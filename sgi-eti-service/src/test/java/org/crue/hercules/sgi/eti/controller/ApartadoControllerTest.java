@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -31,7 +32,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -65,7 +65,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
@@ -96,7 +96,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se produce error porque no encuentra la entidad con ese Id
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -119,7 +119,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los datos
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
@@ -141,7 +141,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .willReturn(new PageImpl<>(Collections.emptyList()));
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía);
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -170,7 +170,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan los datos correctamente según la paginación solicitada
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -203,7 +203,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista de datos paginados vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -244,7 +244,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan los datos filtrados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
@@ -267,7 +267,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -301,7 +301,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los apartados hijos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();

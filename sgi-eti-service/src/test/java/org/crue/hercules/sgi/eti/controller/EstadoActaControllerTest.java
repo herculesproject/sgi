@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.EstadoActaService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -28,7 +29,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -51,7 +51,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("acta.id").value(100))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoActa.id").value(200));
@@ -67,7 +67,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -85,7 +85,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEstadoActaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo estado acta y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("acta.id").value(100))
@@ -106,7 +106,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEstadoActaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -125,7 +125,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceEstadoActaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el estado acta y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("acta.id").value(100))
@@ -146,7 +146,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceEstadoActaJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -157,7 +157,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -176,7 +176,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred estados actas
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -194,7 +194,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -226,7 +226,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked estados actas are returned with the right page information in
         // headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -277,7 +277,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one estado acta
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));

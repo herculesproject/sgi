@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.DictamenService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -26,7 +27,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -51,7 +51,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .willReturn((generarMockDictamen(1L, "Dictamen1")));
 
     mockMvc.perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"));
@@ -67,7 +67,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -85,7 +85,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(DICTAMEN_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevoDictamenJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo dictamen y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"))
@@ -106,7 +106,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(DICTAMEN_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevoDictamenJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -126,7 +126,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceDictamenJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el dictamen y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Replace Dictamen1"));
@@ -146,7 +146,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceDictamenJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -159,7 +159,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -178,7 +178,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -197,7 +197,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
 
   }
 
@@ -230,7 +230,7 @@ public class DictamenControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Dictamens are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -281,7 +281,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
@@ -302,7 +302,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_REVISION_MINIMA_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -336,7 +336,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_NO_REVISION_MINIMA_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -370,7 +370,7 @@ public class DictamenControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_RETROSPECTIVA_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();

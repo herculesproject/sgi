@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -52,7 +53,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -96,7 +96,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
   }
@@ -110,7 +110,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -128,7 +128,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
@@ -149,7 +149,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -172,7 +172,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/crear-memoria-modificada", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
@@ -195,7 +195,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/crear-memoria-modificada", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -215,7 +215,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica la memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"))
@@ -236,7 +236,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceMemoriaJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -249,7 +249,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -261,7 +261,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
                 + "/documentacion-seguimiento-anual/{idDocumentacionMemoria}", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -273,7 +273,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
                 + "/documentacion-seguimiento-final/{idDocumentacionMemoria}", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -285,7 +285,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
                 + "/documentacion-retrospectiva/{idDocumentacionMemoria}", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -298,7 +298,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
                 .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
                     + "/documentacion-inicial/{idDocumentacionMemoria}", 1L, 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -318,7 +318,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
 
   }
@@ -353,7 +353,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Memorias are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -405,7 +405,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
@@ -424,7 +424,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         // then: Devuelve error No Content
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
 
   }
 
@@ -445,9 +445,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion, idTipoComentario).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .perform(MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion, idTipoComentario)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -487,7 +487,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion, idTipoComentario)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos las evaluaciones relacionadas
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -508,7 +508,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -548,7 +548,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -572,7 +572,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10)));
@@ -596,7 +596,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Memorias are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -628,7 +628,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -654,7 +654,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Obtiene las
         // memorias en estado "En secretaria" con la fecha de envío es igual o menor a
         // la fecha límite de la convocatoria de reunión y las que tengan una
@@ -676,7 +676,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -701,7 +701,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Obtiene Memorias en estado
         // "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
         // fecha de envío es igual o menor a la fecha límite de la convocatoria de
@@ -723,7 +723,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -741,7 +741,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -779,7 +779,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -798,7 +798,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -836,7 +836,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -855,7 +855,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -893,7 +893,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -912,7 +912,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -950,7 +950,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -976,7 +976,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
                 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceDocumentacionMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica la documentación memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("aportado").value(Boolean.FALSE));
@@ -1003,7 +1003,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
                 .content(nuevaDocumentacionMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
@@ -1025,7 +1025,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: obtengo un listado de 100 conflictos
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -1051,7 +1051,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaDocumentacionMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
@@ -1077,7 +1077,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaDocumentacionMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
@@ -1103,7 +1103,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaDocumentacionMemoriaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
@@ -1117,7 +1117,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ENVIAR_SECRETARIA, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -1128,7 +1128,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ENVIAR_SECRETARIA_RETROSPECTIVA, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -1151,7 +1151,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -1189,7 +1189,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Memorias are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -1226,7 +1226,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -1270,7 +1270,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, idMemoria, idTipoEvaluacion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -1295,7 +1295,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, idMemoria, idTipoEvaluacion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }

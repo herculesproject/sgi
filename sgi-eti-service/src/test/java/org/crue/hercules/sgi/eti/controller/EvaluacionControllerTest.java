@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -49,7 +50,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -81,7 +81,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
@@ -98,7 +98,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -119,7 +119,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea la nueva evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"))
@@ -144,7 +144,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -168,7 +168,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica la evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria Replace"))
@@ -196,7 +196,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -209,7 +209,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -228,7 +228,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -247,7 +247,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -279,7 +279,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Evaluaciones are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -333,7 +333,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
@@ -356,7 +356,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + CONVOCATORIA_REUNION_BASE_PATH + "/{id}", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -376,7 +376,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + CONVOCATORIA_REUNION_BASE_PATH + "/{id}", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -399,7 +399,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
             .get(EVALUACION_CONTROLLER_BASE_PATH + CONVOCATORIA_REUNION_NO_REV_MINIMA_BASE_PATH
                 + "/{idConvocatoriaReunion}", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -420,7 +420,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
             .get(EVALUACION_CONTROLLER_BASE_PATH + CONVOCATORIA_REUNION_NO_REV_MINIMA_BASE_PATH
                 + "/{idConvocatoriaReunion}", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -439,7 +439,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -464,7 +464,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los comentarios
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
@@ -489,7 +489,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -513,7 +513,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan los comentarios de tipo Evaluador
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
@@ -544,7 +544,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.post(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea los comentario y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
@@ -572,7 +572,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.post(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
@@ -596,7 +596,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoComentarioJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea los comentario y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
@@ -622,7 +622,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.post(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
@@ -645,7 +645,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.put(url, id, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(replaceComentarioJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el comentario y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("texto").value("Comentario Replace"));
@@ -667,7 +667,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
             .put(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceComentarioJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -684,7 +684,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(url, idEvaluacion, idComentario)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Realiza la petición se realiza correctamente
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -702,7 +702,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(url, idEvaluacion, idComentario)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Realiza la petición se realiza correctamente
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -723,7 +723,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -742,7 +742,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
     ;
   }
 
@@ -776,7 +776,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked Evaluaciones are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -818,7 +818,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page three Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
@@ -837,7 +837,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -851,7 +851,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .get(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + NUMERO_COMENTARIOS_BASE_PATH, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   /**

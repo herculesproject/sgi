@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -42,7 +43,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -78,7 +78,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PeticionEvaluacion1"));
   }
@@ -93,7 +93,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -112,7 +112,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoPeticionEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo peticionEvaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PeticionEvaluacion1"));
@@ -132,7 +132,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoPeticionEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -153,7 +153,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replacePeticionEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el peticionEvaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Replace PeticionEvaluacion1"));
@@ -174,7 +174,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replacePeticionEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -187,7 +187,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -209,7 +209,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred PeticionEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -229,7 +229,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -264,7 +264,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked PeticionEvaluacions are returned with the right page
         // information
         // in headers
@@ -320,7 +320,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred PeticionEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
@@ -345,7 +345,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", 1L)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked EquipoTrabajos are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -380,7 +380,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -398,7 +398,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", 1L)
                 .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked tareas are returned with the right page information in
         // headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -428,7 +428,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
 
   }
 
@@ -444,7 +444,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -463,7 +463,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -479,7 +479,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -502,7 +502,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaTareaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea la nueva tarea y la devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("tarea").value("Tarea1"));
@@ -526,7 +526,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaTareaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 404
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -549,7 +549,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevaTareaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -574,7 +574,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
@@ -598,7 +598,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -618,7 +618,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -641,7 +641,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                     + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas/{idTarea}",
                 idPeticionEvaluacion, idEquipoTrabajo, idTarea)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -663,7 +663,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 idPeticionEvaluacion, idEquipoTrabajo, idTarea)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         // then: Devuelve un error 404
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -704,7 +704,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                     idPeticionEvaluacion, idEquipoTrabajo)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         // then: Devuelve un error 404
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -726,7 +726,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + MEMORIAS_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred PeticionEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -745,7 +745,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + MEMORIAS_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -779,7 +779,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PERSONA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked PeticionEvaluacions are returned with the right page
         // information
         // in headers
@@ -816,7 +816,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PERSONA_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -851,7 +851,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + MEMORIAS_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked PeticionEvaluacions are returned with the right page
         // information
         // in headers
@@ -908,7 +908,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + MEMORIAS_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred PeticionEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));

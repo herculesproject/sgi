@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -34,7 +35,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -73,7 +73,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
 
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
@@ -96,7 +96,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /* Retorna un Comite por id y comprueba los datos */
@@ -111,7 +111,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("comite").value("Comite1"));
     ;
@@ -126,7 +126,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   /* Crear Comite */
@@ -150,7 +150,7 @@ public class ComiteControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("comite").value("Comite1"));
@@ -169,7 +169,7 @@ public class ComiteControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
 
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -193,7 +193,7 @@ public class ComiteControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceComiteJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("comite").value("Replace Comite1"));
@@ -218,7 +218,7 @@ public class ComiteControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceComiteJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -234,7 +234,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   /* Retorna lista paginada Comite */
@@ -269,7 +269,7 @@ public class ComiteControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: El Comite retorn la información de la página correcta en el
         // header
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -325,7 +325,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Obtiene la página
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
@@ -345,7 +345,7 @@ public class ComiteControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -382,7 +382,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los tipo memoria relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
@@ -401,7 +401,7 @@ public class ComiteControllerTest extends BaseControllerTest {
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -437,7 +437,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los tipo memoria relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();

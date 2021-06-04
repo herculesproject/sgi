@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.exceptions.RetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -31,7 +32,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -62,7 +62,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.post(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(nuevoRetrospectivaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: La entidad se crea correctamente
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
@@ -86,7 +86,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.post(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(nuevoRetrospectivaJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
@@ -108,7 +108,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.put(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(replaceRetrospectivaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Los datos se actualizan correctamente
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
@@ -138,7 +138,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.put(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).content(replaceRetrospectivaJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se produce error porque no encuentra la entidad a actualizar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -161,7 +161,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: La entidad se elimina correctamente
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -184,7 +184,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(url, retrospectiva.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se produce error porque no encuentra la entidad a eliminar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -207,7 +207,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
@@ -237,7 +237,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se produce error porque no encuentra la entidad con ese Id
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -260,7 +260,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los datos
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
@@ -282,7 +282,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
         .willReturn(new PageImpl<>(Collections.emptyList()));
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía);
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -311,7 +311,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan los datos correctamente según la paginación solicitada
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -344,7 +344,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista de datos paginados vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -385,7 +385,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan los datos filtrados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();

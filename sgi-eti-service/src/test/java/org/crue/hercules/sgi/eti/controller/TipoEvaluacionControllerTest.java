@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.TipoEvaluacionService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -26,7 +27,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -54,7 +54,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoEvaluacion1"));
     ;
@@ -69,7 +69,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -87,7 +87,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoTipoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo Evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoEvaluacion1"));
@@ -107,7 +107,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoTipoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -127,7 +127,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceTipoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el tipo Evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Replace TipoEvaluacion1"));
@@ -148,7 +148,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceTipoEvaluacionJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
@@ -161,7 +161,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -180,7 +180,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred TipoEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
@@ -215,7 +215,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked TipoEvaluaciones are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -266,7 +266,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Get a page one hundred TipoEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
@@ -285,7 +285,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve error No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -311,7 +311,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
             .get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + DICTAMENES_REV_MINIMA_PATH + PATH_PARAMETER,
                 4L, true)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(7L))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(8L))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
@@ -334,7 +334,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + MEMORIA_RETROSPECTIVA_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
@@ -357,7 +357,7 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + SEGUIMIENT_ANUAL_FINAL_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(3L))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(4L))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
