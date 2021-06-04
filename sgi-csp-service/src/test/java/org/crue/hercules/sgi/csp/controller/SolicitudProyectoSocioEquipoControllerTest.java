@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioEquipoNotFound
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioEquipoService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -66,7 +66,7 @@ public class SolicitudProyectoSocioEquipoControllerTest extends BaseControllerTe
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, solicitudProyectoSocioId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(solicitudProyectoEquipoSocioUpdated)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: SolicitudProyectoSocioEquipo is updated
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
@@ -98,7 +98,7 @@ public class SolicitudProyectoSocioEquipoControllerTest extends BaseControllerTe
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(solicitudProyectoEquipoSocioUpdated)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -121,7 +121,7 @@ public class SolicitudProyectoSocioEquipoControllerTest extends BaseControllerTe
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested SolicitudProyectoSocioEquipo is resturned as JSON object
@@ -141,7 +141,7 @@ public class SolicitudProyectoSocioEquipoControllerTest extends BaseControllerTe
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
+        .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
 

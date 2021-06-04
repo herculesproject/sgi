@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.service.TipoEnlaceService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -27,7 +28,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -67,7 +67,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: new TipoEnlace is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
@@ -89,7 +89,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 400 error
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -120,7 +120,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: TipoEnlace is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(data.getId()))
@@ -145,7 +145,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -170,7 +170,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 400 error
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -193,7 +193,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, tipoEnlace.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: return enabled TipoEnlace
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoEnlace.getId()))
@@ -215,7 +215,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -239,7 +239,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders
             .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, idBuscado)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: return disabled TipoEnlace
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
@@ -260,7 +260,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -281,7 +281,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested TipoEnlace is resturned as JSON object
@@ -300,7 +300,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
+        .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -333,7 +333,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked TipoEnlace are returned with the right page information in
         // headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -372,7 +372,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: returns 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -407,7 +407,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: the asked TipoEnlace are returned with the right page information in
         // headers
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -448,7 +448,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: returns 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }

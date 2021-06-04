@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoSeguimientoCientificoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -71,7 +71,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientificos)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se crea el nuevo ConvocatoriaPeriodoSeguimientoCientifico, se actualiza
         // el
         // existe y se eliminan el resto
@@ -124,7 +124,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico))))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -149,7 +149,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
         .perform(MockMvcRequestBuilders
             .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConvocatoriaPeriodoSeguimientoCientifico is resturned as
@@ -172,7 +172,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
         .perform(MockMvcRequestBuilders
             .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
+        .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }

@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -15,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -49,7 +49,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(modeloTipoFaseJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo ModeleoTipoFase y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty());
@@ -70,7 +70,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.post(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(modeloTipoFaseJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -88,7 +88,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(tipoFaseJson))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el ModeloTipoFase y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoria").value(true));
@@ -111,7 +111,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceModeloTipoFaseJson))
         // then: No encuentra el TipoFase y devuelve un 404
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -128,7 +128,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceModeloTipoFaseJson))
         // then: No encuentra el TipoFase y devuelve un 404
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
@@ -144,7 +144,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(modeloTipoFase.getId()))
@@ -164,7 +164,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se produce error porque no encuentra la entidad con ese Id
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -182,7 +182,7 @@ public class ModeloTipoFaseControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(MODELO_TIPO_FASE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }

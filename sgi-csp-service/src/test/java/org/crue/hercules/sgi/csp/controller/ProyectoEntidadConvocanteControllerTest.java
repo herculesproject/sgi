@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -24,7 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(ProyectoEntidadConvocanteController.class)
@@ -54,7 +54,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
     mockMvc
         .perform(MockMvcRequestBuilders.get(ProyectoEntidadConvocanteController.REQUEST_MAPPING, proyectoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -84,7 +84,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
     mockMvc
         .perform(MockMvcRequestBuilders.get(ProyectoEntidadConvocanteController.REQUEST_MAPPING, proyectoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: ProyectoEntidadConvocanteDto list is returned
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -122,7 +122,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
         .perform(MockMvcRequestBuilders.post(ProyectoEntidadConvocanteController.REQUEST_MAPPING, proyectoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(entidadConvocante)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: new ProyectoEntidadConvocanteDto is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
@@ -145,7 +145,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
         .perform(MockMvcRequestBuilders.post(ProyectoEntidadConvocanteController.REQUEST_MAPPING, proyectoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(entidadConvocante)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 400 error
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
@@ -177,7 +177,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
                 proyectoId, entidadConvocanteId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(programa)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: ProyectoEntidadConvocanteDto is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(entidadConvocanteId))
@@ -205,7 +205,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
                 proyectoId, entidadConvocante.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(entidadConvocante)))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -225,7 +225,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
                 + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE, proyectoId, entidadConvocanteId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -245,7 +245,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
                 + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE, proyectoId, entidadConvocanteId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
