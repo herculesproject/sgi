@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.framework.integration;
 
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.framework.web.config.SgiSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +55,7 @@ public class SgiMethodSecurityExpressionRootIT {
     // given:
 
     // when:
-    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(SgiMockMvcResultHandlers.printOnError())
         // then:
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -69,7 +69,7 @@ public class SgiMethodSecurityExpressionRootIT {
     // given:
 
     // when:
-    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(SgiMockMvcResultHandlers.printOnError())
         // then:
         .andExpect(MockMvcResultMatchers.status().isForbidden());
   }
@@ -83,7 +83,7 @@ public class SgiMethodSecurityExpressionRootIT {
     // given:
 
     // when:
-    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(SgiMockMvcResultHandlers.printOnError())
         // then:
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -97,7 +97,7 @@ public class SgiMethodSecurityExpressionRootIT {
     // given:
 
     // when:
-    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(SgiMockMvcResultHandlers.printOnError())
         // then:
         .andExpect(MockMvcResultMatchers.status().isOk());
   }

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.framework.integration;
 
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,7 +59,7 @@ public class RequestPageableIT {
     mockMvc
         .perform(MockMvcRequestBuilders.get("/test-request-pageable").header("X-Page", pageNumber)
             .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: sent paging header data is returned as Pageable object
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +76,7 @@ public class RequestPageableIT {
 
     // when: test-request-pageable controller with @RequestPageable annotations
     mockMvc.perform(MockMvcRequestBuilders.get("/test-request-pageable").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: sent paging header data is returned as no paged object
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -97,7 +97,7 @@ public class RequestPageableIT {
     mockMvc
         .perform(MockMvcRequestBuilders.get("/test-request-pageable-custom-headers").header("XX-P", pageNumber)
             .header("XX-S", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: sent paging header data is returned as Pageable object
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
