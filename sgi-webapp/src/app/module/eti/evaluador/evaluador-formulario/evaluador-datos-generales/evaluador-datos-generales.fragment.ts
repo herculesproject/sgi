@@ -49,7 +49,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     return {
       comite: value.comite,
       fechaAlta: value.fechaAlta,
-      fechaBaja: value.fechaBaja,
+      fechaBaja: value.fechaBaja?.minus({ hours: 23, minutes: 59, seconds: 59 }),
       cargoComite: value.cargoComite,
       resumen: value.resumen,
       persona: value.persona
@@ -62,7 +62,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
       this.evaluador.comite = form.comite.value;
     }
     this.evaluador.fechaAlta = form.fechaAlta.value;
-    this.evaluador.fechaBaja = form.fechaBaja.value;
+    this.evaluador.fechaBaja = form.fechaBaja.value?.plus({ hours: 23, minutes: 59, seconds: 59 });
     this.evaluador.cargoComite = form.cargoComite.value === '' ? null : form.cargoComite.value;
     this.evaluador.resumen = form.resumen.value;
     this.evaluador.persona = form.persona.value;

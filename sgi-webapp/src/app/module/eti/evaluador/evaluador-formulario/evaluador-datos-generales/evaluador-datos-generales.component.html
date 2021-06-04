@@ -42,11 +42,11 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.evaluador.fecha-alta' | translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaAlta" formControlName="fechaAlta"
+        <input matInput [matDatepicker]="pickerFechaAlta" formControlName="fechaAlta"
           placeholder="{{'eti.evaluador.fecha-alta' | translate}}" required>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaAlta">
         </mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaAlta showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
+        <mat-datepicker #pickerFechaAlta></mat-datepicker>
         <mat-error *ngIf="formGroup.controls.fechaAlta.errors?.required">
           {{'error.required.entity' | translate:msgParamFechaAltaEntity}}
         </mat-error>
@@ -58,11 +58,11 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.evaluador.fecha-baja' | translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaBaja" formControlName="fechaBaja"
+        <input matInput [matDatepicker]="pickerFechaBaja" formControlName="fechaBaja"
           placeholder="{{'eti.evaluador.fecha-baja' | translate}}">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaBaja">
         </mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaBaja showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
+        <mat-datepicker #pickerFechaBaja></mat-datepicker>
         <mat-error *ngIf="formGroup.controls.fechaBaja.errors?.required">
           {{'error.required.entity' | translate:msgParamFechaBajaEntity}}
         </mat-error>

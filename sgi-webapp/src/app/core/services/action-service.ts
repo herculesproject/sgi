@@ -1,5 +1,6 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of, Subscription, throwError } from 'rxjs';
 import { filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
@@ -710,6 +711,9 @@ export class Group implements IGroup {
       // they must have the exact same prototype chain, the closest we can do is
       // test their constructor.
       return false;
+    } else if (x instanceof DateTime && y instanceof DateTime) {
+      // if is DateTime compare with Milliseconds to ignore locale
+      return x.toMillis() === y.toMillis();
     } else {
       for (const p in x) {
         if (!x.hasOwnProperty(p)) {

@@ -145,7 +145,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
       codigo: value.codigo,
       comite: value.comite,
       fechaEvaluacion: value.fechaEvaluacion,
-      fechaLimite: value.fechaLimite,
+      fechaLimite: value.fechaLimite?.minus({ hours: 23, minutes: 59, seconds: 59 }),
       tipoConvocatoriaReunion: value.tipoConvocatoriaReunion,
       horaInicio: value.horaInicio,
       minutoInicio: value.minutoInicio,
@@ -194,7 +194,8 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
       this.getFormGroup().controls.comite.value : form.controls.comite.value;
     this.convocatoriaReunion.fechaEvaluacion = form.controls.fechaEvaluacion.value;
     this.convocatoriaReunion.fechaLimite = (this.getFormGroup().controls.fechaLimite.disabled) ?
-      this.getFormGroup().controls.fechaLimite.value : form.controls.fechaLimite.value;
+      this.getFormGroup().controls.fechaLimite.value.plus({ hours: 23, minutes: 59, seconds: 59 }) :
+      form.controls.fechaLimite.value.plus({ hours: 23, minutes: 59, seconds: 59 });
     this.convocatoriaReunion.tipoConvocatoriaReunion = (this.getFormGroup().controls.tipoConvocatoriaReunion.disabled) ?
       this.getFormGroup().controls.tipoConvocatoriaReunion.value : form.controls.tipoConvocatoriaReunion.value;
     this.convocatoriaReunion.horaInicio = form.controls.horaInicio.value;

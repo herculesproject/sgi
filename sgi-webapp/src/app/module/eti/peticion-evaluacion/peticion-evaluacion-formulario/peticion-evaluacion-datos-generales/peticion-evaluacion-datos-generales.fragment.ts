@@ -88,7 +88,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       estadoFinanciacion: value.estadoFinanciacion,
       importeFinanciacion: value.importeFinanciacion,
       fechaInicio: value.fechaInicio,
-      fechaFin: value.fechaFin,
+      fechaFin: value.fechaFin?.minus({ hours: 23, minutes: 59, seconds: 59 }),
       resumen: value.resumen,
       valorSocial: value.valorSocial,
       otroValorSocial: value.otroValorSocial,
@@ -114,7 +114,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       this.peticionEvaluacion.importeFinanciacion = null;
     }
     this.peticionEvaluacion.fechaInicio = form.fechaInicio;
-    this.peticionEvaluacion.fechaFin = form.fechaFin;
+    this.peticionEvaluacion.fechaFin = form.fechaFin.plus({ hours: 23, minutes: 59, seconds: 59 });
     this.peticionEvaluacion.resumen = form.resumen;
     this.peticionEvaluacion.valorSocial = form.valorSocial;
     if (this.peticionEvaluacion.valorSocial === TipoValorSocial.OTRA_FINALIDAD) {
