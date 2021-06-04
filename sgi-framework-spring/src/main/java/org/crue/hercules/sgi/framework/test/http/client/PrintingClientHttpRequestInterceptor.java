@@ -122,13 +122,15 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
   protected void printCookies(HttpHeaders headers) {
     List<HttpCookie> cookies = new ArrayList<>();
     List<String> cookieStrings = headers.get(HttpHeaders.SET_COOKIE);
-    for (String cookieString : cookieStrings) {
-      cookies.addAll(HttpCookie.parse(cookieString));
+    if (cookieStrings != null) {
+      for (String cookieString : cookieStrings) {
+        cookies.addAll(HttpCookie.parse(cookieString));
+      }
+      for (String cookie2String : cookieStrings) {
+        cookies.addAll(HttpCookie.parse(cookie2String));
+      }
+      printCookies(cookies);
     }
-    for (String cookie2String : cookieStrings) {
-      cookies.addAll(HttpCookie.parse(cookie2String));
-    }
-    printCookies(cookies);
   }
 
   /**
