@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.usr.exceptions.UnidadNotFoundException;
 import org.crue.hercules.sgi.usr.model.Unidad;
 import org.crue.hercules.sgi.usr.service.UnidadService;
@@ -24,7 +25,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
@@ -69,7 +69,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve la pagina 3 con los Unidad del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +107,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -125,7 +125,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested Unidad is resturned as JSON object
@@ -145,7 +145,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
+        .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -181,7 +181,7 @@ public class UnidadControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/restringidos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve la pagina 3 con los Unidad del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -220,7 +220,7 @@ public class UnidadControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/restringidos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
+        .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
