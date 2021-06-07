@@ -133,7 +133,20 @@ describe(`hasAnyModuleAccess()`, () => {
 });
 
 describe(`extractModuleAccess()`, () => {
-  const userAuthorizations = ['GEN-ONE', 'GEN-TWO', 'MASTER-THREE', 'GEN-ONE_UO', 'LOCK-ONE_UO2', 'GEN-TWO_UO', 'ACCOUNT-INV-FOUR_OU'];
+  const userAuthorizations = ['GEN-ONE-V', 'GEN-TWO-V', 'MASTER-THREE-V', 'GEN-ONE-V_UO', 'LOCK-ONE-V_UO2', 'GEN-TWO-V_UO', 'ACCOUNT-FOUR-INV-V_OU', 'ACCOUNT-FOUR-MOD-V_OU'];
+  const expected = ['GEN', 'MASTER', 'LOCK', 'INV'];
+
+  it('test for extract modules from authorities should return expected', () => {
+    expect(extractModuleAccess(userAuthorizations)).toEqual(expected);
+  });
+
+  it('test for extract modules from empty authorities should return empty', () => {
+    expect(extractModuleAccess([])).toEqual([]);
+  });
+});
+
+describe(`extractModuleAccessOld()`, () => {
+  const userAuthorizations = ['GEN-ONE-V', 'GEN-TWO-V', 'MASTER-THREE-V', 'GEN-ONE-V_UO', 'LOCK-ONE-V_UO2', 'GEN-TWO-V_UO', 'ACCOUNT-FOUR-INV', 'ACCOUNT-FOUR-MOD-V_OU'];
   const expected = ['GEN', 'MASTER', 'LOCK', 'INV'];
 
   it('test for extract modules from authorities should return expected', () => {

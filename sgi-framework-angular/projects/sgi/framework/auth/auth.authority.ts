@@ -70,8 +70,10 @@ export function hasAnyModuleAccess(userModules: string[], modules: string[]): bo
 export function extractModuleAccess(userAuthorities: string[]): string[] {
   const modules: string[] = [];
   userAuthorities.forEach((authority) => {
-    if (/^.+-INV-.+$/gm.test(authority)) {
-      if (modules.indexOf('INV') < 0) {
+    // TODO: Remove support for endWith -INV when full permission migration
+    const virtualModuleMatch = /^[A-Z]+-[A-Z]+(-(?<module>[A-Z]+)-)?[A-Z]+($|_.+$)|^.+-INV$/gm.exec(authority);
+    if (virtualModuleMatch?.length) {
+      if ((virtualModuleMatch.groups.module === 'INV' || authority.endsWith('-INV')) && modules.indexOf('INV') < 0) {
         modules.push('INV');
       }
     }
