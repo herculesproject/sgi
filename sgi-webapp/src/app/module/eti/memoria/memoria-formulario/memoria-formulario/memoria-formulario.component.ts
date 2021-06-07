@@ -3,8 +3,9 @@ import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@ang
 import { MatStepper } from '@angular/material/stepper';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { Subscription } from 'rxjs';
+import { IBlock } from '../../memoria-formly-form.fragment';
 import { MemoriaActionService } from '../../memoria.action.service';
-import { IBlock, MemoriaFormularioFragment } from './memoria-formulario.fragment';
+import { MemoriaFormularioFragment } from './memoria-formulario.fragment';
 
 @Component({
   selector: 'sgi-memoria-formulario',

@@ -1,5 +1,5 @@
 import { IComite } from '@core/models/eti/comite';
-import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
+import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
@@ -7,10 +7,11 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaFormlyFormFragment } from '../../memoria-formly-form.fragment';
 
-export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
+export class MemoriaRetrospectivaFragment extends MemoriaFormlyFormFragment {
 
   constructor(
     logger: NGXLogger,
@@ -29,7 +30,7 @@ export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
       key,
       comite,
       readonly,
-      TIPO_EVALUACION.MEMORIA,
+      TIPO_EVALUACION.RETROSPECTIVA,
       formularioService,
       memoriaService,
       evaluacionService,
@@ -40,18 +41,18 @@ export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
   }
 
   protected isEditable(): boolean {
-    if (!this.memoria?.estadoActual?.id) {
+    if (!this.memoria.retrospectiva?.estadoRetrospectiva?.id) {
       return false;
     }
-    const estado = this.memoria.estadoActual.id as ESTADO_MEMORIA;
+    const estado = this.memoria.retrospectiva.estadoRetrospectiva.id as ESTADO_RETROSPECTIVA;
     switch (+estado) {
-      case ESTADO_MEMORIA.COMPLETADA:
-      case ESTADO_MEMORIA.EN_ELABORACION:
-      case ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS:
-      case ESTADO_MEMORIA.PENDIENTE_CORRECCIONES:
-        return true;
+      case ESTADO_RETROSPECTIVA.PENDIENTE:
+      case ESTADO_RETROSPECTIVA.COMPLETADA:
+        // La fecha de la restrospectiva es igual o mayor a la fecha actual
+        return this.memoria.retrospectiva.fechaRetrospectiva >= DateTime.now();
       default:
         return false;
     }
   }
+
 }

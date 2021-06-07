@@ -12,6 +12,9 @@ import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-docu
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 import { MemoriaFormularioComponent } from './memoria-formulario/memoria-formulario/memoria-formulario.component';
 import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
+import { MemoriaRetrospectivaComponent } from './memoria-formulario/memoria-retrospectiva/memoria-retrospectiva.component';
+import { MemoriaSeguimientoAnualComponent } from './memoria-formulario/memoria-seguimiento-anual/memoria-seguimiento-anual.component';
+import { MemoriaSeguimientoFinalComponent } from './memoria-formulario/memoria-seguimiento-final/memoria-seguimiento-final.component';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MEMORIA_ROUTE_NAMES } from './memoria-route-names';
 import { MemoriaResolver } from './memoria.resolver';
@@ -61,6 +64,21 @@ const routes: SgiRoutes = [
       {
         path: MEMORIA_ROUTE_NAMES.DOCUMENTACION,
         component: MemoriaDocumentacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.SEGUIMIENTO_ANUAL,
+        component: MemoriaSeguimientoAnualComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.SEGUIMIENTO_FINAL,
+        component: MemoriaSeguimientoFinalComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.RETROSPECTIVA,
+        component: MemoriaRetrospectivaComponent,
         canDeactivate: [FragmentGuard]
       },
       {

@@ -4,7 +4,7 @@ import { MEMORIA_CONVERTER } from '@core/converters/eti/memoria.converter';
 import { IMemoriaBackend } from '@core/models/eti/backend/memoria-backend';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
-import { TipoMemoria } from '@core/models/eti/tipo-memoria';
+import { ITipoMemoria } from '@core/models/eti/tipo-memoria';
 import { environment } from '@env';
 import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -28,9 +28,8 @@ export class ComiteService extends SgiReadOnlyRestService<number, IComite> {
    * @param id Identificador del comité.
    * @param options Opciones de búsqueda.
    */
-  findTipoMemoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<TipoMemoria>> {
-    return this.find<TipoMemoria, TipoMemoria>(`${this.endpointUrl}/${id}/tipo-memorias`, options);
-
+  findTipoMemoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoMemoria>> {
+    return this.find<ITipoMemoria, ITipoMemoria>(`${this.endpointUrl}/${id}/tipo-memorias`, options);
   }
 
   /**

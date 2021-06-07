@@ -189,7 +189,7 @@ export class ComentarioModalComponent extends
    */
   private loadBloques(): void {
     this.apartado$ = this.formularioService.getBloques(resolveFormularioByTipoEvaluacionAndComite
-      (this.data?.evaluacion?.tipoEvaluacion, this.data?.evaluacion?.memoria?.comite)).pipe(
+      (this.data?.evaluacion?.tipoEvaluacion?.id, this.data?.evaluacion?.memoria?.comite)).pipe(
         map(res => res.items),
         catchError(error => {
           this.matDialogRef.close(null);

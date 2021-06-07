@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '@shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { MemoriaResolver } from './memoria.resolver';
-import { MemoriaRoutingGesModule } from './memoria-routing-ges.module';
+import { SharedModule } from '@shared/shared.module';
+import { EtiSharedModule } from '../shared/eti-shared.module';
 import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
-import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
+import { MemoriaRoutingGesModule } from './memoria-routing-ges.module';
+import { MemoriaResolver } from './memoria.resolver';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule,
-    FormlyFormsModule
+    FormlyFormsModule,
+    EtiSharedModule
   ],
   providers: [
     MemoriaResolver,

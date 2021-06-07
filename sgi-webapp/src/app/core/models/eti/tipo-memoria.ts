@@ -1,19 +1,14 @@
+export enum TIPO_MEMORIA {
+  NUEVA = 1,
+  MODIFICACION = 2,
+  RATIFICACION = 3
+}
 
-export class TipoMemoria {
-
+export interface ITipoMemoria {
   /** ID */
   id: number;
-
   /** Nombre */
   nombre: string;
-
   /** Activo */
   activo: boolean;
-
-  constructor() {
-    this.id = null;
-    this.nombre = null;
-    this.activo = true;
-  }
-
 }

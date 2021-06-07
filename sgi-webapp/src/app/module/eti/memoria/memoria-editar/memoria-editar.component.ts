@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { COMITE } from '@core/models/eti/comite';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,6 +38,10 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
     return MSG_PARAMS;
   }
 
+  get COMITE() {
+    return COMITE;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
@@ -56,7 +61,6 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       MEMORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -81,7 +85,6 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
       })
     ).subscribe((value) => this.textoActualizarError = value);
   }
-
 
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(

@@ -10,7 +10,7 @@ import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaFormlyFormFragment } from '../../memoria-formly-form.fragment';
 
-export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
+export class MemoriaSeguimientoFinalFragment extends MemoriaFormlyFormFragment {
 
   constructor(
     logger: NGXLogger,
@@ -29,7 +29,7 @@ export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
       key,
       comite,
       readonly,
-      TIPO_EVALUACION.MEMORIA,
+      TIPO_EVALUACION.SEGUIMIENTO_FINAL,
       formularioService,
       memoriaService,
       evaluacionService,
@@ -45,13 +45,14 @@ export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
     }
     const estado = this.memoria.estadoActual.id as ESTADO_MEMORIA;
     switch (+estado) {
-      case ESTADO_MEMORIA.COMPLETADA:
-      case ESTADO_MEMORIA.EN_ELABORACION:
-      case ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS:
-      case ESTADO_MEMORIA.PENDIENTE_CORRECCIONES:
-        return true;
+      case ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL:
+      case ESTADO_MEMORIA.FIN_EVALUACION_SEGUIMIENTO_ANUAL:
+      case ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL:
+        // Un año o más de diferencia entre la fecha actual y la fecha de fin.
+        return this.memoria.peticionEvaluacion.fechaFin.diffNow('years').years <= -1;
       default:
         return false;
     }
   }
+
 }

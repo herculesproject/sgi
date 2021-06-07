@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { TranslateModule } from '@ngx-translate/core';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MaterialDesignModule } from '@material/material-design.module';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TableType } from './types/table-type.component';
-import { TableTypeRepetible } from './types/table-type-repetible.component';
+import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
+import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { TableTypeRepetible } from './types/table-type-repetible.component';
+import { TableType } from './types/table-type.component';
+import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { requiredChecked } from './validators/utils.validator';
+import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
 import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
 import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper';
-import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
-import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,8 @@ import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
     TableTypeRepetible,
     PanelWrapperComponent,
     TitleDivWrapperComponent,
-    InfoDivWrapperComponent
+    InfoDivWrapperComponent,
+    TipoValorSocialComponent
   ],
   imports: [
     SharedModule,
@@ -40,6 +41,11 @@ import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
         {
           name: 'table-repetible',
           component: TableTypeRepetible
+        },
+        {
+          name: 'tipo-valor-social',
+          component: TipoValorSocialComponent,
+          wrappers: ['form-field'],
         }
       ],
       wrappers: [

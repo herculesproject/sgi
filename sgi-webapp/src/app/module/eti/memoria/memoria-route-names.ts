@@ -5,5 +5,8 @@ export const MEMORIA_ROUTE_NAMES = {
   FORMULARIO: 'formulario',
   DOCUMENTACION: 'documentacion',
   EVALUACIONES: 'evaluaciones',
-  VERSIONES: 'versiones'
+  VERSIONES: 'versiones',
+  SEGUIMIENTO_ANUAL: 'seguimiento-anual',
+  SEGUIMIENTO_FINAL: 'seguimiento-final',
+  RETROSPECTIVA: 'retrospectiva'
 };

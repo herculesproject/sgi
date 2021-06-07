@@ -1,6 +1,6 @@
 import { IComite } from '../comite';
 import { TipoEstadoMemoria } from '../tipo-estado-memoria';
-import { TipoMemoria } from '../tipo-memoria';
+import { ITipoMemoria } from '../tipo-memoria';
 import { IPeticionEvaluacionBackend } from './peticion-evaluacion-backend';
 import { IRetrospectivaBackend } from './retrospectiva-backend';
 
@@ -18,7 +18,7 @@ export interface IMemoriaBackend {
   /** Referencia persona responsable */
   personaRef: string;
   /** Tipo Memoria */
-  tipoMemoria: TipoMemoria;
+  tipoMemoria: ITipoMemoria;
   /** Fecha envio secretaria. */
   fechaEnvioSecretaria: string;
   /** Indicador require retrospectiva */

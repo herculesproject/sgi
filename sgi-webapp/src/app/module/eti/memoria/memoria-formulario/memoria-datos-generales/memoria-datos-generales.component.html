@@ -20,14 +20,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'label.eti.comite' | translate}}</mat-label>
-        <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
-          formControlName="comite" [matAutocomplete]="autocompleteComite" required>
-        <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite"
-          (optionSelected)="selectComite($event.option.value)">
-          <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
-            {{comite.comite}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-comite #selectComite formControlName="comite" required></sgi-select-comite>
         <mat-error *ngIf="formGroup.controls.comite.errors?.required">
           {{'error.required.entity' | translate:msgParamComiteEntity}}
         </mat-error>
@@ -39,14 +32,8 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.tipo' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.memoria.tipo' | translate" arial-label="Number" matInput
-          formControlName="tipoMemoria" [matAutocomplete]="autocompleteTipoMemoria" required>
-        <mat-autocomplete #autocompleteTipoMemoria="matAutocomplete" [displayWith]="getTipoMemoria"
-          (optionSelected)="selectTipoMemoria($event.option.value)">
-          <mat-option *ngFor="let tipoMemoria of filteredTipoMemorias | async" [value]="tipoMemoria">
-            {{tipoMemoria.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity #selectTipoMemoria formControlName="tipoMemoria" required
+          [resetOnChange]="selectComite.selectionChange" [options]="tiposMemoria$ | async"></sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoMemoriaEntity}}
         </mat-error>
@@ -59,15 +46,11 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'eti.memoria.original' | translate}}</mat-label>
-          <input type="text" [placeholder]="'eti.memoria.original' | translate" arial-label="Number" matInput
-            formControlName="memoriaOriginal" [matAutocomplete]="autocompleteMemoria">
-          <mat-autocomplete #autocompleteMemoria="matAutocomplete" [displayWith]="getMemoria">
-            <mat-option *ngFor="let memoria of filteredMemorias | async" [value]="memoria">
-              {{memoria.numReferencia}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error
-            *ngIf="this.datosGeneralesFragment.showMemoriaOriginal && formGroup.controls.memoriaOriginal?.errors?.vacio">
+          <sgi-select-entity formControlName="memoriaOriginal" [resetOnChange]="selectComite.selectionChange"
+            [options]="memorias$ | async" [displayWith]="displayerMemoria"
+            [required]="this.datosGeneralesFragment.showMemoriaOriginal">
+          </sgi-select-entity>
+          <mat-error *ngIf="formGroup.controls.memoriaOriginal?.errors?.required">
             {{'error.required.entity' | translate:msgParamOrginalEntity}}
           </mat-error>
         </mat-form-field>
@@ -91,14 +74,9 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field fxFill>
         <mat-label>{{'eti.memoria.responsable' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.memoria.responsable' | translate" arial-label="Number" matInput
-          formControlName="personaResponsable" [matAutocomplete]="autocompletePersonaResponsable">
-        <mat-autocomplete #autocompletePersonaResponsable="matAutocomplete" [displayWith]="getPersonaResponsable">
-          <mat-option *ngFor="let personaRes of datosGeneralesFragment.personasResponsable$ | async"
-            [value]="personaRes">
-            {{personaRes.nombre}} {{personaRes.apellidos}} ({{personaRes.numeroDocumento}})
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity formControlName="personaResponsable"
+          [options]="datosGeneralesFragment.personasResponsable$ | async" [displayWith]="displayerPersonaResponsable">
+        </sgi-select-entity>
       </mat-form-field>
     </div>
 

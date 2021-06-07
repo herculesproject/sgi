@@ -1,5 +1,5 @@
 import { IComite } from './comite';
-import { TipoEvaluacion, TIPO_EVALUACION } from './tipo-evaluacion';
+import { TIPO_EVALUACION } from './tipo-evaluacion';
 
 export enum FORMULARIO {
   M10 = 1,
@@ -10,9 +10,8 @@ export enum FORMULARIO {
   RETROSPECTIVA = 6
 }
 
-export function resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion: TipoEvaluacion, comite: IComite): FORMULARIO {
-  const tEvaluacion = tipoEvaluacion?.id as TIPO_EVALUACION;
-  switch (tEvaluacion) {
+export function resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion: TIPO_EVALUACION, comite: IComite): FORMULARIO {
+  switch (tipoEvaluacion) {
     case TIPO_EVALUACION.MEMORIA:
       return comite.formulario.id as FORMULARIO;
     case TIPO_EVALUACION.RETROSPECTIVA:

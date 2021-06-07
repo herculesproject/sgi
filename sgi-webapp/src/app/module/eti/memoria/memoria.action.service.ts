@@ -17,7 +17,6 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { map } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
@@ -26,6 +25,9 @@ import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-docum
 import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
 import { MemoriaFormularioFragment } from './memoria-formulario/memoria-formulario/memoria-formulario.fragment';
 import { MemoriaInformesFragment } from './memoria-formulario/memoria-informes/memoria-informes.fragment';
+import { MemoriaRetrospectivaFragment } from './memoria-formulario/memoria-retrospectiva/memoria-retrospectiva.fragment';
+import { MemoriaSeguimientoAnualFragment } from './memoria-formulario/memoria-seguimiento-anual/memoria-seguimiento-anual.fragment';
+import { MemoriaSeguimientoFinalFragment } from './memoria-formulario/memoria-seguimiento-final/memoria-seguimiento-final.fragment';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.peticion-evaluacion');
 
@@ -37,20 +39,26 @@ export class MemoriaActionService extends ActionService {
     FORMULARIO: 'formulario',
     DOCUMENTACION: 'documentacion',
     EVALUACIONES: 'evaluaciones',
-    VERSIONES: 'versiones'
+    VERSIONES: 'versiones',
+    SEGUIMIENTO_ANUAL: 'seguimientoAnual',
+    SEGUIMIENTO_FINAL: 'seguimientoFinal',
+    RETROSPECTIVA: 'retrospectiva'
   };
 
-  private memoria: IMemoria;
+  public readonly memoria: IMemoria;
   public readonly: boolean;
 
   private datosGenerales: MemoriaDatosGeneralesFragment;
   private formularios: MemoriaFormularioFragment;
   private documentacion: MemoriaDocumentacionFragment;
+  private seguimientoAnual: MemoriaSeguimientoAnualFragment;
+  private seguimientoFinal: MemoriaSeguimientoFinalFragment;
+  private retrospectiva: MemoriaRetrospectivaFragment;
   private evaluaciones: MemoriaEvaluacionesFragment;
   private versiones: MemoriaInformesFragment;
 
   constructor(
-    private readonly logger: NGXLogger,
+    logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
     service: MemoriaService,
@@ -61,8 +69,7 @@ export class MemoriaActionService extends ActionService {
     bloqueService: BloqueService,
     apartadoService: ApartadoService,
     respuestaService: RespuestaService,
-    evaluacionService: EvaluacionService,
-    translateService: TranslateService
+    evaluacionService: EvaluacionService
   ) {
     super();
     this.memoria = {} as IMemoria;
@@ -77,17 +84,65 @@ export class MemoriaActionService extends ActionService {
     }
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaService,
       peticionEvaluacionService);
-    this.formularios = new MemoriaFormularioFragment(logger, this.readonly, this.memoria?.id, this.memoria?.comite, formularioService,
-      bloqueService, apartadoService, respuestaService, service, evaluacionService, translateService);
+    this.formularios = new MemoriaFormularioFragment(
+      logger,
+      this.readonly,
+      this.memoria?.id,
+      this.memoria?.comite,
+      formularioService,
+      bloqueService,
+      apartadoService,
+      respuestaService,
+      service,
+      evaluacionService
+    );
     this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.readonly, service, documentoService);
+    this.seguimientoAnual = new MemoriaSeguimientoAnualFragment(
+      logger,
+      this.readonly,
+      this.memoria?.id,
+      this.memoria?.comite,
+      formularioService,
+      bloqueService,
+      apartadoService,
+      respuestaService,
+      service,
+      evaluacionService
+    );
+    this.seguimientoFinal = new MemoriaSeguimientoFinalFragment(
+      logger,
+      this.readonly,
+      this.memoria?.id,
+      this.memoria?.comite,
+      formularioService,
+      bloqueService,
+      apartadoService,
+      respuestaService,
+      service,
+      evaluacionService
+    );
+    this.retrospectiva = new MemoriaRetrospectivaFragment(
+      logger,
+      this.readonly,
+      this.memoria?.id,
+      this.memoria?.comite,
+      formularioService,
+      bloqueService,
+      apartadoService,
+      respuestaService,
+      service,
+      evaluacionService
+    );
     this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     if (this.isEdit()) {
-      this.formularios.setPeticionEvaluacion(this.memoria.peticionEvaluacion);
       this.addFragment(this.FRAGMENT.FORMULARIO, this.formularios);
       this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
+      this.addFragment(this.FRAGMENT.SEGUIMIENTO_ANUAL, this.seguimientoAnual);
+      this.addFragment(this.FRAGMENT.SEGUIMIENTO_FINAL, this.seguimientoFinal);
+      this.addFragment(this.FRAGMENT.RETROSPECTIVA, this.retrospectiva);
       this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
       this.addFragment(this.FRAGMENT.VERSIONES, this.versiones);
     }
@@ -107,7 +162,6 @@ export class MemoriaActionService extends ActionService {
       this.peticionEvaluacionService.findById(id).pipe(
         map((peticionEvaluacion) => {
           this.memoria.peticionEvaluacion = peticionEvaluacion;
-          this.formularios.setPeticionEvaluacion(peticionEvaluacion);
           this.addPeticionEvaluacionLink(id);
           this.datosGenerales.loadResponsable(id);
         })
@@ -116,7 +170,7 @@ export class MemoriaActionService extends ActionService {
   }
 
   public getComite(): IComite {
-    return this.memoria.comite;
+    return this.memoria?.comite || this.datosGenerales.getFormGroup()?.controls?.comite?.value;
   }
 
   public getEstadoMemoria(): TipoEstadoMemoria {
@@ -125,11 +179,6 @@ export class MemoriaActionService extends ActionService {
 
   public getRetrospectiva(): IRetrospectiva {
     return this.memoria.retrospectiva;
-  }
-
-  public setComite(comite: IComite): void {
-    this.memoria.comite = comite;
-    this.formularios.setComite(comite);
   }
 
 }
