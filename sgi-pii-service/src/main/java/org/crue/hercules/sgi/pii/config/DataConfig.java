@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @EnableJpaRepositories(basePackages = {
-    "org.crue.hercules.sgi.pi.repository" }, repositoryBaseClass = SgiJpaRepository.class)
+    "org.crue.hercules.sgi.pii.repository" }, repositoryBaseClass = SgiJpaRepository.class)
 public class DataConfig extends SgiDataConfig {
 }

@@ -29,9 +29,9 @@ spring:
     # Enable Liquibase
     enabled: true
     # Set default Liquibase schema
-    default-schema: pi
+    default-schema: pii
     # Schema to use for Liquibase objects
-    liquibase-schema: pi
+    liquibase-schema: pii
     # Set Liquibase contexts same as spring profiles
     contexts: unit-test
   jpa:
@@ -44,7 +44,7 @@ spring:
         # We use a H2 database with PostgreSQL compatibility mode
         dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
-        default_schema: pi
+        default_schema: pii
   test:
     database:
       # By default, tests annotated with @DataJpaTest will use an embedded in-memory database (replacing any explicit or usually auto-configured DataSource).
@@ -64,9 +64,9 @@ spring:
     # Enable Liquibase
     enabled: true
     # Set default Liquibase schema
-    default-schema: pi
+    default-schema: pii
     # Schema to use for Liquibase objects
-    liquibase-schema: pi
+    liquibase-schema: pii
     # Set Liquibase contexts same as spring profiles
     contexts: integration-test
   jpa:
@@ -79,7 +79,7 @@ spring:
         # We use a PostgreSQL database
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         # Set default Hibernate Schema
-        default_schema: pi
+        default_schema: pii
   test:
     database:
       # By default, tests annotated with @DataJpaTest will use an embedded in-memory database (replacing any explicit or usually auto-configured DataSource).
