@@ -24,17 +24,18 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     readonly: boolean,
   ) {
     super(key);
-    this.peticionEvaluacion = {} as IPeticionEvaluacion;
-    this.peticionEvaluacion.activo = true;
-    this.peticionEvaluacion.externo = false;
-    this.peticionEvaluacion.tieneFondosPropios = false;
-    this.peticionEvaluacion.solicitante = { id: sgiAuthService.authStatus$.getValue().userRefId } as IPersona;
+    this.peticionEvaluacion = {
+      externo: false,
+      solicitante: { id: sgiAuthService.authStatus$.getValue().userRefId } as IPersona,
+      activo: true
+    } as IPeticionEvaluacion;
     this.readonly = readonly;
   }
 
   protected buildFormGroup(): FormGroup {
     const form = this.fb.group({
       codigo: [{ value: '', disabled: true }, Validators.required],
+      solicitudConvocatoriaRef: [{ value: '', disabled: true }],
       titulo: [{ value: '', disabled: this.readonly }, Validators.required],
       tipoActividad: [{ value: null, disabled: this.readonly }, Validators.required],
       tipoInvestigacionTutelada: [{ value: null, disabled: this.readonly }],
@@ -49,6 +50,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       otroValorSocial: [{ value: '', disabled: this.readonly }],
       objetivosCientificos: [{ value: '', disabled: this.readonly }, Validators.required],
       disenioMetodologico: [{ value: '', disabled: this.readonly }, Validators.required],
+      tieneFondosPropios: [{ value: '', disabled: this.readonly }]
     });
 
     this.subscriptions.push(form.controls.existeFinanciacion.valueChanges.subscribe((value: boolean) => {
@@ -78,8 +80,10 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
     this.addFinanciacionValidations(value.existeFinanciacion);
     this.addValorSocialValidations(value.otroValorSocial);
+    this.addTieneFondosPropiosValidations(value.solicitudConvocatoriaRef);
     return {
       codigo: value.codigo,
+      solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
       titulo: value.titulo,
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
@@ -87,6 +91,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       financiacion: value.fuenteFinanciacion,
       estadoFinanciacion: value.estadoFinanciacion,
       importeFinanciacion: value.importeFinanciacion,
+      tieneFondosPropios: value.tieneFondosPropios,
       fechaInicio: value.fechaInicio,
       fechaFin: value.fechaFin?.minus({ hours: 23, minutes: 59, seconds: 59 }),
       resumen: value.resumen,
@@ -99,7 +104,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
 
   getValue(): IPeticionEvaluacion {
     const form = this.getFormGroup().value;
-    this.peticionEvaluacion.codigo = form.codigo ? form.codigo : this.getFormGroup().controls.codigo.value;
     this.peticionEvaluacion.titulo = form.titulo ? form.titulo : this.getFormGroup().controls.titulo.value;
     this.peticionEvaluacion.tipoActividad = form.tipoActividad;
     this.peticionEvaluacion.tipoInvestigacionTutelada = form.tipoInvestigacionTutelada;
@@ -112,6 +116,11 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       this.peticionEvaluacion.fuenteFinanciacion = null;
       this.peticionEvaluacion.estadoFinanciacion = null;
       this.peticionEvaluacion.importeFinanciacion = null;
+    }
+    if (this.peticionEvaluacion.solicitudConvocatoriaRef) {
+      this.peticionEvaluacion.tieneFondosPropios = form.tieneFondosPropios;
+    } else {
+      this.peticionEvaluacion.tieneFondosPropios = false;
     }
     this.peticionEvaluacion.fechaInicio = form.fechaInicio;
     this.peticionEvaluacion.fechaFin = form.fechaFin.plus({ hours: 23, minutes: 59, seconds: 59 });
@@ -178,6 +187,18 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
         form.otroValorSocial.clearValidators();
       }
       form.otroValorSocial.updateValueAndValidity();
+    }
+  }
+
+  private addTieneFondosPropiosValidations(value: string) {
+    const form = this.getFormGroup().controls;
+    if (!this.readonly) {
+      if (value) {
+        form.tieneFondosPropios.setValidators([Validators.required]);
+      } else {
+        form.tieneFondosPropios.clearValidators();
+      }
+      form.tieneFondosPropios.updateValueAndValidity();
     }
   }
 }

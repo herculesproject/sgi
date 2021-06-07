@@ -2,23 +2,31 @@
   <h2>{{'label.datos-generales' | translate}}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-    <!-- Código-->
     <ng-container *ngIf="this.fragment.isEdit()">
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.peticion-evaluacion.codigo' | translate}}</mat-label>
-        <input matInput formControlName="codigo" type="text" required maxlength="100">
-        <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'codigo') && (formGroup.get('codigo').errors.vacio || formGroup.get('codigo').errors.required)">
-          {{'error.required.entity' | translate:msgParamCodigoEntity}}
-        </mat-error>
-      </mat-form-field>
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+        [fxLayoutGap]="fxLayoutProperties.gap">
+        <!-- Referencia solicitud convocatoria -->
+        <div *ngIf="formGroup.controls.solicitudConvocatoriaRef.value">
+          <mat-form-field class="input-form">
+            <mat-label>{{'eti.peticion-evaluacion.solicitud-convocatoria-ref' | translate}}</mat-label>
+            <input matInput formControlName="solicitudConvocatoriaRef" type="text" required maxlength="100">
+          </mat-form-field>
+        </div>
+        <!-- Código-->
+        <div>
+          <mat-form-field class="input-form">
+            <mat-label>{{'eti.peticion-evaluacion.codigo' | translate}}</mat-label>
+            <input matInput formControlName="codigo" type="text" required maxlength="100">
+          </mat-form-field>
+        </div>
+      </div>
     </ng-container>
     <!-- Título-->
     <mat-form-field class="input-form">
       <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
       <input matInput formControlName="titulo" type="text" required maxlength="100">
-      <mat-error
-        *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && (formGroup.get('titulo').errors.vacio || formGroup.get('titulo').errors.required)">
+      <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
         {{'error.required.entity' | translate:msgParamTituloEntity}}
       </mat-error>
     </mat-form-field>
@@ -97,6 +105,16 @@
         </div>
       </div>
     </ng-container>
+    <!--Tiene fondos propios -->
+    <mat-form-field *ngIf="formGroup.controls.solicitudConvocatoriaRef.value">
+      <mat-label>{{'eti.peticion-evaluacion.tiene-fondos-propios' | translate}}</mat-label>
+      <sgi-select-boolean formControlName="tieneFondosPropios"
+        [required]="formGroup.controls.solicitudConvocatoriaRef.value"></sgi-select-boolean>
+      <mat-error
+        *ngIf="FormGroupUtil.hasValidator(this.formGroup,'tieneFondosPropios','required') && formGroup.controls.tieneFondosPropios.errors?.required">
+        {{'error.required.entity' | translate:msgParamTieneFondosPropiosEntity}}
+      </mat-error>
+    </mat-form-field>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap">
@@ -108,8 +126,7 @@
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
           <mat-datepicker #pickerFechaInicio>
           </mat-datepicker>
-          <mat-error
-            *ngIf="FormGroupUtil.checkError(formGroup, 'fechaInicio') && formGroup.get('fechaInicio').errors.required">
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
         </mat-form-field>
@@ -122,8 +139,7 @@
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
           <mat-datepicker #pickerFechaFin>
           </mat-datepicker>
-          <mat-error
-            *ngIf="FormGroupUtil.checkError(formGroup, 'fechaFin') && formGroup.get('fechaFin').errors.required">
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaFinEntity}}
           </mat-error>
         </mat-form-field>

@@ -33,6 +33,7 @@ const PETICION_EVALUACION_EXISTE_FINANCIACION_KEY = marker('eti.peticion-evaluac
 const PETICION_EVALUACION_ESTADO_FINANCIACION_KEY = marker('eti.peticion-evaluacion.estado-financiacion');
 const PETICION_EVALUACION_IMPORTE_FINANCIACION_KEY = marker('eti.peticion-evaluacion.importe-financiacion');
 const PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY = marker('eti.peticion-evaluacion.otro-valor-social');
+const PETICION_EVALUACION_TIENE_FONDOS_PROPIOS_KEY = marker('eti.peticion-evaluacion.tiene-fondos-propios');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-datos-generales',
@@ -69,6 +70,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   msgParamEstadoFinanciacionEntity = {};
   msgParamImporteFinanciacionEntity = {};
   msgParamOtroValorSocialEntity = {};
+  msgParamTieneFondosPropiosEntity = {};
 
   get ESTADO_FINANCIACION_MAP() {
     return ESTADO_FINANCIACION_MAP;
@@ -191,6 +193,11 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
       PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamOtroValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PETICION_EVALUACION_TIENE_FONDOS_PROPIOS_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTieneFondosPropiosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
   }
 
