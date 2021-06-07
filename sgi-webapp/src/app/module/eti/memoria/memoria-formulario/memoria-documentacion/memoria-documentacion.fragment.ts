@@ -4,7 +4,7 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { endWith, map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { endWith, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export enum TIPO_DOCUMENTACION {
   INICIAL = 0,
@@ -166,20 +166,15 @@ export class MemoriaDocumentacionFragment extends Fragment {
     }
     return from(this.deletedDocumentacionInicial).pipe(
       mergeMap((wrappedDocumentacion) => {
-        return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef).pipe(
-          map(() => {
-            this.service
-              .deleteDocumentacionInicial(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
-              .pipe(
-                tap(_ => {
-                  this.deletedDocumentacionInicial =
-                    this.deletedDocumentacionInicial.filter(deletedDocumentacionInicial =>
-                      deletedDocumentacionInicial.value.id !== wrappedDocumentacion.value.id);
-                })
-              );
-          })
-        );
-
+        return this.service
+          .deleteDocumentacionInicial(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
+          .pipe(
+            switchMap(() => {
+              this.deletedDocumentacionInicial = this.deletedDocumentacionInicial.filter(deleted =>
+                deleted.value.id !== wrappedDocumentacion.value.id);
+              return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef);
+            })
+          );
       }));
   }
 
@@ -282,10 +277,10 @@ export class MemoriaDocumentacionFragment extends Fragment {
         return this.service
           .deleteDocumentacionSeguimientoAnual(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
           .pipe(
-            tap(_ => {
-              this.deletedDocumentacionSeguimientoAnual =
-                this.deletedDocumentacionSeguimientoAnual.filter(deletedDocumentacionSeguimientoAnual =>
-                  deletedDocumentacionSeguimientoAnual.value.id !== wrappedDocumentacion.value.id);
+            switchMap(() => {
+              this.deletedDocumentacionSeguimientoAnual = this.deletedDocumentacionSeguimientoAnual.filter(deleted =>
+                deleted.value.id !== wrappedDocumentacion.value.id);
+              return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef);
             })
           );
       }));
@@ -303,10 +298,10 @@ export class MemoriaDocumentacionFragment extends Fragment {
         return this.service
           .deleteDocumentacionSeguimientoFinal(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
           .pipe(
-            tap(_ => {
-              this.deletedDocumentacionSeguimientoFinal =
-                this.deletedDocumentacionSeguimientoFinal.filter(deletedDocumentacionSeguimientoFinal =>
-                  deletedDocumentacionSeguimientoFinal.value.id !== wrappedDocumentacion.value.id);
+            switchMap(() => {
+              this.deletedDocumentacionSeguimientoFinal = this.deletedDocumentacionSeguimientoFinal.filter(deleted =>
+                deleted.value.id !== wrappedDocumentacion.value.id);
+              return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef);
             })
           );
       }));
@@ -324,10 +319,10 @@ export class MemoriaDocumentacionFragment extends Fragment {
         return this.service
           .deleteDocumentacionRetrospectiva(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
           .pipe(
-            tap(_ => {
-              this.deletedDocumentacionSeguimientoFinal =
-                this.deletedDocumentacionSeguimientoFinal.filter(deletedDocumentacionSeguimientoFinal =>
-                  deletedDocumentacionSeguimientoFinal.value.id !== wrappedDocumentacion.value.id);
+            switchMap(() => {
+              this.deletedDocumentacionRetrospectiva = this.deletedDocumentacionRetrospectiva.filter(deleted =>
+                deleted.value.id !== wrappedDocumentacion.value.id);
+              return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef);
             })
           );
       }));
@@ -413,19 +408,18 @@ export class MemoriaDocumentacionFragment extends Fragment {
         } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
           this.deletedDocumentacionRetrospectiva.push(current[index]);
         }
-
-        current.splice(index, 1);
-        if (tipoDocumentacion === TIPO_DOCUMENTACION.INICIAL) {
-          this.documentacionesMemoria$.next(current);
-        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
-          this.documentacionesSeguimientoAnual$.next(current);
-        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
-          this.documentacionesSeguimientoFinal$.next(current);
-        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
-          this.documentacionesRetrospectiva$.next(current);
-        }
-        this.setChanges(true);
       }
+      current.splice(index, 1);
+      if (tipoDocumentacion === TIPO_DOCUMENTACION.INICIAL) {
+        this.documentacionesMemoria$.next(current);
+      } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
+        this.documentacionesSeguimientoAnual$.next(current);
+      } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
+        this.documentacionesSeguimientoFinal$.next(current);
+      } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
+        this.documentacionesRetrospectiva$.next(current);
+      }
+      this.setChanges(true);
     }
   }
 }
