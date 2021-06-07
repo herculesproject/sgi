@@ -586,7 +586,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   private loadColectivos() {
     const queryOptions: SgiRestFindOptions = {};
     queryOptions.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'false')
-      .and('responsableEconomico', SgiRestFilterOperator.EQUALS, 'false');
     this.subscriptions.push(this.rolProyectoService.findAll(queryOptions).subscribe(
       (response) => {
         response.items.forEach((rolProyecto: IRolProyecto) => {
@@ -605,8 +604,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     ));
 
     const queryOptionsResponsable: SgiRestFindOptions = {};
-    queryOptionsResponsable.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'true')
-      .or('responsableEconomico', SgiRestFilterOperator.EQUALS, 'true');
+    queryOptionsResponsable.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'true');
     this.rolProyectoService.findAll(queryOptionsResponsable).subscribe(
       (response) => {
         response.items.forEach((rolProyecto: IRolProyecto) => {
