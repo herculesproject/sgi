@@ -1480,7 +1480,7 @@
             <column name="nombre" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="responsable_economico" type="BOOLEAN"/>
+            <column name="orden" type="INT"/>
             <column defaultValueBoolean="false" name="rol_principal" type="BOOLEAN"/>
         </createTable>
     </changeSet>

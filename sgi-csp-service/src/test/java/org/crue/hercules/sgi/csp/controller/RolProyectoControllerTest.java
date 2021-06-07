@@ -173,7 +173,7 @@ public class RolProyectoControllerTest extends BaseControllerTest {
         .nombre("nombre-" + suffix)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
-        .responsableEconomico(Boolean.FALSE)
+        .orden(1)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
         .build();

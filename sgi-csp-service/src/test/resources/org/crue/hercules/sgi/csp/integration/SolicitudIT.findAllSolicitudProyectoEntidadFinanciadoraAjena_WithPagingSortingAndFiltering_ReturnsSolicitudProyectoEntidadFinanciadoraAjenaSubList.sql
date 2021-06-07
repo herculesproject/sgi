@@ -61,8 +61,8 @@ INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, tipo_presupuesto )
   VALUES (2, 'titulo-2', true, 'GLOBAL');
 
 -- ROL PROYECTO
-INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, responsable_economico, equipo, activo) 
-VALUES(1, '001', 'nombre-001', 'descripcion-001', false, false, 'INVESTIGACION', true);
+INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, orden, equipo, activo) 
+VALUES(1, '001', 'nombre-001', 'descripcion-001', false, 1, 'INVESTIGACION', true);
 
 -- TIPO ORIGEN FUENTE FINANCIACION
 INSERT INTO csp.tipo_origen_fuente_financiacion (id, nombre, activo) VALUES (1, 'nombre-001', true);

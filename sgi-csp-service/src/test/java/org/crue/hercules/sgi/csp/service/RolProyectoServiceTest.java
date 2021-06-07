@@ -53,8 +53,7 @@ public class RolProyectoServiceTest extends BaseServiceTest {
         .isEqualTo(responseData.getDescripcion());
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()")
         .isEqualTo(responseData.getRolPrincipal());
-    Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
-        .isEqualTo(responseData.getResponsableEconomico());
+    Assertions.assertThat(responseData.getOrden()).as("getOrden()").isEqualTo(responseData.getOrden());
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(responseData.getEquipo());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(rolProyectoExistente.getActivo());
   }
@@ -174,7 +173,7 @@ public class RolProyectoServiceTest extends BaseServiceTest {
         .nombre("nombre-" + suffix)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
-        .responsableEconomico(Boolean.FALSE)
+        .orden(1)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
         .build();

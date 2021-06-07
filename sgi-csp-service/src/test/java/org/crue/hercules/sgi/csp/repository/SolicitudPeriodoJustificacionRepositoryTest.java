@@ -38,9 +38,9 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    SolicitudProyecto solicitudProyecto = entityManager
-        .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE,
-            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    SolicitudProyecto solicitudProyecto = entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
@@ -57,18 +57,18 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
         .nombre("Rol1")
         .descripcion("Rol1")
         .rolPrincipal(Boolean.FALSE)
-        .responsableEconomico(Boolean.FALSE)
+        .orden(1)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(rolProyecto);
     // @formatter:on
 
-    SolicitudProyectoSocio solicitudProyectoSocio1 = entityManager.persistAndFlush(
-        new SolicitudProyectoSocio(null, solicitudProyecto.getId(), rolSocio, "001", 1, 3, 3, new BigDecimal(468), null));
+    SolicitudProyectoSocio solicitudProyectoSocio1 = entityManager.persistAndFlush(new SolicitudProyectoSocio(null,
+        solicitudProyecto.getId(), rolSocio, "001", 1, 3, 3, new BigDecimal(468), null));
 
-    SolicitudProyectoSocio solicitudProyectoSocio2 = entityManager.persistAndFlush(
-        new SolicitudProyectoSocio(null, solicitudProyecto.getId(), rolSocio, "002", 1, 3, 3, new BigDecimal(468), null));
+    SolicitudProyectoSocio solicitudProyectoSocio2 = entityManager.persistAndFlush(new SolicitudProyectoSocio(null,
+        solicitudProyecto.getId(), rolSocio, "002", 1, 3, 3, new BigDecimal(468), null));
 
     SolicitudProyectoSocioPeriodoJustificacion solicitudProyectoSocioPeriodoJustificacion1 = entityManager
         .persistAndFlush(new SolicitudProyectoSocioPeriodoJustificacion(null, solicitudProyectoSocio1.getId(), 1, 2, 3,

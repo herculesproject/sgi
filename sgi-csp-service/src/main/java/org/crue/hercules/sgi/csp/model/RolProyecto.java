@@ -82,10 +82,9 @@ public class RolProyecto extends BaseEntity {
   @Column(name = "rol_principal", columnDefinition = "boolean default false", nullable = true)
   private Boolean rolPrincipal;
 
-  /** Responsable económico */
-  @Column(name = "responsable_economico", columnDefinition = "boolean default false", nullable = true)
-  private Boolean responsableEconomico;
-
+  /** Orden */
+  @Column(name = "orden", nullable = true)
+  private Integer orden;
   /** Tipo Formulario Solicitud */
   @Column(name = "equipo", length = 50, nullable = false)
   @Enumerated(EnumType.STRING)

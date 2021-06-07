@@ -2946,7 +2946,7 @@ industries" />
       <column name="nombre" value="Investigadora principal" />
       <column name="descripcion" value="Investigadora principal" />
       <column name="rol_principal" value="true" />
-      <column name="responsable_economico" value="false" />
+      <column name="orden" value="1" />
       <column name="equipo" value="INVESTIGACION" />
       <column name="activo" value="true" />
     </insert>
@@ -2956,7 +2956,7 @@ industries" />
       <column name="nombre" value="Investigador" />
       <column name="descripcion" value="Miembro del equipo de investigación" />
       <column name="rol_principal" value="false" />
-      <column name="responsable_economico" value="false" />
+      <column name="orden" value="1" />
       <column name="equipo" value="INVESTIGACION" />
       <column name="activo" value="true" />
     </insert>

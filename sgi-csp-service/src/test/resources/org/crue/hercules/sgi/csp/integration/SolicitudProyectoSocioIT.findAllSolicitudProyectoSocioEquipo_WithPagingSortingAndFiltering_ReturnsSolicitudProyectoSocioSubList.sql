@@ -64,7 +64,7 @@ INSERT INTO csp.solicitud_proyecto_socio (id, solicitud_proyecto_id, rol_socio_i
 VALUES (1, 1, 1, 2, 6, 8, 4, 'ref-001');
 
 -- ROL PROYECTO
-INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, responsable_economico, equipo, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001', false, false, 'INVESTIGACION', true);
+INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, orden, equipo, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001', false, 1, 'INVESTIGACION', true);
 
 
 -- SOLICITUD PROYECTO EQUIPO SOCIO

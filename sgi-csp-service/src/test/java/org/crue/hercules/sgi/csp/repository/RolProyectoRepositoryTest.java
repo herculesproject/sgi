@@ -34,8 +34,7 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
         .isEqualTo(rolProyecto1.getDescripcion());
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()")
         .isEqualTo(rolProyecto1.getRolPrincipal());
-    Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
-        .isEqualTo(rolProyecto1.getResponsableEconomico());
+    Assertions.assertThat(responseData.getOrden()).as("getOrden()").isEqualTo(rolProyecto1.getOrden());
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(rolProyecto1.getEquipo());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -73,8 +72,7 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
         .isEqualTo(rolProyecto1.getDescripcion());
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()")
         .isEqualTo(rolProyecto1.getRolPrincipal());
-    Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
-        .isEqualTo(rolProyecto1.getResponsableEconomico());
+    Assertions.assertThat(responseData.getOrden()).as("getOrden()").isEqualTo(rolProyecto1.getOrden());
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(rolProyecto1.getEquipo());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -105,7 +103,7 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
         .nombre("nombre-" + suffix)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
-        .responsableEconomico(Boolean.FALSE)
+        .orden(1)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(activo)
         .build();
