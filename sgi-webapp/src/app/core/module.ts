@@ -12,12 +12,14 @@ export class Module {
   public static readonly CSP = new Module('CSP', marker('csp'), 'csp');
   public static readonly ETI = new Module('ETI', marker('eti'), 'eti');
   public static readonly INV = new Module('INV', marker('inv'), 'inv');
+  public static readonly PII = new Module('PII', marker('pii'), 'pii');
 
   static get values(): Module[] {
     return [
       this.CSP,
       this.ETI,
-      this.INV
+      this.INV,
+      this.PII
     ];
   }
 
@@ -29,6 +31,8 @@ export class Module {
         return Module.ETI;
       case Module.INV.path:
         return Module.INV;
+      case Module.PII.path:
+        return Module.PII;
       default:
         return undefined;
     }
@@ -42,6 +46,8 @@ export class Module {
         return Module.ETI;
       case Module.INV.code:
         return Module.INV;
+      case Module.PII.code:
+        return Module.PII;
       default:
         return undefined;
     }

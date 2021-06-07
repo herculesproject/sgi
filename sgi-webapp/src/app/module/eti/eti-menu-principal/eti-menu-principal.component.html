@@ -2,7 +2,7 @@
   <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-PEV-V'"
     [routerLink]="[ETI_ROUTE_NAMES.PETICIONES_EVALUACION]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
-    <p matLine *ngIf="opened">{{'eti.peticion-evaluacion' |  translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</p>
+    <p matLine *ngIf="opened">{{'eti.peticion-evaluacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</p>
   </a>
 
   <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-PEV-V'" [routerLink]="[ETI_ROUTE_NAMES.MEMORIAS]"

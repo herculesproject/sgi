@@ -1121,6 +1121,8 @@
   "msg.save.entity.success": "{gender,select,male{El} female{La} other{El/La}} {entity} se ha creado correctamente",
   "msg.unsaved": "Atención: Hay datos no guardados en la página actual, si sales de esta página, perderás esta información",
   "msg.update.entity.success": "Se ha editado correctamente {gender,select,male{el} female{la} other{el/La}} {entity}",
+  "pii": "PII - Propiedad industrial e intelectual",
+  "pii.root.title": "Inicio",
   "sge.proyecto": "Proyecto{count,plural,=0{} one{} other{s}} económico{count,plural,=0{} one{} other{s}}",
   "sge.proyecto.datos": "Introduzca el identificador SGE o el título de proyecto",
   "sge.proyecto.fecha-fin": "Fecha fin",

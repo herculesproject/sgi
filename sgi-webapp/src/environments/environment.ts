@@ -16,7 +16,8 @@ export const environment = {
     sgdoc: '/api/sgdoc',
     sge: '/api/sge',
     sgemp: '/api/sgemp',
-    sgo: '/api/sgo'
+    sgo: '/api/sgo',
+    pii: '/api/pii'
   },
   loggerConfig: {
     enableSourceMaps: true, // <-- THIS IS REQUIRED, to make "line-numbers" work in SourceMap Object defition (without evalSourceMap)
@@ -40,7 +41,8 @@ export const environment = {
       /\/api\/sgp.*/i,
       /\/api\/sgemp.*/i,
       /\/api\/sgo.*/i,
-      /\/api\/sge.*/i
+      /\/api\/sge.*/i,
+      /\/api\/pii.*/i,
     ]
   } as SgiAuthConfig,
   version
