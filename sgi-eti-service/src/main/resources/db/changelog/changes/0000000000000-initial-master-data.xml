@@ -724,6 +724,13 @@
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
       <column name="orden" value="5" />
     </insert>
+    <!-- FORMULARIO SEGUIMIENTO-ANUAL -->
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="SEGUIMIENTO_ANUAL" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
+      <column name="orden" value="1" />
+    </insert>
   </changeSet>
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-apartado">
@@ -737,7 +744,7 @@
       <column name="padre_id" />
       <column name="orden" value="1" />
       <column name="esquema">
-        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completa esta secci\u00f3n ir a <b>'Datos generales'<\/b>."},{"template":"<p>A continuaci\u00f3n se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social \u00faltimo que justifique su realizaci\u00f3n.<\/p>"},{"key":"valorSocial","type":"textarea","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10","expressionModelValue":"formState.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completa esta secci\u00f3n ir a <b>'Datos generales'<\/b>."},{"template":"<p>A continuaci\u00f3n se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social \u00faltimo que justifique su realizaci\u00f3n.<\/p>"},{"key":"valorSocial","type":"tipo-valor-social","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"expressionModelValue":"formState.memoria.peticionEvaluacion.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
       </column>
     </insert>
 
@@ -1295,7 +1302,7 @@
       <column name="padre_id" />
       <column name="orden" value="1" />
       <column name="esquema">
-        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completa esta sección ir a <b>'Datos generales'</b>."},{"template":"<p>A continuación se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social último que justifique su realización.</p>"},{"key":"valorSocial","type":"textarea","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10","expressionModelValue":"formState.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completa esta sección ir a <b>'Datos generales'</b>."},{"template":"<p>A continuación se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social último que justifique su realización.</p>"},{"key":"valorSocial","type":"tipo-valor-social","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"expressionModelValue":"formState.memoria.peticionEvaluacion.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
       </column>
     </insert>
 
@@ -1899,7 +1906,7 @@
       <column name="padre_id" />
       <column name="orden" value="1" />
       <column name="esquema">
-        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completar esta sección ir a <b>'Datos generales'</b>."},{"template":"<p>A continuación se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social último que justifique su realización.</p>"},{"key":"valorSocial","type":"textarea","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10","expressionModelValue":"formState.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completar esta sección ir a <b>'Datos generales'</b>."},{"template":"<p>A continuación se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social último que justifique su realización.</p>"},{"key":"valorSocial","type":"tipo-valor-social","templateOptions":{"label":"Valor social","placeholder":"","required":true,"disabled":true,"expressionModelValue":"formState.memoria.peticionEvaluacion.valorSocial"}},{"key":"otroValorSocial","type":"textarea","hideExpression":"formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'","templateOptions":{"placeholder":"Especificar","label":"Especificar","disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10", "expressionModelValue":"formState.memoria.peticionEvaluacion.otroValorSocial"}}]}] ]]>
       </column>
     </insert>
 
@@ -2376,6 +2383,19 @@
       <column name="orden" value="6" />
       <column name="esquema">
         <![CDATA[ [{"key":"ap5_6","wrappers":["expansion-panel"],"templateOptions":{"label":"5.6 Aclaraciones al comité"},"fieldGroup":[{"template":"<p>Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité.</p>"},{"key":"aclaracionesComite","type":"textarea","templateOptions":{"label":"Aclaraciones","placeholder":"Aclaraciones","required":false,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- FORMULARIO SEGUIMIENTO-ANUAL -->
+    <!-- Descripcion y resumen -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'Seguimiento Anual'))" />
+      <column name="nombre" value="Descripción y resumen" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"Descripción y resumen", "expanded":true},"fieldGroup":[{"template":"<p>Descripción de los conocimientos obtenidos con el proyecto de investigación<\/p>"},{"key":"descripcion","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Haga un breve resumen de los resultados obtenidos con el proyecto finalizado<\/p>"},{"key":"resumen","type":"textarea","templateOptions":{"placeholder":"Resumen","label":"Resumen","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
       </column>
     </insert>
 
