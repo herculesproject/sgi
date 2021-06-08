@@ -811,7 +811,6 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
-    peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion2");
@@ -886,7 +885,6 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
-    peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion2");
@@ -966,11 +964,10 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
-    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setPersonaRef("user-001");
+    peticionEvaluacion.setPersonaRef("user");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 

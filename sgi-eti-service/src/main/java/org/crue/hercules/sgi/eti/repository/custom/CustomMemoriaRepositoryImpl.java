@@ -153,9 +153,25 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     // Memorias activos
     Predicate memoriasActivas = cb.equal(root.get(Memoria_.activo), Boolean.TRUE);
+    // Memorias desde petición/solicitud de evaluación
+    Predicate memoriasDesdeSolicitudEvaluacion = cb
+        .isNull(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.solicitudConvocatoriaRef));
+    // Memorias desde solicitud convocatoria
+    Predicate memoriasDesdeSolicitudConvocatoria = cb.and(
+        cb.isNotNull(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.solicitudConvocatoriaRef)),
+        cb.or(
+            root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.estadoFinanciacion)
+                .in(Arrays.asList(PeticionEvaluacion.EstadoFinanciacion.CONCEDIDO,
+                    PeticionEvaluacion.EstadoFinanciacion.SOLICITADO)),
+            cb.and(
+                cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.estadoFinanciacion),
+                    PeticionEvaluacion.EstadoFinanciacion.DENEGADO),
+                cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tieneFondosPropios),
+                    Boolean.TRUE))));
 
     // WHERE
-    predicates.add(memoriasActivas);
+    predicates
+        .add(cb.and(memoriasActivas, cb.or(memoriasDesdeSolicitudEvaluacion, memoriasDesdeSolicitudConvocatoria)));
     predicates.add(cb.or(memoriasConvocatoriaOrdinariaExtraordinaria, memoriasConvocatoriaSeguimiento));
 
     // Join all restrictions

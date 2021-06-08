@@ -69,6 +69,24 @@
       <column name="persona_ref" value="3" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="id" valueSequenceNext="peticion_evaluacion_seq" />
+      <column name="codigo" value="PR_5" />
+      <column name="titulo" value="PeticionEvaluacion5" />
+      <column name="solicitud_convocatoria_ref" value="CONV_REF_001" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Práctica docente')" />
+      <column name="existe_financiacion" value="false" />
+      <column name="fecha_inicio" value="2020-07-09T00:00:00Z" />
+      <column name="fecha_fin" value="2021-07-09T23:59:59Z" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="INVESTIGACION_FUNDAMENTAL" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="persona_ref" value="5" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000000-equipo_trabajo">
     <insert tableName="equipo_trabajo">
