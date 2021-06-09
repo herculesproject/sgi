@@ -57,23 +57,28 @@ public class FuenteFinanciacionService {
     log.debug("create(FuenteFinanciacion fuenteFinanciacion) - start");
 
     Assert.isNull(fuenteFinanciacion.getId(),
-        ProblemMessage.builder().key(Assert.class, "isNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "isNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoAmbitoGeografico(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage(TipoAmbitoGeografico.class))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoAmbitoGeografico().getId(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(TipoAmbitoGeografico.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage(TipoOrigenFuenteFinanciacion.class))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(TipoOrigenFuenteFinanciacion.class)).build());
 
@@ -96,23 +101,28 @@ public class FuenteFinanciacionService {
     log.debug("update(FuenteFinanciacion fuenteFinanciacion) - start");
 
     Assert.notNull(fuenteFinanciacion.getId(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoAmbitoGeografico(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage(TipoAmbitoGeografico.class))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoAmbitoGeografico().getId(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(TipoAmbitoGeografico.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage(TipoOrigenFuenteFinanciacion.class))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
     Assert.notNull(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId(),
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(TipoOrigenFuenteFinanciacion.class)).build());
 
@@ -165,7 +175,8 @@ public class FuenteFinanciacionService {
     log.debug("activar(Long id) - start");
 
     Assert.notNull(id,
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
 
@@ -199,7 +210,8 @@ public class FuenteFinanciacionService {
     log.debug("desactivar(Long id) - start");
 
     Assert.notNull(id,
-        ProblemMessage.builder().key(Assert.class, "notNull")
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(FuenteFinanciacion.class)).build());
 
