@@ -130,6 +130,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   ProgramaRepository programaRepository;
   @Mock
   ProyectoProrrogaRepository proyectoProrrogaRepository;
+  @Mock
+  ProyectoPartidaService proyectoPartidaService;
+  @Mock
+  ConvocatoriaPartidaService convocatoriaPartidaService;
 
   private ProyectoService service;
 
@@ -146,7 +150,8 @@ public class ProyectoServiceTest extends BaseServiceTest {
         proyectoSocioPeriodoJustificacionService, convocatoriaConceptoGastoRepository,
         solicitudProyectoEntidadFinanciadoraAjenaRepository, proyectoProrrogaRepository,
         proyectoAreaConocimientoRepository, proyectoClasificacionRepository,
-        solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository);
+        solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository,
+        proyectoPartidaService, convocatoriaPartidaService);
   }
 
   @Test

@@ -3,10 +3,10 @@ package org.crue.hercules.sgi.csp.service.impl;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPartidaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPartidaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPartidaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaService {
 
   private final ConvocatoriaPartidaRepository repository;
-  private final ConvocatoriaService convocatoriaService;
+  private final ConfiguracionRepository configuracionRepository;
 
   public ConvocatoriaPartidaServiceImpl(ConvocatoriaPartidaRepository repository,
-      ConvocatoriaService convocatoriaService) {
+      ConfiguracionRepository configuracionRepository) {
     this.repository = repository;
-    this.convocatoriaService = convocatoriaService;
+    this.configuracionRepository = configuracionRepository;
   }
 
   /**
@@ -50,6 +50,7 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
 
     Assert.notNull(convocatoriaPartida.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaPartida");
+    this.validate(convocatoriaPartida);
 
     // TODO Incluir restricción de convocatorias asociadas a proyectos con
     // presupuesto
@@ -74,6 +75,7 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
 
     Assert.notNull(convocatoriaPartidaActualizar.getId(),
         "ConvocatoriaPartida id no puede ser null para actualizar un ConvocatoriaPartida");
+    this.validate(convocatoriaPartidaActualizar);
 
     // TODO Incluir restricción de convocatorias asociadas a proyectos con
     // presupuesto
@@ -144,4 +146,27 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
     log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - end");
     return returnValue;
   }
+
+  /**
+   * Se comprueba que los datos a guardar cumplan las validaciones oportunas
+   * 
+   * @param convocatoriaPartida datos del {@link ConvocatoriaPartida}
+   */
+  private void validate(ConvocatoriaPartida convocatoriaPartida) {
+    log.debug("validate(ConvocatoriaPartida convocatoriaPartida) - start");
+
+    Assert.isTrue(convocatoriaPartida.getConvocatoriaId() != null,
+        "Id Convocatoria no puede ser null para realizar la acción sobre ConvocatoriaPartida");
+
+    Assert.isTrue(convocatoriaPartida.getCodigo() != null,
+        "Codigo no puede ser null para realizar la acción sobre ConvocatoriaPartida");
+
+    configuracionRepository.findFirstByOrderByIdAsc().ifPresent(configuracion -> {
+      Assert.isTrue(convocatoriaPartida.getCodigo().matches(configuracion.getFormatoPartidaPresupuestaria()),
+          "Formato de codigo no valido");
+    });
+
+    log.debug("validate(ConvocatoriaPartida convocatoriaPartida) - end");
+  }
+
 }

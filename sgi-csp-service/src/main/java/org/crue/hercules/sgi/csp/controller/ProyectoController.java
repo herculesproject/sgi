@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
@@ -30,6 +31,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
@@ -122,6 +124,9 @@ public class ProyectoController {
   /** ProyectoProyectoSgeService service */
   private final ProyectoProyectoSgeService proyectoProyectoSgeService;
 
+  /** ProyectoPartidaService service */
+  private final ProyectoPartidaService proyectoPartidaService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -144,6 +149,7 @@ public class ProyectoController {
    * @param proyectoClasificacionService                      {@link ProyectoClasificacionService}.
    * @param proyectoAreaConocimientoService                   {@link proyectoAreaConocimientoService}.
    * @param proyectoProyectoSgeService                        {@link ProyectoProyectoSgeService}.
+   * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
@@ -157,7 +163,7 @@ public class ProyectoController {
       ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService,
       ProyectoClasificacionService proyectoClasificacionService,
       ProyectoAreaConocimientoService proyectoAreaConocimientoService,
-      ProyectoProyectoSgeService proyectoProyectoSgeService) {
+      ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -176,6 +182,7 @@ public class ProyectoController {
     this.proyectoClasificacionService = proyectoClasificacionService;
     this.proyectoAreaConocimientoService = proyectoAreaConocimientoService;
     this.proyectoProyectoSgeService = proyectoProyectoSgeService;
+    this.proyectoPartidaService = proyectoPartidaService;
   }
 
   /**
@@ -801,6 +808,29 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link ProyectoPartida}
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyecto-partidas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoPartida>> findAllProyectoPartida(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - start");
+    Page<ProyectoPartida> page = proyectoPartidaService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

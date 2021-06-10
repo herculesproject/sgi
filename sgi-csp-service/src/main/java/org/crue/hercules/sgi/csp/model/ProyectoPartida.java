@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,14 +28,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "convocatoria_partida")
+@Table(name = "proyecto_partida", uniqueConstraints = { @UniqueConstraint(columnNames = { "proyecto_id", "codigo",
+    "tipo_partida" }, name = "UK_PROYECTOPARTIDA_PROYECTO_CODIGO_TIPO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class ConvocatoriaPartida extends BaseEntity {
+public class ProyectoPartida extends BaseEntity {
 
   /**
    * Serial version
@@ -45,35 +45,41 @@ public class ConvocatoriaPartida extends BaseEntity {
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "convocatoria_partida_seq")
-  @SequenceGenerator(name = "convocatoria_partida_seq", sequenceName = "convocatoria_partida_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "proyecto_proyecto_sge_seq")
+  @SequenceGenerator(name = "proyecto_proyecto_sge_seq", sequenceName = "proyecto_proyecto_sge_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria Id */
-  @Column(name = "convocatoria_id", nullable = false)
+  /** Proyecto Id */
+  @Column(name = "proyecto_id", nullable = false)
   @NotNull
-  private Long convocatoriaId;
+  private Long proyectoId;
 
-  /** Código. */
+  /** Convocatoria partida id. */
+  @Column(name = "convocatoria_partida_id", nullable = true)
+  private Long convocatoriaPartidaId;
+
+  /** Convocatoria partida id. */
   @Column(name = "codigo", length = 50, nullable = false)
-  @NotEmpty
   @Size(max = 50)
+  @NotNull
   private String codigo;
 
-  /** descripcion. */
-  @Column(name = "descripcion", length = 50, nullable = true)
-  @Size(max = 50)
+  /** Descripcion */
+  @Column(name = "descripcion", length = 250, nullable = true)
+  @Size(max = 250)
   private String descripcion;
 
   /** Tipo partida */
-  @Column(name = "tipo_partida", length = 10)
+  @Column(name = "tipo_partida", length = 50, nullable = false)
   @Enumerated(EnumType.STRING)
+  @NotNull
   private TipoPartida tipoPartida;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAPARTIDA_CONVOCATORIA"))
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOPARTIDA_PROYECTO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  private final Convocatoria convocatoria = null;
+  private final Proyecto proyecto = null;
+
 }

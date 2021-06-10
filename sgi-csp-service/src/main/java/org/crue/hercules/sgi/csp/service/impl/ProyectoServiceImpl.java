@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -30,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -76,10 +78,12 @@ import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
@@ -147,6 +151,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository;
   private final ProgramaRepository programaRepository;
   private final ProyectoProrrogaRepository proyectoProrrogaRepository;
+  private final ProyectoPartidaService proyectoPartidaService;
+  private final ConvocatoriaPartidaService convocatoriaPartidaService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -177,7 +183,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoClasificacionRepository proyectoClasificacionRepository,
       SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository,
       SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository,
-      ProgramaRepository programaRepository) {
+      ProgramaRepository programaRepository, ProyectoPartidaService proyectoPartidaService,
+      ConvocatoriaPartidaService convocatoriaPartidaService) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -213,6 +220,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.solicitudProyectoClasificacionRepository = solicitudProyectoClasificacionRepository;
     this.programaRepository = programaRepository;
     this.proyectoProrrogaRepository = proyectoProrrogaRepository;
+    this.proyectoPartidaService = proyectoPartidaService;
+    this.convocatoriaPartidaService = convocatoriaPartidaService;
   }
 
   /**
@@ -630,7 +639,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.copyAreaTematica(proyecto);
     this.copyPeriodoSeguimiento(proyecto);
     this.copyConfiguracionEconomica(proyecto);
-
+    this.copyPartidasPresupuestarias(proyecto.getId(), proyecto.getConvocatoriaId());
   }
 
   /**
@@ -1116,6 +1125,33 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     });
     log.debug("copyConfiguracionEconomica(Proyecto proyecto) - end");
+  }
+
+  /**
+   * Copia las partidas presupuestarias de una convocatoria a un proyecto
+   * 
+   * @param proyectoId     Identificador del proyecto de destino
+   * @param convocatoriaId Identificador de la convocatoria
+   */
+  private void copyPartidasPresupuestarias(Long proyectoId, Long convocatoriaId) {
+    log.debug("copyPartidasPresupuestarias(Long proyectoId, Long convocatoriaId) - start");
+    Page<ConvocatoriaPartida> partidasConvocatoria = convocatoriaPartidaService.findAllByConvocatoria(convocatoriaId,
+        null, Pageable.unpaged());
+
+    if (partidasConvocatoria != null) {
+      partidasConvocatoria.stream().forEach((partidaConvocatoria) -> {
+        log.debug("Copy copyPartidasPresupuestarias with id: {0}", partidaConvocatoria.getId());
+        ProyectoPartida partidaProyecto = new ProyectoPartida();
+        partidaProyecto.setProyectoId(proyectoId);
+        partidaProyecto.setCodigo(partidaConvocatoria.getCodigo());
+        partidaProyecto.setConvocatoriaPartidaId(partidaConvocatoria.getId());
+        partidaProyecto.setDescripcion(partidaConvocatoria.getDescripcion());
+        partidaProyecto.setTipoPartida(partidaConvocatoria.getTipoPartida());
+
+        this.proyectoPartidaService.create(partidaProyecto);
+      });
+    }
+    log.debug("copyPartidasPresupuestarias(Long proyectoId, Long convocatoriaId) - end");
   }
 
   /**
