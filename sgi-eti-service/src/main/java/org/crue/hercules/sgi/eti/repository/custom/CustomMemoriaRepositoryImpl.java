@@ -4,12 +4,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
@@ -35,6 +37,7 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
+import org.crue.hercules.sgi.eti.repository.predicate.MemoriaPredicateBuilder;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,6 +47,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -209,8 +216,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual), root.get(Memoria_.requiereRetrospectiva),
-        root.get(Memoria_.retrospectiva), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
-        getFechaLimite(root, cb, cq).alias("fechaLimite"),
+        root.get(Memoria_.retrospectiva), cb.nullLiteral(Instant.class), cb.nullLiteral(Instant.class),
         isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo));
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
@@ -218,62 +224,11 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     TypedQuery<MemoriaPeticionEvaluacion> typedQuery = entityManager.createQuery(cq);
 
-    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList();
+    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList().stream().map(this::resolveMemoriaDates)
+        .collect(Collectors.toList());
 
     log.debug("findMemoriasEvaluacion(Long idPeticionEvaluacion, String personaRefConsulta) - end");
     return result;
-  }
-
-  /**
-   * Recupera la fecha de evaluación de la máxima versión de una memoria.
-   * 
-   * @param root root
-   * @param cb   criteria builder
-   * @param cq   criteria query
-   * @return subquery que recupera la fecha de evaluación.
-   */
-  private Subquery<Instant> getFechaEvaluacion(Root<Memoria> root, CriteriaBuilder cb,
-      CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
-    log.debug("getFechaEvaluacion : {} - start");
-
-    Subquery<Instant> queryFechaEvaluacion = cq.subquery(Instant.class);
-    Root<Evaluacion> subqRoot = queryFechaEvaluacion.from(Evaluacion.class);
-
-    queryFechaEvaluacion.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion))
-        .where(cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
-            cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)),
-            cb.equal(subqRoot.get(Evaluacion_.activo), true),
-            cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.activo), true));
-
-    log.debug("getFechaEvaluacion : {} - end");
-
-    return queryFechaEvaluacion;
-  }
-
-  /**
-   * Recupera la fecha limite de la máxima versión de una memoria.
-   * 
-   * @param root root
-   * @param cb   criteria builder
-   * @param cq   criteria query
-   * @return subquery que recupera la fecha limite.
-   */
-  private Subquery<Instant> getFechaLimite(Root<Memoria> root, CriteriaBuilder cb,
-      CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
-    log.debug("getFechaLimite : {} - start");
-
-    Subquery<Instant> queryFechaLimite = cq.subquery(Instant.class);
-    Root<Evaluacion> subqRoot = queryFechaLimite.from(Evaluacion.class);
-
-    queryFechaLimite.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaLimite)).where(
-        cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
-        cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)),
-        cb.equal(subqRoot.get(Evaluacion_.activo), true),
-        cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.activo), true));
-
-    log.debug("getFechaLimite : {} - end");
-
-    return queryFechaLimite;
   }
 
   /**
@@ -328,9 +283,10 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
       predicatesCount.add(predicateSpecsCount);
     }
 
+    Expression<Instant> defaultDate = cb.nullLiteral(Instant.class);
+
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
-        root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
-        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
+        root.get(Memoria_.comite), root.get(Memoria_.estadoActual), defaultDate, defaultDate,
         isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo))
         .distinct(true);
 
@@ -350,11 +306,135 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
       typedQuery.setMaxResults(pageable.getPageSize());
     }
 
-    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList();
+    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList().stream().map(this::resolveMemoriaDates)
+        .collect(Collectors.toList());
+
     Page<MemoriaPeticionEvaluacion> returnValue = new PageImpl<MemoriaPeticionEvaluacion>(result, pageable, count);
 
     log.debug("findAllMemoriasEvaluaciones( Pageable pageable) - end");
     return returnValue;
+  }
+
+  private MemoriaPeticionEvaluacion resolveMemoriaDates(MemoriaPeticionEvaluacion memoria) {
+    FechasMemoria fechas = this.getFechaEvaluacionAndFechaLimite(memoria);
+    memoria.setFechaEvaluacion(fechas.getFechaEvaluacion());
+    memoria.setFechaLimite(fechas.getFechaLimite());
+    return memoria;
+  }
+
+  private FechasMemoria getFechaEvaluacionAndFechaLimite(MemoriaPeticionEvaluacion memoria) {
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<FechasMemoria> cq = cb.createQuery(FechasMemoria.class);
+    Root<Evaluacion> root = cq.from(Evaluacion.class);
+    Root<ConvocatoriaReunion> rootConvocatoriaReunion = cq.from(ConvocatoriaReunion.class);
+
+    MemoriaPredicateBuilder memoriaPredicateBuilder = MemoriaPredicateBuilder.builder();
+
+    final int estadoMemoria = memoria.getEstadoActual().getId().intValue();
+
+    switch (estadoMemoria) {
+      case Constantes.ESTADO_MEMORIA_COMPLETADA:
+      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA:
+        if (!memoria.isActivo()) {
+          return new FechasMemoria();
+        }
+        cq.orderBy(cb.asc(rootConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion)));
+        memoriaPredicateBuilder.filterWithTipoConvocatoriaReunionOrdinarioOrExtraordinario(cb, rootConvocatoriaReunion);
+        memoriaPredicateBuilder.filterWithComiteConvocatoriaReunion(rootConvocatoriaReunion, cb, memoria.getComite());
+        memoriaPredicateBuilder.filterWithFechaLimiteConvocatoriaReunionGreatestThanNowConvocatoriaReunion(cb,
+            rootConvocatoriaReunion);
+        memoriaPredicateBuilder.filterWithActasNotInConvocatoriasFinalizadasConvocatoriaReunion(cb,
+            rootConvocatoriaReunion, cq);
+        prepareCriteriaWithConvocatoriaReunionUnlinked(cb, cq, rootConvocatoriaReunion, memoriaPredicateBuilder);
+        break;
+      case Constantes.ESTADO_MEMORIA_EN_EVALUACION:
+      case Constantes.ESTADO_MEMORIA_PENDIENTE_CORRECCIONES:
+      case Constantes.ESTADO_MEMORIA_NO_PROCEDE_EVALUAR:
+      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA:
+      case Constantes.ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS:
+      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION:
+        memoriaPredicateBuilder.filterWithTipoEvaluacionEqualsTo(cb, root, Constantes.TIPO_EVALUACION_MEMORIA);
+        memoriaPredicateBuilder.filterWithLastVersion(cb, root, memoria.getId(), cq);
+        prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());
+        break;
+      case Constantes.ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL:
+      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL:
+        this.resolveNextEvaluationPredicatesWhereConvocatoriaReunionIsOfTypeSeguimiento(memoria, cb,
+            rootConvocatoriaReunion, memoriaPredicateBuilder, cq);
+        prepareCriteriaWithConvocatoriaReunionUnlinked(cb, cq, rootConvocatoriaReunion, memoriaPredicateBuilder);
+        break;
+      case Constantes.ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL:
+      case Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION:
+      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_ANUAL:
+        resolveNextEvaluationPredicatesForAnyConvocatoriaReunionType(memoria, cb, root, memoriaPredicateBuilder,
+            Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL, cq);
+        prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());
+        break;
+      case Constantes.ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL:
+      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL:
+        this.resolveNextEvaluationPredicatesWhereConvocatoriaReunionIsOfTypeSeguimiento(memoria, cb,
+            rootConvocatoriaReunion, memoriaPredicateBuilder, cq);
+        prepareCriteriaWithConvocatoriaReunionUnlinked(cb, cq, rootConvocatoriaReunion, memoriaPredicateBuilder);
+        break;
+      case Constantes.ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL:
+      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES:
+      case Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL:
+      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_FINAL:
+        resolveNextEvaluationPredicatesForAnyConvocatoriaReunionType(memoria, cb, root, memoriaPredicateBuilder,
+            Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL, cq);
+        prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());
+        break;
+      default:
+        return new FechasMemoria();
+    }
+
+    log.debug("getFechaEvaluacion : {} - end");
+
+    return this.entityManager.createQuery(cq).getResultList().stream().findFirst().orElseGet(FechasMemoria::new);
+
+  }
+
+  private void prepareCriteriaWithConvocatoriaReunionLinked(CriteriaBuilder cb, CriteriaQuery<FechasMemoria> cq,
+      Root<Evaluacion> root, MemoriaPredicateBuilder memoriaPredicateBuilder, Long memoriaId) {
+
+    memoriaPredicateBuilder.filterWithMemoryIdPredicate(root, cb, memoriaId);
+    memoriaPredicateBuilder.filterWithEvaluacionActiva(cb, root);
+    memoriaPredicateBuilder.filterWithMemoriaActiva(cb, root);
+
+    cq.orderBy(cb.asc(root.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion)));
+
+    cq.multiselect(root.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion),
+        root.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaLimite))
+        .where(memoriaPredicateBuilder.build());
+  }
+
+  private void prepareCriteriaWithConvocatoriaReunionUnlinked(CriteriaBuilder cb, CriteriaQuery<FechasMemoria> cq,
+      Root<ConvocatoriaReunion> root, MemoriaPredicateBuilder memoriaPredicateBuilder) {
+
+    cq.orderBy(cb.asc(root.get(ConvocatoriaReunion_.fechaEvaluacion)));
+
+    cq.multiselect(root.get(ConvocatoriaReunion_.fechaEvaluacion), root.get(ConvocatoriaReunion_.fechaLimite))
+        .where(memoriaPredicateBuilder.build());
+  }
+
+  private void resolveNextEvaluationPredicatesForAnyConvocatoriaReunionType(final MemoriaPeticionEvaluacion memoria,
+      final CriteriaBuilder cb, final Root<Evaluacion> root, final MemoriaPredicateBuilder memoriaPredicateBuilder,
+      final Long tipoEvaluacion, final CriteriaQuery<FechasMemoria> cq) {
+
+    memoriaPredicateBuilder.filterWithTipoEvaluacionEqualsTo(cb, root, tipoEvaluacion);
+    memoriaPredicateBuilder.filterWithLastVersion(cb, root, memoria.getId(), cq);
+  }
+
+  private void resolveNextEvaluationPredicatesWhereConvocatoriaReunionIsOfTypeSeguimiento(
+      final MemoriaPeticionEvaluacion memoria, final CriteriaBuilder cb, final Root<ConvocatoriaReunion> root,
+      final MemoriaPredicateBuilder memoriaPredicateBuilder, final CriteriaQuery<FechasMemoria> cq) {
+
+    memoriaPredicateBuilder
+        .filterWithAnyTipoConvocatoriaReunionNotJoined(cb, root, Constantes.TIPO_CONVOCATORIA_REUNION_SEGUIMIENTO)
+        .filterWithComiteConvocatoriaReunion(root, cb, memoria.getComite())
+        .filterWithFechaLimiteConvocatoriaReunionGreatestThanNowConvocatoriaReunion(cb, root)
+        .filterWithActasNotInConvocatoriasFinalizadasConvocatoriaReunion(cb, root, cq);
   }
 
   /**
@@ -416,4 +496,12 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     return queryResponsable;
   }
 
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class FechasMemoria {
+    Instant fechaEvaluacion;
+    Instant fechaLimite;
+  }
 }
