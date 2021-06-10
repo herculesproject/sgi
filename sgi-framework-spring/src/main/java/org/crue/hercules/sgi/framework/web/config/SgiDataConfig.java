@@ -51,7 +51,7 @@ public class SgiDataConfig {
         }
       }
     }
-    log.warn("Unknow database driver: {0}", driverClassName);
+    log.warn("Unknown database driver: {0}", driverClassName);
     log.debug("databaseDriver(String driverClassName) - end");
     return DatabaseDriver.UNKNOWN;
   }
