@@ -47,6 +47,7 @@ import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gesto
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
+import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
@@ -444,6 +445,21 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     const url = `${this.endpointUrl}/${id}/proyecto-prorrogas`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera los IProyectoPartida del proyecto
+   *
+   * @param proyectoId Id del proyecto
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoPartida del proyecto
+   */
+  findAllProyectoPartidas(proyectoId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoPartida>> {
+    return this.find<IProyectoPartida, IProyectoPartida>(
+      `${this.endpointUrl}/${proyectoId}/proyecto-partidas`,
+      options
     );
   }
 

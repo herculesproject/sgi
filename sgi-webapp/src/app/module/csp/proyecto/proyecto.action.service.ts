@@ -53,6 +53,8 @@ import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorro
 import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+import { ProyectoPartidasPresupuestariasFragment } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.fragment';
+import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
 
 export interface IProyectoData {
   proyecto: IProyecto;
@@ -79,7 +81,8 @@ export class ProyectoActionService extends ActionService {
     HISTORICO_ESTADOS: 'historico-estados',
     DOCUMENTOS: 'documentos',
     CLASIFICACIONES: 'clasificaciones',
-    PROYECTOS_SGE: 'proyectos-sge'
+    PROYECTOS_SGE: 'proyectos-sge',
+    PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -99,6 +102,7 @@ export class ProyectoActionService extends ActionService {
   private clasificaciones: ProyectoClasificacionesFragment;
   private areaConocimiento: ProyectoAreaConocimientoFragment;
   private proyectosSge: ProyectoProyectosSgeFragment;
+  private partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
 
   private readonly data: IProyectoData;
 
@@ -152,6 +156,7 @@ export class ProyectoActionService extends ActionService {
     areaConocimientoService: AreaConocimientoService,
     proyectoProyectoSgeService: ProyectoProyectoSgeService,
     proyectoSgeService: ProyectoSgeService,
+    proyectoPartidaService: ProyectoPartidaService,
     translate: TranslateService,
   ) {
     super();
@@ -193,6 +198,8 @@ export class ProyectoActionService extends ActionService {
         clasificacionService, this.readonly);
       this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
         proyectoSgeService, this.readonly);
+      this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, proyectoService, proyectoPartidaService,
+        this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -210,6 +217,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
       this.addFragment(this.FRAGMENT.AREA_CONOCIMIENTO, this.areaConocimiento);
       this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
+      this.addFragment(this.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, this.partidasPresupuestarias);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {

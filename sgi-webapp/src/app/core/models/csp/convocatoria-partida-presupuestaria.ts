@@ -1,20 +1,5 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IPartidaPresupuestaria } from './partida-presupuestaria';
 
-export interface IConvocatoriaPartidaPresupuestaria {
-  id: number;
+export interface IConvocatoriaPartidaPresupuestaria extends IPartidaPresupuestaria {
   convocatoriaId: number;
-  codigo: string;
-  descripcion: string;
-  tipoPartida: TipoPartida;
 }
-
-
-export enum TipoPartida {
-  GASTO = 'GASTO',
-  INGRESO = 'INGRESO'
-}
-
-export const TIPO_PARTIDA_MAP: Map<TipoPartida, string> = new Map([
-  [TipoPartida.GASTO, marker(`csp.convocatoria-partida-presupuestaria.tipo-partida.GASTO`)],
-  [TipoPartida.INGRESO, marker(`csp.convocatoria-partida-presupuestaria.tipo-partida.INGRESO`)]
-]);

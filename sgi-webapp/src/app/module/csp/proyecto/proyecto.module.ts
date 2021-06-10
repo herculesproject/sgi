@@ -27,6 +27,7 @@ import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/p
 import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.component';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
 import { ProyectoPaqueteTrabajoComponent } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.component';
+import { ProyectoPartidasPresupuestariasComponent } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.component';
 import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
 import { ProyectoPlazosComponent } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
@@ -63,7 +64,8 @@ import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyect
     ProyectoDocumentosComponent,
     ProyectoClasificacionesComponent,
     ProyectoAreaConocimientoComponent,
-    ProyectoProyectosSgeComponent
+    ProyectoProyectosSgeComponent,
+    ProyectoPartidasPresupuestariasComponent
   ],
   imports: [
     SharedModule,

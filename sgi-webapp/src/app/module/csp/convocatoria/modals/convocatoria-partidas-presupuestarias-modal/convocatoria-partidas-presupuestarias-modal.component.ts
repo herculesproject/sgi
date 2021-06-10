@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { TIPO_PARTIDA_MAP } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
-import { IConvocatoriaPartidaPresupuestaria, TIPO_PARTIDA_MAP } from '@core/models/csp/convocatoria-partida-presupuestaria';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
@@ -75,7 +75,9 @@ export class ConvocatoriaPartidaPresupuestariaModalComponent
     this.translate.get(
       CONVOCATORIA_PARTIDAS_PRESUPUESTARIAS_DESCRIPCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamDescripcionEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       CONVOCATORIA_PARTIDAS_PRESUPUESTARIAS_TIPO_PARTIDA_KEY,

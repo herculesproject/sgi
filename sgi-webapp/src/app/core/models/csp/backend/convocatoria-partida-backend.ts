@@ -1,4 +1,4 @@
-import { TipoPartida } from "../convocatoria-partida-presupuestaria";
+import { TipoPartida } from '@core/enums/tipo-partida';
 
 export interface IConvocatoriaPartidaPresupuestariaBackend {
   /** Id */
@@ -11,5 +11,4 @@ export interface IConvocatoriaPartidaPresupuestariaBackend {
   descripcion: string;
   /** Tipo de partida */
   tipoPartida: TipoPartida;
-
 }
