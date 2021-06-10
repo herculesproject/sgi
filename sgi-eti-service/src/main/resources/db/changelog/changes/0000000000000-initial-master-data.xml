@@ -731,6 +731,13 @@
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
       <column name="orden" value="1" />
     </insert>
+    <!-- FORMULARIO RETROSPECTIVA -->
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="RETROSPECTIVA" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
+      <column name="orden" value="1" />
+    </insert>
   </changeSet>
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-apartado">
@@ -2420,6 +2427,55 @@
       <column name="orden" value="1" />
       <column name="esquema">
         <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"Descripción y resumen", "expanded":true},"fieldGroup":[{"template":"<p>Descripción de los conocimientos obtenidos con el proyecto de investigación<\/p>"},{"key":"descripcion","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Haga un breve resumen de los resultados obtenidos con el proyecto finalizado<\/p>"},{"key":"resumen","type":"textarea","templateOptions":{"placeholder":"Resumen","label":"Resumen","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- RETROSPECTIVA -->
+    <!-- Objetivos -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'Retrospectiva'))" />
+      <column name="nombre" value="Objetivos" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"Objetivos","expanded":true},"fieldGroup":[{"template":"<p>Señale si se han alcanzado los objetivos del proyecto de investigación.</p>"},{"key":"cumpleObjetivosRadio","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"},{"value":"parcialmente","label":"Parcialmente"}]}},{"template":"<p>Justifique la respuesta:</p>"},{"key":"justificar","type":"textarea","templateOptions":{"placeholder":"Justificación","label":"Justificación","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- Supervisión -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'Retrospectiva'))" />
+      <column name="nombre" value="Supervisión" />
+      <column name="padre_id" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_2","wrappers":["expansion-panel"],"templateOptions":{"label":"Supervisión","expanded":true},"fieldGroup":[{"template":"<p>Describa los resultados de la aplicación del PROTOCOLO DE SUPERVISIÓN indicando las medidas correctoras aplicadas:</p>"},{"key":"describir","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- Severidad -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'Retrospectiva'))" />
+      <column name="nombre" value="Severidad" />
+      <column name="padre_id" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_3","wrappers":["expansion-panel"],"templateOptions":{"label":"Severidad","expanded":true},"fieldGroup":[{"template":"<p>¿Cuántos animales se han utilizado en total?</p>"},{"key":"numAnimalesUtilizados","type":"input","templateOptions":{"label":"Número de animales utilizados","placeholder":"","description":"","required":true}},{"template":"<p>¿Cuántos animales han llegado hasta el final del experimento?</p>"},{"key":"numAnimalesFinal","type":"input","templateOptions":{"label":"Número de animales final","placeholder":"","description":"","required":true}},{"template":"<p>¿Qué nivel de severidad real han sufrido los animales, diferenciando si fuera preciso a unos de otros, p.ej. los controles?</p>"},{"key":"nivelSeveridadSufrido","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>¿Cuántos animales se han retirado del experimento porque el proceso técnico no ha ido bien y se han tenido que desechar?</p>"},{"key":"numAnimalesRetirados","type":"input","templateOptions":{"label":"Número de animales retirados","placeholder":"","description":"","required":true}},{"template":"<p>Describa las razones, el momento y nivel de severidad alcanzado:</p>"},{"key":"nivelSeveridadAlcanzado","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>¿A cuántos animales se ha aplicado el criterio de punto final?</p>"},{"key":"numAnimalesPuntoFinal","type":"input","templateOptions":{"label":"Número de animales punto final","placeholder":"","description":"","required":true}},{"template":"<p>Señale el momento de aplicación:</p>"},{"key":"aplicacion","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Describa cualquier otra cuestión que considere de interés sobre los animales y el desarrollo de los experimentos de su investigación.</p>"},{"key":"descripcion","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Señale las medidas adoptadas para el cumplimiento de los requisitos éticos en la investigación.</p>"},{"key":"medidas","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- Reducción, reemplazo y refinamiento -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'Retrospectiva'))" />
+      <column name="nombre" value="Reducción, reemplazo y refinamiento" />
+      <column name="padre_id" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_4","wrappers":["expansion-panel"],"templateOptions":{"label":"Reducción, reemplazo y refinamiento","expanded":true},"fieldGroup":[{"template":"<p>Indique aquellas propuestas que considere que pueden contribuir a una mejor aplicación de la reducción, el reemplazo y el refinamiento en el uso de animales en investigación: </p><br><p>Reducción.</p>"},{"key":"reduccion","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Reemplazo.</p>"},{"key":"reemplazo","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}},{"template":"<p>Refinamiento.</p>"},{"key":"refinamiento","type":"textarea","templateOptions":{"placeholder":"Descripción","label":"Descripción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"20"}}]}] ]]>
       </column>
     </insert>
 
