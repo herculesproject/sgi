@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.framework.data.domain.SgiAuditorAware;
 import org.hibernate.cfg.AvailableSettings;
@@ -85,7 +86,7 @@ public class SgiDataConfig {
   }
 
   @Bean
-  public static HibernatePropertiesCustomizer hibernatePropertiesCustomizer() {
+  public static HibernatePropertiesCustomizer hibernatePropertiesCustomizer(Validator validator) {
     return new HibernatePropertiesCustomizer() {
       @Override
       public void customize(Map<String, Object> hibernateProperties) {
@@ -95,6 +96,11 @@ public class SgiDataConfig {
           log.info("{0}={1}", HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM, propertyValue);
           hibernateProperties.put(AvailableSettings.DEFAULT_SCHEMA, propertyValue);
         }
+        // Prevent Hibernate Validator from creating it's own ConstraintValidatorManager
+        // for entity level validation
+        // see:
+        // https://stackoverflow.com/questions/56542699/hibernate-validator-in-spring-boot-using-different-constraintvalidatormanager
+        hibernateProperties.put("javax.persistence.validation.factory", validator);
         log.debug("customize(Map<String, Object> hibernateProperties) - end");
       }
     };
