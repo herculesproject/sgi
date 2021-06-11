@@ -166,13 +166,15 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
    * @param memoria la memoria a reestablecer el estado
    */
   public recuperarEstadoAnterior(memoria: IMemoriaPeticionEvaluacion) {
-    this.dialogService.showConfirmation(MSG_RECUPERAR_ESTADO).pipe(
+    const dialogServiceSubscription = this.dialogService.showConfirmation(MSG_RECUPERAR_ESTADO).pipe(
       map((aceptado: boolean) => {
         if (aceptado) {
           this.recuperarEstadoAnteriorMemoria(memoria);
         }
       })
-    );
+    ).subscribe();
+
+    this.subscriptions.push(dialogServiceSubscription);
   }
 
   hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
