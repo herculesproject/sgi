@@ -29,9 +29,10 @@ import lombok.extern.slf4j.Slf4j;
  * {@link EntityManager} .
  */
 @Slf4j
-public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
+public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> implements SgiRepository<T, ID> {
 
   private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
+  private final EntityManager em;
 
   /**
    * Creates a new {@link SgiJpaRepository} to manage objects of the given
@@ -43,6 +44,7 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
   public SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
     super(entityInformation, entityManager);
     log.debug("SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) - start");
+    this.em = entityManager;
     log.debug("SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) - end");
   }
 
@@ -56,6 +58,7 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
   public SgiJpaRepository(Class<T> domainClass, EntityManager em) {
     super(domainClass, em);
     log.debug("SgiJpaRepository(Class<T> domainClass, EntityManager em) - start");
+    this.em = em;
     log.debug("SgiJpaRepository(Class<T> domainClass, EntityManager em) - end");
   }
 
@@ -130,6 +133,20 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
         : readPage(query, probeType, pageable, spec);
     log.debug("findAll(Example<S> example, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Bring EntityManager.refresh to all of Spring Data repositories.
+   * <p>
+   * The refresh method refreshes the state of an instance from the database, and
+   * overwrites the copy held by the EntityManager. This ensures the EntityManager
+   * has the most up to date version of the data.
+   * 
+   * @param t the instance to be refreshed
+   */
+  @Override
+  public void refresh(T t) {
+    em.refresh(t);
   }
 
   /**
