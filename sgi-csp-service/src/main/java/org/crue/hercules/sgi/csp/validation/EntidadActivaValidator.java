@@ -10,14 +10,14 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 public class EntidadActivaValidator implements ConstraintValidator<EntidadActiva, Object> {
-  private ApplicationContext applicationContext;
   private ActivableRepository repository;
   private Class<?> entityClass;
 
-  public EntidadActivaValidator(ApplicationContext applicationContext) throws BeansException {
-    this.applicationContext = applicationContext;
+  public EntidadActivaValidator() throws BeansException {
   }
 
   @Override
@@ -43,10 +43,12 @@ public class EntidadActivaValidator implements ConstraintValidator<EntidadActiva
       throw new IllegalArgumentException(
           "The repositoy class " + repositoryClass.getName() + " is not " + ActivableRepository.class.getName());
     }
+    ApplicationContext applicationContext = ApplicationContextSupport.getApplicationContext();
     repository = (ActivableRepository) applicationContext.getBean(repositoryClass);
   }
 
   @Override
+  @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
   public boolean isValid(Object value, ConstraintValidatorContext context) {
     // fast-return
     if (value == null) {

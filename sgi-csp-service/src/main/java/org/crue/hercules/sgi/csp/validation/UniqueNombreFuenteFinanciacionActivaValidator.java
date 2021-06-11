@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 public class UniqueNombreFuenteFinanciacionActivaValidator
     implements ConstraintValidator<UniqueNombreFuenteFinanciacionActiva, FuenteFinanciacion> {
@@ -19,6 +21,7 @@ public class UniqueNombreFuenteFinanciacionActivaValidator
   }
 
   @Override
+  @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
   public boolean isValid(FuenteFinanciacion value, ConstraintValidatorContext context) {
     if (value == null || value.getNombre() == null) {
       return false;
