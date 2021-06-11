@@ -3,7 +3,13 @@ package org.crue.hercules.sgi.framework.problem.spring.web;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ElementKind;
+import javax.validation.Path;
 
 import org.crue.hercules.sgi.framework.problem.Problem;
 import org.crue.hercules.sgi.framework.problem.Problem.ProblemBuilder;
@@ -79,6 +85,33 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         .detail(ex.getMessage()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) - end");
+    return response;
+  }
+
+  /**
+   * ConstraintViolationException is thrown by the MethodValidationInterceptor,
+   * which matches on classes or method arguments annotated with @Validated (see
+   * MethodValidationPostProcessor).
+   * <p>
+   * <code>@RequestParam @Min(2) Integer parameter</code> throws
+   * ConstraintViolationException
+   * <p>
+   * <code>@RequestBody @Valid BodyModel body</code> throws
+   * MethodArgumentNotValidException
+   * <p>
+   * see: https://github.com/zalando/problem-spring-web/issues/3
+   */
+  @ExceptionHandler({ ConstraintViolationException.class })
+  public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+      WebRequest request) throws Exception {
+    log.debug("handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) - start");
+    HttpHeaders headers = new HttpHeaders();
+
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    Problem problem = from(ex.getConstraintViolations()).type(VALIDATION_PROBLEM_TYPE)
+        .title(ProblemMessage.builder().key(HttpStatus.class, "BAD_REQUEST").build()).status(status.value()).build();
+    ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
+    log.debug("handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) - end");
     return response;
   }
 
@@ -398,4 +431,48 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         .detail(ProblemMessage.builder().key(BindingResult.class).build()).extension("errors", details);
   }
 
+  private ProblemBuilder from(Set<ConstraintViolation<?>> constraintViolations) {
+    ArrayList<FieldError> details = new ArrayList<>();
+    constraintViolations.stream()
+        .forEach(violation -> details.add(new FieldError(determineField(violation), violation.getMessage())));
+    return Problem.builder().type(VALIDATION_PROBLEM_TYPE)
+        .detail(ProblemMessage.builder().key(BindingResult.class).build()).extension("errors", details);
+  }
+
+  /**
+   * Determine a field for the given constraint violation.
+   * <p>
+   * The default implementation returns the stringified property path.
+   * 
+   * @param violation the current JSR-303 ConstraintViolation
+   * @return the Spring-reported field
+   * @see org.springframework.validation.beanvalidation.SpringValidatorAdapter
+   */
+  protected String determineField(ConstraintViolation<?> violation) {
+    Path path = violation.getPropertyPath();
+    StringBuilder sb = new StringBuilder();
+    boolean first = true;
+    for (Path.Node node : path) {
+      if (node.isInIterable()) {
+        sb.append('[');
+        Object index = node.getIndex();
+        if (index == null) {
+          index = node.getKey();
+        }
+        if (index != null) {
+          sb.append(index);
+        }
+        sb.append(']');
+      }
+      String name = node.getName();
+      if (name != null && node.getKind() == ElementKind.PROPERTY && !name.startsWith("<")) {
+        if (!first) {
+          sb.append('.');
+        }
+        first = false;
+        sb.append(name);
+      }
+    }
+    return sb.toString();
+  }
 }
