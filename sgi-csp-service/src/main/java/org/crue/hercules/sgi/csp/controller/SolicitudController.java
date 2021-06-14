@@ -1,11 +1,13 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -18,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
@@ -28,11 +31,14 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +64,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/solicitudes")
 @Slf4j
 public class SolicitudController {
+
+  private ModelMapper modelMapper;
 
   /** Solicitud service */
   private final SolicitudService service;
@@ -95,9 +103,13 @@ public class SolicitudController {
   /** SolicitudProyectoAreaConocimientoService */
   private final SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService;
 
+  /** SolicitudProyectoResponaableEconomicoService */
+  private final SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
+   * @param modelMapper                                      {@link ModelMapper}.
    * @param solicitudService                                 {@link SolicitudService}.
    * @param solicitudModalidadService                        {@link SolicitudModalidadService}.
    * @param solicitudDocumentoService                        {@link SolicitudDocumentoService}
@@ -110,16 +122,19 @@ public class SolicitudController {
    * @param solicitudProyectoPresupuestoService              {@link SolicitudProyectoPresupuestoService}.
    * @param solicitudProyectoClasificacionService            {@link SolicitudProyectoClasificacionService}.
    * @param solicitudProyectoAreaConocimientoService         {@link SolicitudProyectoAreaConocimientoService}.
+   * @param solicitudProyectoResponsableEconomicoService     {@link SolicitudProyectoResponsableEconomicoService}.
    */
-  public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
-      EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
-      SolicitudHitoService solicitudHitoService, SolicitudProyectoService solicitudProyectoService,
-      SolicitudProyectoSocioService solicitudProyectoSocioService,
+  public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
+      SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
+      SolicitudDocumentoService solicitudDocumentoService, SolicitudHitoService solicitudHitoService,
+      SolicitudProyectoService solicitudProyectoService, SolicitudProyectoSocioService solicitudProyectoSocioService,
       SolicitudProyectoEquipoService solicitudProyectoEquipoService,
       SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService,
       SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService,
       SolicitudProyectoClasificacionService solicitudProyectoClasificacionService,
-      SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService) {
+      SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService,
+      SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService) {
+    this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
@@ -132,6 +147,7 @@ public class SolicitudController {
     this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
     this.solicitudProyectoClasificacionService = solicitudProyectoClasificacionService;
     this.solicitudProyectoAreaConocimientoService = solicitudProyectoAreaConocimientoService;
+    this.solicitudProyectoResponsableEconomicoService = solicitudProyectoResponsableEconomicoService;
   }
 
   /**
@@ -759,6 +775,44 @@ public class SolicitudController {
 
     log.debug("findAllBySolicitudProyectoId(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista de {@link SolicitudProyectoResponsableEconomico} con una
+   * {@link SolicitudProyecto} con id indicado.
+   * 
+   * @param id Identificador de {@link SolicitudProyectoResponsableEconomico}.
+   * @return Lista de {@link SolicitudProyectoResponsableEconomico}
+   *         correspondiente al id
+   */
+  @GetMapping("/{id}/solicitudproyectoresponsableseconomicos")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
+  ResponseEntity<Page<SolicitudProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosBySolicitud(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllResponsablesEconomicosBySolicitud(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoResponsableEconomico> page = solicitudProyectoResponsableEconomicoService
+        .findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllResponsablesEconomicosBySolicitud(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllResponsablesEconomicosBySolicitud(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(convert(page), HttpStatus.OK);
+  }
+
+  private SolicitudProyectoResponsableEconomicoOutput convert(
+      SolicitudProyectoResponsableEconomico responsableEconomico) {
+    return modelMapper.map(responsableEconomico, SolicitudProyectoResponsableEconomicoOutput.class);
+  }
+
+  private Page<SolicitudProyectoResponsableEconomicoOutput> convert(Page<SolicitudProyectoResponsableEconomico> page) {
+    List<SolicitudProyectoResponsableEconomicoOutput> content = page.getContent().stream()
+        .map((responsableEconomico) -> convert(responsableEconomico)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
 }
