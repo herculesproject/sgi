@@ -384,4 +384,16 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     );
   }
 
+  /**
+   * Obtiene la última versión del informe de la memoria
+   * @param idMemoria identificador de la memoria
+   */
+  findInformeUltimaVersion(idMemoria: number): Observable<IInforme> {
+    return this.http.get<IInformeBackend>(
+      `${this.endpointUrl}/${idMemoria}/informe/ultima-version`
+    ).pipe(
+      map(response => INFORME_CONVERTER.toTarget(response))
+    );
+  }
+
 }
