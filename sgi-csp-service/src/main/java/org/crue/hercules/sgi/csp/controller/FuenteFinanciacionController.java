@@ -46,7 +46,8 @@ public class FuenteFinanciacionController {
   /**
    * Instancia un nuevo FuenteFinanciacionController.
    * 
-   * @param service {@link FuenteFinanciacionService}
+   * @param modelMapper {@link ModelMapper}
+   * @param service     {@link FuenteFinanciacionService}
    */
   public FuenteFinanciacionController(ModelMapper modelMapper, FuenteFinanciacionService service) {
     this.modelMapper = modelMapper;

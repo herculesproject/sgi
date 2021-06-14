@@ -3,10 +3,12 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -22,8 +24,9 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
-import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
+import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
+import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
@@ -121,11 +124,14 @@ public class ProyectoController {
   /** ProyectoAreaConocimientoService */
   private final ProyectoAreaConocimientoService proyectoAreaConocimientoService;
 
-  /** ProyectoProyectoSgeService service */
+  /** ProyectoProyectoSge service */
   private final ProyectoProyectoSgeService proyectoProyectoSgeService;
 
   /** ProyectoPartidaService service */
   private final ProyectoPartidaService proyectoPartidaService;
+
+  /** ProyectoConceptoGasto service */
+  private final ProyectoConceptoGastoService proyectoConceptoGastoService;
 
   /**
    * Instancia un nuevo ProyectoController.
@@ -150,6 +156,7 @@ public class ProyectoController {
    * @param proyectoAreaConocimientoService                   {@link proyectoAreaConocimientoService}.
    * @param proyectoProyectoSgeService                        {@link ProyectoProyectoSgeService}.
    * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
+   * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
@@ -163,7 +170,8 @@ public class ProyectoController {
       ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService,
       ProyectoClasificacionService proyectoClasificacionService,
       ProyectoAreaConocimientoService proyectoAreaConocimientoService,
-      ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService) {
+      ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
+      ProyectoConceptoGastoService proyectoConceptoGastoService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -183,6 +191,7 @@ public class ProyectoController {
     this.proyectoAreaConocimientoService = proyectoAreaConocimientoService;
     this.proyectoProyectoSgeService = proyectoProyectoSgeService;
     this.proyectoPartidaService = proyectoPartidaService;
+    this.proyectoConceptoGastoService = proyectoConceptoGastoService;
   }
 
   /**
@@ -831,6 +840,57 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO CONCEPTO GASTOS
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoConceptoGasto}
+   * permitidos de {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoconceptosgasto/permitidos")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosPermitidos(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoGastosPermitidos(Long id, Pageable paging) - start");
+    Page<ProyectoConceptoGasto> page = proyectoConceptoGastoService.findAllByProyectoAndPermitidoTrue(id, paging);
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoGastosPermitidos(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoGastosPermitidos(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaConceptoGasto}
+   * no permitidos del {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoconceptosgasto/nopermitidos")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosNoPermitidos(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoGastosNoPermitidos(Long id, Pageable paging) - start");
+    Page<ProyectoConceptoGasto> page = proyectoConceptoGastoService.findAllByProyectoAndPermitidoFalse(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoGastosNoPermitidos(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoGastosNoPermitidos(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
