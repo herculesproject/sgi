@@ -16,5 +16,8 @@ export const PROYECTO_ROUTE_NAMES = {
   DOCUMENTOS: 'documentos',
   CLASIFICACIONES: 'clasificaciones',
   IDENTIFICACION: 'identificacion',
-  PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias'
+  PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
+  ELEGIBILIDAD: 'elegibilidad',
+  CONCEPTO_GATO_PERMITIDO: 'concepto-gasto-permitido',
+  CONCEPTO_GATO_NO_PERMITIDO: 'concepto-gasto-no-permitido'
 };

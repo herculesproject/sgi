@@ -64,7 +64,9 @@ import {
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
+import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
+import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -460,6 +462,32 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.find<IProyectoPartida, IProyectoPartida>(
       `${this.endpointUrl}/${proyectoId}/proyecto-partidas`,
       options
+    );
+  }
+
+  /**
+   * Recupera listado de conceptos de gasto permitidos.
+   * @param id Id del proyecto
+   * @param options opciones de búsqueda.
+   */
+  findAllProyectoConceptosGastoPermitidos(id: number): Observable<SgiRestListResult<IProyectoConceptoGasto>> {
+    return this.find<IProyectoConceptoGastoBackend, IProyectoConceptoGasto>(
+      `${this.endpointUrl}/${id}/proyectoconceptosgasto/permitidos`,
+      undefined,
+      PROYECTO_CONCEPTO_GASTO_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera listado de conceptos de gasto NO permitidos.
+   * @param id Id del proyecto
+   * @param options opciones de búsqueda.
+   */
+  findAllProyectoConceptosGastoNoPermitidos(id: number): Observable<SgiRestListResult<IProyectoConceptoGasto>> {
+    return this.find<IProyectoConceptoGastoBackend, IProyectoConceptoGasto>(
+      `${this.endpointUrl}/${id}/proyectoconceptosgasto/nopermitidos`,
+      undefined,
+      PROYECTO_CONCEPTO_GASTO_CONVERTER
     );
   }
 

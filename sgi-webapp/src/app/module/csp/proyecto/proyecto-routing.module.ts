@@ -30,11 +30,13 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { PROYECTO_ROUTE_NAMES } from './proyecto-route-names';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
 
 const PROYECTO_KEY = marker('csp.proyecto');
 const PROYECTO_SOCIOS_KEY = marker('menu.csp.proyectos.socios');
 const PROYECTO_PERIODOS_SEGUIMIENTO_KEY = marker('menu.csp.proyectos.seguimientos-cientificos');
 const PROYECTO_PRORROGA_KEY = marker('menu.csp.proyectos.prorrogas');
+const PROYECTO_ELEGIBILIDAD_KEY = marker('csp.proyecto-elegibilidad');
 const MSG_NEW_TITLE = marker('title.new.entity');
 
 const routes: SgiAuthRoutes = [
@@ -180,6 +182,19 @@ const routes: SgiAuthRoutes = [
         path: PROYECTO_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS,
         component: ProyectoPartidasPresupuestariasComponent,
         canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
+        component: ProyectoConceptosGastoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO,
+        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO,
+        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD
       }
     ]
   },
@@ -228,6 +243,30 @@ const routes: SgiAuthRoutes = [
         data: {
           title: PROYECTO_PRORROGA_KEY,
           hasAuthorityForAnyUO: 'CSP-PRO-E'
+        }
+      },
+      {
+        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO}`,
+        loadChildren: () =>
+          import('../proyecto-concepto-gasto/proyecto-concepto-gasto.module').then(
+            (m) => m.ProyectoConceptoGastoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: PROYECTO_ELEGIBILIDAD_KEY,
+          permitido: true
+        }
+      },
+      {
+        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO}`,
+        loadChildren: () =>
+          import('../proyecto-concepto-gasto/proyecto-concepto-gasto.module').then(
+            (m) => m.ProyectoConceptoGastoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: PROYECTO_ELEGIBILIDAD_KEY,
+          permitido: false
         }
       }
     ]

@@ -36,6 +36,7 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { ProyectoRoutingModule } from './proyecto-routing.module';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
+import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyect
     ProyectoClasificacionesComponent,
     ProyectoAreaConocimientoComponent,
     ProyectoProyectosSgeComponent,
-    ProyectoPartidasPresupuestariasComponent
+    ProyectoPartidasPresupuestariasComponent,
+    ProyectoConceptosGastoComponent
   ],
   imports: [
     SharedModule,

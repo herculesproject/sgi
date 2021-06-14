@@ -25,7 +25,7 @@ export class ConvocatoriaConceptoGastoCodigoEcService extends
   }
 
   /**
-   * Actualiza el listado de IDConvocatoriaConceptoGasto asociados a un IConvocatoriaConceptoGastoCodigoEc
+   * Actualiza el listado de IConvocatoriaConceptoGastoCodigoEc asociados a un IConvocatoriaConceptoGasto
    *
    * @param id Id del IConvocatoriaConceptoGasto
    * @param entities Listado de IConvocatoriaConceptoGastoCodigoEc

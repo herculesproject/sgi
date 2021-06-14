@@ -36,6 +36,11 @@
         [title]="'csp.proyecto-partida-presupuestaria'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.ELEGIBILIDAD]"
+        [title]="'menu.csp.proyectos.configuracion-economica.elegibilidad' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
+      </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
     <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
       [title]="'menu.csp.proyectos.entidades' | translate">

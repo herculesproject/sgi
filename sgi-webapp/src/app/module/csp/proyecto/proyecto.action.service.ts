@@ -8,6 +8,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
 import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
+import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
@@ -37,6 +38,7 @@ import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
 import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
+import { ProyectoConceptosGastoFragment } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
 import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
@@ -82,7 +84,8 @@ export class ProyectoActionService extends ActionService {
     DOCUMENTOS: 'documentos',
     CLASIFICACIONES: 'clasificaciones',
     PROYECTOS_SGE: 'proyectos-sge',
-    PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias'
+    PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
+    ELEGIBILIDAD: 'elegibilidad'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -103,6 +106,7 @@ export class ProyectoActionService extends ActionService {
   private areaConocimiento: ProyectoAreaConocimientoFragment;
   private proyectosSge: ProyectoProyectosSgeFragment;
   private partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
+  private elegibilidad: ProyectoConceptosGastoFragment;
 
   private readonly data: IProyectoData;
 
@@ -157,6 +161,7 @@ export class ProyectoActionService extends ActionService {
     proyectoProyectoSgeService: ProyectoProyectoSgeService,
     proyectoSgeService: ProyectoSgeService,
     proyectoPartidaService: ProyectoPartidaService,
+    proyectoConceptoGastoService: ProyectoConceptoGastoService,
     translate: TranslateService,
   ) {
     super();
@@ -200,6 +205,8 @@ export class ProyectoActionService extends ActionService {
         proyectoSgeService, this.readonly);
       this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, proyectoService, proyectoPartidaService,
         this.readonly);
+      this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
+        convocatoriaService, this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -218,6 +225,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.AREA_CONOCIMIENTO, this.areaConocimiento);
       this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
       this.addFragment(this.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, this.partidasPresupuestarias);
+      this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {
