@@ -25,11 +25,6 @@ const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_CONCEPTO_GASTO_ECONOMICO_PERMITIDO = marker('csp.proyecto-concepto-gasto-codigo-economico.permitido');
 const PROYECTO_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO = marker('csp.proyecto-concepto-gasto-codigo-economico.no-permitido');
 
-export enum HelpIconClass {
-  WARNING = 'warning',
-  DANGER = 'danger',
-}
-
 @Component({
   selector: 'sgi-proyecto-concepto-gasto-codigo-ec',
   templateUrl: './proyecto-concepto-gasto-codigo-ec.component.html',

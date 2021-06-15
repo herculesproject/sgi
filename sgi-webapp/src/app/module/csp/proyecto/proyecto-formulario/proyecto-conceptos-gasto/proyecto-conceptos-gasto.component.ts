@@ -25,11 +25,6 @@ const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.proyecto-concepto-gasto.list
 const PROYECTO_CONCEPTO_GASTO_PERMITIDO_KEY = marker('csp.proyecto-concepto-gasto-permitido');
 const PROYECTO_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.proyecto-concepto-gasto-no-permitido');
 
-export enum HelpIconClass {
-  WARNING = 'warning',
-  DANGER = 'danger',
-}
-
 @Component({
   selector: 'sgi-proyecto-concepto-gasto',
   templateUrl: './proyecto-conceptos-gasto.component.html',

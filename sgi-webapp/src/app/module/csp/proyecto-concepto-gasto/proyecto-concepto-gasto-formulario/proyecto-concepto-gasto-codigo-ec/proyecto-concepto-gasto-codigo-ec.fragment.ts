@@ -11,13 +11,15 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { compareConceptoGastoCodigoEc } from '../../proyecto-concepto-gasto.utils';
-import { HelpIconClass } from './proyecto-concepto-gasto-codigo-ec.component';
 
 const PROYECTO_CONCEPTO_GASTO_CODIGO_EC_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto-codigo-economico.no-coincide-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_CODIGO_EC_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-concepto-gasto-codigo-economico.no-existe-en-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_CODIGO_EC_NO_PROYECTO_KEY = marker('info.csp.proyecto-concepto-gasto-codigo-economico.no-existe-en-proyecto');
 
-
+export enum HelpIconClass {
+  WARNING = 'warning',
+  DANGER = 'danger',
+}
 
 interface HelpIcon {
   class: HelpIconClass;

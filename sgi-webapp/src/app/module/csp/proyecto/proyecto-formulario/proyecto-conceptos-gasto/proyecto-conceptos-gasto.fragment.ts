@@ -12,13 +12,17 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { HelpIconClass } from '../../../proyecto-concepto-gasto/proyecto-concepto-gasto-formulario/proyecto-concepto-gasto-codigo-ec/proyecto-concepto-gasto-codigo-ec.component';
 import { compareConceptoGasto, getFechaFinConceptoGasto, getFechaInicioConceptoGasto } from '../../../proyecto-concepto-gasto/proyecto-concepto-gasto.utils';
 
 const PROYECTO_CONCEPTO_GASTO_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.no-coincide-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_CODIGOS_ECONONOMICOS_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.codigo-economicos-no-coinciden-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-concepto-gasto.no-existe-en-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_NO_PROYECTO_KEY = marker('info.csp.proyecto-concepto-gasto.no-existe-en-proyecto');
+
+export enum HelpIconClass {
+  WARNING = 'warning',
+  DANGER = 'danger',
+}
 
 interface HelpIcon {
   class: HelpIconClass;
