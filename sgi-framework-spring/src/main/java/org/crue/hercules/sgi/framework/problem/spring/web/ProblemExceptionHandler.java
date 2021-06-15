@@ -39,6 +39,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -146,6 +147,19 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         .detail(ProblemMessage.builder().key(AuthenticationException.class).build()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleAuthenticationException(AuthenticationException ex, WebRequest request) - end");
+    return response;
+  }
+
+  @ExceptionHandler({ RestClientResponseException.class })
+  public ResponseEntity<Object> handleRestClientResponseException(RestClientResponseException ex, WebRequest request)
+      throws Exception {
+    log.debug("handleRestClientResponseException(RestClientResponseException ex, WebRequest request) - start");
+    HttpStatus status = HttpStatus.valueOf(ex.getRawStatusCode());
+
+    Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value()).build();
+    ResponseEntity<Object> response = handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    log.debug("handleRestClientResponseException(RestClientResponseException ex, WebRequest request) - end");
     return response;
   }
 
