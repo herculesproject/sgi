@@ -527,6 +527,8 @@
   "csp.proyectos": "Proyectos",
   "csp.rol-proyecto.equipo.INVESTIGACION": "Equipo de investigación",
   "csp.rol-proyecto.equipo.TRABAJO": "Equipo de trabajo",
+  "csp.rol-proyecto.orden.PRIMARIO": "Primario",
+  "csp.rol-proyecto.orden.SECUNDARIO": "Secundario",
   "csp.root.title": "Inicio",
   "csp.solicitud": "Solicitud{count,plural,=0{} one{} other{es}}",
   "csp.solicitud-datos-proyecto-ficha-general.acronimo": "Acrónimo",
