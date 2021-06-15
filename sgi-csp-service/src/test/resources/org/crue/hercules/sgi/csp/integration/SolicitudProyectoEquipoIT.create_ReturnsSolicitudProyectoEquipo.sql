@@ -56,5 +56,5 @@ VALUES (1, 'titulo-1', true, 'GLOBAL');
 
 -- ROL PROYECTO
 INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, orden, equipo, activo) 
-VALUES(1, '001', 'nombre-001', 'descripcion-001', false, 1, 'INVESTIGACION', true);
+VALUES(1, '001', 'nombre-001', 'descripcion-001', false, null, 'INVESTIGACION', true);
 

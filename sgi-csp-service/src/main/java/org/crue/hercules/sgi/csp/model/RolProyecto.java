@@ -54,6 +54,18 @@ public class RolProyecto extends BaseEntity {
     TRABAJO;
   }
 
+  /**
+   * Tipos de orden.
+   *
+   */
+  public enum Orden {
+
+    /** Orden primario */
+    PRIMARIO,
+    /** Orden Secundario */
+    SECUNDARIO;
+  }
+
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
@@ -84,7 +96,9 @@ public class RolProyecto extends BaseEntity {
 
   /** Orden */
   @Column(name = "orden", nullable = true)
-  private Integer orden;
+  @Enumerated(EnumType.STRING)
+  private Orden orden;
+
   /** Tipo Formulario Solicitud */
   @Column(name = "equipo", length = 50, nullable = false)
   @Enumerated(EnumType.STRING)

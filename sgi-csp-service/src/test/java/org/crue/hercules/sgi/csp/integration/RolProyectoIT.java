@@ -54,7 +54,7 @@ public class RolProyectoIT extends BaseIT {
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()").isEqualTo(Boolean.FALSE);
-    Assertions.assertThat(responseData.getOrden()).as("getOreden()").isEqualTo(1);
+    Assertions.assertThat(responseData.getOrden()).as("getOrden()").isEqualTo(null);
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(RolProyecto.Equipo.INVESTIGACION);
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }

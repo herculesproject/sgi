@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyecto.Orden;
 import org.crue.hercules.sgi.csp.service.RolProyectoColectivoService;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -173,7 +174,7 @@ public class RolProyectoControllerTest extends BaseControllerTest {
         .nombre("nombre-" + suffix)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
-        .orden(1)
+        .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
         .build();

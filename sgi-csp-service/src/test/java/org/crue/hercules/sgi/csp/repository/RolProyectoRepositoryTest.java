@@ -103,7 +103,7 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
         .nombre("nombre-" + suffix)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
-        .orden(1)
+        .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(activo)
         .build();

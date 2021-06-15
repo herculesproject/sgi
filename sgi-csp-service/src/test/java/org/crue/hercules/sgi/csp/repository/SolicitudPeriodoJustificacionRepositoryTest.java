@@ -57,7 +57,7 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
         .nombre("Rol1")
         .descripcion("Rol1")
         .rolPrincipal(Boolean.FALSE)
-        .orden(1)
+        .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
         .build();
