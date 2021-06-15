@@ -21,10 +21,12 @@ import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
@@ -649,6 +651,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setFechaEnvioSecretaria(Instant.now());
       memoriaRepository.save(memoria);
 
+      this.crearInforme(memoria);
+
       return memoria;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
@@ -657,6 +661,41 @@ public class MemoriaServiceImpl implements MemoriaService {
     // guarde en informes el identificador del documento.
 
     log.debug("enviarSecretaria(Long id) - end");
+  }
+
+  private void crearInforme(Memoria memoria) {
+    Informe informe = new Informe();
+    Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
+        .findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId());
+
+    if (evaluacionAnterior.isPresent()) {
+      informe.setVersion(evaluacionAnterior.get().getVersion() + 1);
+    } else {
+      informe.setVersion(1);
+    }
+    informe.setMemoria(memoria);
+    informe.setTipoEvaluacion(new TipoEvaluacion());
+
+    // mismo tipo seguimiento que la memoria Anual(3) Final(4)
+    informe.getTipoEvaluacion()
+        .setId((memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
+            ? Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL
+            : Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL);
+    // memoria 'en secretaría' y retrospectiva 'en secretaría'
+    if (memoria.getEstadoActual().getId() > Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
+        && memoria.getRequiereRetrospectiva() && memoria.getRetrospectiva().getEstadoRetrospectiva()
+            .getId() == Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) {
+      // tipo retrospectiva
+      informe.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_RETROSPECTIVA);
+    } else {
+      // tipo 'memoria'
+      informe.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_MEMORIA);
+    }
+
+    // TODO cambiar documentoRef
+    informe.setDocumentoRef("documentoRef-informe");
+    informeService.create(informe);
+
   }
 
   /**
