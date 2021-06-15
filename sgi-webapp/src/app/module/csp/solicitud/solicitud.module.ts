@@ -30,6 +30,8 @@ import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formula
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
+import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
+import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     CambioEstadoModalComponent,
     SolicitudProyectoClasificacionesComponent,
     SolicitudProyectoAreaConocimientoComponent,
+    SolicitudProyectoResponsableEconomicoComponent,
+    SolicitudProyectoResponsableEconomicoModalComponent
   ],
   imports: [
     CommonModule,

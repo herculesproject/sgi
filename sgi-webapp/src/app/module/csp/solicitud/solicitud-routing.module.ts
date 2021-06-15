@@ -22,6 +22,7 @@ import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-fo
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
+import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
@@ -159,6 +160,11 @@ const routes: SgiRoutes = [
         component: SolicitudProyectoClasificacionesComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: SOLICITUD_ROUTE_NAMES.RESPONSABLE_ECONOMICO,
+        component: SolicitudProyectoResponsableEconomicoComponent,
+        canDeactivate: [FragmentGuard]
+      }
     ]
   },
   {

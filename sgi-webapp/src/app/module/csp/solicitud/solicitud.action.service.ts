@@ -17,6 +17,7 @@ import { SolicitudProyectoClasificacionService } from '@core/services/csp/solici
 import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
+import { SolicitudProyectoResponsableEconomicoService } from '@core/services/csp/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -42,6 +43,7 @@ import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-for
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
+import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
 
 export interface ISolicitudData {
@@ -65,7 +67,8 @@ export class SolicitudActionService extends ActionService {
     ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras',
     DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal',
     DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades',
-    CLASIFICACIONES: 'clasificaciones'
+    CLASIFICACIONES: 'clasificaciones',
+    RESPONSABLE_ECONOMICO: 'responsable-economico'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -80,6 +83,7 @@ export class SolicitudActionService extends ActionService {
   private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
   private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
   private clasificaciones: SolicitudProyectoClasificacionesFragment;
+  private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -139,7 +143,8 @@ export class SolicitudActionService extends ActionService {
     clasificacionService: ClasificacionService,
     authService: SgiAuthService,
     solicitudProyectoAreaConocimiento: SolicitudProyectoAreaConocimientoService,
-    areaConocimientoService: AreaConocimientoService
+    areaConocimientoService: AreaConocimientoService,
+    solicitudProyectoResponsableEconomicoService: SolicitudProyectoResponsableEconomicoService
   ) {
     super();
 
@@ -191,6 +196,8 @@ export class SolicitudActionService extends ActionService {
       this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, solicitudProyectoService, this.readonly);
     this.clasificaciones = new SolicitudProyectoClasificacionesFragment(this.data?.solicitud?.id, solicitudProyectoClasificacionService,
       solicitudService, clasificacionService, this.readonly);
+    this.responsableEconomico = new SolicitudProyectoResponsableEconomicoFragment(this.data?.solicitud?.id, solicitudService,
+      solicitudProyectoResponsableEconomicoService, personaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     // Por ahora solo está implementado para investigador la pestaña datos generales
@@ -208,6 +215,7 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
         this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
         this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
+        this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsableEconomico);
       }
 
       this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(

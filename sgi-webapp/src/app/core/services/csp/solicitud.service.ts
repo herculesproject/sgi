@@ -37,6 +37,7 @@ import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-eq
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { ISolicitudProyectoPresupuestoTotalConceptoGasto } from '@core/models/csp/solicitud-proyecto-presupuesto-total-concepto-gasto';
 import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud-proyecto-presupuesto-totales';
+import { ISolicitudProyectoResponsableEconomico } from '@core/models/csp/solicitud-proyecto-responsable-economico';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
@@ -45,6 +46,8 @@ import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { PersonaService } from '../sgp/persona.service';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitudProyectoResponsableEconomicoResponse } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response';
+import { SOLICITUD_PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -414,6 +417,20 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       `${this.endpointUrl}/${solicitudId}/solicitud-proyecto-clasificaciones`,
       options,
       SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER
+    );
+  }
+
+  /**
+   * Devuelve los responsables economicos de una solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   */
+  findAllSolicitudProyectoResponsablesEconomicos(solicitudId: number):
+    Observable<SgiRestListResult<ISolicitudProyectoResponsableEconomico>> {
+    return this.find<ISolicitudProyectoResponsableEconomicoResponse, ISolicitudProyectoResponsableEconomico>(
+      `${this.endpointUrl}/${solicitudId}/solicitudproyectoresponsableseconomicos`,
+      undefined,
+      SOLICITUD_PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
     );
   }
 

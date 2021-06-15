@@ -25,6 +25,11 @@
           [title]="'menu.csp.solicitudes.equipos-proyecto' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
         </sgi-action-fragment-menu-item>
+        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.RESPONSABLE_ECONOMICO]"
+          *ngIf="actionService.datosProyectoComplete$ | async"
+          [title]="'csp.solicitud-proyecto-responsable-economico' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.RESPONSABLE_ECONOMICO)">
+        </sgi-action-fragment-menu-item>
         <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.SOCIOS]"
           *ngIf="(actionService.datosProyectoComplete$ | async) && (actionService.showSocios$ | async)"
           [title]="'csp.solicitud-proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
