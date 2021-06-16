@@ -7,6 +7,7 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/formulario';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IRespuesta } from '@core/models/eti/respuesta';
+import { ITarea } from '@core/models/eti/tarea';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { Fragment, Group } from '@core/services/action-service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
@@ -14,12 +15,16 @@ import { BloqueService } from '@core/services/eti/bloque.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { FormlyFormOptions } from '@ngx-formly/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
-import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { catchError, endWith, map, mergeAll, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export interface IBlock {
   bloque: IBloque;
@@ -50,6 +55,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   protected comite: IComite;
   protected memoria: IMemoria;
+  protected tareas: ITarea[];
   private comentarios: Map<number, IComentario>;
 
   public blocks$: BehaviorSubject<IBlock[]> = new BehaviorSubject<IBlock[]>([]);
@@ -72,12 +78,17 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     protected evaluacionService: EvaluacionService,
     protected bloqueService: BloqueService,
     protected respuestaService: RespuestaService,
+    protected peticionEvaluacionService: PeticionEvaluacionService,
+    protected vinculacionService: VinculacionService,
+    protected datosAcademicosService: DatosAcademicosService,
+    protected personaService: PersonaService,
     protected apartadoService: ApartadoService
   ) {
     super(key);
     this.comite = comite;
     this.readonly = readonly;
     this.memoria = {} as IMemoria;
+    this.tareas = [];
 
     this.subscriptions.push(this.selectedIndex$.subscribe(
       (index) => {
@@ -90,26 +101,89 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   protected abstract isEditable(): boolean;
 
+  protected loadTareas(idMemoria: number, idPeticionEvaluacion: number): Observable<ITarea[]> {
+
+    let tareas$: Observable<ITarea[]> = of([]);
+    tareas$ = this.peticionEvaluacionService.findTareas(idPeticionEvaluacion).pipe(
+      map((tareas) => {
+        return tareas.items.filter(tarea => tarea.memoria.id === idMemoria);
+      }),
+      mergeMap(tareas => {
+        if (tareas.length === 0) {
+          return of([]);
+        }
+        return from(tareas).pipe(
+          map((element) => {
+            return this.personaService.findById(element.equipoTrabajo.persona.id).pipe(
+              map((persona) => {
+                element.equipoTrabajo.persona = persona;
+                return element;
+              }),
+              switchMap(() => {
+                return this.vinculacionService.findByPersonaId(element.equipoTrabajo.persona.id).pipe(
+                  map((vinculacion) => {
+                    element.equipoTrabajo.persona.vinculacion = vinculacion;
+                    return element;
+                  }),
+                  catchError(() => of(element))
+                );
+              }),
+              switchMap(() => {
+                return this.datosAcademicosService.findByPersonaId(element.equipoTrabajo.persona.id).pipe(
+                  map((datosAcademicos) => {
+                    element.equipoTrabajo.persona.datosAcademicos = datosAcademicos;
+                    return element;
+                  }),
+                  catchError(() => of(element))
+                );
+              }),
+              catchError(() => of(element))
+            );
+          }),
+          mergeAll(),
+          map(() => tareas)
+        );
+      })
+    );
+
+    return tareas$;
+  }
+
   protected onInitialize(): void {
     if (this.getKey() && this.comite) {
-      this.subscriptions.push(
-        this.memoriaService.findById(this.getKey() as number).pipe(
-          map((memoria) => {
-            this.memoria = memoria;
-            if (!this.isEditable() && !this.readonly) {
-              this.readonly = true;
-            }
-            return memoria;
-          }),
-          switchMap((memoria) => {
-            return this.loadComentarios(memoria.id, this.tipoEvaluacion);
-          })
-        ).subscribe(
-          (comentarios) => {
-            this.comentarios = comentarios;
-            this.loadFormulario(this.tipoEvaluacion, this.comite);
+
+      let load$: Observable<IMemoria>;
+
+      load$ = this.memoriaService.findById(this.getKey() as number).pipe(
+        map((memoria) => {
+          this.memoria = memoria;
+          if (!this.isEditable() && !this.readonly) {
+            this.readonly = true;
           }
-        ));
+          return memoria;
+        }),
+        switchMap((memoria) => {
+
+          return this.loadTareas(memoria.id, memoria.peticionEvaluacion.id).pipe(
+            map((tareas) => {
+              this.tareas = tareas;
+              return memoria;
+            }));
+        }),
+        switchMap((memoria) => {
+          return this.loadComentarios(memoria.id, this.tipoEvaluacion).pipe(
+            map((comentarios) => {
+              this.comentarios = comentarios;
+              return memoria;
+            }));
+        })
+      );
+
+      this.subscriptions.push(load$.subscribe(
+        (memoria) => {
+          this.loadFormulario(this.tipoEvaluacion, this.comite);
+        }
+      ));
     }
   }
 
@@ -233,6 +307,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       block.formlyData.options.formState = {
         mainModel: block.formlyData.model,
         memoria: this.memoria,
+        tareas: this.tareas,
         bloques: bloqueModels
       };
       blocks.push(block);
@@ -470,16 +545,54 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     this.setErrors(errors);
   }
 
-  private evalExpressionModelValue(fieldConfig: SgiFormlyFieldConfig[], model: any, formState: any) {
+  private evalExpressionModelValue(fieldConfig: SgiFormlyFieldConfig[], model: any, formState: any, parentKey?: string) {
     fieldConfig.forEach(fg => {
       if (fg.key && fg.templateOptions?.expressionModelValue) {
-        const f = this.evalStringExpression(fg.templateOptions.expressionModelValue, ['model', 'formState', 'field']);
-        model[fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
+        if (parentKey) {
+          this.evalKeyParentExpressionModelValue(model, parentKey, fg, formState);
+        } else {
+          const f = this.evalStringExpression(fg.templateOptions.expressionModelValue, ['model', 'formState', 'field']);
+          model[fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
+        }
       }
-      if (fg.key && fg.fieldGroup) {
-        this.evalExpressionModelValue(fg.fieldGroup, model, formState);
+      if (fg.key && (fg.fieldGroup || fg.fieldArray)) {
+        if (fg.fieldArray?.fieldGroup) {
+          this.evalExpressionModelValue(fg.fieldArray.fieldGroup, model, formState, fg.key as string);
+        } else {
+          this.evalExpressionModelValue(fg.fieldGroup, model, formState);
+        }
       }
     });
+  }
+
+  private evalKeyParentExpressionModelValue(model: any, parentKey: string, fg: SgiFormlyFieldConfig, formState: any) {
+    if (!model[parentKey]) {
+      model[parentKey] = [];
+    }
+
+    const expressionModelValue = fg.templateOptions.expressionModelValue;
+
+    const regularExpressionFieldIterable = /\$1/;
+    const matchIterationExpressionModelValue = expressionModelValue.match(regularExpressionFieldIterable);
+
+    if (matchIterationExpressionModelValue) {
+      const fromIndex = expressionModelValue.indexOf('.');
+      const toIndex = expressionModelValue.indexOf(matchIterationExpressionModelValue[0]);
+      const fieldIteration = expressionModelValue.substring(fromIndex + 1, toIndex - 1);
+      if (formState[fieldIteration] && formState[fieldIteration] instanceof Array) {
+        formState[fieldIteration].forEach((element, i) => {
+          const newExpressionModelValue = expressionModelValue.replace(regularExpressionFieldIterable, i);
+
+          const f = this.evalStringExpression(newExpressionModelValue, ['model', 'formState', 'field']);
+
+          if (model[parentKey] && !model[parentKey][i]) {
+            model[parentKey][i] = {};
+          }
+
+          model[parentKey][i][fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
+        });
+      }
+    }
   }
 
   private evalStringExpression(expression: string, argNames: string[]) {

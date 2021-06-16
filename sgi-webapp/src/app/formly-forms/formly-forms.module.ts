@@ -7,6 +7,8 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { TableCRUDModalComponent } from './types/table-crud/table-crud-modal/table-crud-modal.component';
+import { TableCRUDTypeComponent } from './types/table-crud/table-crud.type';
 import { TableTypeRepetible } from './types/table-type-repetible.component';
 import { TableType } from './types/table-type.component';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
@@ -19,6 +21,8 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
   declarations: [
     TableType,
     TableTypeRepetible,
+    TableCRUDTypeComponent,
+    TableCRUDModalComponent,
     PanelWrapperComponent,
     TitleDivWrapperComponent,
     InfoDivWrapperComponent,
@@ -46,6 +50,10 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
           name: 'tipo-valor-social',
           component: TipoValorSocialComponent,
           wrappers: ['form-field'],
+        },
+        {
+          name: 'table-crud',
+          component: TableCRUDTypeComponent
         }
       ],
       wrappers: [
@@ -73,6 +81,7 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
   exports: [
     TableType,
     TableTypeRepetible,
+    TableCRUDTypeComponent,
     FormlyMatDatepickerModule,
     FormlyModule,
     FormlyMaterialModule

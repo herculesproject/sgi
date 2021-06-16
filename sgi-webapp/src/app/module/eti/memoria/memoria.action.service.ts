@@ -16,7 +16,9 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { NGXLogger } from 'ngx-logger';
 import { map } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
@@ -68,6 +70,8 @@ export class MemoriaActionService extends ActionService {
     formularioService: FormularioService,
     bloqueService: BloqueService,
     apartadoService: ApartadoService,
+    vinculacionService: VinculacionService,
+    datosAcademicosService: DatosAcademicosService,
     respuestaService: RespuestaService,
     evaluacionService: EvaluacionService
   ) {
@@ -93,6 +97,10 @@ export class MemoriaActionService extends ActionService {
       bloqueService,
       apartadoService,
       respuestaService,
+      peticionEvaluacionService,
+      vinculacionService,
+      datosAcademicosService,
+      personaService,
       service,
       evaluacionService
     );
@@ -106,6 +114,10 @@ export class MemoriaActionService extends ActionService {
       bloqueService,
       apartadoService,
       respuestaService,
+      peticionEvaluacionService,
+      vinculacionService,
+      datosAcademicosService,
+      personaService,
       service,
       evaluacionService
     );
@@ -118,6 +130,10 @@ export class MemoriaActionService extends ActionService {
       bloqueService,
       apartadoService,
       respuestaService,
+      peticionEvaluacionService,
+      vinculacionService,
+      datosAcademicosService,
+      personaService,
       service,
       evaluacionService
     );
@@ -130,6 +146,10 @@ export class MemoriaActionService extends ActionService {
       bloqueService,
       apartadoService,
       respuestaService,
+      peticionEvaluacionService,
+      vinculacionService,
+      datosAcademicosService,
+      personaService,
       service,
       evaluacionService
     );
