@@ -87,8 +87,8 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
       solicitudProyectoExistente.setIntereses(solicitudProyecto.getIntereses());
       solicitudProyectoExistente.setResultadosPrevistos(solicitudProyecto.getResultadosPrevistos());
       solicitudProyectoExistente.setAreaTematica(solicitudProyecto.getAreaTematica());
-      solicitudProyectoExistente.setCheckListRef(solicitudProyecto.getCheckListRef());
-      solicitudProyectoExistente.setEnvioEtica(solicitudProyecto.getEnvioEtica());
+      solicitudProyectoExistente.setChecklistRef(solicitudProyecto.getChecklistRef());
+      solicitudProyectoExistente.setPeticionEvaluacionRef(solicitudProyecto.getPeticionEvaluacionRef());
       solicitudProyectoExistente.setTipoPresupuesto(solicitudProyecto.getTipoPresupuesto());
       solicitudProyectoExistente.setImporteSolicitado(solicitudProyecto.getImporteSolicitado());
       solicitudProyectoExistente.setImportePresupuestado(solicitudProyecto.getImportePresupuestado());
@@ -150,7 +150,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
     log.debug("findBySolicitud(Long solicitudId) - start");
 
     if (solicitudRepository.existsById(solicitudId)) {
-      final Optional<SolicitudProyecto> returnValue = repository.findBySolicitudId(solicitudId);
+      final Optional<SolicitudProyecto> returnValue = repository.findById(solicitudId);
       log.debug("findBySolicitud(Long solicitudId) - end");
       return (returnValue.isPresent()) ? returnValue.get() : null;
     } else {
@@ -168,7 +168,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
   @Override
   public boolean existsBySolicitudId(Long id) {
 
-    return repository.existsBySolicitudId(id);
+    return repository.existsById(id);
   }
 
   /**

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -15,16 +16,17 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
-import org.crue.hercules.sgi.csp.service.impl.SolicitudServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -38,6 +40,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * SolicitudServiceTest
@@ -69,19 +72,32 @@ public class SolicitudServiceTest extends BaseServiceTest {
   private SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
 
   @Mock
+  private SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository;
+
+  @Mock
   private ProyectoRepository proyectoRepository;
 
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
 
+  @Mock
+  ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+
+  @Mock
+  private RestApiProperties restApiProperties;
+
+  @Mock
+  private RestTemplate restTemplate;
+
   private SolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository,
-        proyectoRepository, solicitudProyectoRepository, documentoRequeridoSolicitudRepository,
-        solicitudDocumentoRepository, solicitudProyectoEquipoRepository, solicitudProyectoSocioRepository,
-        convocatoriaRepository);
+    service = new SolicitudService(restApiProperties, restTemplate, repository, estadoSolicitudRepository,
+        configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
+        documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
+        solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
+        convocatoriaEntidadFinanciadoraRepository);
   }
 
   @Test

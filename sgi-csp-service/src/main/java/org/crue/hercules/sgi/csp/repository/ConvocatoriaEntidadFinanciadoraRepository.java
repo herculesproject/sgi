@@ -16,14 +16,6 @@ public interface ConvocatoriaEntidadFinanciadoraRepository extends JpaRepository
     JpaSpecificationExecutor<ConvocatoriaEntidadFinanciadora> {
 
   /**
-   * Obtiene las Entidades Financiadoras asociadas a una convocatoria
-   * 
-   * @param convocatoriaId Identificador de la convocatoria
-   * @return Listado de convocatorias
-   */
-  List<ConvocatoriaEntidadFinanciadora> findAllByConvocatoriaId(Long convocatoriaId);
-
-  /**
    * Recupera todos las {@link ConvocatoriaEntidadFinanciadora} asociados a una
    * {@link Convocatoria}.
    * 
@@ -33,4 +25,12 @@ public interface ConvocatoriaEntidadFinanciadoraRepository extends JpaRepository
    */
   List<ConvocatoriaEntidadFinanciadora> findByConvocatoriaId(Long convocatoriaId);
 
+  /**
+   * Comprueba la existencia de una {@link ConvocatoriaEntidadFinanciadora} a
+   * aprtir del identificador de la Convocatoria.
+   * 
+   * @param convocatoriaId Identificador de la convocatoria
+   * @return true en caso de que exista y false en caso contrario
+   */
+  boolean existsByConvocatoriaId(Long convocatoriaId);
 }

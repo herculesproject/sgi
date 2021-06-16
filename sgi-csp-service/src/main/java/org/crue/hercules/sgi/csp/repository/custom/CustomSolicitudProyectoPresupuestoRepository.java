@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
@@ -33,4 +34,12 @@ public interface CustomSolicitudProyectoPresupuestoRepository {
   List<SolicitudProyectoPresupuestoTotalConceptoGasto> getSolicitudProyectoPresupuestoTotalConceptoGastos(
       Long solicitudId);
 
+  /**
+   * Devuelve la suma del importe solicitado de las fuentes de financiación que no
+   * son ajenas.
+   * 
+   * @param solicitudId Id de la {@link Solicitud}.
+   * @return La suma de los importes solicitados.
+   */
+  BigDecimal sumImporteSolicitadoBySolicitudIdAndFinanciacionAjenaIsFalse(Long solicitudId);
 }

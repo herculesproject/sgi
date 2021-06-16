@@ -717,7 +717,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private void copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) {
     log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
     List<ConvocatoriaEntidadFinanciadora> entidadesConvocatoria = convocatoriaEntidadFinanciadoraRepository
-        .findAllByConvocatoriaId(convocatoriaId);
+        .findByConvocatoriaId(convocatoriaId);
     entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
       log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {0}", entidadConvocatoria.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
@@ -1197,7 +1197,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     this.validarDatosSolicitud(solicitud);
 
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitudId)
+    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitudId)
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
 
     proyecto = this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud, solicitudProyecto);

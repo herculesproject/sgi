@@ -264,8 +264,7 @@ public class SolicitudProyectoServiceTest {
 
     BDDMockito.given(solicitudRepository.existsById(idSolicitud)).willReturn(Boolean.TRUE);
 
-    BDDMockito.given(repository.findBySolicitudId(idSolicitud))
-        .willReturn(Optional.of(generarSolicitudProyecto(idSolicitud)));
+    BDDMockito.given(repository.findById(idSolicitud)).willReturn(Optional.of(generarSolicitudProyecto(idSolicitud)));
 
     // when: Buscamos el SolicitudProyecto por solicitud id
     SolicitudProyecto solicitudProyecto = service.findBySolicitud(idSolicitud);

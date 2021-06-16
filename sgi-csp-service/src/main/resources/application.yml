@@ -22,6 +22,10 @@ spring:
     # Disable the static resource handling
     add-mappings: false
 ---
+sgi:
+  rest:
+    api:
+      eti-url: "http://sgi-eti-service:4280"
 spring:
   profiles: dev
   datasource:
@@ -106,6 +110,10 @@ logging:
             JdbcTemplate: DEBUG
             StatementCreatorUtils: TRACE
 ---
+sgi:
+  rest:
+    api:
+      eti-url: "http://sgi-eti:8080"
 spring:
   profiles: prod
   datasource:

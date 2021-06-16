@@ -39,9 +39,9 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    SolicitudProyecto solicitudProyecto1 = entityManager
-        .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE,
-            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    SolicitudProyecto solicitudProyecto1 = entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
 
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
@@ -52,13 +52,14 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
 
     Long convocatoriaIdBuscada = solicitud1.getId();
 
     // when: se busca el SolicitudProyecto por idSolicitud
-    SolicitudProyecto solicitudProyectoEncontrado = repository.findBySolicitudId(convocatoriaIdBuscada).get();
+    SolicitudProyecto solicitudProyectoEncontrado = repository.findById(convocatoriaIdBuscada).get();
 
     // then: Se recupera el SolicitudProyecto con el idSolicitud buscado
     Assertions.assertThat(solicitudProyectoEncontrado.getId()).as("getId").isNotNull();
@@ -82,8 +83,9 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
@@ -93,13 +95,14 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
 
     Long solicitudIdBuscada = 99999L;
 
     // when: se busca el SolicitudProyecto por solicitudId
-    Optional<SolicitudProyecto> solicitudProyectoEncontrado = repository.findBySolicitudId(solicitudIdBuscada);
+    Optional<SolicitudProyecto> solicitudProyectoEncontrado = repository.findById(solicitudIdBuscada);
 
     // then: Se recupera el SolicitudProyecto con el solicitudId buscado
     Assertions.assertThat(solicitudProyectoEncontrado).isEqualTo(Optional.empty());

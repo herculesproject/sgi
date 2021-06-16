@@ -62,7 +62,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     Long convocatoriaIdBuscado = convocatoria1.getId();
 
     // when: se busca el ConvocatoriaEntidadFinanciadora por ConvocatoriaId
-    List<ConvocatoriaEntidadFinanciadora> dataFound = repository.findAllByConvocatoriaId(convocatoriaIdBuscado);
+    List<ConvocatoriaEntidadFinanciadora> dataFound = repository.findByConvocatoriaId(convocatoriaIdBuscado);
 
     // then: Se comprueba que los elementos retornados pertenecen al convocatoriaId
     // solicitado
@@ -117,7 +117,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     Long convocatoriaIdBuscado = 3L;
 
     // when: se busca el ConvocatoriaEntidadFinanciadora por ConvocatoriaId
-    List<ConvocatoriaEntidadFinanciadora> dataFound = repository.findAllByConvocatoriaId(convocatoriaIdBuscado);
+    List<ConvocatoriaEntidadFinanciadora> dataFound = repository.findByConvocatoriaId(convocatoriaIdBuscado);
 
     // then: Se comprueba que no se obtiene ningún valor y la lista está vacia
     Assertions.assertThat(dataFound).isNotNull();

@@ -54,7 +54,7 @@ public class SolicitudProyecto extends BaseEntity {
    */
   private static final long serialVersionUID = 1L;
 
-  /** Id */
+  /** Id de la Solicitud */
   @Id
   @Column(name = "id", nullable = false)
   private Long id;
@@ -109,14 +109,13 @@ public class SolicitudProyecto extends BaseEntity {
   @JoinColumn(name = "area_tematica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTO_AREATEMATICA"))
   private AreaTematica areaTematica;
 
-  /** CheckListRef */
-  @Column(name = "check_list_ref", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String checkListRef;
+  /** Referencia a las respuesta del Checklist de ETICA */
+  @Column(name = "checklist_ref", nullable = true)
+  private String checklistRef;
 
-  /** Envío Ética */
-  @Column(name = "envio_etica", nullable = true)
-  private Boolean envioEtica;
+  /** Referencia a la petición de evaluación de ETICA */
+  @Column(name = "peticion_evaluacion_ref", nullable = true)
+  private String peticionEvaluacionRef;
 
   /** Tipo presupuesto */
   @Column(name = "tipo_presupuesto", length = 50, nullable = false)

@@ -3154,8 +3154,8 @@ industries" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
       <column name="area_tematica_id" value="null" />
-      <column name="check_list_ref" value="null" />
-      <column name="envio_etica" value="null" />
+      <column name="checklist_ref" value="null" />
+      <column name="peticion_evaluacion_ref" value="null" />
       <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
@@ -3169,8 +3169,8 @@ industries" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
       <column name="area_tematica_id" value="null" />
-      <column name="check_list_ref" value="null" />
-      <column name="envio_etica" value="null" />
+      <column name="checklist_ref" value="null" />
+      <column name="peticion_evaluacion_ref" value="null" />
       <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
@@ -3184,8 +3184,8 @@ industries" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
       <column name="area_tematica_id" value="null" />
-      <column name="check_list_ref" value="null" />
-      <column name="envio_etica" value="null" />
+      <column name="checklist_ref" value="null" />
+      <column name="peticion_evaluacion_ref" value="null" />
       <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
@@ -3199,8 +3199,8 @@ industries" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
       <column name="area_tematica_id" value="62" />
-      <column name="check_list_ref" value="null" />
-      <column name="envio_etica" value="null" />
+      <column name="checklist_ref" value="null" />
+      <column name="peticion_evaluacion_ref" value="null" />
       <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
@@ -3214,8 +3214,8 @@ industries" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
       <column name="area_tematica_id" value="null" />
-      <column name="check_list_ref" value="null" />
-      <column name="envio_etica" value="null" />
+      <column name="checklist_ref" value="null" />
+      <column name="peticion_evaluacion_ref" value="null" />
       <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
   </changeSet>
