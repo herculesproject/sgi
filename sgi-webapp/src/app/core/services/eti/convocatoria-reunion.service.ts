@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ACTA_CONVERTER } from '@core/converters/eti/acta.converter';
 import { ASISTENTE_CONVERTER } from '@core/converters/eti/asistente.converter';
 import { CONVOCATORIA_REUNION_DATOS_GENERALES_CONVERTER } from '@core/converters/eti/convocatoria-reunion-datos-generales.converter';
 import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
 import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter';
+import { IActa } from '@core/models/eti/acta';
 import { IAsistente } from '@core/models/eti/asistente';
+import { IActaBackend } from '@core/models/eti/backend/acta-backend';
 import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
 import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
 import { IConvocatoriaReunionDatosGeneralesBackend } from '@core/models/eti/backend/convocatoria-reunion-datos-generales-backend';
@@ -110,6 +113,20 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
     const url = `${this.endpointUrl}/${id}/modificable`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Devuelve el acta asociada ala convocatoria de reunión
+   * @param idConvocatoria id convocatoria.
+   */
+  public findActaInConvocatoriaReunion(idConvocatoria: number): Observable<IActa> {
+    return this.http.get<IActaBackend>(
+      `${this.endpointUrl}/${idConvocatoria}/acta`
+    ).pipe(
+      map((acta) => {
+        return ACTA_CONVERTER.toTarget(acta);
+      })
     );
   }
 }

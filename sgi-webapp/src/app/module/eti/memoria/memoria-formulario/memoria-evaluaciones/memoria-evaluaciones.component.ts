@@ -5,16 +5,23 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IActa } from '@core/models/eti/acta';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
+
+interface IActaConvocatoriaReunion {
+  idConvocatoriaReunion: number;
+  acta: IActa;
+}
 
 @Component({
   selector: 'sgi-memoria-evaluaciones',
@@ -25,6 +32,7 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
 
   private formPart: MemoriaEvaluacionesFragment;
   private subscriptions: Subscription[] = [];
+  private actasConvocatoriaReunion: IActaConvocatoriaReunion[] = [];
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -43,7 +51,8 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     protected readonly dialogService: DialogService,
     protected matDialog: MatDialog,
     protected memoriaService: MemoriaService,
-    actionService: MemoriaActionService) {
+    actionService: MemoriaActionService,
+    private readonly convocatoriaReunionService: ConvocatoriaReunionService) {
 
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
     this.formPart = this.fragment as MemoriaEvaluacionesFragment;
@@ -56,6 +65,13 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     this.dataSource = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
     this.subscriptions.push(this.formPart.evaluaciones$.subscribe(elements => {
       this.dataSource.data = elements;
+
+      elements.forEach(evaluacionWrapper => {
+        this.subscriptions.push(this.convocatoriaReunionService.findActaInConvocatoriaReunion(evaluacionWrapper.value.convocatoriaReunion.id).subscribe(acta => {
+          this.actasConvocatoriaReunion.push({ acta, idConvocatoriaReunion: evaluacionWrapper.value.convocatoriaReunion.id } as IActaConvocatoriaReunion);
+        }));
+      });
+
     }));
 
     this.dataSource.sortingDataAccessor =
@@ -92,6 +108,11 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     else if (idTipoMemoria === 3) {
       openInformeFavorableTipoRatificacion(idEvaluacion);
     }
+  }
+
+  isActaFinalizada(evaluacionWrapper: StatusWrapper<IEvaluacion>): boolean {
+    const actaConvocatoriaReunion = this.actasConvocatoriaReunion.find(actaConv => actaConv.idConvocatoriaReunion === evaluacionWrapper.value.convocatoriaReunion.id);
+    return actaConvocatoriaReunion?.acta?.estadoActual?.id === 2 ? true : false;
   }
 
   ngOnDestroy(): void {
