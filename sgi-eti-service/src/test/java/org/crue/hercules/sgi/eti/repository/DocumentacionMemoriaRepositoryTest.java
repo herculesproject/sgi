@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -27,33 +26,6 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private DocumentacionMemoriaRepository repository;
-
-  @Test
-  public void findByIdAndMemoriaIdAndMemoriaActivoTrue_ReturnsData() throws Exception {
-
-    // given: Datos existentes mmemoria activa y documentación.
-
-    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
-    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
-    TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
-    PeticionEvaluacion peticionEvaluacion = entityManager.persistAndFlush(generarMockPeticionEvaluacion(tipoActividad));
-    TipoMemoria tipoMemoria = entityManager.persistAndFlush(generarMockTipoMemoria());
-    TipoEstadoMemoria tipoEstadoMemoria = entityManager.persistAndFlush(generarMockTipoEstadoMemoria());
-    EstadoRetrospectiva estadoRetrospectiva = entityManager.persistAndFlush(generarMockEstadoRetrospectiva());
-    Retrospectiva retrospectiva = entityManager.persistAndFlush(generarMockRetrospectiva(estadoRetrospectiva));
-    Memoria memoria = entityManager
-        .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
-    TipoDocumento tipoDocumento = entityManager.persistAndFlush(generarMockTipoDocumento(formulario));
-    DocumentacionMemoria documenteacionMemoria = entityManager
-        .persistAndFlush(generarMockDocumentacionMemoria(memoria, tipoDocumento));
-
-    // when: Se buscan los datos
-    Optional<DocumentacionMemoria> result = repository
-        .findByIdAndMemoriaIdAndMemoriaActivoTrue(documenteacionMemoria.getId(), memoria.getId());
-    // then: Se recuperan los datos correctamente
-    Assertions.assertThat(result.get()).isNotNull();
-
-  }
 
   @Test
   public void findByMemoriaIdAndMemoriaActivoTrue_ReturnsData() throws Exception {
@@ -199,7 +171,7 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    * @return Memoria
    */
   private DocumentacionMemoria generarMockDocumentacionMemoria(Memoria memoria, TipoDocumento tipoDocumento) {
-    return new DocumentacionMemoria(null, memoria, tipoDocumento, "docRef001", Boolean.TRUE);
+    return new DocumentacionMemoria(null, memoria, tipoDocumento, "docRef001", "doc");
   }
 
 }

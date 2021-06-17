@@ -51,4 +51,6 @@ public interface RespuestaRepository extends JpaRepository<Respuesta, Long>, Jpa
    */
   Respuesta findByApartadoBloqueOrdenAndApartadoOrdenAndMemoriaId(Integer ordenBloque, Integer ordenApartado,
       Long idMemoria);
+
+  Page<Respuesta> findByMemoriaIdAndTipoDocumentoIsNotNull(Long idMemoria, Pageable pageable);
 }

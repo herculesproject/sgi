@@ -174,7 +174,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     List<DocumentacionMemoria> documentacionesMemoriaList = documentacionesMemoriaPage.getContent().stream()
         .map(documentacionMemoria -> {
           return new DocumentacionMemoria(null, memoriaCreada, documentacionMemoria.getTipoDocumento(),
-              documentacionMemoria.getDocumentoRef(), documentacionMemoria.getAportado());
+              documentacionMemoria.getDocumentoRef(), documentacionMemoria.getNombre());
         }).collect(Collectors.toList());
 
     documentacionMemoriaRepository.saveAll(documentacionesMemoriaList);
@@ -182,7 +182,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     Page<Respuesta> respuestasPage = respuestaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoria.getId(), null);
 
     List<Respuesta> respuestaList = respuestasPage.getContent().stream().map(respuesta -> {
-      return new Respuesta(null, memoriaCreada, respuesta.getApartado(), respuesta.getValor());
+      return new Respuesta(null, memoriaCreada, respuesta.getApartado(), respuesta.getTipoDocumento(),
+          respuesta.getValor());
     }).collect(Collectors.toList());
 
     respuestaRepository.saveAll(respuestaList);

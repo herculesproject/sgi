@@ -520,7 +520,7 @@ public class MemoriaIT extends BaseIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
-    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(4);
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(5);
 
     Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-004");
     Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-005");
@@ -640,11 +640,10 @@ public class MemoriaIT extends BaseIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
-    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(3);
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
 
     Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-003");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-008");
-    Assertions.assertThat(documentacionMemoria.get(2).getDocumentoRef()).isEqualTo("doc-012");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-012");
   }
 
   @Test
@@ -663,31 +662,6 @@ public class MemoriaIT extends BaseIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-  }
-
-  @Test
-  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
-
-    DocumentacionMemoria replaceDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
-        generarMockMemoria(2L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
-    replaceDocumentacionMemoria.setAportado(Boolean.FALSE);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
-
-    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
-        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
-        HttpMethod.PUT, buildRequestDocumentacionMemoria(headers, replaceDocumentacionMemoria),
-        DocumentacionMemoria.class, 3L, 9L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final DocumentacionMemoria documentacionMemoria = response.getBody();
-
-    Assertions.assertThat(replaceDocumentacionMemoria.getId()).isNotNull();
-    Assertions.assertThat(documentacionMemoria.getMemoria().getNumReferencia())
-        .isEqualTo(replaceDocumentacionMemoria.getMemoria().getNumReferencia());
-    Assertions.assertThat(documentacionMemoria.getAportado()).isEqualTo(replaceDocumentacionMemoria.getAportado());
   }
 
   @Test
@@ -829,7 +803,7 @@ public class MemoriaIT extends BaseIT {
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
-    documentacionMemoria.setAportado(Boolean.TRUE);
+    documentacionMemoria.setNombre("doc-00" + id);
 
     return documentacionMemoria;
   }

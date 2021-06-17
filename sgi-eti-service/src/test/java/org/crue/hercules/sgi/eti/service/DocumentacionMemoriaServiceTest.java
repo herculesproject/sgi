@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -7,14 +8,15 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
-import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.service.impl.DocumentacionMemoriaServiceImpl;
@@ -49,10 +51,13 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   @Mock
   private TipoDocumentoService tipoDocumentoService;
 
+  @Mock
+  private FormularioRepository formularioRepository;
+
   @BeforeEach
   public void setUp() throws Exception {
     documentacionMemoriaService = new DocumentacionMemoriaServiceImpl(documentacionMemoriaRepository, memoriaRepository,
-        tipoDocumentoRepository);
+        tipoDocumentoRepository, formularioRepository);
   }
 
   @Test
@@ -82,57 +87,13 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByMemoriaIdNull() {
-    // given: EL id de la memoria sea null
-    Long memoriaId = null;
-    try {
-      // when: se listar sus evaluaciones
-      documentacionMemoriaService.findByMemoriaId(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
-      // then: se debe lanzar una excepción
-    } catch (IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentación");
-    }
-  }
-
-  @Test
-  public void findAllByMemoriaIdValid() {
-    // given: EL id de la memoria es valido
-    Long memoriaId = 12L;
-    Memoria memoria = generarMockMemoria(memoriaId, "Titulo", 1L);
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
-    List<DocumentacionMemoria> response = new LinkedList<DocumentacionMemoria>();
-    response.add(generarMockDocumentacionMemoria(Long.valueOf(1), memoria, tipoDocumento));
-    response.add(generarMockDocumentacionMemoria(Long.valueOf(3), memoria, tipoDocumento));
-    response.add(generarMockDocumentacionMemoria(Long.valueOf(5), memoria, tipoDocumento));
-
-    // página 1 con 2 elementos por página
-    Pageable pageable = PageRequest.of(1, 2);
-    Page<DocumentacionMemoria> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
-
-    BDDMockito
-        .given(
-            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(pageResponse);
-
-    // when: Se buscan los datos paginados
-    Page<DocumentacionMemoria> result = documentacionMemoriaService.findByMemoriaId(memoriaId, pageable);
-
-    // then: Se recuperan los datos correctamente según la paginación solicitada
-    Assertions.assertThat(result).isEqualTo(pageResponse);
-    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(2, 3));
-    Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
-    Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
-    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
-  }
-
-  @Test
   public void findDocumentacionMemoriaIdValid() {
     // given: EL id de la memoria es valido
     Long memoriaId = 12L;
     Memoria memoria = generarMockMemoria(memoriaId, "Titulo", 1L);
+    Formulario formulario = generarMockFormulario(1L);
 
+    BDDMockito.given(formularioRepository.findByMemoriaId(ArgumentMatchers.anyLong())).willReturn(formulario);
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(memoria));
 
@@ -429,8 +390,8 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(Mockito.anyLong())).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(tipoDocumentoRepository.findByIdAndActivoTrue(Mockito.anyLong()))
-        .willReturn(Optional.of(tipoDocumento));
+    BDDMockito.given(tipoDocumentoRepository.findByFormularioIdAndActivoTrue(Mockito.anyLong()))
+        .willReturn(Arrays.asList(tipoDocumento));
 
     BDDMockito.given(documentacionMemoriaRepository.save(documentacionMemoriaNew)).willReturn(documentacionMemoria);
 
@@ -529,8 +490,8 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(Mockito.anyLong())).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(tipoDocumentoRepository.findByIdAndActivoTrue(Mockito.anyLong()))
-        .willReturn(Optional.of(tipoDocumento));
+    BDDMockito.given(tipoDocumentoRepository.findByFormularioIdAndActivoTrue(Mockito.anyLong()))
+        .willReturn(Arrays.asList(tipoDocumento));
 
     BDDMockito.given(documentacionMemoriaRepository.save(documentacionMemoriaNew)).willReturn(documentacionMemoria);
 
@@ -629,8 +590,8 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(Mockito.anyLong())).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(tipoDocumentoRepository.findByIdAndActivoTrue(Mockito.anyLong()))
-        .willReturn(Optional.of(tipoDocumento));
+    BDDMockito.given(tipoDocumentoRepository.findByFormularioIdAndActivoTrue(Mockito.anyLong()))
+        .willReturn(Arrays.asList(tipoDocumento));
 
     BDDMockito.given(documentacionMemoriaRepository.save(documentacionMemoriaNew)).willReturn(documentacionMemoria);
 
@@ -722,122 +683,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void updateDocumentacionInicial_ReturnsDocumentacionMemoria() {
-    // given: documentacion memoria actualizada con aportado a false
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
-    DocumentacionMemoria documentacionMemoriaActualizada = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    BDDMockito.given(documentacionMemoriaRepository.save(documentacionMemoria))
-        .willReturn(documentacionMemoriaActualizada);
-
-    // when: Actualizamos la documentacion memoria
-    DocumentacionMemoria documentacionMemoriaActualizadaBD = documentacionMemoriaService.updateDocumentacionInicial(1L,
-        documentacionMemoriaActualizada);
-
-    // then: La documentacion aportada se actualiza correctamente.
-    Assertions.assertThat(documentacionMemoriaActualizadaBD.getId()).isEqualTo(1L);
-    Assertions.assertThat(documentacionMemoriaActualizadaBD.getMemoria().getId()).isEqualTo(1L);
-    Assertions.assertThat(documentacionMemoriaActualizadaBD.getAportado()).isFalse();
-
-  }
-
-  @Test
-  public void updateDocumentacionInicial_DocumentacionMemoriaIdNull() {
-    // given: documentacion memoria actualizada con aportado a false e identificador
-    // a null
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
-    DocumentacionMemoria documentacionMemoriaActualizada = generarMockDocumentacionMemoria(null, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-    try {
-
-      // when: Actualizamos la documentacion memoria
-      documentacionMemoriaService.updateDocumentacionInicial(1L, documentacionMemoriaActualizada);
-      Assertions.fail("DocumentacionMemoria id no puede ser null para actualizar una documentación memoria.");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id no puede ser null para actualizar una documentación memoria");
-    }
-
-  }
-
-  @Test
-  public void updateDocumentacionInicial_MemoriaIdNull() {
-    // given: documentacion memoria actualizada con aportado a false
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
-    DocumentacionMemoria documentacionMemoriaActualizada = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-    try {
-
-      // when: Actualizamos la documentacion memoria con id memoria null
-      documentacionMemoriaService.updateDocumentacionInicial(null, documentacionMemoriaActualizada);
-      Assertions.fail("Memoria id no puede ser null para actualizar una documentación memoria");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("Memoria id no puede ser null para actualizar una documentación memoria");
-    }
-
-  }
-
-  @Test
-  public void updateDocumentacionInicial_throwDocumentacionMemoriaNotFound() {
-    // given: documentacion memoria actualizada con aportado a false
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
-    DocumentacionMemoria documentacionMemoriaActualizada = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.empty());
-    Assertions
-        .assertThatThrownBy(
-            () -> documentacionMemoriaService.updateDocumentacionInicial(1L, documentacionMemoriaActualizada))
-        .isInstanceOf(DocumentacionMemoriaNotFoundException.class);
-
-  }
-
-  @Test
-  public void updateDocumentacionInicial_estadoMemoriaFail() {
-    // given: documentacion memoria actualizada con aportado a false y memoria en
-    // estado incorrecto
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 4L);
-    DocumentacionMemoria documentacionMemoriaActualizada = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-    documentacionMemoriaActualizada.setAportado(Boolean.FALSE);
-
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    try {
-
-      // when: Actualizamos la documentacion memoria con id memoria null
-      documentacionMemoriaService.updateDocumentacionInicial(1L, documentacionMemoriaActualizada);
-      Assertions.fail("La memoria no se encuentra en un estado adecuado para añadir documentación.");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no se encuentra en un estado adecuado para añadir documentación.");
-    }
-
-  }
-
-  @Test
   public void deleteDocumentacionSeguimientoAnual_DocumentacionMemoriaIdNull() {
 
     try {
@@ -889,10 +734,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+    BDDMockito.given(
+        documentacionMemoriaRepository.findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(1L, 1L, 4L))
         .willReturn(Optional.empty());
     Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L))
-        .isInstanceOf(TipoDocumentoNotFoundException.class);
+        .isInstanceOf(DocumentacionMemoriaNotFoundException.class);
 
   }
 
@@ -914,31 +760,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
           "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento anual");
-    }
-
-  }
-
-  @Test
-  public void deleteDocumentacionSeguimientoAnual_tipoDocumentoFail() {
-    // given:memoria y documentacion con tipo documento erróneo
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-
-    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    try {
-
-      // when: Se elimina la documentación
-      documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L);
-      Assertions.fail("La documentación recuperada no se corresponde con el tipo Seguimiento Anual");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("La documentación recuperada no se corresponde con el tipo Seguimiento Anual");
     }
 
   }
@@ -995,10 +816,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+    BDDMockito.given(
+        documentacionMemoriaRepository.findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(1L, 1L, 5L))
         .willReturn(Optional.empty());
     Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionSeguimientoFinal(1L, 1L))
-        .isInstanceOf(TipoDocumentoNotFoundException.class);
+        .isInstanceOf(DocumentacionMemoriaNotFoundException.class);
 
   }
 
@@ -1020,31 +842,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
           "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento final");
-    }
-
-  }
-
-  @Test
-  public void deleteDocumentacionSeguimientoFinal_tipoDocumentoFail() {
-    // given:memoria y documentacion con tipo documento erróneo
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-
-    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    try {
-
-      // when: Se elimina la documentación
-      documentacionMemoriaService.deleteDocumentacionSeguimientoFinal(1L, 1L);
-      Assertions.fail("La documentación recuperada no se corresponde con el tipo Seguimiento Final");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("La documentación recuperada no se corresponde con el tipo Seguimiento Final");
     }
 
   }
@@ -1101,10 +898,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+    BDDMockito.given(
+        documentacionMemoriaRepository.findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(1L, 1L, 6L))
         .willReturn(Optional.empty());
     Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionRetrospectiva(1L, 1L))
-        .isInstanceOf(TipoDocumentoNotFoundException.class);
+        .isInstanceOf(DocumentacionMemoriaNotFoundException.class);
 
   }
 
@@ -1130,31 +928,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
           "La retrospectiva no se encuentra en un estado adecuado para eliminar documentación de retrospectiva");
-    }
-
-  }
-
-  @Test
-  public void deleteDocumentacionRetrospectiva_tipoDocumentoFail() {
-    // given:memoria y documentacion con tipo documento erróneo
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(4L));
-
-    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    try {
-
-      // when: Se elimina la documentación
-      documentacionMemoriaService.deleteDocumentacionRetrospectiva(1L, 1L);
-      Assertions.fail("La documentación recuperada no se corresponde con el tipo retrospectiva");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("La documentación recuperada no se corresponde con el tipo retrospectiva");
     }
 
   }
@@ -1210,10 +983,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+    BDDMockito.given(
+        documentacionMemoriaRepository.findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(1L, 1L, 4L))
         .willReturn(Optional.empty());
     Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L))
-        .isInstanceOf(TipoDocumentoNotFoundException.class);
+        .isInstanceOf(DocumentacionMemoriaNotFoundException.class);
 
   }
 
@@ -1238,32 +1012,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
-  public void deleteDocumentacionInicial_tipoDocumentoFail() {
-    // given:memoria y documentacion con tipo documento erróneo
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
-        generarMockTipoDocumento(1L));
-
-    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
-    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
-        .willReturn(Optional.of(documentacionMemoria));
-    try {
-
-      // when: Se elimina la documentación
-      documentacionMemoriaService.deleteDocumentacionInicial(1L, 1L);
-      Assertions
-          .fail("La documentación recuperada no se corresponde con los tipos correspondientes a documentación inicial");
-    } catch (
-
-    final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo(
-          "La documentación recuperada no se corresponde con los tipos correspondientes a documentación inicial");
-    }
-
-  }
-
   /**
    * Función que devuelve un objeto DocumentacionMemoria
    * 
@@ -1280,7 +1028,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
-    documentacionMemoria.setAportado(Boolean.TRUE);
+    documentacionMemoria.setNombre("doc-00" + id);
 
     return documentacionMemoria;
   }
@@ -1322,7 +1070,6 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
    * @param id id del TipoDocumento
    * @return el objeto TipoDocumento
    */
-
   public TipoDocumento generarMockTipoDocumento(Long id) {
 
     TipoDocumento tipoDocumento = new TipoDocumento();
@@ -1332,4 +1079,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     return tipoDocumento;
   }
 
+  private Formulario generarMockFormulario(Long id) {
+    return new Formulario(id, "Nombre", "Descripcion");
+  }
 }

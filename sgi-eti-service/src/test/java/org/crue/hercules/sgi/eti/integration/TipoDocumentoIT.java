@@ -53,9 +53,9 @@ public class TipoDocumentoIT extends BaseIT {
   public void getTipoDocumento_WithId_ReturnsTipoDocumento() throws Exception {
 
     Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("M10");
-    formulario.setDescripcion("Formulario M10");
+    formulario.setId(4L);
+    formulario.setNombre("Seguimiento Anual");
+    formulario.setDescripcion("Descripcion");
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
         TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
@@ -71,65 +71,15 @@ public class TipoDocumentoIT extends BaseIT {
   }
 
   @Test
-  public void addTipoDocumento_ReturnsTipoDocumento() throws Exception {
-
-    TipoDocumento nuevoTipoDocumento = generarMockTipoDocumento(1L, "Seguimiento Anual");
-
-    final ResponseEntity<TipoDocumento> response = restTemplate.exchange(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH,
-        HttpMethod.POST, buildRequest(null, nuevoTipoDocumento), TipoDocumento.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    Assertions.assertThat(response.getBody()).isEqualTo(nuevoTipoDocumento);
-  }
-
-  @Test
-  public void removeTipoDocumento_Success() throws Exception {
-
-    // when: Delete con id existente
-    long id = 1L;
-    final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
-        TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        TipoDocumento.class, id);
-
-    // then: 200
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-  }
-
-  @Test
   public void removeTipoDocumento_DoNotGetTipoDocumento() throws Exception {
     restTemplate.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
         TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        TipoDocumento.class, 12L);
+        TipoDocumento.class, 13L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
-  }
-
-  @Test
-  public void replaceTipoDocumento_ReturnsTipoDocumento() throws Exception {
-
-    Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("M10");
-    formulario.setDescripcion("Formulario M10");
-
-    TipoDocumento replaceTipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
-
-    final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
-        TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(null, replaceTipoDocumento), TipoDocumento.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final TipoDocumento tipoDocumento = response.getBody();
-
-    Assertions.assertThat(tipoDocumento.getId()).isNotNull();
-    Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo(replaceTipoDocumento.getNombre());
-    Assertions.assertThat(tipoDocumento.getFormulario()).isEqualTo(replaceTipoDocumento.getFormulario());
-    Assertions.assertThat(tipoDocumento.getActivo()).isEqualTo(replaceTipoDocumento.getActivo());
   }
 
   @Test
@@ -149,10 +99,10 @@ public class TipoDocumentoIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoDocumento> tipoDocumentos = response.getBody();
-    Assertions.assertThat(tipoDocumentos.size()).isEqualTo(3);
+    Assertions.assertThat(tipoDocumentos.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("12");
 
     // Contiene de nombre='TipoDocumento6' a 'TipoDocumento8'
     Assertions.assertThat(tipoDocumentos.get(0).getNombre()).isEqualTo("TipoDocumento6");
@@ -200,11 +150,11 @@ public class TipoDocumentoIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoDocumento> tipoDocumentos = response.getBody();
-    Assertions.assertThat(tipoDocumentos.size()).isEqualTo(8);
+    Assertions.assertThat(tipoDocumentos.size()).isEqualTo(12);
     for (int i = 0; i < 8; i++) {
       TipoDocumento tipoDocumento = tipoDocumentos.get(i);
-      Assertions.assertThat(tipoDocumento.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 8 - i));
+      Assertions.assertThat(tipoDocumento.getId()).isEqualTo(9 - i);
+      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 9 - i));
     }
   }
 
@@ -234,13 +184,13 @@ public class TipoDocumentoIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("12");
 
     // Contiene nombre='TipoDocumento8', 'TipoDocumento7',
     // 'TipoDocumento6'
-    Assertions.assertThat(tipoDocumentos.get(0).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 8));
-    Assertions.assertThat(tipoDocumentos.get(1).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 7));
-    Assertions.assertThat(tipoDocumentos.get(2).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 6));
+    Assertions.assertThat(tipoDocumentos.get(0).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 9));
+    Assertions.assertThat(tipoDocumentos.get(1).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 8));
+    Assertions.assertThat(tipoDocumentos.get(2).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 7));
 
   }
 

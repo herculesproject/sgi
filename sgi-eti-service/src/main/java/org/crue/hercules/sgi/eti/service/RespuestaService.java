@@ -62,4 +62,6 @@ public interface RespuestaService {
    * @return Respuesta
    */
   Respuesta findByMemoriaIdAndApartadoId(Long id, Long idApartado);
+
+  Page<Respuesta> findByMemoriaId(Long idMemoria, Pageable page);
 }

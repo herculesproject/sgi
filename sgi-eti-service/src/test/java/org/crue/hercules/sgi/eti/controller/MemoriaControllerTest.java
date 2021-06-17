@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.RespuestaService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   @MockBean
   private CustomConvocatoriaReunionRepository convocatoriaReunionRepository;
+
+  @MockBean
+  private RespuestaService respuestaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_ASIGNABLES = "/asignables/{idConvocatoria}";
@@ -494,67 +498,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void getDocumentacionesEmptyList() throws Exception {
-    // given: Existe la memoria pero no tiene documentacion
-    Long id = 3L;
-    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
-
-    BDDMockito
-        .given(
-            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(Collections.emptyList()));
-
-    // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Se recupera lista vacía
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void getDocumentacionesValid() throws Exception {
-    // given: Datos existentes con memoria
-    Long id = 3L;
-    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
-
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
-    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
-          "Memoria" + String.format("%03d", i), i);
-      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
-          tipoDocumento);
-      documentacionMemorias.add(documentacionMemoria);
-    }
-
-    BDDMockito
-        .given(
-            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<DocumentacionMemoria>>() {
-          @Override
-          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
-            List<DocumentacionMemoria> content = new ArrayList<>();
-            for (DocumentacionMemoria documentacion : documentacionMemorias) {
-              content.add(documentacion);
-            }
-            return new PageImpl<>(content);
-          }
-        });
-    // when: Se buscan todos los documentos de esa memoria
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
-            .contentType(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Se recuperan todos los documentos relacionados
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
-  }
-
-  @Test
   @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
   public void findAllMemoriasAsignablesConvocatoria_Unlimited_ReturnsFullMemoriaList() throws Exception {
     // given: idConvocatoria, One hundred Memoria
@@ -958,33 +901,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
-  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
-    // given: Una documentación memoria a modificar
-    String replaceDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
-        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
-
-    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
-        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
-    documentacionMemoria.setAportado(Boolean.FALSE);
-
-    BDDMockito.given(documentacionMemoriaService.updateDocumentacionInicial(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
-
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
-                1L, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceDocumentacionMemoriaJson))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Modifica la documentación memoria y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("aportado").value(Boolean.FALSE));
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void newDocumentacionMemoriaInicial_ReturnsMemoria() throws Exception {
     // given: Un documentación memoria nueva
     String nuevaDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
@@ -992,7 +908,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
         generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
-    documentacionMemoria.setAportado(Boolean.FALSE);
 
     BDDMockito.given(documentacionMemoriaService.createDocumentacionInicial(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
@@ -1040,7 +955,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
         generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
-    documentacionMemoria.setAportado(Boolean.FALSE);
 
     BDDMockito.given(documentacionMemoriaService.createSeguimientoAnual(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
@@ -1066,7 +980,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
         generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
-    documentacionMemoria.setAportado(Boolean.FALSE);
 
     BDDMockito.given(documentacionMemoriaService.createSeguimientoFinal(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
@@ -1092,7 +1005,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
         generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
-    documentacionMemoria.setAportado(Boolean.FALSE);
 
     BDDMockito.given(documentacionMemoriaService.createRetrospectiva(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
@@ -1254,7 +1166,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(documentacionMemoriaService.findByMemoriaIdAndTipoEvaluacion(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<TipoEvaluacion.Tipo>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<DocumentacionMemoria>>() {
           @Override
           public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -1288,7 +1200,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(documentacionMemoriaService.findByMemoriaIdAndTipoEvaluacion(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<TipoEvaluacion.Tipo>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
@@ -1546,7 +1458,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
-    documentacionMemoria.setAportado(Boolean.TRUE);
+    documentacionMemoria.setNombre("doc-00" + id);
 
     return documentacionMemoria;
   }

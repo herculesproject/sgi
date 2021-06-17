@@ -40,7 +40,6 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
-  private static final String TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH = "/iniciales";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
@@ -68,99 +67,6 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
-  public void newTipoDocumento_ReturnsTipoDocumento() throws Exception {
-    // given: Un tipo Documento nuevo
-    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
-
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
-
-    BDDMockito.given(tipoDocumentoService.create(ArgumentMatchers.<TipoDocumento>any())).willReturn(tipoDocumento);
-
-    // when: Creamos un tipo Documento
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoTipoDocumentoJson))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Crea el nuevo tipo Documento y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoDocumento1"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
-  public void newTipoDocumento_Error_Returns400() throws Exception {
-    // given: Un tipo Documento nuevo que produce un error al crearse
-    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
-
-    BDDMockito.given(tipoDocumentoService.create(ArgumentMatchers.<TipoDocumento>any()))
-        .willThrow(new IllegalArgumentException());
-
-    // when: Creamos un tipo Documento
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoTipoDocumentoJson))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devueve un error 400
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
-  public void replaceTipoDocumento_ReturnsTipoDocumento() throws Exception {
-    // given: Un tipo Documento a modificar
-    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
-
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "Replace TipoDocumento1");
-
-    BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any())).willReturn(tipoDocumento);
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceTipoDocumentoJson))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Modifica el tipo Documento y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Replace TipoDocumento1"));
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
-  public void replaceTipoDocumento_NotFound() throws Exception {
-    // given: Un tipo Documento a modificar
-    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
-
-    BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any()))
-        .will((InvocationOnMock invocation) -> {
-          throw new TipoDocumentoNotFoundException(((TipoDocumento) invocation.getArgument(0)).getId());
-        });
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceTipoDocumentoJson))
-        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
-  public void removeTipoDocumento_ReturnsOk() throws Exception {
-
-    BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockTipoDocumento(1L, "TipoDocumento1"));
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -284,45 +190,6 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
         // then: Get a page one hundred TipoDocumento
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
-  public void findTipoDocumentacionInicial_ReturnsFullTipoDocumentoInicialList() throws Exception {
-    // given: One hundred TipoDocumento
-    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
-    }
-
-    BDDMockito.given(tipoDocumentoService.findTipoDocumentacionInicial(ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoDocumentos));
-    // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Get a page one hundred TipoDocumento iniciales
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
-  public void findTipoDocumentacionInicial_ReturnsNoContent() throws Exception {
-    // given: TipoDocumento empty
-    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
-
-    BDDMockito.given(tipoDocumentoService.findTipoDocumentacionInicial(ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoDocumentos));
-    // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        // then: Devuelve error No Content
-        .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**

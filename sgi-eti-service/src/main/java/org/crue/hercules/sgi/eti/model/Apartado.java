@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -67,7 +68,8 @@ public class Apartado extends BaseEntity {
   private Integer orden;
 
   /** Esquema. */
-  @Column(name = "esquema", length = 33000, nullable = false)
+  @Lob
+  @Column(name = "esquema", nullable = false)
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String esquema;

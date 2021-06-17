@@ -1,12 +1,11 @@
 package org.crue.hercules.sgi.eti.service;
 
+import javax.validation.Valid;
+
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-
-import javax.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,17 +26,6 @@ public interface DocumentacionMemoriaService {
   DocumentacionMemoria createDocumentacionInicial(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
 
   /**
-   * Actualizar {@link DocumentacionMemoria} inicial de una memoria (aquella
-   * documentación que no es de seguimiento anual, final o retrospectiva).
-   *
-   * @param idMemoria            Id de la {@link Memoria}
-   * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
-   *                             actualizar.
-   * @return la entidad {@link DocumentacionMemoria} persistida.
-   */
-  DocumentacionMemoria updateDocumentacionInicial(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
-
-  /**
    * Obtiene {@link DocumentacionMemoria} por id.
    *
    * @param id el id de la entidad {@link DocumentacionMemoria}.
@@ -46,25 +34,16 @@ public interface DocumentacionMemoriaService {
   DocumentacionMemoria findById(Long id);
 
   /**
-   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} para una
-   * determinada {@link Memoria}.
-   *
-   * @param id       Id de {@link Memoria}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
-   */
-  Page<DocumentacionMemoria> findByMemoriaId(Long id, Pageable pageable);
-
-  /**
    * Obtener todas las entidades paginadas {@link DocumentacionMemoria} por
    * {@link TipoEvaluacion} para una determinada {@link Memoria}.
    *
-   * @param id               Id de {@link Memoria}.
-   * @param idTipoEvaluacion Id de {@link TipoEvaluacion}
-   * @param pageable         la información de la paginación.
+   * @param idMemoria      Id de {@link Memoria}.
+   * @param tipoEvaluacion Id de {@link TipoEvaluacion.Tipo}
+   * @param pageable       la información de la paginación.
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
-  Page<DocumentacionMemoria> findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable);
+  Page<DocumentacionMemoria> findByMemoriaIdAndTipoEvaluacion(Long idMemoria, TipoEvaluacion.Tipo tipoEvaluacion,
+      Pageable pageable);
 
   /**
    * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al

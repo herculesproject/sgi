@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import javax.validation.Valid;
+import java.util.List;
 
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
@@ -9,12 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,36 +60,6 @@ public class TipoDocumentoController {
   }
 
   /**
-   * Crea nuevo {@link TipoDocumento}.
-   * 
-   * @param nuevoTipoDocumento {@link TipoDocumento}. que se quiere crear.
-   * @return Nuevo {@link TipoDocumento} creado.
-   */
-  @PostMapping
-  ResponseEntity<TipoDocumento> newTipoDocumento(@Valid @RequestBody TipoDocumento nuevoTipoDocumento) {
-    log.debug("newTipoDocumento(TipoDocumento nuevoTipoDocumento) - start");
-    TipoDocumento returnValue = service.create(nuevoTipoDocumento);
-    log.debug("newTipoDocumento(TipoDocumento nuevoTipoDocumento) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link TipoDocumento}.
-   * 
-   * @param updatedTipoDocumento {@link TipoDocumento} a actualizar.
-   * @param id                   id {@link TipoDocumento} a actualizar.
-   * @return {@link TipoDocumento} actualizado.
-   */
-  @PutMapping("/{id}")
-  TipoDocumento replaceTipoDocumento(@Valid @RequestBody TipoDocumento updatedTipoDocumento, @PathVariable Long id) {
-    log.debug("replaceTipoDocumento(TipoDocumento updatedTipoDocumento, Long id) - start");
-    updatedTipoDocumento.setId(id);
-    TipoDocumento returnValue = service.update(updatedTipoDocumento);
-    log.debug("replaceTipoDocumento(TipoDocumento updatedTipoDocumento, Long id) - end");
-    return returnValue;
-  }
-
-  /**
    * Devuelve el {@link TipoDocumento} con el id indicado.
    * 
    * @param id Identificador de {@link TipoDocumento}.
@@ -108,31 +74,16 @@ public class TipoDocumentoController {
   }
 
   /**
-   * Elimina {@link TipoDocumento} con id indicado.
+   * Devuelve una lista paginada y filtrada {@link TipoDocumento} inicial de un
+   * formulario
    * 
-   * @param id Identificador de {@link TipoDocumento}.
+   * @param id Identificador de Formulario
+   * @return Listado de {@link TipoDocumento}
    */
-  @DeleteMapping("/{id}")
-  void delete(@PathVariable Long id) {
-    log.debug("delete(Long id) - start");
-    TipoDocumento tipoDocumento = this.one(id);
-    tipoDocumento.setActivo(Boolean.TRUE);
-    service.update(tipoDocumento);
-    log.debug("delete(Long id) - end");
-  }
-
-  /**
-   * Devuelve una lista paginada y filtrada {@link TipoDocumento} inicial de una
-   * memoria.
-   * 
-   * @param query  filtro de búsqueda.
-   * @param paging pageable
-   */
-  @GetMapping("/iniciales")
-  ResponseEntity<Page<TipoDocumento>> findTipoDocumentacionInicial(
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+  @GetMapping("/formulario/{id}")
+  ResponseEntity<List<TipoDocumento>> findByFormularioId(@PathVariable Long id) {
     log.debug("findTipoDocumentacionInicial(String query,Pageable paging) - start");
-    Page<TipoDocumento> page = service.findTipoDocumentacionInicial(query, paging);
+    List<TipoDocumento> page = service.findByFormularioId(id);
 
     if (page.isEmpty()) {
       log.debug("findTipoDocumentacionInicial(String query,Pageable paging) - end");

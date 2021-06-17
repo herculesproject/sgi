@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.crue.hercules.sgi.eti.dto.RespuestaRetrospectivaFormulario;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Bloque;
@@ -53,6 +54,7 @@ public class RespuestaServiceImpl implements RespuestaService {
    * @param respuesta la entidad {@link Respuesta} a guardar.
    * @return la entidad {@link Respuesta} persistida.
    */
+  @Override
   @Transactional
   public Respuesta create(Respuesta respuesta) {
     log.debug("Petición a create Respuesta : {} - start", respuesta);
@@ -74,6 +76,7 @@ public class RespuestaServiceImpl implements RespuestaService {
    * @param query  información del filtro.
    * @return el listado de entidades {@link Respuesta} paginadas y filtradas.
    */
+  @Override
   public Page<Respuesta> findAll(String query, Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
     Specification<Respuesta> specs = SgiRSQLJPASupport.toSpecification(query);
@@ -91,6 +94,7 @@ public class RespuestaServiceImpl implements RespuestaService {
    * @throws RespuestaNotFoundException Si no existe ningún {@link Respuesta} con
    *                                    ese id.
    */
+  @Override
   public Respuesta findById(final Long id) throws RespuestaNotFoundException {
     log.debug("Petición a get Respuesta : {}  - start", id);
     final Respuesta respuesta = respuestaRepository.findById(id).orElseThrow(() -> new RespuestaNotFoundException(id));
@@ -104,6 +108,7 @@ public class RespuestaServiceImpl implements RespuestaService {
    *
    * @param id el id de la entidad {@link Respuesta}.
    */
+  @Override
   @Transactional
   public void delete(Long id) throws RespuestaNotFoundException {
     log.debug("Petición a delete Respuesta : {}  - start", id);
@@ -118,6 +123,7 @@ public class RespuestaServiceImpl implements RespuestaService {
   /**
    * Elimina todos los registros {@link Respuesta}.
    */
+  @Override
   @Transactional
   public void deleteAll() {
     log.debug("Petición a deleteAll de Respuesta: {} - start");
@@ -135,7 +141,7 @@ public class RespuestaServiceImpl implements RespuestaService {
    *                                    ese id.
    * @throws IllegalArgumentException   Si el {@link Respuesta} no tiene id.
    */
-
+  @Override
   @Transactional
   public Respuesta update(final Respuesta respuestaActualizar) {
     log.debug("update(Respuesta RespuestaActualizar) - start");
@@ -146,6 +152,7 @@ public class RespuestaServiceImpl implements RespuestaService {
       respuesta.setMemoria(respuestaActualizar.getMemoria());
       respuesta.setApartado(respuestaActualizar.getApartado());
       respuesta.setValor(respuestaActualizar.getValor());
+      respuesta.setTipoDocumento(respuestaActualizar.getTipoDocumento());
 
       Respuesta returnValue = respuestaRepository.save(respuesta);
 
@@ -209,8 +216,8 @@ public class RespuestaServiceImpl implements RespuestaService {
    * 
    * @param formulario  l {@link Formulario}
    * @param idRespuesta el identificador de la {@link Respuesta}
-   * @param memoria     la {@link Memoria} de la {@link Respuesta}  
-   */                    
+   * @param memoria     la {@link Memoria} de la {@link Respuesta}
+   */
   private void guardarDatosRetrospectiva(Formulario formulario, Long idRespuesta, Memoria memoria) {
     if (formulario.getNombre().equals("M20")) {
       // Bloque 5 apartado 3 - Evaluación retrospectiva
@@ -254,6 +261,11 @@ public class RespuestaServiceImpl implements RespuestaService {
         }
       }
     }
+  }
+
+  @Override
+  public Page<Respuesta> findByMemoriaId(Long idMemoria, Pageable page) {
+    return respuestaRepository.findByMemoriaIdAndTipoDocumentoIsNotNull(idMemoria, page);
   }
 
 }

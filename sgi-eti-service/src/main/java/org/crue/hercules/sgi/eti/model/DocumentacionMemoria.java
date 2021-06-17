@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 /**
  * DocumentacionMemoria
  */
-
 @Entity
 @Table(name = "documentacion_memoria")
 @Data
@@ -56,8 +55,8 @@ public class DocumentacionMemoria extends BaseEntity {
   @NotNull
   private String documentoRef;
 
-  /** Aportado */
-  @Column(name = "aportado", columnDefinition = "boolean default false", nullable = false)
-  private Boolean aportado;
+  /** Nombre */
+  @Column(name = "nombre", nullable = false, length = 250)
+  private String nombre;
 
 }

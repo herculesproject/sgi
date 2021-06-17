@@ -427,140 +427,140 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="4" />
       <column name="documento_ref" value="DocumentoRef1_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 1" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="5" />
       <column name="documento_ref" value="DocumentoRef2_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 2" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="6" />
       <column name="documento_ref" value="DocumentoRef3_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 3" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="7" />
       <column name="documento_ref" value="DocumentoRef4_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 4" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="8" />
       <column name="documento_ref" value="DocumentoRef5_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 5" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="9" />
       <column name="documento_ref" value="DocumentoRef6_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 6" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="10" />
       <column name="documento_ref" value="DocumentoRef7_M10/2019/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 7" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="11" />
       <column name="documento_ref" value="DocumentoRef8_M10/2019/001" />
-      <column name="aportado" value="false" />
+      <column name="nombre" value="Documento 8" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="tipo_documento_id" value="12" />
       <column name="documento_ref" value="DocumentoRef1_M20/2020/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 1" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="tipo_documento_id" value="13" />
       <column name="documento_ref" value="DocumentoRef2_M20/2020/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 2" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="tipo_documento_id" value="14" />
       <column name="documento_ref" value="DocumentoRef3_M20/2020/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 3" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="tipo_documento_id" value="15" />
       <column name="documento_ref" value="DocumentoRef4_M20/2020/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 4" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="tipo_documento_id" value="16" />
       <column name="documento_ref" value="DocumentoRef5_M20/2020/001" />
-      <column name="aportado" value="true" />
-    </insert>
-    <insert tableName="documentacion_memoria">
-      <column name="id" valueSequenceNext="documentacion_memoria_seq" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
-      <column name="tipo_documento_id" value="17" />
-      <column name="documento_ref" value="DocumentoRef6_M20/2020/001" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 5" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="tipo_documento_id" value="12" />
       <column name="documento_ref" value="DocumentoRef1_M20/2020/002" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 1" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="tipo_documento_id" value="13" />
       <column name="documento_ref" value="DocumentoRef2_M20/2020/002" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 2" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="tipo_documento_id" value="14" />
       <column name="documento_ref" value="DocumentoRef3_M20/2020/002" />
-      <column name="aportado" value="false" />
+      <column name="nombre" value="Documento 3" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="tipo_documento_id" value="15" />
       <column name="documento_ref" value="DocumentoRef4_M20/2020/002" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 4" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="tipo_documento_id" value="16" />
       <column name="documento_ref" value="DocumentoRef5_M20/2020/002" />
-      <column name="aportado" value="true" />
+      <column name="nombre" value="Documento 5" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
-      <column name="tipo_documento_id" value="17" />
+      <column name="tipo_documento_id" value="16" />
       <column name="documento_ref" value="DocumentoRef6_M20/2020/002" />
-      <column name="aportado" value="false" />
+      <column name="nombre" value="Documento 6" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="id" valueSequenceNext="documentacion_memoria_seq" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
+      <column name="tipo_documento_id" value="16" />
+      <column name="documento_ref" value="DocumentoRef7_M20/2020/002" />
+      <column name="nombre" value="Documento 7" />
     </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000000-convocatoria_reunion">
@@ -932,7 +932,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos' and bloque_id=(select id from eti.bloque where orden = '2' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="valor">
-        <![CDATA[ {"nombre": "Nombre de prueba", "nif": "74713504M", "vinculacion": "Vinculación de prueba", "nivelAcademico": "Nivel academico de prueba", "tarea": "Tarea de prueba", "experiencia": "Experiencia de prueba"} ]]>
+        <![CDATA[ {"equipoInvestigador": [ { "nombre": "nombre-005", "nif": "00000005M", "vinculacion": "PDI", "nivelAcademico": null, "tarea": "Tarea1", "experiencia": "Experiencia1" }, { "nombre": "nombre-007", "nif": "00000007F", "vinculacion": "PDI", "nivelAcademico": null, "tarea": "Tarea2", "experiencia": "Experiencia2" } ]} ]]>
       </column>
     </insert>
     <insert tableName="respuesta">
@@ -1173,6 +1173,86 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="valor">
         <![CDATA[ {"ap4_6_7": { "proteccionPrivacidad": "Medidas de protección de la privacidad"}} ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de consentimiento' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="4" />
+      <column name="valor">
+        <![CDATA[ { "documentoConsentimiento": 4 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de cesión de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="5" />
+      <column name="valor">
+        <![CDATA[ {"documentoCesion": 5 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de autorización' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="6" />
+      <column name="valor">
+        <![CDATA[ {"documentoAutorizacion": 6 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de aceptación de colaboración' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="7" />
+      <column name="valor">
+        <![CDATA[ {"documentoAceptacionColaboracion": 7 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Informe de la Comisión de Garantías' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="8" />
+      <column name="valor">
+        <![CDATA[ {"informeComisionGarantiasRadio": 8 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Acuerdo de transferencia de muestras' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="9" />
+      <column name="valor">
+        <![CDATA[ {"acuerdoTransferenciaMuestras": 9 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de registro de tratamiento de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="10" />
+      <column name="valor">
+        <![CDATA[ {"documentoRegistroTratamientoDatos": 10 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documentación adicional' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="tipo_documento_id" value="11" />
+      <column name="valor">
+        <![CDATA[ {"documentacionAdicional": 11 } ]]>
+      </column>
+    </insert>
+    <insert tableName="respuesta">
+      <column name="id" valueSequenceNext="respuesta_seq" />
+      <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aclaraciones al comité' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
+      <column name="valor">
+        <![CDATA[ {"aclaracionesComite": "Aclaraciones al comité" } ]]>
       </column>
     </insert>
   </changeSet>

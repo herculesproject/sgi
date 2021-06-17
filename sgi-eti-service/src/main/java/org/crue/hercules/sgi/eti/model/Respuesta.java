@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -63,8 +64,14 @@ public class Respuesta extends BaseEntity {
   @JoinColumn(name = "apartado_id", nullable = false, foreignKey = @ForeignKey(name = "FK_RESPUESTA_APARTADO"))
   private Apartado apartado;
 
+  /** Formulario Memoria */
+  @ManyToOne
+  @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_RESPUESTA_TIPODOCUMENTO"))
+  private TipoDocumento tipoDocumento;
+
   /** Valor */
-  @Column(name = "valor", length = 5000, nullable = false)
+  @Lob
+  @Column(name = "valor", nullable = false)
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String valor;

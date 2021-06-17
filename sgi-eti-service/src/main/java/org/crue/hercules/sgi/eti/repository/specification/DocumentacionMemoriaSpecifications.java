@@ -1,9 +1,8 @@
 package org.crue.hercules.sgi.eti.repository.specification;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria_;
+import org.crue.hercules.sgi.eti.model.Formulario_;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.TipoDocumento_;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,9 +15,10 @@ public class DocumentacionMemoriaSpecifications {
     };
   }
 
-  public static Specification<DocumentacionMemoria> tipoDocumentoNotIn(List<Long> idsTipoDocumento) {
+  public static Specification<DocumentacionMemoria> tipoDocumentoFormularioId(Long idFormulario) {
     return (root, query, cb) -> {
-      return cb.not(root.get(DocumentacionMemoria_.tipoDocumento).get(TipoDocumento_.id).in(idsTipoDocumento));
+      return cb.equal(root.get(DocumentacionMemoria_.tipoDocumento).get(TipoDocumento_.formulario).get(Formulario_.id),
+          idFormulario);
     };
   }
 
