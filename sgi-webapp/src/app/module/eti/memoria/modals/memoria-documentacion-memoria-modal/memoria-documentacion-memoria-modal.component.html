@@ -6,34 +6,39 @@
 </div>
 <mat-dialog-content>
   <form [formGroup]="formGroup">
-    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-      <!-- Tipo de documento -->
-      <div>
-        <mat-form-field>
-          <mat-label>{{'eti.memoria.documento.tipo' | translate}}</mat-label>
-          <input matInput formControlName="tipoDocumento" type="text" id="tipoDocumento"
-            placeholder="{{'eti.memoria.documento.tipo' | translate}}" required [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoDocumento">
-            <mat-option *ngFor="let tipoDcoumentacion of tiposDcoumentacion | async" [value]="tipoDcoumentacion">
-              {{tipoDcoumentacion.nombre}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
-            {{'error.required.entity' | translate:msgParamTipoEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <!-- File -->
-      <div>
-        <div>
-          <button class="icon-foto" mat-icon-button title=" {{'btn.explore' | translate}}">
-          </button>
-          <input type="file" #file #fileUpload name="fileUpload" accept="image/*"
-            (change)="onDocumentoSelect($event)" />
-        </div>
-      </div>
+    <!-- Tipo de documento -->
+    <div fxFill *ngIf="data.tipoEvaluacion == TIPO_EVALUACION.MEMORIA">
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.documento.tipo' | translate}}</mat-label>
+        <sgi-select-entity formControlName="tipoDocumento" required [options]="tiposDocumento$ | async">
+        </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
+          {{'error.required.entity' | translate:msgParamTipoEntity}}
+        </mat-error>
+      </mat-form-field>
     </div>
+    <div fxFill>
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.documento.nombre' | translate}}</mat-label>
+        <input matInput type="text" formControlName="nombre" required>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- File -->
+    <div fxFill>
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.documento.fichero' | translate}}</mat-label>
+        <sgi-file-upload #uploader formControlName="fichero" required autoUpload="false"
+          (uploadEventChange)="onUploadProgress($event)">
+        </sgi-file-upload>
+        <mat-error *ngIf="formGroup.controls.fichero.errors?.required">
+          {{'error.required.entity' | translate:msgParamFicheroEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>

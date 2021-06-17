@@ -104,7 +104,7 @@ export class MemoriaActionService extends ActionService {
       service,
       evaluacionService
     );
-    this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.readonly, service, documentoService);
+    this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, service, documentoService);
     this.seguimientoAnual = new MemoriaSeguimientoAnualFragment(
       logger,
       this.readonly,

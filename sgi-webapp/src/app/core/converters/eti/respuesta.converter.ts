@@ -12,6 +12,7 @@ class RespuestasConverter extends SgiBaseConverter<IRespuestaBackend, IRespuesta
       id: value.id,
       memoria: MEMORIA_CONVERTER.toTarget(value.memoria),
       apartado: value.apartado,
+      tipoDocumento: value.tipoDocumento,
       valor: value.valor
     };
   }
@@ -24,6 +25,7 @@ class RespuestasConverter extends SgiBaseConverter<IRespuestaBackend, IRespuesta
       id: value.id,
       memoria: MEMORIA_CONVERTER.fromTarget(value.memoria),
       apartado: value.apartado,
+      tipoDocumento: value.tipoDocumento,
       valor: value.valor
     };
   }

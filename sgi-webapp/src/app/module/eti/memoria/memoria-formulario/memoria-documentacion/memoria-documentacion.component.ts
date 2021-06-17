@@ -6,22 +6,21 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IComite } from '@core/models/eti/comite';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
-import { IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
+import { ESTADO_RETROSPECTIVA, IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
+import { FORMULARIO } from '@core/models/eti/formulario';
 import { ESTADO_MEMORIA, TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
-import { IDocumento } from '@core/models/sgdoc/documento';
+import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
-import { MemoriaDocumentacionMemoriaModalComponent } from '../../modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
-import { MemoriaDocumentacionSeguimientosModalComponent } from '../../modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
+import { MemoriaDocumentacionMemoriaModalComponent, MemoriaDocumentacionMemoriaModalData } from '../../modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
 import { MemoriaDocumentacionFragment, TIPO_DOCUMENTACION } from './memoria-documentacion.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
@@ -39,138 +38,115 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
   private subscriptions: Subscription[] = [];
 
-  dataSourceDocumentoMemoria: MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>;
-  dataSourceSeguimientoAnual: MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>;
-  dataSourceSeguimientoFinal: MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>;
-  dataSourceRetrospectiva: MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>;
+  readonly dataSourceDocumentoMemoria = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
+  readonly dataSourceSeguimientoAnual = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
+  readonly dataSourceSeguimientoFinal = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
+  readonly dataSourceRetrospectiva = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
 
-  @ViewChild('paginatorDocumentacionMemoria', { static: true }) paginatorDocumentacionMemoria: MatPaginator;
-  @ViewChild('paginatorSeguimientoAnual', { static: true }) paginatorSeguimientoAnual: MatPaginator;
-  @ViewChild('paginatorSeguimientoFinal', { static: true }) paginatorSeguimientoFinal: MatPaginator;
-  @ViewChild('paginatorRetrospectiva', { static: true }) paginatorRetrospectiva: MatPaginator;
+  @ViewChild('paginatorDocumentacionMemoria', { static: true }) private paginatorDocumentacionMemoria: MatPaginator;
+  @ViewChild('paginatorSeguimientoAnual', { static: true }) private paginatorSeguimientoAnual: MatPaginator;
+  @ViewChild('paginatorSeguimientoFinal', { static: true }) private paginatorSeguimientoFinal: MatPaginator;
+  @ViewChild('paginatorRetrospectiva', { static: true }) private paginatorRetrospectiva: MatPaginator;
 
-  @ViewChild('sortDocumentacionMemoria', { static: true }) sortDocumentacionMemoria: MatSort;
-  @ViewChild('sortSeguimientoAnual', { static: true }) sortSeguimientoAnual: MatSort;
-  @ViewChild('sortSeguimientoFinal', { static: true }) sortSeguimientoFinal: MatSort;
-  @ViewChild('sortRetrospectiva', { static: true }) sortRetrospectiva: MatSort;
+  @ViewChild('sortDocumentacionMemoria', { static: true }) private sortDocumentacionMemoria: MatSort;
+  @ViewChild('sortSeguimientoAnual', { static: true }) private sortSeguimientoAnual: MatSort;
+  @ViewChild('sortSeguimientoFinal', { static: true }) private sortSeguimientoFinal: MatSort;
+  @ViewChild('sortRetrospectiva', { static: true }) private sortRetrospectiva: MatSort;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumnsDocumentoMemoria: string[] = ['documentoRef', 'tipoDocumento', 'aportado', 'acciones'];
+  displayedColumnsDocumentoMemoria: string[] = ['tipoDocumento', 'nombre', 'acciones'];
   elementosPaginaDocumentoMemoria: number[] = [5, 10, 25, 100];
 
-  displayedColumnsSeguimientoAnual: string[] = ['documentoRef', 'acciones'];
+  displayedColumnsSeguimientoAnual: string[] = ['nombre', 'acciones'];
   elementosPaginaSeguimientoAnual: number[] = [5, 10, 25, 100];
 
-  displayedColumnsSeguimientoFinal: string[] = ['documentoRef', 'acciones'];
+  displayedColumnsSeguimientoFinal: string[] = ['nombre', 'acciones'];
   elementosPaginaSeguimientoFinal: number[] = [5, 10, 25, 100];
 
-  displayedColumnsRetrospectiva: string[] = ['documentoRef', 'acciones'];
+  displayedColumnsRetrospectiva: string[] = ['nombre', 'acciones'];
   elementosPaginaRetrospectiva: number[] = [5, 10, 25, 100];
 
-  documentacionesMemoria$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
-  documentacionesSeguimientoAnual$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
-  documentacionesSeguimientoFinal$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
-  documentacionesRetrospectiva$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
-
   msgParamDocumentoEntity = {};
-  textoDelete: string;
+  private textoDelete: string;
 
-  get comite(): IComite {
-    return this.actionService.getComite();
+  private sortingDataAccesor = (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
+    switch (property) {
+      case 'tipoDocumento':
+        return wrapper.value.tipoDocumento?.nombre;
+      default:
+        return wrapper.value[property];
+    }
   }
 
-  get estadoMemoria(): TipoEstadoMemoria {
+  get formularioComite(): FORMULARIO {
+    return this.actionService.getComite().id;
+  }
+
+  private get estadoMemoria(): TipoEstadoMemoria {
     return this.actionService.getEstadoMemoria();
   }
 
-  get estadoRetrospectiva(): IEstadoRetrospectiva {
+  private get estadoRetrospectiva(): IEstadoRetrospectiva {
     return this.actionService.getRetrospectiva()?.estadoRetrospectiva;
   }
 
+  get FORMULARIO() {
+    return FORMULARIO;
+  }
+
+  get TIPO_DOCUMENTACION() {
+    return TIPO_DOCUMENTACION;
+  }
+
   constructor(
-    protected readonly dialogService: DialogService,
-    protected matDialog: MatDialog,
+    private readonly dialogService: DialogService,
+    private matDialog: MatDialog,
     private actionService: MemoriaActionService,
-    protected readonly documentoService: DocumentoService,
+    private readonly documentoService: DocumentoService,
     private readonly translate: TranslateService) {
 
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
 
     this.formPart = this.fragment as MemoriaDocumentacionFragment;
-
-    this.documentacionesMemoria$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesMemoria$;
-    this.documentacionesSeguimientoAnual$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesSeguimientoAnual$;
-    this.documentacionesSeguimientoFinal$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesSeguimientoFinal$;
-    this.documentacionesRetrospectiva$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesRetrospectiva$;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
 
-    this.dataSourceDocumentoMemoria = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceDocumentoMemoria.paginator = this.paginatorDocumentacionMemoria;
     this.dataSourceDocumentoMemoria.sort = this.sortDocumentacionMemoria;
-    this.formPart.documentacionesMemoria$.subscribe(elements => {
+    this.subscriptions.push(this.formPart.documentacionesMemoria$.subscribe(elements => {
       this.dataSourceDocumentoMemoria.data = elements;
-    });
+    }));
 
-    this.dataSourceDocumentoMemoria.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
-        switch (property) {
-          case 'tipoDocumento':
-            return wrapper.value.tipoDocumento?.nombre;
-          default:
-            return wrapper.value[property];
-        }
-      };
+    this.dataSourceDocumentoMemoria.sortingDataAccessor = this.sortingDataAccesor;
 
-    this.dataSourceSeguimientoAnual = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoAnual.paginator = this.paginatorSeguimientoAnual;
     this.dataSourceSeguimientoAnual.sort = this.sortSeguimientoAnual;
-    this.formPart.documentacionesSeguimientoAnual$.subscribe(elements => {
+    this.subscriptions.push(this.formPart.documentacionesSeguimientoAnual$.subscribe(elements => {
       this.dataSourceSeguimientoAnual.data = elements;
-    });
+    }));
 
-    this.dataSourceSeguimientoAnual.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
-        switch (property) {
-          default:
-            return wrapper.value[property];
-        }
-      };
+    this.dataSourceSeguimientoAnual.sortingDataAccessor = this.sortingDataAccesor;
 
-    this.dataSourceSeguimientoFinal = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoFinal.paginator = this.paginatorSeguimientoFinal;
     this.dataSourceSeguimientoFinal.sort = this.sortSeguimientoFinal;
-    this.formPart.documentacionesSeguimientoFinal$.subscribe(elements => {
+    this.subscriptions.push(this.formPart.documentacionesSeguimientoFinal$.subscribe(elements => {
       this.dataSourceSeguimientoFinal.data = elements;
-    });
+    }));
 
-    this.dataSourceSeguimientoFinal.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
-        switch (property) {
-          default:
-            return wrapper.value[property];
-        }
-      };
+    this.dataSourceSeguimientoFinal.sortingDataAccessor = this.sortingDataAccesor;
 
-    this.dataSourceRetrospectiva = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceRetrospectiva.paginator = this.paginatorRetrospectiva;
     this.dataSourceRetrospectiva.sort = this.sortRetrospectiva;
-    this.formPart.documentacionesRetrospectiva$.subscribe(elements => {
+    this.subscriptions.push(this.formPart.documentacionesRetrospectiva$.subscribe(elements => {
       this.dataSourceRetrospectiva.data = elements;
-    });
+    }));
 
-    this.dataSourceRetrospectiva.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
-        switch (property) {
-          default:
-            return wrapper.value[property];
-        }
-      };
+    this.dataSourceRetrospectiva.sortingDataAccessor = this.sortingDataAccesor;
   }
 
   private setupI18N(): void {
@@ -192,66 +168,50 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     ).subscribe((value) => this.textoDelete = value);
   }
 
-  openModalDocumentacionMemoria(): void {
+  openModalDocumentacion(tipoDocumentacion: TIPO_DOCUMENTACION): void {
+    let tipoEvaluacion: TIPO_EVALUACION;
+    switch (tipoDocumentacion) {
+      case TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL:
+        tipoEvaluacion = TIPO_EVALUACION.SEGUIMIENTO_ANUAL;
+        break;
+      case TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL:
+        tipoEvaluacion = TIPO_EVALUACION.SEGUIMIENTO_FINAL;
+        break;
+      case TIPO_DOCUMENTACION.RETROSPECTIVA:
+        tipoEvaluacion = TIPO_EVALUACION.RETROSPECTIVA;
+        break;
+      case TIPO_DOCUMENTACION.INICIAL:
+        tipoEvaluacion = TIPO_EVALUACION.MEMORIA;
+        break;
+    }
+    const data: MemoriaDocumentacionMemoriaModalData = {
+      memoriaId: this.fragment.getKey() as number,
+      tipoEvaluacion
+    };
     const config = {
       panelClass: 'sgi-dialog-container',
-      data: this.dataSourceDocumentoMemoria.data
+      data
     };
 
     const dialogRef = this.matDialog.open(MemoriaDocumentacionMemoriaModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (documentacionInicial: StatusWrapper<IDocumentacionMemoria>) => {
-        if (documentacionInicial) {
-          this.formPart.setChanges(true);
-          if (documentacionInicial.created) {
-            this.formPart.addDocumentacion(documentacionInicial.value);
-          }
-
+      (documentacion: IDocumentacionMemoria) => {
+        if (documentacion) {
+          this.formPart.addDocumento(tipoDocumentacion, documentacion);
         }
       }
     );
   }
 
-  openModalDocumentacionSeguimiento(tipoSeguimiento: number, documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
-    const config = {
-      panelClass: 'sgi-dialog-container',
-      data: documentacion ? documentacion.value : {} as IDocumentacionMemoria
-    };
-
-    const dialogRef = this.matDialog.open(MemoriaDocumentacionSeguimientosModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (documentacionSeguimiento: StatusWrapper<IDocumentacionMemoria>) => {
-        if (documentacionSeguimiento) {
-          this.formPart.setChanges(true);
-          if (documentacionSeguimiento.created) {
-            this.formPart.addDocumentacionSeguimiento(documentacionSeguimiento.value, tipoSeguimiento);
-          }
-
-        }
-      }
-    );
-  }
-
-  /**
-   * Elimina la documentación.
-   *
-   * @param tipoSeguimiento Tipo del seguimiento.
-   * @param wrappedDocumentacion documentación a eliminar.
-   */
-  deleteDocumentacionSeguimiento(tipoSeguimiento: number, wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
+  deleteDocumentacion(tipoDocumento: TIPO_DOCUMENTACION, wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
       this.textoDelete
     ).pipe(switchMap((accept) => {
       if (accept) {
-        return of(this.formPart.deletedDocumentacionSeguimiento(tipoSeguimiento, wrappedDocumentacion));
+        return of(this.formPart.deleteDocumento(tipoDocumento, wrappedDocumentacion));
       }
       return of();
-    })).subscribe(
-      () => {
-        wrappedDocumentacion.value.aportado = false;
-        wrappedDocumentacion.setEdited();
-      }
-    );
+    })).subscribe();
 
     this.subscriptions.push(dialogSubscription);
   }
@@ -260,77 +220,48 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.subscriptions?.forEach(x => x.unsubscribe());
   }
 
-  /**
-   * Devuelve si una memoria se encuentra en el estado de añadir documentación inicial.
-   * EN ELABORACION, COMPLETADA, FAVORABLE PENDIENTE DE MODIFICACIONES MINIMAS,
-   * PENDIENTE DE CORRECCIONES, NO PROCEDE EVALUAR
-   *
-   */
-  hasPermisoUpdateDocumentacionInicial(): boolean {
-
-    return this.actionService.readonly || this.estadoMemoria.id === ESTADO_MEMORIA.NO_PROCEDE_EVALUAR
-      ? false
-      : this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
-      || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7;
-  }
-
-  /**
-   * Devuelve si una memoria se encuentra en el estado de añadir documentación seguimiento anual.
-   * FIN DE EVALUACION, COMPLETADA SEGUIMIENTO ANUAL
-   *
-   */
-  hasPermisoUpdateDocumentacionSeguimientoAnual(): boolean {
+  isEditAllowed(tipoDocumentacion: TIPO_DOCUMENTACION): boolean {
     if (this.actionService.readonly) {
       return false;
-    } else {
-      return this.estadoMemoria.id === 9 || this.estadoMemoria.id === 11;
     }
-  }
-
-  /**
-   * Devuelve si una memoria se encuentra en el estado de añadir documentación seguimiento final.
-   * FIN DE EVALUACION SEGUIMIENTO ANUAL, COMPLETADA SEGUIMIENTO FINAL, EN ACLARACION SEGUIMIENTO FINAL
-   *
-   */
-  hasPermisoUpdateDocumentacionSeguimientoFinal(): boolean {
-    if (this.actionService.readonly) {
-      return false;
-    } else {
-      return this.estadoMemoria.id === 14 || this.estadoMemoria.id === 16 || this.estadoMemoria.id === 21;
+    switch (tipoDocumentacion) {
+      case TIPO_DOCUMENTACION.INICIAL:
+        return this.estadoMemoria.id === ESTADO_MEMORIA.NO_PROCEDE_EVALUAR
+          ? false
+          : this.estadoMemoria.id === ESTADO_MEMORIA.EN_ELABORACION
+          || this.estadoMemoria.id === ESTADO_MEMORIA.COMPLETADA
+          || this.estadoMemoria.id === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS
+          || this.estadoMemoria.id === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES;
+      case TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL:
+        return this.estadoMemoria.id === ESTADO_MEMORIA.FIN_EVALUACION
+          || this.estadoMemoria.id === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL;
+      case TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL:
+        return this.estadoMemoria.id === ESTADO_MEMORIA.FIN_EVALUACION_SEGUIMIENTO_ANUAL
+          || this.estadoMemoria.id === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
+          || this.estadoMemoria.id === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL;
+      case TIPO_DOCUMENTACION.RETROSPECTIVA:
+        return this.estadoRetrospectiva?.id === ESTADO_RETROSPECTIVA.PENDIENTE
+          || this.estadoRetrospectiva?.id === ESTADO_RETROSPECTIVA.COMPLETADA;
     }
+
   }
 
-  /**
-   * Devuelve si una retrospectiva se encuentra en el estado de añadir documentación retrospectiva
-   * PENDIENTE, COMPLETADA
-   */
-  hasPermisoUpdateDocumentacionRetrospectiva(): boolean {
-    if (this.actionService.readonly) {
-      return false;
-    } else {
-      return this.estadoRetrospectiva?.id === 1 || this.estadoRetrospectiva?.id === 2;
+  downloadDocumentacion(documentacionMemoria: IDocumentacionMemoria) {
+    let action$: Observable<Blob>;
+    if (documentacionMemoria.documento.nombre) {
+      action$ = this.documentoService.downloadFichero(documentacionMemoria.documento.documentoRef);
     }
-  }
-
-  /**
-   * Visualiza el documento seleccionado.
-   * @param documentoRef Referencia del documento.
-   */
-  visualizarDocumento(documentoRef: string) {
-    const documento: IDocumento = {} as IDocumento;
-    this.documentoService.getInfoFichero(documentoRef).pipe(
-      switchMap((documentoInfo: IDocumento) => {
-        documento.nombre = documentoInfo.nombre;
-        documento.tipo = documentoInfo.tipo;
-        return this.documentoService.downloadFichero(documentoRef);
-      })
-    ).subscribe(response => {
-      triggerDownloadToUser(response, documento.nombre);
-    });
-  }
-
-  public get documentacionTipo(): typeof TIPO_DOCUMENTACION {
-    return TIPO_DOCUMENTACION;
+    else {
+      action$ = this.documentoService.getInfoFichero(documentacionMemoria.documento.documentoRef).pipe(
+        switchMap(documento => {
+          documentacionMemoria.documento = documento;
+          return this.documentoService.downloadFichero(documento.documentoRef);
+        })
+      );
+    }
+    this.subscriptions.push(action$.subscribe(
+      (response) => triggerDownloadToUser(response, documentacionMemoria.documento.nombre)
+    ));
   }
 
 }

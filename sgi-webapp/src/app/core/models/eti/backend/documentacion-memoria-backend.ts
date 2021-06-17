@@ -8,8 +8,8 @@ export interface IDocumentacionMemoriaBackend {
   memoria: IMemoriaBackend;
   /** TIpo de documento */
   tipoDocumento: ITipoDocumento;
+  /** Nombre */
+  nombre: string;
   /** Ref del documento */
   documentoRef: string;
-  /** Aportado */
-  aportado: boolean;
 }

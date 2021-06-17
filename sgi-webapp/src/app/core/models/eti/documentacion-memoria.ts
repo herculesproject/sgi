@@ -1,3 +1,4 @@
+import { IDocumento } from '../sgdoc/documento';
 import { IMemoria } from './memoria';
 import { ITipoDocumento } from './tipo-documento';
 
@@ -8,14 +9,7 @@ export interface IDocumentacionMemoria {
   memoria: IMemoria;
   /** TIpo de documento */
   tipoDocumento: ITipoDocumento;
+  nombre: string;
   /** Ref del documento */
-  documentoRef: string;
-  /** Aportado */
-  aportado: boolean;
-  /**
-   * Fichero
-   *
-   * @deprecated Eliminar cuando sea posible. No debería estar.
-   */
-  fichero: File;
+  documento: IDocumento;
 }

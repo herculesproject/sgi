@@ -7,6 +7,7 @@ import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter'
 import { INFORME_CONVERTER } from '@core/converters/eti/informe.converter';
 import { MEMORIA_PETICION_EVALUACION_CONVERTER } from '@core/converters/eti/memoria-peticion-evaluacion.converter';
 import { MEMORIA_CONVERTER } from '@core/converters/eti/memoria.converter';
+import { RESPUESTA_CONVERTER } from '@core/converters/eti/respuesta.converter';
 import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
 import { IDocumentacionMemoriaBackend } from '@core/models/eti/backend/documentacion-memoria-backend';
 import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
@@ -14,6 +15,7 @@ import { IEvaluacionWithNumComentarioBackend } from '@core/models/eti/backend/ev
 import { IInformeBackend } from '@core/models/eti/backend/informe-backend';
 import { IMemoriaBackend } from '@core/models/eti/backend/memoria-backend';
 import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
+import { IRespuestaBackend } from '@core/models/eti/backend/respuesta-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
@@ -21,6 +23,8 @@ import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-n
 import { IInforme } from '@core/models/eti/informe';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
+import { IRespuesta } from '@core/models/eti/respuesta';
+import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -39,19 +43,6 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
       `${environment.serviceServers.eti}${MemoriaService.MAPPING}`,
       http,
       MEMORIA_CONVERTER
-    );
-  }
-
-  /**
-   * Devuelve toda la documentación asociada a una memoria.
-   *
-   * @param id id de la memoria.
-   */
-  getDocumentaciones(idMemoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
-    return this.find<IDocumentacionMemoriaBackend, IDocumentacionMemoria>(
-      `${this.endpointUrl}/${idMemoria}/documentaciones`,
-      options,
-      DOCUMENTACION_MEMORIA_CONVERTER
     );
   }
 
@@ -256,16 +247,6 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-inicial/${idDocumentacionMemoria}`);
   }
 
-  updateDocumentacion(
-    id: number, documentacionMemoria: IDocumentacionMemoria, idDocumentacionMemoria: number): Observable<IDocumentacionMemoria> {
-    return this.http.put<IDocumentacionMemoriaBackend>(
-      `${this.endpointUrl}/${id}/documentacion-inicial/${idDocumentacionMemoria}`,
-      DOCUMENTACION_MEMORIA_CONVERTER.fromTarget(documentacionMemoria)
-    ).pipe(
-      map(response => DOCUMENTACION_MEMORIA_CONVERTER.toTarget(response))
-    );
-  }
-
   /**
    * Devuelve todos las evaluaciones de una memoria id.
    *
@@ -393,6 +374,16 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
       `${this.endpointUrl}/${idMemoria}/informe/ultima-version`
     ).pipe(
       map(response => INFORME_CONVERTER.toTarget(response))
+    );
+  }
+
+  getTiposDocumentoRespuestasFormulario(id: number): Observable<ITipoDocumento[]> {
+    return this.find<IRespuestaBackend, IRespuesta>(
+      `${this.endpointUrl}/${id}/respuestas-documento`,
+      null,
+      RESPUESTA_CONVERTER
+    ).pipe(
+      map(response => response.items.map(item => item.tipoDocumento))
     );
   }
 

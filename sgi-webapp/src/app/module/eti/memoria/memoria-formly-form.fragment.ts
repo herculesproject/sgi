@@ -8,6 +8,7 @@ import { resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/for
 import { IMemoria } from '@core/models/eti/memoria';
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { ITarea } from '@core/models/eti/tarea';
+import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { Fragment, Group } from '@core/services/action-service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
@@ -60,6 +61,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   public blocks$: BehaviorSubject<IBlock[]> = new BehaviorSubject<IBlock[]>([]);
   public selectedIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
+
+  private fieldsDocumentacion = new Map<number, SgiFormlyFieldConfig>();
 
   private readonly: boolean;
 
@@ -228,6 +231,19 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     if (!question.apartado.respuesta.id) {
       question.apartado.respuesta.memoria = { id: this.getKey() as number } as IMemoria;
       question.apartado.respuesta.apartado = { id: question.apartado.id } as IApartado;
+    }
+    const fieldDocumentacion = this.fieldsDocumentacion.get(question.apartado.id);
+    if (fieldDocumentacion) {
+      const id = fieldDocumentacion.model[fieldDocumentacion.key as string];
+      if (id) {
+        question.apartado.respuesta.tipoDocumento = { id } as ITipoDocumento;
+      }
+      else {
+        question.apartado.respuesta.tipoDocumento = null;
+      }
+    }
+    else {
+      question.apartado.respuesta.tipoDocumento = null;
     }
     question.childs.forEach((child) => {
       respuestas.push(...this.getRespuestas(child));
@@ -523,11 +539,33 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           });
         }
       }
+      const fieldsDocumentacion = this.getFieldsDocumentacion(question.apartado.esquema);
+      if (fieldsDocumentacion.length) {
+        if (fieldsDocumentacion.length > 1) {
+          throw Error('Un apartado no puede contener más de un campo de tipo documento');
+        }
+        this.fieldsDocumentacion.set(question.apartado.id, fieldsDocumentacion[0]);
+      }
       formlyFieldConfig.push(...question.apartado.esquema);
       if (question.childs.length) {
         this.fillFormlyData(false, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs);
       }
     });
+  }
+
+  private getFieldsDocumentacion(formlyFieldConfig: SgiFormlyFieldConfig[]): SgiFormlyFieldConfig[] {
+    const fields: SgiFormlyFieldConfig[] = [];
+    if (formlyFieldConfig.length) {
+      formlyFieldConfig.forEach(field => {
+        if (field.type === 'documento') {
+          fields.push(field);
+        }
+        if (field.fieldGroup) {
+          fields.push(...this.getFieldsDocumentacion(field.fieldGroup));
+        }
+      });
+    }
+    return fields;
   }
 
   private evalStatusChange(): void {

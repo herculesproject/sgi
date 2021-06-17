@@ -1,5 +1,6 @@
 import { IApartado } from './apartado';
 import { IMemoria } from './memoria';
+import { ITipoDocumento } from './tipo-documento';
 
 export interface IRespuesta {
   /** ID */
@@ -8,6 +9,8 @@ export interface IRespuesta {
   memoria: IMemoria;
   /** apartado */
   apartado: IApartado;
+  /** respuestaDocumento */
+  tipoDocumento: ITipoDocumento;
   /** valor */
   valor: {
     [name: string]: any;

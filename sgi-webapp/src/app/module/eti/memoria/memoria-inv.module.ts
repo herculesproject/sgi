@@ -22,7 +22,6 @@ import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listad
 import { MemoriaRoutingInvModule } from './memoria-routing-inv.module';
 import { MemoriaResolver } from './memoria.resolver';
 import { MemoriaDocumentacionMemoriaModalComponent } from './modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
-import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +32,6 @@ import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria
     MemoriaEditarComponent,
     MemoriaDocumentacionComponent,
     MemoriaDocumentacionMemoriaModalComponent,
-    MemoriaDocumentacionSeguimientosModalComponent,
     MemoriaEvaluacionesComponent,
     MemoriaInformesComponent,
     MemoriaSeguimientoAnualComponent,

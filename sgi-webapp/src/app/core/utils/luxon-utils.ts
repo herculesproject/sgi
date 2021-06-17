@@ -4,13 +4,13 @@ export class LuxonUtils {
 
   private constructor() { }
 
-  public static toBackend(value: DateTime): string {
+  public static toBackend(value: DateTime, asDate: boolean = false): string {
     if (typeof value === 'undefined' || value === null) {
       return value as unknown as string;
     }
     if (value instanceof DateTime) {
       if (value.isValid) {
-        return value.toUTC().toISO();
+        return asDate ? value.toUTC().toISODate() : value.toUTC().toISO({ suppressMilliseconds: true });
       }
       else {
         return null;

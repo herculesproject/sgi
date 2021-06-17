@@ -1,5 +1,6 @@
 import { IDocumentacionMemoriaBackend } from '@core/models/eti/backend/documentacion-memoria-backend';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { MEMORIA_CONVERTER } from './memoria.converter';
 
@@ -12,9 +13,8 @@ class DocumentacionMemoriaConverter extends SgiBaseConverter<IDocumentacionMemor
       id: value.id,
       memoria: MEMORIA_CONVERTER.toTarget(value.memoria),
       tipoDocumento: value.tipoDocumento,
-      documentoRef: value.documentoRef,
-      aportado: value.aportado,
-      fichero: null
+      nombre: value.nombre,
+      documento: { documentoRef: value.documentoRef } as IDocumento,
     };
   }
 
@@ -26,8 +26,8 @@ class DocumentacionMemoriaConverter extends SgiBaseConverter<IDocumentacionMemor
       id: value.id,
       memoria: MEMORIA_CONVERTER.fromTarget(value.memoria),
       tipoDocumento: value.tipoDocumento,
-      documentoRef: value.documentoRef,
-      aportado: value.aportado,
+      nombre: value.nombre,
+      documentoRef: value.documento.documentoRef,
     };
   }
 }

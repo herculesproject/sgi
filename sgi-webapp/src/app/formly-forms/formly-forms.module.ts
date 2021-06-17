@@ -54,7 +54,8 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
         {
           name: 'table-crud',
           component: TableCRUDTypeComponent
-        }
+        },
+        { name: 'documento', extends: 'radio' }
       ],
       wrappers: [
         {

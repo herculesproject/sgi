@@ -1,4 +1,5 @@
 import { IApartado } from '../apartado';
+import { ITipoDocumento } from '../tipo-documento';
 import { IMemoriaBackend } from './memoria-backend';
 
 export interface IRespuestaBackend {
@@ -8,6 +9,8 @@ export interface IRespuestaBackend {
   memoria: IMemoriaBackend;
   /** apartado */
   apartado: IApartado;
+  /** Tipo de documento */
+  tipoDocumento: ITipoDocumento;
   /** valor */
   valor: {
     [name: string]: any;

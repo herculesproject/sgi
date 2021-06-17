@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FORMULARIO } from '@core/models/eti/formulario';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
+import { SgiReadOnlyRestService } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoDocumentoService extends SgiRestService<number, ITipoDocumento> {
+export class TipoDocumentoService extends SgiReadOnlyRestService<number, ITipoDocumento> {
   private static readonly MAPPING = '/tipodocumentos';
 
   constructor(protected http: HttpClient) {
@@ -19,14 +21,12 @@ export class TipoDocumentoService extends SgiRestService<number, ITipoDocumento>
     );
   }
 
-  /**
-   * Devuelve los tipos de comentarios iniciales de una memoria.
-   *
-   * @return los tipos de comentarios iniciales de una memoria.
-   */
-  findTiposDocumentoIniciales(options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoDocumento>> {
-    const endpointUrl = `${this.endpointUrl}/iniciales`;
-    return this.find<ITipoDocumento, ITipoDocumento>(endpointUrl, options);
+  findByFormulario(formulario: FORMULARIO): Observable<ITipoDocumento[]> {
+    return this.http.get<ITipoDocumento[]>(
+      `${this.endpointUrl}/formulario/${formulario}`
+    ).pipe(
+      map(response => response)
+    );
   }
 
 }
