@@ -32,7 +32,6 @@ export class DialogService {
       } as DialogData,
       panelClass: 'confirmacion-dialog'
     });
-
     return dialogRef.afterClosed().pipe(
       map((confirmed: boolean) => confirmed ? confirmed : false)
     );

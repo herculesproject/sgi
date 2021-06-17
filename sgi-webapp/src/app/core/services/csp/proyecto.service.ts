@@ -491,4 +491,14 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     );
   }
 
+  /* Realiza el cambio de estado de estado de un proyecto.
+  *
+  * @param id identificador del proyecto.
+  * @param estadoProyecto Nuevo estado del proyecto.
+  */
+
+  cambiarEstado(id: number, estadoProyecto: IEstadoProyecto): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/cambiar-estado`, estadoProyecto);
+  }
+
 }

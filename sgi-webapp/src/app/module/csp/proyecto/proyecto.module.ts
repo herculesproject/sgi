@@ -37,9 +37,11 @@ import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.co
 import { ProyectoRoutingModule } from './proyecto-routing.module';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
 import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
+import { CambioEstadoModalComponent } from './modals/proyecto-cambio-estado-modal/cambio-estado-modal.component';
 
 @NgModule({
   declarations: [
+    CambioEstadoModalComponent,
     ProyectoListadoComponent,
     ProyectoCrearComponent,
     ProyectoEditarComponent,

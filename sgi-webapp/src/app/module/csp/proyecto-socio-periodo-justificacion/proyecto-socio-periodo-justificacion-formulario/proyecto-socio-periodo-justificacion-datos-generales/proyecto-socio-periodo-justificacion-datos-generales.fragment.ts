@@ -135,6 +135,6 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   }
 
   get isAbierto(): boolean {
-    return this.proyectoEstado?.estado === Estado.ABIERTO;
+    return this.proyectoEstado?.estado === Estado.CONCEDIDO;
   }
 }

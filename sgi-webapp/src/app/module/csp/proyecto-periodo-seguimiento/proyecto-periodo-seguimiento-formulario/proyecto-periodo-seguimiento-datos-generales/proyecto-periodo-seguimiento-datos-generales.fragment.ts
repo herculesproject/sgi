@@ -54,7 +54,7 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       }
     );
 
-    if (this.proyecto?.estado?.estado === Estado.ABIERTO) {
+    if (this.proyecto?.estado?.estado === Estado.CONCEDIDO) {
       form.controls.fechaInicioPresentacion.setValidators([Validators.required]);
       form.controls.fechaFinPresentacion.setValidators([Validators.required]);
     } else {

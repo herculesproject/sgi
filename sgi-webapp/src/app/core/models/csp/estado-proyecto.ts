@@ -16,16 +16,14 @@ export interface IEstadoProyecto {
 
 export enum Estado {
   BORRADOR = 'BORRADOR',
-  PROVISIONAL = 'PROVISIONAL',
-  ABIERTO = 'ABIERTO',
-  FINALIZADO = 'FINALIZADO',
-  CANCELADO = 'CANCELADO'
+  CONCEDIDO = 'CONCEDIDO',
+  RENUNCIADO = 'RENUNCIADO',
+  RESCINDIDO = 'RESCINDIDO',
 }
 
 export const ESTADO_MAP: Map<Estado, string> = new Map([
   [Estado.BORRADOR, marker(`csp.estado-proyecto.BORRADOR`)],
-  [Estado.PROVISIONAL, marker(`csp.estado-proyecto.PROVISIONAL`)],
-  [Estado.ABIERTO, marker(`csp.estado-proyecto.ABIERTO`)],
-  [Estado.FINALIZADO, marker(`csp.estado-proyecto.FINALIZADO`)],
-  [Estado.CANCELADO, marker(`csp.estado-proyecto.CANCELADO`)]
+  [Estado.CONCEDIDO, marker(`csp.estado-proyecto.CONCEDIDO`)],
+  [Estado.RENUNCIADO, marker(`csp.estado-proyecto.RENUNCIADO`)],
+  [Estado.RESCINDIDO, marker(`csp.estado-proyecto.RESCINDIDO`)]
 ]);

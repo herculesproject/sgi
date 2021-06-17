@@ -103,6 +103,12 @@
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">
+      <!-- Cambio estado-->
+      <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+        <sgi-action-footer-button color="primary" [text]="textoCambioEstado" (buttonClick)="openCambioEstado()"
+          [disabled]="disableCambioEstado">
+        </sgi-action-footer-button>
+      </ng-container>
     </sgi-action-footer>
   </ng-container>
 </sgi-action>

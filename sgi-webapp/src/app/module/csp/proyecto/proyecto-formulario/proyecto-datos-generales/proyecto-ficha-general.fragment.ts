@@ -387,7 +387,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * Añade validadores al formulario dependiendo del estado del proyecto
    */
   private checkEstado(formgroup: FormGroup, proyecto: IProyecto): void {
-    if (proyecto.estado.estado === Estado.ABIERTO) {
+    if (proyecto.estado.estado === Estado.CONCEDIDO) {
       formgroup.get('finalidad').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('ambitoGeografico').setValidators([
@@ -412,12 +412,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
-    } else if (proyecto.estado.estado === Estado.CANCELADO) {
-      this.comentarioEstadoCancelado = true;
-      this.getFormGroup().disable();
-    } else if (proyecto.estado.estado === Estado.FINALIZADO) {
-      this.comentarioEstadoCancelado = false;
-      this.getFormGroup().disable();
     } else {
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
@@ -427,7 +421,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   get requiredAbierto() {
-    return this.proyecto.estado.estado === Estado.ABIERTO;
+    return this.proyecto.estado.estado === Estado.CONCEDIDO;
   }
 
   saveOrUpdate(): Observable<number> {

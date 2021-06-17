@@ -57,6 +57,8 @@ import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/pr
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 import { ProyectoPartidasPresupuestariasFragment } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.fragment';
 import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
+import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Observable } from 'rxjs';
 
 export interface IProyectoData {
   proyecto: IProyecto;
@@ -124,6 +126,10 @@ export class ProyectoActionService extends ActionService {
     return this.proyecto?.modeloEjecucion?.id;
   }
 
+  get estado(): Estado {
+    return this.fichaGeneral.getValue().estado?.estado;
+  }
+
   get readonly(): boolean {
     return this.data?.readonly;
   }
@@ -132,7 +138,7 @@ export class ProyectoActionService extends ActionService {
     fb: FormBuilder,
     logger: NGXLogger,
     route: ActivatedRoute,
-    proyectoService: ProyectoService,
+    private proyectoService: ProyectoService,
     empresaService: EmpresaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
@@ -278,5 +284,13 @@ export class ProyectoActionService extends ActionService {
       // Inicializamos la ficha general de forma predeterminada
       this.fichaGeneral.initialize();
     }
+  }
+
+  /**
+   * Cambio de estado a **Presentada** desde:
+   * - **Borrador**
+   */
+  cambiarEstado(estadoNuevo: IEstadoProyecto): Observable<void> {
+    return this.proyectoService.cambiarEstado(this.fichaGeneral.getKey() as number, estadoNuevo);
   }
 }

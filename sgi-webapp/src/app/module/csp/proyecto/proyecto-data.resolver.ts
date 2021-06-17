@@ -38,7 +38,7 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
     if (!proyecto.activo) {
       return true;
     }
-    if (proyecto.estado.estado === Estado.CANCELADO || proyecto.estado.estado === Estado.FINALIZADO) {
+    if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
       return true;
     }
     return false;
