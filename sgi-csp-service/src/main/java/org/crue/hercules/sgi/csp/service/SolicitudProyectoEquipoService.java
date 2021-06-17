@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,38 +15,12 @@ import org.springframework.data.domain.Pageable;
 public interface SolicitudProyectoEquipoService {
 
   /**
-   * Guarda la entidad {@link SolicitudProyectoEquipo}.
-   * 
-   * @param solicitudProyectoEquipo la entidad {@link SolicitudProyectoEquipo} a
-   *                                guardar.
-   * @return SolicitudProyectoEquipo la entidad {@link SolicitudProyectoEquipo}
-   *         persistida.
-   */
-  SolicitudProyectoEquipo create(SolicitudProyectoEquipo solicitudProyectoEquipo);
-
-  /**
-   * Actualiza los datos del {@link SolicitudProyectoEquipo}.
-   * 
-   * @param solicitudProyectoEquipo {@link SolicitudProyectoEquipo} con los datos
-   *                                actualizados.
-   * @return SolicitudProyectoEquipo {@link SolicitudProyectoEquipo} actualizado.
-   */
-  SolicitudProyectoEquipo update(final SolicitudProyectoEquipo solicitudProyectoEquipo);
-
-  /**
    * Obtiene una entidad {@link SolicitudProyectoEquipo} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudProyectoEquipo}.
    * @return SolicitudProyectoEquipo la entidad {@link SolicitudProyectoEquipo}.
    */
   SolicitudProyectoEquipo findById(final Long id);
-
-  /**
-   * Elimina el {@link SolicitudProyectoEquipo}.
-   *
-   * @param id Id del {@link SolicitudProyectoEquipo}.
-   */
-  void delete(Long id);
 
   /**
    * Obtiene las {@link SolicitudProyectoEquipo} para una {@link Solicitud}.
@@ -56,4 +33,15 @@ public interface SolicitudProyectoEquipoService {
    */
   Page<SolicitudProyectoEquipo> findAllBySolicitud(Long solicitudId, String query, Pageable pageable);
 
+  /**
+   * Actualiza la lista de {@link SolicitudProyectoEquipo} del
+   * {@link SolicitudProyecto}, elimina los que no están en la lista actual pero
+   * tienen el mismo solicitudProyectoId , añade los que no tienen id y actualiza
+   * los ya existentes.
+   * 
+   * @param solicitudProyectoEquipos la lista con los cambios para aplicar.
+   * @return La lista actualizada de {@link SolicitudProyectoEquipo}.
+   */
+  List<SolicitudProyectoEquipo> updateSolicitudProyectoEquipo(Long solicitudProyectoId,
+      List<SolicitudProyectoEquipo> solicitudProyectoEquipos);
 }

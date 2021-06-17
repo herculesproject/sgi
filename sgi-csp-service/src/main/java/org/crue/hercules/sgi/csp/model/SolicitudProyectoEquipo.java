@@ -74,4 +74,25 @@ public class SolicitudProyectoEquipo extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final SolicitudProyecto solicitudProyecto = null;
+
+  /**
+   * Interfaz para marcar validaciones en la creación de la entidad.
+   */
+  public interface OnCrear {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion de la entidad.
+   */
+  public interface OnActualizar {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion del campo RolProyecto
+   * de la entidad.
+   */
+  public interface OnActualizarRolProyectoSolicitudProyectoEquipo {
+
+  }
+
 }

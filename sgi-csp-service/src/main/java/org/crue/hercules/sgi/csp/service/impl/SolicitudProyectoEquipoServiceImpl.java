@@ -1,29 +1,39 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+
+import org.crue.hercules.sgi.csp.exceptions.MiembroSolicitudProyectoEquipoOverlapRangeException;
+import org.crue.hercules.sgi.csp.exceptions.MissingInvestigadorPrincipalInSolicitudProyectoEquipoException;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
-import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +43,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@Validated
 public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEquipoService {
+
+  private final Validator validator;
 
   private final SolicitudProyectoEquipoRepository repository;
 
@@ -41,77 +54,16 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
 
   private final RolProyectoRepository rolProyectoRepository;
 
-  private final SolicitudService solicitudService;
-
   private final SolicitudRepository solicitudRepository;
 
-  public SolicitudProyectoEquipoServiceImpl(SolicitudProyectoEquipoRepository repository,
+  public SolicitudProyectoEquipoServiceImpl(Validator validator, SolicitudProyectoEquipoRepository repository,
       SolicitudProyectoRepository solicitudProyectoRepository, RolProyectoRepository rolProyectoRepository,
-      SolicitudService solicitudService, SolicitudRepository solicitudRepository) {
+      SolicitudRepository solicitudRepository) {
+    this.validator = validator;
     this.repository = repository;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
     this.rolProyectoRepository = rolProyectoRepository;
-    this.solicitudService = solicitudService;
     this.solicitudRepository = solicitudRepository;
-  }
-
-  /**
-   * Guarda la entidad {@link SolicitudProyectoEquipo}.
-   * 
-   * @param solicitudProyectoEquipo la entidad {@link SolicitudProyectoEquipo} a
-   *                                guardar.
-   * @return SolicitudProyectoEquipo la entidad {@link SolicitudProyectoEquipo}
-   *         persistida.
-   */
-  @Override
-  @Transactional
-  public SolicitudProyectoEquipo create(SolicitudProyectoEquipo solicitudProyectoEquipo) {
-    log.debug("create(SolicitudProyectoEquipo solicitudProyectoEquipo) - start");
-
-    Assert.isNull(solicitudProyectoEquipo.getId(),
-        "Id tiene que ser null para realizar la acción sobre el SolicitudProyectoEquipo");
-
-    validateSolicitudProyectoEquipo(solicitudProyectoEquipo);
-
-    SolicitudProyectoEquipo returnValue = repository.save(solicitudProyectoEquipo);
-
-    log.debug("create(SolicitudProyectoEquipo solicitudProyectoEquipo) - end");
-    return returnValue;
-  }
-
-  /**
-   * Actualiza los datos del {@link SolicitudProyectoEquipo}.
-   * 
-   * @param solicitudProyectoEquipo rolSocioActualizar
-   *                                {@link SolicitudProyectoEquipo} con los datos
-   *                                actualizados.
-   * @return {@link SolicitudProyectoEquipo} actualizado.
-   */
-  @Override
-  @Transactional
-  public SolicitudProyectoEquipo update(SolicitudProyectoEquipo solicitudProyectoEquipo) {
-    log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo) - start");
-
-    validateSolicitudProyectoEquipo(solicitudProyectoEquipo);
-
-    // comprobar si la solicitud es modificable
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
-        .findById(solicitudProyectoEquipo.getSolicitudProyectoId())
-        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoEquipo.getSolicitudProyectoId()));
-    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
-        "No se puede modificar SolicitudProyectoEquipo");
-
-    return repository.findById(solicitudProyectoEquipo.getId()).map((solicitudProyectoEquipoExistente) -> {
-
-      solicitudProyectoEquipoExistente.setRolProyecto(solicitudProyectoEquipo.getRolProyecto());
-      solicitudProyectoEquipoExistente.setPersonaRef(solicitudProyectoEquipo.getPersonaRef());
-      solicitudProyectoEquipoExistente.setMesInicio(solicitudProyectoEquipo.getMesInicio());
-      solicitudProyectoEquipoExistente.setMesFin(solicitudProyectoEquipo.getMesFin());
-      SolicitudProyectoEquipo returnValue = repository.save(solicitudProyectoEquipoExistente);
-
-      log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo) - end");
-      return returnValue;
-    }).orElseThrow(() -> new SolicitudProyectoEquipoNotFoundException(solicitudProyectoEquipo.getId()));
   }
 
   /**
@@ -127,26 +79,6 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
         .orElseThrow(() -> new SolicitudProyectoEquipoNotFoundException(id));
     log.debug("findById(Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Elimina la {@link SolicitudProyectoEquipo}.
-   *
-   * @param id Id del {@link SolicitudProyectoEquipo}.
-   */
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    Assert.notNull(id, "SolicitudProyectoEquipo id no puede ser null para eliminar un SolicitudProyectoEquipo");
-    if (!repository.existsById(id)) {
-      throw new SolicitudProyectoEquipoNotFoundException(id);
-    }
-
-    repository.deleteById(id);
-    log.debug("delete(Long id) - end");
-
   }
 
   /**
@@ -171,62 +103,100 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
     return returnValue;
   }
 
-  private void validateSolicitudProyectoEquipo(SolicitudProyectoEquipo solicitudProyectoEquipo) {
+  /**
+   * Actualiza la lista de {@link SolicitudProyectoEquipo} del
+   * {@link SolicitudProyecto}, elimina los que no están en la lista actual pero
+   * tienen el mismo solicitudProyectoId , añade los que no tienen id y actualiza
+   * los ya existentes .
+   * 
+   * @param solicitudProyectoEquipos la lista con los cambios para aplicar.
+   * @return La lista actualizada de {@link SolicitudProyectoEquipo}.
+   */
+  @Transactional
+  @Override
+  @Validated({ SolicitudProyectoEquipo.OnCrear.class, SolicitudProyectoEquipo.OnActualizar.class })
+  public List<SolicitudProyectoEquipo> updateSolicitudProyectoEquipo(Long solicitudProyectoId,
+      List<SolicitudProyectoEquipo> solicitudProyectoEquipos) {
 
-    Assert.isTrue(solicitudProyectoEquipo.getSolicitudProyectoId() != null,
-        "Los datos de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
-    Assert.isTrue(
-        solicitudProyectoEquipo.getRolProyecto() != null && solicitudProyectoEquipo.getRolProyecto().getId() != null,
-        "El rol de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
-    Assert.notNull(solicitudProyectoEquipo.getPersonaRef(),
-        "La persona ref no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
+    List<SolicitudProyectoEquipo> solicitudProyectoEquiposBD = repository
+        .findAllBySolicitudProyectoId(solicitudProyectoId);
 
-    solicitudProyectoRepository.findById(solicitudProyectoEquipo.getSolicitudProyectoId()).map(solicitudProyecto -> {
+    // SolicitudProyectoEquipo eliminados
+    List<SolicitudProyectoEquipo> solicitudProyectoEquipoEliminar = solicitudProyectoEquiposBD.stream()
+        .filter(solProyEquip -> !solicitudProyectoEquipos.stream().map(SolicitudProyectoEquipo::getId)
+            .anyMatch(id -> id == solProyEquip.getId()))
+        .collect(Collectors.toList());
 
-      Specification<SolicitudProyectoEquipo> specBySolicitud = SolicitudProyectoEquipoSpecifications
-          .bySolicitudId(solicitudProyecto.getId());
-
-      Specification<SolicitudProyectoEquipo> specByPersonaRef = SolicitudProyectoEquipoSpecifications
-          .byPersonaRef(solicitudProyectoEquipo.getPersonaRef());
-
-      Specification<SolicitudProyectoEquipo> specBySolapamientoMeses = SolicitudProyectoEquipoSpecifications
-          .byRangoMesesSolapados(solicitudProyectoEquipo.getMesInicio(), solicitudProyectoEquipo.getMesFin());
-
-      Specification<SolicitudProyectoEquipo> specs = Specification.where(specBySolicitud).and(specByPersonaRef)
-          .and(specBySolapamientoMeses);
-
-      if (solicitudProyectoEquipo.getId() != null) {
-        Specification<SolicitudProyectoEquipo> specsIdNotEqual = SolicitudProyectoEquipoSpecifications
-            .byIdNotEqual(solicitudProyectoEquipo.getId());
-        specs = specs.and(specsIdNotEqual);
-      }
-
-      List<SolicitudProyectoEquipo> listMiembrosEquipoEnRango = repository.findAll(specs);
-
-      Assert.isTrue(CollectionUtils.isEmpty(listMiembrosEquipoEnRango),
-          "El miembro del equipo ya existe en el mismo rango de fechas");
-
-      Solicitud solicitud = solicitudRepository.findById(solicitudProyecto.getId())
-          .orElseThrow(() -> new SolicitudNotFoundException(solicitudProyecto.getId()));
-      Specification<SolicitudProyectoEquipo> specBySolicitante = SolicitudProyectoEquipoSpecifications
-          .bySolicitanteRef(solicitud.getSolicitanteRef());
-
-      Specification<SolicitudProyectoEquipo> specsSolicitante = Specification.where(specBySolicitud)
-          .and(specBySolicitante);
-
-      List<SolicitudProyectoEquipo> listSolicitudProyectoEquipoSolicitante = repository.findAll(specsSolicitante);
-
-      Assert.isTrue(
-          !CollectionUtils.isEmpty(listSolicitudProyectoEquipoSolicitante)
-              || solicitudProyectoEquipo.getPersonaRef().equals(solicitud.getSolicitanteRef()),
-          "El solicitante de la solicitud debe ser miembro del equipo");
-
-      return solicitudProyecto;
-    }).orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoEquipo.getSolicitudProyectoId()));
-
-    if (!rolProyectoRepository.existsById(solicitudProyectoEquipo.getRolProyecto().getId())) {
-      throw new RolProyectoNotFoundException(solicitudProyectoEquipo.getRolProyecto().getId());
+    if (!solicitudProyectoEquipoEliminar.isEmpty()) {
+      repository.deleteAll(solicitudProyectoEquipoEliminar);
     }
+    if (solicitudProyectoEquipos.isEmpty()) {
+      return new ArrayList<>();
+    }
+
+    // SolicitudProyectoEquipo NO encontrados
+    solicitudProyectoEquipos.stream().forEach(solProyEquip -> {
+      if (!solicitudProyectoEquiposBD.stream().map(SolicitudProyectoEquipo::getId)
+          .anyMatch(id -> id == solProyEquip.getId()) && solProyEquip.getId() != null) {
+        throw new SolicitudProyectoEquipoNotFoundException(solProyEquip.getId());
+      }
+    });
+
+    Solicitud solicitud = solicitudRepository.findById(solicitudProyectoId)
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitudProyectoId));
+
+    validateSolicitudProyectoEquipo(solicitud, solicitudProyectoEquipos);
+
+    List<SolicitudProyectoEquipo> returnValue = repository.saveAll(solicitudProyectoEquipos);
+
+    return returnValue;
+  }
+
+  private void validateSolicitudProyectoEquipo(Solicitud solicitud,
+      List<SolicitudProyectoEquipo> solicitudProyectoEquipos) {
+
+    solicitudProyectoEquipos.stream().map(SolicitudProyectoEquipo::getPersonaRef).distinct().forEach(personaRef -> {
+      SolicitudProyectoEquipo solicitudProyectoEquipoAnterior = null,
+          solicitudProyectoEquipoInvestigadorPrincipal = null;
+      List<SolicitudProyectoEquipo> miembrosPersonaRef = solicitudProyectoEquipos.stream()
+          .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
+
+      for (SolicitudProyectoEquipo solicitudProyectoEquipo : miembrosPersonaRef) {
+        Assert.notNull(solicitudProyectoEquipo.getPersonaRef(),
+            () -> ProblemMessage.builder().key(Assert.class, "notNull")
+                .parameter("field", ApplicationContextSupport.getMessage("solicitudProyectoEquipo.personaRef"))
+                .parameter("entity", ApplicationContextSupport.getMessage(SolicitudProyectoEquipo.class)).build());
+
+        if (solicitudProyectoEquipo.getPersonaRef().equals(solicitud.getSolicitanteRef())) {
+          solicitudProyectoEquipoInvestigadorPrincipal = solicitudProyectoEquipo;
+        }
+
+        if ((solicitudProyectoEquipoAnterior != null) && (solicitudProyectoEquipoAnterior.getMesFin() != null
+            && solicitudProyectoEquipoAnterior.getMesFin() >= solicitudProyectoEquipo.getMesInicio())) {
+          throw new MiembroSolicitudProyectoEquipoOverlapRangeException();
+        }
+
+        if (solicitudProyectoEquipo.getRolProyecto() == null
+            && solicitudProyectoEquipo.getRolProyecto().getId() == null) {
+          Set<ConstraintViolation<SolicitudProyectoEquipo>> result = validator.validate(solicitudProyectoEquipo,
+              SolicitudProyectoEquipo.OnActualizarRolProyectoSolicitudProyectoEquipo.class);
+
+          if (!result.isEmpty()) {
+            throw new ConstraintViolationException(result);
+          }
+        }
+
+        if (!rolProyectoRepository.existsById(solicitudProyectoEquipo.getRolProyecto().getId())) {
+          throw new RolProyectoNotFoundException(solicitudProyectoEquipo.getRolProyecto().getId());
+        }
+
+        solicitudProyectoEquipoAnterior = solicitudProyectoEquipo;
+      }
+      if (solicitudProyectoEquipoInvestigadorPrincipal == null) {
+        throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
+      }
+    });
+
   }
 
 }

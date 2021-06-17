@@ -1,21 +1,21 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.exceptions.MiembroSolicitudMissmatchSolicitudProyectoIdException;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * SolicitudProyectoEquipoController
  */
 @RestController
+@Validated
 @RequestMapping("/solicitudproyectoequipo")
 @Slf4j
 public class SolicitudProyectoEquipoController {
@@ -38,43 +39,6 @@ public class SolicitudProyectoEquipoController {
    */
   public SolicitudProyectoEquipoController(SolicitudProyectoEquipoService solicitudProyectoEquipoService) {
     this.service = solicitudProyectoEquipoService;
-  }
-
-  /**
-   * Crea nuevo {@link SolicitudProyectoEquipo}
-   * 
-   * @param solicitudProyectoEquipo {@link SolicitudProyectoEquipo}. que se quiere
-   *                                crear.
-   * @return Nuevo {@link SolicitudProyectoEquipo} creado.
-   */
-  @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
-  public ResponseEntity<SolicitudProyectoEquipo> create(
-      @Valid @RequestBody SolicitudProyectoEquipo solicitudProyectoEquipo) {
-    log.debug("create(SolicitudProyectoEquipo solicitudProyectoEquipo) - start");
-    SolicitudProyectoEquipo returnValue = service.create(solicitudProyectoEquipo);
-    log.debug("create(SolicitudProyectoEquipo solicitudProyectoEquipo) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link SolicitudProyectoEquipo}.
-   * 
-   * @param solicitudProyectoEquipo {@link SolicitudProyectoEquipo} a actualizar.
-   * @param id                      Identificador {@link SolicitudProyectoEquipo}
-   *                                a actualizar.
-   * @param authentication          Datos autenticación.
-   * @return SolicitudProyectoEquipo {@link SolicitudProyectoEquipo} actualizado
-   */
-  @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
-  public SolicitudProyectoEquipo update(@Valid @RequestBody SolicitudProyectoEquipo solicitudProyectoEquipo,
-      @PathVariable Long id, Authentication authentication) {
-    log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo, Long id) - start");
-    solicitudProyectoEquipo.setId(id);
-    SolicitudProyectoEquipo returnValue = service.update(solicitudProyectoEquipo);
-    log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo, Long id) - end");
-    return returnValue;
   }
 
   /**
@@ -93,18 +57,22 @@ public class SolicitudProyectoEquipoController {
     return returnValue;
   }
 
-  /**
-   * Desactiva {@link SolicitudProyectoEquipo} con id indicado.
-   * 
-   * @param id Identificador de {@link SolicitudProyectoEquipo}.
-   */
-  @DeleteMapping("/{id}")
+  @PatchMapping("/{solicitudProyectoId}")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.delete(id);
-    log.debug("deleteById(Long id) - end");
+  public ResponseEntity<List<SolicitudProyectoEquipo>> updateMiembrosEquipo(@PathVariable Long solicitudProyectoId,
+      @Valid @RequestBody List<SolicitudProyectoEquipo> solicitudProyectoEquipos) {
+    log.debug("updateMiembrosEquipo(Long solicitudId, List<SolicitudProyectoEquipo> solicitudProyectoEquipos) - start");
+
+    solicitudProyectoEquipos.stream().forEach(solicitudProyectoEquipo -> {
+      if (solicitudProyectoEquipo.getSolicitudProyectoId() != solicitudProyectoId) {
+        throw new MiembroSolicitudMissmatchSolicitudProyectoIdException();
+      }
+    });
+
+    List<SolicitudProyectoEquipo> returnValue = service.updateSolicitudProyectoEquipo(solicitudProyectoId,
+        solicitudProyectoEquipos);
+    log.debug("updateMiembrosEquipo(Long solicitudId, List<SolicitudProyectoEquipo> solicitudProyectoEquipos) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
 }
