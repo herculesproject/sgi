@@ -139,8 +139,9 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
       if (modalData) {
         if (!wrapper) {
           this.formPart.addProyectoEquipo(modalData.entidad as ISolicitudProyectoEquipo);
-        } else {
-          this.formPart.updateProyectoEquipo(wrapper);
+        } else if (!wrapper.created) {
+          wrapper.setEdited();
+          this.formPart.setChanges(true);
         }
       }
     });

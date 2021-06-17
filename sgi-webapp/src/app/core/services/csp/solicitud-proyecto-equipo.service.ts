@@ -5,6 +5,8 @@ import { ISolicitudProyectoEquipoBackend } from '@core/models/csp/backend/solici
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { environment } from '@env';
 import { SgiMutableRestService } from '@sgi/framework/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,15 @@ export class SolicitudProyectoEquipoService
       `${environment.serviceServers.csp}${SolicitudProyectoEquipoService.MAPPING}`,
       http,
       SOLICITUD_PROYECTO_EQUIPO_CONVERTER
+    );
+  }
+
+  updateSolicitudProyectoEquipo(solicitudId: number, solicitudProyectoEquipos: ISolicitudProyectoEquipo[]):
+    Observable<ISolicitudProyectoEquipo[]> {
+    return this.http.patch<ISolicitudProyectoEquipoBackend[]>(`${this.endpointUrl}/${solicitudId}`,
+      this.converter.fromTargetArray(solicitudProyectoEquipos)
+    ).pipe(
+      map(response => this.converter.toTargetArray(response))
     );
   }
 }

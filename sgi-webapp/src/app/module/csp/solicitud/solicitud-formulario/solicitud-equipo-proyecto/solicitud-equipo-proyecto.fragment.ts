@@ -3,12 +3,11 @@ import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export class SolicitudEquipoProyectoFragment extends Fragment {
   proyectoEquipos$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoEquipo>[]>([]);
-  private proyectosEquipoEliminados: StatusWrapper<ISolicitudProyectoEquipo>[] = [];
 
   constructor(
     key: number,
@@ -42,9 +41,6 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
       (value) => value === wrapper
     );
     if (index >= 0) {
-      if (!wrapper.created) {
-        this.proyectosEquipoEliminados.push(current[index]);
-      }
       current.splice(index, 1);
       this.proyectoEquipos$.next(current);
       this.setChanges(true);
@@ -74,12 +70,18 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
-    return merge(
-      this.deleteEquipoProyecto(),
-      this.updateEquipoProyecto(),
-      this.createEquipoProyecto()
+    const solicitudProyectoEquipos = this.proyectoEquipos$.value.map(wrapper => wrapper.value);
+    solicitudProyectoEquipos.forEach(solicitudProyectoEquipo => {
+      solicitudProyectoEquipo.solicitudProyectoId = this.getKey() as number;
+    });
+
+    return (this.solicitudProyectoEquipoService.updateSolicitudProyectoEquipo(this.getKey() as number, solicitudProyectoEquipos)
     ).pipe(
-      takeLast(1),
+      map((peridosJustificacionActualizados) => {
+        this.proyectoEquipos$.next(
+          peridosJustificacionActualizados
+            .map(solicitudProyectoEquipo => new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo)));
+      }),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
@@ -88,69 +90,8 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     );
   }
 
-  private deleteEquipoProyecto(): Observable<void> {
-    if (this.proyectosEquipoEliminados.length === 0) {
-      return of(void 0);
-    }
-    return from(this.proyectosEquipoEliminados).pipe(
-      mergeMap((wrapped) => {
-        return this.solicitudProyectoEquipoService.deleteById(wrapped.value.id)
-          .pipe(
-            tap(() => {
-              this.proyectosEquipoEliminados = this.proyectosEquipoEliminados.filter(deletedHito =>
-                deletedHito.value.id !== wrapped.value.id);
-            })
-          );
-      })
-    );
-  }
-
-  private updateEquipoProyecto(): Observable<void> {
-    const updateEquipos = this.proyectoEquipos$.value.filter((wrapper) => wrapper.value.id);
-    if (updateEquipos.length === 0) {
-      return of(void 0);
-    }
-    return from(updateEquipos).pipe(
-      mergeMap((wrapped) => {
-        const solicitudProyectoEquipo = wrapped.value;
-        return this.solicitudProyectoEquipoService.update(solicitudProyectoEquipo.id, solicitudProyectoEquipo).pipe(
-          map((updated) => {
-            const index = this.proyectoEquipos$.value.findIndex((current) => current === wrapped);
-            this.proyectoEquipos$.value[index] = new StatusWrapper<ISolicitudProyectoEquipo>(updated);
-          })
-        );
-      })
-    );
-  }
-
-  private createEquipoProyecto(): Observable<void> {
-    const createdEquipos = this.proyectoEquipos$.value.filter((equipoProyecto) => !equipoProyecto.value.id);
-    if (createdEquipos.length === 0) {
-      return of(void 0);
-    }
-    return this.createEquipos(createdEquipos);
-  }
-
-  private createEquipos(
-    createdEquipos: StatusWrapper<ISolicitudProyectoEquipo>[]
-  ): Observable<void> {
-    return from(createdEquipos).pipe(
-      mergeMap((wrapped) => {
-        const value = wrapped.value;
-        value.solicitudProyectoId = this.getKey() as number;
-        return this.solicitudProyectoEquipoService.create(value).pipe(
-          map((solicitudProyectoEquipo) => {
-            const index = this.proyectoEquipos$.value.findIndex((currenthitos) => currenthitos === wrapped);
-            this.proyectoEquipos$.value[index] = new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo);
-          })
-        );
-      }),
-      takeLast(1)
-    );
-  }
-
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.proyectoEquipos$.value.some((wrapper) => wrapper.touched);
-    return (this.proyectosEquipoEliminados.length > 0 || touched);
+    return !touched;
   }
 }
