@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,8 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "estado_proyecto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "estado", "proyecto_id" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
+@Table(name = "estado_proyecto")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -48,14 +46,12 @@ public class EstadoProyecto extends BaseEntity {
   public enum Estado {
     /** Borrador */
     BORRADOR,
-    /** Provisional */
-    PROVISIONAL,
-    /** Abierto */
-    ABIERTO,
-    /** Finalizado */
-    FINALIZADO,
-    /** Cancelado */
-    CANCELADO;
+    /** Concedido */
+    CONCEDIDO,
+    /** Renunciado */
+    RENUNCIADO,
+    /** Rescindido */
+    RESCINDIDO;
   }
 
   /** Id */

@@ -56,7 +56,8 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     Assert.notNull(proyectoEntidadConvocante.getProyectoId(), "Proyecto id no puede ser null");
     Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
-    ProyectoHelper.checkCanUpdate(proyecto);
+    ProyectoHelper.checkCanRead(proyecto);
+
     Assert
         .isTrue(
             !repository.existsByProyectoIdAndEntidadRef(proyectoEntidadConvocante.getProyectoId(),
@@ -94,7 +95,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     return repository.findById(idProyectoEntidadConvocante).map(proyectoEntidadConvocante -> {
       Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
           .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
-      ProyectoHelper.checkCanUpdate(proyecto);
+      ProyectoHelper.checkCanRead(proyecto);
       if (programa == null || programa.getId() == null) {
         proyectoEntidadConvocante.setPrograma(null);
       } else {
@@ -122,7 +123,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     repository.findById(id).map(proyectoEntidadConvocante -> {
       Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
           .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
-      ProyectoHelper.checkCanUpdate(proyecto);
+      ProyectoHelper.checkCanRead(proyecto);
       repository.deleteById(id);
       return proyectoEntidadConvocante;
     }).orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(id));
@@ -201,7 +202,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     Assert.notNull(proyectoEntidadConvocanteActualizar.getEntidadRef(), "EntidadRef no puede ser null");
     Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocanteActualizar.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocanteActualizar.getProyectoId()));
-    ProyectoHelper.checkCanUpdate(proyecto);
+    ProyectoHelper.checkCanRead(proyecto);
     Assert.isTrue(
         repository.existsByProyectoIdAndEntidadRef(proyectoEntidadConvocanteActualizar.getProyectoId(),
             proyectoEntidadConvocanteActualizar.getEntidadRef()),

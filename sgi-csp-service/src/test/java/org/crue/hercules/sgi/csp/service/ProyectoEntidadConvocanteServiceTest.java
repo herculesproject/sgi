@@ -189,10 +189,10 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(ProyectoEntidadConvocante
         .builder().id(proyectoEntidadConvocanteId).proyectoId(proyectoId).entidadRef("Entidad").build()));
+    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
-    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
         // when: delete by existing id

@@ -97,7 +97,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
         Proyecto proyecto = proyectoRepository.findById(proyectoSocioExistente.getProyectoId())
             .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocioExistente.getProyectoId()));
-        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO) && proyecto.getColaborativo()
+        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.CONCEDIDO) && proyecto.getColaborativo()
             && proyecto.getCoordinadorExterno()) {
 
           Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocioExistente.getProyectoId()),
@@ -139,7 +139,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
         Proyecto proyecto = proyectoRepository.findById(proyectoSocio.getProyectoId())
             .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocio.getProyectoId()));
-        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO) && proyecto.getColaborativo()
+        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.CONCEDIDO) && proyecto.getColaborativo()
             && proyecto.getCoordinadorExterno()) {
 
           Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocio.getProyectoId()),

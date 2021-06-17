@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
@@ -78,5 +79,14 @@ public interface ProyectoService {
    * @return proyecto la entidad {@link Proyecto} persistida.
    */
   Proyecto createProyectoBySolicitud(Long id, Proyecto proyecto);
+
+  /**
+   * Se hace el cambio de estado de un {@link Proyecto}.
+   * 
+   * @param id             Identificador de {@link Proyecto}.
+   * @param estadoProyecto Estado al que se cambiará el Proyecto.
+   * @return {@link Proyecto} actualizado.
+   */
+  Proyecto cambiarEstado(Long id, EstadoProyecto estadoProyecto);
 
 }

@@ -465,24 +465,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-E_2" })
-  public void update_WithNotCorrectEstado_ThrowsIllegalArgumentException() {
-    // given: Actualizar un proyecto con estado Finalizado
-    Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.getEstado().setId(4L);
-    proyecto.getEstado().setEstado(EstadoProyecto.Estado.FINALIZADO);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(new ModeloUnidad()));
-
-    // when: Actualizamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El proyecto no está en un estado en el que puede ser actualizado");
-  }
-
-  @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void update_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Actualizar proyecto

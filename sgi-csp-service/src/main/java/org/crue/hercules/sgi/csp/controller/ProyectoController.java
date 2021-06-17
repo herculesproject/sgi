@@ -894,4 +894,21 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Realiza los cambios de estado de proyectos".
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return {@link Proyecto} actualizado.
+   */
+  @PatchMapping("/{id}/cambiar-estado")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  Proyecto cambiarEstado(@PathVariable Long id, @RequestBody EstadoProyecto estadoProyecto) {
+    log.debug("cambiarEstado(EstadoProyecto estadoProyecto) - start");
+
+    Proyecto returnValue = service.cambiarEstado(id, estadoProyecto);
+
+    log.debug("cambiarEstado(EstadoProyecto estadoProyecto) - end");
+    return returnValue;
+  }
+
 }

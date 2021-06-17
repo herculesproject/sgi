@@ -278,7 +278,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.validarDatos(proyectoActualizar);
 
     return repository.findById(proyectoActualizar.getId()).map((data) -> {
-      ProyectoHelper.checkCanUpdate(data);
+      ProyectoHelper.checkCanRead(data);
       Assert.isTrue(
           proyectoActualizar.getEstado().getId() == data.getEstado().getId()
               && ((proyectoActualizar.getConvocatoriaId() == null && data.getConvocatoriaId() == null)
@@ -589,41 +589,41 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     // Validación de campos obligatorios según estados. Solo aplicaría en el
     // actualizar ya que en el crear el estado siempre será "Borrador"
-    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
+    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
       // En la validación del crear no pasará por aquí, aún no tendrá estado.
       Assert.isTrue(proyecto.getFinalidad() != null,
-          "El campo finalidad debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo finalidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getAmbitoGeografico() != null,
-          "El campo ambitoGeografico debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo ambitoGeografico debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getConfidencial() != null,
-          "El campo confidencial debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getColaborativo() != null,
-          "El campo colaborativo debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo colaborativo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getCoordinadorExterno() != null,
-          "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(
-          proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO && proyecto.getTimesheet() != null,
-          "El campo timesheet debe ser obligatorio para el proyecto en estado 'Abierto'");
+          proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO && proyecto.getTimesheet() != null,
+          "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
-          "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getCosteHora() != null,
-          "El campo costeHora debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo costeHora debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getContratos() != null,
-          "El campo contratos debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo contratos debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getFacturacion() != null,
-          "El campo facturacion debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo facturacion debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getIva() != null,
-          "El campo iva debe ser obligatorio para el proyecto en estado 'Abierto'");
+          "El campo iva debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
     }
   }
 
@@ -1231,4 +1231,97 @@ public class ProyectoServiceImpl implements ProyectoService {
     return returnValue;
   }
 
+  /**
+   * Se hace el cambio de estado de un proyecto.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return {@link Proyecto} actualizado.
+   */
+  @Override
+  @Transactional
+  public Proyecto cambiarEstado(Long id, EstadoProyecto estadoProyecto) {
+
+    log.debug("cambiarEstado(Long id, EstadoProyecto estadoProyecto) - start");
+
+    Proyecto proyecto = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
+
+    estadoProyecto.setProyectoId(proyecto.getId());
+
+    // VALIDACIONES
+    // Permisos
+    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-E", proyecto.getUnidadGestionRef()),
+        "La Unidad de Gestión no es gestionable por el usuario");
+
+    // El nuevo estado es diferente al estado actual de del proyecto
+    if (estadoProyecto.getEstado().equals(proyecto.getEstado().getEstado())) {
+      throw new IllegalArgumentException("El proyecto ya se encuentra en el estado al que se quiere modificar.");
+    }
+
+    // Validaciones según el cambio de estado
+    this.checkCamposObligatoriosPorEstado(proyecto, estadoProyecto);
+
+    // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o
+    // RESCINDIDO
+    Instant fechaActual = Instant.now();
+    if (estadoProyecto.getEstado() == EstadoProyecto.Estado.RENUNCIADO
+        || estadoProyecto.getEstado() == EstadoProyecto.Estado.RESCINDIDO) {
+      // La fecha debe actualizarse también para los miembros de los equipos.
+      List<ProyectoEquipo> equiposActualizados;
+      if (proyecto.getFechaFinDefinitiva() != null) {
+        equiposActualizados = getEquiposUpdateFechaFinProyectoEquipo(proyecto.getId(), proyecto.getFechaFinDefinitiva(),
+            fechaActual);
+      } else {
+        equiposActualizados = getEquiposUpdateFechaFinProyectoEquipo(proyecto.getId(), proyecto.getFechaFin(),
+            fechaActual);
+      }
+      proyectoEquipoService.update(proyecto.getId(), equiposActualizados);
+      proyecto.setFechaFinDefinitiva(fechaActual);
+    }
+
+    // Se cambia el estado del proyecto
+    estadoProyecto.setFechaEstado(fechaActual);
+    estadoProyecto = estadoProyectoRepository.save(estadoProyecto);
+    proyecto.setEstado(estadoProyecto);
+
+    Proyecto returnValue = repository.save(proyecto);
+
+    log.debug("cambiarEstado(Long id, EstadoProyecto estadoProyecto) - end");
+    return returnValue;
+  }
+
+  private void checkCamposObligatoriosPorEstado(Proyecto proyecto, EstadoProyecto estadoProyecto) {
+    // Validación de campos obligatorios según estados. Solo aplicaría en el
+    // actualizar ya que en el crear el estado siempre será "Borrador"
+    if (estadoProyecto.getEstado() != null && estadoProyecto.getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
+      // En la validación del crear no pasará por aquí, aún no tendrá estado.
+      Assert.isTrue(proyecto.getFinalidad() != null,
+          "El campo finalidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getAmbitoGeografico() != null,
+          "El campo ambitoGeografico debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getConfidencial() != null,
+          "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getColaborativo() != null,
+          "El campo colaborativo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getCoordinadorExterno() != null,
+          "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getTimesheet() != null,
+          "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
+          "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      Assert.isTrue(proyecto.getCosteHora() != null,
+          "El campo costeHora debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+
+      List<ProyectoEquipo> equipos = proyectoEquipoService.findAllByProyectoId(proyecto.getId());
+
+      Assert.isTrue(!CollectionUtils.isEmpty(equipos),
+          "El equipo debe tener al menos un miembro para el proyecto en estado 'CONCEDIDO'");
+    }
+  }
 }

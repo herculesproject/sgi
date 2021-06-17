@@ -571,7 +571,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
   private Proyecto generarMockProyecto(Long id) {
     Proyecto proyecto = new Proyecto();
     proyecto.setEstado(new EstadoProyecto());
-    proyecto.getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.CONCEDIDO);
     return proyecto;
   }
 

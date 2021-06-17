@@ -147,7 +147,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
 
@@ -175,7 +175,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
 
@@ -354,7 +354,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
 
@@ -386,7 +386,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
 

@@ -262,7 +262,7 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
 
     Proyecto proyecto = proyectoRepository.findById(proyectoSocio.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocio.getProyectoId()));
-    if (proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
+    if (proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
       Assert.isTrue(
           proyectoSocioPeriodoJustificacion.getFechaInicioPresentacion() != null
               && proyectoSocioPeriodoJustificacion.getFechaFinPresentacion() != null,

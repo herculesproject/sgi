@@ -172,7 +172,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoSocio proyectoSocioExistente = generarMockProyectoSocio(1L);
-    proyecto.getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.CONCEDIDO);
     proyecto.setColaborativo(true);
     proyecto.setCoordinadorExterno(true);
 
@@ -231,7 +231,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     Long id = 1L;
     ProyectoSocio proyectoSocio = generarMockProyectoSocio(1L);
-    proyecto.getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.CONCEDIDO);
     proyecto.setColaborativo(true);
     proyecto.setCoordinadorExterno(true);
 

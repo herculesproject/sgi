@@ -366,7 +366,7 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
     Proyecto proyecto = proyectoRepository.findById(datosProyectoPeriodoSeguimiento.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(datosProyectoPeriodoSeguimiento.getProyectoId()));
 
-    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
+    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
       Assert.notNull(datosProyectoPeriodoSeguimiento.getFechaInicioPresentacion(),
           "FechaInicioPresentacion no puede ser null para " + ((datosOriginales == null) ? "crear" : "actualizar")
               + " ProyectoPeriodoSeguimiento");
