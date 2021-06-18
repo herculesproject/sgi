@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -69,6 +70,9 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaReunionService convocatoriaReunionService;
+
+  @MockBean
+  private ActaService actaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";

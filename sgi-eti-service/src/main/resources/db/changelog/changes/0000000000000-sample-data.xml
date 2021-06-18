@@ -804,7 +804,7 @@
       <column name="fecha_dictamen" value="2019-08-28T00:00:00Z" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="2" />
-      <column name="activo" value="false" />
+      <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
       <column name="id" valueSequenceNext="evaluacion_seq" />

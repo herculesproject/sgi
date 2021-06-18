@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -65,5 +66,13 @@ public interface ActaService {
    * @param id identificador del {@link Acta} a finalizar.
    */
   void finishActa(Long id);
+
+  /**
+   * Devuelve el {@link Acta} asociada a una {@link ConvocatoriaReunion}
+   *
+   * @param convocatoriaReunionId Id de {@link ConvocatoriaReunion}.
+   * @return si hay acta asociado a la convocatoria de reunión
+   */
+  Acta findByConvocatoriaReunionId(Long convocatoriaReunionId);
 
 }

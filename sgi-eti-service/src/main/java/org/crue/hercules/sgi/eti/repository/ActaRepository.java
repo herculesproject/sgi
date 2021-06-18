@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
@@ -33,5 +35,13 @@ public interface ActaRepository
    * @return si existe true y si no false
    */
   boolean existsByConvocatoriaReunionIdAndEstadoActualId(Long convocatoriaReunionId, Long tipoEstadoActaId);
+
+  /**
+   * Devuelve el {@link Acta} asociada a una {@link ConvocatoriaReunion}
+   *
+   * @param convocatoriaReunionId Id de {@link ConvocatoriaReunion}.
+   * @return si hay acta asociado a la convocatoria de reunión
+   */
+  Optional<Acta> findByConvocatoriaReunionId(Long convocatoriaReunionId);
 
 }

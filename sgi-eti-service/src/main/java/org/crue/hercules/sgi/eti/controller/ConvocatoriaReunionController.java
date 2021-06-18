@@ -5,9 +5,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
+import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -56,18 +58,25 @@ public class ConvocatoriaReunionController {
   private ConvocatoriaReunionService convocatoriaReunionService;
 
   /**
+   * Acta service
+   */
+  private ActaService actaService;
+
+  /**
    * Instancia un nuevo ConvocatoriaReunionController.
    *
    * @param asistenteService           {@link AsistentesService}
    * @param evaluacionService          {@link EvaluacionService}
-   * @param convocatoriaReunionService {@link ConvocatoriaReunionService}.
+   * @param convocatoriaReunionService {@link ConvocatoriaReunionService}
+   * @param actaService                {@link ActaService}
    */
   public ConvocatoriaReunionController(AsistentesService asistenteService, EvaluacionService evaluacionService,
-      ConvocatoriaReunionService convocatoriaReunionService) {
+      ConvocatoriaReunionService convocatoriaReunionService, ActaService actaService) {
     log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - start");
     this.convocatoriaReunionService = convocatoriaReunionService;
     this.asistenteService = asistenteService;
     this.evaluacionService = evaluacionService;
+    this.actaService = actaService;
     log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - end");
   }
 
@@ -326,5 +335,20 @@ public class ConvocatoriaReunionController {
     Boolean returnValue = convocatoriaReunionService.modificable(id);
     log.debug("modificable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Obtiene el {@link Acta} asociada a la {@link ConvocatoriaReunion}
+   * 
+   * @param id Id del {@link ConvocatoriaReunion}.
+   * @return la entidad {@link Acta} asociada ala {@link ConvocatoriaReunion}
+   */
+  @GetMapping(path = "/{id}/acta")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-V', 'ETI-CNV-E','ETI-ACT-V', 'ETI-ACT-E')")
+  ResponseEntity<Acta> actaConvocatoriaReunion(@PathVariable Long id) {
+    log.debug("actaConvocatoriaReunion(Long id) - start");
+    Acta returnValue = actaService.findByConvocatoriaReunionId(id);
+    log.debug("actaConvocatoriaReunion(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 }

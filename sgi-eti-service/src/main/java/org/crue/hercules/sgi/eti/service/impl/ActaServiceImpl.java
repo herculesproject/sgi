@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -348,6 +349,18 @@ public class ActaServiceImpl implements ActaService {
     actaRepository.save(acta);
 
     log.debug("finishActa(Long id) - end");
+  }
+
+  /**
+   * Devuelve el {@link Acta} asociada a una {@link ConvocatoriaReunion}
+   *
+   * @param convocatoriaReunionId Id de {@link ConvocatoriaReunion}.
+   * @return si hay acta asociado a la convocatoria de reunión
+   */
+  @Override
+  public Acta findByConvocatoriaReunionId(Long convocatoriaReunionId) {
+    Optional<Acta> acta = actaRepository.findByConvocatoriaReunionId(convocatoriaReunionId);
+    return acta.isPresent() ? acta.get() : null;
   }
 
 }
