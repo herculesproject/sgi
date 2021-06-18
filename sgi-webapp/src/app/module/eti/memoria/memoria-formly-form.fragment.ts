@@ -618,6 +618,9 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       const toIndex = expressionModelValue.indexOf(matchIterationExpressionModelValue[0]);
       const fieldIteration = expressionModelValue.substring(fromIndex + 1, toIndex - 1);
       if (formState[fieldIteration] && formState[fieldIteration] instanceof Array) {
+        if (formState[fieldIteration].length === 0 || (formState[fieldIteration].length < model[parentKey].length)) {
+          model[parentKey] = [];
+        }
         formState[fieldIteration].forEach((element, i) => {
           const newExpressionModelValue = expressionModelValue.replace(regularExpressionFieldIterable, i);
 
@@ -629,6 +632,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
           model[parentKey][i][fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
         });
+
       }
     }
   }
