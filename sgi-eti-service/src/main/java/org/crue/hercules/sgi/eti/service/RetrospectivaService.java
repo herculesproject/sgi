@@ -54,4 +54,13 @@ public interface RetrospectivaService {
    */
   void deleteAll();
 
+  /**
+   * Se actualiza el estado actual de la {@link Retrospectiva} recibida
+   * 
+   * @param retrospectiva         {@link Retrospectiva} a actualizar estado.
+   * @param idEstadoRetrospectiva identificador del estado nuevo de la
+   *                              retrospectiva.
+   */
+  void updateEstadoRetrospectiva(Retrospectiva retrospectiva, Long idEstadoRetrospectiva);
+
 }

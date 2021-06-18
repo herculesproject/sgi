@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import org.crue.hercules.sgi.eti.exceptions.RetrospectivaNotFoundException;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
@@ -143,6 +144,28 @@ public class RetrospectivaServiceImpl implements RetrospectivaService {
         .orElseThrow(() -> new RetrospectivaNotFoundException(id));
     log.debug("findById(final Long id) - end");
     return retrospectiva;
+  }
+
+  /**
+   * Se actualiza el estado actual de la {@link Retrospectiva} recibida
+   * 
+   * @param retrospectiva         {@link Retrospectiva} a actualizar estado.
+   * @param idEstadoRetrospectiva identificador del estado nuevo de la
+   *                              retrospectiva.
+   */
+  @Override
+  public void updateEstadoRetrospectiva(Retrospectiva retrospectiva, Long idEstadoRetrospectiva) {
+    log.debug("updateEstadoRetrospectiva(Retrospectiva retrospectiva, Long idEstadoRetrospectiva) - start");
+
+    // se crea el nuevo estado para la retrospectiva
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(idEstadoRetrospectiva);
+
+    // Se actualiza la memoria con el nuevo tipo estado memoria
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    repository.save(retrospectiva);
+
+    log.debug("updateEstadoRetrospectiva(Retrospectiva retrospectiva, Long idEstadoRetrospectiva) - end");
   }
 
 }

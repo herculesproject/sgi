@@ -19,6 +19,8 @@ import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,32 +49,34 @@ public class ActaServiceImpl implements ActaService {
   /** Tipo Estado Acta Repository. */
   private final TipoEstadoActaRepository tipoEstadoActaRepository;
 
-  /** Retrospectiva repository. */
-  private final RetrospectivaRepository retrospectivaRepository;
-
   /** Memoria Service. */
   private final MemoriaService memoriaService;
+
+  /** Retrospectiva Service. */
+  private final RetrospectivaService retrospectivaService;
 
   /**
    * Instancia un nuevo ActaServiceImpl.
    * 
-   * @param actaRepository           { @link ActaRepository}
-   * @param estadoActaRepository     { @link EstadoActaRepository}
-   * @param tipoEstadoActaRepository { @link TipoEstadoActaRepository}
+   * @param actaRepository           {@link ActaRepository}
+   * @param estadoActaRepository     {@link EstadoActaRepository}
+   * @param tipoEstadoActaRepository {@link TipoEstadoActaRepository}
    * @param evaluacionRepository     {@link EvaluacionRepository}
    * @param retrospectivaRepository  {@link RetrospectivaRepository}
    * @param memoriaService           {@link MemoriaService}
+   * @param retrospectivaService     {@link RetrospectivaService}
    * 
    */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
-      RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService) {
+      RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService,
+      RetrospectivaService retrospectivaService) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
     this.evaluacionRepository = evaluacionRepository;
-    this.retrospectivaRepository = retrospectivaRepository;
     this.memoriaService = memoriaService;
+    this.retrospectivaService = retrospectivaService;
   }
 
   /**
@@ -218,57 +222,117 @@ public class ActaServiceImpl implements ActaService {
 
     Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
 
+    // Tipo evaluación memoria
     List<Evaluacion> listEvaluacionesMemoria = evaluacionRepository
-        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(2L, Boolean.FALSE,
-            acta.getConvocatoriaReunion().getId());
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(Constantes.TIPO_EVALUACION_MEMORIA,
+            Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
     listEvaluacionesMemoria.forEach(evaluacion -> {
 
       switch (evaluacion.getDictamen().getId().intValue()) {
-        case 1: {
+        case Constantes.DICTAMEN_FAVORABLE: {
           // Dictamen "Favorable"-
           // Se actualiza memoria a estado 9: "Fin evaluación"
-          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 9L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_FIN_EVALUACION);
           break;
         }
-        case 2: {
+        case Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA: {
           // Dictamen "Favorable pendiente de revisión mínima"-
           // Se actualiza memoria a estado 6: "Favorable Pendiente de Modificaciones
           // Mínimas"
-          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 6L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
+              Constantes.ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS);
           break;
         }
-        case 3: {
+        case Constantes.DICTAMEN_PENDIENTE_CORRECCIONES: {
           // Dictamen "Pendiente de correcciones"
           // Se actualiza memoria a estado 7: "Pendiente de correcciones"
-          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 7L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_PENDIENTE_CORRECCIONES);
           break;
         }
-        case 4: {
+        case Constantes.DICTAMEN_NO_PROCEDE_EVALUAR: {
           // Dictamen "No procede evaluar"
           // Se actualiza memoria a estado 8: "No procede evaluar"
-          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 8L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_NO_PROCEDE_EVALUAR);
+          break;
+        }
+        case Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES: {
+          // Dictamen "Solicitud modificaciones"
+          // Se actualiza memoria a estado 15: "Solicitud modificacion"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION);
+          break;
+        }
+      }
+    });
 
+    // Tipo evaluación retrospectiva
+    List<Evaluacion> listEvaluacionesRetrospectiva = evaluacionRepository
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
+            Constantes.TIPO_EVALUACION_RETROSPECTIVA, Boolean.FALSE, acta.getConvocatoriaReunion().getId());
+
+    listEvaluacionesRetrospectiva.forEach(evaluacion -> {
+
+      switch (evaluacion.getDictamen().getId().intValue()) {
+        case Constantes.DICTAMEN_DESFAVORABLE_RETROSPECTIVA:
+        case Constantes.DICTAMEN_FAVORABLE_RETROSPECTIVA: {
+          // Dictamen "Favorable y desfavorable retrospectiva"
+          // Se actualiza memoria a estado 5: "Fin evaluación retrospectiva"
+          retrospectivaService.updateEstadoRetrospectiva(evaluacion.getMemoria().getRetrospectiva(),
+              Constantes.ESTADO_RETROSPECTIVA_FIN_EVALUACION);
           break;
         }
       }
 
     });
 
-    List<Evaluacion> listEvaluacionesRetrospectiva = evaluacionRepository
-        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(1L, Boolean.FALSE,
-            acta.getConvocatoriaReunion().getId());
+    // Tipo evaluación seguimiento final
+    List<Evaluacion> listEvaluacionesSegFinal = evaluacionRepository
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
+            Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL, Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-    listEvaluacionesRetrospectiva.forEach(evaluacion -> {
+    listEvaluacionesSegFinal.forEach(evaluacion -> {
 
-      // Se actualiza el estado de la retrospectiva a 5: "Fin evaluación"
+      switch (evaluacion.getDictamen().getId().intValue()) {
+        case Constantes.DICTAMEN_FAVORABLE_SEGUIMIENTO_FINAL: {
+          // Dictamen "Favorable - seguimiento anual"-
+          // Se actualiza memoria a estado 9: "Fin evaluación"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
+              Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_FINAL);
+          break;
+        }
+        case Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL: {
+          // Dictamen "Solicitud aclaraciones seguimiento final"
+          // Se actualiza memoria a estado 21: "En aclaracion seguimiento final"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
+              Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
+          break;
+        }
+      }
 
-      EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
-      estadoRetrospectiva.setId(5L);
+    });
 
-      evaluacion.getMemoria().getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva);
+    // Tipo evaluación seguimiento anual
+    List<Evaluacion> listEvaluacionesSegAnual = evaluacionRepository
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
+            Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL, Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-      retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
+    listEvaluacionesSegAnual.forEach(evaluacion -> {
+
+      switch (evaluacion.getDictamen().getId().intValue()) {
+        case Constantes.DICTAMEN_FAVORABLE_SEGUIMIENTO_ANUAL: {
+          // Dictamen "Favorable - seguimiento anual"-
+          // Se actualiza memoria a estado 9: "Fin evaluación"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
+              Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_ANUAL);
+          break;
+        }
+        case Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES: {
+          // Dictamen "Solicitud modificaciones"
+          // Se actualiza memoria a estado 15: "Solicitud modificacion"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION);
+          break;
+        }
+      }
 
     });
 
