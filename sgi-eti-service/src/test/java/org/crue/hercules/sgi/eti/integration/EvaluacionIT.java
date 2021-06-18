@@ -206,8 +206,12 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
 
-    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(EVALUACION_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+    String sort = "id,asc";
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
+        .toUri();
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
         });
 
     // then: Respuesta OK, Evaluaciones retorna la información de la página
