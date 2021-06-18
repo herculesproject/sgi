@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.eti.exceptions.InformeNotFoundException;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -136,10 +138,10 @@ public class InformeServiceImpl implements InformeService {
    */
   @Override
   public void deleteInformeMemoria(Long idMemoria) {
-    Informe informe = informeRepository.findFirstByMemoriaIdOrderByVersionDesc(idMemoria);
+    Optional<Informe> informe = informeRepository.findFirstByMemoriaIdOrderByVersionDesc(idMemoria);
 
-    if (informe != null) {
-      informeRepository.delete(informe);
+    if (informe.isPresent()) {
+      informeRepository.delete(informe.get());
     }
 
   }
@@ -157,6 +159,19 @@ public class InformeServiceImpl implements InformeService {
     Assert.notNull(id, "Memoria id no puede ser null para actualizar un informe");
     Page<Informe> returnValue = informeRepository.findByMemoriaId(id, pageable);
     return returnValue;
+  }
+
+  /**
+   * Devuelve la última versión del {@link Informe} filtrado por la
+   * {@link Memoria}
+   * 
+   * @param id identificador de la {@link Memoria}
+   * @return el {@link Informe}
+   */
+  @Override
+  public Optional<Informe> findFirstByMemoriaOrderByVersionDesc(Long id) {
+    Assert.notNull(id, "Memoria id no puede ser null para actualizar un informe");
+    return informeRepository.findFirstByMemoriaIdOrderByVersionDesc(id);
   }
 
 }

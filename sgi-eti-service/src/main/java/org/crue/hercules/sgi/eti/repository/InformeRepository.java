@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,7 @@ public interface InformeRepository extends JpaRepository<Informe, Long>, JpaSpec
    * @param idMemoria identificador de la {@link Memoria}
    * @return el {@link Informe}
    */
-  Informe findFirstByMemoriaIdOrderByVersionDesc(Long idMemoria);
+  Optional<Informe> findFirstByMemoriaIdOrderByVersionDesc(Long idMemoria);
 
   Page<Informe> findByMemoriaId(Long idMemoria, Pageable pageable);
 }

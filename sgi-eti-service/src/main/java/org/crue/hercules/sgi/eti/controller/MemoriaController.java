@@ -718,4 +718,26 @@ public class MemoriaController {
     }
     return new ResponseEntity<>(respuesta, HttpStatus.OK);
   }
+
+  /**
+   * * Devuelve el informe con la última versión
+   * 
+   * @param id identificador de la {@link Memoria}
+   * @return el {@link Informe}
+   */
+  @GetMapping("/{id}/informe/ultima-version")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V')")
+  public ResponseEntity<Informe> getInformeFormularioUltimaVersion(@PathVariable Long id) {
+
+    Optional<Informe> returnValue = informeService.findFirstByMemoriaOrderByVersionDesc(id);
+
+    if (!returnValue.isPresent()) {
+      log.debug("getInformesFormulario(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("getInformesFormulario(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(returnValue.get(), HttpStatus.OK);
+
+  }
 }

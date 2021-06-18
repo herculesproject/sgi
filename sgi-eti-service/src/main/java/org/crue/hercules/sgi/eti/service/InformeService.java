@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.eti.exceptions.InformeNotFoundException;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -71,5 +73,14 @@ public interface InformeService {
    * @return el listado paginado de {@link Informe}
    */
   Page<Informe> findByMemoria(Long id, Pageable pageable);
+
+  /**
+   * Devuelve la última versión del {@link Informe} filtrado por la
+   * {@link Memoria}
+   * 
+   * @param id identificador de la {@link Memoria}
+   * @return el {@link Informe}
+   */
+  Optional<Informe> findFirstByMemoriaOrderByVersionDesc(Long id);
 
 }

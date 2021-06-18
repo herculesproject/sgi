@@ -281,7 +281,7 @@ public class InformeServiceTest extends BaseServiceTest {
   public void deleteInformeMemoria() {
 
     BDDMockito.given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockInforme(1L, "DocumentoFormulario1"));
+        .willReturn(Optional.of(generarMockInforme(1L, "DocumentoFormulario1")));
 
     BDDMockito.doNothing().when(informeRepository).delete(ArgumentMatchers.<Informe>any());
 
@@ -297,7 +297,7 @@ public class InformeServiceTest extends BaseServiceTest {
   public void deleteInformeMemoria_informeNull() {
 
     BDDMockito.given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
-        .willReturn(null);
+        .willReturn(Optional.empty());
 
     Assertions.assertThatCode(
         // when: Delete con id existente
