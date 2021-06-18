@@ -68,8 +68,7 @@ public class Apartado extends BaseEntity {
   private Integer orden;
 
   /** Esquema. */
-  @Lob
-  @Column(name = "esquema", nullable = false)
+  @Column(name = "esquema", nullable = false, columnDefinition = "clob")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String esquema;

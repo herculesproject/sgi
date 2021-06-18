@@ -70,8 +70,7 @@ public class Respuesta extends BaseEntity {
   private TipoDocumento tipoDocumento;
 
   /** Valor */
-  @Lob
-  @Column(name = "valor", nullable = false)
+  @Column(name = "valor", nullable = false, columnDefinition = "clob")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String valor;
