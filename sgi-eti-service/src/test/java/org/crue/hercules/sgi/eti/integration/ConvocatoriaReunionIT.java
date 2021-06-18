@@ -271,9 +271,13 @@ public class ConvocatoriaReunionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // when: Se buscan todos los datos
-    final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
+
+    final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
         });
 
     // then: Se recuperan todos los datos

@@ -36,3 +36,5 @@ DELETE FROM eti.tipo_evaluacion
 DELETE FROM eti.retrospectiva
 DELETE FROM eti.estado_retrospectiva
 DELETE FROM eti.tipo_tarea
+DELETE FROM eti.checklist
+DELETE FROM eti.formly

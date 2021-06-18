@@ -22,7 +22,7 @@ public interface PeticionEvaluacionRepository extends JpaRepository<PeticionEval
    * @param anio año a buscar en el código de la petición evaluación.
    * @return petición evaluación.
    */
-  PeticionEvaluacion findFirstByCodigoContainingOrderByCodigoDesc(String anio);
+  PeticionEvaluacion findFirstByCodigoStartingWithOrderByCodigoDesc(String anio);
 
   /**
    * Devuelve la petición asociada al id que se encuentra activa.

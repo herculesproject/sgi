@@ -112,7 +112,7 @@ public class PeticionEvaluacionController {
    * @return Nuevo {@link PeticionEvaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-MOD-C')")
   ResponseEntity<PeticionEvaluacion> newPeticionEvaluacion(
       @Valid @RequestBody PeticionEvaluacion nuevoPeticionEvaluacion) {
     log.debug("newPeticionEvaluacion(PeticionEvaluacion nuevoPeticionEvaluacion) - start");
