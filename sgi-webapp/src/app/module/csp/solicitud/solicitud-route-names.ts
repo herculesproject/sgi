@@ -14,5 +14,6 @@ export const SOLICITUD_ROUTE_NAMES = {
   DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD: 'desglose-presupuesto-entidades-financiadoras-solicitud',
   DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-gestoras-convocatoria',
   CLASIFICACIONES: 'clasificaciones',
-  RESPONSABLE_ECONOMICO: 'responsable-economico'
+  RESPONSABLE_ECONOMICO: 'responsable-economico',
+  AUTOEVALUACION: 'autoevaluacion'
 };

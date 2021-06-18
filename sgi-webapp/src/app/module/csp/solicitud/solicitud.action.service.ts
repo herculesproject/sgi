@@ -22,6 +22,8 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
+import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
@@ -32,6 +34,7 @@ import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_ID_KEY } from './solicitud-crear/solicitud-crear.guard';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
+import { SolicitudAutoevaluacionFragment } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.fragment';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
@@ -68,7 +71,8 @@ export class SolicitudActionService extends ActionService {
     DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal',
     DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades',
     CLASIFICACIONES: 'clasificaciones',
-    RESPONSABLE_ECONOMICO: 'responsable-economico'
+    RESPONSABLE_ECONOMICO: 'responsable-economico',
+    AUTOEVALUACION: 'autoevaluacion'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -84,6 +88,7 @@ export class SolicitudActionService extends ActionService {
   private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
   private clasificaciones: SolicitudProyectoClasificacionesFragment;
   private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
+  private autoevaluacion: SolicitudAutoevaluacionFragment;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -144,7 +149,9 @@ export class SolicitudActionService extends ActionService {
     authService: SgiAuthService,
     solicitudProyectoAreaConocimiento: SolicitudProyectoAreaConocimientoService,
     areaConocimientoService: AreaConocimientoService,
-    solicitudProyectoResponsableEconomicoService: SolicitudProyectoResponsableEconomicoService
+    solicitudProyectoResponsableEconomicoService: SolicitudProyectoResponsableEconomicoService,
+    formlyService: FormlyService,
+    checklistService: ChecklistService
   ) {
     super();
 
@@ -198,6 +205,7 @@ export class SolicitudActionService extends ActionService {
       solicitudService, clasificacionService, this.readonly);
     this.responsableEconomico = new SolicitudProyectoResponsableEconomicoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoResponsableEconomicoService, personaService, this.readonly);
+    this.autoevaluacion = new SolicitudAutoevaluacionFragment(formlyService, checklistService, authService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     // Por ahora solo está implementado para investigador la pestaña datos generales
@@ -216,6 +224,7 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
         this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
         this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsableEconomico);
+        this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
       }
 
       this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -269,6 +278,17 @@ export class SolicitudActionService extends ActionService {
             }
           }
         ));
+
+        this.subscriptions.push(this.proyectoDatos.initialized$.subscribe(
+          (value) => {
+            if (value) {
+              this.autoevaluacion.solicitudProyectoData$.next({
+                checklistRef: this.proyectoDatos.getValue().checklistRef,
+                readonly: this.readonly || !!this.proyectoDatos.getValue().peticionEvaluacionRef
+              });
+            }
+          }
+        ));
       }
 
       // Forzamos la inicialización de los datos principales
@@ -301,11 +321,56 @@ export class SolicitudActionService extends ActionService {
           switchMap(() => this.datosGenerales.saveOrUpdate().pipe(tap(() => this.datosGenerales.refreshInitialState(true))))
         );
       }
-      if (this.proyectoDatos.hasChanges()) {
-        cascade = cascade.pipe(
-          switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
-        );
+      if (this.autoevaluacion.hasChanges() && !this.autoevaluacion.isEdit()) {
+        if (this.proyectoDatos.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.autoevaluacion.saveOrUpdate().pipe(
+              tap(() => this.autoevaluacion.refreshInitialState(true)),
+              switchMap(checklistRef => {
+                this.proyectoDatos.setChecklistRef(checklistRef);
+                return this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true)));
+              })
+            ))
+          );
+        }
+        else {
+          cascade = cascade.pipe(
+            switchMap(() => this.autoevaluacion.saveOrUpdate().pipe(
+              tap((checklistRef) => {
+                this.autoevaluacion.refreshInitialState(true);
+                this.proyectoDatos.setChecklistRef(checklistRef);
+              }),
+              switchMap(checklistRef => {
+                this.proyectoDatos.setChecklistRef(checklistRef);
+                return this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true)));
+              })
+            ))
+          );
+        }
       }
+      else if (this.autoevaluacion.hasChanges() && this.autoevaluacion.isEdit()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.autoevaluacion.saveOrUpdate().pipe(
+            tap((checklistRef) => {
+              this.autoevaluacion.refreshInitialState(true);
+              this.proyectoDatos.setChecklistRef(checklistRef);
+            })
+          ))
+        );
+        if (this.proyectoDatos.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
+          );
+        }
+      }
+      else {
+        if (this.proyectoDatos.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
+          );
+        }
+      }
+
       if (this.equipoProyecto.hasChanges()) {
         cascade = cascade.pipe(
           switchMap(() => this.equipoProyecto.saveOrUpdate().pipe(tap(() => this.equipoProyecto.refreshInitialState(true))))

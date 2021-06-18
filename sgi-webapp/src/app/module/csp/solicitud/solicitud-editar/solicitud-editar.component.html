@@ -50,6 +50,10 @@
           [title]="'menu.csp.solicitudes.desgloses-presupuesto' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES)">
         </sgi-action-fragment-menu-item>
+        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.AUTOEVALUACION]"
+          [title]="'menu.csp.solicitudes.autoevaluacion' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.AUTOEVALUACION)">
+        </sgi-action-fragment-menu-item>
       </sgi-action-fragment-menu-group>
     </ng-container>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-SOL-E', 'CSP-SOL-V']"

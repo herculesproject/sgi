@@ -11,6 +11,7 @@ import { SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY, SOLICITUD_PROYECTO_PRESUPUEST
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudDataResolver, SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
+import { SolicitudAutoevaluacionComponent } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
 import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
@@ -163,6 +164,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.RESPONSABLE_ECONOMICO,
         component: SolicitudProyectoResponsableEconomicoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.AUTOEVALUACION,
+        component: SolicitudAutoevaluacionComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

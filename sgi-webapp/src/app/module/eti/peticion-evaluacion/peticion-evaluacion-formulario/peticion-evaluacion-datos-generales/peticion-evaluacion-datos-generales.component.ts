@@ -202,7 +202,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   }
 
   selectTipoActividad(tipoActividad: ITipoActividad): void {
-    if (tipoActividad.id === 3) {
+    if (tipoActividad?.id === 3) {
       this.isInvestigacionTutelada$.next(true);
       this.formGroup.controls.tipoInvestigacionTutelada.setValidators([Validators.required]);
     } else {

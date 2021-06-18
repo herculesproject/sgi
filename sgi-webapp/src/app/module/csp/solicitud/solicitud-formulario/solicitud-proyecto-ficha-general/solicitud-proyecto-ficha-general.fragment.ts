@@ -58,7 +58,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       objetivos: new FormControl(null, [Validators.maxLength(2000)]),
       intereses: new FormControl(null, [Validators.maxLength(2000)]),
       resultadosPrevistos: new FormControl(null, [Validators.maxLength(2000)]),
-      envioEtica: new FormControl(null, [])
+      peticionEvaluacionRef: new FormControl(null, [])
     });
 
     if (this.readonly) {
@@ -127,7 +127,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       objetivos: solicitudProyecto?.objetivos,
       intereses: solicitudProyecto?.intereses,
       resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
-      envioEtica: solicitudProyecto?.envioEtica
+      peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
     };
   }
 
@@ -227,9 +227,13 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyecto.objetivos = form.objetivos.value;
     this.solicitudProyecto.intereses = form.intereses.value;
     this.solicitudProyecto.resultadosPrevistos = form.resultadosPrevistos.value;
-    this.solicitudProyecto.envioEtica = form.envioEtica.value;
+    this.solicitudProyecto.peticionEvaluacionRef = form.peticionEvaluacionRef.value;
     this.solicitudProyecto.tipoPresupuesto = form.tipoDesglosePresupuesto.value;
     return this.solicitudProyecto;
+  }
+
+  setChecklistRef(checklistRef: string): void {
+    this.solicitudProyecto.checklistRef = checklistRef;
   }
 
   saveOrUpdate(): Observable<void> {

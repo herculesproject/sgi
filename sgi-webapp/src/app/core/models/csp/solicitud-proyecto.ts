@@ -13,8 +13,8 @@ export interface ISolicitudProyecto {
   intereses: string;
   resultadosPrevistos: string;
   areaTematica: IAreaTematica;
-  checkListRef: string;
-  envioEtica: boolean;
+  checklistRef: string;
+  peticionEvaluacionRef: string;
   tipoPresupuesto: TipoPresupuesto;
   importeSolicitado: number;
   importePresupuestado: number;

@@ -32,6 +32,9 @@ import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado
 import { SolicitudRoutingModule } from './solicitud-routing.module';
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
+import { SolicitudAutoevaluacionComponent } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 @NgModule({
   declarations: [
@@ -56,7 +59,8 @@ import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/so
     SolicitudProyectoClasificacionesComponent,
     SolicitudProyectoAreaConocimientoComponent,
     SolicitudProyectoResponsableEconomicoComponent,
-    SolicitudProyectoResponsableEconomicoModalComponent
+    SolicitudProyectoResponsableEconomicoModalComponent,
+    SolicitudAutoevaluacionComponent
   ],
   imports: [
     CommonModule,
@@ -68,7 +72,9 @@ import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/so
     FormsModule,
     SgiAuthModule,
     CspSharedModule,
-    SgoSharedModule
+    SgoSharedModule,
+    FormlyModule.forRoot(),
+    FormlyMaterialModule
   ],
   providers: [
     SolicitudDataResolver,

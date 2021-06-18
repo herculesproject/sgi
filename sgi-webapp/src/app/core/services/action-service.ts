@@ -268,15 +268,20 @@ export abstract class Fragment implements IFragment {
   initialize(): void {
     if (!this.initialized$.value && !this.initialing) {
       this.initialing = true;
-      this.onInitialize();
-      this.initialized$.next(true);
+      const result = this.onInitialize();
+      if (result instanceof Observable) {
+        this.subscriptions.push(result.subscribe(null, null, () => this.initialized$.next(true)));
+      }
+      else {
+        this.initialized$.next(true);
+      }
     }
   }
 
   /**
    * Hook for initialization. Called when fragment is initialized
    */
-  protected abstract onInitialize(): void;
+  protected abstract onInitialize(): void | Observable<any>;
 
   hasErrors(): boolean {
     return this.status$.value.errors;
