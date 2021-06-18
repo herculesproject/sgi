@@ -487,7 +487,6 @@ public class MemoriaServiceImpl implements MemoriaService {
           if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
               || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA) {
             // se eliminan los informes en caso de que las memorias tengan alguno asociado
-            memoria.setVersion(memoria.getVersion() - 1);
             informeService.deleteInformeMemoria(memoria.getId());
           }
 
