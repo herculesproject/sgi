@@ -306,7 +306,7 @@ public class ComiteIT extends BaseIT {
     // then: Obtiene las memorias del comité 2.
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memoria = response.getBody();
-    Assertions.assertThat(memoria.size()).isEqualTo(14);
+    Assertions.assertThat(memoria.size()).isEqualTo(13);
 
     Assertions.assertThat(memoria.get(0).getTitulo()).isEqualTo("Memoria002");
     Assertions.assertThat(memoria.get(1).getTitulo()).isEqualTo("Memoria003");
@@ -321,7 +321,6 @@ public class ComiteIT extends BaseIT {
     Assertions.assertThat(memoria.get(10).getTitulo()).isEqualTo("Memoria013");
     Assertions.assertThat(memoria.get(11).getTitulo()).isEqualTo("Memoria014");
     Assertions.assertThat(memoria.get(12).getTitulo()).isEqualTo("Memoria015");
-    Assertions.assertThat(memoria.get(13).getTitulo()).isEqualTo("Memoria016");
   }
 
   @Test

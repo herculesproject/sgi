@@ -39,6 +39,6 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo, memoria_original_id)
  VALUES (15, 'ref-015', 2, 1, 'Memoria015', 'userref-015', 1, 9, null, false, 3, 1, true, null);
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo, memoria_original_id)
- VALUES (16, 'ref-016', 2, 1, 'Memoria016', 'userref-016', 1, 14, null, false, 3, 1, true, null);
+ VALUES (16, 'ref-016', 2, 2, 'Memoria016', 'userref-016', 1, 14, null, true, 4, 1, true, null);
 
 ALTER SEQUENCE eti.memoria_seq RESTART WITH 17;

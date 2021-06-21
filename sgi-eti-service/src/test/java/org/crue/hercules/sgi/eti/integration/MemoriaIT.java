@@ -860,7 +860,7 @@ public class MemoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     // when: Enviar secretaria con id existente
-    long id = 9L;
+    long id = 16L;
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
         buildRequest(headers, null), Memoria.class, id);
