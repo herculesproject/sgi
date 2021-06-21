@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.RolProyecto.Orden;
 import org.crue.hercules.sgi.csp.service.RolProyectoColectivoService;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;

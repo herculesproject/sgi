@@ -37,10 +37,15 @@ public class ProyectoSocioPeriodoPagoRepositoryTest {
     ModeloEjecucion modeloEjecucion1 = entityManager
         .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true));
 
-    // @formatter:on
+    // @formatter:off
     Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder().titulo("proyecto 1").acronimo("PR1")
-        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z")).fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion1).activo(Boolean.TRUE).build());
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("2")
+        .modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
+        .fechaBase(Instant.parse("2020-11-01T00:00:00Z"))
+        .build());
 
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder().abreviatura("001").nombre("nombre-001")
         .descripcion("descripcion-001").coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());

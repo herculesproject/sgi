@@ -38,6 +38,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))))
         .activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     // @formatter:on
     entityManager.persistAndFlush(proyecto1);
@@ -48,6 +49,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     // @formatter:on
     entityManager.persistAndFlush(proyecto2);
@@ -87,6 +89,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto1);
 
@@ -95,6 +98,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto2);
     // @formatter:on
@@ -148,6 +152,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto1);
 
@@ -156,6 +161,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto2);
     // @formatter:on

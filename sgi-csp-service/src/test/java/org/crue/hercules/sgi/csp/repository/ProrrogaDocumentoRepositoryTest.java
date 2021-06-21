@@ -124,6 +124,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
         .permitePaquetesTrabajo(Boolean.TRUE)
         .activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     // @formatter:on
 

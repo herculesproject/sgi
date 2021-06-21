@@ -2989,6 +2989,7 @@ industries" />
       <column name="codigo_externo" value="PCGFOPE1" />
       <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
       <column name="fecha_fin" value="2022-12-31T22:59:59Z" />
+      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
@@ -3019,6 +3020,7 @@ industries" />
       <column name="codigo_externo" value="PCGFOPE2" />
       <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
       <column name="fecha_fin" value="2023-12-05T22:59:59Z" />
+      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
@@ -3049,6 +3051,7 @@ industries" />
       <column name="codigo_externo" value="PCOPE-3" />
       <column name="fecha_inicio" value="2021-02-01T23:00:00Z" />
       <column name="fecha_fin" value="2021-04-30T21:59:59Z" />
+      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />

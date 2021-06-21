@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +19,6 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
@@ -50,18 +48,14 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
 
   private final SolicitudProyectoEquipoRepository repository;
 
-  private final SolicitudProyectoRepository solicitudProyectoRepository;
-
   private final RolProyectoRepository rolProyectoRepository;
 
   private final SolicitudRepository solicitudRepository;
 
   public SolicitudProyectoEquipoServiceImpl(Validator validator, SolicitudProyectoEquipoRepository repository,
-      SolicitudProyectoRepository solicitudProyectoRepository, RolProyectoRepository rolProyectoRepository,
-      SolicitudRepository solicitudRepository) {
+      RolProyectoRepository rolProyectoRepository, SolicitudRepository solicitudRepository) {
     this.validator = validator;
     this.repository = repository;
-    this.solicitudProyectoRepository = solicitudProyectoRepository;
     this.rolProyectoRepository = rolProyectoRepository;
     this.solicitudRepository = solicitudRepository;
   }

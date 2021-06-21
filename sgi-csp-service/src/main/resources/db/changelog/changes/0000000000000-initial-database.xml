@@ -967,6 +967,9 @@
             <column name="coordinador_externo" type="BOOLEAN"/>
             <column name="coste_hora" type="BOOLEAN"/>
             <column name="facturacion" type="BOOLEAN"/>
+            <column name="fecha_base" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
             <column name="fecha_fin" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

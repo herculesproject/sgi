@@ -75,7 +75,8 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
   @Test
   public void update_ReturnsProyectoPeriodoSeguimiento() throws Exception {
     Long idProyectoPeriodoSeguimiento = 1L;
-    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L, 1L);
+    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(
+        idProyectoPeriodoSeguimiento, 1L);
     proyectoPeriodoSeguimiento.setObservaciones("obs modificado");
 
     final ResponseEntity<ProyectoPeriodoSeguimiento> response = restTemplate.exchange(
@@ -180,8 +181,9 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
     return ProyectoPeriodoSeguimiento.builder()
         .id(id)
         .proyectoId(proyectoId)
-        .numPeriodo(1).fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
-        .tipoSeguimiento(TipoSeguimiento.FINAL)
+        .numPeriodo(1)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .tipoSeguimiento(TipoSeguimiento.PERIODICO)
         .fechaFin(Instant.parse("2020-10-04T23:59:59Z"))
         .observaciones("obs-" + (id == null ? "" : String.format("%03d", id)))
         .build();

@@ -36,6 +36,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto1);
 
@@ -44,6 +45,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto2);
     // @formatter:on
@@ -65,7 +67,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     // when: se busca ProyectoPeriodoSeguimiento por ProyectoId
     // ordenadas por Fecha Inicio
-    List<ProyectoPeriodoSeguimiento> dataFound = repository.findAllByProyectoIdOrderByFechaInicio(proyectoIdBuscado);
+    List<ProyectoPeriodoSeguimiento> dataFound = repository.findByProyectoIdOrderByFechaInicio(proyectoIdBuscado);
 
     // then: Se recupera ProyectoPeriodoSeguimiento con el
     // ProyectoId ordenados por Fecha Inicio
@@ -93,6 +95,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto1);
 
@@ -101,6 +104,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
+        .fechaBase(Instant.now())
         .build();
     entityManager.persistAndFlush(proyecto2);
     // @formatter:on
@@ -126,7 +130,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     // when: se busca ProyectoPeriodoSeguimiento por ProyectoId
     // ordenadas por Fecha Inicio
-    List<ProyectoPeriodoSeguimiento> dataFound = repository.findAllByProyectoIdOrderByFechaInicio(proyectoIdBuscado);
+    List<ProyectoPeriodoSeguimiento> dataFound = repository.findByProyectoIdOrderByFechaInicio(proyectoIdBuscado);
 
     // then: No encuentra ProyectoPeriodoSeguimiento para
     // ProyectoId

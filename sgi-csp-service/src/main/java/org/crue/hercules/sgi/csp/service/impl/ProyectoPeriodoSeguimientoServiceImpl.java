@@ -25,6 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -127,7 +128,7 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
   @Transactional
   private void recalcularNumPeriodos(Long proyectoId) {
     List<ProyectoPeriodoSeguimiento> listadoProyectoPeriodoSeguimientoBD = repository
-        .findAllByProyectoIdOrderByFechaInicio(proyectoId);
+        .findByProyectoIdOrderByFechaInicio(proyectoId);
 
     AtomicInteger numPeriodo = new AtomicInteger(0);
 
@@ -249,18 +250,22 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
               || proyecto.getFechaFin().equals(datosProyectoPeriodoSeguimiento.getFechaFin()),
           "La fecha de fin del proyecto debe ser posterior o igual a la fecha de fin del periodo de seguimiento");
 
-      List<ProyectoPeriodoSeguimiento> listaPeriodosSeguimiento = repository.findAll();
-      boolean isFinal = false;
-      ProyectoPeriodoSeguimiento periodofinal = null;
-      for (int i = 0; i < listaPeriodosSeguimiento.size(); i++) {
-        if (!isFinal && listaPeriodosSeguimiento.get(i).getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
-          isFinal = true;
-          periodofinal = listaPeriodosSeguimiento.get(i);
-        } else if (isFinal && listaPeriodosSeguimiento.get(i).getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
+      List<ProyectoPeriodoSeguimiento> listaPeriodosSeguimiento = repository
+          .findByProyectoIdOrderByFechaInicio(proyecto.getId());
+
+      if (!CollectionUtils.isEmpty(listaPeriodosSeguimiento)
+          && datosProyectoPeriodoSeguimiento.getTipoSeguimiento() == TipoSeguimiento.FINAL) {
+
+        if (listaPeriodosSeguimiento.stream().anyMatch(
+            proyectoPeriodoSeguimiento -> proyectoPeriodoSeguimiento.getTipoSeguimiento().equals(TipoSeguimiento.FINAL)
+                && proyectoPeriodoSeguimiento.getId() != datosProyectoPeriodoSeguimiento.getId())) {
           throw new IllegalArgumentException("Solo puede haber un periodo 'final'");
-        } else if (isFinal && listaPeriodosSeguimiento.get(i).getFechaInicio().isAfter(periodofinal.getFechaInicio())) {
+        }
+        if (listaPeriodosSeguimiento.get(listaPeriodosSeguimiento.size() - 1).getFechaInicio()
+            .isAfter(datosProyectoPeriodoSeguimiento.getFechaInicio())) {
           throw new IllegalArgumentException("El periodo 'final' ha de ser el último");
         }
+
       }
     }
 

@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -64,24 +63,6 @@ public class SolicitudProyectoEquipoIT {
     Assertions.assertThat(solicitudProyectoEquipo.getId()).as("getId()").isEqualTo(idSolicitudProyectoEquipo);
     Assertions.assertThat(solicitudProyectoEquipo.getSolicitudProyectoId()).as("getSolicitudProyectoId()").isEqualTo(1);
     Assertions.assertThat(solicitudProyectoEquipo.getPersonaRef()).as("getPersonaRef()").isEqualTo("personaRef-001");
-  }
-
-  /**
-   * Función que devuelve un objeto SolicitudProyectoEquipo
-   * 
-   * @param solicitudProyectoEquipoId
-   * @param solicitudProyectoId
-   * @param tipoDocumentoId
-   * @return el objeto SolicitudProyectoEquipo
-   */
-  private SolicitudProyectoEquipo generarSolicitudProyectoEquipo(Long solicitudProyectoEquipoId,
-      Long solicitudProyectoId, Long rolProyectoId) {
-
-    SolicitudProyectoEquipo solicitudProyectoEquipo = SolicitudProyectoEquipo.builder().id(solicitudProyectoEquipoId)
-        .solicitudProyectoId(solicitudProyectoId).personaRef("personaRef-001")
-        .rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1).mesFin(5).build();
-
-    return solicitudProyectoEquipo;
   }
 
 }
