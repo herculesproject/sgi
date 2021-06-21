@@ -65,9 +65,10 @@ public class ChecklistInput implements Serializable {
     } else {
       StringWriter stringWriter = new StringWriter();
       ObjectMapper objectMapper = new ObjectMapper();
-      JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter);
-      generator.writeTree(jsonNode);
-      setRespuesta(stringWriter.toString());
+      try (JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter)) {
+        generator.writeTree(jsonNode);
+        setRespuesta(stringWriter.toString());
+      }
     }
   }
 }
