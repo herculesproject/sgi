@@ -365,6 +365,16 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     );
   }
 
+  getTiposDocumentoRespuestasFormulario(id: number): Observable<ITipoDocumento[]> {
+    return this.find<IRespuestaBackend, IRespuesta>(
+      `${this.endpointUrl}/${id}/respuestas-documento`,
+      null,
+      RESPUESTA_CONVERTER
+    ).pipe(
+      map(response => response.items.map(item => item.tipoDocumento))
+    );
+  }
+
   /**
    * Obtiene la última versión del informe de la memoria
    * @param idMemoria identificador de la memoria
@@ -374,16 +384,6 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
       `${this.endpointUrl}/${idMemoria}/informe/ultima-version`
     ).pipe(
       map(response => INFORME_CONVERTER.toTarget(response))
-    );
-  }
-
-  getTiposDocumentoRespuestasFormulario(id: number): Observable<ITipoDocumento[]> {
-    return this.find<IRespuestaBackend, IRespuesta>(
-      `${this.endpointUrl}/${id}/respuestas-documento`,
-      null,
-      RESPUESTA_CONVERTER
-    ).pipe(
-      map(response => response.items.map(item => item.tipoDocumento))
     );
   }
 
