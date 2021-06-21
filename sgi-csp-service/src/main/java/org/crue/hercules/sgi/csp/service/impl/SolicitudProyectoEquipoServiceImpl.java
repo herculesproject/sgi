@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -149,9 +150,17 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
   private void validateSolicitudProyectoEquipo(Solicitud solicitud,
       List<SolicitudProyectoEquipo> solicitudProyectoEquipos) {
 
-    solicitudProyectoEquipos.stream().map(SolicitudProyectoEquipo::getPersonaRef).distinct().forEach(personaRef -> {
-      SolicitudProyectoEquipo solicitudProyectoEquipoAnterior = null,
-          solicitudProyectoEquipoInvestigadorPrincipal = null;
+    solicitudProyectoEquipos.sort(
+        Comparator.comparing(SolicitudProyectoEquipo::getMesInicio, Comparator.nullsFirst(Comparator.naturalOrder())));
+
+    boolean hasSolicitanteInvestigadorPrincipal = false;
+
+    List<String> personasRef = solicitudProyectoEquipos.stream().map(SolicitudProyectoEquipo::getPersonaRef).distinct()
+        .collect(Collectors.toList());
+
+    for (String personaRef : personasRef) {
+      SolicitudProyectoEquipo solicitudProyectoEquipoAnterior = null;
+
       List<SolicitudProyectoEquipo> miembrosPersonaRef = solicitudProyectoEquipos.stream()
           .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
 
@@ -162,7 +171,7 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
                 .parameter("entity", ApplicationContextSupport.getMessage(SolicitudProyectoEquipo.class)).build());
 
         if (solicitudProyectoEquipo.getPersonaRef().equals(solicitud.getSolicitanteRef())) {
-          solicitudProyectoEquipoInvestigadorPrincipal = solicitudProyectoEquipo;
+          hasSolicitanteInvestigadorPrincipal = true;
         }
 
         if ((solicitudProyectoEquipoAnterior != null) && (solicitudProyectoEquipoAnterior.getMesFin() != null
@@ -186,10 +195,11 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
 
         solicitudProyectoEquipoAnterior = solicitudProyectoEquipo;
       }
-      if (solicitudProyectoEquipoInvestigadorPrincipal == null) {
-        throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
-      }
-    });
+
+    }
+    if (!hasSolicitanteInvestigadorPrincipal) {
+      throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
+    }
 
   }
 
