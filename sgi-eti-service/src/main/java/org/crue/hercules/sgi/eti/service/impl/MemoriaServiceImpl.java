@@ -668,7 +668,11 @@ public class MemoriaServiceImpl implements MemoriaService {
         .findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId());
 
     if (evaluacionAnterior.isPresent()) {
-      informe.setVersion(evaluacionAnterior.get().getVersion() + 1);
+      if (evaluacionAnterior.get().getEsRevMinima().equals(Boolean.FALSE)) {
+        informe.setVersion(evaluacionAnterior.get().getVersion() + 1);
+      } else {
+        informe.setVersion(evaluacionAnterior.get().getVersion());
+      }
     } else {
       informe.setVersion(1);
     }

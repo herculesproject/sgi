@@ -344,7 +344,7 @@ public class ConvocatoriaReunionController {
    * @return la entidad {@link Acta} asociada ala {@link ConvocatoriaReunion}
    */
   @GetMapping(path = "/{id}/acta")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-V', 'ETI-CNV-E','ETI-ACT-V', 'ETI-ACT-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-V','ETI-ACT-V', 'ETI-PEV-VR-INV')")
   ResponseEntity<Acta> actaConvocatoriaReunion(@PathVariable Long id) {
     log.debug("actaConvocatoriaReunion(Long id) - start");
     Acta returnValue = actaService.findByConvocatoriaReunionId(id);
