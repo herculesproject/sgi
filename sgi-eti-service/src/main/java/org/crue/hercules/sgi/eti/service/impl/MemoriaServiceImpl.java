@@ -706,8 +706,9 @@ public class MemoriaServiceImpl implements MemoriaService {
     memoriaRepository.findById(idMemoria).map(memoria -> {
       // Si el estado es 'Completada', Requiere retrospectiva y el comité es CEEA
       Assert.isTrue(
-          (memoria.getEstadoActual().getId() == 2L && memoria.getRequiereRetrospectiva()
-              && memoria.getComite().getComite().equals("CEEA")),
+          (memoria.getEstadoActual().getId() >= 9L && memoria.getRequiereRetrospectiva()
+              && memoria.getComite().getComite().equals("CEEA")
+              && memoria.getRetrospectiva().getEstadoRetrospectiva().getId() == 2L),
           "La memoria no está en un estado correcto para pasar al estado 'En secretaría'");
 
       Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),

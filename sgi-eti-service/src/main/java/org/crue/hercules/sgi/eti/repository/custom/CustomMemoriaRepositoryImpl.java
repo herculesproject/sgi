@@ -212,12 +212,14 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
     Root<Memoria> root = cq.from(Memoria.class);
-    root.join(Memoria_.retrospectiva, JoinType.LEFT);
+    Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
+
+    Expression<Instant> defaultDate = cb.nullLiteral(Instant.class);
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
-        root.get(Memoria_.comite), root.get(Memoria_.estadoActual), root.get(Memoria_.requiereRetrospectiva),
-        root.get(Memoria_.retrospectiva), cb.nullLiteral(Instant.class), cb.nullLiteral(Instant.class),
-        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo));
+        root.get(Memoria_.comite), root.get(Memoria_.estadoActual), defaultDate, defaultDate,
+        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo),
+        root.get(Memoria_.requiereRetrospectiva), joinMemoriaRetrospectiva.alias("retrospectiva")).distinct(true);
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
         cb.isTrue(root.get(Memoria_.activo)));
@@ -252,6 +254,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
     Root<Memoria> rootCount = countQuery.from(Memoria.class);
     countQuery.select(cb.count(rootCount));
+    Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
 
     List<Predicate> predicates = new ArrayList<Predicate>();
     List<Predicate> predicatesCount = new ArrayList<Predicate>();
@@ -287,8 +290,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual), defaultDate, defaultDate,
-        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo))
-        .distinct(true);
+        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo),
+        root.get(Memoria_.requiereRetrospectiva), joinMemoriaRetrospectiva.alias("retrospectiva")).distinct(true);
 
     cq.where(predicates.toArray(new Predicate[] {}));
 
