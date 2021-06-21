@@ -36,4 +36,12 @@ public interface ApartadoRepository extends JpaRepository<Apartado, Long>, JpaSp
    */
   Page<Apartado> findByPadreId(Long id, Pageable pageable);
 
+  /**
+   * Obtiene el último Apartado del bloque {@link Bloque}.
+   * 
+   * @param idBloque Id del formulario
+   * @return el último {@link Apartado} del formulario
+   */
+  Apartado findFirstByBloqueIdOrderByOrdenDesc(Long idBloque);
+
 }

@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
 import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.impl.RespuestaServiceImpl;
@@ -41,13 +42,15 @@ public class RespuestaServiceTest extends BaseServiceTest {
   private MemoriaService memoriaService;
   @Mock
   private RetrospectivaService retrospectivaService;
+  @Mock
+  private ApartadoRepository apartadoRepository;
 
   private RespuestaService respuestaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     respuestaService = new RespuestaServiceImpl(respuestaRepository, bloqueRepository, memoriaService,
-        retrospectivaService);
+        retrospectivaService, apartadoRepository);
   }
 
   @Test
@@ -82,8 +85,11 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(respuestaRepository.save(respuestaNew)).willReturn(respuesta);
     BDDMockito.given(memoriaService.findById(1L)).willReturn(memoria);
+    BDDMockito.given(apartadoRepository.findById(1L)).willReturn(Optional.of(getMockApartado(1L, 1L, 1L)));
     BDDMockito.given(bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(1L))
         .willReturn(generarMockBloque(1L, memoria.getComite().getFormulario()));
+    BDDMockito.given(apartadoRepository.findFirstByBloqueIdOrderByOrdenDesc(1L))
+        .willReturn(getMockApartado(1L, 1L, 1L));
 
     // when: Creamos el Respuesta
     Respuesta respuestaCreado = respuestaService.create(respuestaNew);
@@ -117,8 +123,11 @@ public class RespuestaServiceTest extends BaseServiceTest {
     BDDMockito.given(respuestaRepository.findById(1L)).willReturn(Optional.of(respuesta));
     BDDMockito.given(respuestaRepository.save(respuesta)).willReturn(respuestaServicioActualizado);
     BDDMockito.given(memoriaService.findById(1L)).willReturn(memoria);
+    BDDMockito.given(apartadoRepository.findById(1L)).willReturn(Optional.of(getMockApartado(1L, 1L, 1L)));
     BDDMockito.given(bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(1L))
         .willReturn(generarMockBloque(1L, memoria.getComite().getFormulario()));
+    BDDMockito.given(apartadoRepository.findFirstByBloqueIdOrderByOrdenDesc(1L))
+        .willReturn(getMockApartado(1L, 1L, 1L));
 
     // when: Actualizamos el Respuesta
     Respuesta RespuestaActualizado = respuestaService.update(respuesta);

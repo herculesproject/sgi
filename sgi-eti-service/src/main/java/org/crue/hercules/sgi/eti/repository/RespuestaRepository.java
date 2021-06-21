@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.springframework.data.domain.Page;
@@ -46,11 +47,12 @@ public interface RespuestaRepository extends JpaRepository<Respuesta, Long>, Jpa
    * 
    * @param ordenBloque   El bloque del apartado
    * @param ordenApartado El apartado del bloque
+   * @param idFormulario  identificador del {@link Formulario}
    * @param idMemoria     identificador de la {@link Memoria}
    * @return Respuesta
    */
-  Respuesta findByApartadoBloqueOrdenAndApartadoOrdenAndMemoriaId(Integer ordenBloque, Integer ordenApartado,
-      Long idMemoria);
+  Respuesta findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(Integer ordenBloque,
+      Integer ordenApartado, Long idFormulario, Long idMemoria);
 
   Page<Respuesta> findByMemoriaIdAndTipoDocumentoIsNotNull(Long idMemoria, Pageable pageable);
 }
