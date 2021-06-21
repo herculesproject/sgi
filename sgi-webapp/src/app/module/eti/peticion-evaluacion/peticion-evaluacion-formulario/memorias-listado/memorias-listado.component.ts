@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { COMITE } from '@core/models/eti/comite';
+import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
@@ -213,8 +215,8 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria): boolean {
     // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
     // El estado de la memoria debe de ser mayor a FIN_EVALUACION
-    return (memoria.estadoActual.id > ESTADO_MEMORIA.FIN_EVALUACION && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
-      && memoria.retrospectiva.estadoRetrospectiva.id !== 3);
+    return (memoria.estadoActual.id >= ESTADO_MEMORIA.FIN_EVALUACION && memoria.comite.id === COMITE.CEEA && memoria.requiereRetrospectiva
+      && memoria.retrospectiva.estadoRetrospectiva.id === ESTADO_RETROSPECTIVA.COMPLETADA);
   }
 
   enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) {

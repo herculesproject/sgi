@@ -60,8 +60,8 @@ export class MemoriaRetrospectivaFragment extends MemoriaFormlyFormFragment {
     switch (+estado) {
       case ESTADO_RETROSPECTIVA.PENDIENTE:
       case ESTADO_RETROSPECTIVA.COMPLETADA:
-        // La fecha de la restrospectiva es igual o mayor a la fecha actual
-        return this.memoria.retrospectiva.fechaRetrospectiva >= DateTime.now();
+        // La fecha de la restrospectiva es igual o menor a la fecha actual
+        return this.memoria.retrospectiva.fechaRetrospectiva <= DateTime.now();
       default:
         return false;
     }
