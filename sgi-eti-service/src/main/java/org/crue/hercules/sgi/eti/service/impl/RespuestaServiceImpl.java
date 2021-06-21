@@ -205,11 +205,11 @@ public class RespuestaServiceImpl implements RespuestaService {
       Bloque lastBloque = bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(formulario.getId());
       Apartado lastApartado = apartadoRepository.findFirstByBloqueIdOrderByOrdenDesc(lastBloque.getId());
       Respuesta respuestaUltimoBloqueApartado = null;
-      if (formulario.getId().toString().equals(ID_FORMULARIO_SEG_FINAL)) {
+      if (formulario.getId().toString().equals(ID_FORMULARIO_SEG_FINAL) && lastBloque != null) {
         respuestaUltimoBloqueApartado = respuestaRepository
             .findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(lastBloque.getOrden(),
                 1, formulario.getId(), memoria.getId());
-      } else {
+      } else if (lastBloque != null && lastApartado != null) {
         respuestaUltimoBloqueApartado = respuestaRepository
             .findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(lastBloque.getOrden(),
                 lastApartado.getOrden(), formulario.getId(), memoria.getId());
