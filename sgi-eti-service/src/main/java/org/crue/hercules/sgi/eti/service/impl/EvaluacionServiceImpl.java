@@ -190,20 +190,16 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
     }
 
-    if (evaluacion.getTipoEvaluacion().getId().equals(2L)) {
-      evaluacion.setVersion(evaluacion.getMemoria().getVersion() + 1);
-    } else {
-      evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(evaluacion.getMemoria().getId())
-          .map(evaluacionAnterior -> {
+    Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
+        .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(evaluacion.getMemoria().getId(),
+            evaluacion.getTipoEvaluacion().getId());
 
-            if (evaluacionAnterior != null) {
-              evaluacion.setVersion(evaluacionAnterior.getVersion() + 1);
-            } else {
-              evaluacion.setVersion(1);
-            }
-            return evaluacionAnterior;
-          });
+    if (evaluacionAnterior.isPresent()) {
+      evaluacion.setVersion(evaluacionAnterior.get().getVersion() + 1);
+    } else {
+      evaluacion.setVersion(1);
     }
+
     evaluacion.getMemoria().setVersion(evaluacion.getVersion());
 
     return evaluacion;
@@ -270,15 +266,15 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * Obtener todas las entidades paginadas {@link Evaluacion} para una determinada
    * {@link Memoria}.
    *
-   * @param idMemoria    Id de {@link Memoria}.
-   * @param idEvaluacion Id de {@link Evaluacion}
+   * @param idMemoria        Id de {@link Memoria}.
+   * @param idEvaluacion     Id de {@link Evaluacion}
    * @param idTipoComentario Id de {@link TipoComentario}
-   * @param pageable     la información de la paginación.
+   * @param pageable         la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @Override
-  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
-      Pageable pageable) {
+  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+      Long idTipoComentario, Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - start");
     Assert.notNull(idMemoria, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
     Assert.notNull(idEvaluacion, "El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");

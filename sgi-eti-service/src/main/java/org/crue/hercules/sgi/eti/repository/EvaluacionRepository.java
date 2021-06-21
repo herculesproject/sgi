@@ -52,6 +52,16 @@ public interface EvaluacionRepository
   Optional<Evaluacion> findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(Long idMemoria);
 
   /**
+   * Recupera la última evaluación de una memoria y su tipo de evaluación
+   * 
+   * @param idMemoria        identificador de la memoria.
+   * @param idTipoEvaluacion identificador del tipo de evaluación.
+   * @return evaluación.
+   */
+  Optional<Evaluacion> findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(Long idMemoria,
+      Long idTipoEvaluacion);
+
+  /**
    * Recupera la evaluación de la memoria con la última versión
    * 
    * @param idMemoria el identificador del objeto {@link Memoria}

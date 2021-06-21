@@ -597,6 +597,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
       boolean crearEvaluacion = false;
 
+      Long tipoEvaluacion = Constantes.TIPO_EVALUACION_MEMORIA;
+
       // Si el estado es 'Completada', 'Pendiente de correcciones' o 'No procede
       // evaluar' se cambia el estado de la memoria a 'En secretaría'
       if (memoria.getEstadoActual().getId() == 2L || memoria.getEstadoActual().getId() == 7L
@@ -614,12 +616,14 @@ public class MemoriaServiceImpl implements MemoriaService {
       // Si el estado es 'Completada seguimiento anual'
       // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
       if (memoria.getEstadoActual().getId() == 11L) {
+        tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL;
         updateEstadoMemoria(memoria, 12L);
       }
 
       // Si el estado es 'Completada seguimiento final'
       // se cambia el estado de la memoria a 'En secretaría seguimiento final'
       if (memoria.getEstadoActual().getId() == 16L) {
+        tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL;
         updateEstadoMemoria(memoria, 17L);
       }
 
@@ -627,6 +631,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       // se cambia el estado de la memoria a 'En secretaría seguimiento final
       // aclaraciones'
       if (memoria.getEstadoActual().getId() == 21L) {
+        tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL;
         crearEvaluacion = true;
         updateEstadoMemoria(memoria, 18L);
       }
@@ -650,7 +655,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setFechaEnvioSecretaria(Instant.now());
       memoriaRepository.save(memoria);
 
-      this.crearInforme(memoria);
+      this.crearInforme(memoria, tipoEvaluacion);
 
       return memoria;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
@@ -662,10 +667,10 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug("enviarSecretaria(Long id) - end");
   }
 
-  private void crearInforme(Memoria memoria) {
+  private void crearInforme(Memoria memoria, Long tipoEvaluacion) {
     Informe informe = new Informe();
     Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
-        .findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId());
+        .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion);
 
     if (evaluacionAnterior.isPresent()) {
       if (evaluacionAnterior.get().getEsRevMinima().equals(Boolean.FALSE)) {
@@ -678,22 +683,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     }
     informe.setMemoria(memoria);
     informe.setTipoEvaluacion(new TipoEvaluacion());
-
-    // mismo tipo seguimiento que la memoria Anual(3) Final(4)
-    informe.getTipoEvaluacion()
-        .setId((memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
-            ? Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL
-            : Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL);
-    // memoria 'en secretaría' y retrospectiva 'en secretaría'
-    if (memoria.getEstadoActual().getId() > Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
-        && memoria.getRequiereRetrospectiva() && memoria.getRetrospectiva().getEstadoRetrospectiva()
-            .getId() == Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) {
-      // tipo retrospectiva
-      informe.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_RETROSPECTIVA);
-    } else {
-      // tipo 'memoria'
-      informe.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_MEMORIA);
-    }
+    informe.getTipoEvaluacion().setId(tipoEvaluacion);
 
     // TODO cambiar documentoRef
     informe.setDocumentoRef("documentoRef-informe");
@@ -730,6 +720,8 @@ public class MemoriaServiceImpl implements MemoriaService {
         return estadoRetrospectiva;
 
       }).orElseThrow(() -> new EstadoRetrospectivaNotFoundException(3L));
+
+      this.crearInforme(memoria, Constantes.TIPO_EVALUACION_RETROSPECTIVA);
 
       return memoria;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
