@@ -35,6 +35,7 @@ export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoria> {
     return this.service.findById(key).pipe(
       map((evaluacion) => {
         this.memoria = evaluacion.memoria;
+        this.memoria.version = evaluacion.version;
         return this.memoria;
       }),
       switchMap((memoria) => {
