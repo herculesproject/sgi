@@ -102,7 +102,7 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  openModal(wrapper?: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {
+  openModal(wrapper?: StatusWrapper<ISolicitudProyectoSocioEquipo>, position?: number): void {
     const data: MiembroEquipoSolicitudModalData = {
       titleEntity: this.modalTitleEntity,
       entidad: wrapper?.value ?? {} as ISolicitudProyectoSocioEquipo,
@@ -110,14 +110,12 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
       mesInicialMin: this.actionService.mesInicio,
       mesFinalMax: this.actionService.mesFin ?? this.actionService.solicitudProyectoDuracion,
       isEdit: Boolean(wrapper),
+      index: position,
       readonly: this.formPart.readonly
     };
 
     if (wrapper) {
-      const index = data.selectedEntidades.findIndex((element) => element === wrapper.value);
-      if (index >= 0) {
-        data.selectedEntidades.splice(index, 1);
-      }
+      data.selectedEntidades.splice(position, 1);
     }
 
     const config = {

@@ -121,6 +121,7 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
       mesInicialMin: 1,
       mesFinalMax: this.actionService.duracionProyecto,
       isEdit: Boolean(wrapper),
+      index: position,
       readonly: this.formPart.readonly
     };
 
@@ -139,8 +140,9 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
       if (modalData) {
         if (!wrapper) {
           this.formPart.addProyectoEquipo(modalData.entidad as ISolicitudProyectoEquipo);
-        } else if (!wrapper.created) {
+        } else {
           wrapper.setEdited();
+          this.formPart.updateProyectoEquipo(wrapper, modalData.index);
           this.formPart.setChanges(true);
         }
       }

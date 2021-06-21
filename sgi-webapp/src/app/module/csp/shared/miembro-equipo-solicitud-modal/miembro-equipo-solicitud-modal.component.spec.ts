@@ -25,6 +25,7 @@ describe('MiembroEquipoSolicitudModalComponent', () => {
     mesInicialMin: 1,
     mesFinalMax: 20,
     isEdit: true,
+    index: 0,
     readonly: true
   };
 

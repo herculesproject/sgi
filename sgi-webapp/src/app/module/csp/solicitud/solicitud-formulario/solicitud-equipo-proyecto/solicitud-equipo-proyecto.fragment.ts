@@ -56,9 +56,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     this.setChanges(true);
   }
 
-  updateProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>): void {
-    const current = this.proyectoEquipos$.value;
-    const index = current.findIndex(value => value.value.id === wrapper.value.id);
+  updateProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>, index: number): void {
     if (index >= 0) {
       if (!wrapper.created) {
         wrapper.setEdited();

@@ -30,6 +30,7 @@ export interface MiembroEquipoSolicitudModalData {
   mesInicialMin: number;
   mesFinalMax: number;
   isEdit: boolean;
+  index: number;
   readonly: boolean;
 }
 
