@@ -25,6 +25,7 @@ public class CustomFormularioRepositoryImpl implements CustomFormularioRepositor
 
   @Override
   public Formulario findByMemoriaId(Long idMemoria) {
+    log.debug("findByMemoriaId(Long idMemoria) - start");
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Formulario> cq = cb.createQuery(Formulario.class);
     Root<Memoria> root = cq.from(Memoria.class);
@@ -34,6 +35,8 @@ public class CustomFormularioRepositoryImpl implements CustomFormularioRepositor
 
     TypedQuery<Formulario> typedQuery = entityManager.createQuery(cq);
 
-    return typedQuery.getSingleResult();
+    Formulario response = typedQuery.getSingleResult();
+    log.debug("findByMemoriaId(Long idMemoria) - end");
+    return response;
   }
 }
