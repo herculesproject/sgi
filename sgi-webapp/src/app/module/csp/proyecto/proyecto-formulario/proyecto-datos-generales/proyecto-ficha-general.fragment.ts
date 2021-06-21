@@ -17,6 +17,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -305,6 +306,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.observaciones = form.observaciones.value;
 
     this.proyecto.coordinadorExterno = form.coordinadorExterno.value;
+
+    if (form.fechaInicio.value) {
+      this.proyecto.fechaBase = DateTime.local(form.fechaInicio.value.year, form.fechaInicio.value.month);
+    }
+    else {
+      this.proyecto.fechaBase = undefined;
+    }
+
     return this.proyecto;
   }
 

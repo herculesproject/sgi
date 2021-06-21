@@ -70,6 +70,8 @@ export interface IProyecto {
   activo: boolean;
   /** Tipo de Seguimiento */
   tipoSeguimiento: TipoSeguimiento;
+  /** Fecha Base */
+  fechaBase: DateTime;
 }
 
 export enum TipoHorasAnuales {

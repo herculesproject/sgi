@@ -42,7 +42,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones,
       comentario: value.estado.comentario,
-      tipoSeguimiento: value.tipoSeguimiento
+      tipoSeguimiento: value.tipoSeguimiento,
+      fechaBase: LuxonUtils.fromBackend(value.fechaBase)
     };
   }
 
@@ -80,7 +81,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       observaciones: value.observaciones,
       anualidades: value.anualidades,
       activo: value.activo,
-      tipoSeguimiento: value.tipoSeguimiento
+      tipoSeguimiento: value.tipoSeguimiento,
+      fechaBase: LuxonUtils.toBackend(value.fechaBase)
     };
   }
 }
