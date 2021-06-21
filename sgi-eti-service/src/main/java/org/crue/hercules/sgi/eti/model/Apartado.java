@@ -91,9 +91,10 @@ public class Apartado extends BaseEntity {
     } else {
       StringWriter stringWriter = new StringWriter();
       ObjectMapper objectMapper = new ObjectMapper();
-      JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter);
-      generator.writeTree(jsonNode);
-      setEsquema(stringWriter.toString());
+      try (JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter)) {
+        generator.writeTree(jsonNode);
+        setEsquema(stringWriter.toString());
+      }
     }
   }
 }

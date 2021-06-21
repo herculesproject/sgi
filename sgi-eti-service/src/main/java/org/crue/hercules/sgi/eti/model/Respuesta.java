@@ -93,9 +93,10 @@ public class Respuesta extends BaseEntity {
     } else {
       StringWriter stringWriter = new StringWriter();
       ObjectMapper objectMapper = new ObjectMapper();
-      JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter);
-      generator.writeTree(jsonNode);
-      setValor(stringWriter.toString());
+      try (JsonGenerator generator = new JsonFactory(objectMapper).createGenerator(stringWriter)) {
+        generator.writeTree(jsonNode);
+        setValor(stringWriter.toString());
+      }
     }
   }
 }
