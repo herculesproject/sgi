@@ -61,12 +61,13 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * @param idMemoria        id de la memoria.
    * @param idEvaluacion     id de la evaluación.
    * @param idTipoComentario id del tipo de comentario.
+   * @param idTipoEvaluacion id del tipo de evaluación.
    * @param pageable         la información de la paginación.
    * @return la lista de entidades {@link EvaluacionWithNumComentario} paginadas
    *         y/o filtradas.
    */
   public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
-      Long idTipoComentario, Pageable pageable) {
+      Long idTipoComentario, Long idTipoEvaluacion, Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria : {} - start");
 
     // Crete query
@@ -84,15 +85,28 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     cq.multiselect(root.alias("evaluacion"), getNumComentarios(root, cb, cq, idTipoComentario).alias("numComentarios"));
 
-    cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
-        cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)));
+    if (idTipoEvaluacion != null) {
+      cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
+          cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)),
+          cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), idTipoEvaluacion));
+    } else {
+      cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
+          cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)));
+    }
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
 
     // Número de registros totales para la paginación
-    countQuery.where(cb.equal(rootCount.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
-        cb.notEqual(rootCount.get(Evaluacion_.id), idEvaluacion), cb.isTrue(rootCount.get(Evaluacion_.activo)));
+    if (idTipoEvaluacion != null) {
+      countQuery.where(cb.equal(rootCount.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
+          cb.notEqual(rootCount.get(Evaluacion_.id), idEvaluacion), cb.isTrue(rootCount.get(Evaluacion_.activo)),
+          cb.equal(rootCount.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), idTipoEvaluacion));
+    } else {
+      countQuery.where(cb.equal(rootCount.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
+          cb.notEqual(rootCount.get(Evaluacion_.id), idEvaluacion), cb.isTrue(rootCount.get(Evaluacion_.activo)));
+    }
+
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     TypedQuery<EvaluacionWithNumComentario> typedQuery = entityManager.createQuery(cq);

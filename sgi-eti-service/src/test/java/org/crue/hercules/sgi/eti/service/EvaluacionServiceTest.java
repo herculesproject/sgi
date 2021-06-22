@@ -527,7 +527,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     Long tipoComentarioId = 1L;
     try {
       // when: se listar sus evaluaciones
-      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId, Pageable.unpaged());
+      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId,
+          Pageable.unpaged());
       Assertions.fail("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
@@ -544,7 +545,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     Long tipoComentarioId = 1L;
     try {
       // when: se listar sus evaluaciones
-      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId, Pageable.unpaged());
+      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId,
+          Pageable.unpaged());
       Assertions.fail("El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
@@ -571,8 +573,13 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     Pageable pageable = PageRequest.of(1, 2);
     Page<EvaluacionWithNumComentario> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
-    BDDMockito.given(evaluacionRepository.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+    BDDMockito.given(
+        evaluacionRepository.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L)));
 
     // when: Se buscan los datos paginados
     Page<EvaluacionWithNumComentario> result = evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId,

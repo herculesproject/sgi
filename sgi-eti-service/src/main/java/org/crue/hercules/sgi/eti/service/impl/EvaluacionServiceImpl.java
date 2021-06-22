@@ -278,8 +278,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - start");
     Assert.notNull(idMemoria, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
     Assert.notNull(idEvaluacion, "El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+    Optional<Evaluacion> evaluacion = evaluacionRepository.findById(idEvaluacion);
+    Long idTipoEvaluacion = null;
+    if (evaluacion.isPresent()) {
+      idTipoEvaluacion = evaluacion.get().getTipoEvaluacion().getId();
+    }
     Page<EvaluacionWithNumComentario> returnValue = evaluacionRepository.findEvaluacionesAnterioresByMemoria(idMemoria,
-        idEvaluacion, idTipoComentario, pageable);
+        idEvaluacion, idTipoComentario, idTipoEvaluacion, pageable);
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - end");
     return returnValue;
   }

@@ -17,16 +17,17 @@ public interface CustomEvaluacionRepository {
    * Obtener todas las entidades {@link EvaluacionWithNumComentario} paginadas
    * asociadas a una memoria y anteriores a la evaluación recibida.
    *
-   * @param idMemoria    id de la memoria.
-   * @param idEvaluacion id de la evaluación.
+   * @param idMemoria        id de la memoria.
+   * @param idEvaluacion     id de la evaluación.
    * @param idTipoComentario id del tipo de comentario.
-   * @param pageable     la información de la paginación.
+   * @param idTipoEvaluacion id del tipo de evaluación.
+   * @param pageable         la información de la paginación.
    * 
    * @return la lista de entidades {@link EvaluacionWithNumComentario} paginadas
    *         y/o filtradas.
    */
-  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
-      Pageable pageable);
+  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+      Long idTipoComentario, Long idTipoEvaluacion, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link Evaluacion} paginadas y/o filtradas.
