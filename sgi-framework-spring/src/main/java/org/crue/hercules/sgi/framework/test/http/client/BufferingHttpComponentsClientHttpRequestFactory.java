@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.framework.test.http.client;
 
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 /**

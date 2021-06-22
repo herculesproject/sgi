@@ -76,8 +76,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({ IllegalArgumentException.class })
-  public final ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request)
-      throws Exception {
+  public final ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
     log.debug("handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) - start");
     HttpHeaders headers = new HttpHeaders();
     HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -101,10 +100,14 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
    * MethodArgumentNotValidException
    * <p>
    * see: https://github.com/zalando/problem-spring-web/issues/3
+   * 
+   * @param ex      the ConstraintViolationException
+   * @param request the WebRequest
+   * @return the ResponseEntity
    */
   @ExceptionHandler({ ConstraintViolationException.class })
   public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
-      WebRequest request) throws Exception {
+      WebRequest request) {
     log.debug("handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) - start");
     HttpHeaders headers = new HttpHeaders();
 
@@ -119,6 +122,10 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
   /**
    * Handle method-level security @PreAuthorize, @PostAuthorize, and @Secure
    * Access Denied.
+   * 
+   * @param ex      the AccessDeniedException
+   * @param request the WebRequest
+   * @return the ResponseEntity
    */
   @ExceptionHandler({ AccessDeniedException.class })
   public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
@@ -136,6 +143,10 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
   /**
    * Handle method-level security @PreAuthorize, @PostAuthorize, and @Secure
    * Access Denied.
+   * 
+   * @param ex      the AuthenticationException
+   * @param request the WebRequest
+   * @return the ResponseEntity
    */
   @ExceptionHandler({ AuthenticationException.class })
   public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
@@ -151,8 +162,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({ RestClientResponseException.class })
-  public ResponseEntity<Object> handleRestClientResponseException(RestClientResponseException ex, WebRequest request)
-      throws Exception {
+  public ResponseEntity<Object> handleRestClientResponseException(RestClientResponseException ex, WebRequest request) {
     log.debug("handleRestClientResponseException(RestClientResponseException ex, WebRequest request) - start");
     HttpStatus status = HttpStatus.valueOf(ex.getRawStatusCode());
 
@@ -164,7 +174,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({ Exception.class })
-  public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) throws Exception {
+  public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
     log.debug("handleOtherException(Exception ex, WebRequest request) - start");
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)

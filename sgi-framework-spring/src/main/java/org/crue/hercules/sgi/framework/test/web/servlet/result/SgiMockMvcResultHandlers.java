@@ -17,6 +17,8 @@ public abstract class SgiMockMvcResultHandlers {
    * Print {@link MvcResult} details to the "standard" output stream only if the
    * response status code is greater or equal to 400.
    * 
+   * @return a {@link ResultHandler} that writes to {@link System#out} only if the
+   *         response status code is greater or equal to 400.
    * @see System#out
    * @see #printOnError(OutputStream)
    * @see #printOnError(Writer)
@@ -29,6 +31,9 @@ public abstract class SgiMockMvcResultHandlers {
    * Print {@link MvcResult} details to the supplied {@link OutputStream} only if
    * the response status code is greater or equal to 400.
    * 
+   * @param stream the OutputStream to write to
+   * @return a {@link ResultHandler} that writes to an {@link OutputStream} only
+   *         if the response status code is greater or equal to 400.
    * @see #printOnError()
    * @see #printOnError(Writer)
    */
@@ -40,6 +45,9 @@ public abstract class SgiMockMvcResultHandlers {
    * Print {@link MvcResult} details to the supplied {@link Writer} only if the
    * response status code is greater or equal to 400.
    * 
+   * @param writer the Writer to write to
+   * @return a {@link ResultHandler} that writes to a {@link Writer} only if the
+   *         response status code is greater or equal to 400.
    * @see #printOnError()
    * @see #printOnError(OutputStream)
    */

@@ -83,6 +83,10 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
 
   /**
    * Print the request.
+   * 
+   * @param request the request, containing method, URI, and headers
+   * @param body    the body of the request
+   * @throws IOException in case of I/O errors
    */
   protected void printRequest(HttpRequest request, byte[] body) throws IOException {
     String bodyString = new String(body, "UTF-8");
@@ -95,6 +99,9 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
 
   /**
    * Print the response.
+   * 
+   * @param response the response containing the body to print
+   * @throws IOException in case of I/O errors
    */
   protected void printResponse(ClientHttpResponse response) throws IOException {
     StringBuilder inputStringBuilder = new StringBuilder();
@@ -118,6 +125,8 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
    * Print the cookies taken from the {@link HttpHeaders} in a human-readable
    * form, assuming the {@link HttpCookie} implementation does not provide its own
    * {@code toString()}.
+   * 
+   * @param headers the headers cotaining the cookies to print
    */
   protected void printCookies(HttpHeaders headers) {
     List<HttpCookie> cookies = new ArrayList<>();
@@ -137,6 +146,8 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
    * Print the supplied cookies in a human-readable form, assuming the
    * {@link HttpCookie} implementation does not provide its own
    * {@code toString()}.
+   * 
+   * @param cookies the list of cookies to print
    */
   protected void printCookies(List<HttpCookie> cookies) {
     String[] cookieStrings = new String[cookies.size()];

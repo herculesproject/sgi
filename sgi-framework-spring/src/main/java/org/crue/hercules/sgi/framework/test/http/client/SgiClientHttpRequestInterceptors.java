@@ -21,6 +21,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class SgiClientHttpRequestInterceptors {
+  /**
+   * Logs {@link HttpRequest} and {@link ClientHttpResponse} details to the via
+   * SL4J.
+   * 
+   * @return a {@link ClientHttpRequestInterceptor} that logs {@link HttpRequest}
+   *         and {@link ClientHttpResponse} details at {@code DEBUG} level via
+   *         SL4J..
+   * @see #print(OutputStream)
+   * @see #print(Writer)
+   * @see #print()
+   */
   public static ClientHttpRequestInterceptor log() {
     return new LoggingClientHttpRequestInterceptor();
   }
@@ -29,6 +40,8 @@ public abstract class SgiClientHttpRequestInterceptors {
    * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
    * "standard" output stream.
    * 
+   * @return a {@link PrintingClientHttpRequestInterceptor} that writes to
+   *         {@link System#out}.
    * @see System#out
    * @see #print(OutputStream)
    * @see #print(Writer)
@@ -42,7 +55,9 @@ public abstract class SgiClientHttpRequestInterceptors {
    * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
    * supplied {@link OutputStream}.
    * 
-   * @since 4.2
+   * @param stream the OutputStream to write to
+   * @return a {@link PrintingClientHttpRequestInterceptor} that writes to an
+   *         {@link OutputStream}.
    * @see #print()
    * @see #print(Writer)
    * @see #log()
@@ -55,7 +70,9 @@ public abstract class SgiClientHttpRequestInterceptors {
    * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
    * supplied {@link Writer}.
    * 
-   * @since 4.2
+   * @param writer the Writer to write to
+   * @return a {@link PrintingClientHttpRequestInterceptor} that writes to a
+   *         {@link Writer}.
    * @see #print()
    * @see #print(OutputStream)
    * @see #log()
@@ -65,9 +82,13 @@ public abstract class SgiClientHttpRequestInterceptors {
   }
 
   /**
-   * Print {@link MvcResult} details to the "standard" output stream only if the
-   * response status code is greater or equal to 400.
+   * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
+   * "standard" output stream only if the response status code is greater or equal
+   * to 400.
    * 
+   * @return a {@link ClientHttpRequestInterceptor} that writes to
+   *         {@link System#out} only if the response status code is greater or
+   *         equal to 400.
    * @see System#out
    * @see #printOnError(OutputStream)
    * @see #printOnError(Writer)
@@ -77,9 +98,14 @@ public abstract class SgiClientHttpRequestInterceptors {
   }
 
   /**
-   * Print {@link MvcResult} details to the supplied {@link OutputStream} only if
-   * the response status code is greater or equal to 400.
+   * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
+   * supplied {@link OutputStream} only if the response status code is greater or
+   * equal to 400.
    * 
+   * @param stream the OutputStream to write to
+   * @return a {@link ClientHttpRequestInterceptor} that writes to an
+   *         {@link OutputStream} only if the response status code is greater or
+   *         equal to 400.
    * @see #printOnError()
    * @see #printOnError(Writer)
    */
@@ -88,9 +114,13 @@ public abstract class SgiClientHttpRequestInterceptors {
   }
 
   /**
-   * Print {@link MvcResult} details to the supplied {@link Writer} only if the
-   * response status code is greater or equal to 400.
+   * Print {@link HttpRequest} and {@link ClientHttpResponse} details to the
+   * supplied {@link Writer} only if the response status code is greater or equal
+   * to 400.
    * 
+   * @param writer the Writer to write to
+   * @return a {@link PrintingClientHttpRequestInterceptor} that writes to a
+   *         {@link Writer}.
    * @see #printOnError()
    * @see #printOnError(OutputStream)
    */
@@ -124,8 +154,8 @@ public abstract class SgiClientHttpRequestInterceptors {
   }
 
   /**
-   * A {@link ResultHandler} that writes to a {@link Writer} only if the response
-   * status code is greater or equal to 400.
+   * A {@link PrintingClientHttpRequestInterceptor} that writes to a
+   * {@link Writer} only if the response status code is greater or equal to 400.
    *
    * <p>
    * Delegates to a {@link PrintWriterHttpRequestInterceptor} for writing.
