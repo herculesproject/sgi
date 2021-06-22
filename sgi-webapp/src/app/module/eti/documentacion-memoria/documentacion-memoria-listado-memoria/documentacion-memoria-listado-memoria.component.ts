@@ -103,7 +103,7 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends
     // TODO generar documentacion
   }
 
-  getVersion(informe: IInforme) {
+  private getVersion(informe: IInforme) {
     switch (informe.tipoEvaluacion.id) {
       case TIPO_EVALUACION.MEMORIA:
         return informe.memoria?.numReferencia + '_v' + informe.version;
@@ -115,6 +115,18 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends
         return informe.memoria?.numReferencia + '_SF_v' + informe.version;
       default:
         return '';
+    }
+  }
+
+  getNombre(documento: IDocumentacionMemoriaWithInformeAndFichaEvaluador) {
+    if (documento.informe) {
+      return this.getVersion(documento.informe);
+    }
+    switch (this.tipoEvaluacion) {
+      case TIPO_EVALUACION.MEMORIA:
+        return `${documento.tipoDocumento.nombre}: ${documento.nombre}`;
+      default:
+        return documento.nombre;
     }
   }
 }

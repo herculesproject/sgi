@@ -6,10 +6,9 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.documentacion-memoria.documento-ref' | translate}}
       </th>
-      <td mat-cell *matCellDef="let documentacionMemoria"> {{documentacionMemoria.informe?
-        getVersion(documentacionMemoria.informe) :
+      <td mat-cell *matCellDef="let documentacionMemoria"> {{
         (documentacionMemoria.fichaEvaluador? (documentacionMemoria.fichaEvaluador | translate) :
-        documentacionMemoria.documento?.documentoRef)}}
+        getNombre(documentacionMemoria))}}
       </td>
     </ng-container>
 
