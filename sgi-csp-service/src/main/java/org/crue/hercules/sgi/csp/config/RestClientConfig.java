@@ -1,5 +1,10 @@
 package org.crue.hercules.sgi.csp.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.crue.hercules.sgi.framework.problem.Problem;
+import org.crue.hercules.sgi.framework.problem.exception.ProblemException;
+import org.crue.hercules.sgi.framework.problem.spring.boot.web.client.RestTemplateProblemCustomizer;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,5 +24,20 @@ public class RestClientConfig {
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
     return restTemplateBuilder.build();
+  }
+
+  /**
+   * Permite interceptar las peticiones Http de los RestTemplate de modo que si se
+   * recibe una respuesta de tipo "application/problem+json" se construye un
+   * objeto {@link Problem} a partir del cuerpo de dicha respuesta y se lanza una
+   * {@link ProblemException} en él.
+   * 
+   * @param mapper el ObjectMapper que permite reconstruir el objeto Problem a
+   *               partir del contenido de la respuesta
+   * @return el RestTemplateProblemCustomizer
+   */
+  @Bean
+  public RestTemplateProblemCustomizer restTemplateProblemCustomizer(ObjectMapper mapper) {
+    return new RestTemplateProblemCustomizer(mapper);
   }
 }

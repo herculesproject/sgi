@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -451,9 +452,10 @@ public class SolicitudService {
       if (solicitudProyecto != null) {
         String idChecklist = solicitudProyecto.getChecklistRef();
         String peticionEvaluacionRef = solicitudProyecto.getPeticionEvaluacionRef();
-        // Y "peticionEvaluacionRef" tenga valor null (no se ha creado todavía la
-        // petición de evaluación en ética)
+        // Si se ha rellenado el checklist de ética
         if (idChecklist != null) {
+          // Y "peticionEvaluacionRef" tenga valor null (no se ha creado todavía la
+          // petición de evaluación en ética)
           if (peticionEvaluacionRef == null) {
             final ResponseEntity<ChecklistOutput> responseChecklistOutput = restTemplate.exchange(
                 restApiProperties.getEtiUrl() + "/checklists/{id}", HttpMethod.GET,
@@ -497,12 +499,14 @@ public class SolicitudService {
                 solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
                 solicitudProyectoRepository.save(solicitudProyecto);
               } else {
-                // TODO (rubensa) throw exception
+                // throw exception
+                throw new GetPeticionEvaluacionException();
               }
             } else {
-              // TODO (rubensa) throw exception
+              // Do nothing
             }
           } else {
+            // Si ya se había creado la petición de evaluación en ética
             switch (estadoSolicitud.getEstado()) {
               case DENEGADA:
                 // Se debe recuperar la petición de ética y cambiar el valor del
@@ -519,7 +523,8 @@ public class SolicitudService {
                       restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
                       buildRequest(null, peticionEvaluacionDenegada), PeticionEvaluacion.class, peticionEvaluacionRef);
                 } else {
-                  // TODO (rubensa) throw exception
+                  // throw exception
+                  throw new GetPeticionEvaluacionException();
                 }
                 break;
               case CONCEDIDA_PROVISIONAL:
@@ -540,7 +545,8 @@ public class SolicitudService {
                       restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
                       buildRequest(null, peticionEvaluacionConcedida), PeticionEvaluacion.class, peticionEvaluacionRef);
                 } else {
-                  // TODO (rubensa) throw exception
+                  // throw exception
+                  throw new GetPeticionEvaluacionException();
                 }
                 break;
               default:
