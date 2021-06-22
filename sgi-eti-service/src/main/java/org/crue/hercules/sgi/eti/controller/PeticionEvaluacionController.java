@@ -129,7 +129,7 @@ public class PeticionEvaluacionController {
    * @return {@link PeticionEvaluacion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-MOD-C')")
   PeticionEvaluacion replacePeticionEvaluacion(@Valid @RequestBody PeticionEvaluacion updatedPeticionEvaluacion,
       @PathVariable Long id) {
     log.debug("replacePeticionEvaluacion(PeticionEvaluacion updatedPeticionEvaluacion, Long id) - start");
@@ -146,7 +146,7 @@ public class PeticionEvaluacionController {
    * @return {@link PeticionEvaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V', 'ETI-PEV-MOD-C')")
   PeticionEvaluacion one(@PathVariable Long id) {
     log.debug("PeticionEvaluacion one(Long id) - start");
     PeticionEvaluacion returnValue = service.findById(id);

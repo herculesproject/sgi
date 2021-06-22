@@ -186,7 +186,8 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
     }
 
-    if (peticionEvaluacionActualizar.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
+    if (peticionEvaluacionActualizar.getValorSocial() != null
+        && peticionEvaluacionActualizar.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
       Assert.notNull(peticionEvaluacionActualizar.getOtroValorSocial(),
           "PeticionEvaluacion otroValorSocial no puede ser null si TipoValorSocial.OTRA_FINALIDAD");
     }
