@@ -451,6 +451,11 @@ public class EvaluacionIT extends BaseIT {
   }
 
   @Test
+  @Sql(scripts = {
+  // @formatter:off  
+  "classpath:scripts/evaluacion_seguimiento.sql",
+// @formatter:on  
+  })
   public void findByEvaluacionesEnSeguimientoFinal_ReturnsEvaluacionList() throws Exception {
     // when: Obtiene la page=0 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
@@ -458,7 +463,7 @@ public class EvaluacionIT extends BaseIT {
     headers.add("X-Page-Size", "5");
     // Authorization
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V", "ETI-EVC-EVAL")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-002", "ETI-EVC-V", "ETI-EVC-EVAL")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH, HttpMethod.GET, buildRequest(headers, null),
@@ -476,7 +481,7 @@ public class EvaluacionIT extends BaseIT {
 
     // Contiene de memoria.titulo='Memoria010'
 
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria010");
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria016");
 
   }
 

@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoComentario_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -57,15 +58,15 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * Obtener todas las entidades {@link EvaluacionWithNumComentario} paginadas
    * asociadas a una memoria y anteriores a la evaluación recibida.
    *
-   * @param idMemoria    id de la memoria.
-   * @param idEvaluacion id de la evaluación.
+   * @param idMemoria        id de la memoria.
+   * @param idEvaluacion     id de la evaluación.
    * @param idTipoComentario id del tipo de comentario.
-   * @param pageable     la información de la paginación.
+   * @param pageable         la información de la paginación.
    * @return la lista de entidades {@link EvaluacionWithNumComentario} paginadas
    *         y/o filtradas.
    */
-  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
-      Pageable pageable) {
+  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+      Long idTipoComentario, Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria : {} - start");
 
     // Crete query
@@ -129,25 +130,36 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
     Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
 
-    List<Predicate> listPredicates = getPredicatesEvaluacionesEnSeguimientoFinal(root, cb);
-    List<Predicate> listPredicatesCount = getPredicatesEvaluacionesEnSeguimientoFinal(rootCount, cb);
+    List<Predicate> listPredicatesFinal = getPredicatesEvaluacionesEnSeguimientoFinal(root, cb, null);
+    List<Predicate> listPredicatesFinalCount = getPredicatesEvaluacionesEnSeguimientoFinal(rootCount, cb, null);
+
+    List<Predicate> listPredicatesAnual = getPredicatesEvaluacionesEnSeguimientoAnual(root, cb, null);
+    List<Predicate> listPredicatesAnualCount = getPredicatesEvaluacionesEnSeguimientoAnual(rootCount, cb, null);
 
     // Where
     if (query != null) {
       Specification<Evaluacion> spec = SgiRSQLJPASupport.toSpecification(query);
-      listPredicates.add(spec.toPredicate(root, cq, cb));
-      listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
+      listPredicatesFinal.add(spec.toPredicate(root, cq, cb));
+      listPredicatesFinalCount.add(spec.toPredicate(rootCount, cq, cb));
+
+      listPredicatesAnual.add(spec.toPredicate(root, cq, cb));
+      listPredicatesAnualCount.add(spec.toPredicate(rootCount, cq, cb));
     }
 
+    Predicate predicateFinal = cb.and(listPredicatesFinal.toArray(new Predicate[] {}));
+    Predicate predicateAnual = cb.and(listPredicatesAnual.toArray(new Predicate[] {}));
+
     // Filtros
-    cq.where(listPredicates.toArray(new Predicate[] {}));
+    cq.where(cb.or(predicateFinal, predicateAnual));
 
     // Ordenación
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
 
     // Número de registros totales para la paginación
-    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Predicate predicateFinalCount = cb.and(listPredicatesFinalCount.toArray(new Predicate[] {}));
+    Predicate predicateAnualCount = cb.and(listPredicatesAnualCount.toArray(new Predicate[] {}));
+    countQuery.where(cb.or(predicateFinalCount, predicateAnualCount));
     countQuery.select(cb.count(rootCount));
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -350,25 +362,36 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     countQuery.select(cb.count(rootCount));
 
     // Evaluaciones en seguimiento
-    List<Predicate> listPredicates = getPredicateEvaluacionEnSeguimiento(rootEvaluacion, cb, personaRef);
-    List<Predicate> listPredicatesCount = getPredicateEvaluacionEnSeguimiento(rootCount, cb, personaRef);
+    List<Predicate> listPredicatesAnual = getPredicatesEvaluacionesEnSeguimientoAnual(rootEvaluacion, cb, personaRef);
+    List<Predicate> listPredicatesAnualCount = getPredicatesEvaluacionesEnSeguimientoAnual(rootCount, cb, personaRef);
+
+    List<Predicate> listPredicatesFinal = getPredicatesEvaluacionesEnSeguimientoFinal(rootEvaluacion, cb, personaRef);
+    List<Predicate> listPredicatesFinalCount = getPredicatesEvaluacionesEnSeguimientoFinal(rootCount, cb, personaRef);
 
     // Where
     if (query != null) {
       Specification<Evaluacion> spec = SgiRSQLJPASupport.toSpecification(query);
-      listPredicates.add(spec.toPredicate(rootEvaluacion, cq, cb));
-      listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
+      listPredicatesFinal.add(spec.toPredicate(rootEvaluacion, cq, cb));
+      listPredicatesFinalCount.add(spec.toPredicate(rootCount, cq, cb));
+
+      listPredicatesAnual.add(spec.toPredicate(rootEvaluacion, cq, cb));
+      listPredicatesAnualCount.add(spec.toPredicate(rootCount, cq, cb));
     }
 
+    Predicate predicateFinal = cb.and(listPredicatesFinal.toArray(new Predicate[] {}));
+    Predicate predicateAnual = cb.and(listPredicatesAnual.toArray(new Predicate[] {}));
+
     // Filtros
-    cq.where(listPredicates.toArray(new Predicate[] {}));
+    cq.where(cb.or(predicateFinal, predicateAnual));
 
     // Ordenación
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), rootEvaluacion, cb);
     cq.orderBy(orders);
 
     // Número de registros totales para la paginación
-    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Predicate predicateFinalCount = cb.and(listPredicatesFinalCount.toArray(new Predicate[] {}));
+    Predicate predicateAnualCount = cb.and(listPredicatesAnualCount.toArray(new Predicate[] {}));
+    countQuery.where(cb.or(predicateFinalCount, predicateAnualCount));
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     // Paginación
@@ -395,21 +418,32 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * @param cb
    * @return lista con los predicates necesarios
    */
-  private List<Predicate> getPredicateEvaluacionEnSeguimiento(Root<Evaluacion> rootEvaluacion, CriteriaBuilder cb,
-      String personaRef) {
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoAnual(Root<Evaluacion> rootEvaluacion,
+      CriteriaBuilder cb, String personaRef) {
 
     log.debug("getPredicateEvaluacionEnSeguimiento : {} - start");
     List<Predicate> listPredicates = new ArrayList<Predicate>();
 
     listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
-        .in(Arrays.asList(11L, 12L, 13L)));
+        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)));
+
+    listPredicates.add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
+        .in(Arrays.asList(Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL)).not());
 
     listPredicates.add(cb.isTrue(rootEvaluacion.get(Evaluacion_.activo)));
-    listPredicates
-        .add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id).in(Arrays.asList(3L, 4L)));
-    listPredicates
-        .add(cb.or(cb.equal(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
-            cb.equal(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));
+    listPredicates.add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
+        .in(Arrays.asList(Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL)));
+
+    listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL,
+            Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES))
+        .not());
+
+    if (personaRef != null) {
+      listPredicates
+          .add(cb.or(cb.equal(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
+              cb.equal(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));
+    }
 
     Predicate memoriaVersion = cb.equal(rootEvaluacion.get(Evaluacion_.version),
         rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.version));
@@ -428,8 +462,8 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Subquery<Long> queryNumComentarios = cq.subquery(Long.class);
     Root<Comentario> subqRoot = queryNumComentarios.from(Comentario.class);
     queryNumComentarios.select(cb.count(subqRoot.get(Comentario_.id)))
-        .where(cb.and(cb.equal(subqRoot.get(Comentario_.evaluacion).get(Evaluacion_.id), root.get(Evaluacion_.id)), 
-        cb.equal(subqRoot.get(Comentario_.tipoComentario).get(TipoComentario_.id), idTipoComentario)));
+        .where(cb.and(cb.equal(subqRoot.get(Comentario_.evaluacion).get(Evaluacion_.id), root.get(Evaluacion_.id)),
+            cb.equal(subqRoot.get(Comentario_.tipoComentario).get(TipoComentario_.id), idTipoComentario)));
 
     log.debug("getNumComentarios : {} - end");
     return queryNumComentarios;
@@ -488,15 +522,29 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * @param cb   Criteria builder
    * @return lista de predicates.
    */
-  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoFinal(Root<Evaluacion> root, CriteriaBuilder cb) {
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoFinal(Root<Evaluacion> root, CriteriaBuilder cb,
+      String personaRef) {
     log.debug("getPredicatesEvaluacionesEnSeguimientoFinal : {} - start");
     List<Predicate> listPredicates = new ArrayList<Predicate>();
 
-    listPredicates.add(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id).in(Arrays.asList(3L, 4L)));
+    listPredicates.add(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
+        .in(Arrays.asList(Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL)));
 
     listPredicates.add(root.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)).not());
 
-        .in(Arrays.asList(18L, 19L, 13L)));
+    listPredicates.add(cb.isTrue(root.get(Evaluacion_.activo)));
+    listPredicates.add(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
+        .in(Arrays.asList(Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL)).not());
+
+    listPredicates.add(root.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL,
+            Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES)));
+
+    if (personaRef != null) {
+      listPredicates.add(cb.or(cb.equal(root.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
+          cb.equal(root.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));
+    }
 
     listPredicates.add(cb.equal(root.get(Evaluacion_.version), root.get(Evaluacion_.memoria).get(Memoria_.version)));
 
@@ -605,12 +653,14 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
     Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
     countQuery.select(cb.count(rootCount));
-
     // Evaluaciones en seguimiento
-    List<Predicate> listPredicatesCount = getPredicateEvaluacionEnSeguimiento(rootCount, cb, personaRef);
+    List<Predicate> listPredicatesAnualCount = getPredicatesEvaluacionesEnSeguimientoAnual(rootCount, cb, personaRef);
+    List<Predicate> listPredicatesFinalCount = getPredicatesEvaluacionesEnSeguimientoFinal(rootCount, cb, personaRef);
 
     // Número de registros totales para la paginación
-    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Predicate predicateFinalCount = cb.and(listPredicatesFinalCount.toArray(new Predicate[] {}));
+    Predicate predicateAnualCount = cb.and(listPredicatesAnualCount.toArray(new Predicate[] {}));
+    countQuery.where(cb.or(predicateFinalCount, predicateAnualCount));
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
