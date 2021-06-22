@@ -462,7 +462,8 @@ public class SolicitudService {
             ChecklistOutput checklistOutput = responseChecklistOutput.getBody();
             // En el caso que que en la Pestaña de Autoevaluación ética exista una respuesta
             // afirmativa a una sola de las preguntas del formulario
-            if (checklistOutput.getRespuesta().contains("true")) {
+            if (checklistOutput != null && checklistOutput.getRespuesta() != null
+                && checklistOutput.getRespuesta().contains("true")) {
               // Se creará un registro en la tabla "PeticionEvaluacion" del módulo de ética
               PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
                   .solicitudConvocatoriaRef(solicitud.getId().toString()).checklistId(checklistOutput.getId())
@@ -492,8 +493,14 @@ public class SolicitudService {
 
               // Guardar el PeticionEvaluacion.id
               PeticionEvaluacion peticionEvaluacion = responsePeticionEvaluacion.getBody();
-              solicitudProyecto.setPeticionEvaluacionRef(peticionEvaluacion.getId().toString());
-              solicitudProyectoRepository.save(solicitudProyecto);
+              if (peticionEvaluacion != null) {
+                solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
+                solicitudProyectoRepository.save(solicitudProyecto);
+              } else {
+                // TODO (rubensa) throw exception
+              }
+            } else {
+              // TODO (rubensa) throw exception
             }
           } else {
             switch (estadoSolicitud.getEstado()) {
@@ -505,11 +512,15 @@ public class SolicitudService {
                     buildRequest(null, null), PeticionEvaluacion.class, peticionEvaluacionRef);
 
                 PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
-                peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
+                if (peticionEvaluacionDenegada != null) {
+                  peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
 
-                responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                    buildRequest(null, peticionEvaluacionDenegada), PeticionEvaluacion.class, peticionEvaluacionRef);
+                  responsePeticionEvaluacionDenegada = restTemplate.exchange(
+                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                      buildRequest(null, peticionEvaluacionDenegada), PeticionEvaluacion.class, peticionEvaluacionRef);
+                } else {
+                  // TODO (rubensa) throw exception
+                }
                 break;
               case CONCEDIDA_PROVISIONAL:
               case CONCEDIDA_PROVISIONAL_ALEGADA:
@@ -522,11 +533,15 @@ public class SolicitudService {
                     buildRequest(null, null), PeticionEvaluacion.class, peticionEvaluacionRef);
 
                 PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
-                peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
+                if (peticionEvaluacionConcedida != null) {
+                  peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
 
-                responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                    buildRequest(null, peticionEvaluacionConcedida), PeticionEvaluacion.class, peticionEvaluacionRef);
+                  responsePeticionEvaluacionConcedida = restTemplate.exchange(
+                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                      buildRequest(null, peticionEvaluacionConcedida), PeticionEvaluacion.class, peticionEvaluacionRef);
+                } else {
+                  // TODO (rubensa) throw exception
+                }
                 break;
               default:
                 // Do nothing
