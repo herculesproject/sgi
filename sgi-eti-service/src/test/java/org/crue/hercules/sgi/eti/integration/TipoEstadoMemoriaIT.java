@@ -126,7 +126,10 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
 
     final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
