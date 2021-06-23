@@ -58,4 +58,42 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-solicitud">
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion1" />
+      <column name="descripcion" value="Duis elit aliqua eiusmod et qui mollit." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+    </insert>
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion2" />
+      <column name="descripcion" value="Cillum adipisicing consequat sunt excepteur non aliquip sint." />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
+    </insert>
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion3" />
+      <column name="descripcion" value="Elit duis irure in eiusmod proident non mollit." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+    </insert>
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion4" />
+      <column name="descripcion" value="Dolor duis cupidatat enim aliqua proident veniam." />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
+    </insert>   
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion5" />
+      <column name="descripcion" value="Irure eiusmod velit in cupidatat quis fugiat reprehenderit aute." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+    </insert> 
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion6" />
+      <column name="descripcion" value="Consequat adipisicing eu culpa quis elit anim magna." />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
+    </insert>    
+  </changeSet>
 </databaseChangeLog>
