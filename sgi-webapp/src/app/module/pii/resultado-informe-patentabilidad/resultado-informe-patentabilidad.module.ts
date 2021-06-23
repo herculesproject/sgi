@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ResultadoInformePatentabilidadRoutingModule } from './resultado-informe-patentabilidad-routing.module';
+import { ResultadoInformePatentabilidadListadoComponent } from './resultado-informe-patentabilidad-listado/resultado-informe-patentabilidad-listado.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ResultadoInformePatentabilidadListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -18,6 +19,6 @@ import { ResultadoInformePatentabilidadRoutingModule } from './resultado-informe
     TranslateModule,
     FormsModule,
     SgiAuthModule
-  ]
+  ],
 })
 export class ResultadoInformePatentabilidadModule { }
