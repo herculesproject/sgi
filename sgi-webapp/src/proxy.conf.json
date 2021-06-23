@@ -17,6 +17,15 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/api/pii": {
+    "target": "http://sgi-pii-service:4281",
+    "pathRewrite": {
+      "^/api/pii": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/api/usr": {
     "target": "http://sgi-usr-service:4282",
     "pathRewrite": {
