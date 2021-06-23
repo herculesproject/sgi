@@ -115,7 +115,7 @@
   "csp.convocatoria-fase.fecha-inicio": "Fecha Inicio",
   "csp.convocatoria-fase.observaciones": "Observaciones",
   "csp.convocatoria-fase.tipo": "Tipo de fase",
-  "csp.convocatoria-partida-presupuestaria": "Partida presupuestaria",
+  "csp.convocatoria-partida-presupuestaria": "Partida{count,plural,=0{} one{} other{s}} presupuestaria{count,plural,=0{} one{} other{s}}",
   "csp.convocatoria-partida-presupuestaria.codigo": "Código",
   "csp.convocatoria-partida-presupuestaria.descripcion": "Descripción",
   "csp.convocatoria-partida-presupuestaria.tipo-partida": "Tipo",
