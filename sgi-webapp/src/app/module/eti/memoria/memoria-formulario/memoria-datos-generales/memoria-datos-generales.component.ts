@@ -87,11 +87,12 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
       (tipoMemoria) => {
         this.datosGeneralesFragment.onTipoMemoriaChange(tipoMemoria);
         if (this.datosGeneralesFragment.showMemoriaOriginal) {
-          this.comiteService.findMemorias(this.formGroup.controls.comite.value.id).subscribe(
-            (response) => {
-              this.memorias$.next(response.items);
-            }
-          );
+          this.comiteService.findMemoriasComitePeticionEvaluacion(
+            this.formGroup.controls.comite.value.id, this.datosGeneralesFragment.idPeticionEvaluacion).subscribe(
+              (response) => {
+                this.memorias$.next(response.items);
+              }
+            );
         } else {
           this.memorias$.next([]);
         }

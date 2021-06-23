@@ -20,7 +20,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   public personasResponsable$: BehaviorSubject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
   public mostrarCodOrgano = false;
 
-  private idPeticionEvaluacion: number;
+  public idPeticionEvaluacion: number;
 
   constructor(
     private fb: FormBuilder, readonly: boolean, key: number, private service: MemoriaService,
