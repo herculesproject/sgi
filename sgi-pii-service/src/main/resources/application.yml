@@ -15,6 +15,11 @@ spring:
         jdbc:
           # see: https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
           time_zone: UTC
+      javax:
+        persistence:
+          # Disable Hibernate validation in JPA
+          validation:
+            mode: "none"
     # Disable Open Session In View
     open-in-view: false
   liquibase:
