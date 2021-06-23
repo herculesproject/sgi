@@ -71,6 +71,179 @@
     </faultSequence>
   </resource>
 
+  <!-- documentos -->
+  <resource methods="GET" uri-template="/documentos/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/documentos/{id}/archivo">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <!-- ejecucion economica -->
+  <resource methods="GET" url-mapping="/ejecucion-economica">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/ejecucion-economica/columnas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/ejecucion-economica/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <!-- gastos -->
+  <resource methods="GET" url-mapping="/gastos">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/gastos/columnas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/gastos/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="PATCH" uri-template="/gastos/{id}/validar">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="PATCH" uri-template="/gastos/{id}/rechazar">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
   <!-- proyectos -->
   <resource methods="GET" url-mapping="/proyectos">
     <inSequence>
