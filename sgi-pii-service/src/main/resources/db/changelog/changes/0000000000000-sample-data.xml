@@ -1,2 +1,61 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"></databaseChangeLog>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet context="dev" author="master" id="0000000000000-resultado_informe_patentabilidad">
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado1-Activo" />
+      <column name="descripcion" value="Veniam nostrud laboris laborum sit aute deserunt irure Lorem cillum nostrud aliquip." />
+      <column name="activo" value="true" />
+    </insert> 
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado2-Inactivo" />
+      <column name="descripcion" value="Aliquip irure aliqua cupidatat eu reprehenderit." />
+      <column name="activo" value="false" />
+    </insert>  
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado3-Activo" />
+      <column name="descripcion" value="Non do consectetur pariatur deserunt aliquip aliquip est nostrud ad amet consequat sit." />
+      <column name="activo" value="true" />
+    </insert>   
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado4-Inactivo" />
+      <column name="descripcion" value="Irure voluptate incididunt sint enim dolor." />
+      <column name="activo" value="false" />
+    </insert>  
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado5-Activo" />
+      <column name="descripcion" value="Adipisicing mollit mollit laborum id in amet dolore excepteur." />
+      <column name="activo" value="true" />
+    </insert> 
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado6-Inactivo" />
+      <column name="descripcion" value="Deserunt anim mollit magna veniam." />
+      <column name="activo" value="false" />
+    </insert>  
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado7-Activo" />
+      <column name="descripcion" value="Consequat veniam ad incididunt elit mollit ex ex et do." />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado8-Inactivo" />
+      <column name="descripcion" value="Sunt proident dolor consequat officia minim velit in anim aliquip consectetur." />
+      <column name="activo" value="false" />
+    </insert> 
+    <insert tableName="resultado_informe_patentabilidad">
+      <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
+      <column name="nombre" value="Resultado9-Activo" />
+      <column name="descripcion" value="Eiusmod enim eu non id veniam ullamco enim ex ea quis commodo dolor labore ut." />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>
