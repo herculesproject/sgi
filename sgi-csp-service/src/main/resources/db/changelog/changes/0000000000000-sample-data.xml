@@ -2584,7 +2584,7 @@ industries" />
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="1" />
-      <column name="codigo_economico_ref" value="1" />
+      <column name="codigo_economico_ref" value="IB" />
       <column name="fecha_inicio" value="2020-09-30T22:00:00Z" />
       <column name="fecha_fin" value="2021-12-31T22:59:59Z" />
       <column name="observaciones" value="null" />
@@ -2592,7 +2592,7 @@ industries" />
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="2" />
-      <column name="codigo_economico_ref" value="3" />
+      <column name="codigo_economico_ref" value="MA" />
       <column name="fecha_inicio" value="2020-11-30T23:00:00Z" />
       <column name="fecha_fin" value="2021-12-01T22:59:59Z" />
       <column name="observaciones" value="null" />
@@ -2600,7 +2600,7 @@ industries" />
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="5" />
-      <column name="codigo_economico_ref" value="1" />
+      <column name="codigo_economico_ref" value="IB" />
       <column name="fecha_inicio" value="2020-09-30T22:00:00Z" />
       <column name="fecha_fin" value="2020-11-01T22:59:59Z" />
       <column name="observaciones" value="null" />
@@ -2608,7 +2608,7 @@ industries" />
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="4" />
-      <column name="codigo_economico_ref" value="2" />
+      <column name="codigo_economico_ref" value="DA" />
       <column name="fecha_inicio" value="2020-10-30T22:00:00Z" />
       <column name="fecha_fin" value="2020-12-01T22:59:59Z" />
       <column name="observaciones" value="null" />
@@ -2616,7 +2616,7 @@ industries" />
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="6" />
-      <column name="codigo_economico_ref" value="4" />
+      <column name="codigo_economico_ref" value="JS" />
       <column name="fecha_inicio" value="2020-11-30T23:00:00Z" />
       <column name="fecha_fin" value="2021-12-01T22:59:59Z" />
       <column name="observaciones" value="null" />
