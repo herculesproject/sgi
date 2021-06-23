@@ -8,6 +8,4 @@ public enum ClasificacionCVN {
   COMPETITIVOS,
   /** Contratos, Convenios, Proyectos no competitivos */
   NO_COMPETITIVOS,
-  /** Estancias */
-  ESTANCIAS;
 }
