@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de Unidad.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UnidadIT extends BaseIT {
+class UnidadIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/unidades";
@@ -43,7 +43,7 @@ public class UnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsUnidad() throws Exception {
+  void findById_ReturnsUnidad() throws Exception {
     Long idUnidad = 1L;
 
     final ResponseEntity<Unidad> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -56,13 +56,13 @@ public class UnidadIT extends BaseIT {
     Assertions.assertThat(unidad.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(unidad.getAcronimo()).as("getAcronimo()").isEqualTo("acronimo-1");
     Assertions.assertThat(unidad.getDescripcion()).as("descripcion-001").isEqualTo(unidad.getDescripcion());
-    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -95,7 +95,7 @@ public class UnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
+  void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");

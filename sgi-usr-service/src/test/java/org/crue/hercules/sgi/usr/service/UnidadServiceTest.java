@@ -27,7 +27,7 @@ import org.springframework.security.test.context.support.WithMockUser;
  * UnidadServiceTest
  */
 
-public class UnidadServiceTest extends BaseServiceTest {
+class UnidadServiceTest extends BaseServiceTest {
 
   @Mock
   private UnidadRepository repository;
@@ -35,12 +35,12 @@ public class UnidadServiceTest extends BaseServiceTest {
   private UnidadService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new UnidadServiceImpl(repository);
   }
 
   @Test
-  public void findAll_ReturnsPage() {
+  void findAll_ReturnsPage() {
     // given: Una lista con 37 Unidad
     List<Unidad> unidades = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -80,7 +80,7 @@ public class UnidadServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsUnidad() {
+  void findById_ReturnsUnidad() {
     // given: Un Unidad con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockUnidad(idBuscado)));
@@ -92,11 +92,11 @@ public class UnidadServiceTest extends BaseServiceTest {
     Assertions.assertThat(unidad).as("isNotNull()").isNotNull();
     Assertions.assertThat(unidad.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(unidad.getNombre()).as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isTrue();
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsUnidadNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsUnidadNotFoundException() throws Exception {
     // given: Ningun Unidad con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -108,7 +108,7 @@ public class UnidadServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void findAllTodosRestringidos_ReturnsPage() {
+  void findAllTodosRestringidos_ReturnsPage() {
     // given: Una lista con 37 Unidad
     List<Unidad> unidades = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {

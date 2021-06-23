@@ -12,13 +12,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  * UnidadRepositoryTest
  */
 @DataJpaTest
-public class UnidadRepositoryTest extends BaseRepositoryTest {
+class UnidadRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private UnidadRepository repository;
 
   @Test
-  public void findByNombre_ReturnsUnidad() throws Exception {
+  void findByNombre_ReturnsUnidad() throws Exception {
     // given: 2 Unidad de los que 1 coincide con el nombre buscado
     Unidad unidad1 = new Unidad(null, "nombre-1", "acronimo-1", "descripcion-1", true);
     entityManager.persistAndFlush(unidad1);
@@ -40,7 +40,7 @@ public class UnidadRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findByNombreNoExiste_ReturnsNull() throws Exception {
+  void findByNombreNoExiste_ReturnsNull() throws Exception {
     // given: 2 Unidad que no coinciden con el nombre buscado
     Unidad unidad1 = new Unidad(null, "nombre-1", "acronimo-1", "descripcion-1", true);
     entityManager.persistAndFlush(unidad1);
@@ -54,11 +54,11 @@ public class UnidadRepositoryTest extends BaseRepositoryTest {
     Optional<Unidad> unidadEncontrado = repository.findByNombre(nombreBuscado);
 
     // then: No hay ningun Unidad con el nombre buscado
-    Assertions.assertThat(unidadEncontrado).isEqualTo(Optional.empty());
+    Assertions.assertThat(unidadEncontrado).isEmpty();
   }
 
   @Test
-  public void findByAcronimo_ReturnsUnidad() throws Exception {
+  void findByAcronimo_ReturnsUnidad() throws Exception {
     // given: 2 Unidad de los que 1 coincide con el acronimo buscado
     Unidad unidad1 = new Unidad(null, "nombre-1", "acronimo-1", "descripcion-1", true);
     entityManager.persistAndFlush(unidad1);
@@ -80,7 +80,7 @@ public class UnidadRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findByAcronimoNoExiste_ReturnsNull() throws Exception {
+  void findByAcronimoNoExiste_ReturnsNull() throws Exception {
     // given: 2 Unidad que no coinciden con el acronimo buscado
     Unidad unidad1 = new Unidad(null, "nombre-1", "acronimo-1", "descripcion-1", true);
     entityManager.persistAndFlush(unidad1);
@@ -94,6 +94,6 @@ public class UnidadRepositoryTest extends BaseRepositoryTest {
     Optional<Unidad> unidadEncontrado = repository.findByNombre(acronimoBuscado);
 
     // then: No hay ningun Unidad con el acronimo buscado
-    Assertions.assertThat(unidadEncontrado).isEqualTo(Optional.empty());
+    Assertions.assertThat(unidadEncontrado).isEmpty();
   }
 }

@@ -18,6 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @Import({ ValidationAutoConfiguration.class, MessageSourceAutoConfiguration.class,
     ApplicationContextSupportAutoConfiguration.class })
-public class BaseServiceTest {
+abstract class BaseServiceTest {
 
 }

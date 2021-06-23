@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * UnidadControllerTest
  */
 @WebMvcTest(UnidadController.class)
-public class UnidadControllerTest extends BaseControllerTest {
+class UnidadControllerTest extends BaseControllerTest {
 
   @MockBean
   private UnidadService service;
@@ -42,7 +42,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V", "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E",
       "CSP-PRO-B", "CSP-PRO-R", "CSP-ME-C", "CSP-ME-E" })
-  public void findAll_ReturnsPage() throws Exception {
+  void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 Unidad
     List<Unidad> unidades = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -92,7 +92,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V", "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E",
       "CSP-PRO-B", "CSP-PRO-R", "CSP-ME-C", "CSP-ME-E" })
-  public void findAll_EmptyList_Returns204() throws Exception {
+  void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Unidad
     List<Unidad> unidades = new ArrayList<>();
     Integer page = 0;
@@ -115,7 +115,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-INV-V", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V",
       "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E" })
-  public void findById_WithExistingId_ReturnsUnidad() throws Exception {
+  void findById_WithExistingId_ReturnsUnidad() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
       return generarMockUnidad(invocation.getArgument(0));
@@ -135,7 +135,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-INV-V", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V",
       "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E" })
-  public void findById_WithNoExistingId_Returns404() throws Exception {
+  void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new UnidadNotFoundException(1L);
@@ -153,7 +153,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-C", "CSP-CON-E", "CSP-SOL-C", "CSP-SOL-E",
       "CSP-SOL-V", "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E" })
-  public void findAllTodosRestringidos_ReturnsPage() throws Exception {
+  void findAllTodosRestringidos_ReturnsPage() throws Exception {
     // given: Una lista con 37 Unidad
     List<Unidad> unidades = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -204,7 +204,7 @@ public class UnidadControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-C", "CSP-CON-E", "CSP-SOL-C", "CSP-SOL-E",
       "CSP-SOL-V", "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E" })
-  public void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
+  void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Unidad
     List<Unidad> unidades = new ArrayList<>();
     Integer page = 0;

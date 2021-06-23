@@ -7,15 +7,17 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public class UnidadSpecifications {
+
+  private UnidadSpecifications() {
+  }
+
   /**
    * {@link Unidad} activos.
    * 
    * @return specification para obtener los {@link Unidad} activos.
    */
   public static Specification<Unidad> activos() {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(Unidad_.activo), Boolean.TRUE);
-    };
+    return (root, query, cb) -> cb.equal(root.get(Unidad_.activo), Boolean.TRUE);
   }
 
   /**
@@ -26,9 +28,7 @@ public class UnidadSpecifications {
    *         encuentre entre los recibidos.
    */
   public static Specification<Unidad> acronimosIn(List<String> acronimos) {
-    return (root, query, cb) -> {
-      return root.get(Unidad_.id).in(acronimos);
-    };
+    return (root, query, cb) -> root.get(Unidad_.id).in(acronimos);
   }
 
 }

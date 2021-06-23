@@ -44,7 +44,7 @@ public class UnidadController {
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R', 'CSP-ME-C', 'CSP-ME-E')")
-  ResponseEntity<Page<Unidad>> findAll(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<Unidad>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
     Page<Unidad> page = service.findAll(query, paging);
@@ -67,7 +67,7 @@ public class UnidadController {
    */
   @GetMapping("/restringidos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-C','CSP-CON-E', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
-  ResponseEntity<Page<Unidad>> findAllTodosRestringidos(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<Unidad>> findAllTodosRestringidos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodosRestringidos(String query, Pageable paging, Authentication atuhentication) - start");
 
@@ -90,7 +90,7 @@ public class UnidadController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-ME-E')")
-  Unidad findById(@PathVariable Long id) {
+  public Unidad findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     Unidad returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
