@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { InvencionRoutingModule } from './invencion-routing.module';
+import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [InvencionListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
