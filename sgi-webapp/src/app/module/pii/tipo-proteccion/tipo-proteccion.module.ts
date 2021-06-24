@@ -6,9 +6,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { TipoProteccionRoutingModule } from './tipo-proteccion-routing.module';
+import { PiiTipoProteccionListadoComponent } from './pii-tipo-proteccion-listado/pii-tipo-proteccion-listado.component';
+import { PiiTipoProteccionModalComponent } from './pii-tipo-proteccion-modal/pii-tipo-proteccion-modal.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [PiiTipoProteccionListadoComponent, PiiTipoProteccionModalComponent],
   imports: [
     CommonModule,
     SharedModule,
