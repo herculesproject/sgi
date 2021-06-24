@@ -441,7 +441,7 @@ public class SolicitudService {
     // Se cambia el estado de la solicitud
     // Actualiza el estado actual de la solicitud con el nuevo estado
     estadoSolicitud.setFechaEstado(Instant.now());
-    estadoSolicitudRepository.save(estadoSolicitud);
+    estadoSolicitud = estadoSolicitudRepository.save(estadoSolicitud);
     solicitud.setEstado(estadoSolicitud);
 
     // Cuando la solicitud cambie de estado (de cualquier estado a otro que no sea
@@ -497,7 +497,7 @@ public class SolicitudService {
               PeticionEvaluacion peticionEvaluacion = responsePeticionEvaluacion.getBody();
               if (peticionEvaluacion != null) {
                 solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
-                solicitudProyectoRepository.save(solicitudProyecto);
+                solicitudProyecto = solicitudProyectoRepository.save(solicitudProyecto);
               } else {
                 // throw exception
                 throw new GetPeticionEvaluacionException();
