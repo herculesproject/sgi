@@ -53,4 +53,13 @@ public interface ProyectoProyectoSgeService {
    */
   Page<ProyectoProyectoSge> findAllByProyecto(Long proyectoId, String query, Pageable pageable);
 
+  /**
+   * Obtiene todos los {@link ProyectoProyectoSge}.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ProyectoProyectoSge} paginadas.
+   */
+  Page<ProyectoProyectoSge> findAll(String query, Pageable pageable);
+
 }

@@ -1,18 +1,23 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -112,11 +117,40 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   @Override
   public Page<ProyectoProyectoSge> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
-    Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId)
-        .and(SgiRSQLJPASupport.toSpecification(query));
+    Specification<ProyectoProyectoSge> specs = SgiRSQLJPASupport
+        .toSpecification(query, ProyectoProyectoSgePredicateResolver.getInstance())
+        .and(ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId));
 
     Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link ProyectoProyectoSge}.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ProyectoProyectoSge} paginadas.
+   */
+  @Override
+  public Page<ProyectoProyectoSge> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<ProyectoProyectoSge> specs = SgiRSQLJPASupport.toSpecification(query,
+        ProyectoProyectoSgePredicateResolver.getInstance());
+
+    // No tiene acceso a todos los UO
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-EJEC-V", "CSP-EJEC-E" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<ProyectoProyectoSge> specByUnidadGestionRefIn = ProyectoProyectoSgeSpecifications
+          .unidadGestionRefIn(unidadesGestion);
+      specs = specs.and(specByUnidadGestionRefIn);
+    }
+
+    Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
