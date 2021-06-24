@@ -1,5 +1,5 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of, Subscription, throwError } from 'rxjs';
 import { filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -630,6 +630,12 @@ export class Group implements IGroup {
       }
       return Object.keys(form.controls).find((key) => this.hasControlErrors(form.get(key))) ? true : false;
     }
+    if (form instanceof FormArray) {
+      if (form.errors) {
+        return true;
+      }
+      return form.controls.some(control => this.hasControlErrors(control));
+    }
   }
 
   private isControlValid(form: AbstractControl): boolean {
@@ -642,6 +648,12 @@ export class Group implements IGroup {
         return false;
       }
       return Object.keys(form.controls).find((key) => !this.isControlValid(form.get(key))) ? false : true;
+    }
+    if (form instanceof FormArray) {
+      if (!form.valid) {
+        return false;
+      }
+      return !form.controls.some(control => !this.isControlValid(control));
     }
   }
 

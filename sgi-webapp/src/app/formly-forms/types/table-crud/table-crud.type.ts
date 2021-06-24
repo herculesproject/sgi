@@ -120,6 +120,7 @@ export class TableCRUDTypeComponent extends FieldArrayType implements OnInit {
     const data: TableCRUDModalData = {
       fieldGroup: [...this.field.fieldArray.fieldGroup],
       formModel: editItemModel,
+      validateEmptyRow: this.to.validateEmptyRow || true,
       entity: {
         name: this.to.entity,
         gender: this.to.gender,

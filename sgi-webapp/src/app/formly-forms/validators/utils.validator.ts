@@ -1,4 +1,4 @@
-import { FormGroup, ValidationErrors } from '@angular/forms';
+import { FormArray, FormGroup, ValidationErrors } from '@angular/forms';
 
 export function requiredChecked(formGroup: FormGroup): ValidationErrors {
   let checked = 0;
@@ -14,4 +14,8 @@ export function requiredChecked(formGroup: FormGroup): ValidationErrors {
   return {
     required: true,
   };
+}
+
+export function requiredRowTable(formArray: FormArray): ValidationErrors {
+  return !formArray.value || formArray.length === 0 ? { oneRowRequired: true } : null;
 }

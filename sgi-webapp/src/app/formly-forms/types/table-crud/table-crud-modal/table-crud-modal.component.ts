@@ -3,13 +3,16 @@ import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ONE_ELEMENT_REQUIRED = marker('error.table-crud.required');
 
 export interface TableCRUDModalData {
+  validateEmptyRow?: boolean;
   fieldGroup: FormlyFieldConfig[];
   formModel: any;
   entity: {
@@ -34,6 +37,7 @@ export class TableCRUDModalComponent implements OnInit {
   constructor(
     public readonly matDialogRef: MatDialogRef<TableCRUDModalComponent>,
     private readonly translate: TranslateService,
+    protected readonly snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public tableCRUDModalData: TableCRUDModalData,
   ) { }
 
@@ -52,13 +56,26 @@ export class TableCRUDModalComponent implements OnInit {
     this.gender = this.tableCRUDModalData?.entity?.gender;
   }
 
+  private isEmpyRow(): boolean {
+    let checked = 0;
+    Object.keys(this.formGroup.controls).forEach((key, i) => {
+      const control = this.formGroup.controls[key];
+      if (!control.disabled && control.value && control.value !== '') {
+        checked++;
+      }
+    });
+
+    return checked === 0;
+  }
+
   /**
    * Checks the formGroup, returns the entered data and closes the modal
    */
   saveOrUpdate(): void {
     this.formGroup.markAllAsTouched();
-
-    if (this.formGroup.valid) {
+    if (this.tableCRUDModalData.validateEmptyRow && this.isEmpyRow()) {
+      this.snackBarService.showError(MSG_ONE_ELEMENT_REQUIRED);
+    } else if (this.formGroup.valid) {
       this.matDialogRef.close(this.model);
     }
   }
