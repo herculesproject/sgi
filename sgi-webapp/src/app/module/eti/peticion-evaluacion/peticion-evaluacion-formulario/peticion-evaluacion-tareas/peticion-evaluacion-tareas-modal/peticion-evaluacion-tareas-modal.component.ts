@@ -21,11 +21,9 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM = marker('error.form-group');
-const MSG_ERROR = marker('error.load');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
 const BTN_ADD = marker('btn.add');
@@ -47,30 +45,15 @@ export interface PeticionEvaluacionTareasModalComponentData {
   templateUrl: './peticion-evaluacion-tareas-modal.component.html',
   styleUrls: ['./peticion-evaluacion-tareas-modal.component.scss']
 })
+
 export class PeticionEvaluacionTareasModalComponent extends
   BaseModalComponent<PeticionEvaluacionTareasModalComponentData, PeticionEvaluacionTareasModalComponent> implements OnInit, OnDestroy {
 
   fxLayoutProperties: FxLayoutProperties;
 
-  tareaSuscripcion: Subscription;
-
-  formacionListado: FormacionEspecifica[];
-  formacionesSubscription: Subscription;
-  filteredFormaciones: Observable<FormacionEspecifica[]>;
-
-  memoriaListado: IMemoriaPeticionEvaluacion[];
-  memoriasSubscription: Subscription;
-  filteredMemorias: Observable<IMemoriaPeticionEvaluacion[]>;
-
-  equipoTrabajoListado: IEquipoTrabajo[];
-  equiposTrabajoSubscription: Subscription;
-  filteredEquiposTrabajo: Observable<IEquipoTrabajo[]>;
-
-  tipoTareaListado: TipoTarea[];
-  tipoTareasSubscription: Subscription;
-  filteredTipoTareas: Observable<TipoTarea[]>;
-
-  personaServiceOneSubscritpion: Subscription;
+  formaciones$: Subject<FormacionEspecifica[]> = new BehaviorSubject<FormacionEspecifica[]>([]);
+  personas$: Subject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
+  tipoTareas$: Subject<TipoTarea[]> = new BehaviorSubject<TipoTarea[]>([]);
 
   mostrarOrganismo: boolean;
   mostrarOrganismo$ = new BehaviorSubject(false);
@@ -126,11 +109,10 @@ export class PeticionEvaluacionTareasModalComponent extends
     this.tareaYformacionTextoSubscription = this.tareaYformacionTexto$.subscribe(mostrar => {
       this.tareaYformacionTexto = mostrar;
     });
-    this.onClickMemoria(this.data.tarea?.memoria);
+    this.onChangeMemoria(this.data.tarea?.memoria);
     this.loadFormaciones();
-    this.loadMemorias();
-    this.loadEquiposTrabajo();
     this.loadTipoTareas();
+    this.loadDatosUsuario(this.data.equiposTrabajo);
   }
 
   private setupI18N(): void {
@@ -196,45 +178,14 @@ export class PeticionEvaluacionTareasModalComponent extends
   }
 
   /**
-   * Devuelve el nombre de una formación específica.
-   * @param formacion formación específica
-   * returns nombre de la formación específica
-   */
-  getFormacion(formacion: FormacionEspecifica): string {
-    return formacion?.nombre;
-  }
-
-  /**
    * Recupera un listado de las formaciones escíficas que hay en el sistema.
    */
-  loadFormaciones(): void {
-    this.formacionesSubscription = this.formacionService.findAll().subscribe(
+  private loadFormaciones(): void {
+    this.subscriptions.push(this.formacionService.findAll().subscribe(
       (response) => {
-        this.formacionListado = response.items;
-
-        this.filteredFormaciones = this.formGroup.controls.formacionEspecifica.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filterFormacion(value))
-          );
-      });
-  }
-
-  /**
-   * Filtro de campo autocompletable formación específica
-   * @param value value a filtrar (string o nombre formación).
-   * @returns lista de formaciones filtradas.
-   */
-  private filterFormacion(value: string | FormacionEspecifica): FormacionEspecifica[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.nombre.toLowerCase();
-    }
-
-    return this.formacionListado.filter
-      (formacion => formacion.nombre.toLowerCase().includes(filterValue));
+        this.formaciones$.next(response.items);
+      }
+    ));
   }
 
   /**
@@ -242,21 +193,8 @@ export class PeticionEvaluacionTareasModalComponent extends
    * @param memoria memoria
    * returns título de la memoria
    */
-  getMemoria(memoria: IMemoria): string {
+  displayerMemoria(memoria: IMemoria): string {
     return memoria?.numReferencia;
-  }
-
-  /**
-   * Recupera un listado de las memorias que hay en el sistema.
-   */
-  loadMemorias(): void {
-    this.memoriaListado = this.data.memorias;
-
-    this.filteredMemorias = this.formGroup.controls.memoria.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this.filterMemoria(value))
-      );
   }
 
   /**
@@ -264,7 +202,7 @@ export class PeticionEvaluacionTareasModalComponent extends
    * @param memoria memoria
    * muestra y oculta los campos oportunos
    */
-  onClickMemoria(memoria: IMemoria): void {
+  private onChangeMemoria(memoria: IMemoria): void {
     if (memoria?.comite?.comite === 'CEIAB' || memoria?.comite?.comite === 'CEEA') {
       this.mostrarOrganismoYanio$.next(true);
       this.formGroup.controls.organismo.setValidators(Validators.required);
@@ -298,95 +236,23 @@ export class PeticionEvaluacionTareasModalComponent extends
   }
 
   /**
-   * Filtro de campo autocompletable de memoria
-   * @param value value a filtrar (string o título memoria).
-   * @returns lista de memorias filtradas.
-   */
-  private filterMemoria(value: string | IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacion[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.numReferencia.toLowerCase();
-    }
-
-    return this.memoriaListado?.filter
-      (memoria => memoria.numReferencia.toLowerCase().includes(filterValue));
-  }
-
-  /**
    * Devuelve la persona del equipo de trabajo
-   * @param equipoTrabajo el equipo de trabajo
+   * @param persona la entidad IPersona
    * returns persona del equipo de trabajo
    */
-  getEquipoTrabajo(equipoTrabajo: IEquipoTrabajo): string {
-    if (typeof equipoTrabajo === 'string') {
-      return null;
-    }
-    return equipoTrabajo?.persona.nombre + ' ' + equipoTrabajo?.persona.apellidos;
-  }
-
-  /**
-   * Recupera un listado de los equipo de trabajo que hay en el sistema.
-   */
-  loadEquiposTrabajo(): void {
-    this.equipoTrabajoListado = this.data.equiposTrabajo;
-
-    this.filteredEquiposTrabajo = this.formGroup.controls.equipoTrabajo.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this.filterEquipoTrabajo(value))
-      );
-  }
-
-  onClickEquipoTrabajo(): void {
-    this.filteredEquiposTrabajo = this.formGroup.controls.equipoTrabajo.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this.filterEquipoTrabajo(value))
-      );
-  }
-
-  /**
-   * Devuelve el nombre de un tipo de tarea
-   * @param tipoTarea el tipo de tarea
-   * returns nombre del tipo de tarea
-   */
-  getTipoTarea(tipoTarea: TipoTarea): string {
-    return tipoTarea?.nombre;
+  displayerPersonaEquipoTrabajo(persona: IPersona): string {
+    return persona && persona.id ?
+      `${persona?.nombre} ${persona?.apellidos} (${persona?.numeroDocumento})` : null;
   }
 
   /**
    * Recupera un listado de los tipos de tareas que hay en el sistema.
    */
-  loadTipoTareas(): void {
-    this.tipoTareasSubscription = this.tipoTareaService.findAll().subscribe(
+  private loadTipoTareas(): void {
+    this.subscriptions.push(this.tipoTareaService.findAll().subscribe(
       (response) => {
-        this.tipoTareaListado = response.items;
-
-        this.filteredTipoTareas = this.formGroup.controls.tipoTarea.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filterTipoTarea(value))
-          );
-      });
-  }
-
-  /**
-   * Filtro de campo autocompletable tipo tarea
-   * @param value value a filtrar (string o nombre tipo de la tarea).
-   * @returns lista de tipo tareas filtradas.
-   */
-  private filterTipoTarea(value: string | TipoTarea): TipoTarea[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.nombre.toLowerCase();
-    }
-
-    return this.tipoTareaListado.filter
-      (tipoTarea => tipoTarea.nombre.toLowerCase().includes(filterValue));
+        this.tipoTareas$.next(response.items);
+      }));
   }
 
   /**
@@ -394,40 +260,18 @@ export class PeticionEvaluacionTareasModalComponent extends
    * @param equiposTrabajo listado de equipos de trabajo
    * returns los equipos de trabajo con los datos de persona
    */
-  loadDatosUsuario(equiposTrabajo: IEquipoTrabajo[]) {
-    this.equipoTrabajoListado = [];
-    equiposTrabajo.forEach(equipoTrabajo => {
-      this.personaServiceOneSubscritpion = this.personaService.findById(equipoTrabajo.persona?.id)
-        .subscribe(
-          (persona: IPersona) => {
-            equipoTrabajo.persona = persona;
-            this.equipoTrabajoListado.push(equipoTrabajo);
-          },
-          (error) => {
-            this.logger.error(error);
-            this.snackBarService.showError(MSG_ERROR);
-          }
-        );
-    });
-  }
+  private loadDatosUsuario(equiposTrabajo: IEquipoTrabajo[]) {
+    const personaIds = new Set<string>();
 
-  /**
-   * Filtro de campo autocompletable del equipo de trabajo
-   * @param value value a filtrar (string o persona equipo de trabajo).
-   * @returns lista de memorias filtradas.
-   */
-  private filterEquipoTrabajo(value: string | IEquipoTrabajo): IEquipoTrabajo[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.persona.nombre.toLowerCase()
-        + ' ' + value.persona.apellidos.toLowerCase();
+    if (equiposTrabajo) {
+      equiposTrabajo.forEach((equipoTrabajo: IEquipoTrabajo) => {
+        personaIds.add(equipoTrabajo?.persona?.id);
+      });
+
+      this.subscriptions.push(this.personaService.findAllByIdIn([...personaIds]).subscribe((result) => {
+        this.personas$.next(result.items);
+      }));
     }
-
-    return this.equipoTrabajoListado?.filter
-      (equipoTrabajo => (equipoTrabajo.persona.nombre.toLowerCase()
-        + ' ' + equipoTrabajo.persona.apellidos.toLowerCase()).includes(filterValue));
   }
 
   protected getDatosForm(): PeticionEvaluacionTareasModalComponentData {
@@ -467,6 +311,10 @@ export class PeticionEvaluacionTareasModalComponent extends
       formacion: new FormControl(this.data.tarea?.formacion),
       memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
       equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' : this.data.tarea?.equipoTrabajo, [Validators.required])
+    });
+
+    formGroup.controls.memoria.valueChanges.subscribe((memoria) => {
+      this.onChangeMemoria(memoria);
     });
 
     return formGroup;
