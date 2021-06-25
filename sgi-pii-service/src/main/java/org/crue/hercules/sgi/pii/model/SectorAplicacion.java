@@ -7,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.pii.validation.EntidadActiva;
 import org.crue.hercules.sgi.pii.validation.UniqueNombreSectorAplicacionActiva;
@@ -43,15 +41,11 @@ public class SectorAplicacion extends BaseActivableEntity {
   /** Nombre */
   /** Si tiene padre equivale a abreviatura requerido size 5 y único */
   @Column(name = "nombre", length = NOMBRE_LENGTH, nullable = false)
-  @NotEmpty
-  @Size(max = NOMBRE_LENGTH)
   private String nombre;
 
   /** Descripción */
   /** Si tiene padre equivale a nombre requerido size 50 y único */
   @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = false)
-  @NotEmpty
-  @Size(max = DESCRIPCION_LENGTH)
   private String descripcion;
 
   /**

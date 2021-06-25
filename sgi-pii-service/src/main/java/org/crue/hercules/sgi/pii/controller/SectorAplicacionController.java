@@ -63,7 +63,7 @@ public class SectorAplicacionController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthority('PII-SEA-V', 'PII-SEA-C', 'PII-SEA-E', 'PII-SEA-B', 'PII-SEA-R')")
+  @PreAuthorize("hasAnyAuthority('PII-SEA-V', 'PII-SEA-C', 'PII-SEA-E', 'PII-SEA-B', 'PII-SEA-R', 'PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R')")
   ResponseEntity<Page<SectorAplicacionOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
