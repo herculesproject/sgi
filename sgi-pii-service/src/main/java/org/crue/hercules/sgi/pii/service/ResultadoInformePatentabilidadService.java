@@ -4,8 +4,8 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.Validator;
-
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -50,7 +49,9 @@ public class ResultadoInformePatentabilidadService {
    *                                       a guardar.
    * @return Entidad {@link ResultadoInformePatentabilidad} persistida.
    */
-  public ResultadoInformePatentabilidad create(ResultadoInformePatentabilidad resultadoInformePatentabilidad) {
+  @Transactional
+  @Validated(ResultadoInformePatentabilidad.OnCrear.class)
+  public ResultadoInformePatentabilidad create(@Valid ResultadoInformePatentabilidad resultadoInformePatentabilidad) {
     log.debug("create(ResultadoInformePatentabilidad resultadoInformePatentabilidad) - start");
 
     Assert.isNull(resultadoInformePatentabilidad.getId(),
@@ -89,8 +90,8 @@ public class ResultadoInformePatentabilidadService {
    * @return Entidad {@link ResultadoInformePatentabilidad} persistida.
    */
   @Transactional
-  @Validated({ ResultadoInformePatentabilidad.OnActualizar.class })
-  public ResultadoInformePatentabilidad update(ResultadoInformePatentabilidad resultadoInformePatentabilidad) {
+  @Validated(ResultadoInformePatentabilidad.OnActualizar.class)
+  public ResultadoInformePatentabilidad update(@Valid ResultadoInformePatentabilidad resultadoInformePatentabilidad) {
     log.debug("update(ResultadoInformePatentabilidad resultadoInformePatentabilidad) - start");
 
     Assert.notNull(resultadoInformePatentabilidad.getId(),
@@ -178,6 +179,7 @@ public class ResultadoInformePatentabilidadService {
    * @return la entidad {@link ResultadoInformePatentabilidad} persistida.
    */
   @Transactional
+  @Validated({ ResultadoInformePatentabilidad.OnActivar.class })
   public ResultadoInformePatentabilidad enable(Long id) {
     log.debug("enable(Long id) - start");
 
