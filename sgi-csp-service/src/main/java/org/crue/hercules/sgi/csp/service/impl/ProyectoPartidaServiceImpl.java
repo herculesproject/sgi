@@ -75,9 +75,7 @@ public class ProyectoPartidaServiceImpl implements ProyectoPartidaService {
       proyectoPartida.setCodigo(proyectoPartidaActualizar.getCodigo());
       proyectoPartida.setDescripcion(proyectoPartidaActualizar.getDescripcion());
       proyectoPartida.setTipoPartida(proyectoPartidaActualizar.getTipoPartida());
-      // Si se modifica una partida asociada a una convocatoria al modificarla se
-      // desvinculada de la partida origen de la convocatoria
-      proyectoPartida.setConvocatoriaPartidaId(null);
+      proyectoPartida.setConvocatoriaPartidaId(proyectoPartidaActualizar.getConvocatoriaPartidaId());
 
       ProyectoPartida returnValue = repository.save(proyectoPartida);
 
