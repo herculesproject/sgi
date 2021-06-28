@@ -1167,6 +1167,7 @@
   "msg.csp.proyecto-prorroga.tiempo-importe.delete": "¿Desea eliminar la prórroga del proyecto? Recuerde que debe revisar la fecha de fin del proyecto así como el presupuesto en caso de que se vean afectados por la eliminación de esta prórroga",
   "msg.csp.proyecto-prorroga.tiempo.delete": "¿Desea eliminar la prórroga del proyecto? Recuerde que debe revisar la fecha de fin del proyecto en caso de que se vea afectada por la eliminación de esta prórroga",
   "msg.csp.proyecto-socios.relations.delete": "Existe información de detalle vinculada a este socio, ¿desea continuar?",
+  "msg.csp.proyecto.value-convocatoria": "El valor no coincide con el de la convocatoria. En la convocatoria tiene el valor {valueConvocatoria}",
   "msg.csp.proyecto.modelo-ejecucion.vinculaciones": "No se puede modificar el campo porque tiene dependencias en fases, hitos o documentos. Si desea modificar el valor del campo tendrá que ir primero a eliminar dichos registros",
   "msg.csp.reactivate": "Va a modificar el elemento, pasando a estar activo. ¿Desea continuar?",
   "msg.csp.solicitud-desglose-presupuesto.info": "En caso de que no hayan sido introducidos los detalles del presupuesto y/o socios, puede introducir manualmente los importes que desee. Éstos prevalecerán sobre los calculados.",

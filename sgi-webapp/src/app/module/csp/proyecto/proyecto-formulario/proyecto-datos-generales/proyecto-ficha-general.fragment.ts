@@ -5,6 +5,8 @@ import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -39,10 +41,18 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   mostrarSolicitud = false;
   solicitudProyecto: ISolicitudProyecto;
   private ultimaProrroga: IProyectoProrroga;
+  finalidadConvocatoria: ITipoFinalidad;
+  ambitoGeograficoConvocatoria: ITipoAmbitoGeografico;
+  unidadGestionConvocatoria: IUnidadGestion;
+  modeloEjecucionConvocatoria: IModeloEjecucion;
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  finalidadConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  ambitoGeograficoConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  unidadGestionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  modeloEjecucionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -189,6 +199,52 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.colaborativo$.next(value);
       })
     );
+
+    this.subscriptions.push(
+      form.controls.finalidad.valueChanges.subscribe(
+        (value) => {
+          if (form.controls.convocatoria.value) {
+            this.finalidadConvocatoria$.next(form.controls.convocatoria.value.finalidad?.id !== value?.id);
+          }
+        }
+      )
+    );
+
+    this.subscriptions.push(
+      form.controls.ambitoGeografico.valueChanges.subscribe(
+        (value) => {
+          if (form.controls.ambitoGeografico.value) {
+            this.ambitoGeograficoConvocatoria$.next(form.controls.convocatoria.value.ambitoGeografico?.id !== value?.id);
+          }
+        }
+      )
+    );
+
+    this.subscriptions.push(
+      form.controls.unidadGestion.valueChanges.pipe(
+        switchMap((value) => {
+          if (form.controls.convocatoria?.value !== '' && value !== '') {
+            this.unidadGestionConvocatoria$.next(form.controls.convocatoria.value.unidadGestion?.id !== value?.id);
+
+            return this.unidadGestionService.findById(value.id);
+          }
+          return of(null);
+        }
+        ))
+        .subscribe((unidadGestion) => {
+          this.unidadGestionConvocatoria = unidadGestion;
+        }));
+
+    this.subscriptions.push(
+      form.controls.modeloEjecucion.valueChanges.subscribe(
+        (value) => {
+          if (form.controls.convocatoria.value.modeloEjecucion) {
+            this.modeloEjecucionConvocatoria$.next(form.controls.convocatoria.value.modeloEjecucion?.id !== value?.id);
+          }
+        }
+      )
+    );
+
     if (!this.readonly) {
 
       this.subscriptions.push(
@@ -254,6 +310,21 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     if (proyecto.convocatoria && this.isEdit()) {
       this.getFormGroup().controls.convocatoriaExterna.disable();
+    }
+
+    if (proyecto.convocatoria) {
+      this.finalidadConvocatoria = proyecto.convocatoria.finalidad;
+      this.ambitoGeograficoConvocatoria = proyecto.convocatoria.ambitoGeografico;
+      this.modeloEjecucionConvocatoria = proyecto.convocatoria.modeloEjecucion;
+
+      this.finalidadConvocatoria$.next(proyecto.finalidad?.id !== proyecto.convocatoria.finalidad?.id);
+      this.ambitoGeograficoConvocatoria$.next(proyecto.ambitoGeografico?.id !== proyecto.convocatoria.ambitoGeografico?.id);
+      this.subscriptions.push(this.unidadGestionService.findById(proyecto.convocatoria.unidadGestion.id).subscribe(unidadGestion => {
+        this.unidadGestionConvocatoria = unidadGestion;
+        this.unidadGestionConvocatoria$.next(proyecto.unidadGestion?.id !== proyecto.convocatoria.unidadGestion?.id);
+      }));
+      this.modeloEjecucionConvocatoria$.next(proyecto.modeloEjecucion?.id !== proyecto.convocatoria.modeloEjecucion?.id);
+
     }
 
     return result;
@@ -326,6 +397,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.seguimientoCientificos = [];
 
     if (convocatoria) {
+
       if (convocatoria.codigo) {
         this.getFormGroup().controls.convocatoriaExterna.setValue(convocatoria.codigo);
       }
@@ -383,12 +455,22 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         )
       );
       this.getFormGroup().controls.convocatoriaExterna.disable();
+
+      this.unidadGestionConvocatoria = convocatoria.unidadGestion;
+      this.ambitoGeograficoConvocatoria = convocatoria.ambitoGeografico;
+      this.finalidadConvocatoria = convocatoria.finalidad;
+      this.modeloEjecucionConvocatoria = convocatoria.modeloEjecucion;
     } else if (!this.isEdit()) {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
       // Enable fields
       this.getFormGroup().controls.unidadGestion.enable();
       this.getFormGroup().controls.convocatoriaExterna.enable();
+
+      this.unidadGestionConvocatoria = null;
+      this.ambitoGeograficoConvocatoria = null;
+      this.finalidadConvocatoria = null;
+      this.modeloEjecucionConvocatoria = null;
     }
   }
 

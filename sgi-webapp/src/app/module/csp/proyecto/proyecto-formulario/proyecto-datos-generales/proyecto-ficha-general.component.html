@@ -132,6 +132,9 @@
               {{tipoAmbitoGeografico.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.ambitoGeograficoConvocatoria$ | async)"
+            message="{{textoInfoAmbitoGeograficoConvocatoria}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
             {{'error.required.entity' | translate:msgParamAmbitoGeograficoEntity}}
           </mat-error>
@@ -166,6 +169,9 @@
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.unidadGestionConvocatoria$ | async)"
+            message="{{textoInfoUnidadGestionConvocatoria}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
             {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
           </mat-error>
@@ -191,6 +197,9 @@
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.modeloEjecucionConvocatoria$ | async)"
+            message="{{textoInfoModeloEjecucionConvocatoria}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
             {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}
           </mat-error>
@@ -213,6 +222,9 @@
               {{finalidad.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.finalidadConvocatoria$ | async)"
+            message="{{textoInfoFinalidadConvocatoria}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">
             {{'error.required.entity' | translate:msgParamFinalidadEntity}}
           </mat-error>

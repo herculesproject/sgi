@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
 
@@ -45,6 +45,7 @@ const PROYECTO_PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colabor
 const PROYECTO_TIMESHEET_KEY = marker('csp.proyecto.timesheet');
 const PROYECTO_TITULO_KEY = marker('csp.proyecto.titulo');
 const PROYECTO_UNIDAD_GESTION_KEY = marker('csp.proyecto.unidad-gestion');
+const MSG_PROYECTO_VALUE_CONVOCATORIA = marker('msg.csp.proyecto.value-convocatoria');
 
 @Component({
   selector: 'sgi-proyecto-ficha-general',
@@ -96,6 +97,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamTimesheetEntity = {};
   msgParamUnidadGestionEntity = {};
   msgParamFechaFinDefinitivaEntity = {};
+  textoInfoAmbitoGeograficoConvocatoria: string;
+  textoInfoFinalidadConvocatoria: string;
+  textoInfoUnidadGestionConvocatoria: string;
+  textoInfoModeloEjecucionConvocatoria: string;
 
   get CLASIFICACION_CVN_MAP() {
     return CLASIFICACION_CVN_MAP;
@@ -107,6 +112,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
   private obligatorioTimesheet: boolean;
@@ -176,6 +185,42 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     ).subscribe());
 
     this.subscriptions.push(
+      this.formPart.finalidadConvocatoria$.subscribe(
+        (value) => {
+          if (value) {
+            this.setTextoInfoFinalidadConvocatoria();
+          }
+        }
+      ));
+
+    this.subscriptions.push(
+      this.formPart.ambitoGeograficoConvocatoria$.subscribe(
+        (value) => {
+          if (value) {
+            this.setTextoInfoAmbitoGeograficoConvocatoria();
+          }
+        }
+      ));
+
+    this.subscriptions.push(
+      this.formPart.unidadGestionConvocatoria$.subscribe(
+        (value) => {
+          if (value && this.formPart.unidadGestionConvocatoria?.nombre) {
+            this.setTextoInfoUnidadGestionConvocatoria();
+          }
+        }
+      ));
+
+    this.subscriptions.push(
+      this.formPart.modeloEjecucionConvocatoria$.subscribe(
+        (value) => {
+          if (value) {
+            this.setTextoInfoModeloEjecucionConvocatoria();
+          }
+        }
+      ));
+
+    this.subscriptions.push(
       merge(
         this.formGroup.controls.fechaInicio.valueChanges,
         this.formGroup.controls.fechaFin.valueChanges,
@@ -183,6 +228,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       ).subscribe(() => this.formPart.checkFechas())
     );
   }
+
 
   private setupI18N(): void {
 
@@ -199,12 +245,14 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaInicioEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaFinEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FECHA_FIN_DEFINITIVA_KEY,
@@ -224,12 +272,14 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_UNIDAD_GESTION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamUnidadGestionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_MODELO_EJECUCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FINALIDAD_KEY,
@@ -239,22 +289,26 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamAmbitoGeograficoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamAmbitoGeograficoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_CONFIDENCIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConfidencialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamConfidencialEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_PROYECTO_COLABORATIVO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoColaborativoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamProyectoColaborativoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_COORDINADOR_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCoordinadorExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamCoordinadorExternoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_TIMESHEET_KEY,
@@ -264,33 +318,38 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_PAQUETE_TRABAJO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPaqueteTrabajoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamPaqueteTrabajoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_CALCULO_COSTE_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamCalculoCosteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamCalculoCosteEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_HORAS_ANUALES_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamHorasAnualesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamHorasAnualesEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_CONTRATACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamContratacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamContratacionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FACTURACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFacturacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
+    ).subscribe((value) => this.msgParamFacturacionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_IVA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamIvaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
   }
 
 
@@ -574,7 +633,59 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.clearFinalidad();
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
+  setTextoInfoFinalidadConvocatoria() {
+    this.translate.get(
+      this.formPart.finalidadConvocatoria.nombre,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_PROYECTO_VALUE_CONVOCATORIA,
+          { valueConvocatoria: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoInfoFinalidadConvocatoria = value);
+  }
+
+  setTextoInfoAmbitoGeograficoConvocatoria() {
+    this.translate.get(
+      this.formPart.ambitoGeograficoConvocatoria.nombre,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_PROYECTO_VALUE_CONVOCATORIA,
+          { valueConvocatoria: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoInfoAmbitoGeograficoConvocatoria = value);
+  }
+
+  setTextoInfoUnidadGestionConvocatoria() {
+    this.translate.get(
+      this.formPart.unidadGestionConvocatoria.nombre,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_PROYECTO_VALUE_CONVOCATORIA,
+          { valueConvocatoria: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoInfoUnidadGestionConvocatoria = value);
+  }
+
+  setTextoInfoModeloEjecucionConvocatoria() {
+    this.translate.get(
+      this.formPart.modeloEjecucionConvocatoria.nombre,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_PROYECTO_VALUE_CONVOCATORIA,
+          { valueConvocatoria: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoInfoModeloEjecucionConvocatoria = value);
   }
 }
