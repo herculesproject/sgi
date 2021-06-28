@@ -45,15 +45,13 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
   public RequisitoIP create(RequisitoIP requisitoIP) {
     log.debug("create(RequisitoIP requisitoIP) - start");
 
-    Assert.isNull(requisitoIP.getId(), "Id tiene que ser null para crear RequisitoIP");
+    Assert.notNull(requisitoIP.getId(), "Id no puede ser null para crear RequisitoIP");
 
-    Assert.isTrue(requisitoIP.getConvocatoriaId() != null, "Convocatoria no puede ser null para crear RequisitoIP");
+    Assert.isTrue(!repository.findById(requisitoIP.getId()).isPresent(),
+        "Ya existe RequisitoIP para la convocatoria " + requisitoIP.getId());
 
-    Assert.isTrue(!repository.findByConvocatoriaId(requisitoIP.getConvocatoriaId()).isPresent(),
-        "Ya existe RequisitoIP para la convocatoria " + requisitoIP.getConvocatoriaId());
-
-    convocatoriaRepository.findById(requisitoIP.getConvocatoriaId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoIP.getConvocatoriaId()));
+    convocatoriaRepository.findById(requisitoIP.getId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoIP.getId()));
 
     RequisitoIP returnValue = repository.save(requisitoIP);
 
@@ -76,20 +74,19 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
 
     Assert.notNull(idConvocatoria, "Id Convocatoria no puede ser null para actualizar RequisitoIP");
 
-    return repository.findByConvocatoriaId(idConvocatoria).map(requisitoIP -> {
-
-      requisitoIP.setAniosNivelAcademico(requisitoIPActualizar.getAniosNivelAcademico());
-      requisitoIP.setAniosVinculacion(requisitoIPActualizar.getAniosVinculacion());
+    return repository.findById(idConvocatoria).map(requisitoIP -> {
+      requisitoIP.setFechaMinimaNivelAcademico(requisitoIPActualizar.getFechaMinimaNivelAcademico());
+      requisitoIP.setFechaMaximaNivelAcademico(requisitoIPActualizar.getFechaMaximaNivelAcademico());
+      requisitoIP.setFechaMinimaCategoriaProfesional(requisitoIPActualizar.getFechaMinimaCategoriaProfesional());
+      requisitoIP.setFechaMaximaCategoriaProfesional(requisitoIPActualizar.getFechaMaximaCategoriaProfesional());
       requisitoIP.setEdadMaxima(requisitoIPActualizar.getEdadMaxima());
-      requisitoIP.setModalidadContratoRef(requisitoIPActualizar.getModalidadContratoRef());
-      requisitoIP.setNivelAcademicoRef(requisitoIPActualizar.getNivelAcademicoRef());
       requisitoIP.setNumMaximoCompetitivosActivos(requisitoIPActualizar.getNumMaximoCompetitivosActivos());
       requisitoIP.setNumMaximoIP(requisitoIPActualizar.getNumMaximoIP());
       requisitoIP.setNumMaximoNoCompetitivosActivos(requisitoIPActualizar.getNumMaximoNoCompetitivosActivos());
       requisitoIP.setNumMinimoCompetitivos(requisitoIPActualizar.getNumMinimoCompetitivos());
       requisitoIP.setNumMinimoNoCompetitivos(requisitoIPActualizar.getNumMinimoNoCompetitivos());
       requisitoIP.setOtrosRequisitos(requisitoIPActualizar.getOtrosRequisitos());
-      requisitoIP.setSexo(requisitoIPActualizar.getSexo());
+      requisitoIP.setSexoRef(requisitoIPActualizar.getSexoRef());
       requisitoIP.setVinculacionUniversidad(requisitoIPActualizar.getVinculacionUniversidad());
 
       RequisitoIP returnValue = repository.save(requisitoIP);
@@ -110,7 +107,7 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
     log.debug("findByConvocatoria(Long id) - start");
 
     if (convocatoriaRepository.existsById(id)) {
-      final Optional<RequisitoIP> returnValue = repository.findByConvocatoriaId(id);
+      final Optional<RequisitoIP> returnValue = repository.findById(id);
       log.debug("findByConvocatoriaId(Long id) - end");
       return (returnValue.isPresent()) ? returnValue.get() : null;
     } else {

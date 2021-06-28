@@ -41,7 +41,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // given: Un nuevo RequisitoIP
     Long convocatoriaId = 1L;
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
-    RequisitoIP requisitoIP = generarMockRequisitoIP(null, convocatoriaId);
+    RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
@@ -57,58 +57,44 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // then: El RequisitoIP se crea correctamente
     Assertions.assertThat(requisitoIPCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(requisitoIPCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(requisitoIPCreado.getSexo()).as("getSexo()").isEqualTo(requisitoIP.getSexo());
+    Assertions.assertThat(requisitoIPCreado.getSexoRef()).as("getSexoRef()").isEqualTo(requisitoIP.getSexoRef());
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo RequisitoIP que ya tiene id
-    Long convocatoriaId = 1L;
-    RequisitoIP requisitoIP = generarMockRequisitoIP(1L, convocatoriaId);
-
-    // when: Creamos el RequisitoIP
-    // then: Lanza una excepcion porque el RequisitoIP ya tiene id
-    Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear RequisitoIP");
-  }
-
-  @Test
-  public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
+  public void create_WithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoIP sin convocatoria
-    RequisitoIP requisitoIP = generarMockRequisitoIP(null, null);
+    RequisitoIP requisitoIP = generarMockRequisitoIP(null);
 
     // when: Creamos el RequisitoIP
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null para crear RequisitoIP");
+        .hasMessage("Id no puede ser null para crear RequisitoIP");
   }
 
   @Test
   public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoIP con convocatoria ya asignada
     Long convocatoriaId = 1L;
-    RequisitoIP requisitoIPExistente = generarMockRequisitoIP(1L, convocatoriaId);
-    RequisitoIP requisitoIP = generarMockRequisitoIP(null, convocatoriaId);
+    RequisitoIP requisitoIPExistente = generarMockRequisitoIP(convocatoriaId);
+    RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoIPExistente));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(requisitoIPExistente));
 
     // when: Creamos el RequisitoIP
     // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoIP
     Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe RequisitoIP para la convocatoria %s", requisitoIP.getConvocatoriaId());
+        .hasMessage("Ya existe RequisitoIP para la convocatoria %s", requisitoIP.getId());
   }
 
   @Test
   public void update_ReturnsRequisitoIP() {
     // given: Un nuevo RequisitoIP con el sexo actualizado
     Long convocatoriaId = 1L;
-    RequisitoIP requisitoIP = generarMockRequisitoIP(1L, convocatoriaId);
-    RequisitoIP requisitoIPActualizado = generarMockRequisitoIP(1L, convocatoriaId);
-    requisitoIPActualizado.setSexo("Mujer");
+    RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
+    RequisitoIP requisitoIPActualizado = generarMockRequisitoIP(convocatoriaId);
+    requisitoIPActualizado.setSexoRef("Mujer");
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoIP));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(requisitoIP));
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoIP>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -118,17 +104,16 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // then: El RequisitoIP se actualiza correctamente.
     Assertions.assertThat(requisitoIPActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(requisitoIPActualizado.getId()).as("getId()").isEqualTo(requisitoIP.getId());
-    Assertions.assertThat(requisitoIPActualizado.getSexo()).as("getSexo()").isEqualTo(requisitoIP.getSexo());
+    Assertions.assertThat(requisitoIPActualizado.getSexoRef()).as("getSexoRef()").isEqualTo(requisitoIP.getSexoRef());
   }
 
   @Test
   public void update_WithIdNotExist_ThrowsRequisitoIPNotFoundException() {
     // given: Un RequisitoIP actualizado con un id que no existe
     Long convocatoriaId = 1L;
-    RequisitoIP requisitoIP = generarMockRequisitoIP(1L, convocatoriaId);
+    RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoIP));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(requisitoIP));
 
     // when: Actualizamos el RequisitoIP
     // then: Lanza una excepcion porque el RequisitoIP no existe
@@ -140,12 +125,10 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   public void findByConvocatoriaId_ReturnsRequisitoIP() {
     // given: Un RequisitoIP con el id buscado
     Long idBuscado = 1L;
-    Long convocatoriaId = 1L;
 
     BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
-    BDDMockito.given(repository.findByConvocatoriaId(idBuscado))
-        .willReturn(Optional.of(generarMockRequisitoIP(idBuscado, convocatoriaId)));
+    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockRequisitoIP(idBuscado)));
 
     // when: Buscamos el RequisitoIP por su id
     RequisitoIP requisitoIP = service.findByConvocatoria(idBuscado);
@@ -153,7 +136,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // then: el RequisitoIP
     Assertions.assertThat(requisitoIP).as("isNotNull()").isNotNull();
     Assertions.assertThat(requisitoIP.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(requisitoIP.getSexo()).as("getSexo()").isEqualTo("Hombre");
+    Assertions.assertThat(requisitoIP.getSexoRef()).as("getSexoRef()").isEqualTo("Hombre");
 
   }
 
@@ -180,11 +163,10 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
    * @param id id del RequisitoIP
    * @return el objeto RequisitoIP
    */
-  private RequisitoIP generarMockRequisitoIP(Long id, Long convocatoriaId) {
+  private RequisitoIP generarMockRequisitoIP(Long id) {
     RequisitoIP requisitoIP = new RequisitoIP();
     requisitoIP.setId(id);
-    requisitoIP.setConvocatoriaId(convocatoriaId);
-    requisitoIP.setSexo("Hombre");
+    requisitoIP.setSexoRef("Hombre");
     return requisitoIP;
   }
 

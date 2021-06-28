@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -40,7 +41,10 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   public void create_ReturnsRequisitoEquipo() {
     // given: Un nuevo RequisitoEquipo
     Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null, convocatoriaId);
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(repository.save(requisitoEquipo)).will((InvocationOnMock invocation) -> {
       RequisitoEquipo requisitoEquipoCreado = invocation.getArgument(0);
@@ -56,74 +60,68 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     Assertions.assertThat(requisitoEquipoCreado.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(requisitoEquipoCreado.getEdadMaxima()).as("getEdadMaxima()")
         .isEqualTo(requisitoEquipo.getEdadMaxima());
-  }
-
-  @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo RequisitoEquipo que ya tiene id
-    Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
-
-    // when: Creamos el RequisitoEquipo
-    // then: Lanza una excepcion porque el RequisitoEquipo ya tiene id
-    Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear RequisitoEquipo");
+    Assertions.assertThat(requisitoEquipoCreado.getSexoRef()).as("getSexoRef()")
+        .isEqualTo(requisitoEquipo.getSexoRef());
   }
 
   @Test
   public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoEquipo sin convocatoria
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null, null);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null);
 
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null para crear RequisitoEquipo");
+        .hasMessage("Id no puede ser null para crear RequisitoEquipo");
   }
 
   @Test
   public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoEquipo con convocatoria ya asignada
     Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipoExistente = generarMockRequisitoEquipo(1L, convocatoriaId);
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null, convocatoriaId);
+    RequisitoEquipo requisitoEquipoExistente = generarMockRequisitoEquipo(convocatoriaId);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoEquipoExistente));
 
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoEquipo
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe RequisitoEquipo para la convocatoria %s", requisitoEquipo.getConvocatoriaId());
+        .hasMessage("Ya existe RequisitoEquipo para la convocatoria %s", requisitoEquipo.getId());
   }
 
   @Test
   public void update_ReturnsRequisitoEquipo() {
     // given: Un nuevo RequisitoEquipo con el sexo actualizado
     Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
-    RequisitoEquipo requisitoEquipoActualizado = generarMockRequisitoEquipo(1L, convocatoriaId);
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
+    RequisitoEquipo requisitoEquipoActualizado = generarMockRequisitoEquipo(convocatoriaId);
     requisitoEquipoActualizado.setEdadMaxima(45);
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoEquipo));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(requisitoEquipo));
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoEquipo>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Actualizamos el RequisitoEquipo
-    requisitoEquipoActualizado = service.update(requisitoEquipoActualizado, requisitoEquipo.getConvocatoriaId());
+    requisitoEquipoActualizado = service.update(requisitoEquipoActualizado, requisitoEquipo.getId());
 
     // then: El RequisitoEquipo se actualiza correctamente.
     Assertions.assertThat(requisitoEquipoActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(requisitoEquipoActualizado.getId()).as("getId()").isEqualTo(requisitoEquipo.getId());
     Assertions.assertThat(requisitoEquipoActualizado.getEdadMaxima()).as("getEdadMaxima()")
         .isEqualTo(requisitoEquipo.getEdadMaxima());
+    Assertions.assertThat(requisitoEquipoActualizado.getSexoRef()).as("getSexoRef()")
+        .isEqualTo(requisitoEquipo.getSexoRef());
   }
 
   @Test
   public void update_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un RequisitoEquipo actualizado con una convocatoria que no existe
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, null);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null);
 
     // when: Actualizamos el RequisitoEquipo
     // then: Lanza una excepcion porque el RequisitoEquipo no existe
@@ -133,16 +131,33 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_NotExist_ThrowsNotFoundException() {
+  public void update_WithConvocatoriaNotExist_ThrowsNotFoundException() {
     // given: Un RequisitoEquipo actualizado con una convocatoria que no existe
     Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
 
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
     // when: Actualizamos el RequisitoEquipo
     // then: Lanza una excepcion porque la Convocatoria no existe
-    Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, requisitoEquipo.getConvocatoriaId()))
+    Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, requisitoEquipo.getId()))
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
+  }
+
+  @Test
+  public void update_NotExist_ThrowsNotFoundException() {
+    // given: Un RequisitoEquipo actualizado con una convocatoria que no existe
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    // when: Actualizamos el RequisitoEquipo
+    // then: Lanza una excepcion porque la Convocatoria no existe
+    Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, requisitoEquipo.getId()))
         .isInstanceOf(RequisitoEquipoNotFoundException.class);
   }
 
@@ -150,12 +165,10 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   public void findByConvocatoriaId_ReturnsRequisitoEquipo() {
     // given: Un RequisitoEquipo con el id convocatoria buscado
     Long idBuscado = 1L;
-    Long convocatoriaId = 1L;
 
     BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
-    BDDMockito.given(repository.findByConvocatoriaId(idBuscado))
-        .willReturn(Optional.of(generarMockRequisitoEquipo(idBuscado, convocatoriaId)));
+    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockRequisitoEquipo(idBuscado)));
 
     // when: Buscamos el RequisitoEquipo por id Convocatoria
     RequisitoEquipo requisitoEquipo = service.findByConvocatoriaId(idBuscado);
@@ -164,7 +177,7 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     Assertions.assertThat(requisitoEquipo).as("isNotNull()").isNotNull();
     Assertions.assertThat(requisitoEquipo.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(requisitoEquipo.getEdadMaxima()).as("getEdadMaxima()").isEqualTo(50);
-
+    Assertions.assertThat(requisitoEquipo.getSexoRef()).as("getSexoRef()").isEqualTo("sexo-ref");
   }
 
   @Test
@@ -180,17 +193,21 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).activo(Boolean.TRUE).codigo("codigo" + convocatoriaId).build();
+  }
+
   /**
    * Función que devuelve un objeto RequisitoEquipo
    * 
    * @param id id del RequisitoEquipo
    * @return el objeto RequisitoEquipo
    */
-  private RequisitoEquipo generarMockRequisitoEquipo(Long id, Long convocatoriaId) {
+  private RequisitoEquipo generarMockRequisitoEquipo(Long id) {
     RequisitoEquipo requisitoEquipo = new RequisitoEquipo();
     requisitoEquipo.setId(id);
-    requisitoEquipo.setConvocatoriaId(convocatoriaId);
     requisitoEquipo.setEdadMaxima(50);
+    requisitoEquipo.setSexoRef("sexo-ref");
     return requisitoEquipo;
   }
 

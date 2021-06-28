@@ -44,13 +44,13 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
   public RequisitoEquipo create(RequisitoEquipo requisitoEquipo) {
     log.debug("create(RequisitoEquipo requisitoEquipo) - start");
 
-    Assert.isNull(requisitoEquipo.getId(), "Id tiene que ser null para crear RequisitoEquipo");
+    Assert.notNull(requisitoEquipo.getId(), "Id no puede ser null para crear RequisitoEquipo");
 
-    Assert.isTrue(requisitoEquipo.getConvocatoriaId() != null,
-        "Convocatoria no puede ser null para crear RequisitoEquipo");
+    Assert.isTrue(!repository.findById(requisitoEquipo.getId()).isPresent(),
+        "Ya existe RequisitoEquipo para la convocatoria " + requisitoEquipo.getId());
 
-    Assert.isTrue(!repository.findByConvocatoriaId(requisitoEquipo.getConvocatoriaId()).isPresent(),
-        "Ya existe RequisitoEquipo para la convocatoria " + requisitoEquipo.getConvocatoriaId());
+    convocatoriaRepository.findById(requisitoEquipo.getId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoEquipo.getId()));
 
     RequisitoEquipo returnValue = repository.save(requisitoEquipo);
 
@@ -74,19 +74,25 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
     Assert.notNull(convocatoriaId, "La Convocatoria no puede ser null para actualizar RequisitoEquipo");
 
-    return repository.findByConvocatoriaId(convocatoriaId).map(requisitoEquipo -> {
+    // Comprobación de existencia de Convocatoria
+    convocatoriaRepository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
 
-      requisitoEquipo.setAniosNivelAcademico(requisitoEquipoActualizar.getAniosNivelAcademico());
-      requisitoEquipo.setAniosVinculacion(requisitoEquipoActualizar.getAniosVinculacion());
+    return repository.findById(convocatoriaId).map(requisitoEquipo -> {
+      requisitoEquipo.setFechaMinimaNivelAcademico(requisitoEquipoActualizar.getFechaMinimaNivelAcademico());
+      requisitoEquipo.setFechaMaximaNivelAcademico(requisitoEquipoActualizar.getFechaMaximaNivelAcademico());
+      requisitoEquipo
+          .setFechaMinimaCategoriaProfesional(requisitoEquipoActualizar.getFechaMinimaCategoriaProfesional());
+      requisitoEquipo
+          .setFechaMaximaCategoriaProfesional(requisitoEquipoActualizar.getFechaMaximaCategoriaProfesional());
       requisitoEquipo.setEdadMaxima(requisitoEquipoActualizar.getEdadMaxima());
-      requisitoEquipo.setRatioMujeres(requisitoEquipoActualizar.getRatioMujeres());
-      requisitoEquipo.setModalidadContratoRef(requisitoEquipoActualizar.getModalidadContratoRef());
-      requisitoEquipo.setNivelAcademicoRef(requisitoEquipoActualizar.getNivelAcademicoRef());
+      requisitoEquipo.setRatioSexo(requisitoEquipoActualizar.getRatioSexo());
       requisitoEquipo.setNumMaximoCompetitivosActivos(requisitoEquipoActualizar.getNumMaximoCompetitivosActivos());
       requisitoEquipo.setNumMaximoNoCompetitivosActivos(requisitoEquipoActualizar.getNumMaximoNoCompetitivosActivos());
       requisitoEquipo.setNumMinimoCompetitivos(requisitoEquipoActualizar.getNumMinimoCompetitivos());
       requisitoEquipo.setNumMinimoNoCompetitivos(requisitoEquipoActualizar.getNumMinimoNoCompetitivos());
       requisitoEquipo.setOtrosRequisitos(requisitoEquipoActualizar.getOtrosRequisitos());
+      requisitoEquipo.setSexoRef(requisitoEquipoActualizar.getSexoRef());
       requisitoEquipo.setVinculacionUniversidad(requisitoEquipoActualizar.getVinculacionUniversidad());
 
       RequisitoEquipo returnValue = repository.save(requisitoEquipo);
@@ -107,7 +113,7 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
     log.debug("findByConvocatoriaId(Long id) - start");
 
     if (convocatoriaRepository.existsById(id)) {
-      final Optional<RequisitoEquipo> returnValue = repository.findByConvocatoriaId(id);
+      final Optional<RequisitoEquipo> returnValue = repository.findById(id);
       log.debug("findByConvocatoriaId(Long id) - end");
       return (returnValue.isPresent()) ? returnValue.get() : null;
     } else {
