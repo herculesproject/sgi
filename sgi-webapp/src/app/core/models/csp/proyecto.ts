@@ -4,6 +4,7 @@ import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
 import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoProyecto } from './estado-proyecto';
+import { IProyectoIVA } from './proyecto-iva';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
@@ -56,12 +57,10 @@ export interface IProyecto {
   costeHora: boolean;
   /** tipoHorasAnuales */
   tipoHorasAnuales: TipoHorasAnuales;
-  /** contratos */
-  contratos: boolean;
-  /** facturacion */
-  facturacion: boolean;
   /** iva */
-  iva: boolean;
+  iva: IProyectoIVA;
+  /** causaExencion */
+  causaExencion: CausaExencion;
   /** observaciones */
   observaciones: string;
   /** anualidades */
@@ -84,4 +83,18 @@ export const TIPO_HORAS_ANUALES_MAP: Map<TipoHorasAnuales, string> = new Map([
   [TipoHorasAnuales.FIJO, marker('csp.proyecto.tipo-horas-anuales.FIJO')],
   [TipoHorasAnuales.REAL, marker('csp.proyecto.tipo-horas-anuales.REAL')],
   [TipoHorasAnuales.CATEGORIA, marker('csp.proyecto.tipo-horas-anuales.CATEGORIA')]
+]);
+
+export enum CausaExencion {
+  SUJETO_EXENTO = 'SUJETO_EXENTO',
+  NO_SUJETO = 'NO_SUJETO',
+  NO_SUJETO_SIN_DEDUCCION = 'NO_SUJETO_SIN_DEDUCCION',
+  NO_SUJETO_CON_DEDUCCION = 'NO_SUJETO_CON_DEDUCCION'
+}
+
+export const CAUSA_EXENCION_MAP: Map<CausaExencion, string> = new Map([
+  [CausaExencion.SUJETO_EXENTO, marker('csp.proyecto.causa-exencion.SUJETO_EXENTO')],
+  [CausaExencion.NO_SUJETO, marker('csp.proyecto.causa-exencion.NO_SUJETO')],
+  [CausaExencion.NO_SUJETO_SIN_DEDUCCION, marker('csp.proyecto.causa-exencion.NO_SUJETO_SIN_DEDUCCION')],
+  [CausaExencion.NO_SUJETO_CON_DEDUCCION, marker('csp.proyecto.causa-exencion.NO_SUJETO_CON_DEDUCCION')]
 ]);

@@ -1,9 +1,10 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
-import { TipoHorasAnuales } from '../proyecto';
+import { CausaExencion, TipoHorasAnuales } from '../proyecto';
 import { ITipoAmbitoGeografico } from '../tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '../tipos-configuracion';
 import { IEstadoProyectoBackend } from './estado-proyecto-backend';
+import { IProyectoIVABackend } from './proyecto-iva-backend';
 
 export interface IProyectoBackend {
   /** Id */
@@ -50,12 +51,10 @@ export interface IProyectoBackend {
   costeHora: boolean;
   /** tipoHorasAnuales */
   tipoHorasAnuales: TipoHorasAnuales;
-  /** contratos */
-  contratos: boolean;
-  /** facturacion */
-  facturacion: boolean;
   /** iva */
-  iva: boolean;
+  iva: IProyectoIVABackend;
+  /** causaExencion */
+  causaExencion: CausaExencion;
   /** observaciones */
   observaciones: string;
   /** unidadGestionRef */

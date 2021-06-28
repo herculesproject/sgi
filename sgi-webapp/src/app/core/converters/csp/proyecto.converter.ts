@@ -4,6 +4,7 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ESTADO_PROYECTO_CONVERTER } from './estado-proyecto.converter';
+import { PROYECTO_IVA_CONVERTER } from './proyecto-iva.converter';
 
 class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
 
@@ -35,9 +36,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       costeHora: value.costeHora,
       tipoHorasAnuales: value.tipoHorasAnuales,
-      contratos: value.contratos,
-      facturacion: value.facturacion,
-      iva: value.iva,
+      causaExencion: value.causaExencion,
+      iva: PROYECTO_IVA_CONVERTER.toTarget(value.iva),
       anualidades: value.anualidades,
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones,
@@ -75,9 +75,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       costeHora: value.costeHora,
       tipoHorasAnuales: value.tipoHorasAnuales,
-      contratos: value.contratos,
-      facturacion: value.facturacion,
-      iva: value.iva,
+      causaExencion: value.causaExencion,
+      iva: PROYECTO_IVA_CONVERTER.fromTarget(value.iva),
       observaciones: value.observaciones,
       anualidades: value.anualidades,
       activo: value.activo,

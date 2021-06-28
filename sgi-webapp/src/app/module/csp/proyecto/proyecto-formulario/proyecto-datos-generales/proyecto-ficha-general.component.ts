@@ -1,10 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
-import { IProyecto, TIPO_HORAS_ANUALES_MAP } from '@core/models/csp/proyecto';
+import { CAUSA_EXENCION_MAP, IProyecto, TIPO_HORAS_ANUALES_MAP } from '@core/models/csp/proyecto';
+import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -15,6 +19,7 @@ import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -29,16 +34,15 @@ const PROYECTO_AMBITO_GEOGRAFICO_KEY = marker('csp.proyecto.ambito-geografico');
 const PROYECTO_CALCULO_COSTE_KEY = marker('csp.proyecto.calculo-coste-personal');
 const PROYECTO_CODIGO_EXTERNO_KEY = marker('csp.proyecto.codigo-externo');
 const PROYECTO_CONFIDENCIAL_KEY = marker('csp.proyecto.confidencial');
-const PROYECTO_CONTRATACION_KEY = marker('csp.proyecto.contratacion-rrhh');
 const PROYECTO_COORDINADOR_EXTERNO_KEY = marker('csp.proyecto.coordinador-externo');
 const PROYECTO_CONVOCATORIA_EXTERNA_KEY = marker('csp.proyecto.convocatoria-externa');
-const PROYECTO_FACTURACION_KEY = marker('csp.proyecto.facturacion');
 const PROYECTO_FECHA_FIN_KEY = marker('csp.proyecto.fecha-fin');
 const PROYECTO_FECHA_FIN_DEFINITIVA_KEY = marker('csp.proyecto.fecha-fin-definitiva');
 const PROYECTO_FECHA_INICIO_KEY = marker('csp.proyecto.fecha-inicio');
 const PROYECTO_FINALIDAD_KEY = marker('csp.proyecto.finalidad');
 const PROYECTO_IVA_KEY = marker('csp.proyecto.iva');
 const PROYECTO_HORAS_ANUALES_KEY = marker('csp.proyecto.horas-anuales');
+const PROYECTO_CAUSA_EXENCION_KEY = marker('csp.proyecto.causa-exencion');
 const PROYECTO_MODELO_EJECUCION_KEY = marker('csp.proyecto.modelo-ejecucion');
 const PROYECTO_PAQUETE_TRABAJO_KEY = marker('csp.proyecto-paquete-trabajo');
 const PROYECTO_PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colaborativo');
@@ -62,6 +66,13 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
+  displayedColumns = ['iva', 'fechaInicio', 'fechaFin'];
+  elementosPagina = [5, 10, 25, 100];
+
+  dataSource = new MatTableDataSource<StatusWrapper<IProyectoIVA>>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   private finalidadFiltered = [] as ITipoFinalidad[];
   finalidades$: Observable<ITipoFinalidad[]>;
 
@@ -81,15 +92,14 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamCalculoCosteEntity = {};
   msgParamCodigoExternoEntity = {};
   msgParamConfidencialEntity = {};
-  msgParamContratacionEntity = {};
   msgParamCoordinadorExternoEntity = {};
   msgParamConvocatoriaExternaEntity = {};
-  msgParamFacturacionEntity = {};
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamFinalidadEntity = {};
   msgParamHorasAnualesEntity = {};
   msgParamIvaEntity = {};
+  msgParamCausaExencionEntity = {};
   msgParamModeloEjecucionEntity = {};
   msgParamPaqueteTrabajoEntity = {};
   msgParamProyectoColaborativoEntity = {};
@@ -108,6 +118,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   get TIPO_HORAS_ANUALES_MAP() {
     return TIPO_HORAS_ANUALES_MAP;
+  }
+
+  get CAUSA_EXENCION_MAP() {
+    return CAUSA_EXENCION_MAP;
   }
 
   get ESTADO_MAP() {
@@ -171,6 +185,25 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
     this.loadUnidadesGestion();
     this.loadAmbitosGeograficos();
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IProyectoIVA>, property: string) => {
+        switch (property) {
+          case 'iva':
+            return wrapper.value.iva;
+          case 'fechaInicio':
+            return wrapper.value.fechaInicio;
+          case 'fechaFin':
+            return wrapper.value.fechaFin;
+          default:
+            return wrapper[property];
+        }
+      };
+    this.dataSource.sort = this.sort;
+    this.subscriptions.push(this.formPart.proyectoIva$.subscribe(elements => {
+      this.dataSource.data = elements;
+    }));
 
     if (!this.fragment.isEdit()) {
       this.formGroup.controls.estado.setValue(Estado.BORRADOR);
@@ -334,16 +367,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
-      PROYECTO_CONTRATACION_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamContratacionEntity =
-      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
-      PROYECTO_FACTURACION_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFacturacionEntity =
-      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+      PROYECTO_CAUSA_EXENCION_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamCausaExencionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_IVA_KEY,

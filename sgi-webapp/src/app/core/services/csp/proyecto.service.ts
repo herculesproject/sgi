@@ -67,6 +67,10 @@ import { map } from 'rxjs/operators';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
+import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
+import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
+import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
+
 
 @Injectable({
   providedIn: 'root'
@@ -328,6 +332,19 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
+ * Recupera listado de proyectoIVA
+ * @param id proyecto
+ * @param options opciones de búsqueda.
+ */
+  findProyectoIVA(proyectoId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoIVA>> {
+    return this.find<IProyectoIVABackend, IProyectoIVA>(
+      `${this.endpointUrl}/${proyectoId}/proyectoiva`,
+      options,
+      PROYECTO_IVA_CONVERTER
+    );
+  }
+
+  /**
    * Recupera todos los documentos de un proyecto
    * @param id Identificador del proyecto.
    * @param options opciones de búsqueda
@@ -401,6 +418,18 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   hasProyectoHitos(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/proyectohitos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+ * Comprueba si Proyecto tiene ProyectosSGE relacionados
+ *
+ * @param id Proyecto
+ */
+  hasProyectoSGE(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/proyectos-sge`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

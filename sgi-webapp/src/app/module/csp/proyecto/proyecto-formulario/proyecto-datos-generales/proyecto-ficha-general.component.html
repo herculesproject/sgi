@@ -451,51 +451,63 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Contratacion rrhh -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.contratacion-rrhh' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="contratacion" [required]="formPart.abiertoRequired">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.contratacion.errors?.required">
-            {{'error.required.entity' | translate:msgParamContratacionEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Requiere facturacion -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.facturacion' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="facturacion" [required]="formPart.abiertoRequired">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.facturacion.errors?.required">
-            {{'error.required.entity' | translate:msgParamFacturacionEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Aplicacion IVA -->
+      <!-- Porcentaje IVA -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.iva' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="iva" [required]="formPart.abiertoRequired">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.iva.errors?.required">
-            {{'error.required.entity' | translate:msgParamIvaEntity}}
+          <input matInput formControlName="iva" type="number" id="iva" min="0" max="100"
+            placeholder="{{'csp.proyecto.iva' | translate}}">
+          <mat-error *ngIf="formGroup.controls.iva.errors?.min">
+            {{'error.min.entity' | translate:msgParamIvaEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.iva.errors?.max">
+            {{'error.max.entity' | translate:msgParamIvaEntity}}
           </mat-error>
         </mat-form-field>
       </div>
 
+      <!-- Causa Exencion -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order" *ngIf="formPart.mostrarCausaExencion">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto.causa-exencion' | translate}}</mat-label>
+          <sgi-select-enum formControlName="causaExencion" [enumMap]="CAUSA_EXENCION_MAP" required></sgi-select-enum>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="separation-button" *ngIf="this.dataSource.data.length>0">
+      <h3>{{'csp.proyecto-iva.historico' | translate}}</h3>
+      <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="dataSource" matSort matSortActive="id"
+        matSortDirection="asc" matSortDisableClear>
+
+        <!-- IVA Column -->
+        <ng-container matColumnDef="iva">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'csp.proyecto.iva' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let proyectoIva">{{proyectoIva.value.iva}}</td>
+        </ng-container>
+
+        <!-- Fecha Inicio Column -->
+        <ng-container matColumnDef="fechaInicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'csp.proyecto-iva.fecha-inicio' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let proyectoIva">
+            {{proyectoIva.value.fechaInicio | luxon:'shortDate'}}
+          </td>
+        </ng-container>
+
+        <!-- Fecha Fin Column -->
+        <ng-container matColumnDef="fechaFin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'csp.proyecto-iva.fecha-fin' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let proyectoIva">{{proyectoIva.value.fechaFin | luxon:'shortDate'}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </div>
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -510,11 +522,6 @@
             placeholder="{{'csp.proyecto.observaciones' | translate}}"></textarea>
         </mat-form-field>
       </div>
-
     </div>
-
-
-
   </form>
-
 </section>

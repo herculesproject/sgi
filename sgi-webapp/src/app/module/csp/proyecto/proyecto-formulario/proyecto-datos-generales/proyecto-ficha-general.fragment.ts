@@ -3,6 +3,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
@@ -11,11 +12,13 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -39,12 +42,15 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   abiertoRequired: boolean;
   comentarioEstadoCancelado: boolean;
   mostrarSolicitud = false;
+  mostrarCausaExencion = false;
   solicitudProyecto: ISolicitudProyecto;
   private ultimaProrroga: IProyectoProrroga;
   finalidadConvocatoria: ITipoFinalidad;
   ambitoGeograficoConvocatoria: ITipoAmbitoGeografico;
   unidadGestionConvocatoria: IUnidadGestion;
   modeloEjecucionConvocatoria: IModeloEjecucion;
+
+  proyectoIva$ = new BehaviorSubject<StatusWrapper<IProyectoIVA>[]>([]);
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
@@ -53,6 +59,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   ambitoGeograficoConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   unidadGestionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   modeloEjecucionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly vinculacionesProyectoSGE$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -65,6 +72,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private convocatoriaService: ConvocatoriaService,
     private solicitudService: SolicitudService,
+    private proyectoIvaService: ProyectoIVAService,
     public readonly: boolean
   ) {
     super(key);
@@ -73,6 +81,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
+    this.loadHistoricoProyectoIVA(key);
     return this.service.findById(key).pipe(
       map(proyecto => {
         this.proyecto = proyecto;
@@ -167,10 +176,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       timesheet: new FormControl(null),
       permitePaquetesTrabajo: new FormControl(null),
       costeHora: new FormControl(null),
-      contratacion: new FormControl(null),
-      facturacion: new FormControl(null),
-      iva: new FormControl(null),
+      iva: new FormControl(null, [Validators.min(0), Validators.max(100)]),
       tipoHorasAnuales: new FormControl(''),
+      causaExencion: new FormControl(null),
       observaciones: new FormControl(''),
       comentario: new FormControl({
         value: '',
@@ -187,6 +195,17 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.convocatoria.valueChanges.subscribe(
         (convocatoria) => this.onConvocatoriaChange(convocatoria)
+      )
+    );
+    this.subscriptions.push(
+      form.controls.iva.valueChanges.subscribe(
+        (iva) => {
+          if (iva == 0) {
+            this.mostrarCausaExencion = true;
+          } else {
+            this.mostrarCausaExencion = false;
+          }
+        }
       )
     );
     this.subscriptions.push(
@@ -256,7 +275,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           }
         )
       );
-
       this.subscriptions.push(
         this.vinculacionesModeloEjecucion$.subscribe(
           value => {
@@ -267,6 +285,16 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
             else {
               form.controls.unidadGestion.enable();
               form.controls.modeloEjecucion.enable();
+            }
+          }
+        ),
+        this.vinculacionesProyectoSGE$.subscribe(
+          value => {
+            if (value) {
+              form.controls.causaExencion.disable();
+            }
+            else {
+              form.controls.causaExencion.enable();
             }
           }
         )
@@ -297,10 +325,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       timesheet: proyecto.timesheet,
       permitePaquetesTrabajo: proyecto.permitePaquetesTrabajo,
       costeHora: proyecto.costeHora,
-      contratacion: proyecto.contratos,
-      facturacion: proyecto.facturacion,
-      iva: proyecto.iva,
+      iva: proyecto.iva?.iva,
+      ivaFechaInicio: proyecto.iva?.fechaInicio,
+      ivaFechaFin: proyecto.iva?.fechaFin,
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
+      causaExencion: proyecto.causaExencion,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
       solicitudProyecto: proyecto.solicitudProyecto?.titulo ?? ''
@@ -364,13 +393,18 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.timesheet = form.timesheet.value;
     this.proyecto.permitePaquetesTrabajo = form.permitePaquetesTrabajo.value;
     this.proyecto.costeHora = form.costeHora.value;
-    this.proyecto.contratos = form.contratacion.value;
-    this.proyecto.facturacion = form.facturacion.value;
-    this.proyecto.iva = form.iva.value;
+    this.proyecto.iva = {} as IProyectoIVA;
+    this.proyecto.iva.iva = form.iva.value;
     if (form.tipoHorasAnuales.value?.length > 0) {
       this.proyecto.tipoHorasAnuales = form.tipoHorasAnuales.value;
     } else {
       this.proyecto.tipoHorasAnuales = undefined;
+    }
+
+    if (form.causaExencion.value?.length > 0) {
+      this.proyecto.causaExencion = form.causaExencion?.value;
+    } else {
+      this.proyecto.causaExencion = undefined;
     }
 
     this.proyecto.comentario = form.comentario.value;
@@ -495,17 +529,17 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('costeHora').setValidators([
         Validators.required]);
-      formgroup.get('contratacion').setValidators([
-        Validators.required]);
-      formgroup.get('facturacion').setValidators([
-        Validators.required]);
       formgroup.get('iva').setValidators([
-        Validators.required]);
+        Validators.required, Validators.min(0), Validators.max(100)]);
+      ;
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
     } else {
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
+      formgroup.get('iva').setValidators([
+        Validators.min(0), Validators.max(100)]);
+      ;
       this.abiertoRequired = false;
       this.comentarioEstadoCancelado = false;
     }
@@ -588,5 +622,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }
       return null;
     };
+  }
+
+  private loadHistoricoProyectoIVA(key: number): void {
+    this.proyectoIvaService.findAllByProyectoId(key).pipe(
+      map((response) => response.items)
+    ).subscribe((proyectosIva) => {
+      this.proyectoIva$.next(proyectosIva.map(proyectoIva => new StatusWrapper<IProyectoIVA>(proyectoIva)));
+    });
   }
 }

@@ -59,6 +59,7 @@ import { ProyectoPartidasPresupuestariasFragment } from './proyecto-formulario/p
 import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
 import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { Observable } from 'rxjs';
+import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 
 export interface IProyectoData {
   proyecto: IProyecto;
@@ -117,6 +118,7 @@ export class ProyectoActionService extends ActionService {
   private readonly hasFases$ = new BehaviorSubject<boolean>(false);
   private readonly hasHitos$ = new BehaviorSubject<boolean>(false);
   private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
+  private readonly hasProyectoSGE$ = new BehaviorSubject<boolean>(false);
 
   get proyecto(): IProyecto {
     return this.fichaGeneral.getValue();
@@ -159,6 +161,7 @@ export class ProyectoActionService extends ActionService {
     proyectoProrrogaService: ProyectoProrrogaService,
     proyectoDocumentoService: ProyectoDocumentoService,
     solicitudService: SolicitudService,
+    proyectoIvaService: ProyectoIVAService,
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     proyectoClasificacionService: ProyectoClasificacionService,
     clasificacionService: ClasificacionService,
@@ -180,7 +183,7 @@ export class ProyectoActionService extends ActionService {
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
       logger, fb, id, proyectoService, unidadGestionService,
-      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, this.data?.readonly
+      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService, this.data?.readonly
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -257,6 +260,9 @@ export class ProyectoActionService extends ActionService {
         this.subscriptions.push(
           proyectoService.hasProyectoDocumentos(id).subscribe(value => this.hasDocumentos$.next(value))
         );
+        this.subscriptions.push(
+          proyectoService.hasProyectoSGE(id).subscribe(value => this.hasProyectoSGE$.next(value))
+        );
 
         // Propagate changes
         this.subscriptions.push(
@@ -272,13 +278,21 @@ export class ProyectoActionService extends ActionService {
                 || this.hasDocumentos$.value
               );
             }
-          )
+          ),
+          this.hasProyectoSGE$.subscribe(
+            () => {
+              this.fichaGeneral.vinculacionesProyectoSGE$.next(
+                this.hasProyectoSGE$.value
+              );
+            }
+          ),
         );
 
         // Syncronize changes
         this.subscriptions.push(this.plazos.plazos$.subscribe(value => this.hasFases$.next(!!value.length)));
         this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
         this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
+        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => this.hasProyectoSGE$.next(!!value.length)));
       }
 
       // Inicializamos la ficha general de forma predeterminada
