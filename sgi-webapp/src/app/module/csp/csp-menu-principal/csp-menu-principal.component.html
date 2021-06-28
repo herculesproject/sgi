@@ -17,7 +17,8 @@
     <mat-icon color="primary" mat-list-icon>work</mat-icon>
     <p matLine *ngIf="opened">{{'csp.proyecto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</p>
   </a>
-  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'AUTH'" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['CSP-EJEC-V', 'CSP-EJEC-E']"
+    [routerLink]="[CSP_ROUTE_NAMES.EJECUCION_ECONOMICA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>attach_money</mat-icon>
     <p matLine *ngIf="opened">{{'menu.csp.ejecucion-economica' | translate}}</p>
   </a>
@@ -47,21 +48,21 @@
         <div class="opciones-accordion" *ngIf="opened">
           <a mat-list-item
             *sgiHasAnyAuthority="['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E','CSP-TFASE-B','CSP-TFASE-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.TIPO_FASE]"
-            [routerLinkActive]="['is-active']">{{'csp.tipo-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.TIPO_FASE]" [routerLinkActive]="['is-active']">{{'csp.tipo-fase' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item *sgiHasAnyAuthority="['CSP-TFIN-V','CSP-TFIN-C','CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]"
-            [routerLinkActive]="['is-active']">{{'csp.tipo-finalidad' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]" [routerLinkActive]="['is-active']">{{'csp.tipo-finalidad' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item *sgiHasAnyAuthority="['CSP-TDOC-V', 'CSP-TDOC-C', 'CSP-TDOC-E', 'CSP-TDOC-B', 'CSP-TDOC-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.TIPO_DOCUMENTO]"
-            [routerLinkActive]="['is-active']">{{'csp.tipo-documento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.TIPO_DOCUMENTO]" [routerLinkActive]="['is-active']">{{'csp.tipo-documento' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item *sgiHasAnyAuthority="['CSP-TENL-V', 'CSP-TENL-C', 'CSP-TENL-E', 'CSP-TENL-B', 'CSP-TENL-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.TIPO_ENLACE]"
-            [routerLinkActive]="['is-active']">{{'csp.tipo-enlace' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.TIPO_ENLACE]" [routerLinkActive]="['is-active']">{{'csp.tipo-enlace' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item
             *sgiHasAnyAuthority="['CSP-THITO-V', 'CSP-THITO-C', 'CSP-THITO-E', 'CSP-THITO-B', 'CSP-THITO-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.TIPO_HITO]"
-            [routerLinkActive]="['is-active']">{{'csp.tipo-hito' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.TIPO_HITO]" [routerLinkActive]="['is-active']">{{'csp.tipo-hito' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item *sgiHasAnyAuthorityForAnyUO="['CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-ME-B', 'CSP-ME-R']"
             [routerLink]="[CSP_ROUTE_NAMES.MODELO_EJECUCION]"
             [routerLinkActive]="['is-active']">{{'menu.csp.configuraciones.modelos-ejecucion' | translate}}</a>
@@ -69,8 +70,8 @@
             [routerLink]="[CSP_ROUTE_NAMES.PLANES_INVESTIGACION]"
             [routerLinkActive]="['is-active']">{{'menu.csp.configuraciones.planes-investigacion' | translate}}</a>
           <a mat-list-item *sgiHasAnyAuthority="['CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R']"
-            [routerLink]="[CSP_ROUTE_NAMES.AREA_TEMATICA]"
-            [routerLinkActive]="['is-active']">{{'csp.area-tematica' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
+            [routerLink]="[CSP_ROUTE_NAMES.AREA_TEMATICA]" [routerLinkActive]="['is-active']">{{'csp.area-tematica' |
+            translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
           <a mat-list-item *sgiHasAnyAuthority="['CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R']"
             [routerLink]="[CSP_ROUTE_NAMES.FUENTE_FINANCIACION]"
             [routerLinkActive]="['is-active']">{{'menu.csp.configuraciones.fuentes-financiacion' | translate}}</a>

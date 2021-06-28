@@ -21,6 +21,7 @@ const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.csp.configuraciones.concep
 const MSG_TIPO_FINANCIACION_TITLE = marker('menu.csp.configuraciones.tipos-financiacion');
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.csp.configuraciones.fuentes-financiacion');
 const MSG_AREA_TEMATICA_TITLE = marker('menu.csp.configuraciones.areas-tematicas');
+const MSG_EJECUCION_ECONOMICA_TITLE = marker('menu.csp.ejecucion-economica');
 const PROYECTO_KEY = marker('csp.proyectos');
 
 const routes: SgiRoutes = [
@@ -214,6 +215,19 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_AREA_TEMATICA_TITLE,
           hasAnyAuthority: ['CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.EJECUCION_ECONOMICA,
+        loadChildren: () =>
+          import('./ejecucion-economica/ejecucion-economica.module').then(
+            (m) => m.EjecucionEconomicaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_EJECUCION_ECONOMICA_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+          hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR']
         }
       },
       { path: '**', component: null }
