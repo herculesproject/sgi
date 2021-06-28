@@ -4,5 +4,9 @@ export interface IInvencionResponse {
   fechaComunicacion: string;
   descripcion: string;
   comentarios: string;
+  tipoProteccion: {
+    id: number;
+    nombre: string;
+  }
   activo: boolean;
 }

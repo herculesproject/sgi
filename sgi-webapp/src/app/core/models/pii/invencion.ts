@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { ITipoProteccion } from "./tipo-proteccion";
 
 export interface IInvencion {
   id: number;
@@ -6,5 +7,6 @@ export interface IInvencion {
   fechaComunicacion: DateTime;
   descripcion: string;
   comentarios: string;
+  tipoProteccion: ITipoProteccion;
   activo: boolean;
 }

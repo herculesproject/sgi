@@ -1,4 +1,5 @@
 import { IInvencion } from "@core/models/pii/invencion";
+import { ITipoProteccion } from "@core/models/pii/tipo-proteccion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
 import { IInvencionResponse } from "./invencion-response";
@@ -14,6 +15,10 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       titulo: value.titulo,
       descripcion: value.descripcion,
       comentarios: value.comentarios,
+      tipoProteccion: {
+        id: value.tipoProteccion.id,
+        nombre: value.tipoProteccion.nombre
+      } as ITipoProteccion,
       activo: value.activo
     };
   }
@@ -27,6 +32,10 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       titulo: value.titulo,
       descripcion: value.descripcion,
       comentarios: value.comentarios,
+      tipoProteccion: {
+        id: value.tipoProteccion.id,
+        nombre: value.tipoProteccion.nombre
+      },
       activo: value.activo
     };
   }
