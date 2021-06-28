@@ -1,6 +1,10 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaFinPeriodo;
+import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaInicioPeriodo;
+
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
@@ -28,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -52,9 +58,11 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoIVARepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
@@ -95,9 +103,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
-
-import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaFinPeriodo;
-import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaInicioPeriodo;
 
 /**
  * Servicio implementación para la gestión de {@link Proyecto}.
@@ -149,6 +154,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoProrrogaRepository proyectoProrrogaRepository;
   private final ProyectoPartidaService proyectoPartidaService;
   private final ConvocatoriaPartidaService convocatoriaPartidaService;
+  private final ProyectoIVARepository proyectoIVARepository;
+  private final ProyectoProyectoSgeRepository proyectoProyectoSGERepository;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -180,7 +187,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository,
       SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository,
       ProgramaRepository programaRepository, ProyectoPartidaService proyectoPartidaService,
-      ConvocatoriaPartidaService convocatoriaPartidaService) {
+      ConvocatoriaPartidaService convocatoriaPartidaService, ProyectoIVARepository proyectoIVARepository,
+      ProyectoProyectoSgeRepository proyectoProyectoSGERepository) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -218,6 +226,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoProrrogaRepository = proyectoProrrogaRepository;
     this.proyectoPartidaService = proyectoPartidaService;
     this.convocatoriaPartidaService = convocatoriaPartidaService;
+    this.proyectoIVARepository = proyectoIVARepository;
+    this.proyectoProyectoSGERepository = proyectoProyectoSGERepository;
   }
 
   /**
@@ -246,6 +256,14 @@ public class ProyectoServiceImpl implements ProyectoService {
     EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
 
     proyecto.setEstado(estadoProyecto);
+
+    // Crea el proyecto iva del proyecto si el porcentaje de IVA es cero o superior
+    ProyectoIVA proyectoIVA = null;
+    if (proyecto.getIva() != null && proyecto.getIva().getIva() != null) {
+      proyectoIVA = addProyectoIVA(proyecto);
+    }
+    proyecto.setIva(proyectoIVA);
+
     // Actualiza el estado actual del proyecto con el nuevo estado
     Proyecto returnValue = repository.save(proyecto);
 
@@ -292,15 +310,29 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setCodigoExterno(proyectoActualizar.getCodigoExterno());
       data.setColaborativo(proyectoActualizar.getColaborativo());
       data.setConfidencial(proyectoActualizar.getConfidencial());
-      data.setContratos(proyectoActualizar.getContratos());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
       data.setCoordinadorExterno(proyectoActualizar.getCoordinadorExterno());
       data.setCosteHora(proyectoActualizar.getCosteHora());
-      data.setFacturacion(proyectoActualizar.getFacturacion());
       data.setFechaFin(proyectoActualizar.getFechaFin());
       data.setFechaInicio(proyectoActualizar.getFechaInicio());
       data.setFinalidad(proyectoActualizar.getFinalidad());
-      data.setIva(proyectoActualizar.getIva());
+
+      // Crea o actualiza el proyecto iva del proyecto si el porcentaje de IVA es cero
+      // o superior
+
+      if ((proyectoActualizar.getIva() != null && data.getIva() == null)
+          || (proyectoActualizar.getIva() != null && data.getIva() != null)
+              && (proyectoActualizar.getIva().getIva() != data.getIva().getIva())) {
+        ProyectoIVA proyectoIVA = updateProyectoIVA(data, proyectoActualizar);
+        data.setIva(proyectoIVA);
+      }
+
+      // Si no se informa IVA igual o superior a 0 se elimina la causa de exención
+      if (proyectoActualizar.getIva() != null && proyectoActualizar.getIva().getIva() != null) {
+        data.setCausaExencion(proyectoActualizar.getCausaExencion());
+      } else {
+        data.setCausaExencion(null);
+      }
       data.setModeloEjecucion(proyectoActualizar.getModeloEjecucion());
       data.setObservaciones(proyectoActualizar.getObservaciones());
       data.setPermitePaquetesTrabajo(proyectoActualizar.getPermitePaquetesTrabajo());
@@ -536,6 +568,86 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
+   * Añade el nuevo {@link ProyectoIVA} y actualiza la {@link Proyecto} con dicho
+   * ProyectoIVA.
+   * 
+   * @param proyecto    la {@link Proyecto} para la que se añade el nuevo estado.
+   * @param proyectoIVA El nuevo {@link EstadoProyecto.Estado} de la
+   *                    {@link Proyecto}.
+   * @return la {@link Proyecto} con el estado actualizado.
+   */
+  private ProyectoIVA addProyectoIVA(Proyecto proyecto) {
+    log.debug("addProyectoIVA(Proyecto proyecto) - start");
+
+    Assert.isTrue(proyecto.getIva().getIva() >= 0 || proyecto.getIva().getIva() <= 100,
+        "El porcentaje de IVA debe estar comprendido entre 0 y 100");
+
+    ProyectoIVA proyectoIVA = new ProyectoIVA();
+    proyectoIVA.setProyectoId(proyecto.getId());
+    proyectoIVA.setIva(proyecto.getIva().getIva());
+    proyectoIVA.setFechaInicio(proyecto.getFechaInicio());
+    proyectoIVA.setFechaFin(null);
+    proyectoIVA.setProyectoId(proyecto.getId());
+    ProyectoIVA returnValue = proyectoIVARepository.save(proyectoIVA);
+
+    log.debug("addProyectoIVA(Proyecto proyecto) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza {@link ProyectoIVA} y actualiza la {@link Proyecto} con dicho
+   * proyectoIVA.
+   * 
+   * @param proyectoGuardado    la {@link Proyecto} proyecto sin actualizar
+   * 
+   * @param proyectoActualizado la {@link Proyecto} proyecto a actualizar con el
+   *                            nuevo proyecto iva
+   * @return la {@link Proyecto} con el estado actualizado.
+   */
+  private ProyectoIVA updateProyectoIVA(Proyecto proyectoGuardado, Proyecto proyectoActualizado) {
+    log.debug("updateProyectoIVA(Proyecto data, Proyecto proyectoActualizado) - start");
+
+    // Validar que no haya proyecto proyectosge vinculados, y si los hay que el
+    // porcentaje de IVA no se mayor que cero
+    Boolean isProyectospSGE = proyectoProyectoSGERepository.existsByProyectoId(proyectoGuardado.getId());
+
+    if (isProyectospSGE && (proyectoGuardado.getIva() != null && proyectoGuardado.getIva().getIva() != null
+        && proyectoActualizado.getIva() != null && proyectoActualizado.getIva().getIva() != null
+        && (proyectoGuardado.getIva().getIva() > 0 && proyectoActualizado.getIva().getIva() == 0))) {
+      throw new ProyectoIVAException();
+    }
+    // Al antiguo proyecto IVA le ponemos de fecha de fin actual
+    ProyectoIVA oldProyectoIVA = proyectoGuardado.getIva();
+    if (oldProyectoIVA != null && oldProyectoIVA.getIva() != null) {
+      oldProyectoIVA.setFechaFin(
+          Instant.now().atZone(ZoneId.systemDefault()).withHour(23).withMinute(59).withSecond(59).toInstant());
+      oldProyectoIVA = proyectoIVARepository.save(oldProyectoIVA);
+    }
+
+    // Creamos un nuevo proyecto IVA
+    ProyectoIVA newProyectoIVA = new ProyectoIVA();
+    newProyectoIVA.setProyectoId(proyectoActualizado.getId());
+    if (proyectoActualizado.getIva() != null && proyectoActualizado.getIva().getIva() != null) {
+
+      Assert.isTrue(proyectoActualizado.getIva().getIva() >= 0 || proyectoActualizado.getIva().getIva() <= 100,
+          "El porcentaje de IVA debe estar comprendido entre 0 y 100");
+
+      newProyectoIVA.setIva(proyectoActualizado.getIva().getIva());
+    } else {
+      newProyectoIVA.setIva(null);
+    }
+    newProyectoIVA.setFechaInicio(Instant.now().atZone(ZoneId.systemDefault()).plusDays(1).withHour(00).withMinute(00)
+        .withSecond(00).toInstant());
+    newProyectoIVA.setFechaFin(null);
+    newProyectoIVA.setProyectoId(proyectoActualizado.getId());
+
+    newProyectoIVA = proyectoIVARepository.save(newProyectoIVA);
+
+    log.debug("updateProyectoIVA(Proyecto data, Proyecto proyectoActualizado) - end");
+    return newProyectoIVA;
+  }
+
+  /**
    * Se comprueba que los datos a guardar cumplan las validaciones oportunas
    * 
    * @param proyecto datos del proyecto
@@ -609,16 +721,13 @@ public class ProyectoServiceImpl implements ProyectoService {
           "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getCosteHora() != null,
-          "El campo costeHora debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+          "El campo costeHora debe ser obligatorio para el proyecto en estado 'Abierto'");
+    }
 
-      Assert.isTrue(proyecto.getContratos() != null,
-          "El campo contratos debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getFacturacion() != null,
-          "El campo facturacion debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getIva() != null,
-          "El campo iva debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+    // Validación de datos IVA
+    if (proyecto.getIva() != null && proyecto.getIva().getIva() != null && proyecto.getCausaExencion() != null) {
+      Assert.isTrue(proyecto.getCausaExencion() != null,
+          "El campo causa exención no puede tener valor si el porcentaje de IVA no es '0'");
     }
   }
 

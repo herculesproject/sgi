@@ -25,9 +25,11 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoIVARepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
@@ -134,6 +136,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   ProyectoPartidaService proyectoPartidaService;
   @Mock
   ConvocatoriaPartidaService convocatoriaPartidaService;
+  @Mock
+  ProyectoIVARepository proyectoIVARepository;
+  @Mock
+  ProyectoProyectoSgeRepository proyectoProyectoSgeRepository;
 
   private ProyectoService service;
 
@@ -151,7 +157,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
         solicitudProyectoEntidadFinanciadoraAjenaRepository, proyectoProrrogaRepository,
         proyectoAreaConocimientoRepository, proyectoClasificacionRepository,
         solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository,
-        proyectoPartidaService, convocatoriaPartidaService);
+        proyectoPartidaService, convocatoriaPartidaService, proyectoIVARepository, proyectoProyectoSgeRepository);
   }
 
   @Test

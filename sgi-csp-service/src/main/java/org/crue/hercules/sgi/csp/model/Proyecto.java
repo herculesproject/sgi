@@ -55,6 +55,18 @@ public class Proyecto extends BaseEntity {
     CATEGORIA;
   }
 
+  /** Causas de exención. */
+  public enum CausaExencion {
+    /** Sujeto y Exento */
+    SUJETO_EXENTO,
+    /** No sujeto a articulos 7, 14 y otros */
+    NO_SUJETO,
+    /** No sujeto por reglas de localización. Sin derecho a deducción */
+    NO_SUJETO_SIN_DEDUCCION,
+    /** No sujeto por reglas de localización. Con derecho a deducción */
+    NO_SUJETO_CON_DEDUCCION;
+  }
+
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
@@ -171,17 +183,15 @@ public class Proyecto extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private TipoHorasAnuales tipoHorasAnuales;
 
-  /** Contratos */
-  @Column(name = "contratos", nullable = true)
-  private Boolean contratos;
-
-  /** Facturación */
-  @Column(name = "facturacion", nullable = true)
-  private Boolean facturacion;
-
   /** Iva */
-  @Column(name = "iva", nullable = true)
-  private Boolean iva;
+  @ManyToOne
+  @JoinColumn(name = "proyecto_iva_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_PROYECTOIVA"))
+  private ProyectoIVA iva;
+
+  /** Causa exención */
+  @Column(name = "causa_exencion", length = 50, nullable = true)
+  @Enumerated(EnumType.STRING)
+  private CausaExencion causaExencion;
 
   /** Observaciones */
   @Column(name = "observaciones", length = 2000, nullable = true)
@@ -274,5 +284,10 @@ public class Proyecto extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final List<ProyectoSocio> socios = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoIVA> ivas = null;
 
 }

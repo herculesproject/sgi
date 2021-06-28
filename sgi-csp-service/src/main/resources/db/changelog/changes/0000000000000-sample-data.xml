@@ -3005,9 +3005,6 @@ industries" />
       <column name="paquetes_trabajo" value="false" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
-      <column name="contratos" value="false" />
-      <column name="facturacion" value="false" />
-      <column name="iva" value="false" />
       <column name="observaciones" value="" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
@@ -3036,9 +3033,6 @@ industries" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="REAL" />
-      <column name="contratos" value="false" />
-      <column name="facturacion" value="false" />
-      <column name="iva" value="false" />
       <column name="observaciones" value="" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
@@ -3067,9 +3061,6 @@ industries" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
-      <column name="contratos" value="false" />
-      <column name="facturacion" value="false" />
-      <column name="iva" value="false" />
       <column name="observaciones" value="" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
