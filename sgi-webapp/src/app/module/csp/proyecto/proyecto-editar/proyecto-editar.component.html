@@ -41,10 +41,18 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
-    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
-      [route]="[PROYECTO_ROUTE_NAMES.EQUIPO_PROYECTO]" [title]="'menu.csp.proyectos.equipos' | translate"
-      [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
-    </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+      [title]="'menu.csp.proyectos.equipo-responsable-economico' | translate">
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.EQUIPO_PROYECTO]" [title]="'menu.csp.proyectos.equipo' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.RESPONSABLE_ECONOMICO]"
+        [title]="'csp.proyecto-responsable-economico' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.REPONSABLE_ECONOMICO)">
+      </sgi-action-fragment-menu-item>
+    </sgi-action-fragment-menu-group>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
       [route]="[PROYECTO_ROUTE_NAMES.SOCIOS]" [title]="'menu.csp.proyectos.socios' | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">

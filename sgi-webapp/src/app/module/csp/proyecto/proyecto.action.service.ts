@@ -23,6 +23,7 @@ import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-p
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
+import { ProyectoResponsableEconomicoService } from '@core/services/csp/proyecto-responsable-economico/proyecto-responsable-economico.service';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -59,6 +60,7 @@ import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/pr
 import { ProyectoPresupuestoFragment } from './proyecto-formulario/proyecto-presupuesto/proyecto-presupuesto.fragment';
 import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
 import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.fragment';
+import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 
@@ -90,7 +92,8 @@ export class ProyectoActionService extends ActionService {
     PROYECTOS_SGE: 'proyectos-sge',
     PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
     ELEGIBILIDAD: 'elegibilidad',
-    PRESUPUESTO: 'presupuesto'
+    PRESUPUESTO: 'presupuesto',
+    REPONSABLE_ECONOMICO: 'responsable-economico'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -113,6 +116,7 @@ export class ProyectoActionService extends ActionService {
   private partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
   private elegibilidad: ProyectoConceptosGastoFragment;
   private presupuesto: ProyectoPresupuestoFragment;
+  private responsableEconomico: ProyectoResponsableEconomicoFragment;
 
   private readonly data: IProyectoData;
 
@@ -174,6 +178,7 @@ export class ProyectoActionService extends ActionService {
     proyectoSgeService: ProyectoSgeService,
     proyectoPartidaService: ProyectoPartidaService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
     translate: TranslateService,
     proyectoAnualidadService: ProyectoAnualidadService
   ) {
@@ -221,6 +226,8 @@ export class ProyectoActionService extends ActionService {
       this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
         convocatoriaService, this.readonly);
       this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService, this.readonly);
+      this.responsableEconomico = new ProyectoResponsableEconomicoFragment(id, proyectoService, proyectoResponsableEconomicoService,
+        personaService, this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -241,6 +248,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, this.partidasPresupuestarias);
       this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
       this.addFragment(this.FRAGMENT.PRESUPUESTO, this.presupuesto);
+      this.addFragment(this.FRAGMENT.REPONSABLE_ECONOMICO, this.responsableEconomico);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {

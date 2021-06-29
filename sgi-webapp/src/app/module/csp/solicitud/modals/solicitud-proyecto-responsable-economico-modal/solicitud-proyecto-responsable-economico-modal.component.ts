@@ -12,7 +12,6 @@ import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { TipoColectivo } from '@shared/select-persona/select-persona.component';
-import { merge } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
@@ -60,7 +59,7 @@ export class SolicitudProyectoResponsableEconomicoModalComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
-    this.textSaveOrUpdate = this.data.entidad?.id ? MSG_ACEPTAR : MSG_ANADIR;
+    this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {

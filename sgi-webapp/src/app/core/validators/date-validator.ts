@@ -1,5 +1,5 @@
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 export class DateValidator {
 
@@ -181,18 +181,67 @@ export class DateValidator {
    */
   static isBetween(minDate: DateTime, maxDate: DateTime): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if ((control.errors && !control.errors.invalid
-        || control.errors && !control.errors.invalid)) {
-        return null;
-      }
-
-      const date = control.value;
-      if (date && (date < minDate || date > maxDate)) {
-        return { invalid: true } as ValidationErrors;
+      if (control.value) {
+        if (!(minDate <= control.value && maxDate >= control.value)) {
+          return { invalid: true };
+        }
       }
 
       return null;
     };
   }
 
+  /**
+   * Checks that a value isn't present in an interval
+   *
+   * @param intervals Array of intervals where the value sould not be in
+   * @param min Min value where no intervals
+   * @param max Max value where no intervals
+   */
+  static notOverlaps(intervals: Interval[]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && intervals.length) {
+        // Manual compare because Interval.contains() isn't inclusive for end dates
+        if (intervals.some(int => int.start <= control.value && int.end >= control.value)) {
+          return { overlaps: true };
+        }
+        return null;
+      }
+      return null;
+    };
+  }
+
+  static notOverlapsDependentForStart(intervals: Interval[], endControl: AbstractControl): ValidatorFn {
+    return (startControl: AbstractControl): ValidationErrors | null => {
+      return validateOverlaps(intervals, startControl, endControl);
+    };
+  }
+
+  static notOverlapsDependentForEnd(intervals: Interval[], startControl: AbstractControl): ValidatorFn {
+    return (endControl: AbstractControl): ValidationErrors | null => {
+      return validateOverlaps(intervals, startControl, endControl);
+    };
+  }
+
+  static isAfterOther(other: AbstractControl): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && other.value) {
+        if (control.value.toMillis() <= other.value.toMillis()) {
+          return { after: true };
+        }
+      }
+      return null;
+    };
+  }
+
+}
+
+function validateOverlaps(intervals: Interval[], startControl: AbstractControl, endControl: AbstractControl): ValidationErrors {
+  if (startControl.value && endControl.value) {
+    const currentInterval = Interval.fromDateTimes(startControl.value, endControl.value);
+    if (intervals.some(interval => interval.overlaps(currentInterval))) {
+      return { overlaps: true };
+    }
+  }
+  return null;
 }

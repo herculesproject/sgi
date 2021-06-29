@@ -60,6 +60,7 @@ import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
+import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { environment } from '@env';
 import {
@@ -74,6 +75,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
 import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
+import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
+import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -524,12 +527,12 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     );
   }
 
-  /* Realiza el cambio de estado de estado de un proyecto.
-  *
-  * @param id identificador del proyecto.
-  * @param estadoProyecto Nuevo estado del proyecto.
-  */
-
+  /**
+   * Realiza el cambio de estado de estado de un proyecto.
+   *
+   * @param id identificador del proyecto.
+   * @param estadoProyecto Nuevo estado del proyecto.
+   */
   cambiarEstado(id: number, estadoProyecto: IEstadoProyecto): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/cambiar-estado`, estadoProyecto);
   }
@@ -550,6 +553,20 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   getProyectoPresupuestoTotales(proyectoId: number): Observable<IProyectoPresupuestoTotales> {
     return this.http.get<IProyectoPresupuestoTotales>(`${this.endpointUrl}/${proyectoId}/presupuesto-totales`);
+  }
+
+  /**
+   * Devuelve los responsables economicos de un proyecto
+   *
+   * @param proyectoId Id del proyecto
+   */
+  findAllProyectoResponsablesEconomicos(proyectoId: number, findOptions?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoResponsableEconomico>> {
+    return this.find<IProyectoResponsableEconomicoResponse, IProyectoResponsableEconomico>(
+      `${this.endpointUrl}/${proyectoId}/proyectoresponsableseconomicos`,
+      findOptions,
+      PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
+    );
   }
 
 }
