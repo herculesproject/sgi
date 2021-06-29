@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion.OnActualizar;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico.OnActualizar;
 import org.crue.hercules.sgi.csp.validation.OrderMesesSolicitudProyectoResponsableEconomico;
 
 import lombok.AccessLevel;

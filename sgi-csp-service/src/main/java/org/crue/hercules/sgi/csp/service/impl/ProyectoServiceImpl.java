@@ -41,6 +41,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
@@ -75,6 +76,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionReposi
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
@@ -93,11 +95,13 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
+import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -166,6 +170,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoConceptoGastoService proyectoConceptoGastoService;
   private final ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  private final SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
+  private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -201,7 +207,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoProyectoSgeRepository proyectoProyectoSGERepository,
       ProyectoConceptoGastoService proyectoConceptoGastoService,
       ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService,
-      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository) {
+      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository,
+      SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository,
+      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService) {
+
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -244,6 +253,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoConceptoGastoService = proyectoConceptoGastoService;
     this.proyectoConceptoGastoCodigoEcService = proyectoConceptoGastoCodigoEcService;
     this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
+    this.solicitudProyectoResponsableEconomicoRepository = solicitudProyectoResponsableEconomicoRepository;
+    this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
   }
 
   /**
@@ -981,6 +992,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.copyEntidadesFinanciadorasDeSolicitud(proyecto, solicitudProyecto.getId());
     this.copyMiembrosEquipo(proyecto, solicitudProyecto.getId());
     this.copySocios(proyecto, solicitudProyecto.getId());
+    this.copyResponsablesEconomicos(proyecto, solicitudProyecto.getId());
     log.debug(
         "copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
   }
@@ -1165,6 +1177,43 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
+   * Copia los responsables economicos de una {@link Solicitud} a un
+   * {@link Proyecto}. Los responsables que tengan una fecha de inicio posterior a
+   * la fecha de fin del proyecto no se copian.
+   * 
+   * @param proyecto            entidad {@link Proyecto}
+   * @param solicitudProyectoId Identificador del {@link SolicitudProyecto}
+   */
+  private void copyResponsablesEconomicos(Proyecto proyecto, Long solicitudProyectoId) {
+    log.debug("copyResponsablesEconomicos(Proyecto proyecto) - start");
+
+    List<ProyectoResponsableEconomico> responsablesEconomicosProyecto = solicitudProyectoResponsableEconomicoRepository
+        .findAllBySolicitudProyectoId(solicitudProyectoId).stream().map(responsableEconomicoSolicitud -> {
+          log.debug("Copy SolicitudProyectoResponsableEconomico with id: {0}", responsableEconomicoSolicitud.getId());
+
+          ProyectoResponsableEconomico proyectoResponsableEconomico = ProyectoResponsableEconomico.builder()
+              .proyectoId(proyecto.getId()).personaRef(responsableEconomicoSolicitud.getPersonaRef()).build();
+
+          if (responsableEconomicoSolicitud.getMesInicio() != null) {
+            proyectoResponsableEconomico.setFechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(
+                proyecto.getFechaInicio(), responsableEconomicoSolicitud.getMesInicio(), proyecto.getFechaBase()));
+          }
+          if (responsableEconomicoSolicitud.getMesFin() != null) {
+            proyectoResponsableEconomico.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                proyecto.getFechaFin(), responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaBase()));
+          }
+          return proyectoResponsableEconomico;
+        }).filter(responsableEconomicoProyecto -> !responsableEconomicoProyecto.getFechaInicio()
+            .isAfter(proyecto.getFechaFin()))
+        .collect(Collectors.toList());
+
+    this.proyectoResponsableEconomicoService.updateProyectoResponsableEconomicos(proyecto.getId(),
+        responsablesEconomicosProyecto);
+
+    log.debug("copyResponsablesEconomicos(Proyecto proyecto) - end");
+  }
+
+  /**
    * Copia todos los socios de una {@link Solicitud} a un {@link Proyecto}
    * 
    * @param proyecto entidad {@link Proyecto}
@@ -1192,15 +1241,21 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   private ProyectoSocio createProyectoSocio(Proyecto proyecto, SolicitudProyectoSocio entidadSolicitud) {
-
-    return ProyectoSocio.builder().proyectoId(proyecto.getId())
-        .fechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(), entidadSolicitud.getMesInicio(),
-            proyecto.getFechaBase()))
-        .fechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
-            entidadSolicitud.getMesFin(), proyecto.getFechaBase()))
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder().proyectoId(proyecto.getId())
         .rolSocio(entidadSolicitud.getRolSocio()).empresaRef(entidadSolicitud.getEmpresaRef())
         .importeConcedido(entidadSolicitud.getImporteSolicitado())
         .numInvestigadores(entidadSolicitud.getNumInvestigadores()).build();
+
+    if (entidadSolicitud.getMesInicio() != null) {
+      proyectoSocio.setFechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+          entidadSolicitud.getMesInicio(), proyecto.getFechaBase()));
+    }
+    if (entidadSolicitud.getMesFin() != null) {
+      proyectoSocio.setFechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+          entidadSolicitud.getMesFin(), proyecto.getFechaBase()));
+    }
+
+    return proyectoSocio;
   }
 
   private void copyProyectoSocioPeriodoJusitificacion(Proyecto proyecto, SolicitudProyectoSocio entidadSolicitud,

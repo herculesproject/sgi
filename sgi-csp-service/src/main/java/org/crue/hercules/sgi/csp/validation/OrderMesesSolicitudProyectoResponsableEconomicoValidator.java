@@ -14,7 +14,11 @@ public class OrderMesesSolicitudProyectoResponsableEconomicoValidator implements
       return false;
     }
 
-    return (value.getMesInicio() != null && value.getMesFin() != null) && value.getMesInicio() >= value.getMesFin();
+    if (value.getMesInicio() == null || value.getMesFin() == null) {
+      return true;
+    }
+
+    return value.getMesInicio() <= value.getMesFin();
   }
 
 }

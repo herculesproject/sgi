@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -23,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
@@ -43,11 +48,14 @@ import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoServ
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
+import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +83,8 @@ public class ProyectoController {
 
   /** El path que gestiona este controlador */
   public static final String REQUEST_MAPPING = "/proyectos";
+
+  private ModelMapper modelMapper;
 
   /** Proyecto service */
   private final ProyectoService service;
@@ -140,9 +150,13 @@ public class ProyectoController {
   /** ProyectoConceptoGasto service */
   private final ProyectoConceptoGastoService proyectoConceptoGastoService;
 
+  /** ProyectoResponsableEconomicoService */
+  private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
+   * @param modelMapper                                       {@link ModelMapper}.
    * @param proyectoService                                   {@link ProyectoService}.
    * @param proyectoHitoService                               {@link ProyectoHitoService}.
    * @param proyectoFaseService                               {@link ProyectoFaseService}.
@@ -165,11 +179,12 @@ public class ProyectoController {
    * @param proyectoAnualidadService                          {@link ProyectoAnualidadService}.
    * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
    * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
+   * @param proyectoResponsableEconomicoService               {@link ProyectoResponsableEconomicoService}.
    */
-  public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
-      ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
-      ProyectoEquipoService proyectoEquipoService, ProyectoSocioService proyectoSocioService,
-      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
+  public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
+      ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
+      ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService, ProyectoEquipoService proyectoEquipoService,
+      ProyectoSocioService proyectoSocioService, ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
       ProyectoProrrogaService proyectoProrrogaService, ProyectoEntidadGestoraService proyectoEntidadGestoraService,
       ProyectoDocumentoService proyectoDocumentoService, EstadoProyectoService estadoProyectoService,
@@ -179,7 +194,9 @@ public class ProyectoController {
       ProyectoClasificacionService proyectoClasificacionService,
       ProyectoAreaConocimientoService proyectoAreaConocimientoService,
       ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
-      ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService) {
+      ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService,
+      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService) {
+    this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -201,6 +218,7 @@ public class ProyectoController {
     this.proyectoAnualidadService = proyectoAnualidadService;
     this.proyectoPartidaService = proyectoPartidaService;
     this.proyectoConceptoGastoService = proyectoConceptoGastoService;
+    this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
   }
 
   /**
@@ -956,6 +974,41 @@ public class ProyectoController {
     ProyectoPresupuestoTotales returnValue = service.getTotales(id);
     log.debug("getProyectoPresupuestoTotales(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista de {@link ProyectoResponsableEconomico} con una
+   * {@link Proyecto} con id indicado.
+   * 
+   * @param id Identificador de {@link ProyectoResponsableEconomico}.
+   * @return Lista de {@link ProyectoResponsableEconomico} correspondiente al id
+   */
+  @GetMapping("/{id}/proyectoresponsableseconomicos")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosByProyecto(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllResponsablesEconomicosByProyecto(Long id, String query, Pageable paging) - start");
+    Page<ProyectoResponsableEconomico> page = proyectoResponsableEconomicoService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllResponsablesEconomicosByProyecto(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllResponsablesEconomicosByProyecto(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(convert(page), HttpStatus.OK);
+  }
+
+  private ProyectoResponsableEconomicoOutput convert(ProyectoResponsableEconomico responsableEconomico) {
+    return modelMapper.map(responsableEconomico, ProyectoResponsableEconomicoOutput.class);
+  }
+
+  private Page<ProyectoResponsableEconomicoOutput> convert(Page<ProyectoResponsableEconomico> page) {
+    List<ProyectoResponsableEconomicoOutput> content = page.getContent().stream()
+        .map((responsableEconomico) -> convert(responsableEconomico)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
 }

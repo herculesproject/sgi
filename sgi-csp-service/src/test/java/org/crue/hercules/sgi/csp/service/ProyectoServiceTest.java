@@ -38,6 +38,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionReposi
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
@@ -147,6 +148,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
   @Mock
   ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  @Mock
+  SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
+  @Mock
+  ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
 
   private ProyectoService service;
 
@@ -165,8 +170,8 @@ public class ProyectoServiceTest extends BaseServiceTest {
         proyectoAreaConocimientoRepository, proyectoClasificacionRepository,
         solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository,
         proyectoPartidaService, convocatoriaPartidaService, proyectoIVARepository, proyectoProyectoSgeRepository,
-        proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService,
-        convocatoriaConceptoGastoCodigoEcRepository);
+        proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService, convocatoriaConceptoGastoCodigoEcRepository,
+        solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService);
   }
 
   @Test
