@@ -71,6 +71,18 @@ export interface IProyecto {
   tipoSeguimiento: TipoSeguimiento;
   /** Fecha Base */
   fechaBase: DateTime;
+  /** Importe presupuesto */
+  importePresupuesto: number;
+  /** Importe concedido */
+  importeConcedido: number;
+  /** Importe presupuesto socios */
+  importePresupuestoSocios: number;
+  /** Importe concedido socios */
+  importeConcedidoSocios: number;
+  /** total Importe presupuesto */
+  totalImportePresupuesto: number;
+  /** total Importe concedido */
+  totalImporteConcedido: number;
 }
 
 export enum TipoHorasAnuales {

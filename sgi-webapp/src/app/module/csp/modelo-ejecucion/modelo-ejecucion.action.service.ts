@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
-import { IModeloEjecucion, ITipoFase } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { ActionService } from '@core/services/action-service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ModeloTipoDocumentoService } from '@core/services/csp/modelo-tipo-documento.service';

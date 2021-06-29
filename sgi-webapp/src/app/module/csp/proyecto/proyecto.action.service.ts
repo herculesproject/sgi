@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
 import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
@@ -14,7 +16,9 @@ import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
 import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
+import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
+import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -34,7 +38,7 @@ import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, merge, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
 import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
@@ -49,17 +53,14 @@ import { ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/pr
 import { ProyectoHistoricoEstadosFragment } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.fragment';
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
+import { ProyectoPartidasPresupuestariasFragment } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.fragment';
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
+import { ProyectoPresupuestoFragment } from './proyecto-formulario/proyecto-presupuesto/proyecto-presupuesto.fragment';
 import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
 import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
-import { ProyectoPartidasPresupuestariasFragment } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.fragment';
-import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
-import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
-import { Observable } from 'rxjs';
-import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 
 export interface IProyectoData {
   proyecto: IProyecto;
@@ -88,7 +89,8 @@ export class ProyectoActionService extends ActionService {
     CLASIFICACIONES: 'clasificaciones',
     PROYECTOS_SGE: 'proyectos-sge',
     PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
-    ELEGIBILIDAD: 'elegibilidad'
+    ELEGIBILIDAD: 'elegibilidad',
+    PRESUPUESTO: 'presupuesto'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -110,6 +112,7 @@ export class ProyectoActionService extends ActionService {
   private proyectosSge: ProyectoProyectosSgeFragment;
   private partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
   private elegibilidad: ProyectoConceptosGastoFragment;
+  private presupuesto: ProyectoPresupuestoFragment;
 
   private readonly data: IProyectoData;
 
@@ -172,6 +175,7 @@ export class ProyectoActionService extends ActionService {
     proyectoPartidaService: ProyectoPartidaService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     translate: TranslateService,
+    proyectoAnualidadService: ProyectoAnualidadService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -216,6 +220,7 @@ export class ProyectoActionService extends ActionService {
         this.readonly);
       this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
         convocatoriaService, this.readonly);
+      this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService, this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -235,6 +240,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
       this.addFragment(this.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, this.partidasPresupuestarias);
       this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
+      this.addFragment(this.FRAGMENT.PRESUPUESTO, this.presupuesto);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {

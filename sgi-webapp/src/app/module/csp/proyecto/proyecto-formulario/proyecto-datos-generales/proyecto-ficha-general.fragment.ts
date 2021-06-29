@@ -222,7 +222,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.finalidad.valueChanges.subscribe(
         (value) => {
-          if (form.controls.convocatoria.value) {
+          if (form.controls.convocatoria?.value !== '' && form.controls.convocatoria.value) {
             this.finalidadConvocatoria$.next(form.controls.convocatoria.value.finalidad?.id !== value?.id);
           }
         }
@@ -232,8 +232,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.ambitoGeografico.valueChanges.subscribe(
         (value) => {
-          if (form.controls.ambitoGeografico.value) {
-            this.ambitoGeograficoConvocatoria$.next(form.controls.convocatoria.value.ambitoGeografico?.id !== value?.id);
+          if (form.controls.convocatoria?.value !== '' && form.controls.ambitoGeografico.value) {
+            this.ambitoGeograficoConvocatoria$.next(form.controls.convocatoria.value?.ambitoGeografico?.id !== value?.id);
           }
         }
       )

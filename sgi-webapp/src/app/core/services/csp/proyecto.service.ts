@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_PROYECTO_CONVERTER } from '@core/converters/csp/estado-proyecto.converter';
-import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
 import { PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-area-conocimiento.converter';
+import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
+import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
 import { PROYECTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-documento.converter';
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
@@ -10,6 +11,7 @@ import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/pr
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-equipo.converter';
 import { PROYECTO_HITO_CONVERTER } from '@core/converters/csp/proyecto-hito.converter';
+import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
 import { PROYECTO_PLAZO_CONVERTER } from '@core/converters/csp/proyecto-plazo.converter';
@@ -21,6 +23,7 @@ import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
+import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
 import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-documento-backend';
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
@@ -28,6 +31,7 @@ import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/pr
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoEquipoBackend } from '@core/models/csp/backend/proyecto-equipo-backend';
 import { IProyectoHitoBackend } from '@core/models/csp/backend/proyecto-hito-backend';
+import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
 import { IProyectoPlazoBackend } from '@core/models/csp/backend/proyecto-plazo-backend';
@@ -37,8 +41,10 @@ import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-b
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoClasificacion } from '@core/models/csp/proyecto-clasificacion';
+import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
 import { IProyectoAreaConocimiento } from '@core/models/csp/proyecto-area-conocimiento';
+import { IProyectoClasificacion } from '@core/models/csp/proyecto-clasificacion';
+import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
@@ -46,10 +52,12 @@ import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
+import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
+import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
@@ -64,18 +72,14 @@ import {
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
-import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
-import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
-import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
-import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
-import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
-
+import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
+import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoService extends SgiMutableRestService<number, IProyectoBackend, IProyecto> {
+
   private static readonly MAPPING = '/proyectos';
   private static readonly ENTIDAD_CONVOCANTES_MAPPING = 'entidadconvocantes';
 
@@ -528,6 +532,24 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
 
   cambiarEstado(id: number, estadoProyecto: IEstadoProyecto): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/cambiar-estado`, estadoProyecto);
+  }
+
+  findAllProyectoAnualidades(proyectoId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoAnualidadResumen>> {
+    return this.find<IProyectoAnualidadResumenResponse, IProyectoAnualidadResumen>(
+      `${this.endpointUrl}/${proyectoId}/anualidades`,
+      options,
+      PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Devuelve los totales de los importes de un presupuesto de proyecto
+   *
+   * @param proyectoId Id del proyecto
+   */
+  getProyectoPresupuestoTotales(proyectoId: number): Observable<IProyectoPresupuestoTotales> {
+    return this.http.get<IProyectoPresupuestoTotales>(`${this.endpointUrl}/${proyectoId}/presupuesto-totales`);
   }
 
 }

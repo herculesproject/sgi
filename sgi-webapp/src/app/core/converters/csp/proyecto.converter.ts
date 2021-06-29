@@ -43,7 +43,13 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       observaciones: value.observaciones,
       comentario: value.estado.comentario,
       tipoSeguimiento: value.tipoSeguimiento,
-      fechaBase: LuxonUtils.fromBackend(value.fechaBase)
+      fechaBase: LuxonUtils.fromBackend(value.fechaBase),
+      importeConcedido: value.importeConcedido,
+      importePresupuesto: value.importePresupuesto,
+      importeConcedidoSocios: value.importeConcedidoSocios,
+      importePresupuestoSocios: value.importePresupuestoSocios,
+      totalImporteConcedido: value.totalImporteConcedido,
+      totalImportePresupuesto: value.totalImportePresupuesto
     };
   }
 
@@ -81,7 +87,13 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       anualidades: value.anualidades,
       activo: value.activo,
       tipoSeguimiento: value.tipoSeguimiento,
-      fechaBase: LuxonUtils.toBackend(value.fechaBase)
+      fechaBase: LuxonUtils.toBackend(value.fechaBase),
+      importeConcedido: value.importeConcedido,
+      importePresupuesto: value.importePresupuesto,
+      importeConcedidoSocios: value.importeConcedidoSocios,
+      importePresupuestoSocios: value.importePresupuestoSocios,
+      totalImporteConcedido: value.totalImporteConcedido,
+      totalImportePresupuesto: value.totalImportePresupuesto
     };
   }
 }

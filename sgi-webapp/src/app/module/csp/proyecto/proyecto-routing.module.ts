@@ -9,8 +9,9 @@ import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
 import { ProyectoDataResolver, PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
-import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
+import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
+import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { ProyectoDocumentosComponent } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.component';
@@ -24,17 +25,18 @@ import { ProyectoPaqueteTrabajoComponent } from './proyecto-formulario/proyecto-
 import { ProyectoPartidasPresupuestariasComponent } from './proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partidas-presupuestarias.component';
 import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
 import { ProyectoPlazosComponent } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.component';
+import { ProyectoPresupuestoComponent } from './proyecto-formulario/proyecto-presupuesto/proyecto-presupuesto.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 import { ProyectoProyectosSgeComponent } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { PROYECTO_ROUTE_NAMES } from './proyecto-route-names';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
-import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
 
 const PROYECTO_KEY = marker('csp.proyecto');
 const PROYECTO_SOCIOS_KEY = marker('menu.csp.proyectos.socios');
 const PROYECTO_PERIODOS_SEGUIMIENTO_KEY = marker('menu.csp.proyectos.seguimientos-cientificos');
+const PROYECTO_PRESUPUESTO_KEY = marker('menu.csp.proyectos.configuracion-economica.presupuesto');
 const PROYECTO_PRORROGA_KEY = marker('menu.csp.proyectos.prorrogas');
 const PROYECTO_ELEGIBILIDAD_KEY = marker('csp.proyecto-elegibilidad');
 const MSG_NEW_TITLE = marker('title.new.entity');
@@ -195,6 +197,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO,
         redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.PRESUPUESTO,
+        component: ProyectoPresupuestoComponent,
+        canDeactivate: [FragmentGuard]
       }
     ]
   },
@@ -268,7 +275,19 @@ const routes: SgiAuthRoutes = [
           title: PROYECTO_ELEGIBILIDAD_KEY,
           permitido: false
         }
-      }
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.PRESUPUESTO,
+        loadChildren: () =>
+          import('../proyecto-anualidad/proyecto-anualidad.module').then(
+            (m) => m.ProyectoAnualidadModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: PROYECTO_PRESUPUESTO_KEY,
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        }
+      },
     ]
   }
 ];

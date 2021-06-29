@@ -90,14 +90,19 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTOS_SGE)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.ELEGIBILIDAD]"
+        [title]="'menu.csp.proyectos.configuracion-economica.elegibilidad' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
         [route]="[PROYECTO_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS]"
         [title]="'csp.proyecto-partida-presupuestaria'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
-        [route]="[PROYECTO_ROUTE_NAMES.ELEGIBILIDAD]"
-        [title]="'menu.csp.proyectos.configuracion-economica.elegibilidad' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
+        [route]="[PROYECTO_ROUTE_NAMES.PRESUPUESTO]"
+        [title]="'menu.csp.proyectos.configuracion-economica.presupuesto'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.PRESUPUESTO)">
       </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
   </ng-container>

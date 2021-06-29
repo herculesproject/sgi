@@ -5,7 +5,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEntidadGestoraFragment } from './proyecto-entidad-gestora.fragment';
-
 @Component({
   selector: 'sgi-proyecto-entidad-gestora',
   templateUrl: './proyecto-entidad-gestora.component.html',

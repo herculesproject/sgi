@@ -19,5 +19,6 @@ export const PROYECTO_ROUTE_NAMES = {
   PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
   ELEGIBILIDAD: 'elegibilidad',
   CONCEPTO_GATO_PERMITIDO: 'concepto-gasto-permitido',
-  CONCEPTO_GATO_NO_PERMITIDO: 'concepto-gasto-no-permitido'
+  CONCEPTO_GATO_NO_PERMITIDO: 'concepto-gasto-no-permitido',
+  PRESUPUESTO: 'presupuesto'
 };

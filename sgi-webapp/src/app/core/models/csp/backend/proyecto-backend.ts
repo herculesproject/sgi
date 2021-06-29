@@ -67,4 +67,16 @@ export interface IProyectoBackend {
   tipoSeguimiento: TipoSeguimiento;
   /** Fecha Base */
   fechaBase: string;
+  /** Importe presupuesto */
+  importePresupuesto: number;
+  /** Importe concedido */
+  importeConcedido: number;
+  /** Importe presupuesto socios */
+  importePresupuestoSocios: number;
+  /** Importe concedido socios */
+  importeConcedidoSocios: number;
+  /** total Importe presupuesto */
+  totalImportePresupuesto: number;
+  /** total Importe concedido */
+  totalImporteConcedido: number;
 }
