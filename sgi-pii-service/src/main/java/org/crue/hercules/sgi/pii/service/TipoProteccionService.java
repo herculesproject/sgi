@@ -11,8 +11,8 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.exceptions.TipoProteccionNotFoundException;
-import org.crue.hercules.sgi.pii.model.SectorAplicacion.OnActivar;
 import org.crue.hercules.sgi.pii.model.TipoProteccion;
+import org.crue.hercules.sgi.pii.model.TipoProteccion.OnActivar;
 import org.crue.hercules.sgi.pii.repository.TipoProteccionRepository;
 import org.crue.hercules.sgi.pii.repository.specification.TipoProteccionSpecifications;
 import org.springframework.data.domain.Page;
@@ -75,7 +75,7 @@ public class TipoProteccionService {
    */
   @Transactional
   @Validated({ TipoProteccion.OnActualizar.class })
-  public TipoProteccion update(TipoProteccion tipoProteccion) {
+  public TipoProteccion update(@Valid TipoProteccion tipoProteccion) {
     log.debug("update(TipoProteccion tipoProteccion) - start");
 
     Assert.notNull(tipoProteccion.getId(),
@@ -210,4 +210,5 @@ public class TipoProteccionService {
     log.debug("findById(Long id)  - end");
     return returnValue;
   }
+
 }
