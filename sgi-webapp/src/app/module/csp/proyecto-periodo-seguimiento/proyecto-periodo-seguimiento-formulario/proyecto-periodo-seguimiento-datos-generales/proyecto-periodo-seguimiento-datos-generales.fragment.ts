@@ -1,5 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
@@ -7,11 +8,15 @@ import { FormFragment } from '@core/services/action-service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { StringValidator } from '@core/validators/string-validator';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, skipWhile } from 'rxjs/operators';
+import { comparePeriodoSeguimiento, getFechaFinPeriodoSeguimiento, getFechaInicioPeriodoSeguimiento } from '../../proyecto-periodo-seguimiento.utils';
 
 export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragment<IProyectoPeriodoSeguimiento> {
   proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento;
+
+  showDatosConvocatoriaPeriodoSeguimiento = false;
 
   constructor(
     key: number,
@@ -42,7 +47,14 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
         observaciones: new FormControl('', [Validators.maxLength(250)]),
         fechaInicioProyecto: new FormControl(this.proyecto?.fechaInicio),
         tipoSeguimiento: new FormControl('', [Validators.required]),
-        fechaFinProyecto: new FormControl(this.proyecto?.fechaFin)
+        fechaFinProyecto: new FormControl(this.proyecto?.fechaFin),
+        fechaInicioConvocatoria: new FormControl({ value: null, disabled: true }),
+        fechaFinConvocatoria: new FormControl({ value: null, disabled: true }),
+        observacionesConvocatoria: new FormControl({ value: null, disabled: true }),
+        tipoSeguimientoConvocatoria: new FormControl({ value: null, disabled: true }),
+        fechaInicioPresentacionConvocatoria: new FormControl({ value: null, disabled: true }),
+        fechaFinPresentacionConvocatoria: new FormControl({ value: null, disabled: true }),
+        numPeriodoConvocatoria: new FormControl({ value: null, disabled: true })
       },
       {
         validators: [
@@ -123,6 +135,45 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       map(result => {
         this.proyectoPeriodoSeguimiento = result;
         return this.proyectoPeriodoSeguimiento.id;
+      })
+    );
+  }
+
+
+  setDatosConvocatoriaPeriodoSeguimiento(convocatoriaPeriodoSeguimiento: IConvocatoriaPeriodoSeguimientoCientifico) {
+    this.subscriptions.push(
+      this.initialized$.pipe(
+        skipWhile(initialized => !initialized)
+      ).subscribe(() => {
+
+        this.proyectoPeriodoSeguimiento.convocatoriaPeriodoSeguimientoId = convocatoriaPeriodoSeguimiento.id;
+
+        if (comparePeriodoSeguimiento(convocatoriaPeriodoSeguimiento, this.proyectoPeriodoSeguimiento,
+          this.proyecto.fechaInicio, this.proyecto.fechaFin)) {
+
+          this.showDatosConvocatoriaPeriodoSeguimiento = true;
+          this.getFormGroup().controls.tipoSeguimientoConvocatoria.setValue(convocatoriaPeriodoSeguimiento.tipoSeguimiento);
+          this.getFormGroup().controls.observacionesConvocatoria.setValue(convocatoriaPeriodoSeguimiento.observaciones);
+          this.getFormGroup().controls.fechaInicioPresentacionConvocatoria.setValue(convocatoriaPeriodoSeguimiento.fechaInicioPresentacion);
+          this.getFormGroup().controls.fechaFinPresentacionConvocatoria.setValue(convocatoriaPeriodoSeguimiento.fechaFinPresentacion);
+          this.getFormGroup().controls.numPeriodoConvocatoria.setValue(convocatoriaPeriodoSeguimiento.numPeriodo);
+
+          let fechaInicioPeriodoSeguimiento: DateTime;
+          if (convocatoriaPeriodoSeguimiento.mesInicial) {
+            fechaInicioPeriodoSeguimiento = getFechaInicioPeriodoSeguimiento(this.proyecto.fechaInicio,
+              convocatoriaPeriodoSeguimiento.mesInicial);
+            this.getFormGroup().controls.fechaInicioConvocatoria.setValue(fechaInicioPeriodoSeguimiento);
+          }
+
+          if (convocatoriaPeriodoSeguimiento.mesFinal) {
+            this.getFormGroup().controls.fechaFinConvocatoria.setValue(getFechaFinPeriodoSeguimiento(this.proyecto.fechaInicio,
+              this.proyecto.fechaFin, convocatoriaPeriodoSeguimiento.mesFinal, fechaInicioPeriodoSeguimiento));
+          }
+
+          if (this.proyectoPeriodoSeguimiento.id) {
+            this.refreshInitialState();
+          }
+        }
       })
     );
   }

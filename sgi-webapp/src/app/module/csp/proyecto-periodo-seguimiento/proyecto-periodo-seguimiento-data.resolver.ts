@@ -59,6 +59,7 @@ export class ProyectoPeriodoSeguimientoDataResolver extends SgiResolverResolver<
         return {
           proyecto: proyectoData.proyecto,
           proyectoPeriodosSeguimiento: periodos.items.filter(element => element.id !== proyectoPeriodoSeguimientoId),
+          convocatoriaPeriodoSeguimientoId: null,
           readonly: proyectoData.readonly
         };
       })

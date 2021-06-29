@@ -21,7 +21,6 @@ export interface IConvocatoriaSeguimientoCientificoModalData {
   duracion: number;
   convocatoriaSeguimientoCientifico: IConvocatoriaPeriodoSeguimientoCientifico;
   convocatoriaSeguimientoCientificoList: StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>[];
-  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('btn.add');
@@ -159,10 +158,6 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
-
-    if (this.data.readonly) {
-      formGroup.disable();
-    }
 
     // Si la convocatoria tiene duracion el mesFinal no puede superarla
     if (this.data.duracion) {

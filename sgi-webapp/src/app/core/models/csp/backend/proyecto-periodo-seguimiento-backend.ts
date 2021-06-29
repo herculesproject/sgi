@@ -10,4 +10,5 @@ export interface IProyectoPeriodoSeguimientoBackend {
   fechaFinPresentacion: string;
   tipoSeguimiento: TipoSeguimiento;
   observaciones: string;
+  convocatoriaPeriodoSeguimientoId: number;
 }

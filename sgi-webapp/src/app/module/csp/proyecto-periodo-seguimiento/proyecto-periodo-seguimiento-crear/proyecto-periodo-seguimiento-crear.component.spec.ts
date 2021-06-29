@@ -26,10 +26,15 @@ describe('ProyectoPeriodoSeguimientoCrearComponent', () => {
           id: 1
         }
       },
+      proyectoPeriodosSeguimiento: [],
       readonly: false
     } as IProyectoPeriodoSeguimientoData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('0', routeData);
+
+  const state = {
+    convocatoriaConceptoGastoId: 1
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -60,6 +65,7 @@ describe('ProyectoPeriodoSeguimientoCrearComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(ProyectoPeriodoSeguimientoCrearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

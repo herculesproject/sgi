@@ -201,7 +201,7 @@ export class ProyectoActionService extends ActionService {
       this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(id, proyectoService, proyectoPaqueteTrabajoService);
       this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
-        id, proyectoService, proyectoPeriodoSeguimientoService, documentoService);
+        id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
       this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(
         fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly);

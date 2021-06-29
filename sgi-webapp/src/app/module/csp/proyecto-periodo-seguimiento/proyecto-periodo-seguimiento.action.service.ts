@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { ActionService } from '@core/services/action-service';
+import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
 import { ProyectoPeriodoSeguimientoDocumentoService } from '@core/services/csp/proyecto-periodo-seguimiento-documento.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
@@ -12,9 +13,11 @@ import { ProyectoPeriodoSeguimientoDatosGeneralesFragment } from './proyecto-per
 import { ProyectoPeriodoSeguimientoDocumentosFragment } from './proyecto-periodo-seguimiento-formulario/proyecto-periodo-seguimiento-documentos/proyecto-periodo-seguimiento-documentos.fragment';
 import { PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_PARAMS } from './proyecto-periodo-seguimiento-route-params';
 
+export const CONVOCATORIA_PERIODO_SEGUIMIENTO_ID_KEY = 'convocatoriaPeriodoSeguimientoId';
 export interface IProyectoPeriodoSeguimientoData {
   proyecto: IProyecto;
   proyectoPeriodosSeguimiento: IProyectoPeriodoSeguimiento[];
+  convocatoriaPeriodoSeguimientoId: number;
   readonly: boolean;
 }
 
@@ -40,11 +43,19 @@ export class ProyectoPeriodoSeguimientoActionService extends ActionService {
     route: ActivatedRoute,
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     periodoSeguimientoDocumentoService: ProyectoPeriodoSeguimientoDocumentoService,
-    documentoService: DocumentoService
+    documentoService: DocumentoService,
+    private convocatoriaPeriodoSeguimientoService: ConvocatoriaSeguimientoCientificoService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_PERIODO_SEGUIMIENTO_DATA_KEY];
     const id = Number(route.snapshot.paramMap.get(PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_PARAMS.ID));
+
+    const convocatoriaPeriodoSeguimientoId =
+      this.data.convocatoriaPeriodoSeguimientoId ?? history.state[CONVOCATORIA_PERIODO_SEGUIMIENTO_ID_KEY];
+
+    if (convocatoriaPeriodoSeguimientoId) {
+      this.loadPeriodoSeguimiento(convocatoriaPeriodoSeguimientoId);
+    }
 
     if (id) {
       this.enableEdit();
@@ -58,5 +69,16 @@ export class ProyectoPeriodoSeguimientoActionService extends ActionService {
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
 
+    // Inicializamos los datos generales
+    this.datosGenerales.initialize();
+
+  }
+
+  private loadPeriodoSeguimiento(id: number): void {
+    if (id) {
+      this.convocatoriaPeriodoSeguimientoService.findById(id).subscribe(convocatoriaPeriodoSeguimiento => {
+        this.datosGenerales.setDatosConvocatoriaPeriodoSeguimiento(convocatoriaPeriodoSeguimiento);
+      });
+    }
   }
 }

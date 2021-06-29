@@ -5,11 +5,10 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { TipoSeguimiento, TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
+import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { DialogService } from '@core/services/dialog.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -114,7 +113,6 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
       convocatoriaSeguimientoCientifico: seguimientoCientificoActualizar
         ? seguimientoCientificoActualizar.value : {} as IConvocatoriaPeriodoSeguimientoCientifico,
       convocatoriaSeguimientoCientificoList: this.dataSource.data,
-      readonly: this.formPart.readonly
     };
 
     const config = {

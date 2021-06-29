@@ -16,8 +16,10 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { CONVOCATORIA_PERIODO_SEGUIMIENTO_ID_KEY } from '../../../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento.action.service';
+import { PROYECTO_ROUTE_NAMES } from '../../proyecto-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
-import { ProyectoPeriodoSeguimientosFragment } from './proyecto-periodo-seguimientos.fragment';
+import { IPeriodoSeguimientoListado, ProyectoPeriodoSeguimientosFragment } from './proyecto-periodo-seguimientos.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_DOCUMENTOS = marker('msg.csp.proyecto-periodo-seguimiento-cientifico.documento.delete');
@@ -37,17 +39,21 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns = ['numPeriodo', 'fechaInicio', 'fechaFin', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'tipoSeguimiento', 'observaciones', 'acciones'];
+  displayedColumns = ['helpIcon', 'numPeriodo', 'fechaInicio', 'fechaFin', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'tipoSeguimiento', 'observaciones', 'acciones'];
 
   msgParamEntity = {};
   textoDelete: string;
 
-  dataSource = new MatTableDataSource<StatusWrapper<IProyectoPeriodoSeguimiento>>();
+  dataSource = new MatTableDataSource<IPeriodoSeguimientoListado>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   get TIPO_SEGUIMIENTO_MAP() {
     return TIPO_SEGUIMIENTO_MAP;
+  }
+
+  get PROYECTO_ROUTE_NAMES() {
+    return PROYECTO_ROUTE_NAMES;
   }
 
   constructor(
@@ -63,7 +69,7 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    const subscription = this.formPart.periodoSeguimientos$.subscribe(
+    const subscription = this.formPart?.periodoSeguimientos$.subscribe(
       (proyectoPeriodoSeguimientos) => {
         this.dataSource.data = proyectoPeriodoSeguimientos;
       }
@@ -72,10 +78,10 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IProyectoPeriodoSeguimiento>, property: string) => {
+      (periodoSeguimientoListado: IPeriodoSeguimientoListado, property: string) => {
         switch (property) {
           default:
-            return wrapper.value[property];
+            return periodoSeguimientoListado[property];
         }
       };
     this.dataSource.sort = this.sort;
@@ -128,6 +134,10 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
         );
       }
     });
+  }
+
+  getConvocatoriaPeriodoSeguimientoState(convocatoriaPeriodoSeguimientoId: number) {
+    return { [CONVOCATORIA_PERIODO_SEGUIMIENTO_ID_KEY]: convocatoriaPeriodoSeguimientoId };
   }
 
 }

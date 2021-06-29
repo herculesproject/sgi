@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { TipoSeguimiento, TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
+import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -76,6 +76,18 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
         tap(() => this.checkOverlapsPeriodosSeguimiento())
       ).subscribe()
     );
+  }
+
+  copyToProyecto(): void {
+    this.formPart.getFormGroup().controls.numPeriodo.setValue(this.formPart.getFormGroup().controls.numPeriodoConvocatoria.value);
+    this.formPart.getFormGroup().controls.fechaInicio.setValue(this.formPart.getFormGroup().controls.fechaInicioConvocatoria.value);
+    this.formPart.getFormGroup().controls.fechaFin.setValue(this.formPart.getFormGroup().controls.fechaFinConvocatoria.value);
+    this.formPart.getFormGroup().controls.fechaInicioPresentacion.setValue(
+      this.formPart.getFormGroup().controls.fechaInicioPresentacionConvocatoria.value);
+    this.formPart.getFormGroup().controls.fechaFinPresentacion.setValue(
+      this.formPart.getFormGroup().controls.fechaFinPresentacionConvocatoria.value);
+    this.formPart.getFormGroup().controls.observaciones.setValue(this.formPart.getFormGroup().controls.observacionesConvocatoria.value);
+    this.formPart.getFormGroup().controls.tipoSeguimiento.setValue(this.formPart.getFormGroup().controls.tipoSeguimientoConvocatoria.value);
   }
 
   private setupI18N(): void {
