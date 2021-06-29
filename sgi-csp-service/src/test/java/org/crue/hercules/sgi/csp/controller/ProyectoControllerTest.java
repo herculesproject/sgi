@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
@@ -124,6 +125,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoConceptoGastoService proyectoConceptoGastoService;
+
+  @MockBean
+  private ProyectoAnualidadService proyectoAnualidadService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

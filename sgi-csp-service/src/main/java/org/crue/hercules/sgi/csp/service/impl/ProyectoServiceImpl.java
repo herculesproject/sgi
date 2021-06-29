@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
@@ -355,6 +356,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setTipoHorasAnuales(proyectoActualizar.getTipoHorasAnuales());
       data.setTitulo(proyectoActualizar.getTitulo());
       data.setUnidadGestionRef(proyectoActualizar.getUnidadGestionRef());
+      data.setImportePresupuesto(proyectoActualizar.getImportePresupuesto());
+      data.setImportePresupuestoSocios(proyectoActualizar.getImportePresupuestoSocios());
+      data.setImporteConcedido(proyectoActualizar.getImporteConcedido());
+      data.setImporteConcedidoSocios(proyectoActualizar.getImporteConcedidoSocios());
+      data.setTotalImporteConcedido(proyectoActualizar.getTotalImporteConcedido());
+      data.setTotalImportePresupuesto(proyectoActualizar.getTotalImportePresupuesto());
+
       List<ProyectoEquipo> equipos = null;
       if (data.getFechaFinDefinitiva() == null && proyectoActualizar.getFechaFinDefinitiva() != null) {
         // Si se informa por primera vez la fecha fin definitiva del proyecto, se
@@ -1538,4 +1546,24 @@ public class ProyectoServiceImpl implements ProyectoService {
           "El equipo debe tener al menos un miembro para el proyecto en estado 'CONCEDIDO'");
     }
   }
+
+  /**
+   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Solicitud}.
+   * 
+   * @param proyectoId Identificador de la entidad {@link Proyecto}.
+   * @return {@link ProyectoPresupuestoTotales}.
+   */
+  @Override
+  public ProyectoPresupuestoTotales getTotales(Long proyectoId) {
+    log.debug("getTotales(Long proyectoId) - start");
+    final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
+
+    returnValue.setImporteTotalPresupuesto(
+        returnValue.getImporteTotalPresupuestoUniversidad().add(returnValue.getImporteTotalPresupuestoSocios()));
+    returnValue.setImporteTotalConcedido(
+        returnValue.getImporteTotalConcedidoUniversidad().add(returnValue.getImporteTotalConcedidoSocios()));
+    log.debug("getTotales(Long proyectoId) - end");
+    return returnValue;
+  }
+
 }

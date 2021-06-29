@@ -92,6 +92,7 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
     BDDMockito.given(repository.saveAll(ArgumentMatchers.<ProyectoSocioPeriodoJustificacionDocumento>anyList()))
         .will((InvocationOnMock invocation) -> {
           List<ProyectoSocioPeriodoJustificacionDocumento> periodoJustificaciones = invocation.getArgument(0);
+
           return periodoJustificaciones.stream().map(periodoJustificacion -> {
             if (periodoJustificacion.getId() == null) {
               periodoJustificacion.setId(6L);

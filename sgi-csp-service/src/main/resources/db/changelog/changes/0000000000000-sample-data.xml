@@ -3006,7 +3006,7 @@ industries" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="null" />
+      <column name="anualidades" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="proyecto">
@@ -3034,7 +3034,7 @@ industries" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="REAL" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="null" />
+      <column name="anualidades" value="false" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="proyecto">
@@ -3062,7 +3062,7 @@ industries" />
       <column name="coste_hora" value="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="null" />
+      <column name="anualidades" value="true" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>

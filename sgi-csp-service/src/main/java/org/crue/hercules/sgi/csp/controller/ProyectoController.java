@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
+import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -24,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
@@ -127,6 +131,9 @@ public class ProyectoController {
   /** ProyectoProyectoSge service */
   private final ProyectoProyectoSgeService proyectoProyectoSgeService;
 
+  /** ProyectoAnualidadService service */
+  private final ProyectoAnualidadService proyectoAnualidadService;
+
   /** ProyectoPartidaService service */
   private final ProyectoPartidaService proyectoPartidaService;
 
@@ -155,6 +162,7 @@ public class ProyectoController {
    * @param proyectoClasificacionService                      {@link ProyectoClasificacionService}.
    * @param proyectoAreaConocimientoService                   {@link proyectoAreaConocimientoService}.
    * @param proyectoProyectoSgeService                        {@link ProyectoProyectoSgeService}.
+   * @param proyectoAnualidadService                          {@link ProyectoAnualidadService}.
    * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
    * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
    */
@@ -171,7 +179,7 @@ public class ProyectoController {
       ProyectoClasificacionService proyectoClasificacionService,
       ProyectoAreaConocimientoService proyectoAreaConocimientoService,
       ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
-      ProyectoConceptoGastoService proyectoConceptoGastoService) {
+      ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -190,6 +198,7 @@ public class ProyectoController {
     this.proyectoClasificacionService = proyectoClasificacionService;
     this.proyectoAreaConocimientoService = proyectoAreaConocimientoService;
     this.proyectoProyectoSgeService = proyectoProyectoSgeService;
+    this.proyectoAnualidadService = proyectoAnualidadService;
     this.proyectoPartidaService = proyectoPartidaService;
     this.proyectoConceptoGastoService = proyectoConceptoGastoService;
   }
@@ -821,6 +830,29 @@ public class ProyectoController {
   }
 
   /**
+   * Devuelve una lista paginada de {@link ProyectoAnualidadOutput}
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/anualidades")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoAnualidadResumen>> findAllProyectoAnualidadResumen(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoAnualidadResumen(Long id, String query, Pageable paging) - start");
+    Page<ProyectoAnualidadResumen> page = proyectoAnualidadService.findAllResumenByProyecto(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoAnualidadResumen(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoAnualidadResumen(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Devuelve una lista paginada de {@link ProyectoPartida}
    * 
    * @param id     Identificador de {@link Proyecto}.
@@ -908,6 +940,21 @@ public class ProyectoController {
     Proyecto returnValue = service.cambiarEstado(id, estadoProyecto);
 
     log.debug("cambiarEstado(EstadoProyecto estadoProyecto) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Proyecto}.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return {@link ProyectoPresupuestoTotales}
+   */
+  @GetMapping("/{id}/presupuesto-totales")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  ProyectoPresupuestoTotales getProyectoPresupuestoTotales(@PathVariable Long id) {
+    log.debug("getProyectoPresupuestoTotales(Long id) - start");
+    ProyectoPresupuestoTotales returnValue = service.getTotales(id);
+    log.debug("getProyectoPresupuestoTotales(Long id) - end");
     return returnValue;
   }
 

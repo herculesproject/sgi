@@ -408,7 +408,8 @@ public class SolicitudService {
   /**
    * Se hace el cambio de estado de "Borrador" a "Presentada".
    * 
-   * @param id Identificador de {@link Solicitud}.
+   * @param id              Identificador de {@link Solicitud}.
+   * @param estadoSolicitud {@link EstadoSolicitud}
    * @return {@link Solicitud} actualizado.
    */
   @Transactional

@@ -22,6 +22,17 @@ public interface ProyectoConceptoGastoCodigoEcService {
   ProyectoConceptoGastoCodigoEc findById(Long id);
 
   /**
+   * Obtener todas las entidades {@link ProyectoConceptoGastoCodigoEc} paginadas
+   * y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ProyectoConceptoGastoCodigoEc} paginadas
+   *         y/o filtradas.
+   */
+  Page<ProyectoConceptoGastoCodigoEc> findAll(String query, Pageable pageable);
+
+  /**
    * Obtiene los {@link ProyectoConceptoGastoCodigoEc} para un
    * {@link ProyectoConceptoGasto}
    *

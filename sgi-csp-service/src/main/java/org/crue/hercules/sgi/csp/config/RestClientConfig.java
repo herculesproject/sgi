@@ -18,8 +18,8 @@ public class RestClientConfig {
   /**
    * RestTemplate usado para el acceso al API rest de otros módulos.
    * 
-   * @param restTemplateBuilder
-   * @return
+   * @param restTemplateBuilder {@link RestTemplateBuilder}
+   * @return {@link RestTemplate}
    */
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {

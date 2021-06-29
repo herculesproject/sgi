@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -201,6 +202,30 @@ public class Proyecto extends BaseEntity {
   /** Anualidades */
   @Column(name = "anualidades", nullable = true)
   private Boolean anualidades;
+
+  /** Importe Presupuesto */
+  @Column(name = "importe_presupuesto", nullable = true)
+  private BigDecimal importePresupuesto;
+
+  /** Importe concedido */
+  @Column(name = "importe_concedido", nullable = true)
+  private BigDecimal importeConcedido;
+
+  /** Importe presupuesta socios */
+  @Column(name = "importe_presupuesto_socios", nullable = true)
+  private BigDecimal importePresupuestoSocios;
+
+  /** Importe concedido socios */
+  @Column(name = "importe_concedido_socios", nullable = true)
+  private BigDecimal importeConcedidoSocios;
+
+  /** Total importe presupuesto */
+  @Column(name = "total_importe_presupuesto", nullable = true)
+  private BigDecimal totalImportePresupuesto;
+
+  /** Total importe concedido */
+  @Column(name = "total_importe_concedido", nullable = true)
+  private BigDecimal totalImporteConcedido;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

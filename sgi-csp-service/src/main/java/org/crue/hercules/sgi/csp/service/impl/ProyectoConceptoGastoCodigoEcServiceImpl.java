@@ -12,8 +12,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.ProyectoConceptoGastoCodigoEcPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -52,6 +54,25 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
     final ProyectoConceptoGastoCodigoEc returnValue = repository.findById(id)
         .orElseThrow(() -> new ProyectoConceptoGastoCodigoEcNotFoundException(id));
     log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link ProyectoConceptoGastoCodigoEc} activos
+   * paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ProyectoConceptoGastoCodigoEc} paginadas
+   *         y/o filtradas.
+   */
+  @Override
+  public Page<ProyectoConceptoGastoCodigoEc> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<ProyectoConceptoGastoCodigoEc> specs = SgiRSQLJPASupport.toSpecification(query,
+        ProyectoConceptoGastoCodigoEcPredicateResolver.getInstance());
+    Page<ProyectoConceptoGastoCodigoEc> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 

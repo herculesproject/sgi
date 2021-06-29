@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.repository.custom;
 
 import java.util.Optional;
 
+import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
@@ -29,4 +30,12 @@ public interface CustomProyectoRepository {
    *         permiten {@link ProyectoPaqueteTrabajo}
    */
   Optional<Boolean> getPermitePaquetesTrabajo(Long id);
+
+  /**
+   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Proyecto}.
+   * 
+   * @param proyectoId Id de la {@link Proyecto}.
+   * @return {@link ProyectoPresupuestoTotales}.
+   */
+  ProyectoPresupuestoTotales getTotales(Long proyectoId);
 }

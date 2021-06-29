@@ -39,6 +39,7 @@ public interface SolicitudProyectoEquipoService {
    * tienen el mismo solicitudProyectoId , añade los que no tienen id y actualiza
    * los ya existentes.
    * 
+   * @param solicitudProyectoId      Identificador de {@link SolicitudProyecto}
    * @param solicitudProyectoEquipos la lista con los cambios para aplicar.
    * @return La lista actualizada de {@link SolicitudProyectoEquipo}.
    */

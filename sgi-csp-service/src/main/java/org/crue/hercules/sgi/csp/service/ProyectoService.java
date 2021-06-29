@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
@@ -88,5 +89,13 @@ public interface ProyectoService {
    * @return {@link Proyecto} actualizado.
    */
   Proyecto cambiarEstado(Long id, EstadoProyecto estadoProyecto);
+
+  /**
+   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Proyecto}.
+   * 
+   * @param proyectoId Identificador de la entidad {@link Proyecto}.
+   * @return {@link ProyectoPresupuestoTotales}.
+   */
+  ProyectoPresupuestoTotales getTotales(Long proyectoId);
 
 }
