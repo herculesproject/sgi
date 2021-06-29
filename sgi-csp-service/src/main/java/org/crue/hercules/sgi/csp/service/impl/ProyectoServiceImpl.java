@@ -904,6 +904,9 @@ public class ProyectoServiceImpl implements ProyectoService {
               && projectBuilder.build().getFechaInicio().isBefore(proyecto.getFechaFin()))) {
             this.proyectoPeriodoSeguimientoService.create(projectBuilder.build());
           }
+          projectBuilder.convocatoriaPeriodoSeguimientoId(convocatoriaSeguimiento.getId());
+
+          this.proyectoPeriodoSeguimientoService.create(projectBuilder.build());
         });
 
     log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - end");

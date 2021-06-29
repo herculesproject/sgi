@@ -130,7 +130,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithExistingId_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
     // given: existing id
     Long convocatoriaPeriodoSeguimientoCientificoId = 1L;
@@ -158,7 +158,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long convocatoriaPeriodoSeguimientoCientificoId = 1L;

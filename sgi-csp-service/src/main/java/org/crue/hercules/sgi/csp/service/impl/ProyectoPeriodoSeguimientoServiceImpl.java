@@ -99,6 +99,7 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
 
       validarProyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoActualizar, proyectoPeriodoSeguimiento);
 
+      proyectoPeriodoSeguimiento.setTipoSeguimiento(proyectoPeriodoSeguimientoActualizar.getTipoSeguimiento());
       proyectoPeriodoSeguimiento.setFechaInicio(proyectoPeriodoSeguimientoActualizar.getFechaInicio());
       proyectoPeriodoSeguimiento.setFechaFin(proyectoPeriodoSeguimientoActualizar.getFechaFin());
       proyectoPeriodoSeguimiento
@@ -385,5 +386,4 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
         "validarRequeridosProyectoPeriodoSeguimiento(ProyectoPeriodoSeguimiento datosProyectoPeriodoSeguimiento, ProyectoPeriodoSeguimiento datosOriginales) - end");
 
   }
-
 }

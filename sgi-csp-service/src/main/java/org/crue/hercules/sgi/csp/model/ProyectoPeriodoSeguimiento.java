@@ -87,6 +87,10 @@ public class ProyectoPeriodoSeguimiento extends BaseEntity {
   @Column(name = "observaciones", length = 2000, nullable = true)
   private String observaciones;
 
+  /** Identificador de la convocatoria periodo de seguimiento */
+  @Column(name = "convocatoria_periodo_seguimiento_id", nullable = true)
+  private Long convocatoriaPeriodoSeguimientoId;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOPERIODOSEGUIMIENTO_PROYECTO"))

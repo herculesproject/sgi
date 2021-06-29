@@ -79,7 +79,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoController {
    *         id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ConvocatoriaPeriodoSeguimientoCientifico findById(@PathVariable Long id) {
     log.debug("ConvocatoriaPeriodoSeguimientoCientifico findById(Long id) - start");
     ConvocatoriaPeriodoSeguimientoCientifico returnValue = service.findById(id);

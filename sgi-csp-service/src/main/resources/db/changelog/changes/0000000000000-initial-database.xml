@@ -1387,6 +1387,7 @@
             <column name="creation_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="convocatoria_periodo_seguimiento_id" type="BIGINT"/>
             <column name="fecha_fin" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

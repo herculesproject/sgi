@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPeriodoSeguimientoCientificoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,14 +37,11 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
 
   private final ConvocatoriaPeriodoSeguimientoCientificoRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaPeriodoSeguimientoCientificoServiceImpl(
-      ConvocatoriaPeriodoSeguimientoCientificoRepository repository, ConvocatoriaRepository convocatoriaRepository,
-      ConvocatoriaService convocatoriaService) {
+      ConvocatoriaPeriodoSeguimientoCientificoRepository repository, ConvocatoriaRepository convocatoriaRepository) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -75,12 +71,6 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
 
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
-
-    // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef(),
-            new String[] { "CSP-CON-E", "CSP-CON-C" }),
-        "No se puede modificar ConvocatoriaPeriodoSeguimientoCientifico. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoesBD = repository
         .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaId);
