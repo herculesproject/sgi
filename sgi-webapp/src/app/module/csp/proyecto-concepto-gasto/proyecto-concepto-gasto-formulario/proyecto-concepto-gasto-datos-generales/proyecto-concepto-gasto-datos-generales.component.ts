@@ -10,6 +10,7 @@ import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service'
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { comparePartidaPresupuestaria } from '../../../proyecto/proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partida-presupuestaria.utils';
 import { ProyectoConceptoGastoActionService } from '../../proyecto-concepto-gasto.action.service';
 import { ProyectoConceptoGastoDatosGeneralesFragment } from './proyecto-concepto-gasto-datos-generales.fragment';
 

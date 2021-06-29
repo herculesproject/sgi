@@ -150,14 +150,16 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
     }
   }
 
-  updateCodigoEconomico(wrapper: StatusWrapper<IProyectoConceptoGastoCodigoEc>): void {
-    const current = this.proyectoConceptoGastoCodigosEcs$.value;
-    const index = current.findIndex(value =>
-      value.proyectoCodigoEconomico && value.proyectoCodigoEconomico.value === wrapper.value);
+  updateCodigoEconomico(wrapper: StatusWrapper<IProyectoConceptoGastoCodigoEc>, index: number): void {
     if (index >= 0) {
-      current[index].proyectoCodigoEconomico = wrapper;
-      this.fillListadoFields(current[index]);
-      current[index].proyectoCodigoEconomico.setEdited();
+      this.proyectoConceptoGastoCodigosEcs$.value[index].proyectoCodigoEconomico = wrapper;
+      this.fillListadoFields(this.proyectoConceptoGastoCodigosEcs$.value[index]);
+      if (wrapper.value.id) {
+        this.proyectoConceptoGastoCodigosEcs$.value[index].proyectoCodigoEconomico.setEdited();
+      } else {
+        this.proyectoConceptoGastoCodigosEcs$.value[index].proyectoCodigoEconomico.setCreated();
+      }
+
       this.setChanges(true);
     }
 

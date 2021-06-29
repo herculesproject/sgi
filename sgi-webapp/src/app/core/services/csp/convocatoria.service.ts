@@ -209,10 +209,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
   }
 
   /**
- * Recupera listado de partidas presupuestarias.
- * @param id partida presupuestaria
- * @param options opciones de búsqueda.
- */
+   * Recupera listado de partidas presupuestarias.
+   * @param id partida presupuestaria
+   * @param options opciones de búsqueda.
+   */
   findPartidasPresupuestarias(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IConvocatoriaPartidaPresupuestaria>> {
     return this.find<IConvocatoriaPartidaPresupuestariaBackend, IConvocatoriaPartidaPresupuestaria>(

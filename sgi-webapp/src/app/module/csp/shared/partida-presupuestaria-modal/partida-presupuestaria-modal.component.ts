@@ -5,12 +5,15 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { TIPO_PARTIDA_MAP } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IPartidaPresupuestaria } from '@core/models/csp/partida-presupuestaria';
+import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
+import { comparePartidaPresupuestaria } from '../../proyecto/proyecto-formulario/proyecto-partidas-presupuestarias/proyecto-partida-presupuestaria.utils';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -23,6 +26,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface PartidaPresupuestariaModalComponentData {
   partidasPresupuestarias: IPartidaPresupuestaria[];
   partidaPresupuestaria: IPartidaPresupuestaria;
+  convocatoriaPartidaPresupuestaria: IConvocatoriaPartidaPresupuestaria;
   readonly: boolean;
   canEdit: boolean;
 }
@@ -46,6 +50,8 @@ export class PartidaPresupuestariaModalComponent
     return TIPO_PARTIDA_MAP;
   }
 
+  showDatosPartidaPresupuestaria = false;
+
   constructor(
     public matDialogRef: MatDialogRef<PartidaPresupuestariaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PartidaPresupuestariaModalComponentData,
@@ -64,6 +70,14 @@ export class PartidaPresupuestariaModalComponent
     super.ngOnInit();
     this.setupI18N();
     this.textSaveOrUpdate = this.data?.partidaPresupuestaria ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.checkShowDatosConvocatoriaPartidaPresupuestaria(this.data.convocatoriaPartidaPresupuestaria, this.data.partidaPresupuestaria);
+  }
+
+  copyToProyecto(): void {
+    this.formGroup.controls.codigo.setValue(this.formGroup.controls.codigoConvocatoria.value);
+    this.formGroup.controls.tipo.setValue(this.formGroup.controls.tipoConvocatoria.value);
+    this.formGroup.controls.descripcion.setValue(this.formGroup.controls.descripcionConvocatoria.value);
   }
 
   private setupI18N(): void {
@@ -105,10 +119,26 @@ export class PartidaPresupuestariaModalComponent
     }
   }
 
+  private checkShowDatosConvocatoriaPartidaPresupuestaria(
+    convocatoriaPartidaPresupuestaria: IConvocatoriaPartidaPresupuestaria,
+    proyectoPartidaPresupuestaria: IPartidaPresupuestaria) {
+
+    if (!convocatoriaPartidaPresupuestaria) {
+      this.showDatosPartidaPresupuestaria = false;
+    } else if (!proyectoPartidaPresupuestaria) {
+      this.showDatosPartidaPresupuestaria = true;
+    } else if (comparePartidaPresupuestaria(convocatoriaPartidaPresupuestaria, proyectoPartidaPresupuestaria)) {
+      this.showDatosPartidaPresupuestaria = true;
+    } else {
+      this.showDatosPartidaPresupuestaria = false;
+    }
+  }
+
   protected getDatosForm(): IPartidaPresupuestaria {
     this.data.partidaPresupuestaria.codigo = this.formGroup.controls.codigo.value;
     this.data.partidaPresupuestaria.tipoPartida = this.formGroup.controls.tipo.value;
-    this.data.partidaPresupuestaria.descripcion = this.formGroup.controls.descripcion.value;
+    this.data.partidaPresupuestaria.descripcion = this.formGroup.controls.descripcion.value === ''
+      ? null : this.formGroup.controls.descripcion.value;
     return this.data.partidaPresupuestaria;
   }
 
@@ -123,7 +153,10 @@ export class PartidaPresupuestariaModalComponent
       ]),
       descripcion: new FormControl(this.data?.partidaPresupuestaria?.descripcion, [
         Validators.maxLength(250)
-      ])
+      ]),
+      codigoConvocatoria: new FormControl({ value: this.data?.convocatoriaPartidaPresupuestaria?.codigo, disabled: true }),
+      tipoConvocatoria: new FormControl({ value: this.data?.convocatoriaPartidaPresupuestaria?.tipoPartida, disabled: true }),
+      descripcionConvocatoria: new FormControl({ value: this.data?.convocatoriaPartidaPresupuestaria?.descripcion, disabled: true }),
     }, {
       validators: [
         this.uniqueCodigoTipo(),
@@ -166,8 +199,8 @@ export class PartidaPresupuestariaModalComponent
       const tipoValue = tipoControl.value;
 
       const duplicated = this.data.partidasPresupuestarias
-        .filter(partidaPresupuestaria => partidaPresupuestaria.id !== this.data.partidaPresupuestaria?.id)
-        .some(partidaPresupuestaria => partidaPresupuestaria.codigo === codigoValue && partidaPresupuestaria.tipoPartida === tipoValue);
+        .filter(partidaPresupuestaria => partidaPresupuestaria?.id !== this.data.partidaPresupuestaria?.id)
+        .some(partidaPresupuestaria => partidaPresupuestaria?.codigo === codigoValue && partidaPresupuestaria?.tipoPartida === tipoValue);
 
       if (duplicated) {
         codigoControl.setErrors({ duplicated: true });

@@ -216,8 +216,8 @@ export class ProyectoActionService extends ActionService {
         clasificacionService, this.readonly);
       this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
         proyectoSgeService, this.readonly);
-      this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, proyectoService, proyectoPartidaService,
-        this.readonly);
+      this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, this.data?.proyecto,
+        proyectoService, proyectoPartidaService, convocatoriaService, this.readonly);
       this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
         convocatoriaService, this.readonly);
       this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService, this.readonly);

@@ -7,6 +7,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { TIPO_PARTIDA_MAP } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -16,7 +17,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PartidaPresupuestariaModalComponent, PartidaPresupuestariaModalComponentData } from '../../../shared/partida-presupuestaria-modal/partida-presupuestaria-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
-import { ProyectoPartidasPresupuestariasFragment } from './proyecto-partidas-presupuestarias.fragment';
+import { IPartidaPresupuestariaListado, ProyectoPartidasPresupuestariasFragment } from './proyecto-partidas-presupuestarias.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_PARTIDA_PRESUPUESTARIA_KEY = marker('csp.proyecto-partida-presupuestaria');
@@ -32,13 +33,13 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
   formPart: ProyectoPartidasPresupuestariasFragment;
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumns = ['codigo', 'tipoPartida', 'descripcion', 'acciones'];
+  displayedColumns = ['helpIcon', 'codigo', 'tipoPartida', 'descripcion', 'acciones'];
 
   modalTitleEntity: string;
   msgParamEntity = {};
   textoDelete: string;
 
-  dataSource = new MatTableDataSource<StatusWrapper<IProyectoPartida>>();
+  dataSource = new MatTableDataSource<IPartidaPresupuestariaListado>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -64,24 +65,21 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IProyectoPartida>, property: string) => {
+      (wrapper: IPartidaPresupuestariaListado, property: string) => {
         switch (property) {
-          case 'codigo':
-            return wrapper.value.codigo;
-          case 'tipoPartida':
-            return wrapper.value.tipoPartida;
-          case 'descripcion':
-            return wrapper.value.descripcion;
           default:
             return wrapper[property];
         }
       };
-    this.dataSource.sort = this.sort;
+
     this.subscriptions.push(this.formPart.partidasPresupuestarias$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
+
   }
 
   private setupI18N(): void {
@@ -109,10 +107,18 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
    *
    * @param idEquipo Identificador de equipo a editar.
    */
-  openModal(wrapper?: StatusWrapper<IProyectoPartida>): void {
+  openModal(proyectoPartida: StatusWrapper<IProyectoPartida>, convocatoriaPartida?: IConvocatoriaPartidaPresupuestaria,
+    rowIndex?: number): void {
+
+    const proyectoPartidaPresupuestariaTabla = this.dataSource.data
+      .filter(partidaPresupuestaria => partidaPresupuestaria.partidaPresupuestaria)
+      .map(partidaPresupuestaria => partidaPresupuestaria.partidaPresupuestaria.value);
+
+    proyectoPartidaPresupuestariaTabla.splice(rowIndex, 1);
     const data: PartidaPresupuestariaModalComponentData = {
-      partidaPresupuestaria: wrapper?.value ?? {} as IProyectoPartida,
-      partidasPresupuestarias: this.dataSource.data.map(element => element.value),
+      partidaPresupuestaria: proyectoPartida?.value ?? {} as IProyectoPartida,
+      partidasPresupuestarias: proyectoPartidaPresupuestariaTabla,
+      convocatoriaPartidaPresupuestaria: convocatoriaPartida,
       readonly: this.formPart.readonly,
       canEdit: !this.formPart.readonly
     };
@@ -124,11 +130,11 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
     const dialogRef = this.matDialog.open(PartidaPresupuestariaModalComponent, config);
     dialogRef.afterClosed().subscribe((partidaPresupuestaria) => {
       if (partidaPresupuestaria) {
-        if (!wrapper) {
-          this.formPart.addPartidaPresupuestaria(partidaPresupuestaria);
-        } else if (!wrapper.created) {
-          const wrapperUpdated = new StatusWrapper<IProyectoPartida>(wrapper.value);
-          this.formPart.updatePartidaPresupuestaria(wrapperUpdated);
+        if (!proyectoPartida) {
+          this.formPart.addPartidaPresupuestaria(partidaPresupuestaria, convocatoriaPartida);
+        } else {
+          const wrapperUpdated = new StatusWrapper<IProyectoPartida>(partidaPresupuestaria);
+          this.formPart.updatePartidaPresupuestaria(wrapperUpdated, rowIndex);
         }
       }
     });

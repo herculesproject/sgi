@@ -148,9 +148,9 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
             const codigoEconomico = modalData.proyectoConceptoGastoCodigoEc;
             codigoEconomico.proyectoConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IProyectoConceptoGasto;
             this.formPart.addCodigoEconomico(codigoEconomico, modalData.convocatoriaConceptoGastoCodigoEc?.id);
-          } else if (!codigoEconomicoListado.proyectoCodigoEconomico.created) {
+          } else {
             const codigoEconomico = new StatusWrapper<IProyectoConceptoGastoCodigoEc>(modalData.proyectoConceptoGastoCodigoEc);
-            this.formPart.updateCodigoEconomico(codigoEconomico);
+            this.formPart.updateCodigoEconomico(codigoEconomico, rowIndex);
           }
         }
       }

@@ -19,6 +19,7 @@ describe('PartidaPresupuestariaModalComponent', () => {
   const newData: PartidaPresupuestariaModalComponentData = {
     partidaPresupuestaria: undefined,
     partidasPresupuestarias: [],
+    convocatoriaPartidaPresupuestaria: undefined,
     readonly: false,
     canEdit: true
   };

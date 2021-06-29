@@ -109,6 +109,7 @@ export class ConvocatoriaPartidaPresupuestariaComponent extends FragmentComponen
     const modalData: PartidaPresupuestariaModalComponentData = {
       partidaPresupuestaria: partidaPresupuestariaActualizar?.value ?? {} as IConvocatoriaPartidaPresupuestaria,
       partidasPresupuestarias: this.dataSource.data.map(element => element.value),
+      convocatoriaPartidaPresupuestaria: null,
       readonly: this.formPart.readonly,
       canEdit: this.formPart.canEdit
     };
