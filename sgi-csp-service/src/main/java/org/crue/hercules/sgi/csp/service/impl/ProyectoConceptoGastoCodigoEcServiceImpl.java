@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoCodigoEcReposit
 import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
-import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,7 +35,7 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
   private final ProyectoConceptoGastoRepository proyectoConceptoGastoRepository;
 
   public ProyectoConceptoGastoCodigoEcServiceImpl(ProyectoConceptoGastoCodigoEcRepository repository,
-      ProyectoConceptoGastoRepository proyectoConceptoGastoRepository, ProyectoService proyectoService) {
+      ProyectoConceptoGastoRepository proyectoConceptoGastoRepository) {
     this.repository = repository;
     this.proyectoConceptoGastoRepository = proyectoConceptoGastoRepository;
   }

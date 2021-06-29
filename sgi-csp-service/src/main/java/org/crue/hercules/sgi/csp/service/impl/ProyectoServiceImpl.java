@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
@@ -29,6 +30,8 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -49,6 +52,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
@@ -80,6 +84,8 @@ import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadCon
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
+import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
+import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
@@ -156,6 +162,9 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ConvocatoriaPartidaService convocatoriaPartidaService;
   private final ProyectoIVARepository proyectoIVARepository;
   private final ProyectoProyectoSgeRepository proyectoProyectoSGERepository;
+  private final ProyectoConceptoGastoService proyectoConceptoGastoService;
+  private final ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
+  private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -188,7 +197,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository,
       ProgramaRepository programaRepository, ProyectoPartidaService proyectoPartidaService,
       ConvocatoriaPartidaService convocatoriaPartidaService, ProyectoIVARepository proyectoIVARepository,
-      ProyectoProyectoSgeRepository proyectoProyectoSGERepository) {
+      ProyectoProyectoSgeRepository proyectoProyectoSGERepository,
+      ProyectoConceptoGastoService proyectoConceptoGastoService,
+      ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService,
+      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -228,6 +240,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.convocatoriaPartidaService = convocatoriaPartidaService;
     this.proyectoIVARepository = proyectoIVARepository;
     this.proyectoProyectoSGERepository = proyectoProyectoSGERepository;
+    this.proyectoConceptoGastoService = proyectoConceptoGastoService;
+    this.proyectoConceptoGastoCodigoEcService = proyectoConceptoGastoCodigoEcService;
+    this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
   }
 
   /**
@@ -742,8 +757,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.copyEntidadesConvocantesDeConvocatoria(proyecto.getId(), proyecto.getConvocatoriaId());
     this.copyAreaTematica(proyecto);
     this.copyPeriodoSeguimiento(proyecto);
-    this.copyConfiguracionEconomica(proyecto);
-    this.copyPartidasPresupuestarias(proyecto.getId(), proyecto.getConvocatoriaId());
+    this.copyConfiguracionEconomica(proyecto, proyecto.getConvocatoriaId());
   }
 
   /**
@@ -876,7 +890,12 @@ public class ProyectoServiceImpl implements ProyectoService {
           }
           projectBuilder.observaciones(convocatoriaSeguimiento.getObservaciones());
 
-          this.proyectoPeriodoSeguimientoService.create(projectBuilder.build());
+          // Solo se copian los seguimientos científicos que encajen dentro del rango
+          // del proyecto
+          if (projectBuilder.build().getFechaInicio() == null || (projectBuilder.build().getFechaInicio() != null
+              && projectBuilder.build().getFechaInicio().isBefore(proyecto.getFechaFin()))) {
+            this.proyectoPeriodoSeguimientoService.create(projectBuilder.build());
+          }
         });
 
     log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - end");
@@ -1234,19 +1253,93 @@ public class ProyectoServiceImpl implements ProyectoService {
    * Copia toda la configuración económica de una {@link Convocatoria} a un
    * {@link Proyecto}
    * 
+   * @param proyecto       entidad {@link Proyecto}
+   * @param convocatoriaId Identificador de la {@link Convocatoria}
+   */
+  private void copyConfiguracionEconomica(Proyecto proyecto, Long convocatoriaId) {
+    log.debug("copyConfiguracionEconomica(Proyecto proyecto) - start");
+    this.copyConceptosGasto(proyecto);
+    this.copyPartidasPresupuestarias(proyecto.getId(), proyecto.getConvocatoriaId());
+    log.debug("copyConfiguracionEconomica(Proyecto proyecto) - end");
+  }
+
+  /**
+   * Copia toda los conceptos de gasto de una {@link Convocatoria} a un
+   * {@link Proyecto}
+   * 
    * @param proyecto entidad {@link Proyecto}
    */
-  private void copyConfiguracionEconomica(Proyecto proyecto) {
-    // TODO cuando se implemente ProyectoConceptoGasto
-    log.debug("copyConfiguracionEconomica(Proyecto proyecto) - start");
-    List<ConvocatoriaConceptoGasto> entidadesConvocatoria = convocatoriaConceptoGastoRepository
+  private void copyConceptosGasto(Proyecto proyecto) {
+    log.debug("copyConceptosGasto(Proyecto proyecto) - start");
+    List<ConvocatoriaConceptoGasto> conceptosGastoConvocatoria = convocatoriaConceptoGastoRepository
         .findAllByConvocatoriaIdAndConceptoGastoActivoTrue(proyecto.getConvocatoriaId());
 
-    entidadesConvocatoria.stream().forEach((entidadSolicitud) -> {
-      log.debug("Copy ConvocatoriaConceptoGasto with id: {0}", entidadSolicitud.getId());
+    conceptosGastoConvocatoria.stream().forEach((conceptoGastoConvocatoria) -> {
+      log.debug("Copy ConvocatoriaConceptoGasto with id: {0}", conceptoGastoConvocatoria.getId());
+      ProyectoConceptoGasto conceptoGastoProyecto = new ProyectoConceptoGasto();
+      conceptoGastoProyecto.setProyectoId(proyecto.getId());
+      conceptoGastoProyecto.setConceptoGasto(conceptoGastoConvocatoria.getConceptoGasto());
+      conceptoGastoProyecto.setImporteMaximo(conceptoGastoConvocatoria.getImporteMaximo());
+      conceptoGastoProyecto.setPermitido(conceptoGastoConvocatoria.getPermitido());
+      conceptoGastoProyecto.setObservaciones(conceptoGastoConvocatoria.getObservaciones());
+      conceptoGastoProyecto.setPorcentajeCosteIndirecto(conceptoGastoConvocatoria.getPorcentajeCosteIndirecto());
+      conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
+
+      if (conceptoGastoConvocatoria.getMesInicial() != null) {
+        Instant fechaInicio = calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+            conceptoGastoConvocatoria.getMesInicial(), proyecto.getFechaBase());
+        conceptoGastoProyecto.setFechaInicio(fechaInicio);
+      }
+
+      if (conceptoGastoConvocatoria.getMesFinal() != null) {
+        Instant fechaFin = calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+            conceptoGastoConvocatoria.getMesFinal(), proyecto.getFechaBase());
+        conceptoGastoProyecto.setFechaFin(fechaFin);
+      }
+
+      // Solo se copian los conceptos que tengan fechas que encajen dentro del rango
+      // del proyecto
+      if (conceptoGastoProyecto.getFechaInicio() == null || (conceptoGastoProyecto.getFechaInicio() != null
+          && conceptoGastoProyecto.getFechaInicio().isBefore(proyecto.getFechaFin()))) {
+        ProyectoConceptoGasto conceptoGastoCopiado = this.proyectoConceptoGastoService.create(conceptoGastoProyecto);
+        this.copyConceptoGastoCodigosEc(conceptoGastoCopiado.getConvocatoriaConceptoGastoId(),
+            conceptoGastoCopiado.getId());
+      }
 
     });
-    log.debug("copyConfiguracionEconomica(Proyecto proyecto) - end");
+    log.debug("copyConceptosGasto(Proyecto proyecto) - end");
+  }
+
+  /**
+   * Copia todos los codigos economicos del concepto de gasto de la
+   * {@link Convocatoria} a los del {@link Proyecto}
+   * 
+   * @param convocatoriaConceptoGastoId Identificador del
+   *                                    {@link ConvocatoriaConceptoGasto}
+   * @param proyectoConceptoGastoId     Identificador del
+   *                                    {@link ProyectoConceptoGasto}
+   */
+  private void copyConceptoGastoCodigosEc(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) {
+    log.debug("copyConceptosGasto(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) - start");
+    List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicosConceptosGastoConvocatoria = convocatoriaConceptoGastoCodigoEcRepository
+        .findAllByConvocatoriaConceptoGastoId(convocatoriaConceptoGastoId);
+
+    List<ProyectoConceptoGastoCodigoEc> proyectoConceptoGastoCodigoEcs = codigosEconomicosConceptosGastoConvocatoria
+        .stream().map((codigoEconomicoConvocatoria) -> {
+          log.debug("Copy ConvocatoriaConceptoGastoCodigoEc with id: {0}", codigoEconomicoConvocatoria.getId());
+          ProyectoConceptoGastoCodigoEc codigoEconomicoProyecto = new ProyectoConceptoGastoCodigoEc();
+          codigoEconomicoProyecto.setProyectoConceptoGastoId(proyectoConceptoGastoId);
+          codigoEconomicoProyecto.setCodigoEconomicoRef(codigoEconomicoConvocatoria.getCodigoEconomicoRef());
+          codigoEconomicoProyecto.setFechaInicio(codigoEconomicoConvocatoria.getFechaInicio());
+          codigoEconomicoProyecto.setFechaFin(codigoEconomicoConvocatoria.getFechaFin());
+          codigoEconomicoProyecto.setObservaciones(codigoEconomicoConvocatoria.getObservaciones());
+          codigoEconomicoProyecto.setConvocatoriaConceptoGastoCodigoEcId(codigoEconomicoConvocatoria.getId());
+
+          return codigoEconomicoProyecto;
+        }).collect(Collectors.toList());
+
+    this.proyectoConceptoGastoCodigoEcService.update(proyectoConceptoGastoId, proyectoConceptoGastoCodigoEcs);
+    log.debug("copyConceptosGasto(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) - end");
   }
 
   /**
@@ -1260,8 +1353,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     Page<ConvocatoriaPartida> partidasConvocatoria = convocatoriaPartidaService.findAllByConvocatoria(convocatoriaId,
         null, Pageable.unpaged());
 
-    if (partidasConvocatoria != null) {
-      partidasConvocatoria.stream().forEach((partidaConvocatoria) -> {
+    if (partidasConvocatoria != null && partidasConvocatoria.hasContent()) {
+      partidasConvocatoria.getContent().stream().forEach((partidaConvocatoria) -> {
         log.debug("Copy copyPartidasPresupuestarias with id: {0}", partidaConvocatoria.getId());
         ProyectoPartida partidaProyecto = new ProyectoPartida();
         partidaProyecto.setProyectoId(proyectoId);
