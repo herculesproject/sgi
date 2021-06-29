@@ -16,6 +16,8 @@ import { SelectConvocatoriaComponent } from './select-convocatoria/select-convoc
 import { SelectFuenteFinanciacionComponent } from './select-fuente-financiacion/select-fuente-financiacion.component';
 import { SelectModeloEjecucionComponent } from './select-modelo-ejecucion/select-modelo-ejecucion.component';
 import { SelectProgramaComponent } from './select-programa/select-programa.component';
+import { SearchProyectoModalComponent } from './select-proyecto/dialog/search-proyecto.component';
+import { SelectProyectoComponent } from './select-proyecto/select-proyecto.component';
 import { SelectTipoAmbitoGeograficoComponent } from './select-tipo-ambito-geografico/select-tipo-ambito-geografico.component';
 import { SelectTipoFinalidadComponent } from './select-tipo-finalidad/select-tipo-finalidad.component';
 import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-unidad-gestion.component';
@@ -38,7 +40,9 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectUnidadGestionComponent,
     SearchProyectosEconomicosModalComponent,
     SolicitiudPresupuestoModalComponent,
-    PartidaPresupuestariaModalComponent
+    PartidaPresupuestariaModalComponent,
+    SearchProyectoModalComponent,
+    SelectProyectoComponent
   ],
   imports: [
     SharedModule,
@@ -62,7 +66,8 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoFinalidadComponent,
     SelectUnidadGestionComponent,
     SearchProyectosEconomicosModalComponent,
-    SolicitiudPresupuestoModalComponent
+    SolicitiudPresupuestoModalComponent,
+    SelectProyectoComponent
   ]
 })
 export class CspSharedModule { }
