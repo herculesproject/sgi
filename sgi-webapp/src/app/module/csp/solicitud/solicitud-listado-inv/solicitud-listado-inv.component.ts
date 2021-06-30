@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
@@ -187,7 +188,12 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(this.textoErrorDesactivar);
+        if (error instanceof HttpProblem) {
+          this.snackBarService.showError(error);
+        }
+        else {
+          this.snackBarService.showError(this.textoErrorDesactivar);
+        }
       }
     );
     this.suscripciones.push(subcription);

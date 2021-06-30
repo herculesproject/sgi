@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoProteccion, TIPO_PROPIEDAD_MAP } from '@core/models/pii/tipo-proteccion';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -243,7 +244,12 @@ export class TipoProteccionListadoComponent extends AbstractTablePaginationCompo
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);
@@ -268,7 +274,12 @@ export class TipoProteccionListadoComponent extends AbstractTablePaginationCompo
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorReactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorReactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);

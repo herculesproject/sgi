@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -393,7 +394,12 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);
@@ -420,7 +426,12 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         (error) => {
           this.logger.error(error);
           convocatoria.convocatoria.activo = false;
-          this.snackBarService.showError(this.textoErrorReactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorReactivar);
+          }
         }
       );
     this.suscripciones.push(suscription);

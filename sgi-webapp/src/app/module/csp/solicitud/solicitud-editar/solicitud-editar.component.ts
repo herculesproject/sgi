@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
@@ -120,7 +121,12 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
       () => { },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(this.textoEditarError);
+        if (error instanceof HttpProblem) {
+          this.snackBarService.showError(error);
+        }
+        else {
+          this.snackBarService.showError(this.textoEditarError);
+        }
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
@@ -166,7 +172,12 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
             () => { },
             (error) => {
               this.logger.error(error);
-              this.snackBarService.showError(MSG_CAMBIO_ESTADO_ERROR);
+              if (error instanceof HttpProblem) {
+                this.snackBarService.showError(error);
+              }
+              else {
+                this.snackBarService.showError(MSG_CAMBIO_ESTADO_ERROR);
+              }
             },
             () => {
               this.snackBarService.showSuccess(MSG_CAMBIO_ESTADO_SUCCESS);

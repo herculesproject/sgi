@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { COMITE } from '@core/models/eti/comite';
 import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
@@ -207,7 +208,12 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+          }
         }
       );
   }
@@ -233,7 +239,12 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+          }
         }
       );
   }

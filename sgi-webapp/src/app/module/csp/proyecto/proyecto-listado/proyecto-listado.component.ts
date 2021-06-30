@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
@@ -374,7 +375,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);
@@ -401,7 +407,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         (error) => {
           this.logger.error(error);
           proyecto.activo = false;
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesactivar);
+          }
         }
       );
     this.suscripciones.push(suscription);

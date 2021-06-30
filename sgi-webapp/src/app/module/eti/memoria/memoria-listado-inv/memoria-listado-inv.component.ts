@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { COMITE, IComite } from '@core/models/eti/comite';
 import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
@@ -310,7 +311,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+          }
         }
       );
     this.suscripciones.push(dialogSubscription);
@@ -335,7 +341,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoDeleteError);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoDeleteError);
+          }
         }
       );
   }
@@ -362,7 +373,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+          }
         }
       );
   }

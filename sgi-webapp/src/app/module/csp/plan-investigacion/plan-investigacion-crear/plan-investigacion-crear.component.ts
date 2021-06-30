@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -15,6 +16,7 @@ const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.save.entity.success');
 const MSG_ERROR = marker('error.save.entity');
 const PLAN_INVESTIGACION_KEY = marker('csp.plan-investigacion');
+
 @Component({
   selector: 'sgi-plan-investigacion-crear',
   templateUrl: './plan-investigacion-crear.component.html',
@@ -93,7 +95,12 @@ export class PlanInvestigacionCrearComponent extends ActionComponent {
       () => { },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(this.textoCrearError);
+        if (error instanceof HttpProblem) {
+          this.snackBarService.showError(error);
+        }
+        else {
+          this.snackBarService.showError(this.textoCrearError);
+        }
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);

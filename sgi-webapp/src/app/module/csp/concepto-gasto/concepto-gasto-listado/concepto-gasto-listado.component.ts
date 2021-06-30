@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -275,7 +276,12 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
             },
             (error) => {
               this.logger.error(error);
-              this.snackBarService.showError(conceptoGasto ? this.textoUpdateError : this.textoCrearError);
+              if (error instanceof HttpProblem) {
+                this.snackBarService.showError(error);
+              }
+              else {
+                this.snackBarService.showError(conceptoGasto ? this.textoUpdateError : this.textoCrearError);
+              }
             }
           );
 
@@ -299,7 +305,12 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);
@@ -321,7 +332,12 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
         (error) => {
           conceptoGasto.activo = false;
           this.logger.error(error);
-          this.snackBarService.showError(this.textoErrorReactivar);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorReactivar);
+          }
         }
       );
     this.suscripciones.push(subcription);

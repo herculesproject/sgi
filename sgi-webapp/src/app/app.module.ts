@@ -1,11 +1,13 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { CoreModule } from '@angular/flex-layout';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SgiErrorHttpInterceptor } from '@core/error-http-interceptor';
+import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
 import { environment } from '@env';
 import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -82,6 +84,16 @@ const appInitializerFn = (appConfig: ConfigService) => {
     {
       provide: LOCALE_ID,
       useValue: 'es'
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SgiLanguageHttpInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SgiErrorHttpInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

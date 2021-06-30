@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -91,7 +92,12 @@ export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionCompo
       () => { },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(this.textoCrearError);
+        if (error instanceof HttpProblem) {
+          this.snackBarService.showError(error);
+        }
+        else {
+          this.snackBarService.showError(this.textoCrearError);
+        }
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
