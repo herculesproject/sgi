@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.crue.hercules.sgi.pii.model.Invencion.OnActualizar;
+import org.crue.hercules.sgi.pii.validation.EntidadActiva;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +32,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @SuperBuilder
+@EntidadActiva(entityClass = Invencion.class, groups = { OnActualizar.class })
 public class Invencion extends BaseActivableEntity {
   public static final int TITULO_LENGTH = 50;
   public static final int LONG_TEXT_LENGTH = 250;
@@ -71,4 +75,10 @@ public class Invencion extends BaseActivableEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final List<InvencionInventor> inventores = null;
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion de la entidad.
+   */
+  public interface OnActualizar {
+  }
 }

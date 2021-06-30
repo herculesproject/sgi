@@ -3,7 +3,10 @@ package org.crue.hercules.sgi.pii.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.service.InvencionService;
@@ -16,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,8 +108,33 @@ public class InvencionController {
     return convert(returnValue);
   }
 
+  /**
+   * Crea un nuevo {@link Invencion}.
+   * 
+   * @param invencion {@link Invencion} que se quiere crear.
+   * @return Nuevo {@link Invencion} creado.
+   */
+  @PostMapping
+  @PreAuthorize("hasAuthority('PII-INV-C')")
+  ResponseEntity<InvencionOutput> create(@Valid @RequestBody InvencionInput invencion) {
+    log.debug("create(Invencion invencion) - start");
+    Invencion returnValue = service.create(convert(invencion));
+    log.debug("create(Invencion invencion) - end");
+    return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
+  }
+
   private InvencionOutput convert(Invencion invencion) {
     return modelMapper.map(invencion, InvencionOutput.class);
+  }
+
+  private Invencion convert(InvencionInput invencionInput) {
+    return convert(null, invencionInput);
+  }
+
+  private Invencion convert(Long id, InvencionInput invencionInput) {
+    Invencion invencion = modelMapper.map(invencionInput, Invencion.class);
+    invencion.setId(id);
+    return invencion;
   }
 
   private Page<InvencionOutput> convert(Page<Invencion> page) {

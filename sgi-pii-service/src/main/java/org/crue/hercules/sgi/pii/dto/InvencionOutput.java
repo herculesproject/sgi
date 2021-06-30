@@ -30,5 +30,6 @@ public class InvencionOutput {
   public static class TipoProteccion {
     private Long id;
     private String nombre;
+    private TipoProteccion padre;
   }
 }
