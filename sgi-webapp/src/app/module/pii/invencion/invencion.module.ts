@@ -7,9 +7,11 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { InvencionRoutingModule } from './invencion-routing.module';
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
+import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
+import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
 
 @NgModule({
-  declarations: [InvencionListadoComponent],
+  declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent],
   imports: [
     CommonModule,
     SharedModule,

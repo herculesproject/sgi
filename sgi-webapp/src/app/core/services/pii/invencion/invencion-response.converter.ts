@@ -17,7 +17,11 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       comentarios: value.comentarios,
       tipoProteccion: {
         id: value.tipoProteccion.id,
-        nombre: value.tipoProteccion.nombre
+        nombre: value.tipoProteccion.nombre,
+        padre: {
+          id: value.tipoProteccion.padre?.id,
+          nombre: value.tipoProteccion.padre?.nombre
+        }
       } as ITipoProteccion,
       activo: value.activo
     };
@@ -34,7 +38,11 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       comentarios: value.comentarios,
       tipoProteccion: {
         id: value.tipoProteccion.id,
-        nombre: value.tipoProteccion.nombre
+        nombre: value.tipoProteccion.nombre,
+        padre: {
+          id: value.tipoProteccion.padre?.id,
+          nombre: value.tipoProteccion.padre.nombre
+        }
       },
       activo: value.activo
     };

@@ -52,7 +52,7 @@
         <!-- Sector de Aplicación -->
         <div class="col">
           <mat-form-field class="input-form">
-            <mat-label>{{'pii.invencion.sector-aplicacion' | translate}}</mat-label>
+            <mat-label>{{'pii.sector-aplicacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
             <sgi-select-entity formControlName="sectorAplicacion" [options]=" sectoresAplicacion$ | async">
             </sgi-select-entity>
           </mat-form-field>
@@ -119,7 +119,7 @@
       <!--Tipo de protección-->
       <ng-container matColumnDef="tipoProteccion.nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'pii.invencion.tipo-proteccion.nombre' | translate}}
+          {{'pii.invencion.tipo-proteccion' | translate}}
         </th>
         <td mat-cell *matCellDef="let invencion">
           {{invencion.tipoProteccion?.nombre}}</td>
@@ -149,3 +149,5 @@
 
   </section>
 </div>
+<sgi-footer-crear *sgiHasAuthority="'PII-INV-C'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+</sgi-footer-crear>

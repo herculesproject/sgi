@@ -1,0 +1,102 @@
+<section class="plan-investigacion-datos-generales">
+  <h2>{{'label.datos-generales' | translate}}</h2>
+  <form [formGroup]="formGroup">
+    <!-- Título -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.titulo' | translate}}</mat-label>
+          <input matInput formControlName="titulo" type="text" id="titulo"
+            placeholder="{{'pii.invencion.titulo' | translate}}" required>
+          <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
+            {{'error.required.entity' | translate:msgParamTituloEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Fecha Comunicación -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.fecha-comunicacion' | translate}}</mat-label>
+          <input matInput formControlName="fechaComunicacion" [matDatepicker]="fechaComunicacion" required>
+          <mat-datepicker-toggle matSuffix [for]="fechaComunicacion"></mat-datepicker-toggle>
+          <mat-datepicker #fechaComunicacion></mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaComunicacion.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaComunicacionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.descripcion' | translate}}</mat-label>
+          <textarea matInput formControlName="descripcion" id="descripcion"
+            placeholder="{{'pii.invencion.descripcion' | translate}}" required></textarea>
+          <mat-error *ngIf="formGroup.controls.descripcion.errors?.required">
+            {{'error.required.entity' | translate:msgParamDescripcionEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Tipor de Protección -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.tipo-proteccion' | translate}}</mat-label>
+          <sgi-select-entity formControlName="tipoProteccion" [options]=" tiposProteccion$ | async" required>
+          </sgi-select-entity>
+          <mat-error *ngIf="formGroup.controls.tipoProteccion.errors?.required">
+            {{'error.required.entity' | translate:msgParamTipoProteccionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Subtipo de Protección -->
+    <ng-container *ngIf="subtiposProteccion$ | async as subtiposProteccion">
+      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+        *ngIf="subtiposProteccion?.length">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <mat-form-field fxFill>
+            <mat-label>{{'pii.invencion.subtipo-proteccion' | translate}}</mat-label>
+            <sgi-select-entity formControlName="subtipoProteccion" [options]=" subtiposProteccion">
+            </sgi-select-entity>
+          </mat-form-field>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Comentarios -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.comentarios' | translate}}</mat-label>
+          <textarea matInput formControlName="comentarios" id="comentarios"
+            placeholder="{{'pii.invencion.comentarios' | translate}}"></textarea>
+          <mat-error *ngIf="formGroup.controls.comentarios.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamComentariosEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</section>

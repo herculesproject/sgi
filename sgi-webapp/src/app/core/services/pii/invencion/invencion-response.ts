@@ -7,6 +7,10 @@ export interface IInvencionResponse {
   tipoProteccion: {
     id: number;
     nombre: string;
+    padre: {
+      id: number;
+      nombre: string;
+    }
   }
   activo: boolean;
 }
