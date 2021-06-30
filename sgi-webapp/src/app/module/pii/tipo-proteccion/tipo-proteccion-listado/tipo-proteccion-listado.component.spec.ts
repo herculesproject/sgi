@@ -8,16 +8,15 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { PiiTipoProteccionListadoComponent } from './pii-tipo-proteccion-listado.component';
+import { TipoProteccionListadoComponent } from './tipo-proteccion-listado.component';
 
-
-describe('PiiTipoProteccionListadoComponent', () => {
-  let component: PiiTipoProteccionListadoComponent;
-  let fixture: ComponentFixture<PiiTipoProteccionListadoComponent>;
+describe('TipoProteccionListadoComponent', () => {
+  let component: TipoProteccionListadoComponent;
+  let fixture: ComponentFixture<TipoProteccionListadoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PiiTipoProteccionListadoComponent],
+      declarations: [TipoProteccionListadoComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -35,7 +34,7 @@ describe('PiiTipoProteccionListadoComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PiiTipoProteccionListadoComponent);
+    fixture = TestBed.createComponent(TipoProteccionListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -22,7 +22,9 @@
       <ng-container matColumnDef="tipoPropiedad">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-proteccion.tipo-propiedad' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.tipoPropiedad}}</td>
+        <td mat-cell *matCellDef="let tipoProteccion">{{TIPO_PROPIEDAD_MAP.get(tipoProteccion.tipoPropiedad) |
+          translate}}
+        </td>
       </ng-container>
 
       <!-- Activo -->
@@ -65,12 +67,7 @@
     </mat-paginator>
 
     <ng-container *sgiHasAuthority="'PII-TPR-C'">
-      <div class="separation-button">
-        <button color="three" aria-label="Center Align" md-button mat-raised-button>
-          <mat-icon color="accent">add_circle</mat-icon>
-          {{ 'btn.add.entity' | translate:msgParamEntity }}
-        </button>
-      </div>
+      <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW"></sgi-footer-crear>
     </ng-container>
 
   </section>

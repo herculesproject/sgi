@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
+import { ITipoProteccion, TIPO_PROPIEDAD_MAP } from '@core/models/pii/tipo-proteccion';
+import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -13,6 +14,7 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('error.load');
+const MSG_CREATE = marker('btn.add.entity');
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_SAVE_ERROR = marker('error.save.entity');
 const MSG_UPDATE_ERROR = marker('error.update.entity');
@@ -23,17 +25,19 @@ const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
 const MSG_ERROR_DEACTIVATE = marker('error.deactivate.entity');
 const MSG_SUCCESS_DEACTIVATE = marker('msg.deactivate.entity.success');
-const SECTOR_APLICACION_KEY = marker('pii.tipo-proteccion');
+const TIPO_PROTECCION_KEY = marker('pii.tipo-proteccion');
 
 @Component({
-  selector: 'sgi-pii-tipo-proteccion-listado',
-  templateUrl: './pii-tipo-proteccion-listado.component.html',
-  styleUrls: ['./pii-tipo-proteccion-listado.component.scss']
+  selector: 'sgi-tipo-proteccion-listado',
+  templateUrl: './tipo-proteccion-listado.component.html',
+  styleUrls: ['./tipo-proteccion-listado.component.scss']
 })
-export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationComponent<ITipoProteccion> implements OnInit {
+export class TipoProteccionListadoComponent extends AbstractTablePaginationComponent<ITipoProteccion> implements OnInit {
 
+  ROUTE_NAMES = ROUTE_NAMES;
   tipoProteccion$: Observable<ITipoProteccion[]>;
   msgParamEntity = {};
+  textoCrear: string;
   textoCrearSuccess: string;
   textoCrearError: string;
   textoUpdateSuccess: string;
@@ -44,6 +48,10 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
   textoSuccessDesactivar: string;
   textoSuccessReactivar: string;
   textoErrorReactivar: string;
+
+  get TIPO_PROPIEDAD_MAP() {
+    return TIPO_PROPIEDAD_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -61,12 +69,24 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
 
   private setupI18N(): void {
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_CREATE,
+          { entity: value, ...this.msgParamEntity }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
+    this.translate.get(
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -78,7 +98,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoCrearSuccess = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -90,7 +110,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoCrearError = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -102,7 +122,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoUpdateSuccess = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -114,7 +134,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoUpdateError = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -126,7 +146,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoDesactivar = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -138,7 +158,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoErrorDesactivar = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -150,7 +170,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -162,7 +182,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoReactivar = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -174,7 +194,7 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
     ).subscribe((value) => this.textoSuccessReactivar = value);
 
     this.translate.get(
-      SECTOR_APLICACION_KEY,
+      TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -253,6 +273,5 @@ export class PiiTipoProteccionListadoComponent extends AbstractTablePaginationCo
       );
     this.suscripciones.push(subcription);
   }
-
 
 }

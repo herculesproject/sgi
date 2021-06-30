@@ -2,50 +2,48 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { PiiTipoProteccionModalComponent } from './pii-tipo-proteccion-modal.component';
+import { TipoProteccionActionService } from '../tipo-proteccion.action.service';
+import { TipoProteccionCrearComponent } from './tipo-proteccion-crear.component';
 
-
-describe('PiiTipoProteccionModalComponent', () => {
-  let component: PiiTipoProteccionModalComponent;
-  let fixture: ComponentFixture<PiiTipoProteccionModalComponent>;
+describe('TipoProteccionCrearComponent', () => {
+  let component: TipoProteccionCrearComponent;
+  let fixture: ComponentFixture<TipoProteccionCrearComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PiiTipoProteccionModalComponent],
+      declarations: [TipoProteccionCrearComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        LoggerTestingModule,
         FlexModule,
         FormsModule,
-        ReactiveFormsModule,
+        SgiAuthModule,
+        LoggerTestingModule,
         RouterTestingModule,
-        SharedModule,
-        MatDialogModule
+        ReactiveFormsModule,
+        SharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoProteccion },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoProteccion },
-
-      ]
+        TipoProteccionActionService,
+        SgiAuthService
+      ],
     })
       .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PiiTipoProteccionModalComponent);
+    fixture = TestBed.createComponent(TipoProteccionCrearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
