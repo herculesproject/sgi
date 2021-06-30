@@ -20,12 +20,21 @@
         </td>
       </ng-container>
 
+      <!-- Activo -->
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.activo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let tipoProteccion">{{(tipoProteccion.activo ? 'label.si' : 'label.no') | translate}}
+        </td>
+      </ng-container>
+
       <!-- Acciones -->
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let resultadoInformePatentabilidad">
           <ng-container *sgiHasAuthority="'PII-RIP-E'">
-            <button *ngIf="resultadoInformePatentabilidad.activo" mat-button matTooltip="{{'btn.edit' | translate}}">
+            <button *ngIf="resultadoInformePatentabilidad.activo" mat-button matTooltip="{{'btn.edit' | translate}}"
+              (click)="openModal(resultadoInformePatentabilidad)">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>
@@ -52,7 +61,8 @@
 
     <ng-container *sgiHasAuthority="'PII-RIP-C'">
       <div class="separation-button">
-        <button color="three" aria-label="Center Align" md-button mat-raised-button>
+        <button color="three" attr.aria-label="{{ 'btn.add.entity' | translate:msgParamEntity }}" md-button
+          mat-raised-button (click)="openModal()">
           <mat-icon color="accent">add_circle</mat-icon>
           {{ 'btn.add.entity' | translate:msgParamEntity }}
         </button>

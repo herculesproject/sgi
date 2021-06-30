@@ -13,6 +13,7 @@ import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ResultadoInformePatentabilidadModalComponent } from '../resultado-informe-patentabilidad-modal/resultado-informe-patentabilidad-modal.component';
 
 const RESULTADO_INFORME_PATENTABILIDAD_KEY = marker('pii.resultado-informe-patentabilidad');
 const MSG_ERROR = marker('error.load');
@@ -26,8 +27,6 @@ const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
 const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
 const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
-const FUENTE_FINANCIACION_KEY = marker('csp.fuente-financiacion');
-
 
 @Component({
   selector: 'sgi-resultado-informe-patentabilidad-listado',
@@ -36,6 +35,7 @@ const FUENTE_FINANCIACION_KEY = marker('csp.fuente-financiacion');
 })
 export class ResultadoInformePatentabilidadListadoComponent
   extends AbstractTablePaginationComponent<IResultadoInformePatentibilidad> implements OnInit {
+
   resultadoInformePatentabilidad$: Observable<IResultadoInformePatentibilidad[]>;
   msgParamEntity = {};
   textoCrearSuccess: string;
@@ -48,7 +48,6 @@ export class ResultadoInformePatentabilidadListadoComponent
   textoSuccessDesactivar: string;
   textoSuccessReactivar: string;
   textoErrorReactivar: string;
-
 
   constructor(
     private matDialog: MatDialog,
@@ -66,7 +65,6 @@ export class ResultadoInformePatentabilidadListadoComponent
     super.ngOnInit();
     this.setupI18N();
   }
-
 
   /**
    * Desactivar un registro de Resultado de Informe de Patentabilidad
@@ -94,9 +92,9 @@ export class ResultadoInformePatentabilidadListadoComponent
   }
 
   /**
- * Activar un registro de Resultado de Informe de Patentabilidad
- * @param resultadoInformePatentabilidad  Resultado de Informe de Patentabilidad
- */
+   * Activar un registro de Resultado de Informe de Patentabilidad
+   * @param resultadoInformePatentabilidad  Resultado de Informe de Patentabilidad
+   */
   activateResultadoInformePatentabilidad(resultadoInformePatentabilidad: IResultadoInformePatentibilidad): void {
     const subcription = this.dialogService.showConfirmation(this.textoReactivar)
       .pipe(switchMap((accept) => {
@@ -118,7 +116,6 @@ export class ResultadoInformePatentabilidadListadoComponent
     this.suscripciones.push(subcription);
   }
 
-
   private setupI18N(): void {
     this.translate.get(
       RESULTADO_INFORME_PATENTABILIDAD_KEY,
@@ -132,7 +129,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_SAVE_SUCCESS,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoCrearSuccess = value);
@@ -144,7 +141,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_SAVE_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoCrearError = value);
@@ -156,7 +153,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_UPDATE_SUCCESS,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoUpdateSuccess = value);
@@ -168,7 +165,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_UPDATE_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoUpdateError = value);
@@ -180,7 +177,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_DEACTIVATE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoDesactivar = value);
@@ -192,7 +189,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR_DEACTIVATE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoErrorDesactivar = value);
@@ -204,7 +201,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS_DEACTIVATE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
@@ -216,7 +213,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_REACTIVE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoReactivar = value);
@@ -228,7 +225,7 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS_REACTIVE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
@@ -240,14 +237,43 @@ export class ResultadoInformePatentabilidadListadoComponent
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR_REACTIVE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoErrorReactivar = value);
 
+  }
 
+  /**
+   * Abre un modal para añadir o actualizar un Sector de Aplicación
+   *
+   * @param resultadoInformePatentibilidad Sector de Aplicación
+   */
+  openModal(resultadoInformePatentibilidad?: IResultadoInformePatentibilidad): void {
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data: resultadoInformePatentibilidad
+    };
+    const dialogRef = this.matDialog.open(ResultadoInformePatentabilidadModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (result: IResultadoInformePatentibilidad) => {
+        if (result) {
+          const subscription = resultadoInformePatentibilidad ?
+            this.resultadoInformePatentabilidadService.update(resultadoInformePatentibilidad.id, result) :
+            this.resultadoInformePatentabilidadService.create(result);
 
-
+          subscription.subscribe(
+            () => {
+              this.snackBarService.showSuccess(resultadoInformePatentibilidad ? this.textoUpdateSuccess : this.textoCrearSuccess);
+              this.loadTable();
+            },
+            (error) => {
+              this.logger.error(error);
+              this.snackBarService.showError(resultadoInformePatentibilidad ? this.textoUpdateError : this.textoCrearError);
+            }
+          );
+        }
+      });
   }
 
   protected createFilter(): SgiRestFilter {
@@ -258,8 +284,9 @@ export class ResultadoInformePatentabilidadListadoComponent
     const observable$ = this.resultadoInformePatentabilidadService.findTodos(this.getFindOptions());
     return observable$;
   }
+
   protected initColumns(): void {
-    this.columnas = ['nombre', 'descripcion', 'acciones'];
+    this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
   }
 
   protected loadTable(reset?: boolean): void {
