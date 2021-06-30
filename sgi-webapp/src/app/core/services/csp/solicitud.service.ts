@@ -434,4 +434,28 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+  /**
+   * Comprueba si existen SolicitudProyectoPresupuesto asociada a una solicitud
+   *
+   * @param id Id de la solicitud
+   */
+  existsSolictudProyectoPresupuesto(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si la solicitud proyecto de la solicitud es de tipo Global
+   *
+   * @param id Id de la Solicitud
+   */
+  hasSolicitudProyectoGlobal(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/solicitudproyecto-global`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
 }

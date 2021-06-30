@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -12,11 +13,14 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { SOLICITUD_ROUTE_NAMES } from '../../../solicitud/solicitud-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoPresupuestoFragment } from './proyecto-presupuesto.fragment';
 
@@ -57,6 +61,9 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
   constructor(public actionService: ProyectoActionService,
     private translate: TranslateService,
     private readonly proyectoService: ProyectoService,
+    private readonly solicitudService: SolicitudService,
+    private router: Router,
+    private route: ActivatedRoute,
     private dialogService: DialogService) {
     super(actionService.FRAGMENT.PRESUPUESTO, actionService);
 
@@ -174,6 +181,23 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
         }
       )
     );
+  }
+
+  showPresupuestoSolcitud() {
+    this.subscriptions.push(this.solicitudService.hasSolicitudProyectoGlobal(this.formPart.proyecto.solicitudId as number).
+      subscribe(value => {
+        if (value) {
+          this.router.navigate(['../',
+            CSP_ROUTE_NAMES.SOLICITUD, this.formPart.proyecto.solicitudId, SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_GLOBAL],
+            { relativeTo: this.route.parent.parent });
+        } else {
+          this.router.navigate(['../',
+            CSP_ROUTE_NAMES.SOLICITUD, this.formPart.proyecto.solicitudId, SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES],
+            { relativeTo: this.route.parent.parent });
+        }
+
+      }));
+
   }
 
   private checkDisabledControls(numAnualidades: number) {

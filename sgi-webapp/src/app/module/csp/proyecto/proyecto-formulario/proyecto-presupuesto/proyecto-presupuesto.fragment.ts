@@ -4,25 +4,28 @@ import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-r
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
-import { catchError, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
 
-  private proyecto: IProyecto;
+  proyecto: IProyecto;
   proyectoAnualidades$ = new BehaviorSubject<StatusWrapper<IProyectoAnualidadResumen>[]>([]);
   private proyectoAnualidadesEliminadas: StatusWrapper<IProyectoAnualidadResumen>[] = [];
 
   disableAddAnualidad$ = new BehaviorSubject<boolean>(false);
   columnAnualidades$ = new BehaviorSubject<boolean>(false);
+  showPresupuestoSolicitud$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoAnualidadService: ProyectoAnualidadService,
+    private solicitudService: SolicitudService,
     public readonly: boolean
   ) {
     super(key, true);
@@ -31,6 +34,13 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
 
   protected initializer(key: string | number): Observable<IProyecto> {
     return this.proyectoService.findById(key as number).pipe(
+      map((proyecto) => {
+
+        if (proyecto.solicitudId) {
+          this.checkSolicitudProyectoPresupuesto(proyecto.solicitudId);
+        }
+        return proyecto;
+      }),
       tap(() => this.loadAnualidades(key as number)),
       catchError((error) => {
         this.logger.error(error);
@@ -177,5 +187,11 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
         anualidad => new StatusWrapper<IProyectoAnualidadResumen>(anualidad)));
     }));
 
+  }
+
+  private checkSolicitudProyectoPresupuesto(solicitudId: number) {
+    this.subscriptions.push(this.solicitudService.existsSolictudProyectoPresupuesto(solicitudId).pipe().subscribe(value => {
+      this.showPresupuestoSolicitud$.next(value);
+    }));
   }
 }
