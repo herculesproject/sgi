@@ -62,8 +62,6 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
   }
 
   ngAfterViewInit(): void {
-    this.search(true);
-
     merge(
       this.paginator.page,
       this.sort.sortChange
@@ -121,7 +119,6 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
    */
   onClearFilters(): void {
     this.formGroup.reset();
-    this.search(true);
   }
 
   get MSG_PARAMS() {
