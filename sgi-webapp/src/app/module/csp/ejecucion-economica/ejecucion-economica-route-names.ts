@@ -1,2 +1,3 @@
 export const EJECUCION_ECONOMICA_ROUTE_NAMES = {
+  PROYECTOS: 'proyectos',
 };
