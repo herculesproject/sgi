@@ -7,6 +7,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -24,6 +25,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -42,6 +44,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -60,6 +63,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -77,6 +81,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -95,6 +100,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -112,6 +118,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -130,6 +137,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -147,6 +155,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgo-endpoint"/>
       </send>
@@ -165,8 +174,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sgo-endpoint"/>
+        <endpoint key="sgo-standalone-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -182,8 +192,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgo-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sgo-endpoint"/>
+        <endpoint key="sgo-standalone-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
