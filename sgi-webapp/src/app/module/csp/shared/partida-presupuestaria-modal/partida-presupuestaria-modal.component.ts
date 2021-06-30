@@ -84,7 +84,7 @@ export class PartidaPresupuestariaModalComponent
     this.translate.get(
       PROYECTO_PARTIDA_PRESUPUESTARIA_CODIGO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamCodigoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_PARTIDA_PRESUPUESTARIA_DESCRIPCION_KEY,
