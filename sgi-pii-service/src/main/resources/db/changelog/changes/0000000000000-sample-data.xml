@@ -149,31 +149,31 @@
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="1" />
-      <column name="inventor_ref" value="1" />
+      <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="2" />
-      <column name="inventor_ref" value="1" />
+      <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="3" />
-      <column name="inventor_ref" value="1" />
+      <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="4" />
-      <column name="inventor_ref" value="2" />
+      <column name="inventor_ref" value="01925489" />
       <column name="participacion" value="100" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="5" />
-      <column name="inventor_ref" value="2" />
+      <column name="inventor_ref" value="01925489" />
       <column name="participacion" value="100" />
     </insert>
   </changeSet>
