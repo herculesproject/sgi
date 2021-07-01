@@ -7,6 +7,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -24,6 +25,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -42,6 +44,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -59,6 +62,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -77,6 +81,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -94,6 +99,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -112,6 +118,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -129,6 +136,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -146,6 +154,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -164,6 +173,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -181,6 +191,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -198,6 +209,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -215,6 +227,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -232,6 +245,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -250,6 +264,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -267,6 +282,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -284,9 +300,202 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <send>
-        <endpoint key="sge-endpoint"/>
-      </send>
+      <payloadFactory media-type="json">
+        <format>
+        [
+  {
+    "wrappers": [
+      "global"
+    ],
+    "templateOptions": {
+      "styles": "{ \"width\": \"700px\" }"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": ""
+        },
+        "fieldGroup": [
+          {
+            "fieldGroup": [
+              {
+                "key": "proyectoSgiId",
+                "type": "input",
+                "templateOptions": {
+                  "label": "Identificador proyecto SGI",
+                  "disabled": true
+                },
+                "expressionProperties": {
+                  "model.proyectoSgiId": "formState.mainModel.proyecto.id"
+                }
+              },
+              {
+                "key": "titulo",
+                "type": "input",
+                "templateOptions": {
+                  "label": "Título proyecto",
+                  "required": true,
+                  "disabled": true
+                },
+                "expressionProperties": {
+                  "model.titulo": "formState.mainModel.proyecto.titulo"
+                }
+              },
+              {
+                "fieldGroupClassName": "row-formly",
+                "fieldGroup": [
+                  {
+                    "key": "fechaInicio",
+                    "type": "dateTimePicker",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Fecha inicio",
+                      "placeholder": "Introduce fecha inicio",
+                      "disabled": true
+                    },
+                    "expressionProperties": {
+                      "model.fechaInicio": "formState.mainModel.proyecto.fechaInicio"
+                    }
+                  },
+                  {
+                    "key": "fechaFin",
+                    "type": "dateTimePicker",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Fecha fin",
+                      "placeholder": "Introduce fecha fin",
+                      "disabled": true
+                    },
+                    "expressionProperties": {
+                      "model.fechaFin": "formState.mainModel.proyecto.fechaFin"
+                    }
+                  }
+                ]
+              },
+              {
+                "key": "numeroDocumentoResponsable",
+                "type": "input",
+                "templateOptions": {
+                  "label": "Identificador número de documento del responsable",
+                  "disabled": true
+                },
+                "expressionProperties": {
+                  "model.numeroDocumentoResponsable": "formState.mainModel.numeroDocumentoResponsable"
+                }
+              },
+              {
+                "fieldGroupClassName": "row-formly",
+                "fieldGroup": [
+                  {
+                    "key": "modeloEjecucion",
+                    "type": "select-object",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Modelo de ejecución",
+                      "required": true,
+                      "disabled": true,
+                      "modelKeyCompareProp": "id",
+                      "modelKeyLabelProp": "nombre",
+                      "modelKeyValueProp": "modeloEjecucion"
+                    },
+                    "expressionProperties": {
+                      "model.modeloEjecucion": "formState.mainModel.proyecto.modeloEjecucion"
+                    }
+                  },
+                  {
+                    "key": "tipoFinalidad",
+                    "type": "select-object",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Tipo de finalidad",
+                      "required": true,
+                      "disabled": true,
+                      "modelKeyCompareProp": "id",
+                      "modelKeyLabelProp": "nombre",
+                      "modelKeyValueProp": "tipoFinalidad"
+                    },
+                    "expressionProperties": {
+                      "model.tipoFinalidad": "formState.mainModel.proyecto.finalidad"
+                    }
+                  }
+                ]
+              },
+              {
+                "fieldGroupClassName": "row-formly",
+                "fieldGroup": [
+                  {
+                    "key": "importeTotalGastos",
+                    "type": "input",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Importe total previsto de gastos",
+                      "type": "number",
+                      "min": 0
+                    },
+                    "expressionProperties": {
+                      "model.importeTotalGastos": "formState.mainModel.importeTotalGastos"
+                    }
+                  },
+                  {
+                    "key": "importeTotalIngresos",
+                    "type": "input",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Importe total previsto de ingresos",
+                      "type": "number",
+                      "min": 0
+                    },
+                    "expressionProperties": {
+                      "model.importeTotalIngresos": "formState.mainModel.importeTotalIngresos"
+                    }
+                  }
+                ]
+              },
+              {
+                "fieldGroupClassName": "row-formly",
+                "fieldGroup": [
+                  {
+                    "key": "porIva",
+                    "type": "input",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "% IVA",
+                      "type": "number",
+                      "min": 0,
+                      "disabled": true
+                    },
+                    "expressionProperties": {
+                      "model.porIva": "formState.mainModel.porIva"
+                    }
+                  },
+                  {
+                    "key": "causaExencion",
+                    "type": "input",
+                    "className": "flex-1",
+                    "templateOptions": {
+                      "label": "Causa exención",
+                      "disabled": true
+                    },
+                    "expressionProperties": {
+                      "model.causaExencion": "formState.mainModel.causaExencionDesc"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+        </format>
+        <args/>
+      </payloadFactory>
+      <respond/>
     </inSequence>
     <outSequence>
       <respond/>
@@ -301,6 +510,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
@@ -319,6 +529,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sge-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sge-endpoint"/>
       </send>
