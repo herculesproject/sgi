@@ -10,6 +10,7 @@
   <description>sgi-esb-sgemp</description>
   <modules>
     <module>sgemp-integration-project</module>
+    <module>sgemp-registry-resources</module>
     <module>sgemp-composite-application</module>
   </modules>
 

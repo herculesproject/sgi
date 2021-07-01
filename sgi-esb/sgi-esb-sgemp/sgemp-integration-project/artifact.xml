@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="sgemp-add-x-api-key-sequence" groupId="org.crue.hercules.sgi.esb.sgemp.sequence" version="0.0.1-SNAPSHOT" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/sgemp-add-x-api-key-sequence.xml</file>
+    </artifact>
     <artifact name="sgemp-api" groupId="org.crue.hercules.sgi.esb.sgemp.api" version="0.0.1-SNAPSHOT" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/sgemp-api.xml</file>
     </artifact>

@@ -2,7 +2,7 @@
 <endpoint name="sgemp-endpoint" xmlns="http://ws.apache.org/ns/synapse">
     <address format="rest" uri="$SYSTEM:SGI_ESB_SGEMP_SERVICE_URL">
         <timeout>
-            <duration>10000</duration>
+            <duration>60000</duration>
             <responseAction>fault</responseAction>
         </timeout>
         <suspendOnFailure>

@@ -7,6 +7,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgemp-endpoint"/>
       </send>
@@ -24,6 +25,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgemp-endpoint"/>
       </send>
@@ -42,11 +44,13 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgemp-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
+      <script key="gov:scripts/sgemp/datos-contacto-response-converter-mediator.js" language="js"/>
       <respond/>
     </outSequence>
     <faultSequence>
@@ -60,6 +64,7 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
       <send>
         <endpoint key="sgemp-endpoint"/>
       </send>
