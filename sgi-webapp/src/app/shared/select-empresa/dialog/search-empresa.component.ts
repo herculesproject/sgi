@@ -58,8 +58,6 @@ export class SearchEmpresaModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.search(true);
-
     merge(
       this.paginator.page,
       this.sort.sortChange
@@ -115,7 +113,6 @@ export class SearchEmpresaModalComponent implements OnInit, AfterViewInit {
    */
   onClearFilters(): void {
     FormGroupUtil.clean(this.formGroup);
-    this.search(true);
   }
 
   get MSG_PARAMS() {
