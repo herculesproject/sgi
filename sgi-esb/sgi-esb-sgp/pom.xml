@@ -10,9 +10,9 @@
   <description>sgi-esb-sgp</description>
   <modules>
     <module>sgp-integration-project</module>
+    <module>sgp-registry-resources</module>
     <module>sgp-composite-application</module>
   </modules>
-
 
   <!-- ********************************************** -->
   <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
