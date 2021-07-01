@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
@@ -108,7 +109,12 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError(MSG_LISTADO_ERROR);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_LISTADO_ERROR);
+          }
           return of([]);
         })
       );
