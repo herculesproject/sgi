@@ -12,8 +12,11 @@ public class PeriodDateUtil {
 
   private static final int MONTHS_TO_SUBTRACT = 1;
 
-  public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, int mesInicial,
+  public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, Integer mesInicial,
       Instant fechaCalculoPeriodoRef) {
+    if (mesInicial == null) {
+      return null;
+    }
 
     OffsetDateTime fechaBase = fechaCalculoPeriodoRef.atOffset(ZoneOffset.UTC);
 
@@ -29,16 +32,22 @@ public class PeriodDateUtil {
     // para recuperar la hora establecida inicialmente
     fechaInicioPeriodo = fechaInicioPeriodo.minusSeconds(ZoneOffset.MAX.getTotalSeconds());
 
-    Instant instantInicioPeridio = fechaInicioPeriodo.toInstant();
+    Instant instantInicioPeriodo = fechaInicioPeriodo.toInstant();
 
     // La fecha de inicio del periodo nunca puede ser anterior a la fecha de inicio
     // del proyecto
-    return fechaInicio.isAfter(instantInicioPeridio) ? fechaInicio : instantInicioPeridio;
+    if (fechaInicio == null) {
+      return instantInicioPeriodo;
+    }
+    return fechaInicio.isAfter(instantInicioPeriodo) ? fechaInicio : instantInicioPeriodo;
 
   }
 
-  public static Instant calculateFechaFinPeriodo(Instant fechaInicio, Instant fechaFin, int mesFinal,
+  public static Instant calculateFechaFinPeriodo(Instant fechaFin, Integer mesFinal,
       Instant fechaCalculoPeriodoRef) {
+    if (mesFinal == null) {
+      return null;
+    }
 
     OffsetDateTime fechaBase = fechaCalculoPeriodoRef.atOffset(ZoneOffset.UTC);
 
@@ -54,11 +63,14 @@ public class PeriodDateUtil {
     // para recuperar la hora establecida inicialmente
     fechaFinPeriodo = fechaFinPeriodo.minusSeconds(ZoneOffset.MAX.getTotalSeconds());
 
-    Instant instantFinPeridio = fechaFinPeriodo.toInstant();
+    Instant instantFinPeriodo = fechaFinPeriodo.toInstant();
 
     // La fecha de finalización del periodo nunca puede ser posterior a la fecha de
     // fin del proyecto
-    return fechaFin.isBefore(instantFinPeridio) ? fechaFin : instantFinPeridio;
+    if (fechaFin == null) {
+      return instantFinPeriodo;
+    }
+    return fechaFin.isBefore(instantFinPeriodo) ? fechaFin : instantFinPeriodo;
 
   }
 

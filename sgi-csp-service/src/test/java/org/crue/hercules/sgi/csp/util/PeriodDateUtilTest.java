@@ -29,8 +29,7 @@ public class PeriodDateUtilTest {
   @Test
   void calculateFechaFinSeguimiento_should_return_a_valid_end_periodo_instant_when_is_called() {
 
-    Instant result = PeriodDateUtil.calculateFechaFinPeriodo(DEFAULT_FECHA_INICIO(), DEFAULT_FECHA_FIN(), 3,
-        DEFAULT_FECHA_INICIO());
+    Instant result = PeriodDateUtil.calculateFechaFinPeriodo(DEFAULT_FECHA_FIN(), 3, DEFAULT_FECHA_INICIO());
 
     assertThat(result).isNotNull();
     Calendar cal = Calendar.getInstance();
@@ -42,8 +41,7 @@ public class PeriodDateUtilTest {
   @Test
   void calculateFechaFinSeguimiento_should_return_project_end_date_when_calculated_date_is_greater_than_fecha_fin() {
 
-    Instant result = PeriodDateUtil.calculateFechaFinPeriodo(DEFAULT_FECHA_INICIO(), DEFAULT_FECHA_FIN(), 6,
-        DEFAULT_FECHA_INICIO());
+    Instant result = PeriodDateUtil.calculateFechaFinPeriodo(DEFAULT_FECHA_FIN(), 6, DEFAULT_FECHA_INICIO());
     Calendar calResult = Calendar.getInstance();
     calResult.setTime(Date.from(result));
 

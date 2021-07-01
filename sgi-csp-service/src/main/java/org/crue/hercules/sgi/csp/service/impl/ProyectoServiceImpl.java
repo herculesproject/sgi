@@ -1,8 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaFinPeriodo;
-import static org.crue.hercules.sgi.csp.util.PeriodDateUtil.calculateFechaInicioPeriodo;
-
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -896,9 +893,9 @@ public class ProyectoServiceImpl implements ProyectoService {
               .builder();
           projectBuilder.numPeriodo(convocatoriaSeguimiento.getNumPeriodo())
               .tipoSeguimiento(convocatoriaSeguimiento.getTipoSeguimiento()).proyectoId(proyecto.getId())
-              .fechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+              .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                   convocatoriaSeguimiento.getMesInicial(), proyecto.getFechaBase()))
-              .fechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
                   convocatoriaSeguimiento.getMesFinal(), proyecto.getFechaBase()));
 
           if (convocatoriaSeguimiento.getFechaInicioPresentacion() != null) {
@@ -1160,11 +1157,11 @@ public class ProyectoServiceImpl implements ProyectoService {
           ProyectoEquipo.ProyectoEquipoBuilder proyectoEquipo = ProyectoEquipo.builder();
           proyectoEquipo.proyectoId(proyecto.getId());
           if (solicitudProyectoEquipo.getMesInicio() != null) {
-            proyectoEquipo.fechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+            proyectoEquipo.fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                 solicitudProyectoEquipo.getMesInicio(), proyecto.getFechaBase()));
           }
           if (solicitudProyectoEquipo.getMesFin() != null) {
-            proyectoEquipo.fechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+            proyectoEquipo.fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
                 solicitudProyectoEquipo.getMesFin(), proyecto.getFechaBase()));
           }
           proyectoEquipo.rolProyecto(solicitudProyectoEquipo.getRolProyecto())
@@ -1199,8 +1196,8 @@ public class ProyectoServiceImpl implements ProyectoService {
                 proyecto.getFechaInicio(), responsableEconomicoSolicitud.getMesInicio(), proyecto.getFechaBase()));
           }
           if (responsableEconomicoSolicitud.getMesFin() != null) {
-            proyectoResponsableEconomico.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
-                proyecto.getFechaFin(), responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaBase()));
+            proyectoResponsableEconomico.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
+                responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaBase()));
           }
           return proyectoResponsableEconomico;
         }).filter(responsableEconomicoProyecto -> !responsableEconomicoProyecto.getFechaInicio()
@@ -1246,14 +1243,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         .importeConcedido(entidadSolicitud.getImporteSolicitado())
         .numInvestigadores(entidadSolicitud.getNumInvestigadores()).build();
 
-    if (entidadSolicitud.getMesInicio() != null) {
-      proyectoSocio.setFechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-          entidadSolicitud.getMesInicio(), proyecto.getFechaBase()));
-    }
-    if (entidadSolicitud.getMesFin() != null) {
-      proyectoSocio.setFechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
-          entidadSolicitud.getMesFin(), proyecto.getFechaBase()));
-    }
+    proyectoSocio.setFechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+        entidadSolicitud.getMesInicio(), proyecto.getFechaBase()));
+    proyectoSocio.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
+        entidadSolicitud.getMesFin(), proyecto.getFechaBase()));
 
     return proyectoSocio;
   }
@@ -1269,9 +1262,9 @@ public class ProyectoServiceImpl implements ProyectoService {
 
           ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = ProyectoSocioPeriodoJustificacion
               .builder().proyectoSocioId(proyectoSocioCreado.getId())
-              .fechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+              .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                   entidadPeriodoJustificacionSolicitud.getMesInicial(), proyecto.getFechaBase()))
-              .fechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
                   entidadPeriodoJustificacionSolicitud.getMesFinal(), proyecto.getFechaBase()))
               .numPeriodo(entidadPeriodoJustificacionSolicitud.getNumPeriodo())
               .observaciones(entidadPeriodoJustificacionSolicitud.getObservaciones())
@@ -1288,7 +1281,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagos = solicitudPeriodoPagoRepository
         .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId()).stream()
         .map((entidadPeriodoPagoSolicitud) -> ProyectoSocioPeriodoPago.builder()
-            .fechaPrevistaPago(calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+            .fechaPrevistaPago(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                 entidadPeriodoPagoSolicitud.getMes(), proyecto.getFechaBase()))
             .importe(entidadPeriodoPagoSolicitud.getImporte()).numPeriodo(entidadPeriodoPagoSolicitud.getNumPeriodo())
             .proyectoSocioId(proyectoSocio.getId()).build())
@@ -1303,9 +1296,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId()).stream().map((entidadEquipoSolicitud) -> {
           log.debug("Copy SolicitudProyectoSocioEquipo with id: {0}", entidadEquipoSolicitud.getId());
           return ProyectoSocioEquipo.builder()
-              .fechaInicio(calculateFechaInicioPeriodo(proyecto.getFechaInicio(), entidadEquipoSolicitud.getMesInicio(),
-                  proyecto.getFechaBase()))
-              .fechaFin(calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
+              .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+                  entidadEquipoSolicitud.getMesInicio(), proyecto.getFechaBase()))
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
                   entidadEquipoSolicitud.getMesFin(), proyecto.getFechaBase()))
 
               .personaRef(entidadEquipoSolicitud.getPersonaRef()).rolProyecto(entidadEquipoSolicitud.getRolProyecto())
@@ -1351,17 +1344,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       conceptoGastoProyecto.setPorcentajeCosteIndirecto(conceptoGastoConvocatoria.getPorcentajeCosteIndirecto());
       conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
 
-      if (conceptoGastoConvocatoria.getMesInicial() != null) {
-        Instant fechaInicio = calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-            conceptoGastoConvocatoria.getMesInicial(), proyecto.getFechaBase());
-        conceptoGastoProyecto.setFechaInicio(fechaInicio);
-      }
+      Instant fechaInicio = PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+          conceptoGastoConvocatoria.getMesInicial(), proyecto.getFechaBase());
+      conceptoGastoProyecto.setFechaInicio(fechaInicio);
 
-      if (conceptoGastoConvocatoria.getMesFinal() != null) {
-        Instant fechaFin = calculateFechaFinPeriodo(proyecto.getFechaInicio(), proyecto.getFechaFin(),
-            conceptoGastoConvocatoria.getMesFinal(), proyecto.getFechaBase());
-        conceptoGastoProyecto.setFechaFin(fechaFin);
-      }
+      Instant fechaFin = PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
+          conceptoGastoConvocatoria.getMesFinal(), proyecto.getFechaBase());
+      conceptoGastoProyecto.setFechaFin(fechaFin);
 
       // Solo se copian los conceptos que tengan fechas que encajen dentro del rango
       // del proyecto
