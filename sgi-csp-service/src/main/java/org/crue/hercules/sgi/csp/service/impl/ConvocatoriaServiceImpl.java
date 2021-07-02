@@ -139,7 +139,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       data.setObservaciones(validConvocatoria.getObservaciones());
       data.setFinalidad(validConvocatoria.getFinalidad());
       data.setRegimenConcurrencia(validConvocatoria.getRegimenConcurrencia());
-      data.setColaborativos(validConvocatoria.getColaborativos());
       data.setDuracion(validConvocatoria.getDuracion());
       data.setAmbitoGeografico(validConvocatoria.getAmbitoGeografico());
       data.setClasificacionCVN(validConvocatoria.getClasificacionCVN());

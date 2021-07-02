@@ -2161,7 +2161,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="colaborativos" value="true" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="4" />
@@ -2181,7 +2180,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="colaborativos" value="true" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
@@ -2201,7 +2199,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="colaborativos" value="true" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
@@ -2221,7 +2218,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="colaborativos" value="false" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />
@@ -2241,7 +2237,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
-      <column name="colaborativos" value="null" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="5" />
@@ -2261,7 +2256,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
-      <column name="colaborativos" value="false" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
@@ -2281,7 +2275,6 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
-      <column name="colaborativos" value="true" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />

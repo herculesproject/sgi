@@ -89,6 +89,11 @@ public class SolicitudProyecto extends BaseEntity {
   @Column(name = "coordinador_externo", nullable = true)
   private Boolean coordinadorExterno;
 
+  /** Coordinado */
+  @Column(name = "coordinado", columnDefinition = "boolean default false", nullable = false)
+  @NotNull
+  private Boolean coordinado;
+
   /** Objetivos */
   @Column(name = "objetivos", length = 2000, nullable = true)
   @Size(max = 2000)

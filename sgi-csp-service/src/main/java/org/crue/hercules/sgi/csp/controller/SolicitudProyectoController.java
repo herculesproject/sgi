@@ -52,6 +52,7 @@ public class SolicitudProyectoController {
   public SolicitudProyectoController(SolicitudProyectoService solicitudProyectoService,
       SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService,
       SolicitudProyectoSocioService solicitudProyectoSocioService) {
+
     this.service = solicitudProyectoService;
     this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
     this.solicitudProyectoSocioService = solicitudProyectoSocioService;
@@ -151,6 +152,36 @@ public class SolicitudProyectoController {
     Boolean returnValue = solicitudProyectoSocioService.hasSolicitudSocio(id);
     log.debug("hasSolicitudSocio(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/periodospago", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> hasSolicitudProyectoSocioPeriodosPago(
+      @PathVariable(required = true) Long solicitudProyectoId) {
+
+    return this.solicitudProyectoSocioService.existsSolicitudProyectoSocioPeriodoPagoBySolicitudProyectoSocioId(
+        solicitudProyectoId) ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/periodosjustificacion", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> hasSolicitudProyectoSocioPeriodosJustificacion(
+      @PathVariable(required = true) Long solicitudProyectoId) {
+
+    return this.solicitudProyectoSocioService
+        .existsSolicitudProyectoSocioPeriodoJustificacionBySolicitudProyectoSocioId(solicitudProyectoId)
+            ? ResponseEntity.ok().build()
+            : ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/coordinador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> hasAnySolicitudProyectoSocioWithRolCoordinador(
+      @PathVariable(required = true) Long solicitudProyectoId) {
+
+    return this.solicitudProyectoSocioService.hasAnySolicitudProyectoSocioWithRolCoordinador(solicitudProyectoId)
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
   }
 
 }

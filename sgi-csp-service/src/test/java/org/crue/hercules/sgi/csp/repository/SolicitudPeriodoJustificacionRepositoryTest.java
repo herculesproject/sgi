@@ -38,9 +38,9 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    SolicitudProyecto solicitudProyecto = entityManager.persistAndFlush(
-        new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, null,
-            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+    SolicitudProyecto solicitudProyecto = entityManager.persistAndFlush(SolicitudProyecto.builder()
+        .id(solicitud1.getId()).titulo("solicitud1").colaborativo(Boolean.TRUE).coordinadorExterno(Boolean.TRUE)
+        .coordinado(Boolean.TRUE).colaborativo(Boolean.TRUE).tipoPresupuesto(TipoPresupuesto.GLOBAL).build());
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()

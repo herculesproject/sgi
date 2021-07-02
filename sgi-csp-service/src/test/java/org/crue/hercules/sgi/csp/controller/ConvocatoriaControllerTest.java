@@ -191,7 +191,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaExistente.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(convocatoriaExistente.getRegimenConcurrencia().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(convocatoriaExistente.getColaborativos()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(convocatoriaExistente.getDuracion()))
         .andExpect(MockMvcResultMatchers.jsonPath("ambitoGeografico.id")
@@ -262,8 +261,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
             MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaBorradorExistente.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(convocatoriaBorradorExistente.getRegimenConcurrencia().getId()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("colaborativos").value(convocatoriaBorradorExistente.getColaborativos()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(convocatoriaBorradorExistente.getDuracion()))
         .andExpect(MockMvcResultMatchers.jsonPath("ambitoGeografico.id")
@@ -1363,7 +1360,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(newConvocatoria.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(newConvocatoria.getRegimenConcurrencia().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(newConvocatoria.getColaborativos()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(newConvocatoria.getDuracion()))
         .andExpect(
@@ -1651,7 +1647,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
-        .colaborativos(Boolean.TRUE)
         .estado(Convocatoria.Estado.REGISTRADA)
         .duracion(12)
         .ambitoGeografico(tipoAmbitoGeografico)

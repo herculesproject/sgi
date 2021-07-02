@@ -90,4 +90,24 @@ public interface ProyectoSocioService {
    */
   Boolean vinculaciones(Long id);
 
+  /**
+   * Comprueba si hay algún objeto ProyectoSocio con la propiedad coordinador a
+   * true en las especificaciones de su rol
+   * 
+   * @param proyectoId
+   * @return
+   */
+  boolean hasAnyProyectoSocioWithRolCoordinador(Long proyectoId);
+
+  /**
+   * Comprueba si hay algún socio asignado al proyecto
+   * 
+   * @param proyectoId
+   * @return
+   */
+  boolean hasAnyProyectoSocioWithProyectoId(Long proyectoId);
+
+  boolean existsProyectoSocioPeriodoPagoByProyectoSocioId(Long proyectoId);
+
+  boolean existsProyectoSocioPeriodoJustificacionByProyectoSocioId(Long proyectoId);
 }

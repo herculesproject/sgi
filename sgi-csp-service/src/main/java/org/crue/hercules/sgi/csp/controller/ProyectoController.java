@@ -1011,4 +1011,40 @@ public class ProyectoController {
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
+  @RequestMapping(path = "/{proyectoId}/proyectosocios", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> hasAnyProyectoSocio(@PathVariable(required = true) Long proyectoId) {
+
+    return this.proyectoSocioService.hasAnyProyectoSocioWithProyectoId(proyectoId) ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/{proyectoId}/proyectosocios/coordinador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> hasAnyProyectoSocioWithRolCoordinador(@PathVariable(required = true) Long proyectoId) {
+
+    return this.proyectoSocioService.hasAnyProyectoSocioWithRolCoordinador(proyectoId) ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/{proyectoId}/proyectosocios/periodospago", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> existsProyectoSocioPeriodoPagoByProyectoSocioId(
+      @PathVariable(required = true) Long proyectoId) {
+
+    return this.proyectoSocioService.existsProyectoSocioPeriodoPagoByProyectoSocioId(proyectoId)
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/{proyectoId}/proyectosocios/periodosjustificacion", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  public ResponseEntity<Object> existsProyectoSocioPeriodoJustificacionByProyectoSocioId(
+      @PathVariable(required = true) Long proyectoId) {
+
+    return this.proyectoSocioService.existsProyectoSocioPeriodoJustificacionByProyectoSocioId(proyectoId)
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
+  }
+
 }

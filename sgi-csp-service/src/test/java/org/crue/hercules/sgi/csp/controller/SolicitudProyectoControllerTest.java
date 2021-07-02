@@ -228,9 +228,13 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
    */
   private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId) {
 
+    // formatter: off
+
     SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
         .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
-        .tipoPresupuesto(TipoPresupuesto.GLOBAL).build();
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL).coordinado(Boolean.TRUE).build();
+
+    // formatter: on
 
     return solicitudProyecto;
   }

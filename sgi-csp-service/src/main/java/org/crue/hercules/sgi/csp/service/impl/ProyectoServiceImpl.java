@@ -256,7 +256,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Guarda la entidad {@link Proyecto}.
-   * 
+   *
    * @param proyecto la entidad {@link Proyecto} a guardar.
    * @return proyecto la entidad {@link Proyecto} persistida.
    */
@@ -303,7 +303,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Actualiza los datos del {@link Proyecto}.
-   * 
+   *
    * @param proyectoActualizar proyectoActualizar {@link Proyecto} con los datos
    *                           actualizados.
    * @return {@link Proyecto} actualizado.
@@ -332,6 +332,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setAnualidades(proyectoActualizar.getAnualidades());
       data.setClasificacionCVN(proyectoActualizar.getClasificacionCVN());
       data.setCodigoExterno(proyectoActualizar.getCodigoExterno());
+      data.setCoordinado(proyectoActualizar.getCoordinado());
       data.setColaborativo(proyectoActualizar.getColaborativo());
       data.setConfidencial(proyectoActualizar.getConfidencial());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
@@ -501,7 +502,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Obtiene una entidad {@link Proyecto} por id.
-   * 
+   *
    * @param id Identificador de la entidad {@link Proyecto}.
    * @return Proyecto la entidad {@link Proyecto}.
    */
@@ -573,7 +574,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Añade el nuevo {@link EstadoProyecto} y actualiza la {@link Proyecto} con
    * dicho estado.
-   * 
+   *
    * @param proyecto           la {@link Proyecto} para la que se añade el nuevo
    *                           estado.
    * @param tipoEstadoProyecto El nuevo {@link EstadoProyecto.Estado} de la
@@ -764,7 +765,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia todos los datos de la {@link Convocatoria} al {@link Proyecto}
-   * 
+   *
    * @param proyecto la entidad {@link Proyecto}
    */
   private void copyDatosConvocatoriaToProyecto(Proyecto proyecto) {
@@ -779,7 +780,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
    * Proyecto
-   * 
+   *
    * @param proyecto     el {@link Proyecto}
    * @param convocatoria la {@link Convocatoria}
    */
@@ -821,7 +822,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia la entidad área temática de una convocatoria a unproyecto
-   * 
+   *
    * @param proyecto la entidad {@link Proyecto}
    */
   private void copyAreaTematica(Proyecto proyecto) {
@@ -851,7 +852,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia las entidades financiadores de una convocatoria a un proyecto
-   * 
+   *
    * @param proyectoId     Identificador del proyecto de destino
    * @param convocatoriaId Identificador de la convocatoria
    */
@@ -877,7 +878,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia los periodos de seguimiento de una convocatoria a un proyecto
-   * 
+   *
    * @param proyecto El proyecto de destino
    */
   private void copyPeriodoSeguimiento(Proyecto proyecto) {
@@ -922,7 +923,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia las entidades gestoras de una convocatoria a un proyecto
-   * 
+   *
    * @param proyecto la entidad {@link Proyecto}
    */
   private void copyEntidadesGestoras(Proyecto proyecto) {
@@ -941,7 +942,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia los datos generales de la {@link Solicitud} al {@link Proyecto}
-   * 
+   *
    * @param proyecto la entidad {@link Proyecto}
    * @return la entidad {@link Proyecto} con los nuevos datos
    */
@@ -964,6 +965,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }
     proyecto.setColaborativo(solicitudProyecto.getColaborativo());
+    proyecto.setCoordinado(solicitudProyecto.getCoordinado());
     proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
     log.debug("copyDatosGenerales(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
     return proyecto;
@@ -971,7 +973,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia todos los datos de la {@link Solicitud} al {@link Proyecto}
-   * 
+   *
    * @param proyecto          la entidad {@link Proyecto}
    * @param solicitudProyecto la entidad {@link SolicitudProyecto}
    */
@@ -997,7 +999,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Copia el los datos {@link ContextoProyecto} de la entidad
    * {@link SolicitudProyecto} al {@link Proyecto}
-   * 
+   *
    * @param proyecto          la entidad {@link Proyecto}
    * @param solicitudProyecto la entidad {@link SolicitudProyecto}
    * @return la entidad {@link Proyecto} con los nuevos datos
@@ -1094,7 +1096,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Copia las entidades convocantes de una {@link Solicitud} a un
    * {@link Proyecto}
-   * 
+   *
    * @param proyecto entidad {@link Proyecto}
    */
   private void copyEntidadesConvocantesDeSolicitud(Proyecto proyecto) {
@@ -1116,7 +1118,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Copia las entidades financiadoras de una {@link Solicitud} a un
    * {@link Proyecto}
-   * 
+   *
    * @param proyecto entidad {@link Proyecto}
    */
   private void copyEntidadesFinanciadorasDeSolicitud(Proyecto proyecto, Long solicitudProyectoId) {
@@ -1142,7 +1144,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Copia todos los miembros del equipo de una {@link Solicitud} a un
    * {@link Proyecto}
-   * 
+   *
    * @param proyecto entidad {@link Proyecto}
    */
   private void copyMiembrosEquipo(Proyecto proyecto, Long solicitudProyectoId) {
@@ -1212,7 +1214,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Copia todos los socios de una {@link Solicitud} a un {@link Proyecto}
-   * 
+   *
    * @param proyecto entidad {@link Proyecto}
    */
   private void copySocios(Proyecto proyecto, Long solicitudProyectoId) {
@@ -1427,7 +1429,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Se comprueba que los datos de la {@link Solicitud} a copiar para crear el
    * {@link Proyecto} cumplan las validaciones oportunas
-   * 
+   *
    * @param solicitud datos de la {@link Solicitud}
    */
   private void validarDatosSolicitud(Solicitud solicitud) {
@@ -1449,7 +1451,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Guarda la entidad {@link Proyecto} a partir de los datos de la entidad
    * {@link Solicitud}.
-   * 
+   *
    * @param solicitudId identificador de la entidad {@link Solicitud} a copiar
    *                    datos.
    * @param proyecto    datos necesarios para crear el {@link Proyecto}

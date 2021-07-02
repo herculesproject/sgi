@@ -123,7 +123,6 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
-        .colaborativos(Boolean.TRUE)
         .estado(Convocatoria.Estado.REGISTRADA)
         .duracion(12)
         .ambitoGeografico(tipoAmbitoGeografico)

@@ -159,6 +159,10 @@ public class Proyecto extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private ClasificacionCVN clasificacionCVN;
 
+  /** Coordinado */
+  @Column(name = "coordinado", nullable = true)
+  private Boolean coordinado;
+
   /** Colaborativo */
   @Column(name = "colaborativo", nullable = true)
   private Boolean colaborativo;

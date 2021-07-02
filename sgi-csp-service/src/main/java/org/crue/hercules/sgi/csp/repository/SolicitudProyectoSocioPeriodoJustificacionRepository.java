@@ -30,4 +30,6 @@ public interface SolicitudProyectoSocioPeriodoJustificacionRepository
    */
   void deleteBySolicitudProyectoSocioId(Long solicitudProyectoSocioId);
 
+  boolean existsBySolicitudProyectoSocioId(Long solicitudProyectoSocioId);
+
 }

@@ -76,32 +76,37 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
     // comprobar si la solicitud es modificable
     Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()), "No se puede modificar SolicitudProyecto");
 
-    return repository.findById(solicitudProyecto.getId()).map((solicitudProyectoExistente) -> {
+    return repository.findById(solicitudProyecto.getId()).map(
+        (solicitudProyectoExistente) -> updateExistingSolicitudProyecto(solicitudProyecto, solicitudProyectoExistente))
+        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyecto.getId()));
+  }
 
-      solicitudProyectoExistente.setTitulo(solicitudProyecto.getTitulo());
-      solicitudProyectoExistente.setAcronimo(solicitudProyecto.getAcronimo());
-      solicitudProyectoExistente.setCodExterno(solicitudProyecto.getCodExterno());
-      solicitudProyectoExistente.setDuracion(solicitudProyecto.getDuracion());
-      solicitudProyectoExistente.setColaborativo(solicitudProyecto.getColaborativo());
-      solicitudProyectoExistente.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
-      solicitudProyectoExistente.setObjetivos(solicitudProyecto.getObjetivos());
-      solicitudProyectoExistente.setIntereses(solicitudProyecto.getIntereses());
-      solicitudProyectoExistente.setResultadosPrevistos(solicitudProyecto.getResultadosPrevistos());
-      solicitudProyectoExistente.setAreaTematica(solicitudProyecto.getAreaTematica());
-      solicitudProyectoExistente.setChecklistRef(solicitudProyecto.getChecklistRef());
-      solicitudProyectoExistente.setPeticionEvaluacionRef(solicitudProyecto.getPeticionEvaluacionRef());
-      solicitudProyectoExistente.setTipoPresupuesto(solicitudProyecto.getTipoPresupuesto());
-      solicitudProyectoExistente.setImporteSolicitado(solicitudProyecto.getImporteSolicitado());
-      solicitudProyectoExistente.setImportePresupuestado(solicitudProyecto.getImportePresupuestado());
-      solicitudProyectoExistente.setImporteSolicitadoSocios(solicitudProyecto.getImporteSolicitadoSocios());
-      solicitudProyectoExistente.setImportePresupuestadoSocios(solicitudProyecto.getImportePresupuestadoSocios());
-      solicitudProyectoExistente.setTotalImporteSolicitado(solicitudProyecto.getTotalImporteSolicitado());
-      solicitudProyectoExistente.setTotalImportePresupuestado(solicitudProyecto.getTotalImportePresupuestado());
-      SolicitudProyecto returnValue = repository.save(solicitudProyectoExistente);
+  private SolicitudProyecto updateExistingSolicitudProyecto(SolicitudProyecto source, SolicitudProyecto target) {
 
-      log.debug("update(SolicitudProyecto solicitudProyecto) - end");
-      return returnValue;
-    }).orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyecto.getId()));
+    target.setTitulo(source.getTitulo());
+    target.setAcronimo(source.getAcronimo());
+    target.setCodExterno(source.getCodExterno());
+    target.setDuracion(source.getDuracion());
+    target.setColaborativo(source.getColaborativo());
+    target.setCoordinado(source.getCoordinado());
+    target.setCoordinadorExterno(source.getCoordinadorExterno());
+    target.setObjetivos(source.getObjetivos());
+    target.setIntereses(source.getIntereses());
+    target.setResultadosPrevistos(source.getResultadosPrevistos());
+    target.setAreaTematica(source.getAreaTematica());
+    target.setChecklistRef(source.getChecklistRef());
+    target.setPeticionEvaluacionRef(source.getPeticionEvaluacionRef());
+    target.setTipoPresupuesto(source.getTipoPresupuesto());
+    target.setImporteSolicitado(source.getImporteSolicitado());
+    target.setImportePresupuestado(source.getImportePresupuestado());
+    target.setImporteSolicitadoSocios(source.getImporteSolicitadoSocios());
+    target.setImportePresupuestadoSocios(source.getImportePresupuestadoSocios());
+    target.setTotalImporteSolicitado(source.getTotalImporteSolicitado());
+    target.setTotalImportePresupuestado(source.getTotalImportePresupuestado());
+
+    log.debug("update(SolicitudProyecto solicitudProyecto) - end");
+
+    return repository.save(target);
   }
 
   /**

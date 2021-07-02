@@ -119,10 +119,6 @@ public class Convocatoria extends BaseEntity {
   @JoinColumn(name = "tipo_regimen_concurrencia_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_REGIMENCONCURRENCIA"))
   private TipoRegimenConcurrencia regimenConcurrencia;
 
-  /** Colaborativos */
-  @Column(name = "colaborativos", nullable = true)
-  private Boolean colaborativos;
-
   /** Estado */
   @Column(name = "estado", length = 50, nullable = false)
   @Enumerated(EnumType.STRING)

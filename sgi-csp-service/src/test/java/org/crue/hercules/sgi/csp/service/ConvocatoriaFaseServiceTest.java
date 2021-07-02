@@ -510,8 +510,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any()))
-        .willReturn(Boolean.FALSE);
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatCode(
         // when: delete by existing id
@@ -653,7 +652,6 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
-        .colaborativos(Boolean.TRUE)
         .estado(Convocatoria.Estado.REGISTRADA)
         .duracion(12)
         .ambitoGeografico(tipoAmbitoGeografico)

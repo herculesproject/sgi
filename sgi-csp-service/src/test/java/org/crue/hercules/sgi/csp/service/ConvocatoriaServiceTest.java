@@ -129,7 +129,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(created.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(created.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(created.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(created.getEstado()).isEqualTo(Convocatoria.Estado.BORRADOR);
     Assertions.assertThat(created.getDuracion()).isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(created.getAmbitoGeografico().getId()).isEqualTo(convocatoria.getAmbitoGeografico().getId());
@@ -177,7 +176,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(created.getObservaciones()).isNull();
     Assertions.assertThat(created.getFinalidad()).isNull();
     Assertions.assertThat(created.getRegimenConcurrencia()).isNull();
-    Assertions.assertThat(created.getColaborativos()).isNull();
     Assertions.assertThat(created.getEstado()).isEqualTo(Convocatoria.Estado.BORRADOR);
     Assertions.assertThat(created.getDuracion()).isNull();
     Assertions.assertThat(created.getAmbitoGeografico()).isNull();
@@ -600,7 +598,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(updated.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(updated.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(updated.getEstado()).isEqualTo(convocatoria.getEstado());
     Assertions.assertThat(updated.getDuracion()).isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(updated.getAmbitoGeografico().getId()).isEqualTo(convocatoria.getAmbitoGeografico().getId());
@@ -644,7 +641,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getObservaciones()).isNull();
     Assertions.assertThat(updated.getFinalidad()).isNull();
     Assertions.assertThat(updated.getRegimenConcurrencia()).isNull();
-    Assertions.assertThat(updated.getColaborativos()).isNull();
     Assertions.assertThat(updated.getEstado()).isEqualTo(Convocatoria.Estado.BORRADOR);
     Assertions.assertThat(updated.getDuracion()).isNull();
     Assertions.assertThat(updated.getAmbitoGeografico()).isNull();
@@ -1842,7 +1838,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(enabledData.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(enabledData.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(enabledData.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(enabledData.getEstado()).isEqualTo(convocatoria.getEstado());
     Assertions.assertThat(enabledData.getDuracion()).isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(enabledData.getAmbitoGeografico().getId())
@@ -1903,7 +1898,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(disabledData.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(disabledData.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(disabledData.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(disabledData.getEstado()).isEqualTo(convocatoria.getEstado());
     Assertions.assertThat(disabledData.getDuracion()).isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(disabledData.getAmbitoGeografico().getId())
@@ -1986,7 +1980,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaRegistrada.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(convocatoriaRegistrada.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(convocatoriaRegistrada.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(convocatoriaRegistrada.getEstado()).isEqualTo(Convocatoria.Estado.REGISTRADA);
     Assertions.assertThat(convocatoriaRegistrada.getDuracion()).isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(convocatoriaRegistrada.getAmbitoGeografico().getId())
@@ -2603,7 +2596,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoria.getFinalidad().getId()).isEqualTo(convocatoriaExistente.getFinalidad().getId());
     Assertions.assertThat(convocatoria.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoriaExistente.getRegimenConcurrencia().getId());
-    Assertions.assertThat(convocatoria.getColaborativos()).isEqualTo(convocatoriaExistente.getColaborativos());
     Assertions.assertThat(convocatoria.getEstado()).isEqualTo(convocatoriaExistente.getEstado());
     Assertions.assertThat(convocatoria.getDuracion()).isEqualTo(convocatoriaExistente.getDuracion());
     Assertions.assertThat(convocatoria.getAmbitoGeografico().getId())
@@ -2851,9 +2843,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
-        .regimenConcurrencia(tipoRegimenConcurrencia).colaborativos(Boolean.TRUE).estado(Convocatoria.Estado.REGISTRADA)
-        .duracion(12).ambitoGeografico(tipoAmbitoGeografico).clasificacionCVN(ClasificacionCVN.AYUDAS).activo(activo)
-        .build();
+        .regimenConcurrencia(tipoRegimenConcurrencia).estado(Convocatoria.Estado.REGISTRADA).duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico).clasificacionCVN(ClasificacionCVN.AYUDAS).activo(activo).build();
 
     return convocatoria;
   }
