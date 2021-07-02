@@ -1,5 +1,5 @@
 server:
-  port : 4281
+  port : 4283
   error:
     whitelabel:
       # Disble the default error page displayed in browsers in case of a server error

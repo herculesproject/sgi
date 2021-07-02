@@ -19,6 +19,7 @@ public class InvencionOutput {
   private Instant fechaComunicacion;
   private String descripcion;
   private String comentarios;
+  private String proyectoRef;
   private TipoProteccion tipoProteccion;
   private Boolean activo;
 

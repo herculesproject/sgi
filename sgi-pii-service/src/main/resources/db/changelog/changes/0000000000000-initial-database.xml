@@ -37,6 +37,7 @@
             <column name="fecha_comunicacion" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
+            <column name="proyecto_ref" type="VARCHAR(50)"/>
             <column name="titulo" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>

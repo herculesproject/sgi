@@ -34,6 +34,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EntidadActiva(entityClass = Invencion.class, groups = { OnActualizar.class })
 public class Invencion extends BaseActivableEntity {
+  public static final int REF_LENGTH = 50;
   public static final int TITULO_LENGTH = 50;
   public static final int LONG_TEXT_LENGTH = 250;
 
@@ -59,6 +60,10 @@ public class Invencion extends BaseActivableEntity {
   /** Comentarios */
   @Column(name = "comentarios", length = LONG_TEXT_LENGTH, nullable = true)
   private String comentarios;
+
+  /** Proyecto ref */
+  @Column(name = "proyecto_ref", length = REF_LENGTH, nullable = true)
+  private String proyectoRef;
 
   /** Tipo de protección. */
   @ManyToOne

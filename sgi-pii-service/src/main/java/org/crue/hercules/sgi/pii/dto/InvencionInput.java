@@ -37,6 +37,8 @@ public class InvencionInput implements Serializable {
   @Size(max = Invencion.LONG_TEXT_LENGTH)
   private String comentarios;
 
+  private String proyectoRef;
+
   @NotNull
   private Long tipoProteccionId;
 }
