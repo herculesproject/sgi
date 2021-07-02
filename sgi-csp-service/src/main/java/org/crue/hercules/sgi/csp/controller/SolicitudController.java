@@ -803,6 +803,41 @@ public class SolicitudController {
     return new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
+  /**
+   * Comprueba la existencia de {@link SolicitudProyectoPresupuesto} asociados a
+   * una solicitud
+   * 
+   * @param id Id de la Solicitud
+   * @return {@link HttpStatus.OK} si existe alguna relación,
+   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   */
+  @RequestMapping(path = "/{id}/solicitudproyectopresupuestos", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  ResponseEntity<?> existSolicitudProyectoPresupuesto(@PathVariable Long id) {
+    log.debug("existSolicitudProyectoPresupuesto(Long id) - start");
+    boolean returnValue = solicitudProyectoPresupuestoService.existsBySolicitudProyectoSolicitudId(id);
+
+    log.debug("existSolicitudProyectoPresupuesto(Long id,) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si la solicitud proyecto de la solicitud es de tipo Global
+   * 
+   * @param id Id de la Solicitud
+   * @return {@link HttpStatus.OK} si es tipo Global,
+   *         {@link HttpStatus.NO_CONTENT} Mixto o Individual
+   */
+  @RequestMapping(path = "/{id}/solicitudproyecto-global", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E')")
+  ResponseEntity<?> hasSolicitudProyectoTipoGlobal(@PathVariable Long id) {
+    log.debug("hasSolicitudProyectoTipoGlobal(Long id) - start");
+    boolean returnValue = solicitudProyectoService.isTipoPresupuestoGlobalBySolicitudId(id);
+
+    log.debug("hasSolicitudProyectoTipoGlobal(Long id,) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
   private SolicitudProyectoResponsableEconomicoOutput convert(
       SolicitudProyectoResponsableEconomico responsableEconomico) {
     return modelMapper.map(responsableEconomico, SolicitudProyectoResponsableEconomicoOutput.class);

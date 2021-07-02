@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
@@ -169,6 +170,22 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
   public boolean existsBySolicitudId(Long id) {
 
     return repository.existsById(id);
+  }
+
+  /**
+   * Compruena si la {@link SolicitudProyecto} asociada a la {@link Solicitud} es
+   * de tipo Global.
+   * 
+   * @param solicitudId Identificador de la solicitud.
+   * @return Indicador de si el tipo de presupuesto es global
+   */
+  @Override
+  public boolean isTipoPresupuestoGlobalBySolicitudId(Long solicitudId) {
+    log.debug("isTipoPresupuestoGlobalBySolicitudId(Long solicitudId) - start");
+    SolicitudProyecto solicitudProyecto = findBySolicitud(solicitudId);
+    log.debug("isTipoPresupuestoGlobalBySolicitudId(Long solicitudId) - end");
+
+    return solicitudProyecto.getTipoPresupuesto().equals(TipoPresupuesto.GLOBAL);
   }
 
   /**

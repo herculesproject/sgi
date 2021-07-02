@@ -79,7 +79,7 @@ public class ProyectoAnualidadController {
    * @return Nuevo {@link ProyectoAnualidad} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthority('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoAnualidadOutput> create(@Valid @RequestBody ProyectoAnualidadInput proyectoAnualidad) {
     log.debug("create(ProyectoAnualidad proyectoAnualidad) - start");
     ProyectoAnualidad returnValue = service.create(convert(proyectoAnualidad));
