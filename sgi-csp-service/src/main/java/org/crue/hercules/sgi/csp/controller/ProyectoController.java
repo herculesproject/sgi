@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
@@ -13,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoAgrupacionGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
@@ -32,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoAgrupacionGastoService;
 import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
@@ -146,6 +149,8 @@ public class ProyectoController {
 
   /** ProyectoPartidaService service */
   private final ProyectoPartidaService proyectoPartidaService;
+  /** ProyectoAgrupacionGasto Service */
+  private final ProyectoAgrupacionGastoService proyectoAgrupacionGastoService;
 
   /** ProyectoConceptoGasto service */
   private final ProyectoConceptoGastoService proyectoConceptoGastoService;
@@ -180,6 +185,7 @@ public class ProyectoController {
    * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
    * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
    * @param proyectoResponsableEconomicoService               {@link ProyectoResponsableEconomicoService}.
+   * @param proyectoAgrupacionGastoService                    {@link ProyectoAgrupacionGastoService}.
    */
   public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
       ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
@@ -195,7 +201,8 @@ public class ProyectoController {
       ProyectoAreaConocimientoService proyectoAreaConocimientoService,
       ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
       ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService,
-      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService) {
+      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService,
+      ProyectoAgrupacionGastoService proyectoAgrupacionGastoService) {
     this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
@@ -219,6 +226,7 @@ public class ProyectoController {
     this.proyectoPartidaService = proyectoPartidaService;
     this.proyectoConceptoGastoService = proyectoConceptoGastoService;
     this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
+    this.proyectoAgrupacionGastoService = proyectoAgrupacionGastoService;
   }
 
   /**
@@ -1000,15 +1008,28 @@ public class ProyectoController {
     return new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
-  private ProyectoResponsableEconomicoOutput convert(ProyectoResponsableEconomico responsableEconomico) {
-    return modelMapper.map(responsableEconomico, ProyectoResponsableEconomicoOutput.class);
-  }
+  /**
+   * Devuelve una lista de {@link ProyectoAgrupacionGastoOutput} con una
+   * {@link Proyecto} con id indicado.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return Lista de {@link ProyectoAgrupacionGastoOutput} correspondiente al id
+   */
 
-  private Page<ProyectoResponsableEconomicoOutput> convert(Page<ProyectoResponsableEconomico> page) {
-    List<ProyectoResponsableEconomicoOutput> content = page.getContent().stream()
-        .map((responsableEconomico) -> convert(responsableEconomico)).collect(Collectors.toList());
+  @GetMapping("/{id}/proyectoagrupaciongasto")
+  ResponseEntity<Page<ProyectoAgrupacionGastoOutput>> findAllProyectoAgrupacionGastoByProyectoId(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoAgrupacionGastoByProyectoId(Long id, String query, Pageable paging) - start");
+    Page<ProyectoAgrupacionGastoOutput> page = convertProyectoAgrupacionGastoOutput(
+        proyectoAgrupacionGastoService.findAllByProyectoId(id, query, paging));
 
-    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoAgrupacionGastoByProyectoId(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoAgrupacionGastoByProyectoId(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   @RequestMapping(path = "/{proyectoId}/proyectosocios", method = RequestMethod.HEAD)
@@ -1045,6 +1066,32 @@ public class ProyectoController {
     return this.proyectoSocioService.existsProyectoSocioPeriodoJustificacionByProyectoSocioId(proyectoId)
         ? ResponseEntity.ok().build()
         : ResponseEntity.noContent().build();
+  }
+
+  private ProyectoResponsableEconomicoOutput convert(ProyectoResponsableEconomico responsableEconomico) {
+    return modelMapper.map(responsableEconomico, ProyectoResponsableEconomicoOutput.class);
+  }
+
+  private Page<ProyectoResponsableEconomicoOutput> convert(Page<ProyectoResponsableEconomico> page) {
+    List<ProyectoResponsableEconomicoOutput> content = page.getContent().stream()
+        .map((responsableEconomico) -> convert(responsableEconomico)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+
+  }
+
+  private ProyectoAgrupacionGastoOutput convertProyectoAgrupacionGastoOutput(
+      ProyectoAgrupacionGasto proyectoAgrupacionGasto) {
+    return modelMapper.map(proyectoAgrupacionGasto, ProyectoAgrupacionGastoOutput.class);
+  }
+
+  private Page<ProyectoAgrupacionGastoOutput> convertProyectoAgrupacionGastoOutput(Page<ProyectoAgrupacionGasto> page) {
+    List<ProyectoAgrupacionGastoOutput> content = page.getContent().stream()
+        .map((proyectoAgrupacionGasto) -> convertProyectoAgrupacionGastoOutput(proyectoAgrupacionGasto))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+
   }
 
 }

@@ -192,4 +192,14 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
 
   }
 
+  @Override
+  public Page<ConceptoGasto> findAllNotInAgrupacion(Long id, String query, Pageable paging) {
+    log.debug("findAllbyProyectoAgrupacionGastoId(Long agrupacionId, String query, Pageable pageable) - start");
+    Specification<ConceptoGasto> specs = ConceptoGastoSpecifications.notInProyectoAgrupacionGasto(id)
+        .and(ConceptoGastoSpecifications.activos()).and(SgiRSQLJPASupport.toSpecification(query));
+    Page<ConceptoGasto> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllbyProyectoAgrupacionGastoId(Long agrupacionId, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
 }
