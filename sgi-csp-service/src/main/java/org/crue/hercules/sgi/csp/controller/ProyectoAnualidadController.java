@@ -110,7 +110,7 @@ public class ProyectoAnualidadController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/anualidadgastos")
-  @PreAuthorize("hasAuthority('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<AnualidadGastoOutput>> findAllAnualidadGasto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllAnualidadGasto(Long id, String query, Pageable paging) - start");
@@ -134,7 +134,7 @@ public class ProyectoAnualidadController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/anualidadingresos")
-  @PreAuthorize("hasAuthority('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<AnualidadIngresoOutput>> findAllAnualidadIngreso(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllAnualidadIngreso(Long id, String query, Pageable paging) - start");
