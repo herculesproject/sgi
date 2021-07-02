@@ -68,12 +68,12 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}</th>
         <td mat-cell *matCellDef="let wrapper">
-          <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-            (click)="openModalSeguimientoCientifico(wrapper)">
+          <button mat-button matTooltip="{{'btn.edit' | translate}}" (click)="openModalSeguimientoCientifico(wrapper)"
+            *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-          <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
-            (click)="deleteSeguimientoCientifico(wrapper)">
+          <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteSeguimientoCientifico(wrapper)"
+            *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </td>

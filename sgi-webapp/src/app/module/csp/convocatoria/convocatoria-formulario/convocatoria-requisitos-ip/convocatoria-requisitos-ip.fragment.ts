@@ -12,7 +12,7 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
     private fb: FormBuilder,
     key: number,
     private convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
-    public readonly: boolean
+    public hasEditPerm: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -43,7 +43,7 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
         [Validators.min(0), Validators.max(9999)])],
       otrosRequisitos: ['']
     });
-    if (this.readonly) {
+    if (!this.hasEditPerm) {
       form.disable();
     }
     return form;

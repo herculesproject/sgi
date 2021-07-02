@@ -22,6 +22,7 @@ import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DocumentoRequeridoSolicitudService } from '@core/services/csp/documento-requerido-solicitud.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -120,6 +121,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     logger: NGXLogger,
     route: ActivatedRoute,
     private convocatoriaService: ConvocatoriaService,
+    proyectoService: ProyectoService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaService: EmpresaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
@@ -149,35 +151,35 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     }
 
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
-      logger, this.id, convocatoriaService, empresaService,
+      logger, this.id, convocatoriaService, proyectoService, empresaService,
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService, configuracionSolicitudService,
-      this.readonly);
+      this.readonly, this.canEdit);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
-      this.id, convocatoriaService, convocatoriaPeriodoJustificacionService, this.readonly);
+      this.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.id, convocatoriaService, convocatoriaEntidadConvocanteService,
       empresaService, this.readonly);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
-      this.id, convocatoriaService, convocatoriaFaseService, this.readonly, this.canEdit);
+      this.id, convocatoriaService, convocatoriaFaseService, configuracionSolicitudService, this.readonly, this.canEdit);
     this.hitos = new ConvocatoriaHitosFragment(this.id, convocatoriaService,
       convocatoriaHitoService, this.readonly, this.canEdit);
     this.documentos = new ConvocatoriaDocumentosFragment(logger, this.id, convocatoriaService,
       convocatoriaDocumentoService, this.readonly, this.canEdit);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(this.id,
-      convocatoriaService, convocatoriaSeguimientoCientificoService, this.readonly);
+      convocatoriaService, convocatoriaSeguimientoCientificoService);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
       this.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly);
     this.enlaces = new ConvocatoriaEnlaceFragment(this.id, convocatoriaService,
       convocatoriaEnlaceService, this.readonly, this.canEdit);
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.id,
-      convocatoriaRequisitoIPService, this.readonly);
+      convocatoriaRequisitoIPService, this.canEdit);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, this.id, convocatoriaService,
       convocatoriaConceptoGastoService, this.readonly, this.canEdit);
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, this.id,
-      convocatoriaRequisitoEquipoService, this.readonly);
+      convocatoriaRequisitoEquipoService, this.canEdit);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
       logger, this.id, configuracionSolicitudService, documentoRequeridoSolicitudService,
-      this.readonly);
+      this.readonly, this.canEdit);
     this.partidasPresupuestarias = new ConvocatoriaPartidaPresupuestariaFragment(this.id, convocatoriaService, convocatoriaPartidaPresupuestariaService,
       this.readonly, this.canEdit);
 

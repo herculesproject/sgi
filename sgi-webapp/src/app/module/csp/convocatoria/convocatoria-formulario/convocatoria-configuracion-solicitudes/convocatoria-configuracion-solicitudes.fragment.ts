@@ -21,7 +21,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     key: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private documentoRequeridoSolicitudService: DocumentoRequeridoSolicitudService,
-    public readonly: boolean
+    public isConvocatoriaVinculada: boolean,
+    public hasEditPerm: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -37,8 +38,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       fechaFinFase: new FormControl({ value: null, disabled: true }),
       importeMaximoSolicitud: new FormControl(null, Validators.maxLength(50)),
     });
-    if (this.readonly) {
+    if (!this.hasEditPerm) {
       form.disable();
+    } else if (this.isConvocatoriaVinculada) {
+      form.controls.formularioSolicitud.disable();
     }
 
     this.subscriptions.push(form.controls.tramitacionSGI.valueChanges.subscribe(

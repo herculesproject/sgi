@@ -129,13 +129,11 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   ngOnInit() {
     super.ngOnInit();
     this.setupI18N();
-    if (!this.formPart.readonly) {
-      this.convocatoriaAreaTematicas.paginator = this.paginator;
-      this.convocatoriaAreaTematicas.sort = this.sort;
-      this.subscriptions.push(this.formPart.areasTematicas$.subscribe(
-        data => this.convocatoriaAreaTematicas.data = data
-      ));
-    }
+    this.convocatoriaAreaTematicas.paginator = this.paginator;
+    this.convocatoriaAreaTematicas.sort = this.sort;
+    this.subscriptions.push(this.formPart.areasTematicas$.subscribe(
+      data => this.convocatoriaAreaTematicas.data = data
+    ));
   }
 
   private setupI18N(): void {

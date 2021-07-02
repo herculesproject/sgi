@@ -13,8 +13,7 @@ export class ConvocatoriaSeguimientoCientificoFragment extends Fragment {
   constructor(
     key: number,
     private convocatoriaService: ConvocatoriaService,
-    private convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
-    public readonly: boolean
+    private convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService
   ) {
     super(key);
     this.setComplete(true);

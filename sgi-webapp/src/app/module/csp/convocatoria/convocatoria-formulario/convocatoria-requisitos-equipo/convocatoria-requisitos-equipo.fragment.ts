@@ -13,7 +13,7 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
     private fb: FormBuilder,
     key: number,
     private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    public readonly: boolean
+    public hasEditPerm: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -41,7 +41,7 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
         [Validators.min(0), Validators.max(9999)])],
       otrosRequisitos: ['']
     });
-    if (this.readonly) {
+    if (!this.hasEditPerm) {
       form.disable();
     }
     return form;

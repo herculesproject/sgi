@@ -112,7 +112,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
       duracion: this.actionService.duracion,
       convocatoriaSeguimientoCientifico: seguimientoCientificoActualizar
         ? seguimientoCientificoActualizar.value : {} as IConvocatoriaPeriodoSeguimientoCientifico,
-      convocatoriaSeguimientoCientificoList: this.dataSource.data,
+      convocatoriaSeguimientoCientificoList: this.dataSource.data
     };
 
     const config = {

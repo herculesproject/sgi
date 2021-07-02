@@ -615,4 +615,18 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     );
   }
 
+  /**
+  * Busca todos los proyectos que tengan la convocatoria asociada.
+  *
+  * @param id identificador de la convocatoria
+  * @returns la lista de Proyectos
+  */
+  findAllProyectosByConvocatoria(id: number): Observable<SgiRestListResult<IProyecto>> {
+    let options: SgiRestFindOptions;
+    options = {
+      filter: new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, id.toString())
+    };
+    return this.findTodos(options);
+  }
+
 }

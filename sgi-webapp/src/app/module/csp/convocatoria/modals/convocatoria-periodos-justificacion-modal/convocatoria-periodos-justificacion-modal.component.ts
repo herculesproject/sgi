@@ -21,7 +21,6 @@ export interface IConvocatoriaPeriodoJustificacionModalData {
   duracion: number;
   convocatoriaPeriodoJustificacion: IConvocatoriaPeriodoJustificacion;
   convocatoriaPeriodoJustificacionList: StatusWrapper<IConvocatoriaPeriodoJustificacion>[];
-  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('btn.add');
@@ -175,10 +174,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
-
-    if (this.data.readonly) {
-      formGroup.disable();
-    }
 
     // Si ya existe un periodo final tiene que ser el ultimo y solo puede haber 1
     if (periodoJustificacionFinal) {

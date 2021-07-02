@@ -13,8 +13,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
   constructor(
     key: number,
     private convocatoriaService: ConvocatoriaService,
-    private convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService,
-    public readonly: boolean
+    private convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService
   ) {
     super(key);
     this.setComplete(true);
