@@ -34,6 +34,8 @@ import { ConvocatoriaPartidaPresupuestariaModalComponent } from './modals/convoc
 import { ConvocatoriaPeriodosJustificacionModalComponent } from './modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
 import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
 import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convocatoria-seguimiento-cientifico-modal/convocatoria-seguimiento-cientifico-modal.component';
+import { CategoriaProfesionalModalComponent } from './modals/categoria-profesional-modal/categoria-profesional-modal.component';
+import { NivelAcademicoModalComponent } from './modals/nivel-academico-modal/nivel-academico-modal.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convoc
     ConvocatoriaRequisitosEquipoComponent,
     ConvocatoriaDocumentosComponent,
     ConvocatoriaConfiguracionSolicitudesComponent,
-    ConvocatoriaConfiguracionSolicitudesModalComponent
+    ConvocatoriaConfiguracionSolicitudesModalComponent,
+    NivelAcademicoModalComponent,
+    CategoriaProfesionalModalComponent
   ],
   imports: [
     CommonModule,
