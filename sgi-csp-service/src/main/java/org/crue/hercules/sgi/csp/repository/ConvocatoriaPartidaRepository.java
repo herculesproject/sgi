@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.repository.custom.CustomConvocatoriaPartidaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -9,8 +10,8 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository para {@link ConvocatoriaPartida}.
  */
 @Repository
-public interface ConvocatoriaPartidaRepository
-    extends JpaRepository<ConvocatoriaPartida, Long>, JpaSpecificationExecutor<ConvocatoriaPartida> {
+public interface ConvocatoriaPartidaRepository extends JpaRepository<ConvocatoriaPartida, Long>,
+    JpaSpecificationExecutor<ConvocatoriaPartida>, CustomConvocatoriaPartidaRepository {
 
   /**
    * Comprueba si existe algún {@link ConvocatoriaPartida} relacionado con el Id

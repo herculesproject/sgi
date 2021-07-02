@@ -17,8 +17,9 @@ public interface AnualidadIngresoRepository
    * Elimina los {@link AnualidadIngreso} por el identificador de
    * {@link ProyectoAnualidad}.
    * 
-   * @param id de {@link ProyectoAnualidad}.
+   * @param id identificador de {@link ProyectoAnualidad}.
    */
   void deleteByProyectoAnualidadId(Long id);
 
+  boolean existsByProyectoPartidaIdAndProyectoAnualidadEnviadoSgeIsTrue(Long proyectoPartidaId);
 }
