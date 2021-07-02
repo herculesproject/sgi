@@ -36,14 +36,12 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
   private final ConvocatoriaPeriodoJustificacionRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaPeriodoJustificacionServiceImpl(
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ConvocatoriaRepository convocatoriaRepository, ConvocatoriaService convocatoriaService) {
     this.repository = convocatoriaPeriodoJustificacionRepository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -64,18 +62,8 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
     log.debug(
         "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) - start");
 
-    if (convocatoriaPeriodoJustificaciones.isEmpty()) {
-      return new ArrayList<>();
-    }
-
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
-
-    // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef(),
-            new String[] { "CSP-CON-E", "CSP-CON-C" }),
-        "No se puede modificar ConvocatoriaPeriodoJustificacion. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificacionesBD = repository
         .findAllByConvocatoriaId(convocatoriaId);
@@ -88,6 +76,10 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
     if (!periodoJustificacionesEliminar.isEmpty()) {
       repository.deleteAll(periodoJustificacionesEliminar);
+    }
+
+    if (convocatoriaPeriodoJustificaciones.isEmpty()) {
+      return new ArrayList<>();
     }
 
     // Ordena los periodos por mesInicial

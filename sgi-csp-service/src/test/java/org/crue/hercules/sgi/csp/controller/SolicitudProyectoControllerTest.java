@@ -177,7 +177,7 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithExistingId_ReturnsSolicitudProyecto() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -201,7 +201,7 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

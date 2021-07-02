@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -102,15 +101,10 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   public void update_ReturnsRequisitoEquipo() {
     // given: Un nuevo RequisitoEquipo con el sexo actualizado
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
     RequisitoEquipo requisitoEquipoActualizado = generarMockRequisitoEquipo(1L, convocatoriaId);
     requisitoEquipoActualizado.setEdadMaxima(45);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(convocatoria));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoEquipo));
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoEquipo>any()))
@@ -139,57 +133,17 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithConvocatoriaNotExist_ThrowsNotFoundException() {
-    // given: Un RequisitoEquipo actualizado con una convocatoria que no existe
-    Long convocatoriaId = 1L;
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
-
-    // when: Actualizamos el RequisitoEquipo
-    // then: Lanza una excepcion porque la Convocatoria no existe
-    Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, requisitoEquipo.getConvocatoriaId()))
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
   public void update_NotExist_ThrowsNotFoundException() {
     // given: Un RequisitoEquipo actualizado con una convocatoria que no existe
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
     // when: Actualizamos el RequisitoEquipo
     // then: Lanza una excepcion porque la Convocatoria no existe
     Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, requisitoEquipo.getConvocatoriaId()))
         .isInstanceOf(RequisitoEquipoNotFoundException.class);
-  }
-
-  @Test
-  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a RequisitoEquipo when modificable return false
-    Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L, convocatoriaId);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(convocatoria));
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoEquipo));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: update RequisitoEquipo
-        () -> service.update(requisitoEquipo, requisitoEquipo.getConvocatoriaId()))
-        // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar RequisitoEquipo. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -224,10 +178,6 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     // then: lanza un ConvocatoriaNotFoundException
     Assertions.assertThatThrownBy(() -> service.findByConvocatoriaId(idBuscado))
         .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).activo(Boolean.TRUE).codigo("codigo" + convocatoriaId).build();
   }
 
   /**

@@ -122,10 +122,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     return repository.findById(convocatoria.getId()).map((data) -> {
 
-      // comprobar si es modificable
-      Assert.isTrue(this.modificable(data.getId(), data.getUnidadGestionRef(), new String[] { "CSP-CON-E" }),
-          "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
-
       Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, data);
 
       data.setUnidadGestionRef(validConvocatoria.getUnidadGestionRef());
@@ -228,7 +224,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       Assert.isTrue(
           (SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef()))
-              && !repository.esRegistradaConSolicitudesOProyectos(id),
+              && !repository.isRegistradaConSolicitudesOProyectos(id),
           "No se puede eliminar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
 
       convocatoria.setActivo(Boolean.FALSE);
@@ -265,8 +261,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   @Override
-  public boolean modificable(Long id, String unidadConvocatoria, String[] atuhorities) {
-    log.debug("modificable(Long id, String unidadConvocatoria) - start");
+  public boolean isRegistradaConSolicitudesOProyectos(Long id, String unidadConvocatoria, String[] atuhorities) {
+    log.debug("isRegistradaConSolicitudesOProyectos(Long id, String unidadConvocatoria) - start");
 
     if (StringUtils.isEmpty(unidadConvocatoria)) {
       unidadConvocatoria = repository.findById(id).map(convocatoria -> convocatoria.getUnidadGestionRef())
@@ -275,10 +271,10 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     if (SgiSecurityContextHolder.hasAnyAuthorityForUO(atuhorities, unidadConvocatoria)) {
       // Será modificable si no tiene solicitudes o proyectos asociados
-      return !(repository.esRegistradaConSolicitudesOProyectos(id));
+      return !(repository.isRegistradaConSolicitudesOProyectos(id));
     }
 
-    log.debug("modificable(Long id, String unidadConvocatoria) - end");
+    log.debug("isRegistradaConSolicitudesOProyectos(Long id, String unidadConvocatoria) - end");
     return false;
   }
 

@@ -65,10 +65,6 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
     log.debug(
         "updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) - start");
 
-    if (convocatoriaPeriodoSeguimientoCientificos.isEmpty()) {
-      return new ArrayList<>();
-    }
-
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
 
@@ -84,6 +80,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
 
     if (!periodoSeguimientoCientificoesEliminar.isEmpty()) {
       repository.deleteAll(periodoSeguimientoCientificoesEliminar);
+    }
+
+    if (convocatoriaPeriodoSeguimientoCientificos.isEmpty()) {
+      return new ArrayList<>();
     }
 
     // Ordena los periodos por mesInicial

@@ -26,13 +26,11 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
   private final RequisitoEquipoRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public RequisitoEquipoServiceImpl(RequisitoEquipoRepository repository, ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -76,16 +74,7 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
     Assert.notNull(convocatoriaId, "La Convocatoria no puede ser null para actualizar RequisitoEquipo");
 
-    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
-
     return repository.findByConvocatoriaId(convocatoriaId).map(requisitoEquipo -> {
-
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(requisitoEquipo.getConvocatoriaId(), convocatoria.getUnidadGestionRef(),
-              new String[] { "CSP-CON-E" }),
-          "No se puede modificar RequisitoEquipo. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       requisitoEquipo.setAniosNivelAcademico(requisitoEquipoActualizar.getAniosNivelAcademico());
       requisitoEquipo.setAniosVinculacion(requisitoEquipoActualizar.getAniosVinculacion());

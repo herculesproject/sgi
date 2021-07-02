@@ -384,8 +384,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   public void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
     // given: Existing id convocatoria registrada with Solicitudes or Proyectos
     Long id = 1L;
-    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
+    BDDMockito.given(service.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     // when: check modificable by convocatoriaId
     mockMvc
@@ -401,8 +401,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   public void modificable_ConvocatoriaRegistradaOrWithSolicitudesOrProyectosIsFalse_Returns200() throws Exception {
     // given: Existing id in any Estado without Solicitudes or Proyectos
     Long id = 1L;
-    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(service.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     // when: check modificable by convocatoriaId
     mockMvc

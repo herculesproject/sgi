@@ -677,27 +677,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Modificable returns false
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.REGISTRADA);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-    BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong()))
-        .willReturn(Boolean.TRUE);
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutUnidadRef_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without UnidadRef
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -732,26 +711,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-E_1" })
-  public void update_UnidadGestionInvalid_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    convocatoria.setUnidadGestionRef("2");
-
-    Assertions.assertThatThrownBy(
-        // when: Update Convocatoria
-        () -> service.update(convocatoria))
-        // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -1928,7 +1887,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong()))
+    BDDMockito.given(repository.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong()))
         .willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
@@ -2242,11 +2201,12 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Long id = 1L;
     String unidadGestionRef = "2";
 
-    BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(repository.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
         .willReturn(Boolean.FALSE);
 
     // when: check modificable
-    boolean responseData = service.modificable(id, unidadGestionRef, new String[] { "CSP-CON-V" });
+    boolean responseData = service.isRegistradaConSolicitudesOProyectos(id, unidadGestionRef,
+        new String[] { "CSP-CON-V" });
 
     // then: returns TRUE
     Assertions.assertThat(responseData).isNotNull();
@@ -2260,11 +2220,12 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Long id = 1L;
     String unidadGestionRef = "2";
 
-    BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(repository.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
         .willReturn(Boolean.TRUE);
 
     // when: check modificable
-    boolean responseData = service.modificable(id, unidadGestionRef, new String[] { "CSP-CON-E" });
+    boolean responseData = service.isRegistradaConSolicitudesOProyectos(id, unidadGestionRef,
+        new String[] { "CSP-CON-E" });
 
     // then: returns FALSE
     Assertions.assertThat(responseData).isNotNull();

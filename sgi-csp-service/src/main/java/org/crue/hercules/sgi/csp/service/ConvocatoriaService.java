@@ -62,7 +62,7 @@ public interface ConvocatoriaService {
    * @param authorities        Authorities a validar
    * @return true si puede ser modificada / false si no puede ser modificada
    */
-  boolean modificable(Long id, String unidadConvocatoria, String[] authorities);
+  boolean isRegistradaConSolicitudesOProyectos(Long id, String unidadConvocatoria, String[] authorities);
 
   /**
    * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}

@@ -74,9 +74,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(peridosJustificiacionExistentes);
 
@@ -172,9 +169,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong())).willReturn(new ArrayList<>());
 
     // when:updateConvocatoriaPeriodoJustificacionesConvocatoria
@@ -195,9 +189,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
@@ -222,9 +213,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
 
@@ -248,9 +236,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     convocatoria.setDuracion(convocatoriaPeriodoJustificacion.getMesFinal() - 1);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
@@ -277,9 +262,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2));
 
@@ -304,9 +286,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2));
 
@@ -317,26 +296,6 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
-  }
-
-  @Test
-  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion when modificable return false
-    Convocatoria convocatoria = generarMockConvocatoria(1L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(1L,
-            Arrays.asList(convocatoriaPeriodoJustificacion)))
-        // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar ConvocatoriaPeriodoJustificacion. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

@@ -27,13 +27,11 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
 
   private final RequisitoIPRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public RequisitoIPServiceImpl(RequisitoIPRepository repository, ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -79,11 +77,6 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
     Assert.notNull(idConvocatoria, "Id Convocatoria no puede ser null para actualizar RequisitoIP");
 
     return repository.findByConvocatoriaId(idConvocatoria).map(requisitoIP -> {
-
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(requisitoIP.getConvocatoriaId(), null, new String[] { "CSP-CON-E" }),
-          "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       requisitoIP.setAniosNivelAcademico(requisitoIPActualizar.getAniosNivelAcademico());
       requisitoIP.setAniosVinculacion(requisitoIPActualizar.getAniosVinculacion());

@@ -109,8 +109,6 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoIP>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -131,34 +129,11 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el RequisitoIP
     // then: Lanza una excepcion porque el RequisitoIP no existe
     Assertions.assertThatThrownBy(() -> service.update(requisitoIP, 1L))
         .isInstanceOf(RequisitoIPNotFoundException.class);
-  }
-
-  @Test
-  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a RequisitoIP when modificable return false
-    Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
-    RequisitoIP requisitoIP = generarMockRequisitoIP(1L, convocatoriaId);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: update RequisitoIP
-        () -> service.update(requisitoIP, requisitoIP.getConvocatoriaId()))
-        // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

@@ -78,7 +78,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
+        convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
             convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-C", "CSP-CON-E" }),
         "No se puede crear ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
@@ -180,8 +180,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
           // comprobar si convocatoria es modificable
           Assert.isTrue(
-              convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null,
-                  new String[] { "CSP-CON-E" }),
+              convocatoriaService.isRegistradaConSolicitudesOProyectos(
+                  convocatoriaEntidadFinanciadora.getConvocatoriaId(), null, new String[] { "CSP-CON-E" }),
               "No se puede modificar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
           convocatoriaEntidadFinanciadora
@@ -217,8 +217,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
       // comprobar si convocatoria es modificable
       Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null,
-              new String[] { "CSP-CON-E" }),
+          convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
+              null, new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaEntidadFinanciadora;

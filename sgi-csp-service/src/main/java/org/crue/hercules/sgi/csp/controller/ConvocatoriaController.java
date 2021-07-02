@@ -238,7 +238,8 @@ public class ConvocatoriaController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V')")
   ResponseEntity<Convocatoria> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
-    boolean returnValue = service.modificable(id, null, new String[] { "CSP-CON-E", "CSP-CON-V" });
+    boolean returnValue = service.isRegistradaConSolicitudesOProyectos(id, null,
+        new String[] { "CSP-CON-E", "CSP-CON-V" });
     log.debug("modificable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

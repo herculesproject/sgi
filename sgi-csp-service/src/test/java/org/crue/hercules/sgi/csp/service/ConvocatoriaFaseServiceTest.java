@@ -452,8 +452,8 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(configuracionSolicitud));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
@@ -509,8 +509,8 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockConvocatoriaFase(id)));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(configuracionSolicitud));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatCode(
         // when: delete by existing id

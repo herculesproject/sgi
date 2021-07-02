@@ -100,7 +100,7 @@ public class SolicitudProyectoController {
    * @return SolicitudProyecto {@link SolicitudProyecto} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E')")
   SolicitudProyecto findById(@PathVariable Long id) {
     log.debug("SolicitudProyecto findById(Long id) - start");
     SolicitudProyecto returnValue = service.findById(id);
