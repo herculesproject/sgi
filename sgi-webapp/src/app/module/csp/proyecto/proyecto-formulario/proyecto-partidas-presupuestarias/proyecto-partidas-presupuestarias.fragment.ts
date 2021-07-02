@@ -39,6 +39,8 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
   partidasPresupuestarias$ = new BehaviorSubject<IPartidaPresupuestariaListado[]>([]);
   private partidasPresupuestariasEliminadas: IPartidaPresupuestariaListado[] = [];
 
+  mapModificable: Map<number, boolean> = new Map();
+
   constructor(
     key: number,
     private proyecto: IProyecto,
@@ -101,6 +103,22 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
             }
             return requestConvocatoriaPartidaPresupuestaria;
           }),
+          switchMap((partidasPresupuestarias) => {
+            if (partidasPresupuestarias) {
+              partidasPresupuestarias.forEach(partida => {
+                if (!this.readonly) {
+                  if (partida.partidaPresupuestaria) {
+                    this.subscriptions.push(this.proyectoPartidaService.modificable(partida.partidaPresupuestaria.value.id).subscribe((value) => {
+                      this.mapModificable.set(partida.partidaPresupuestaria.value.id, value);
+                    }));
+                  }
+                } else {
+                  this.mapModificable.set(partida.partidaPresupuestaria?.value.id, false);
+                }
+              });
+            }
+            return of(partidasPresupuestarias);
+          })
         ).subscribe((response) => {
           response.forEach(element => this.fillListadoFields(element));
           this.partidasPresupuestarias$.next(response);

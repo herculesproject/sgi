@@ -4,11 +4,13 @@ import { ConvocatoriaPartidaPresupuestariaService } from '@core/services/csp/con
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ConvocatoriaPartidaPresupuestariaFragment extends Fragment {
   partidasPresupuestarias$ = new BehaviorSubject<StatusWrapper<IConvocatoriaPartidaPresupuestaria>[]>([]);
   partidasPresupuestariasEliminadas: StatusWrapper<IConvocatoriaPartidaPresupuestaria>[] = [];
+
+  mapModificable: Map<number, boolean> = new Map();
 
   constructor(
     key: number,
@@ -24,7 +26,23 @@ export class ConvocatoriaPartidaPresupuestariaFragment extends Fragment {
   protected onInitialize(): void {
     if (this.getKey()) {
       this.convocatoriaService.findPartidasPresupuestarias(this.getKey() as number).pipe(
-        map((response) => response.items)
+        map((response) => {
+          return response.items;
+        }),
+        switchMap((partidasPresupuestarias) => {
+          if (partidasPresupuestarias) {
+            partidasPresupuestarias.forEach(partida => {
+              if (this.canEdit) {
+                this.subscriptions.push(this.convocatoriaPartidaPresupuestariaService.modificable(partida.id).subscribe((value) => {
+                  this.mapModificable.set(partida.id, value);
+                }));
+              } else {
+                this.mapModificable.set(partida.id, false);
+              }
+            });
+          }
+          return of(partidasPresupuestarias);
+        })
       ).subscribe((partidasPresupuestarias) => {
         this.partidasPresupuestarias$.next(partidasPresupuestarias.map(
           partidaPresupuestaria => new StatusWrapper<IConvocatoriaPartidaPresupuestaria>(partidaPresupuestaria))

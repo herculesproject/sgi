@@ -108,7 +108,10 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
    * @param idEquipo Identificador de equipo a editar.
    */
   openModal(proyectoPartida: StatusWrapper<IProyectoPartida>, convocatoriaPartida?: IConvocatoriaPartidaPresupuestaria,
-    rowIndex?: number): void {
+    rowIndex?: number, canEdit?: boolean): void {
+
+    // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación
+    this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
 
     const proyectoPartidaPresupuestariaTabla = this.dataSource.data
       .filter(partidaPresupuestaria => partidaPresupuestaria.partidaPresupuestaria)
@@ -120,7 +123,7 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
       partidasPresupuestarias: proyectoPartidaPresupuestariaTabla,
       convocatoriaPartidaPresupuestaria: convocatoriaPartida,
       readonly: this.formPart.readonly,
-      canEdit: !this.formPart.readonly
+      canEdit: canEdit ?? true
     };
 
     const config = {
