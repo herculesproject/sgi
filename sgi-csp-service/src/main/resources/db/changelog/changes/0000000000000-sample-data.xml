@@ -2943,8 +2943,8 @@ industries" />
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="IP" />
-      <column name="nombre" value="Investigadora principal" />
-      <column name="descripcion" value="Investigadora principal" />
+      <column name="nombre" value="Investigador/a principal" />
+      <column name="descripcion" value="Investigador/a principal" />
       <column name="rol_principal" value="true" />
       <column name="orden" value="PRIMARIO" />
       <column name="equipo" value="INVESTIGACION" />
@@ -2952,9 +2952,119 @@ industries" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
-      <column name="abreviatura" value="Inv" />
-      <column name="nombre" value="Investigador" />
-      <column name="descripcion" value="Miembro del equipo de investigación" />
+      <column name="abreviatura" value="COIP" />
+      <column name="nombre" value="Co-Investigador/a Principal" />
+      <column name="descripcion" value="Co-Investigador/a Principal" />
+      <column name="rol_principal" value="true" />
+      <column name="orden" value="SECUNDARIO" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PDI" />
+      <column name="nombre" value="PDI – UMU" />
+      <column name="descripcion" value="PDI – UMU miembro E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PDIEX" />
+      <column name="nombre" value="PDI – EXTERNO" />
+      <column name="descripcion" value="PDI – EXTERNO miembro E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="ASESR" />
+      <column name="nombre" value="Asesor científico" />
+      <column name="descripcion" value="Asesor científico E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PAS" />
+      <column name="nombre" value="PAS E.I." />
+      <column name="descripcion" value="PAS E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PFOEI" />
+      <column name="nombre" value="Personal en formación E.I." />
+      <column name="descripcion" value="Personal en formación E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="COLEI" />
+      <column name="nombre" value="Colaborador E.I." />
+      <column name="descripcion" value="Colaborador E.I." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="INVESTIGACION" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PCOET" />
+      <column name="nombre" value="Personal contratado E.T." />
+      <column name="descripcion" value="Personal contratado E.T." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="TRABAJO" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PFOET" />
+      <column name="nombre" value="Personal en formación E.T." />
+      <column name="descripcion" value="Personal en formación E.T." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="TRABAJO" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="RPET" />
+      <column name="nombre" value="Resto personal E.T." />
+      <column name="descripcion" value="Resto personal E.T." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="TRABAJO" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="COLET" />
+      <column name="nombre" value="Colaborador E.T." />
+      <column name="descripcion" value="Colaborador E.T." />
+      <column name="rol_principal" value="false" />
+      <column name="orden" value="null" />
+      <column name="equipo" value="TRABAJO" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_proyecto">
+      <column name="id" valueSequenceNext="rol_proyecto_seq" />
+      <column name="abreviatura" value="PRASC" />
+      <column name="nombre" value="Profesorado Asociado" />
+      <column name="descripcion" value="Profesorado Asociado" />
       <column name="rol_principal" value="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
