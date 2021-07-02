@@ -4,7 +4,8 @@ import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
-import { TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IPersona } from '@core/models/sgp/persona';
 import { ActionService } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
@@ -28,6 +29,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
@@ -53,6 +55,9 @@ export interface ISolicitudData {
   readonly: boolean;
   solicitud: ISolicitud;
   hasSolicitudProyecto: boolean;
+  hasPopulatedPeriodosSocios: boolean;
+  solicitudProyecto: ISolicitudProyecto;
+  hasAnySolicitudProyectoSocioWithRolCoordinador: boolean;
 }
 
 @Injectable()
@@ -95,6 +100,8 @@ export class SolicitudActionService extends ActionService {
   readonly showDesglosePresupuestoGlobal$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly showDesglosePresupuestoEntidad$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly datosProyectoComplete$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly showAlertNotSocioCoordinadorExist$ = new BehaviorSubject<boolean>(false);
+  readonly hasAnySolicitudProyectoSocioWithRolCoordinador$ = new BehaviorSubject<boolean>(false);
 
   private readonly data: ISolicitudData;
   private convocatoria: IConvocatoria;
@@ -139,7 +146,7 @@ export class SolicitudActionService extends ActionService {
     solicitudHitoService: SolicitudHitoService,
     unidadGestionService: UnidadGestionService,
     solicitudDocumentoService: SolicitudDocumentoService,
-    solicitudProyectoService: SolicitudProyectoService,
+    protected solicitudProyectoService: SolicitudProyectoService,
     solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
     solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService,
@@ -190,7 +197,8 @@ export class SolicitudActionService extends ActionService {
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.data?.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId);
+      solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId,
+      this.hasAnySolicitudProyectoSocioWithRolCoordinador$, this.data?.hasPopulatedPeriodosSocios);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService, this.readonly);
     this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,
@@ -242,8 +250,8 @@ export class SolicitudActionService extends ActionService {
           })
         );
 
-        this.subscriptions.push(this.proyectoDatos.colaborativo$.subscribe(
-          (value) => {
+        this.subscriptions.push(this.proyectoDatos.coordinado$.subscribe(
+          (value: boolean) => {
             this.showSocios$.next(value);
           }
         ));
@@ -263,7 +271,7 @@ export class SolicitudActionService extends ActionService {
 
         this.subscriptions.push(this.socio.proyectoSocios$.subscribe((value) => {
           const rowTableData = value.length > 0;
-          this.proyectoDatos.disableSocioColaborador(rowTableData);
+          this.proyectoDatos.disableProyectoCoordinadoIfAnySocioExists(rowTableData);
         }));
 
         this.subscriptions.push(this.proyectoDatos.status$.subscribe(
@@ -289,6 +297,12 @@ export class SolicitudActionService extends ActionService {
             }
           }
         ));
+
+        this.subscriptions.push(this.socio.proyectoSocios$.subscribe(
+          (proyectoSocios) => {
+            this.onSolicitudProyectoSocioListChangeHandle(proyectoSocios);
+          }
+        ));
       }
 
       // Forzamos la inicialización de los datos principales
@@ -307,6 +321,7 @@ export class SolicitudActionService extends ActionService {
       // Forzamos la inicialización de los datos principales
       this.datosGenerales.initialize();
     }
+    this.hasAnySolicitudProyectoSocioWithRolCoordinador$.next(this.data?.hasAnySolicitudProyectoSocioWithRolCoordinador);
   }
 
   saveOrUpdate(): Observable<void> {
@@ -423,5 +438,24 @@ export class SolicitudActionService extends ActionService {
         this.datosGenerales.setDatosConvocatoria(convocatoria);
       });
     }
+  }
+
+  private onSolicitudProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<ISolicitudProyectoSocio>[]): void {
+
+    let needShow = false;
+    if (this.proyectoDatos.getFormGroup()?.controls?.coordinado.value
+      && this.proyectoDatos.getFormGroup()?.controls?.coordinadorExterno.value) {
+      const socioCoordinador = proyectoSocios.find((socio: StatusWrapper<ISolicitudProyectoSocio>) => socio.value.rolSocio.coordinador);
+
+      if (socioCoordinador) {
+        needShow = false;
+      } else {
+        needShow = true;
+      }
+    } else {
+      needShow = false;
+    }
+    this.showAlertNotSocioCoordinadorExist$.next(needShow);
+    this.hasAnySolicitudProyectoSocioWithRolCoordinador$.next(!needShow);
   }
 }

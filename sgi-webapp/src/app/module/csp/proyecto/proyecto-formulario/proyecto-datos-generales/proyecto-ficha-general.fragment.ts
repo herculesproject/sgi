@@ -24,7 +24,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 interface IProyectoDatosGenerales extends IProyecto {
@@ -54,7 +54,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
+  readonly coordinado$: Subject<boolean> = new BehaviorSubject<boolean>(null);
+  readonly coordinadorExterno$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly hasPopulatedSocios$ = new BehaviorSubject<boolean>(false);
+  readonly hasProyectoCoordinadoAndCoordinadorExterno$ = new BehaviorSubject<boolean>(false);
+  readonly hasAnyProyectoSocioWithRolCoordinador$ = new BehaviorSubject<boolean>(false);
+  private hasPopulatedSocios: boolean;
+
   finalidadConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   ambitoGeograficoConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   unidadGestionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -73,11 +80,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private convocatoriaService: ConvocatoriaService,
     private solicitudService: SolicitudService,
     private proyectoIvaService: ProyectoIVAService,
-    public readonly: boolean
+    public readonly: boolean,
+    public disableCoordinadorExterno: boolean,
+    private hasAnyProyectoSocioCoordinador: boolean
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
     this.proyecto = { activo: true } as IProyecto;
+
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
@@ -135,6 +145,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           return of(proyecto);
         }
       }),
+      switchMap((proyecto) => {
+        return this.verifyProyectoSocioCoordinado(proyecto);
+      }),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
@@ -142,7 +155,20 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     );
   }
 
+  private verifyProyectoSocioCoordinado(proyecto: IProyectoDatosGenerales): Observable<IProyectoDatosGenerales> {
+    if (proyecto.id) {
+      return this.service.hasAnyProyectoSocio(proyecto.id).pipe(
+        map(response => {
+          this.hasPopulatedSocios = response;
+          this.hasPopulatedSocios$.next(response);
+          return proyecto;
+        }));
+    }
+    return of(proyecto);
+  }
+
   protected buildFormGroup(): FormGroup {
+
     const form = new FormGroup({
       estado: new FormControl({
         value: '',
@@ -171,6 +197,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       ambitoGeografico: new FormControl(''),
       confidencial: new FormControl(null),
       clasificacionCVN: new FormControl(null),
+      coordinado: new FormControl(null),
       colaborativo: new FormControl(null),
       coordinadorExterno: new FormControl(null),
       timesheet: new FormControl(null),
@@ -211,11 +238,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.permitePaquetesTrabajo.valueChanges.subscribe((value) => {
         this.permitePaquetesTrabajo$.next(value);
-      })
-    );
-    this.subscriptions.push(
-      form.controls.colaborativo.valueChanges.subscribe((value) => {
-        this.colaborativo$.next(value);
       })
     );
 
@@ -275,6 +297,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           }
         )
       );
+
       this.subscriptions.push(
         this.vinculacionesModeloEjecucion$.subscribe(
           value => {
@@ -299,8 +322,58 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           }
         )
       );
+
+      this.subscribeToOnCoordinadoChangeHandler(form.controls.coordinado as FormControl);
+
+      this.subscriptions.push(this.coordinadoExternoValueChangeListener(form.controls.coordinadorExterno as FormControl));
+
+      this.subscribeToVerifyIfCoordinadoAndCoordinadorExternoChecked(form.controls.coordinado as FormControl,
+        form.controls.coordinadorExterno as FormControl);
+
+      this.hasAnyProyectoSocioWithRolCoordinador$.next(this.hasAnyProyectoSocioCoordinador);
+
+      this.subscribeToOnChangeHasPopulatedSocios();
+
     }
+
     return form;
+  }
+
+  private subscribeToVerifyIfCoordinadoAndCoordinadorExternoChecked(coordinado: FormControl, coordinadorExterno: FormControl): void {
+
+    this.subscriptions.push(
+      merge(
+        coordinadorExterno.valueChanges,
+        coordinado.valueChanges
+      ).pipe(
+        map(() => coordinadorExterno.value && coordinado.value)
+      ).subscribe(
+        (value) => {
+          this.hasProyectoCoordinadoAndCoordinadorExterno$.next(value);
+          if (value) {
+            this.hasAnyProyectoSocioWithRolCoordinador$.next(this.hasAnyProyectoSocioCoordinador);
+          }
+        }
+      )
+    );
+  }
+
+  private subscribeToOnCoordinadoChangeHandler(coordinado: FormControl): void {
+
+    this.subscriptions.push(coordinado.valueChanges.subscribe((value: boolean) => {
+      if (!value) {
+        this.getFormGroup().controls?.coordinadorExterno.setValue(undefined);
+        this.getFormGroup().controls?.colaborativo.setValue(undefined);
+        this.getFormGroup().controls?.coordinadorExterno.setValidators([]);
+
+      } else {
+        this.getFormGroup().controls?.coordinadorExterno.setValidators([Validators.required]);
+        this.disableCoordinadoFormControl(this.hasPopulatedSocios);
+      }
+
+      this.getFormGroup().controls?.coordinadorExterno.updateValueAndValidity();
+      this.coordinado$.next(value);
+    }));
   }
 
   buildPatch(proyecto: IProyectoDatosGenerales): { [key: string]: any } {
@@ -320,6 +393,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       ambitoGeografico: proyecto.ambitoGeografico,
       confidencial: proyecto.confidencial,
       clasificacionCVN: proyecto.clasificacionCVN,
+      coordinado: proyecto.coordinado,
       colaborativo: proyecto.colaborativo,
       coordinadorExterno: proyecto.coordinadorExterno,
       timesheet: proyecto.timesheet,
@@ -329,7 +403,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       ivaFechaInicio: proyecto.iva?.fechaInicio,
       ivaFechaFin: proyecto.iva?.fechaFin,
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
-      causaExencion: proyecto.causaExencion,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
       solicitudProyecto: proyecto.solicitudProyecto?.titulo ?? ''
@@ -355,6 +428,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.modeloEjecucionConvocatoria$.next(proyecto.modeloEjecucion?.id !== proyecto.convocatoria.modeloEjecucion?.id);
 
     }
+
+    this.service.hasAnyProyectoSocio(proyecto.id).pipe(
+      map((hasAnySocio: boolean) => {
+        this.disableProyectoCoordinadoIfAnySocioExists(hasAnySocio);
+        return proyecto;
+      })).subscribe();
 
     return result;
   }
@@ -390,6 +469,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.confidencial = form.confidencial.value;
     this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
+    this.proyecto.coordinado = form.coordinado.value;
     this.proyecto.timesheet = form.timesheet.value;
     this.proyecto.permitePaquetesTrabajo = form.permitePaquetesTrabajo.value;
     this.proyecto.costeHora = form.costeHora.value;
@@ -431,7 +511,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.seguimientoCientificos = [];
 
     if (convocatoria) {
-
       if (convocatoria.codigo) {
         this.getFormGroup().controls.convocatoriaExterna.setValue(convocatoria.codigo);
       }
@@ -475,7 +554,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }
 
       this.getFormGroup().controls.clasificacionCVN.setValue(convocatoria.clasificacionCVN);
-      this.getFormGroup().controls.colaborativo.setValue(convocatoria.colaborativos);
 
       const options: SgiRestFindOptions = {
         sort: new RSQLSgiRestSort('numPeriodo', SgiRestSortDirection.ASC)
@@ -519,7 +597,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('confidencial').setValidators([
         Validators.required]);
-      formgroup.get('colaborativo').setValidators([
+      formgroup.get('coordinado').setValidators([
         Validators.required]);
       formgroup.get('coordinadorExterno').setValidators([
         Validators.required]);
@@ -537,9 +615,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     } else {
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
-      formgroup.get('iva').setValidators([
-        Validators.min(0), Validators.max(100)]);
-      ;
       this.abiertoRequired = false;
       this.comentarioEstadoCancelado = false;
     }
@@ -624,11 +699,59 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     };
   }
 
+  private subscribeToOnChangeHasPopulatedSocios(): void {
+    this.subscriptions.push(
+      this.hasPopulatedSocios$.subscribe((anySocio: boolean) => {
+
+        this.hasPopulatedSocios = anySocio;
+        this.disableCoordinadoFormControl(anySocio);
+      })
+    );
+  }
+
   private loadHistoricoProyectoIVA(key: number): void {
     this.proyectoIvaService.findAllByProyectoId(key).pipe(
       map((response) => response.items)
     ).subscribe((proyectosIva) => {
       this.proyectoIva$.next(proyectosIva.map(proyectoIva => new StatusWrapper<IProyectoIVA>(proyectoIva)));
     });
+  }
+
+  private disableCoordinadoFormControl(value: boolean) {
+    if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
+      this.getFormGroup()?.controls.coordinado.disable({ emitEvent: false });
+    } else {
+      this.getFormGroup()?.controls.coordinado.enable({ emitEvent: false });
+    }
+  }
+
+  private disableCoordinadorExternoFormControl(value: boolean): void {
+
+    if (value || this.readonly) {
+      this.getFormGroup()?.controls.coordinadorExterno.disable({ emitEvent: false });
+    } else {
+      this.getFormGroup()?.controls.coordinadorExterno.enable({ emitEvent: false });
+    }
+  }
+
+  private coordinadoExternoValueChangeListener(coordinadorExterno: FormControl): Subscription {
+
+    return coordinadorExterno.valueChanges.subscribe((value) => {
+      this.coordinadorExterno$.next(value);
+      this.disableCoordinadorExternoFormControl(this.disableCoordinadorExterno);
+    });
+  }
+
+  private disableProyectoCoordinadoIfAnySocioExists(value: boolean): void {
+
+    if (value) {
+      this.hasPopulatedSocios$.next(true);
+    }
+    if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
+      this.getFormGroup()?.controls.coordinado.disable();
+    } else {
+      this.getFormGroup()?.controls.coordinado.enable();
+      this.hasPopulatedSocios$.next(false);
+    }
   }
 }

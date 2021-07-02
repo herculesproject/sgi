@@ -1,9 +1,11 @@
 <section class="proyecto-socio">
   <h2>{{'menu.csp.proyectos.socios' | translate}}</h2>
 
-  <!-- Error no proyecto colaborativo -->
-  <div *ngIf="actionService.disableAddSocios$ | async" class="info-message">
-    {{'info.csp.proyecto-socio' | translate}}
+  <!-- Error campos coordinado y coordinador externo como true pero no hay socio coordinador -->
+  <div
+    *ngIf="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.hasProyectoCoordinadoAndCoordinadorExterno$ | async)"
+    class="info-message">
+    {{'info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado' | translate}}
   </div>
 
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="dataSource" matSort matSortActive="id"
@@ -109,8 +111,7 @@
   </table>
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]"
-        [disabled]="actionService.disableAddSocios$ | async">
+      <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

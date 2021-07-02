@@ -46,6 +46,7 @@ const PROYECTO_CAUSA_EXENCION_KEY = marker('csp.proyecto.causa-exencion');
 const PROYECTO_MODELO_EJECUCION_KEY = marker('csp.proyecto.modelo-ejecucion');
 const PROYECTO_PAQUETE_TRABAJO_KEY = marker('csp.proyecto-paquete-trabajo');
 const PROYECTO_PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colaborativo');
+const PROYECTO_PROYECTO_COORDINADO_KEY = marker('csp.proyecto.proyecto-coordinado');
 const PROYECTO_TIMESHEET_KEY = marker('csp.proyecto.timesheet');
 const PROYECTO_TITULO_KEY = marker('csp.proyecto.titulo');
 const PROYECTO_UNIDAD_GESTION_KEY = marker('csp.proyecto.unidad-gestion');
@@ -107,6 +108,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamTimesheetEntity = {};
   msgParamUnidadGestionEntity = {};
   msgParamFechaFinDefinitivaEntity = {};
+  msgParamProyectoCoordinadoEntity = {};
   textoInfoAmbitoGeograficoConvocatoria: string;
   textoInfoFinalidadConvocatoria: string;
   textoInfoUnidadGestionConvocatoria: string;
@@ -262,7 +264,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     );
   }
 
-
   private setupI18N(): void {
 
     this.translate.get(
@@ -332,6 +333,11 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
+      PROYECTO_PROYECTO_COORDINADO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamProyectoCoordinadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
       PROYECTO_PROYECTO_COLABORATIVO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamProyectoColaborativoEntity =
@@ -375,7 +381,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       PROYECTO_IVA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamIvaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
   }
 
 

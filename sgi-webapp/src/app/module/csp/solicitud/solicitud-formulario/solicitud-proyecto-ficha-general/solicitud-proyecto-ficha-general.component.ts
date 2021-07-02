@@ -22,6 +22,7 @@ import { AreaTematicaSolicitudData, SolicitudProyectoFichaGeneralFragment } from
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_ACRONIMO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.acronimo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COD_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.codigo-externo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-colaborativo');
+const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-coordinado');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADOR_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.coordinador-externo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TIPO_DESGLOSE_PRESUPUESTO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.tipo-desglose-presupuesto');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TITULO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.titulo');
@@ -42,6 +43,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
 
   msgParamAcronimoEntity = {};
   msgParamColaborativoEntity = {};
+  msgParamCoordinadoEntity = {};
   msgParamCoordinadorExternoEntity = {};
   msgParamTipoDesglosePresupuestoEntity = {};
   msgParamTituloEntity = {};
@@ -55,7 +57,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
   columns = ['nombreRaizArbol', 'areaTematicaConvocatoria', 'areaTematicaSolicitud', 'acciones'];
 
   constructor(
-    protected actionService: SolicitudActionService,
+    public actionService: SolicitudActionService,
     private router: Router,
     private route: ActivatedRoute,
     private matDialog: MatDialog,
@@ -118,6 +120,11 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     ).subscribe((value) => this.msgParamColaborativoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
+      SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCoordinadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
       SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADOR_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamCoordinadorExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
@@ -136,6 +143,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       AREA_TEMATICA_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamAreaTematicaEntities = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
   }
 
   ngOnDestroy(): void {

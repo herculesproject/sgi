@@ -7,8 +7,8 @@ import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 import { IProyectoData } from './proyecto.action.service';
 
@@ -25,12 +25,24 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
 
   protected resolveEntity(route: ActivatedRouteSnapshot): Observable<IProyectoData> {
     return this.service.findById(Number(route.paramMap.get(PROYECTO_ROUTE_PARAMS.ID))).pipe(
-      map(proyecto => {
+      map((proyecto) => {
         return {
           proyecto,
-          readonly: this.isReadonly(proyecto)
-        };
-      })
+          readonly: this.isReadonly(proyecto),
+          disableCoordinadorExterno: false,
+          hasAnyProyectoSocioCoordinador: false
+        } as IProyectoData;
+      }),
+      switchMap(data => {
+        return forkJoin([this.service.hasPeriodosPago(data.proyecto.id), this.service.hasPeriodosJustificacion(data.proyecto.id)])
+          .pipe(
+            map((response) => {
+              data.disableCoordinadorExterno = response[0] || response[1];
+              return data;
+            })
+          );
+      }),
+      switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data))
     );
   }
 
@@ -43,4 +55,20 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
     }
     return false;
   }
+
+  private hasAnyProyectoSocioWithRolCoordinador(data: IProyectoData): Observable<IProyectoData> {
+    if (data?.proyecto?.id) {
+      return this.service.hasAnyProyectoSocioWithRolCoordinador(data?.proyecto?.id)
+        .pipe(
+          map((value: boolean) => {
+            data.hasAnyProyectoSocioCoordinador = value;
+            return data;
+          })
+        );
+    } else {
+      data.hasAnyProyectoSocioCoordinador = false;
+      return of(data);
+    }
+  }
+
 }

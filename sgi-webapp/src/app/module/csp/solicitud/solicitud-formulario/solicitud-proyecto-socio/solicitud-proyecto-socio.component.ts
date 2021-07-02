@@ -93,6 +93,7 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
       }
     };
     this.subscriptions.push(subscription);
+
   }
 
   private setupI18N(): void {
@@ -118,6 +119,8 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
       })
     ).subscribe((value) => this.textoDelete = value);
   }
+
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());

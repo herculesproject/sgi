@@ -6,7 +6,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 
 export interface AreaTematicaSolicitudData {
@@ -19,18 +19,24 @@ export interface AreaTematicaSolicitudData {
 export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicitudProyecto>{
   solicitudProyecto: ISolicitudProyecto;
   areasTematicas$ = new BehaviorSubject<AreaTematicaSolicitudData[]>([]);
+  readonly hasPopulatedSocios$ = new BehaviorSubject<boolean>(false);
+  readonly hasPopulatedPeriodosSocios$ = new BehaviorSubject<boolean>(false);
   hasConvocatoria = false;
-  readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly coordinado$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly coordinadorExterno$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly tipoDesglosePresupuesto$: Subject<TipoPresupuesto> = new Subject<TipoPresupuesto>();
+  readonly hasSolicitudSocio$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private solicitudService: SolicitudService,
-    private solicitudProyectoService: SolicitudProyectoService,
+    protected solicitudProyectoService: SolicitudProyectoService,
     private convocatoriaService: ConvocatoriaService,
     public readonly: boolean,
-    private convocatoriaId: number
+    private convocatoriaId: number,
+    public hasAnySolicitudProyectoSocioWithRolCoordinador$: BehaviorSubject<boolean>,
+    private hasPopulatedPeriodosSocios: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -52,8 +58,9 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       acronimo: new FormControl(null, [Validators.maxLength(50)]),
       codExterno: new FormControl(undefined, [Validators.maxLength(250)]),
       duracion: new FormControl(null, [Validators.min(1), Validators.max(9999)]),
-      colaborativo: new FormControl(undefined, [Validators.required]),
-      coordinadorExterno: new FormControl(undefined, [Validators.required]),
+      colaborativo: new FormControl(null, []),
+      coordinado: new FormControl(undefined, [Validators.required]),
+      coordinadorExterno: new FormControl(undefined),
       tipoDesglosePresupuesto: new FormControl(undefined, [Validators.required]),
       objetivos: new FormControl(null, [Validators.maxLength(2000)]),
       intereses: new FormControl(null, [Validators.maxLength(2000)]),
@@ -65,19 +72,12 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       form.disable();
     }
 
-    const colaborativo = form.controls.colaborativo;
-    const coordinadorExterno = form.controls.coordinadorExterno;
     this.subscriptions.push(
-      colaborativo.valueChanges.subscribe(
-        (value) => {
-          if (value && !this.readonly) {
-            coordinadorExterno.enable();
-          } else {
-            coordinadorExterno.disable();
-          }
-          this.colaborativo$.next(value);
-        }
-      )
+      this.coordinadoValueChangeListener(form.controls.coordinado as FormControl, form.controls.coordinadorExterno as FormControl)
+    );
+
+    this.subscriptions.push(
+      this.coordinadoExternoValueChangeListener(form.controls.coordinadorExterno as FormControl)
     );
 
     this.subscriptions.push(
@@ -85,7 +85,45 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         this.tipoDesglosePresupuesto$.next(value);
       })
     );
+
     return form;
+  }
+
+  private coordinadoValueChangeListener(coordinado: FormControl, coordinadorExterno: FormControl): Subscription {
+
+    return coordinado.valueChanges.subscribe(
+      (value) => {
+        if (value && !this.readonly) {
+          coordinadorExterno.enable();
+          coordinadorExterno.setValidators([Validators.required]);
+          this.disableProyectoCoordinadoIfAnySocioExists(this.hasSolicitudSocio$.value);
+        }
+        coordinadorExterno.updateValueAndValidity();
+        this.coordinado$.next(value);
+
+        if (!value) {
+          this.getFormGroup().controls?.colaborativo.setValue(null);
+          coordinadorExterno.disable();
+          this.getFormGroup().controls?.coordinadorExterno.setValue('');
+          this.coordinadorExterno$.next(false);
+          coordinadorExterno.setValidators([]);
+          coordinadorExterno.updateValueAndValidity();
+        }
+      }
+    );
+  }
+
+  private coordinadoExternoValueChangeListener(coordinadorExterno: FormControl): Subscription {
+
+    return coordinadorExterno.valueChanges
+      .subscribe(
+        (value) => {
+          this.coordinadorExterno$.next(value);
+          if (!this.readonly) {
+            this.disableCoordinadorExterno(value, this.hasPopulatedPeriodosSocios$.value);
+          }
+        }
+      );
   }
 
   /**
@@ -100,15 +138,20 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   }
 
   /**
-   * Deshabilitar proyecto colaborativo en caso
+   * Deshabilitar proyecto coordinado en caso
    * de tener datos la pestaña
    * Socio colaboradores
    */
-  disableSocioColaborador(value: boolean): void {
-    if (value || this.readonly) {
-      this.getFormGroup()?.controls.colaborativo.disable();
+  disableProyectoCoordinadoIfAnySocioExists(value: boolean): void {
+
+    if (value) {
+      this.hasPopulatedSocios$.next(true);
+    }
+    if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
+      this.getFormGroup()?.controls.coordinado.disable({ emitEvent: false });
     } else {
-      this.getFormGroup()?.controls.colaborativo.enable();
+      this.getFormGroup()?.controls.coordinado.enable({ emitEvent: false });
+      this.hasPopulatedSocios$.next(false);
     }
   }
 
@@ -116,12 +159,13 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     if (solicitudProyecto) {
       this.solicitudProyecto = solicitudProyecto;
     }
-    return {
+    const controls = {
       titulo: solicitudProyecto?.titulo,
       acronimo: solicitudProyecto?.acronimo,
       codExterno: solicitudProyecto?.codExterno,
       duracion: solicitudProyecto?.duracion,
       colaborativo: solicitudProyecto?.colaborativo,
+      coordinado: solicitudProyecto?.coordinado,
       coordinadorExterno: solicitudProyecto?.coordinadorExterno,
       tipoDesglosePresupuesto: solicitudProyecto?.tipoPresupuesto,
       objetivos: solicitudProyecto?.objetivos,
@@ -129,6 +173,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
       peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
     };
+
+    return controls;
   }
 
   protected initializer(key: number): Observable<ISolicitudProyecto> {
@@ -136,17 +182,6 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     return this.solicitudService.findSolicitudProyecto(key).pipe(
       switchMap((solicitudProyectoDatos) => {
         return this.loadSolicitudProyecto(solicitudProyectoDatos);
-      }),
-      switchMap(solicitudProyecto => {
-        if (solicitudProyecto?.id) {
-          return this.solicitudProyectoService.hasSolicitudSocio(solicitudProyecto?.id).pipe(
-            map(hasSolicitudSocio => {
-              this.disableSocioColaborador(hasSolicitudSocio);
-              return solicitudProyecto;
-            })
-          );
-        }
-        return of(solicitudProyecto);
       }),
       switchMap(solicitudProyecto => {
         if (solicitudProyecto?.id) {
@@ -164,13 +199,26 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
           return this.convocatoriaService.findById(this.convocatoriaId).pipe(
             map(convocatoria => {
               solicitudProyecto = {} as ISolicitudProyecto;
-              solicitudProyecto.colaborativo = convocatoria.colaborativos;
               solicitudProyecto.duracion = convocatoria.duracion;
               return solicitudProyecto;
             })
           );
         }
         return of(solicitudProyecto);
+      }),
+      switchMap(solicitudProyecto => {
+        this.hasPopulatedPeriodosSocios$.next(this.hasPopulatedPeriodosSocios);
+        return of(solicitudProyecto);
+      }),
+      switchMap(solicitudProyecto => {
+        if (!solicitudProyecto?.id) {
+          return of(solicitudProyecto);
+        }
+        return this.solicitudProyectoService.hasSolicitudSocio(solicitudProyecto?.id).pipe(
+          map(hasSolicitudSocio => {
+            this.hasSolicitudSocio$.next(hasSolicitudSocio);
+            return solicitudProyecto;
+          }));
       }),
       catchError(error => {
         this.logger.error(error);
@@ -223,6 +271,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyecto.codExterno = form.codExterno.value;
     this.solicitudProyecto.duracion = form.duracion.value;
     this.solicitudProyecto.colaborativo = Boolean(form.colaborativo.value);
+    this.solicitudProyecto.coordinado = Boolean(form.coordinado.value);
     this.solicitudProyecto.coordinadorExterno = Boolean(form.coordinadorExterno.value);
     this.solicitudProyecto.objetivos = form.objetivos.value;
     this.solicitudProyecto.intereses = form.intereses.value;
@@ -255,5 +304,13 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
 
   private update(solicitudProyecto: ISolicitudProyecto): Observable<ISolicitudProyecto> {
     return this.solicitudProyectoService.update(solicitudProyecto.id, solicitudProyecto);
+  }
+
+  private disableCoordinadorExterno(isCoordinadorExterno: boolean, hasPopulatedPeriodosSocios: boolean): void {
+    if (!isCoordinadorExterno && hasPopulatedPeriodosSocios) {
+      this.getFormGroup()?.controls.coordinadorExterno.disable({ emitEvent: false });
+    } else {
+      this.getFormGroup()?.controls.coordinadorExterno.enable({ emitEvent: false });
+    }
   }
 }

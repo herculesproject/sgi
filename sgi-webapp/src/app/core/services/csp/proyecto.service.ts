@@ -537,6 +537,34 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.http.patch<void>(`${this.endpointUrl}/${id}/cambiar-estado`, estadoProyecto);
   }
 
+  hasAnyProyectoSocio(proyectoId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${proyectoId}/proyectosocios`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  hasPeriodosPago(proyectoId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${proyectoId}/proyectosocios/periodospago`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  hasPeriodosJustificacion(proyectoId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${proyectoId}/proyectosocios/periodosjustificacion`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  hasAnyProyectoSocioWithRolCoordinador(proyectoId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${proyectoId}/proyectosocios/coordinador`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
   findAllProyectoAnualidades(proyectoId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoAnualidadResumen>> {
     return this.find<IProyectoAnualidadResumenResponse, IProyectoAnualidadResumen>(

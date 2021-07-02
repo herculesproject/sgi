@@ -71,7 +71,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       ambitoGeografico: new FormControl(null),
       clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(null),
-      colaborativos: new FormControl(null),
       entidadGestora: new FormControl(null),
       objeto: new FormControl('', Validators.maxLength(2000)),
       observaciones: new FormControl('', Validators.maxLength(2000))
@@ -121,7 +120,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       observaciones: convocatoria.observaciones,
       finalidad: convocatoria.finalidad,
       regimenConcurrencia: convocatoria.regimenConcurrencia,
-      colaborativos: convocatoria.colaborativos,
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
@@ -270,7 +268,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     this.convocatoria.observaciones = form.observaciones.value;
     this.convocatoria.finalidad = form.finalidad.value;
     this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
-    this.convocatoria.colaborativos = form.colaborativos.value;
     this.convocatoria.duracion = form.duracion.value;
     this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
     this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;

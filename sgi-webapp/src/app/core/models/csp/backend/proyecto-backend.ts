@@ -39,6 +39,8 @@ export interface IProyectoBackend {
   clasificacionCVN: ClasificacionCVN;
   /** convocatoriaExterna */
   convocatoriaExterna: string;
+  /** coordinado */
+  coordinado: boolean;
   /** colaborativo */
   colaborativo: boolean;
   /** coordinadorExterno */

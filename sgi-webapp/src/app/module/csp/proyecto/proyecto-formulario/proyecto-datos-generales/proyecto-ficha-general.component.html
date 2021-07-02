@@ -340,32 +340,51 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Proyecto colaborativo -->
+      <!-- Proyecto coordinado -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
-          <mat-label>{{'csp.proyecto.proyecto-colaborativo' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="colaborativo" [required]="formPart.abiertoRequired">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.colaborativo.errors?.required">
-            {{'error.required.entity' | translate:msgParamProyectoColaborativoEntity}}
+          <mat-label>{{'csp.proyecto.proyecto-coordinado' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="coordinado" [required]="formPart.abiertoRequired"></sgi-select-boolean>
+          <sgi-field-info matSuffix
+            [visible]="(formPart.hasPopulatedSocios$ | async)  && (formPart.coordinado$ | async)"
+            message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-socios-dependencies.info' | translate}}">
+          </sgi-field-info>
+          <mat-error *ngIf="formGroup.controls.coordinado.errors?.required">
+            {{'error.required.entity' | translate:msgParamProyectoCoordinadoEntity}}
           </mat-error>
         </mat-form-field>
       </div>
 
       <!-- Coordinador externo -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+        [fxFlexOrder]="fxFlexProperties.order" *ngIf="(formPart.coordinado$ | async)">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.coordinador-externo' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="coordinadorExterno" [required]="formPart.abiertoRequired">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
+          <sgi-select-boolean formControlName="coordinadorExterno" [required]="(formPart.coordinado$ | async)">
+          </sgi-select-boolean>
+          <sgi-field-info matSuffix
+            [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false"
+            message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-periodos-socios-dependencies.info' | translate}}">
+          </sgi-field-info>
+          <sgi-field-info matSuffix
+            [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async)"
+            message="{{'info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip' | translate}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.coordinadorExterno.errors?.required">
             {{'error.required.entity' | translate:msgParamCoordinadorExternoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Proyecto colaborativo -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order" *ngIf="formGroup.controls.coordinado.value">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto.proyecto-colaborativo' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="colaborativo" [required]="formPart.abiertoRequired"></sgi-select-boolean>
+          <mat-error *ngIf="formGroup.controls.colaborativo.errors?.required">
+            {{'error.required.entity' | translate:msgParamProyectoColaborativoEntity}}
           </mat-error>
         </mat-form-field>
       </div>

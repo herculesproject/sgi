@@ -10,6 +10,7 @@ import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service'
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject } from 'rxjs';
 import { PROYECTO_SOCIO_DATA_KEY } from './proyecto-socio-data.resolver';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.fragment';
@@ -51,6 +52,15 @@ export class ProyectoSocioActionService extends ActionService {
     return this.datosGenerales.getValue();
   }
 
+  get showPeriodoJustificacion(): boolean {
+    return !this.data.proyecto.coordinadorExterno;
+  }
+
+  get showPeriodoPago(): boolean {
+    return !this.data.proyecto.coordinadorExterno;
+  }
+
+
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
@@ -81,10 +91,7 @@ export class ProyectoSocioActionService extends ActionService {
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.EQUIPO, this.equipo);
     this.addFragment(this.FRAGMENT.PERIODO_PAGO, this.periodoPago);
-
-    if (this.isEdit()) {
-      this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodosJustificacion);
-    }
+    this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodosJustificacion);
 
     // Inicializamos por defectos los datos generales
     this.datosGenerales.initialize();

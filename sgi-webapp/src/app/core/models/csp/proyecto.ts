@@ -45,6 +45,8 @@ export interface IProyecto {
   confidencial: boolean;
   /** clasificacionCVN */
   clasificacionCVN: ClasificacionCVN;
+  /** coordinado */
+  coordinado: boolean;
   /** colaborativo */
   colaborativo: boolean;
   /** coordinadorExterno */

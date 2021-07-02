@@ -8,6 +8,7 @@ export interface ISolicitudProyectoBackend {
   codExterno: string;
   duracion: number;
   colaborativo: boolean;
+  coordinado: boolean;
   coordinadorExterno: boolean;
   objetivos: string;
   intereses: string;

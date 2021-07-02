@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
 import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
@@ -16,9 +14,7 @@ import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
 import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
-import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
-import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -63,10 +59,18 @@ import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-pro
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
+import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
+import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 
 export interface IProyectoData {
   proyecto: IProyecto;
   readonly: boolean;
+  disableCoordinadorExterno: boolean;
+  hasAnyProyectoSocioCoordinador: boolean;
 }
 
 @Injectable()
@@ -125,6 +129,8 @@ export class ProyectoActionService extends ActionService {
   private readonly hasFases$ = new BehaviorSubject<boolean>(false);
   private readonly hasHitos$ = new BehaviorSubject<boolean>(false);
   private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
+  readonly showAlertNotSocioCoordinadorExist$ = new BehaviorSubject<boolean>(false);
+  readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   private readonly hasProyectoSGE$ = new BehaviorSubject<boolean>(false);
 
   get proyecto(): IProyecto {
@@ -143,11 +149,23 @@ export class ProyectoActionService extends ActionService {
     return this.data?.readonly;
   }
 
+  get hasAnyProyectoSocioWithRolCoordinador$() {
+    return this.fichaGeneral.hasAnyProyectoSocioWithRolCoordinador$;
+  }
+
+  get hasProyectoCoordinadoAndCoordinadorExterno$() {
+    return this.fichaGeneral.hasProyectoCoordinadoAndCoordinadorExterno$;
+  }
+
+  get hasPopulatedSocios$() {
+    return this.fichaGeneral.hasPopulatedSocios$;
+  }
+
   constructor(
     fb: FormBuilder,
     logger: NGXLogger,
     route: ActivatedRoute,
-    private proyectoService: ProyectoService,
+    protected proyectoService: ProyectoService,
     empresaService: EmpresaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
@@ -192,14 +210,18 @@ export class ProyectoActionService extends ActionService {
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
       logger, fb, id, proyectoService, unidadGestionService,
-      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService, this.data?.readonly
+      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService,
+      this.data?.readonly,
+      this.data?.disableCoordinadorExterno,
+      this.data?.hasAnyProyectoSocioCoordinador
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
       this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(
         id, this.data.proyecto?.solicitudId, proyectoService, proyectoEntidadFinanciadoraService, empresaService, solicitudService, false);
-      this.socios = new ProyectoSociosFragment(id, empresaService, proyectoService, proyectoSocioService);
+      this.socios = new ProyectoSociosFragment(id, empresaService, proyectoService, proyectoSocioService,
+        this.hasAnyProyectoSocioWithRolCoordinador$, this.hasProyectoCoordinadoAndCoordinadorExterno$);
       this.hitos = new ProyectoHitosFragment(id, proyectoService, proyectoHitoService);
       this.plazos = new ProyectoPlazosFragment(id, proyectoService, proyectoPlazoService);
       this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(logger, id, proyectoService, empresaService);
@@ -308,7 +330,16 @@ export class ProyectoActionService extends ActionService {
         this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
         this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
         this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => this.hasProyectoSGE$.next(!!value.length)));
+        this.subscriptions.push(this.fichaGeneral.coordinado$.subscribe(
+          (value: boolean) => {
+            this.showSocios$.next(value);
+          }
+        ));
       }
+
+      this.subscriptions.push(
+        this.socios.proyectoSocios$.subscribe(proyectoSocios => this.onProyectoSocioListChangeHandle(proyectoSocios))
+      );
 
       // Inicializamos la ficha general de forma predeterminada
       this.fichaGeneral.initialize();
@@ -321,5 +352,26 @@ export class ProyectoActionService extends ActionService {
    */
   cambiarEstado(estadoNuevo: IEstadoProyecto): Observable<void> {
     return this.proyectoService.cambiarEstado(this.fichaGeneral.getKey() as number, estadoNuevo);
+  }
+
+  private onProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<IProyectoSocio>[]): void {
+
+    if (this.data?.proyecto?.coordinado) {
+      const numSocios = proyectoSocios.length;
+      this.hasPopulatedSocios$.next(numSocios > 0);
+    }
+    let needShow = false;
+    if (this.data?.proyecto?.coordinado && this.data?.proyecto?.coordinadorExterno) {
+      const socioCoordinador = proyectoSocios.find((socio: StatusWrapper<IProyectoSocio>) => socio.value.rolSocio.coordinador);
+
+      if (socioCoordinador) {
+        needShow = false;
+      } else {
+        needShow = true;
+      }
+    } else {
+      needShow = false;
+    }
+    this.hasAnyProyectoSocioWithRolCoordinador$.next(!needShow);
   }
 }
