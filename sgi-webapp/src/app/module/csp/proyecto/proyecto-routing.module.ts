@@ -9,6 +9,7 @@ import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
 import { ProyectoDataResolver, PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
+import { ProyectoAgrupacionesGastoComponent } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.component';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
 import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
@@ -40,6 +41,7 @@ const PROYECTO_PERIODOS_SEGUIMIENTO_KEY = marker('menu.csp.proyectos.seguimiento
 const PROYECTO_PRESUPUESTO_KEY = marker('menu.csp.proyectos.configuracion-economica.presupuesto');
 const PROYECTO_PRORROGA_KEY = marker('menu.csp.proyectos.prorrogas');
 const PROYECTO_ELEGIBILIDAD_KEY = marker('csp.proyecto-elegibilidad');
+const PROYECTO_AGRUPACION_GASTO_KEY = marker('csp.proyecto-agrupacion-gasto');
 const MSG_NEW_TITLE = marker('title.new.entity');
 
 const routes: SgiAuthRoutes = [
@@ -184,6 +186,10 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS,
         component: ProyectoPartidasPresupuestariasComponent,
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.AGRUPACIONES_GASTO,
+        component: ProyectoAgrupacionesGastoComponent,
         canDeactivate: [FragmentGuard]
       },
       {
@@ -244,6 +250,17 @@ const routes: SgiAuthRoutes = [
         data: {
           title: PROYECTO_PERIODOS_SEGUIMIENTO_KEY,
           hasAuthorityForAnyUO: 'CSP-PRO-E'
+        }
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.AGRUPACIONES_GASTO,
+        loadChildren: () =>
+          import('../proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.module').then(
+            (m) => m.ProyectoAgrupacionGastoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: PROYECTO_AGRUPACION_GASTO_KEY
         }
       },
       {

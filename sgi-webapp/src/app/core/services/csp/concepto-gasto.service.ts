@@ -43,4 +43,18 @@ export class ConceptoGastoService extends SgiRestService<number, IConceptoGasto>
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, { id });
   }
 
+  /**
+   * Devuelve el listado de IAgrupacionGastoConcepto de un IProyectoAgrupacionGasto
+   *
+   * @param id Id del IProyectoAgrupacionGasto
+   */
+  findAllAgrupacionesGastoConceptoNotInAgrupacion(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IConceptoGasto>> {
+    const returnValue = this.find<IConceptoGasto, IConceptoGasto>(
+      `${this.endpointUrl}/${id}/no-proyectoagrupacion`,
+      options
+    );
+    return returnValue;
+  }
+
 }

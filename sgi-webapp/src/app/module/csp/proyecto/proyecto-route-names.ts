@@ -21,5 +21,6 @@ export const PROYECTO_ROUTE_NAMES = {
   CONCEPTO_GATO_PERMITIDO: 'concepto-gasto-permitido',
   CONCEPTO_GATO_NO_PERMITIDO: 'concepto-gasto-no-permitido',
   PRESUPUESTO: 'presupuesto',
-  RESPONSABLE_ECONOMICO: 'responsable-economico'
+  RESPONSABLE_ECONOMICO: 'responsable-economico',
+  AGRUPACIONES_GASTO: 'agrupaciones-gasto'
 };
