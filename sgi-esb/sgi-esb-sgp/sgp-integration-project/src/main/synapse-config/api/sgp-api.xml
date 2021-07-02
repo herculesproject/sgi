@@ -11534,7 +11534,7 @@
         },
         "fieldGroup": [
           {
-            "template": "<p class='section-label'>Datos en entidad propia/PDI</p>"
+            "template": ""
           },
           {
             "fieldGroupClassName": "row-formly",
@@ -17627,7 +17627,7 @@
             }
           },
           {
-            "template": "<p class='section-label'>Datos en entidad propia/PAS</p>"
+            "template": ""
           },
           {
             "fieldGroupClassName": "row-formly",
@@ -20786,14 +20786,2872 @@
                   "label": "Unidad",
                   "placeholder": "Introduce unidad",
                   "disabled": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre",
                   "options": [
                     {
-                      "value": "1",
-                      "label": "Biomedicina"
+                      "id": "E0B8",
+                      "nombre": "OFTALMOLOGÍA, OPTOMETRÍA, OTORRINOLARINGOLOGÍA Y ANATOMÍA PATOLÓGICA"
                     },
                     {
-                      "value": "2",
-                      "label": "Otro"
+                      "id": "IE01",
+                      "nombre": "INSTITUTO TEOLÓGICO DE MURCIA"
+                    },
+                    {
+                      "id": "X100",
+                      "nombre": "SEC. DEL CENTRO DE FORMACIÓN Y DESARROLLO PROFESIONAL"
+                    },
+                    {
+                      "id": "X901",
+                      "nombre": "UNIDADES ESCUELA ADSCRITA ENFERMERIA CARTAGENA"
+                    },
+                    {
+                      "id": "X902",
+                      "nombre": "UNIDADES ESCUELA UNIVERSITARIA ADSCRITA DE TURISMO"
+                    },
+                    {
+                      "id": "X903",
+                      "nombre": "UNIDADES CENTRO ADSCRITO ISEN"
+                    },
+                    {
+                      "id": "X904",
+                      "nombre": "UNIDADES ESCUELA UNIVERSITARIA ADSCRITA DE OSTEOPATÍA"
+                    },
+                    {
+                      "id": "X905",
+                      "nombre": "UNIDADES ESCUELA ADSCRITA ENFERMERIA DE LA CARM"
+                    },
+                    {
+                      "id": "X750",
+                      "nombre": "UNIDAD DE INNOVACIÓN"
+                    },
+                    {
+                      "id": "X751",
+                      "nombre": "OFICINA DE DIRECCIÓN ESTRATÉGICA (ODE)"
+                    },
+                    {
+                      "id": "E80E",
+                      "nombre": "ÁREA CALIDAD E INNOVACIÓN"
+                    },
+                    {
+                      "id": "X101",
+                      "nombre": "PLANIFICACIÓN ESTRATÉGICA Y FORMACIÓN"
+                    },
+                    {
+                      "id": "E584",
+                      "nombre": "CENTRO DE ATENCIÓN AL USUARIO (CAU)"
+                    },
+                    {
+                      "id": "E0B9",
+                      "nombre": "ELECTROMAGNETISMO Y ELECTRÓNICA"
+                    },
+                    {
+                      "id": "X804",
+                      "nombre": "ENTOMOLOGÍA FORENSE DEL SERV. EXTERNO DE CIENCIAS Y TÉCNICAS FORENSES"
+                    },
+                    {
+                      "id": "E80F",
+                      "nombre": "ÁREA PARA LA CALIDAD E INNOVACIÓN"
+                    },
+                    {
+                      "id": "E0C1",
+                      "nombre": "DIDÁCTICA DE LA LENGUA Y LA LITERATURA (ESPAÑOL, INGLÉS Y FRANCÉS)"
+                    },
+                    {
+                      "id": "X001",
+                      "nombre": "SERV. GEN. PARANINFO Y EDIFICIO RECTOR LOUSTAU"
+                    },
+                    {
+                      "id": "E33B",
+                      "nombre": "SECCIÓN DE REGISTRO E INFORMACIÓN"
+                    },
+                    {
+                      "id": "E46G",
+                      "nombre": "SERVICIO DE OFERTA, BECAS Y TITULOS"
+                    },
+                    {
+                      "id": "E46F",
+                      "nombre": "SERVICIO DE GRADO Y POSTGRADO"
+                    },
+                    {
+                      "id": "E65R",
+                      "nombre": "S. CALIDAD AMBIENTAL, SEGURIDAD ALIMENTARIA Y NUTRICIÓN"
+                    },
+                    {
+                      "id": "CE46",
+                      "nombre": "SERV. GENERALES FAC. CIENCIAS SOCIOSANITARIAS"
+                    },
+                    {
+                      "id": "SD46",
+                      "nombre": "SEC. DIRECCIÓN F. CIENCIAS SOCIOSANITARIAS"
+                    },
+                    {
+                      "id": "CE47",
+                      "nombre": "SERV. GEN. ESCUELA INTERNACIONAL DE DOCTORADO"
+                    },
+                    {
+                      "id": "ED01",
+                      "nombre": "ESCUELA INTERNACIONAL DE DOCTORADO"
+                    },
+                    {
+                      "id": "ED00",
+                      "nombre": "ESCUELAS DE DOCTORADO"
+                    },
+                    {
+                      "id": "IU38",
+                      "nombre": "INSTITUTO UNIVERSITARIO DE INVESTIGACIÓN EN ÓPTICA Y NANOFÍSICA"
+                    },
+                    {
+                      "id": "IU39",
+                      "nombre": "INST. UNIV. EN INVEST. EN TECNOLOGÍAS DE LA INFORMACIÓN Y COMUNICACIÓN ORIENTADAS"
+                    },
+                    {
+                      "id": "E42R",
+                      "nombre": "REGISTRO DE PERSONAL"
+                    },
+                    {
+                      "id": "IU40",
+                      "nombre": "CENTRO DE ESTUDIOS DE ARQUEOLOGÍA VIRTUAL"
+                    },
+                    {
+                      "id": "X805",
+                      "nombre": "OFICINA DEL PROYECTO CAMPUS MARE NOSTRUM"
+                    },
+                    {
+                      "id": "E0C2",
+                      "nombre": "SOCIOLOGIA Y TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "E952",
+                      "nombre": "CÁTEDRA DE EMPRESA FAMILIAR MARE NOSTRUM U. MURCIA-U. POLITECNICA DE CARTAGENA"
+                    },
+                    {
+                      "id": "E291",
+                      "nombre": "UNIDAD PARA LA IGUALDAD DE HOMBRES Y MUJERES"
+                    },
+                    {
+                      "id": "E338",
+                      "nombre": "UNIDAD ADMINISTRATIVA DE LA UNIDAD PARA LA IGUALDAD DE MUJ. y HOMBRES"
+                    },
+                    {
+                      "id": "E562",
+                      "nombre": "S. DE COMUNICACIÓN"
+                    },
+                    {
+                      "id": "CE41",
+                      "nombre": "SEC. Y SERV. GEN. ESCUELA DE ÓPTICA"
+                    },
+                    {
+                      "id": "E0B6",
+                      "nombre": "TRADUCCIÓN E INTERPRETACIÓN"
+                    },
+                    {
+                      "id": "E45C",
+                      "nombre": "SEC. DE CONTRATACIÓN DE SERVICIOS"
+                    },
+                    {
+                      "id": "E45D",
+                      "nombre": "SEC. DE CONTRATACIÓN DE OBRAS"
+                    },
+                    {
+                      "id": "E100",
+                      "nombre": "CONCESIONES"
+                    },
+                    {
+                      "id": "E0B7",
+                      "nombre": "LENGUA ESPAÑOLA Y LINGÜÍSTICA GENERAL"
+                    },
+                    {
+                      "id": "E43H",
+                      "nombre": "SECCIÓN DE PERSONAL DOCENTE E INVESTIGADOR CONTRATADO"
+                    },
+                    {
+                      "id": "E43G",
+                      "nombre": "SECCIÓN DE PERSONAL DOCENTE E INVESTIGADOR FUNCIONARIO"
+                    },
+                    {
+                      "id": "CE00",
+                      "nombre": "CENTROS"
+                    },
+                    {
+                      "id": "IU35",
+                      "nombre": "INSTITUTO UNIVERSITARIO DE INVESTIGACIÓN EN ENVEJECIMIENTO"
+                    },
+                    {
+                      "id": "IU36",
+                      "nombre": "CENTRO DE ESTUDIOS DE BIODERECHO, ÉTICA Y SALUD (CEBES)"
+                    },
+                    {
+                      "id": "E112",
+                      "nombre": "PLAN DE ACTUACIÓN DE EMERGENCIAS POR GRIPE A"
+                    },
+                    {
+                      "id": "EX01",
+                      "nombre": "MASTER DE SECUNDARIA"
+                    },
+                    {
+                      "id": "IU37",
+                      "nombre": "HERBARIO DE LA UNIVERSIDAD DE MURCIA"
+                    },
+                    {
+                      "id": "E951",
+                      "nombre": "CÁTEDRA DE RESPONSABILIDAD SOCIAL CORPORATIVA"
+                    },
+                    {
+                      "id": "X801",
+                      "nombre": "CENTRO INTEGRADO DE INVESTIGACIÓN BIOMEDICA (CEIB)"
+                    },
+                    {
+                      "id": "X802",
+                      "nombre": "CENTRO DE TRANSFERENCIA TECNOLÓGICA"
+                    },
+                    {
+                      "id": "E55Ñ",
+                      "nombre": "SECCIÓN DE GESTIÓN DE EMPLEO"
+                    },
+                    {
+                      "id": "E55O",
+                      "nombre": "SECCIÓN DE OBSERVATORIO DE EMPLEO"
+                    },
+                    {
+                      "id": "E55P",
+                      "nombre": "SECCIÓN DE ORIENTACIÓN PROFESIONAL"
+                    },
+                    {
+                      "id": "E333",
+                      "nombre": "VICERRECTORADO DE COORDINACIÓN Y COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E334",
+                      "nombre": "VICERRECTORADO DE DESARROLLO ESTRATÉGICO Y FORMACIÓN"
+                    },
+                    {
+                      "id": "E335",
+                      "nombre": "VICERRECTORADO DE RELACIONES INTERNACIONALES E INNOVACIÓN"
+                    },
+                    {
+                      "id": "CE92",
+                      "nombre": "ESCUELA UNIVERSITARIA ADSCRITA DE TURISMO"
+                    },
+                    {
+                      "id": "CE90",
+                      "nombre": "ESCUELA UNIVERSITARIA ADSCRITA DE ENFERMERÍA"
+                    },
+                    {
+                      "id": "CE94",
+                      "nombre": "ISEN FORMACIÓN UNIVERSITARIA"
+                    },
+                    {
+                      "id": "XC40",
+                      "nombre": "FACULTAD DE CIENCIAS DEL DEPORTE"
+                    },
+                    {
+                      "id": "CE42",
+                      "nombre": "SEC. Y SERV. GEN. CENTRO DE LORCA"
+                    },
+                    {
+                      "id": "CE43",
+                      "nombre": "SEC. SEC. FACULTAD DE TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "CE44",
+                      "nombre": "SEC. SEC. FACULTAD DE  ENFERMERÍA"
+                    },
+                    {
+                      "id": "CE45",
+                      "nombre": "SEC. Y SERV. GEN. FAC. ÓPTICA Y OPTOMETRÍA"
+                    },
+                    {
+                      "id": "SD39",
+                      "nombre": "SECRETARÍA DE DIRECCIÇON F. DE COMUNICACIÓN Y DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "SD40",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN FACULTAD CIENCIAS DEL DEPORTE"
+                    },
+                    {
+                      "id": "SD42",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. C. LORCA"
+                    },
+                    {
+                      "id": "SD43",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN FACULTAD DE TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "SD44",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN FACULTAD DE ENFERMERÍA"
+                    },
+                    {
+                      "id": "SD45",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. DE ÓPTICA Y OPTOMETRÍA"
+                    },
+                    {
+                      "id": "E49A",
+                      "nombre": "SECCIÓN DE PROYECTOS Y DESARROLLO INTERNACIONAL"
+                    },
+                    {
+                      "id": "E49B",
+                      "nombre": "SECCIÓN DE MOVILIDAD INTERNACIONAL"
+                    },
+                    {
+                      "id": "E43F",
+                      "nombre": "SECCIÓN DE SELECCIÓN DEL PERSONAL DOCENTE E INVESTIGADOR"
+                    },
+                    {
+                      "id": "E0A8",
+                      "nombre": "BIOLOGÍA CELULAR E HISTOLOGÍA"
+                    },
+                    {
+                      "id": "E0A9",
+                      "nombre": "LENGUA ESPAÑOLA, LINGÜISTICA GENERAL Y TRADUCCIÓN E INTERPRETACIÓN"
+                    },
+                    {
+                      "id": "E0B1",
+                      "nombre": "MÉTODOS CUANTITATIVOS PARA LA ECONOMÍA Y EMPRESA"
+                    },
+                    {
+                      "id": "E620",
+                      "nombre": "ADMINISTRACIÓN DE ACTIVIDADES DEPORTIVAS"
+                    },
+                    {
+                      "id": "E619",
+                      "nombre": "S. DE PROMOCIÓN  DEPORTIVA"
+                    },
+                    {
+                      "id": "E618",
+                      "nombre": "SERVICIO DE ACTIVIDADES DEPORTIVAS"
+                    },
+                    {
+                      "id": "E46B",
+                      "nombre": "SECCIÓN DE RECLAMACIONES Y RECURSOS"
+                    },
+                    {
+                      "id": "E55A",
+                      "nombre": "SECCIÓN ADMINISTRATIVA DEL VICER. DE ESTUDIANTES"
+                    },
+                    {
+                      "id": "E46C",
+                      "nombre": "SECCIÓN DE ESTUDIOS DE GRADO"
+                    },
+                    {
+                      "id": "E55B",
+                      "nombre": "SERVICIO DE CULTURA, VOLUNTARIADO Y ESTUDIOS PROPIOS"
+                    },
+                    {
+                      "id": "E55C",
+                      "nombre": "SERVICIO ADJUNTO DE CULTURA"
+                    },
+                    {
+                      "id": "E55D",
+                      "nombre": "SERVICIO ADJUNTO DE PROYECTOS FORMATIVOS"
+                    },
+                    {
+                      "id": "E55E",
+                      "nombre": "SERVICIO DE ORIENTACIÓN Y EMPLEO"
+                    },
+                    {
+                      "id": "E55F",
+                      "nombre": "SECCIÓN DE PRÁCTICAS EN EMPRESAS E INSTITUCIONES"
+                    },
+                    {
+                      "id": "E55G",
+                      "nombre": "SECCION DE ASESORAMIENTO Y ORIENTACIÓN PERSONAL (SAOP)"
+                    },
+                    {
+                      "id": "E55H",
+                      "nombre": "ACUARIO"
+                    },
+                    {
+                      "id": "CARM",
+                      "nombre": "ADMINISTRACIÓN DE LA COMUNIDAD AUTÓNOMA DE LA REGIÓN DE MURCIA"
+                    },
+                    {
+                      "id": "E80D",
+                      "nombre": "OFICINA DE CONVERGENCIA EUROPEA"
+                    },
+                    {
+                      "id": "E55I",
+                      "nombre": "SECCIÓN DE UNIMAR"
+                    },
+                    {
+                      "id": "E55J",
+                      "nombre": "SECCIÓN DE ADMINISTRACIÓN DE ACTIVIDADES CULTURALES"
+                    },
+                    {
+                      "id": "E55K",
+                      "nombre": "SECCIÓN DE FORMACIÓN PERMANENTE"
+                    },
+                    {
+                      "id": "E55L",
+                      "nombre": "SECCIÓN DE ORIENTACIÓN PROFESIONAL"
+                    },
+                    {
+                      "id": "E55M",
+                      "nombre": "SECCIÓN DE MAYORES"
+                    },
+                    {
+                      "id": "E55N",
+                      "nombre": "SECCIÓN DE PROMOCIÓN CULTURAL"
+                    },
+                    {
+                      "id": "E46D",
+                      "nombre": "SERVICIO DE GESTIÓN ACADÉMICA 2"
+                    },
+                    {
+                      "id": "IU31",
+                      "nombre": "CENTRO DE ESTUDIOS INTERCULTURALES"
+                    },
+                    {
+                      "id": "IU32",
+                      "nombre": "ESCUELA DE PRÁCTICAS DE PERIODISMO, PUBLICIDAD Y DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "E45A",
+                      "nombre": "SERVICIO DE PATRIMONIO"
+                    },
+                    {
+                      "id": "E0B2",
+                      "nombre": "HISTORIA JURÍDICA Y DE CIENCIAS PENALES Y CRIMINOLÓGICAS"
+                    },
+                    {
+                      "id": "IU33",
+                      "nombre": "CENTRO DE ESTUDIOS MEDIEVALES"
+                    },
+                    {
+                      "id": "IU34",
+                      "nombre": "CENTRO DE ESTUDIOS MURCIANOS"
+                    },
+                    {
+                      "id": "E0B3",
+                      "nombre": "MIXTO"
+                    },
+                    {
+                      "id": "E0B5",
+                      "nombre": "ACTIVIDAD FÍSICA Y DEPORTE"
+                    },
+                    {
+                      "id": "E65A",
+                      "nombre": "ÁREA DE UNIDAD TÉCNICA"
+                    },
+                    {
+                      "id": "E65B",
+                      "nombre": "SECCIÓN DE ADMINISTRACIÓN DE UNIDAD TÉCNICA"
+                    },
+                    {
+                      "id": "E65C",
+                      "nombre": "SECCIÓN DE PROCESOS"
+                    },
+                    {
+                      "id": "E65D",
+                      "nombre": "SERVICIO DE INFRAESTRUCTURAS Y DESARROLLO"
+                    },
+                    {
+                      "id": "E65E",
+                      "nombre": "SERVICIO DE ADAPTACIÓN DE ESPACIOS"
+                    },
+                    {
+                      "id": "E65F",
+                      "nombre": "UNIDAD DE PROYECTOS"
+                    },
+                    {
+                      "id": "E65G",
+                      "nombre": "SECCIÓN DE LOGÍSTICA"
+                    },
+                    {
+                      "id": "E65H",
+                      "nombre": "SECCIÓN DE ELECTRICIDAD-ELECTRÓNICA"
+                    },
+                    {
+                      "id": "E65I",
+                      "nombre": "SECCIÓN  DE SEGUIMIENTO DE OBRAS"
+                    },
+                    {
+                      "id": "E65J",
+                      "nombre": "SECCIÓN DE VÍA PÚBLICA"
+                    },
+                    {
+                      "id": "E44D",
+                      "nombre": "SERVICIO DE INGRESOS"
+                    },
+                    {
+                      "id": "E90A",
+                      "nombre": "SERVICIO DE TRANSFERENCIA TECNOLÓGICA"
+                    },
+                    {
+                      "id": "E90B",
+                      "nombre": "SECCIÓN DE PROMOCIÓN Y TRANSFERENCIA TECNOLÓGICA"
+                    },
+                    {
+                      "id": "E90C",
+                      "nombre": "SERVICIO DE GESTIÓN DE LA INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "E90D",
+                      "nombre": "SECCIÓN DE RECURSOS HUMANOS DE LA INVESTIGACIÓN Y DEL PLAN PROPIO"
+                    },
+                    {
+                      "id": "E90E",
+                      "nombre": "SERVICIO DE ASUNTOS ECONOMICOS Y CONTROL DE SUBVENCIONES DE LA INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "E90F",
+                      "nombre": "SECCIÓN DE PROYECTOS INTERNACIONALES"
+                    },
+                    {
+                      "id": "E65K",
+                      "nombre": "SERVICIO DE MANTENIMIENTO"
+                    },
+                    {
+                      "id": "E65L",
+                      "nombre": "SECCIÓN DE CAMPUS PERIFÉRICOS"
+                    },
+                    {
+                      "id": "E40A",
+                      "nombre": "ÁREA DE INSPECCIÓN DE SERVICIOS"
+                    },
+                    {
+                      "id": "E45B",
+                      "nombre": "SERVICIO DE CONTRATACIÓN Y SERVICIOS"
+                    },
+                    {
+                      "id": "E714",
+                      "nombre": "S. DE BIOLOGIA MOLECULAR"
+                    },
+                    {
+                      "id": "IU00",
+                      "nombre": "INSTITUTOS UNIVERSITARIOS, CENTROS Y ESCUELAS PROFESIONALES"
+                    },
+                    {
+                      "id": "E90G",
+                      "nombre": "SECCIÓN DE COMERCIALIZACIÓN Y DIFUSIÓN"
+                    },
+                    {
+                      "id": "E65M",
+                      "nombre": "SECCIÓN DE FLUIDOS"
+                    },
+                    {
+                      "id": "E65N",
+                      "nombre": "SECCIÓN TERMICA"
+                    },
+                    {
+                      "id": "E65Ñ",
+                      "nombre": "SECCIÓN DE ELEMENTOS DE EDIFICACIÓN"
+                    },
+                    {
+                      "id": "E65O",
+                      "nombre": "SECCIÓN DE SUMINISTRO DE ENERGÍAS Y CONSUMOS"
+                    },
+                    {
+                      "id": "E65P",
+                      "nombre": "SECCIÓN DE PLANIMETRÍA"
+                    },
+                    {
+                      "id": "E65Q",
+                      "nombre": "SECCIÓN DE EQUIPAMIENTO"
+                    },
+                    {
+                      "id": "E80C",
+                      "nombre": "SECCIÓN DE EVALUACIÓN DOCENTE Y GARANTÍA DE CALIDAD"
+                    },
+                    {
+                      "id": "E80A",
+                      "nombre": "ÁREA PARA LA CALIDAD Y LA CONVERGENCIA EUROPEA"
+                    },
+                    {
+                      "id": "E80B",
+                      "nombre": "SECCIÓN DE ACREDITACIÓN Y CERTIFICACIÓN"
+                    },
+                    {
+                      "id": "E712",
+                      "nombre": "S. DE EXPERIENCIAS AGRÍCOLAS Y FORESTALES"
+                    },
+                    {
+                      "id": "E819",
+                      "nombre": "AREA DE GESTION ECONOM."
+                    },
+                    {
+                      "id": "E823",
+                      "nombre": "ESCUELA PRACTICA JURIDICA"
+                    },
+                    {
+                      "id": "E003",
+                      "nombre": "BIOLOGIA ANIMAL"
+                    },
+                    {
+                      "id": "E006",
+                      "nombre": "BIOQUÍMICA Y BIOLOGÍA MOLECULAR A"
+                    },
+                    {
+                      "id": "E450",
+                      "nombre": "SERVICIO DE CONTRATACIÓN Y PATRIMONIO."
+                    },
+                    {
+                      "id": "E551",
+                      "nombre": "CENTRO RECURSOS AUDIOVISUALES (CRAV)"
+                    },
+                    {
+                      "id": "E018",
+                      "nombre": "FARMACOLOGIA Y FISIOLOGIA"
+                    },
+                    {
+                      "id": "E044",
+                      "nombre": "QUÍMICA ANALÍTICA"
+                    },
+                    {
+                      "id": "E051",
+                      "nombre": "ECONOMÍA APLICADA"
+                    },
+                    {
+                      "id": "E004",
+                      "nombre": "BIOLOGÍA CELULAR"
+                    },
+                    {
+                      "id": "E075",
+                      "nombre": "DERECHO CIVIL"
+                    },
+                    {
+                      "id": "E067",
+                      "nombre": "INGENIERÍA GRÁFICA, CARTOGRÁFICA Y DE PROYECTOS"
+                    },
+                    {
+                      "id": "BI61",
+                      "nombre": "NULO"
+                    },
+                    {
+                      "id": "E056",
+                      "nombre": "OTROS DEPARTAMENTOS"
+                    },
+                    {
+                      "id": "E090",
+                      "nombre": "AUTOMATICA Y TECNOLOGIA ELECTRONICA"
+                    },
+                    {
+                      "id": "E454",
+                      "nombre": "AREA DE CONTRATACION, PATRIMONIO Y SERVICIOS"
+                    },
+                    {
+                      "id": "E453",
+                      "nombre": "SECCIÓN DE PATRIMONIO"
+                    },
+                    {
+                      "id": "BI35",
+                      "nombre": "BIBLIOTECA DE LA FACULTAD DE DOCUMENTACION"
+                    },
+                    {
+                      "id": "CE64",
+                      "nombre": "EDIFICIO \"NEBRIJA\""
+                    },
+                    {
+                      "id": "E445",
+                      "nombre": "SECCIÓN DE TESORERÍA"
+                    },
+                    {
+                      "id": "E752",
+                      "nombre": "AULA INFORMATICA C.CARTAGENA"
+                    },
+                    {
+                      "id": "E479",
+                      "nombre": "SERVICIO DE GESTION DE LA INVESTIGACION"
+                    },
+                    {
+                      "id": "U006",
+                      "nombre": "* ADMIN.M. EDUCACION Y CIENCIA"
+                    },
+                    {
+                      "id": "U011",
+                      "nombre": "** FAC.QUIMICAS Y MATEMATICAS"
+                    },
+                    {
+                      "id": "U430",
+                      "nombre": "** SECCION DE PERSONAL"
+                    },
+                    {
+                      "id": "CE75",
+                      "nombre": "SERV.GENERALES CAMPUS MERCED"
+                    },
+                    {
+                      "id": "CE66",
+                      "nombre": "EDIF. \"EMPRESARIALES\""
+                    },
+                    {
+                      "id": "CE68",
+                      "nombre": "EDIFICIO \"INDUSTRIALES\""
+                    },
+                    {
+                      "id": "CE67",
+                      "nombre": "EDIFICIO \"MINAS\""
+                    },
+                    {
+                      "id": "CE70",
+                      "nombre": "SEC.(ESCUELAS TECNICAS)"
+                    },
+                    {
+                      "id": "CE73",
+                      "nombre": "SERV.GENERALES CAMPUS CARTAGENA"
+                    },
+                    {
+                      "id": "CE74",
+                      "nombre": "SERV.GENERALES CAMPUS ESPINARDO"
+                    },
+                    {
+                      "id": "CE69",
+                      "nombre": "SERV. GEN. EDIFICIO \"D\""
+                    },
+                    {
+                      "id": "E629",
+                      "nombre": "COLEGIOS MAYORES"
+                    },
+                    {
+                      "id": "E650",
+                      "nombre": "SERVICIO DE PLANIFICACION, INFRAESTRUCTURAS Y MANTENIMIENTO"
+                    },
+                    {
+                      "id": "E150",
+                      "nombre": "SALA DE DISECCION"
+                    },
+                    {
+                      "id": "E651",
+                      "nombre": "SECCIÓN DE CONSTRUCCIONES"
+                    },
+                    {
+                      "id": "E652",
+                      "nombre": "SECCION DE INFRAESTRUCTURAS"
+                    },
+                    {
+                      "id": "E653",
+                      "nombre": "SECCION DE MANTENIMIENTO"
+                    },
+                    {
+                      "id": "E630",
+                      "nombre": "UNIDAD DE ALMACEN"
+                    },
+                    {
+                      "id": "E631",
+                      "nombre": "UNIDAD DE TRANSPORTE"
+                    },
+                    {
+                      "id": "E091",
+                      "nombre": "FILOSOFÍA"
+                    },
+                    {
+                      "id": "E446",
+                      "nombre": "SECCION DE GESTION ECONOMICA DE LA INVESTIGACION"
+                    },
+                    {
+                      "id": "CE76",
+                      "nombre": "SERV. GEN. EDIFICIO UNIVERSITARIO \"SAAVEDRA FAJARDO\""
+                    },
+                    {
+                      "id": "CE77",
+                      "nombre": "SERV. DEL EDIFICIO  \"D\""
+                    },
+                    {
+                      "id": "E713",
+                      "nombre": "S. DE INSTRUMENTACIÓN PSICOLÓGICA"
+                    },
+                    {
+                      "id": "IU20",
+                      "nombre": "ESCUELA DE PRÁCTICA PSICOLÓGICA"
+                    },
+                    {
+                      "id": "IU21",
+                      "nombre": "ESCUELA DE PRÁCTICA SOCIAL"
+                    },
+                    {
+                      "id": "CE78",
+                      "nombre": "SERV. GEN. EDIFICIO UNIVERSITARIO RECTOR SABATER"
+                    },
+                    {
+                      "id": "E092",
+                      "nombre": "ORGANIZACION DE EMPRESAS"
+                    },
+                    {
+                      "id": "E093",
+                      "nombre": "COMERCIALIZACIÓN E INVESTIGACIÓN DE MERCADOS"
+                    },
+                    {
+                      "id": "E059",
+                      "nombre": "DEPARTAMENTO EN CONSTITUCIÓN"
+                    },
+                    {
+                      "id": "E805",
+                      "nombre": "ÁREA DE CALIDAD Y CONVERGENCIA EURPEA"
+                    },
+                    {
+                      "id": "E810",
+                      "nombre": "UNIDAD DE INNOVACION Y DESARROLLO"
+                    },
+                    {
+                      "id": "E496",
+                      "nombre": "SECCIÓN  DE RELACIONES INSTITUCIONALES"
+                    },
+                    {
+                      "id": "E088",
+                      "nombre": "SOCIOLOGÍA Y POLÍTICA SOCIAL"
+                    },
+                    {
+                      "id": "E497",
+                      "nombre": "ÁREA DE RELACIONES INTERNACIONALES"
+                    },
+                    {
+                      "id": "E318",
+                      "nombre": "VICERRECTORADO DE INNOVACIÓN Y DESARROLLO"
+                    },
+                    {
+                      "id": "E485",
+                      "nombre": "SECCIÓN DE COORDINACION DE EXTENSIÓN UNIV. Y RELAC.INTERNAC. E INSTITUC."
+                    },
+                    {
+                      "id": "E486",
+                      "nombre": "APOYO VIC. ESTUDIANTES Y PARTICIPACION"
+                    },
+                    {
+                      "id": "E435",
+                      "nombre": "SECCIÓN SEGUNDA DE GESTION DEL P.A.S."
+                    },
+                    {
+                      "id": "E094",
+                      "nombre": "FISIOLOGÍA"
+                    },
+                    {
+                      "id": "E095",
+                      "nombre": "FARMACOLOGÍA"
+                    },
+                    {
+                      "id": "E096",
+                      "nombre": "INGENIERÍA DE LA INFORMACIÓN Y LAS COMUNICACIONES"
+                    },
+                    {
+                      "id": "E097",
+                      "nombre": "INFORMÁTICA Y SISTEMAS"
+                    },
+                    {
+                      "id": "E439",
+                      "nombre": "AREA DE CONTRATACION PATRIMONIO Y SERVICIOS"
+                    },
+                    {
+                      "id": "CE36",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE BELLAS ARTES"
+                    },
+                    {
+                      "id": "CE37",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE ECONOMÍA Y EMPRESA"
+                    },
+                    {
+                      "id": "E036",
+                      "nombre": "MATEMÁTICAS"
+                    },
+                    {
+                      "id": "E039",
+                      "nombre": "TEORIA ECONOMICA"
+                    },
+                    {
+                      "id": "E040",
+                      "nombre": "PATOLOGÍA ANIMAL"
+                    },
+                    {
+                      "id": "E046",
+                      "nombre": "QUÍMICA INORGÁNICA"
+                    },
+                    {
+                      "id": "E055",
+                      "nombre": "SOCIOLOGIA E HISTORIA DE LAS INSTITUCIONES ECONOMICAS"
+                    },
+                    {
+                      "id": "E065",
+                      "nombre": "ECOLOGÍA E HIDROLOGÍA"
+                    },
+                    {
+                      "id": "E302",
+                      "nombre": "VICERRECTORADO DE EXTENSIÓN UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E304",
+                      "nombre": "VICERR.ECONOM.Y FINANZAS"
+                    },
+                    {
+                      "id": "E307",
+                      "nombre": "VICERR. CAMPUS CARTAGENA"
+                    },
+                    {
+                      "id": "E309",
+                      "nombre": "VICERRECTORADO DE INVESTIGACIÓN Y NUEVAS TECNOLOGÍAS"
+                    },
+                    {
+                      "id": "E320",
+                      "nombre": "GABINETE DE PRENSA"
+                    },
+                    {
+                      "id": "E400",
+                      "nombre": "GERENCIA"
+                    },
+                    {
+                      "id": "E410",
+                      "nombre": "ÁREA DE CONTROL INTERNO"
+                    },
+                    {
+                      "id": "E420",
+                      "nombre": "ÁREA DE RÉGIMEN JURÍDICO-ADMINISTRATIVO"
+                    },
+                    {
+                      "id": "E432",
+                      "nombre": "SECCION DE SELECCION Y FORMACION"
+                    },
+                    {
+                      "id": "E444",
+                      "nombre": "SECCIÓN DE GESTION PRESUPUESTARIA"
+                    },
+                    {
+                      "id": "E462",
+                      "nombre": "SECCIÓN DE TÍTULOS"
+                    },
+                    {
+                      "id": "E501",
+                      "nombre": "ÁREA DE BIBLIOTECA UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E553",
+                      "nombre": "S. DE INFORMACIÓN UNIVERSITARIO (SIU)"
+                    },
+                    {
+                      "id": "E557",
+                      "nombre": "S. DE PROMOCIÓN  EDUCATIVA"
+                    },
+                    {
+                      "id": "E560",
+                      "nombre": "S. DE INFORMACION INTERNA"
+                    },
+                    {
+                      "id": "E623",
+                      "nombre": "SERV. GEN. DE CORREOS"
+                    },
+                    {
+                      "id": "E626",
+                      "nombre": "SERV. GEN. DE LIMPIEZA"
+                    },
+                    {
+                      "id": "E702",
+                      "nombre": "S. DE INSTRUMENTACIÓN CIENTIFICA (SUIC)"
+                    },
+                    {
+                      "id": "E705",
+                      "nombre": "S. DE ANIMALES DE LABORATORIO"
+                    },
+                    {
+                      "id": "E710",
+                      "nombre": "TALL.VIDRIO,ELECTR.Y MEC."
+                    },
+                    {
+                      "id": "E817",
+                      "nombre": "SECCION AS.GRALES.Y ALUM."
+                    },
+                    {
+                      "id": "E821",
+                      "nombre": "SECCION BECAS Y AY.ESTUD."
+                    },
+                    {
+                      "id": "E826",
+                      "nombre": "ESCUELA DE ESTOMATOLOGIA"
+                    },
+                    {
+                      "id": "E841",
+                      "nombre": "AREA DE GEST.ECONOMICA"
+                    },
+                    {
+                      "id": "E461",
+                      "nombre": "SECCIÓN DE REGISTRO E INFORMACIÓN"
+                    },
+                    {
+                      "id": "E464",
+                      "nombre": "SECCION DE COORDINACION DE CENTROS"
+                    },
+                    {
+                      "id": "E474",
+                      "nombre": "SECCION DE SOPORTE A USUARIOS"
+                    },
+                    {
+                      "id": "E489",
+                      "nombre": "SERV. DE ASUNTOS GENERALES"
+                    },
+                    {
+                      "id": "E502",
+                      "nombre": "HEMEROTECA CIENTIFICA"
+                    },
+                    {
+                      "id": "E530",
+                      "nombre": "BIBLIOTECA CAMPUS DE CARTAGENA"
+                    },
+                    {
+                      "id": "E554",
+                      "nombre": "CENTRO ORIENT.Y EST.(COE)"
+                    },
+                    {
+                      "id": "E558",
+                      "nombre": "S. DE ACTIVIDADES CULTURALES"
+                    },
+                    {
+                      "id": "E561",
+                      "nombre": "OFICINA DE TRANSFERENCIA DE RESULTADOS DE LA INVESTIGACIÓN (OTRI)"
+                    },
+                    {
+                      "id": "E600",
+                      "nombre": "UNIDAD TECNICA CONST.CONS"
+                    },
+                    {
+                      "id": "E621",
+                      "nombre": "S. DE ACTIVIDADES DEPORTIVAS"
+                    },
+                    {
+                      "id": "E625",
+                      "nombre": "SERV. GEN. DE CONTROL DE ACCESOS"
+                    },
+                    {
+                      "id": "E701",
+                      "nombre": "S. DE MICROSCOPÍA ELECTRÓNICA"
+                    },
+                    {
+                      "id": "E707",
+                      "nombre": "S. DE DIGITALIZACION DE IMAGENES"
+                    },
+                    {
+                      "id": "E711",
+                      "nombre": "S. DE INSTALACIONES RADIOACTIVAS Y RESIDUOS TÓXICOS"
+                    },
+                    {
+                      "id": "IU18",
+                      "nombre": "CLINICA ODONTOLOGICA"
+                    },
+                    {
+                      "id": "IU05",
+                      "nombre": "INST.DE BIOQUIMICA CLINIC"
+                    },
+                    {
+                      "id": "IU08",
+                      "nombre": "INSTITUTO REGIONAL DE ECONOMÍA"
+                    },
+                    {
+                      "id": "IU10",
+                      "nombre": "ESCUELA DE PRÁCTICA JURÍDICA"
+                    },
+                    {
+                      "id": "IU12",
+                      "nombre": "ESCUELA DE PRÁCTICA LABORAL"
+                    },
+                    {
+                      "id": "IU15",
+                      "nombre": "ESC.PROF.PEDIATR.Y PUERIC"
+                    },
+                    {
+                      "id": "IU17",
+                      "nombre": "ESCUELA DE NEGOCIOS DE LA REGION DE MURCIA"
+                    },
+                    {
+                      "id": "E074",
+                      "nombre": "MÉTODOS DE INVESTIGACIÓN Y DIAGNÓSTICO EN EDUCACIÓN"
+                    },
+                    {
+                      "id": "E068",
+                      "nombre": "AUTOMATICA, ELECTRICIDAD Y ELECTRONICA INDUSTRIAL"
+                    },
+                    {
+                      "id": "CE23",
+                      "nombre": "SEC.Y SERV.(RELACIONES LABORALES)"
+                    },
+                    {
+                      "id": "E473",
+                      "nombre": "SECCION DE EXPLOTACION Y SISTEMAS"
+                    },
+                    {
+                      "id": "E448",
+                      "nombre": "SEC.CONTABILIDAD (PAGOS)"
+                    },
+                    {
+                      "id": "CE32",
+                      "nombre": "DIR. E.T.S. INGENIEROS AGRONOMOS"
+                    },
+                    {
+                      "id": "CE34",
+                      "nombre": "DIR. E.U. ING.TEC.NAVAL"
+                    },
+                    {
+                      "id": "E582",
+                      "nombre": "SERVICIO DE INFORMACION-CAMPUS DE CARTAGENA"
+                    },
+                    {
+                      "id": "BI06",
+                      "nombre": "BIBLIOTECA (LETRAS)"
+                    },
+                    {
+                      "id": "BI08",
+                      "nombre": "BIBLIOTECA (VETERINARIA)"
+                    },
+                    {
+                      "id": "BI22",
+                      "nombre": "BIBLIOTECA (INFORMATICA)"
+                    },
+                    {
+                      "id": "BI60",
+                      "nombre": "BIBLIOTECA LUIS VIVES"
+                    },
+                    {
+                      "id": "CE04",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE DERECHO"
+                    },
+                    {
+                      "id": "CE08",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE  VETERINARIA"
+                    },
+                    {
+                      "id": "CE22",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE  INFORMÁTICA"
+                    },
+                    {
+                      "id": "CE28",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE  MATEMÁTICAS"
+                    },
+                    {
+                      "id": "CE61",
+                      "nombre": "SERV. GEN. AULARIO \"GINER DE LOS RIOS\""
+                    },
+                    {
+                      "id": "E012",
+                      "nombre": "DIDÁCTICA DE LAS CIENCIAS MATEMÁTICAS Y SOCIALES"
+                    },
+                    {
+                      "id": "E020",
+                      "nombre": "FILOLOGÍA INGLESA"
+                    },
+                    {
+                      "id": "E014",
+                      "nombre": "DIDÁCTICA DE LA LENGUA Y LA LITERATURA"
+                    },
+                    {
+                      "id": "E024",
+                      "nombre": "FÍSICA"
+                    },
+                    {
+                      "id": "E027",
+                      "nombre": "GEOGRAFÍA FÍSICA, HUMANA Y ANÁLISIS REGIONAL"
+                    },
+                    {
+                      "id": "E035",
+                      "nombre": "MATEMATICA APLICADA Y ESTADISTICA"
+                    },
+                    {
+                      "id": "E042",
+                      "nombre": "PSICOLOGÍA EVOLUTIVA Y DE LA EDUCACIÓN"
+                    },
+                    {
+                      "id": "E049",
+                      "nombre": "INGENIERÍA DE LOS MATERIALES Y FABRICACIÓN"
+                    },
+                    {
+                      "id": "E057",
+                      "nombre": "DERECHO DEL TRABAJO Y DE LA SEGURIDAD SOCIAL"
+                    },
+                    {
+                      "id": "E299",
+                      "nombre": "CONSEJO SOCIAL"
+                    },
+                    {
+                      "id": "E303",
+                      "nombre": "VICERRECTORADO DE PROFESORADO"
+                    },
+                    {
+                      "id": "E306",
+                      "nombre": "VICERR.ALUMNOS Y SERV. SOCIALES"
+                    },
+                    {
+                      "id": "E308",
+                      "nombre": "VICERR.DOCENCIA Y PLAN.ENSEÑANZAS"
+                    },
+                    {
+                      "id": "E315",
+                      "nombre": "VICERRECTORADO DE ESTUDIANTES Y EMPLEO"
+                    },
+                    {
+                      "id": "E440",
+                      "nombre": "ÁREA DE GESTION ECONÓMICA"
+                    },
+                    {
+                      "id": "E452",
+                      "nombre": "SECCION DE SUMINISTROS"
+                    },
+                    {
+                      "id": "E490",
+                      "nombre": "SECCION DE.ASUNTOS ASIST.Y CULTURALES"
+                    },
+                    {
+                      "id": "E504",
+                      "nombre": "BIBLIOTECA DE SOFTWARE"
+                    },
+                    {
+                      "id": "E556",
+                      "nombre": "SERV.UNIV.REL.INTER.(SURI)"
+                    },
+                    {
+                      "id": "E601",
+                      "nombre": "SECCIÓN DE PUBLICACIONES"
+                    },
+                    {
+                      "id": "E700",
+                      "nombre": "SERVICIO DE APOYO A LA INVESTIGACIÓN (SAI)"
+                    },
+                    {
+                      "id": "E704",
+                      "nombre": "SERV.INSTRUM. BIOMEDICA"
+                    },
+                    {
+                      "id": "E495",
+                      "nombre": "SERV. DE RELACIONES INTERNACIONALES E INSTITUCIONALES"
+                    },
+                    {
+                      "id": "E503",
+                      "nombre": "CENTRO DOCUMENTACIÓN EUROPEA"
+                    },
+                    {
+                      "id": "E550",
+                      "nombre": "S. DE L  CENTRO DE ORIENTACION Y EMPLEO (COIE)"
+                    },
+                    {
+                      "id": "E555",
+                      "nombre": "S. DE CÁLCULO CIENTÍFICO"
+                    },
+                    {
+                      "id": "E559",
+                      "nombre": "ASUNTOS SOCIALES"
+                    },
+                    {
+                      "id": "E581",
+                      "nombre": "S. DE INFORMACION UNIVERSITARIO  (CAMPUS DE ESPINARDO)"
+                    },
+                    {
+                      "id": "E602",
+                      "nombre": "S. DE CALIDAD Y SEGURIDAD ALIMENTARIA"
+                    },
+                    {
+                      "id": "E622",
+                      "nombre": "S. DE PREVENCIÓN DE RIESGOS LABORALES"
+                    },
+                    {
+                      "id": "E624",
+                      "nombre": "SERV. GEN.  DE TELEFONIA"
+                    },
+                    {
+                      "id": "E627",
+                      "nombre": "COLEGIO MAYOR R.MENDEZ"
+                    },
+                    {
+                      "id": "E628",
+                      "nombre": "COLEGIO MAYOR AZARBE"
+                    },
+                    {
+                      "id": "E703",
+                      "nombre": "S. DE CULTIVOS CELULARES"
+                    },
+                    {
+                      "id": "E708",
+                      "nombre": "S. DE TALLERES DE APOYO A LA INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "E751",
+                      "nombre": "SERV.APOYO INV.TEC(SAIT)"
+                    },
+                    {
+                      "id": "IU01",
+                      "nombre": "INSTITUTO DE CIENCIAS DE LA EDUCACIÓN (ICE)"
+                    },
+                    {
+                      "id": "CE21",
+                      "nombre": "SEC. DE SEC. ESC. UNIV. DE TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "CE27",
+                      "nombre": "SEC. DE SEC. FACULTAD DE  PSICOLOGÍA"
+                    },
+                    {
+                      "id": "E023",
+                      "nombre": "FILOLOGÍA FRANCESA, ROMÁNICA, ITALIANA Y ÁRABE"
+                    },
+                    {
+                      "id": "E025",
+                      "nombre": "FUNDAMENTOS DEL ORDEN JURÍDICO Y CONSTITUCIONAL"
+                    },
+                    {
+                      "id": "E028",
+                      "nombre": "HISTORIA DEL ARTE"
+                    },
+                    {
+                      "id": "E030",
+                      "nombre": "HISTORIA MODERNA, CONTEMPORÁNEA Y DE AMÉRICA"
+                    },
+                    {
+                      "id": "E002",
+                      "nombre": "ANATOMÍA Y ANATOMÍA PATOLÓGICA COMPARADAS"
+                    },
+                    {
+                      "id": "E001",
+                      "nombre": "ANALISIS SOCIOECONOMIA APLICADA"
+                    },
+                    {
+                      "id": "CE62",
+                      "nombre": "SERV. GEN. EDIFICIO \"C\""
+                    },
+                    {
+                      "id": "CE63",
+                      "nombre": "SERV. GEN. AULARIO \" LA MERCED\""
+                    },
+                    {
+                      "id": "E310",
+                      "nombre": "VIC.RELAC. INTERN. E INSTIT."
+                    },
+                    {
+                      "id": "E429",
+                      "nombre": "ÁREA DE RECURSOS HUMANOS Y SERVICIOS GENERALES"
+                    },
+                    {
+                      "id": "E465",
+                      "nombre": "SECCIÓN DE OFERTA DE ENSEÑANZAS"
+                    },
+                    {
+                      "id": "E510",
+                      "nombre": "BIBLIOTECA CAMPUS DE LA MERCED"
+                    },
+                    {
+                      "id": "E520",
+                      "nombre": "BIBLIOTECA CAMPUS DE ESPINARDO"
+                    },
+                    {
+                      "id": "IU02",
+                      "nombre": "INST.DIREC.ADMON.EMPRESAS"
+                    },
+                    {
+                      "id": "IU03",
+                      "nombre": "INST.INVEST.Y CONT.TECN."
+                    },
+                    {
+                      "id": "IU04",
+                      "nombre": "INSTITUTO UNIVERSITARIO DEL AGUA Y MEDIO AMBIENTE"
+                    },
+                    {
+                      "id": "IU06",
+                      "nombre": "INST.UNIV.MEDIO AMBIENTE"
+                    },
+                    {
+                      "id": "IU07",
+                      "nombre": "INSTITUTO UNIVERSITARIO DE DERECHO COMÚN"
+                    },
+                    {
+                      "id": "IU09",
+                      "nombre": "CENTRO CIRUGIA EXPERIM."
+                    },
+                    {
+                      "id": "IU11",
+                      "nombre": "ESCUELA DE RELACIONES LABORALES"
+                    },
+                    {
+                      "id": "IU13",
+                      "nombre": "ESC.PROF. PSIQUIATRIA"
+                    },
+                    {
+                      "id": "IU14",
+                      "nombre": "ESC.PROF.ESTOMATOLOGIA"
+                    },
+                    {
+                      "id": "IU16",
+                      "nombre": "FUNDACION UNIVERSIDAD-EMPRESA"
+                    },
+                    {
+                      "id": "E072",
+                      "nombre": "RELIGIÓN"
+                    },
+                    {
+                      "id": "CA05",
+                      "nombre": "FAC. FILOSOFIA,PSICOLOGIA Y CC. EE."
+                    },
+                    {
+                      "id": "CA00",
+                      "nombre": "SERVICIOS GENERALES"
+                    },
+                    {
+                      "id": "E305",
+                      "nombre": "VICERR.CAMPUS E INFRAESTRUCTURA"
+                    },
+                    {
+                      "id": "E077",
+                      "nombre": "HISTORIA JURÍDICA Y DERECHO PENAL"
+                    },
+                    {
+                      "id": "CE65",
+                      "nombre": "SERV. GEN. AULARIO GENERAL DE ESPINARDO"
+                    },
+                    {
+                      "id": "E471",
+                      "nombre": "SECCION DE DESARROLLO"
+                    },
+                    {
+                      "id": "IU19",
+                      "nombre": "HOSPITAL CLINICO VETERINARIO"
+                    },
+                    {
+                      "id": "BI01",
+                      "nombre": "BIBLIOTECA (BIOLOGIA)"
+                    },
+                    {
+                      "id": "CE31",
+                      "nombre": "DIR. E.T.S. INGENIEROS INDUSTRIALES"
+                    },
+                    {
+                      "id": "CE33",
+                      "nombre": "DIR. E.U. ING.TEC. MINERA"
+                    },
+                    {
+                      "id": "E580",
+                      "nombre": "S. DE INFORMACION UNIVERSITARIO (CAMPUS DE LA MERCED)"
+                    },
+                    {
+                      "id": "BI02",
+                      "nombre": "BIBLIOTECA (ECONOMICAS)"
+                    },
+                    {
+                      "id": "BI03",
+                      "nombre": "BIBLIOTECA (QUIMICA)"
+                    },
+                    {
+                      "id": "BI07",
+                      "nombre": "BIBLIOTECA (MEDICINA)"
+                    },
+                    {
+                      "id": "BI19",
+                      "nombre": "BIBLIOTECA (EMPRES.CART.)"
+                    },
+                    {
+                      "id": "BI28",
+                      "nombre": "BIBLIOTECA (MATEMATICAS)"
+                    },
+                    {
+                      "id": "BI29",
+                      "nombre": "BIBLIOTECA (POLITECNICA)"
+                    },
+                    {
+                      "id": "CE02",
+                      "nombre": "SEC.Y SERV.(ECONOMICAS)"
+                    },
+                    {
+                      "id": "CE06",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE LETRAS"
+                    },
+                    {
+                      "id": "CE19",
+                      "nombre": "NEG.Y SERV.(EMPRESARIALES-CARTAGENA)"
+                    },
+                    {
+                      "id": "CE26",
+                      "nombre": "SEC.Y SERV.(BIBLIOTECONOMIA)"
+                    },
+                    {
+                      "id": "CE29",
+                      "nombre": "SEC.Y SERV.(POLITECNICA)"
+                    },
+                    {
+                      "id": "E015",
+                      "nombre": "ECONOMIA DE LA EMPRESA"
+                    },
+                    {
+                      "id": "E016",
+                      "nombre": "ECONOMÍA FINANCIERA Y CONTABILIDAD"
+                    },
+                    {
+                      "id": "E021",
+                      "nombre": "FILOSOFIA Y LOGICA"
+                    },
+                    {
+                      "id": "E008",
+                      "nombre": "CIENCIAS SOCIO-SANITARIAS"
+                    },
+                    {
+                      "id": "E009",
+                      "nombre": "CIRUGÍA, PEDIATRÍA, OBSTETRICIA Y GINECOLOGÍA"
+                    },
+                    {
+                      "id": "BI04",
+                      "nombre": "BIBLIOTECA (DERECHO)"
+                    },
+                    {
+                      "id": "BI10",
+                      "nombre": "BIBLIOTECA (EMPRES.MUR.)"
+                    },
+                    {
+                      "id": "BI26",
+                      "nombre": "BIBLIOTECA (BIBLIOTEC.)"
+                    },
+                    {
+                      "id": "BI30",
+                      "nombre": "BIBLIOTECA (EDUCACION)"
+                    },
+                    {
+                      "id": "CE01",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE  BIOLOGIA"
+                    },
+                    {
+                      "id": "CE03",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE QUÍMICA"
+                    },
+                    {
+                      "id": "CE05",
+                      "nombre": "SEC. DE SEC. FACULTAD DE  FILOSOFÍA"
+                    },
+                    {
+                      "id": "CE07",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE MEDICINA"
+                    },
+                    {
+                      "id": "CE09",
+                      "nombre": "SERV.G. E.T.S.INGEN.IND"
+                    },
+                    {
+                      "id": "CE10",
+                      "nombre": "NEG.Y SERV.(EMPRESARIALES-MURCIA)"
+                    },
+                    {
+                      "id": "CE11",
+                      "nombre": "SERV.G.E.GRAD.SOCIALES-"
+                    },
+                    {
+                      "id": "CE12",
+                      "nombre": "SERV.G.E.U.INFORMATICA"
+                    },
+                    {
+                      "id": "CE13",
+                      "nombre": "SERV.G.E.U.POLITECNICA"
+                    },
+                    {
+                      "id": "CE14",
+                      "nombre": "SERV.G.E.U.PROF.E.G.B."
+                    },
+                    {
+                      "id": "CE24",
+                      "nombre": "SERV.G.E.ESTOMATOLOGIA"
+                    },
+                    {
+                      "id": "CE25",
+                      "nombre": "SEC. DE SEC. ESC. UNIVER. DE ENFERMERÍA"
+                    },
+                    {
+                      "id": "CE30",
+                      "nombre": "SEC. DE SEC. Y S.G. FACULTAD DE EDUCACIÓN"
+                    },
+                    {
+                      "id": "E010",
+                      "nombre": "CURRICULUM E INVESTIGACION EDUCATIVA"
+                    },
+                    {
+                      "id": "E011",
+                      "nombre": "DERECHO PRIVADO"
+                    },
+                    {
+                      "id": "E013",
+                      "nombre": "DIDÁCTICA DE LAS CIENCIAS EXPERIMENTALES"
+                    },
+                    {
+                      "id": "E019",
+                      "nombre": "FILOLOGÍA CLÁSICA"
+                    },
+                    {
+                      "id": "E022",
+                      "nombre": "LENGUA ESPAÑOLA Y LINGÜÍSTICA GENERAL"
+                    },
+                    {
+                      "id": "E029",
+                      "nombre": "HISTORIA JURIDICA Y DERECHO PUBLICO"
+                    },
+                    {
+                      "id": "E031",
+                      "nombre": "INFORMATICA Y SISTEMAS"
+                    },
+                    {
+                      "id": "E058",
+                      "nombre": "PRODUCCIÓN ANIMAL"
+                    },
+                    {
+                      "id": "E061",
+                      "nombre": "LITERATURA ESPAÑOLA, TEORÍA DE LA LITERATURA y  LITERATURA COMPARADA"
+                    },
+                    {
+                      "id": "E069",
+                      "nombre": "PERSONALIDAD, EVALUACIÓN Y TRATAMIENTO PSICOLÓGICOS"
+                    },
+                    {
+                      "id": "E076",
+                      "nombre": "DERECHO ADMINISTRATIVO"
+                    },
+                    {
+                      "id": "E301",
+                      "nombre": "SECRETARIA GENERAL"
+                    },
+                    {
+                      "id": "E325",
+                      "nombre": "SERV. GEN. RECTORADO"
+                    },
+                    {
+                      "id": "E405",
+                      "nombre": "SERVICIO DE INSPECCION DE SERVICIOS"
+                    },
+                    {
+                      "id": "E425",
+                      "nombre": "SERVICIO JURIDICO"
+                    },
+                    {
+                      "id": "E431",
+                      "nombre": "SECCION DE PERSONAL DOCENTE"
+                    },
+                    {
+                      "id": "E441",
+                      "nombre": "SERVICIO DE CICLO PRESUPUESTARIO Y ADMINISTRACIÓN"
+                    },
+                    {
+                      "id": "E447",
+                      "nombre": "APOYO CURSOS/PROYECTOS I."
+                    },
+                    {
+                      "id": "E449",
+                      "nombre": "SECCION CONTABILIDAD (REG. FACTURAS)"
+                    },
+                    {
+                      "id": "E033",
+                      "nombre": "INGENIERIA MECANICA Y ENERGETICA"
+                    },
+                    {
+                      "id": "E043",
+                      "nombre": "PSIQUIATRÍA Y PSICOLOGÍA SOCIAL"
+                    },
+                    {
+                      "id": "E048",
+                      "nombre": "QUÍMICA AGRÍCOLA, GEOLOGÍA Y EDAFOLOGÍA"
+                    },
+                    {
+                      "id": "E053",
+                      "nombre": "INFORMACIÓN Y DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "E060",
+                      "nombre": "BIOQUÍMICA Y BIOLOGÍA MOLECULAR \"B\" E INMUNOLOGÍA"
+                    },
+                    {
+                      "id": "E062",
+                      "nombre": "DERMATOLOGIA, ESTOMATOLOGIA, FISIOTERAPIA Y RADIOLOGIA"
+                    },
+                    {
+                      "id": "E064",
+                      "nombre": "OFTALMOLOGÍA, OTORRINOLARINGOLOGÍA Y ANATOMÍA PATOLÓGICA"
+                    },
+                    {
+                      "id": "E071",
+                      "nombre": "HACIENDA Y ECONOMÍA DEL SECTOR PÚBLICO"
+                    },
+                    {
+                      "id": "E079",
+                      "nombre": "ESTADÍSTICA E INVESTIGACIÓN OPERATIVA"
+                    },
+                    {
+                      "id": "CE60",
+                      "nombre": "SERV. GEN. EDIFICIO  \"LUIS VIVES\""
+                    },
+                    {
+                      "id": "E808",
+                      "nombre": "BIBLIOTECA UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E005",
+                      "nombre": "BIOLOGÍA VEGETAL"
+                    },
+                    {
+                      "id": "E080",
+                      "nombre": "DERMATOLOGÍA, ESTOMATOLOGÍA, RADIOLOGÍA Y MEDICINA FÍSICA"
+                    },
+                    {
+                      "id": "E081",
+                      "nombre": "FISIOTERAPIA"
+                    },
+                    {
+                      "id": "E082",
+                      "nombre": "INFORMÁTICA, INTELIGENCIA ARTIFICIAL Y ELECTRÓNICA"
+                    },
+                    {
+                      "id": "E083",
+                      "nombre": "INFORMÁTICA: LENGUAJES Y SISTEMAS INFORMÁTICOS"
+                    },
+                    {
+                      "id": "E084",
+                      "nombre": "INGENIERÍA Y TECNOLOGÍA DE COMPUTADORES"
+                    },
+                    {
+                      "id": "E200",
+                      "nombre": "INSTITUTO DEL AGUA"
+                    },
+                    {
+                      "id": "E800",
+                      "nombre": "UNIDAD DE EVALUACION"
+                    },
+                    {
+                      "id": "E312",
+                      "nombre": "VICERRECTORADO DE ECONOMIA Y ADMINISTRACION"
+                    },
+                    {
+                      "id": "E313",
+                      "nombre": "VICERRECTORADO DE EXTENSION CULTURAL Y PROY. UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E314",
+                      "nombre": "VICERRECTORADO DE PLANIFICACION E INFRAESTRUCTURAS"
+                    },
+                    {
+                      "id": "E316",
+                      "nombre": "VICERRECTORADO DE PROFESORADO Y FORMACIÓN"
+                    },
+                    {
+                      "id": "E317",
+                      "nombre": "VICERRECTORADO PARA LA COORDINACION UNIVERSITARIA EN CARTAGENA"
+                    },
+                    {
+                      "id": "E085",
+                      "nombre": "FISICA APLICADA"
+                    },
+                    {
+                      "id": "E086",
+                      "nombre": "AUTOMATICA Y ELECTRONICA INDUSTRIAL"
+                    },
+                    {
+                      "id": "E087",
+                      "nombre": "INGENIERIA ELECTRICA"
+                    },
+                    {
+                      "id": "CE35",
+                      "nombre": "SEC. DE SEC. Y S. G. FACULTAD DE COMUNICACIÓN Y  DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "E089",
+                      "nombre": "INGENIERÍA MINERA, GEOLÓGICA Y CARTOGRÁFICA"
+                    },
+                    {
+                      "id": "E007",
+                      "nombre": "CIENCIAS MORFOLOGICAS Y PSICOBIOLOGIA"
+                    },
+                    {
+                      "id": "E017",
+                      "nombre": "EXPRESIÓN PLÁSTICA, MUSICAL Y DINÁMICA"
+                    },
+                    {
+                      "id": "E026",
+                      "nombre": "GENÉTICA Y MICROBIOLOGÍA"
+                    },
+                    {
+                      "id": "E032",
+                      "nombre": "INGENIERIA APLICADA"
+                    },
+                    {
+                      "id": "E034",
+                      "nombre": "INGENIERÍA QUÍMICA"
+                    },
+                    {
+                      "id": "E037",
+                      "nombre": "MEDICINA INTERNA"
+                    },
+                    {
+                      "id": "E038",
+                      "nombre": "PSICOLOGÍA BÁSICA Y METODOLOGÍA"
+                    },
+                    {
+                      "id": "E041",
+                      "nombre": "PREHISTORIA, ARQUEOLOGÍA, HISTORIA ANTIGUA, HISTORIA MEDIEVAL Y CIENCIAS  Y TECN. HISTORIOGRAFICAS"
+                    },
+                    {
+                      "id": "E045",
+                      "nombre": "QUÍMICA FÍSICA"
+                    },
+                    {
+                      "id": "E047",
+                      "nombre": "QUÍMICA ORGÁNICA"
+                    },
+                    {
+                      "id": "E050",
+                      "nombre": "TEORÍA E HISTORIA DE LA EDUCACIÓN"
+                    },
+                    {
+                      "id": "E052",
+                      "nombre": "FUNDAMENTOS DEL ANÁLISIS ECONÓMICO"
+                    },
+                    {
+                      "id": "E054",
+                      "nombre": "MÉTODOS CUANTITATIVOS PARA LA ECONOMÍA"
+                    },
+                    {
+                      "id": "E063",
+                      "nombre": "ENFERMERÍA"
+                    },
+                    {
+                      "id": "E066",
+                      "nombre": "INGENIERIA QUIMICA - CARTAGENA"
+                    },
+                    {
+                      "id": "E070",
+                      "nombre": "DERECHO FINANCIERO, INTERNACIONAL Y PROCESAL"
+                    },
+                    {
+                      "id": "E073",
+                      "nombre": "DIDÁCTICA Y ORGANIZACIÓN ESCOLAR"
+                    },
+                    {
+                      "id": "E078",
+                      "nombre": "MATEMÁTICA APLICADA"
+                    },
+                    {
+                      "id": "E300",
+                      "nombre": "SECCIÓN DE RECTORADO"
+                    },
+                    {
+                      "id": "E311",
+                      "nombre": "UNIDAD DE  APOYO COORDINADORES"
+                    },
+                    {
+                      "id": "E401",
+                      "nombre": "SERV .GEN. EDIFICIO RECTORADO"
+                    },
+                    {
+                      "id": "E415",
+                      "nombre": "SECCIÓN DE JUSTIFICACIÓN DE GASTOS"
+                    },
+                    {
+                      "id": "E430",
+                      "nombre": "SERVICIO DE GESTIÓN DE  RECURSOS HUMANOS"
+                    },
+                    {
+                      "id": "E433",
+                      "nombre": "SECCIÓN DE GESTIÓN DEL PERSONAL DE ADMINISTRACIÓN Y SERVICIOS"
+                    },
+                    {
+                      "id": "E434",
+                      "nombre": "SECCION DE NOMINAS Y HABILITACIÓN"
+                    },
+                    {
+                      "id": "E442",
+                      "nombre": "SECCIÓN DE GASTO"
+                    },
+                    {
+                      "id": "E443",
+                      "nombre": "SECCIÓN DE GESTIÓN INGRESOS"
+                    },
+                    {
+                      "id": "E451",
+                      "nombre": "SECCIÓN DE CONTRATACIÓN Y OBRAS"
+                    },
+                    {
+                      "id": "E460",
+                      "nombre": "SERVICIO DE GESTION ACADEMICA"
+                    },
+                    {
+                      "id": "E463",
+                      "nombre": "SECCIÓN DE BECAS"
+                    },
+                    {
+                      "id": "E470",
+                      "nombre": "SERVICIO DE INFORMATICA"
+                    },
+                    {
+                      "id": "E472",
+                      "nombre": "SECCION DE REDES Y COMUNICACIONES"
+                    },
+                    {
+                      "id": "E480",
+                      "nombre": "SECCION DE GESTION DE LA INVESTIGACION."
+                    },
+                    {
+                      "id": "BI14",
+                      "nombre": "BIBLIOTECA ESCUELA UNIVERSITARIA DEL PROFESORADO DE E.G.B."
+                    },
+                    {
+                      "id": "E540",
+                      "nombre": "MUSEO DE LA UNIVERSIDAD DE MURCIA"
+                    },
+                    {
+                      "id": "E098",
+                      "nombre": "TECNOLOGÍA DE LOS ALIMENTOS, NUTRICIÓN Y BROMATOLOGÍA"
+                    },
+                    {
+                      "id": "E099",
+                      "nombre": "EN CONSTITUCIÓN (CPA)"
+                    },
+                    {
+                      "id": "CE79",
+                      "nombre": "SERV. GEN. EDIFICIO F. DE CIENCIAS DEL TRABAJO Y E.U. DE TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "CE80",
+                      "nombre": "SERV. GEN. CENTRO SOCIAL UNIVERSITARIO"
+                    },
+                    {
+                      "id": "CE81",
+                      "nombre": "SERV. GEN. EDIFICIO AULARIO NORTE"
+                    },
+                    {
+                      "id": "CE39",
+                      "nombre": "SEC. DE SEC. Y S. G. FACULTAD DE COMUNICACION Y DOCUMENTACION"
+                    },
+                    {
+                      "id": "CE38",
+                      "nombre": "SEC. DE SEC. FACULTAD DE CIENCIAS DEL TRABAJO"
+                    },
+                    {
+                      "id": "E0A2",
+                      "nombre": "SANIDAD ANIMAL"
+                    },
+                    {
+                      "id": "CE82",
+                      "nombre": "SERV. GEN. PABELLON DOCENTE H.U.V.A."
+                    },
+                    {
+                      "id": "E0A0",
+                      "nombre": "ZOOLOGÍA Y ANTROPOLOGÍA FÍSICA"
+                    },
+                    {
+                      "id": "E319",
+                      "nombre": "VICERRECTORADO DE ESTUDIOS Y POSTGRADO"
+                    },
+                    {
+                      "id": "E0A1",
+                      "nombre": "MEDICINA Y CIRUGÍA ANIMAL"
+                    },
+                    {
+                      "id": "E0A3",
+                      "nombre": "ANATOMÍA HUMANA Y PSICOBIOLOGÍA"
+                    },
+                    {
+                      "id": "E0A4",
+                      "nombre": "ORGANIZACIÓN DE EMPRESAS Y FINANZAS"
+                    },
+                    {
+                      "id": "CE83",
+                      "nombre": "SERV. GEN. EDIFICIO CUARTEL DE ARTILLERIA"
+                    },
+                    {
+                      "id": "E901",
+                      "nombre": "S. UNIVERSITARIO DE  PROYECCIÓN SOCIAL Y VOLUNTARIADO"
+                    },
+                    {
+                      "id": "E902",
+                      "nombre": "S. DE ASESORAMIENTO Y ORIENTACION PERSONAL (SAOP)"
+                    },
+                    {
+                      "id": "E617",
+                      "nombre": "S. DEL CENTRO DE MEDICINA DEL DEPORTE"
+                    },
+                    {
+                      "id": "SD01",
+                      "nombre": "SECRETARÍA DE DIRECCION F. BIOLOGÍA"
+                    },
+                    {
+                      "id": "SD03",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. QUÍMICA"
+                    },
+                    {
+                      "id": "SD04",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. DERECHO"
+                    },
+                    {
+                      "id": "SD05",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. FILOSOFÍA"
+                    },
+                    {
+                      "id": "SD06",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. LETRAS"
+                    },
+                    {
+                      "id": "SD07",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. MEDICINA"
+                    },
+                    {
+                      "id": "SD08",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. VETERINARIA"
+                    },
+                    {
+                      "id": "SD21",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN E.U. TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "SD22",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. INFORMÁTICA"
+                    },
+                    {
+                      "id": "SD25",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN E.U. ENFERMERÍA"
+                    },
+                    {
+                      "id": "SD27",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. PSICOLOGÍA"
+                    },
+                    {
+                      "id": "SD28",
+                      "nombre": "SECRETARIA DE DIRECCIÓN F. MATEMÁTICAS"
+                    },
+                    {
+                      "id": "SD30",
+                      "nombre": "SECRETARIA DE DIRECCIÓN F. EDUCACIÓN"
+                    },
+                    {
+                      "id": "SD35",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. COMUNICACIÓN Y DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "SD36",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. BELLAS ARTES"
+                    },
+                    {
+                      "id": "SD37",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. ECONOMÍA Y EMPRESA"
+                    },
+                    {
+                      "id": "SD38",
+                      "nombre": "SECRETARÍA DE DIRECCIÓN F. CIENCIAS DEL TRABAJO"
+                    },
+                    {
+                      "id": "SE01",
+                      "nombre": "SECRETARÍA F. BIOLOGIA"
+                    },
+                    {
+                      "id": "SE03",
+                      "nombre": "SECRETARÍA F. QUÍMICA"
+                    },
+                    {
+                      "id": "SE04",
+                      "nombre": "SECRETARÍA F. DERECHO"
+                    },
+                    {
+                      "id": "SE05",
+                      "nombre": "SECRETARÍA F. FILOSOFÍA"
+                    },
+                    {
+                      "id": "SE06",
+                      "nombre": "SECRETARÍA F. LETRAS"
+                    },
+                    {
+                      "id": "SE07",
+                      "nombre": "SECRETARÍA F. MEDICINA"
+                    },
+                    {
+                      "id": "SE08",
+                      "nombre": "SECRETARÍA F. VETERINARIA"
+                    },
+                    {
+                      "id": "SE21",
+                      "nombre": "SECRETARÍA E.U. TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "SE22",
+                      "nombre": "SECRETARÍA F. INFORMÁTICA"
+                    },
+                    {
+                      "id": "SE25",
+                      "nombre": "SECRETARÍA E.U. ENFERMERÍA"
+                    },
+                    {
+                      "id": "SE27",
+                      "nombre": "SECRETARÍA F. PSICOLOGÍA"
+                    },
+                    {
+                      "id": "SE28",
+                      "nombre": "SECRETARÍA F. MATEMÁTICAS"
+                    },
+                    {
+                      "id": "SE30",
+                      "nombre": "SECRETARÍA F. EDUCACIÓN"
+                    },
+                    {
+                      "id": "SE35",
+                      "nombre": "SECRETARÍA F. CIENCIAS DE LA DOCUMENTACIÓN"
+                    },
+                    {
+                      "id": "SE36",
+                      "nombre": "SECRETARÍA F. BELLAS ARTES"
+                    },
+                    {
+                      "id": "SE37",
+                      "nombre": "SECRETARIA F. ECONOMÍA Y EMPRESA"
+                    },
+                    {
+                      "id": "SE38",
+                      "nombre": "SECRETARÍA F. CIENCIAS DEL TRABAJO"
+                    },
+                    {
+                      "id": "E850",
+                      "nombre": "ÁREA DE TECNOLOGÍAS DE LA INFORMACIÓN Y COMUNICACIONES APLICADAS"
+                    },
+                    {
+                      "id": "E860",
+                      "nombre": "SERVICIO DE DESARROLLO, APLICACIONES Y METODOLOGIA"
+                    },
+                    {
+                      "id": "E861",
+                      "nombre": "SECCIÓN DE PROYECTOS Y APLICACIONES"
+                    },
+                    {
+                      "id": "E862",
+                      "nombre": "SECCIÓN DE METODOLOGÍAS, NORMALIZACIÓN Y CALIDAD DEL SOFTWARE"
+                    },
+                    {
+                      "id": "E387",
+                      "nombre": "SERVICIO DE REDES Y COMUNICACIONES"
+                    },
+                    {
+                      "id": "E871",
+                      "nombre": "SECCIÓN DE REDES"
+                    },
+                    {
+                      "id": "E872",
+                      "nombre": "SECCION DE TELEMÁTICA"
+                    },
+                    {
+                      "id": "E881",
+                      "nombre": "SECCIÓN DE SEGURIDAD Y SISTEMAS"
+                    },
+                    {
+                      "id": "E891",
+                      "nombre": "SECCIÓN DE SOPORTE A USUARIOS"
+                    },
+                    {
+                      "id": "E44A",
+                      "nombre": "SERVICIO DE DIRECCIÓN FINANCIERA, FISCAL Y CONTABLE"
+                    },
+                    {
+                      "id": "E44B",
+                      "nombre": "SECCIÓN DE CONTABILIDAD Y EXTRAPRESUPUESTARIO"
+                    },
+                    {
+                      "id": "E44C",
+                      "nombre": "SECCIÓN UNIDAD TÉCNICA APOYO ECONÓMICO A PROYECTOS"
+                    },
+                    {
+                      "id": "E330",
+                      "nombre": "GABINETE DE PROTOCOLO Y COMUNICACION"
+                    },
+                    {
+                      "id": "E870",
+                      "nombre": "SERVICIO DE REDES Y TELEMATICA"
+                    },
+                    {
+                      "id": "E321",
+                      "nombre": "VICERRECTORADO DE CALIDAD Y CONVERGENCIA EUROPEA"
+                    },
+                    {
+                      "id": "E46A",
+                      "nombre": "ÁREA DE GESTIÓN ACADÉMICA"
+                    },
+                    {
+                      "id": "E467",
+                      "nombre": "SECCIÓN DE COORDINACIÓN ACADÉMICA Y CENTROS"
+                    },
+                    {
+                      "id": "E466",
+                      "nombre": "SECCIÓN DE POSTGRADO"
+                    },
+                    {
+                      "id": "X700",
+                      "nombre": "UNIDAD DE DEPOSITO RECICLATICA"
+                    },
+                    {
+                      "id": "X701",
+                      "nombre": "S. DE IDIOMAS (SIDI)"
+                    },
+                    {
+                      "id": "U003",
+                      "nombre": "E.U. POLITECNICA DE ALBACETE"
+                    },
+                    {
+                      "id": "U004",
+                      "nombre": "E.U. DE MAGISTERIO DE ALBACETE"
+                    },
+                    {
+                      "id": "U005",
+                      "nombre": "FACULTAD DE CIENCIAS"
+                    },
+                    {
+                      "id": "IU22",
+                      "nombre": "UNIVERSIDAD DEL MAR"
+                    },
+                    {
+                      "id": "IU23",
+                      "nombre": "ESCUELA DE  PRÁCTICA TECNOLÓGICA"
+                    },
+                    {
+                      "id": "IU24",
+                      "nombre": "ESCUELA DE PRÁCTICA ENFERMERA"
+                    },
+                    {
+                      "id": "IU25",
+                      "nombre": "GRANJA DOCENTE VETERINARIA"
+                    },
+                    {
+                      "id": "IU26",
+                      "nombre": "INSTITUTO UNIVERSITARIO DE CIENCIAS DEL DEPORTE"
+                    },
+                    {
+                      "id": "IU27",
+                      "nombre": "INSTITUTO UNIVERSITARIO DEL ENVEJECIMIENTO"
+                    },
+                    {
+                      "id": "IU28",
+                      "nombre": "CENTRO DE ESTUDIOS ECONÓMICOS Y EMPRESARIALES"
+                    },
+                    {
+                      "id": "IU29",
+                      "nombre": "CENTRO DE ESTUDIOS DE COOPERACIÓN AL DESARROLLO"
+                    },
+                    {
+                      "id": "IU30",
+                      "nombre": "UNIDAD DOCENTE ENFERM. OBSTETRICIA-GINECOLOGIA (MATRONAS)"
+                    },
+                    {
+                      "id": "E716",
+                      "nombre": "S. DE PSICOLOGÍA APLICADA (SEPA)"
+                    },
+                    {
+                      "id": "X702",
+                      "nombre": "CLINICA UNIVERSITARIA DE VISIÓN INTEGRAL"
+                    },
+                    {
+                      "id": "E0A5",
+                      "nombre": "GEOGRAFÍA"
+                    },
+                    {
+                      "id": "E900",
+                      "nombre": "ÁREA DE INVESTIGACIÓN Y TRANSFERENCIA TECNOLÓGICA"
+                    },
+                    {
+                      "id": "E905",
+                      "nombre": "SECCIÓN DE GESTIÓN DE CONTRATOS Y PATENTES"
+                    },
+                    {
+                      "id": "E906",
+                      "nombre": "SECCIÓN DE GESTIÓN DE PROYECTOS Y AYUDAS"
+                    },
+                    {
+                      "id": "E907",
+                      "nombre": "SECCIÓN DE GESTIÓN DE ASUNTOS ECONÓMICOS"
+                    },
+                    {
+                      "id": "E331",
+                      "nombre": "UNIDAD PARA LA PARTICIPACIÓN ESTUDIANTIL"
+                    },
+                    {
+                      "id": "E0A6",
+                      "nombre": "BELLAS ARTES"
+                    },
+                    {
+                      "id": "E322",
+                      "nombre": "VICERRECTORADO DE ESTUDIOS"
+                    },
+                    {
+                      "id": "E323",
+                      "nombre": "VICERRECTORADO DE RELACIONES INTERNACIONALES E INNOV."
+                    },
+                    {
+                      "id": "E324",
+                      "nombre": "VICERRECTORADO DE INFORMACIÓN, COMUNICACIÓN E INNOVACIÓN"
+                    },
+                    {
+                      "id": "E329",
+                      "nombre": "VICERRECTORADO DE RELACIONES INSTITUCIONALES Y DE CIENCIAS DE LA SALUD"
+                    },
+                    {
+                      "id": "E326",
+                      "nombre": "VICERRECTORADO DE INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "E327",
+                      "nombre": "VICERRECTORADO DE ECONOMÍA E INFRAESTRUCTURAS"
+                    },
+                    {
+                      "id": "E328",
+                      "nombre": "VICERRECTORADO DE CONVERGENCIA EUROPEA"
+                    },
+                    {
+                      "id": "CE84",
+                      "nombre": "SERV. GEN. EDIFICIO \"R. SOLER\""
+                    },
+                    {
+                      "id": "E332",
+                      "nombre": "UNIDAD DE APOYO AL DEFENSOR DEL UNIVERSITARIO"
+                    },
+                    {
+                      "id": "B0A1",
+                      "nombre": "EN CONSTITUCIÓN (TRAD- E INTERP-)"
+                    },
+                    {
+                      "id": "E0A7",
+                      "nombre": "EN CONSTITUCIÓN  (CAMPUS DE SAN JAVIER)"
+                    },
+                    {
+                      "id": "CE40",
+                      "nombre": "SEC. DE SEC. Y S. G.  FACULTAD DE CIENCIAS DEL DEPORTE"
+                    },
+                    {
+                      "id": "E411",
+                      "nombre": "SERVICIO DE FISCALIZACIÓN"
+                    },
+                    {
+                      "id": "E412",
+                      "nombre": "SERVICIO DE CONTROL FINANCIERO"
+                    },
+                    {
+                      "id": "E541",
+                      "nombre": "ACUARIO"
+                    },
+                    {
+                      "id": "E87A",
+                      "nombre": "SERVICIO DE INFRAESTRUCTURAS TICS"
+                    },
+                    {
+                      "id": "E43A",
+                      "nombre": "SECCIÓN DE NOMINAS"
+                    },
+                    {
+                      "id": "E43B",
+                      "nombre": "SECCIÓN DE SEGURIDAD SOCIAL Y A. SOCIAL"
+                    },
+                    {
+                      "id": "E43C",
+                      "nombre": "SEC. DE PERSONAL LABORAL Y DE PERSONAL DE PROYECTOS DE INVEST."
+                    },
+                    {
+                      "id": "E30A",
+                      "nombre": "SERVICIO DE APOYO AL CONSEJO DE DIRECCIÓN"
+                    },
+                    {
+                      "id": "E290",
+                      "nombre": "DEFENSOR DEL UNIVERSITARIO"
+                    },
+                    {
+                      "id": "E33A",
+                      "nombre": "SECCIÓN DE PROTOCOLO Y COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E42A",
+                      "nombre": "SERVICIO DE GESTIÓN DEL P.D.I."
+                    },
+                    {
+                      "id": "E42B",
+                      "nombre": "SERVICIO DE GESTIÓN DEL PERSONAL DE ADM. Y SERV. Y DE PROYECTOS DE INVES."
+                    },
+                    {
+                      "id": "E42C",
+                      "nombre": "SERVICIO DE COORDINACIÓN DE RECURSOS HUMANOS Y RETRIBUCIONES"
+                    },
+                    {
+                      "id": "E43D",
+                      "nombre": "SECCIÓN DE SELECCIÓN DEL P.A.S. Y DE PERS. DE PROYECTOS"
+                    },
+                    {
+                      "id": "E43E",
+                      "nombre": "SECCIÓN DE FORMACIÓN"
+                    },
+                    {
+                      "id": "E950",
+                      "nombre": "CÁTEDRA DE EMPRESA FAMILIAR"
+                    },
+                    {
+                      "id": "IU41",
+                      "nombre": "CENTRO DE ESTUDIOS DEL PRÓXIMO ORIENTE Y LA ANTIGÜEDAD TARDÍA "
+                    },
+                    {
+                      "id": "E954",
+                      "nombre": "CÁTEDRA DE HACIENDA TERRITORIAL"
+                    },
+                    {
+                      "id": "E955",
+                      "nombre": "OBSERVATORIO DE LA HACIENDA TERRITORIAL"
+                    },
+                    {
+                      "id": "E956",
+                      "nombre": "SERVICIO EXTERNO DE CIENCIAS Y TÉCNICAS FORENSES DE LA UNIVERSIDAD DE MURCIA"
+                    },
+                    {
+                      "id": "E55R",
+                      "nombre": "SERVICIO DE CULTURA"
+                    },
+                    {
+                      "id": "E55Q",
+                      "nombre": "SERVICIO DE VOLUNTARIADO Y ESTUDIOS PROPIOS"
+                    },
+                    {
+                      "id": "E957",
+                      "nombre": "CÁTEDRA TAHE DE CIENCIA APLICADA"
+                    },
+                    {
+                      "id": "E958",
+                      "nombre": "CÁTEDRA UM-SEMG-HEEL DE MEDICINA DE FAMILIA Y ACTITUDES SALUDABLES"
+                    },
+                    {
+                      "id": "E953",
+                      "nombre": "OBSERVATORIO REGIONAL DE LA DEPENDENCIA (OREDE)"
+                    },
+                    {
+                      "id": "E55S",
+                      "nombre": "SERVICIO DE FORMACIÓN PERMANENTE"
+                    },
+                    {
+                      "id": "E55T",
+                      "nombre": "AULA SENIOR"
+                    },
+                    {
+                      "id": "E55U",
+                      "nombre": "UNIVERSIDAD INTERNACIONAL DEL MAR"
+                    },
+                    {
+                      "id": "E55V",
+                      "nombre": "ESTUDIOS PROPIOS"
+                    },
+                    {
+                      "id": "E55X",
+                      "nombre": "S. ATENCION A LA DIVERSIDAD Y EL VOLUNTARIADO"
+                    },
+                    {
+                      "id": "E33C",
+                      "nombre": "SERVICIO erróneo"
+                    },
+                    {
+                      "id": "IU42",
+                      "nombre": "CENTRO DE ESTUDIOS SOBRE LA MEMORIA EDUCATIVA DE LA UNIVERSIDAD DE MURCIA"
+                    },
+                    {
+                      "id": "IU43",
+                      "nombre": "CENTRO DE ESTUDIOS EUROPEOS DE LA UNIVERSIDAD DE MURCIA (CEEUM)"
+                    },
+                    {
+                      "id": "IU44",
+                      "nombre": "CENTRO DE ESTUDIOS SOBRE DISCAPACIDAD Y PROMOCIÓN DE LA AUTONOMÍA PERSONAL (DIPAP)"
+                    },
+                    {
+                      "id": "IU45",
+                      "nombre": "CENTRO DE ESTUDIOS DE EDUCACIÓN MÉDICA"
+                    },
+                    {
+                      "id": "IU46",
+                      "nombre": "CENTRO DE ESTUDIO DE TERAPIAS CREATIVAS"
+                    },
+                    {
+                      "id": "E340",
+                      "nombre": "VICERRECTORADO DE COMUNICACIÓN Y CULTURA"
+                    },
+                    {
+                      "id": "E341",
+                      "nombre": "VICERRECTORADO DE COORDINACIÓN E INTERNACIONALIZACIÓN"
+                    },
+                    {
+                      "id": "E337",
+                      "nombre": "VICERRECTORADO DE ESTUDIANTES, CALIDAD E IGUALDAD"
+                    },
+                    {
+                      "id": "E342",
+                      "nombre": "VICERRECTORADO DE FORMACIÓN E INNOVACCIÓN"
+                    },
+                    {
+                      "id": "E343",
+                      "nombre": "VICERRECTORADO DE INFRAESTRUCTURAS Y SOSTENIBILIDAD"
+                    },
+                    {
+                      "id": "E339",
+                      "nombre": "VICERRECTORADO DE PLANIFICACIÓN DE ENSEÑANZAS"
+                    },
+                    {
+                      "id": "E344",
+                      "nombre": "VICERRECTORADO DE TRANSFERENCIA Y EMPRENDIMIENTO"
+                    },
+                    {
+                      "id": "X102",
+                      "nombre": "FORMACIÓN E INNOVACIÓN"
+                    },
+                    {
+                      "id": "E959",
+                      "nombre": "CÁTEDRA DE REPRODUCCIÓN ASISTIDA"
+                    },
+                    {
+                      "id": "E960",
+                      "nombre": "CÁTEDRA CABRERA INFANTE"
+                    },
+                    {
+                      "id": "E961",
+                      "nombre": "CÁTEDRA DE ECONOMÍA SOCIAL"
+                    },
+                    {
+                      "id": "E962",
+                      "nombre": "CÁTEDRA SAES DE SOFTWARE LIBRE Y DE APLICACIONES CRÍTICAS Y EN TIEMPO REAL"
+                    },
+                    {
+                      "id": "E963",
+                      "nombre": "CATEDRA BANCAJA \"JOVENES EMPRENDEDORES\""
+                    },
+                    {
+                      "id": "E964",
+                      "nombre": "CÁTEDRA BIOFERMA MURCIA"
+                    },
+                    {
+                      "id": "E965",
+                      "nombre": "CÁTEDRA DEL AGUA Y MEDIOAMBIENTE CAJAMURCIA"
+                    },
+                    {
+                      "id": "E966",
+                      "nombre": "CÁTEDRA MAPFRE"
+                    },
+                    {
+                      "id": "E967",
+                      "nombre": "CÁTEDRA DE EMPRESA CAJAMURCIA"
+                    },
+                    {
+                      "id": "E968",
+                      "nombre": "CÁTEDRA DE HISTORIA NAVAL"
+                    },
+                    {
+                      "id": "E969",
+                      "nombre": "CÁTEDRA CRISTOBAL GABARRÓN"
+                    },
+                    {
+                      "id": "E91A",
+                      "nombre": "ÁREA DE INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "E90H",
+                      "nombre": "SERVICIO DE TRANSFERENCIA"
+                    },
+                    {
+                      "id": "E90I",
+                      "nombre": "SECCIÓN DE PROMOCIÓN Y TRANSFERENCIA"
+                    },
+                    {
+                      "id": "E000",
+                      "nombre": "NUEVAS ACTUACIONES"
+                    },
+                    {
+                      "id": "CE88",
+                      "nombre": "SERV. GEN. EDIFICIO PLEYADES"
+                    },
+                    {
+                      "id": "CE87",
+                      "nombre": "SERV. GEN. EDIFICIO DEPART. CC.SALUD"
+                    },
+                    {
+                      "id": "E971",
+                      "nombre": "CÁTEDRA DEL AGUA Y LA SOSTENIBILIDAD"
+                    },
+                    {
+                      "id": "E972",
+                      "nombre": "CÁTEDRA ASTRADE DE AUTISMO Y TRASTORNOS GENERALIZADOS DEL DESARROLLO"
+                    },
+                    {
+                      "id": "E0C3",
+                      "nombre": "SOCIOLOGIA"
+                    },
+                    {
+                      "id": "E0C4",
+                      "nombre": "TRABAJO SOCIAL"
+                    },
+                    {
+                      "id": "CE89",
+                      "nombre": "SERV. GEN. LAIB/DEPARTAMENTAL"
+                    },
+                    {
+                      "id": "E345",
+                      "nombre": "VICERRECTORADO DE ESTUDIANTES"
+                    },
+                    {
+                      "id": "E346",
+                      "nombre": "VICERRECTORADO DE RESPONSABILIDAD SOCIAL, TRANSPARENCIA E IGUALDAD"
+                    },
+                    {
+                      "id": "E973",
+                      "nombre": "CÁTEDRA DE MEDIO AMBIENTE INTERUNIVERSITARIA AUTO. PORTUARIA CARTAGENA. CAMPUS MARE NOSTRUM"
+                    },
+                    {
+                      "id": "E974",
+                      "nombre": "CÁTEDRA DE INNOVACCIÓN EN ADICCIONES"
+                    },
+                    {
+                      "id": "E975",
+                      "nombre": "CÁTEDRA INTERNACIONAL DE INNOVACIÓN ECUESTRE"
+                    },
+                    {
+                      "id": "E976",
+                      "nombre": "CÁTEDRA ARTURO PÉREZ REVERTE"
+                    },
+                    {
+                      "id": "IU47",
+                      "nombre": "CENTRO DE ESTUDIOS CRIMINOLÓGICOS"
+                    },
+                    {
+                      "id": "E58A",
+                      "nombre": "SERVICIO DE COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E58B",
+                      "nombre": "SECCIÓN DE COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E90J",
+                      "nombre": "SECCIÓN DE EMPRENDIMIENTO DE E.B.T."
+                    },
+                    {
+                      "id": "E55Y",
+                      "nombre": "SECCIÓN DE PROSPECCIÓN Y EMPRENDIMIENTO"
+                    },
+                    {
+                      "id": "E86A",
+                      "nombre": "SECCIÓN DE PROYECTOS DE RRHH"
+                    },
+                    {
+                      "id": "E86B",
+                      "nombre": "SECCION DE PROYECTOS DE GESTION ACADÉMICA"
+                    },
+                    {
+                      "id": "E65S",
+                      "nombre": "SERVICIO CALIDAD AMBIENTAL, SEG. ALIM. Y NUTRICIÓN"
+                    },
+                    {
+                      "id": "E426",
+                      "nombre": "SECCIÓN DE ADMINISTRACIÓN DE LA ASESORÍA JURÍDICA"
+                    },
+                    {
+                      "id": "E80G",
+                      "nombre": "SECCIÓN DE INNOVACIÓN"
+                    },
+                    {
+                      "id": "E44E",
+                      "nombre": "SECCIÓN CAJA PAGADORA CENTRAL"
+                    },
+                    {
+                      "id": "E90L",
+                      "nombre": "SECCION DE SOPORTE INVESTIGACIÓN BIOMÉDICA"
+                    },
+                    {
+                      "id": "E90M",
+                      "nombre": "SECCION CONTROL DE SUBVENCIONES"
+                    },
+                    {
+                      "id": "E32A",
+                      "nombre": "SERVICIO DE DATO ÚNICO"
+                    },
+                    {
+                      "id": "E90K",
+                      "nombre": "SERVICIO DE PROYECTOS INTERNACIONALES"
+                    },
+                    {
+                      "id": "E44F",
+                      "nombre": "SECCIÓN DE CAJA PAGADORA DE INVEST. Y PROYECTOS"
+                    },
+                    {
+                      "id": "E62A",
+                      "nombre": "SECCIÓN DE INSTALACIONES DEPORTIVAS"
+                    },
+                    {
+                      "id": "E62C",
+                      "nombre": "SECCIÓN DE PREVENCIÓN DE RIESGOS LABORALES 2"
+                    },
+                    {
+                      "id": "IU48",
+                      "nombre": "OFICINA DE UNIVERSIDAD SALUDABLE (REUS-UMU)"
+                    },
+                    {
+                      "id": "E0C5",
+                      "nombre": "HISTORIA MODERNA, CONTEMPORÁNEA, DE AMÉRICA Y DEL PENSAMIENTO Y MOV. SOCIALES Y POLÍTICOS"
+                    },
+                    {
+                      "id": "E0C6",
+                      "nombre": "TRABAJO SOCIAL Y SERVICIOS SOCIALES"
+                    },
+                    {
+                      "id": "IU49",
+                      "nombre": "CENTRO DE ESTUDIOS VISUALES"
+                    },
+                    {
+                      "id": "E58C",
+                      "nombre": "SERVICIO DE INFORMACIÓN UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E58D",
+                      "nombre": "SECCIÓN DE INFORMACIÓN UNIVERSITARIA"
+                    },
+                    {
+                      "id": "E33G",
+                      "nombre": "SECRETARÍA DE GERENCIA"
+                    },
+                    {
+                      "id": "E33S",
+                      "nombre": "SECRETARÍA DE SECRETARÍA  GENERAL"
+                    },
+                    {
+                      "id": "E977",
+                      "nombre": "CÁTEDRA PONCEMAR DE GERONTOLOGÍA"
+                    },
+                    {
+                      "id": "E56A",
+                      "nombre": "SERVICIO DE COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E56B",
+                      "nombre": "SECCIÓN DE COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E70C",
+                      "nombre": "SERVICIO DE INSTRUMENTACIÓN CIENTÍFICA"
+                    },
+                    {
+                      "id": "E70D",
+                      "nombre": "SERVICIO DE CULTIVO DE TEJIDOS"
+                    },
+                    {
+                      "id": "E70E",
+                      "nombre": "SERVICIO DE ANIMALES DE EXPERIMENTACIÓN"
+                    },
+                    {
+                      "id": "E70F",
+                      "nombre": "SERVICIO DE MICROSCOPÍA"
+                    },
+                    {
+                      "id": "E49C",
+                      "nombre": "SERVICIO DE PROYECTOS Y DESARROLLO INTERNACIONAL"
+                    },
+                    {
+                      "id": "E49D",
+                      "nombre": "SERVICIO DE MOVILIDAD INTERNACIONAL"
+                    },
+                    {
+                      "id": "E86C",
+                      "nombre": "SECCIÓN DE PROYECTOS CAMPUS VIRTUAL"
+                    },
+                    {
+                      "id": "E90N",
+                      "nombre": "ÁREA DE TRANSFERENCIA"
+                    },
+                    {
+                      "id": "E56C",
+                      "nombre": "CANAL TV UM"
+                    },
+                    {
+                      "id": "E45E",
+                      "nombre": "SECCIÓN DE CONTRATACIÓN DE OBRAS Y CONCESIONES"
+                    },
+                    {
+                      "id": "E60A",
+                      "nombre": "SERVICIOS  VIC. ESTUDIANTES"
+                    },
+                    {
+                      "id": "E350",
+                      "nombre": "VICERRECTORADO DE ESTUDIOS"
+                    },
+                    {
+                      "id": "E351",
+                      "nombre": "VICERRECTORADO DE INVESTIGACIÓN Y TRANSFERENCIA"
+                    },
+                    {
+                      "id": "E352",
+                      "nombre": "VICERRECTORADO DE INTERNACIONALIZACIÓN"
+                    },
+                    {
+                      "id": "E353",
+                      "nombre": "VICERRECTORADO DE CALIDAD, CULTURA Y COMUNICACIÓN"
+                    },
+                    {
+                      "id": "E354",
+                      "nombre": "VICERRECTORADO DE PLANIFICACIÓN DE LAS INFRAESTRUCTURAS"
+                    },
+                    {
+                      "id": "E355",
+                      "nombre": "VICERRECTORADO DE EMPLEO, EMPRENDIMIENTO Y SOCIEDAD"
+                    },
+                    {
+                      "id": "E356",
+                      "nombre": "VICERRECTORADO DE CIENCIAS DE LA SALUD"
+                    },
+                    {
+                      "id": "E357",
+                      "nombre": "VICERRECTORADO DE COORDINACIÓN Y SERVICIOS ASISTENCIALES"
+                    },
+                    {
+                      "id": "IU50",
+                      "nombre": "CENTRO DE ESTUDIOS PARA EL DESARROLLO DE LA SUPERDOTACIÓN EL TALENTO Y LA EXCELENCIA (CEDETE)"
+                    },
+                    {
+                      "id": "IU51",
+                      "nombre": "ESCUELA DE PRÁCTICA LOGOPÉDICA"
+                    },
+                    {
+                      "id": "E70A",
+                      "nombre": "ÁREA CIENTÍFICA y TÉCNICA DE INVESTIGACIÓN"
+                    },
+                    {
+                      "id": "IU52",
+                      "nombre": "CENTRO DE ESTUDIOS DE GÉNERO Y DE LAS MUJERES (CEMUGE)"
+                    },
+                    {
+                      "id": "E0C7",
+                      "nombre": "CIENCIA POLÍTICA, ANTROPOLOGÍA SOCIAL Y HAC. PÚBLICA"
+                    },
+                    {
+                      "id": "X906",
+                      "nombre": "UNIDADES CENTRO ADSCRITO ENAE"
+                    },
+                    {
+                      "id": "E336",
+                      "nombre": "PRUEBAS DE ACCESO"
+                    },
+                    {
+                      "id": "E979",
+                      "nombre": "VICERRECTORADO DE ESTRATEGIA Y UNIVERSIDAD DIGITAL"
+                    },
+                    {
+                      "id": "E798",
+                      "nombre": "VICERRECTORADO DE RESPONSABILIDAD SOCIAL Y TRANSPARENCIA"
+                    },
+                    {
+                      "id": "E799",
+                      "nombre": "VICERRECTORADO DE ESTUDIANTES Y SERVICIOS A LA COMUNIDAD UNI"
+                    },
+                    {
+                      "id": "E358",
+                      "nombre": "VICERRECTORADO DE INVESTIGACIÓN E INTERNACIONALIZACIÓN"
+                    },
+                    {
+                      "id": "E359",
+                      "nombre": "VICERRECTORADO DE TRANSFERENCIA Y DIVULGACIÓN CIENTÍFICA"
+                    },
+                    {
+                      "id": "IU99",
+                      "nombre": "ESCUELA DE PRÁCTICA PROFESIONAL DE EDUCACIÓN SOCIAL"
+                    },
+                    {
+                      "id": "AAPP",
+                      "nombre": "OTRAS ADMINISTRACIONES PÚBLICAS"
+                    },
+                    {
+                      "id": "0E94",
+                      "nombre": "ISEN Centro Universitario, facultad adscrita a la Universidad de Murcia"
+                    },
+                    {
+                      "id": "E153",
+                      "nombre": "UNIDAD ADMINISTRATIVA DE APOYO A DEPARTAMENTOS"
+                    },
+                    {
+                      "id": "E137",
+                      "nombre": "MEDICINA"
+                    },
+                    {
+                      "id": "E978",
+                      "nombre": "CÁTEDRA FUNDACIÓN ASISA DE COMUNICACIÓN SANITARIA DE LA UNIVERSIDAD DE MURCIA"
+                    },
+                    {
+                      "id": "E0C8",
+                      "nombre": "MEDICINA"
+                    },
+                    {
+                      "id": "E0C9",
+                      "nombre": "COMUNICACIÓN"
                     }
                   ]
                 }
@@ -20826,7 +23684,7 @@
             ]
           },
           {
-            "template": "<p class='section-label'>Datos en entidad externa</p>"
+            "template": ""
           },
           {
             "fieldGroupClassName": "row-formly",
