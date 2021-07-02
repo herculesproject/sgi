@@ -7,6 +7,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { DateTimePickerTypeComponent } from './types/datetimepicker.type';
 import { TableCRUDModalComponent } from './types/table-crud/table-crud-modal/table-crud-modal.component';
 import { TableCRUDTypeComponent } from './types/table-crud/table-crud.type';
 import { TableTypeRepetible } from './types/table-type-repetible.component';
@@ -36,7 +37,7 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
     FormsModule,
     ReactiveFormsModule,
     FormlyMatDatepickerModule,
-    FormlyModule.forRoot({
+    FormlyModule.forChild({
       types: [
         {
           name: 'table',
@@ -55,7 +56,12 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
           name: 'table-crud',
           component: TableCRUDTypeComponent
         },
-        { name: 'documento', extends: 'radio' }
+        { name: 'documento', extends: 'radio' },
+        {
+          name: 'dateTimePicker',
+          component: DateTimePickerTypeComponent,
+          wrappers: ['form-field'],
+        }
       ],
       wrappers: [
         {

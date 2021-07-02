@@ -132,6 +132,13 @@
   </table>
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
+
+  <div class="separation-button">
+    <button color="three" mat-raised-button (click)="openProyectoCreateModal()">
+      <mat-icon color="accent">add_circle</mat-icon>
+      {{ 'btn.add.entity' | translate:msgParamEntity }}
+    </button>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>

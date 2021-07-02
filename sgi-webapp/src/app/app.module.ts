@@ -11,6 +11,7 @@ import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
 import { environment } from '@env';
 import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { FormlyModule } from '@ngx-formly/core';
 import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SgiAuthMode, SgiAuthModule, SGI_AUTH_CONFIG } from '@sgi/framework/auth';
@@ -59,7 +60,8 @@ const appInitializerFn = (appConfig: ConfigService) => {
     }),
     BlockModule,
     HttpClientModule,
-    SgiAuthModule.forRoot()
+    SgiAuthModule.forRoot(),
+    FormlyModule.forRoot()
   ],
   providers: [
     ConfigService,

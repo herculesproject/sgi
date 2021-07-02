@@ -64,6 +64,7 @@ import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { environment } from '@env';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   RSQLSgiRestFilter,
   SgiMutableRestService,
@@ -616,11 +617,11 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
-  * Busca todos los proyectos que tengan la convocatoria asociada.
-  *
-  * @param id identificador de la convocatoria
-  * @returns la lista de Proyectos
-  */
+   * Busca todos los proyectos que tengan la convocatoria asociada.
+   *
+   * @param id identificador de la convocatoria
+   * @returns la lista de Proyectos
+   */
   findAllProyectosByConvocatoria(id: number): Observable<SgiRestListResult<IProyecto>> {
     let options: SgiRestFindOptions;
     options = {
@@ -629,4 +630,11 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.findTodos(options);
   }
 
+  createProyecto(model: any): Observable<void> {
+    return this.http.post<void>(`${this.endpointUrl}`, model);
+  }
+
+  getFormlyCreate(): Observable<FormlyFieldConfig[]> {
+    return this.http.get<FormlyFieldConfig[]>(`${this.endpointUrl}/formly/create`);
+  }
 }

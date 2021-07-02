@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,15 +10,18 @@ import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { IProyectoEconomicoFormlyData, ProyectoEconomicoFormlyModalComponent } from 'src/app/esb/sge/formly-forms/proyecto-economico-formly-modal/proyecto-economico-formly-modal.component';
 
 const MSG_LISTADO_ERROR = marker('error.load');
-
+const TIPO_PROYECTO_KEY = marker('sge.proyecto');
 export interface SearchProyectoEconomicoModalData {
   selectedProyectos: IProyectoSge[];
+  proyectoSgiId: number;
 }
 
 interface ProyectoListado {
@@ -42,12 +45,16 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  msgParamEntity: {};
+
   constructor(
     private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchProyectosEconomicosModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SearchProyectoEconomicoModalData,
     private proyectoService: ProyectoSgeService,
-    protected snackBarService: SnackBarService
+    protected snackBarService: SnackBarService,
+    private readonly translate: TranslateService,
+    private proyectoCreateMatDialog: MatDialog
   ) {
   }
 
@@ -60,6 +67,16 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
       fechaFinHasta: new FormControl(null),
 
     });
+
+    this.setupI18N();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      TIPO_PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
   }
 
   ngAfterViewInit(): void {
@@ -153,4 +170,15 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
     return rsqlFilter;
   }
 
+  openProyectoCreateModal(): void {
+    const proyectoData: IProyectoEconomicoFormlyData = {
+      proyectoSgiId: this.data.proyectoSgiId
+    };
+
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data: proyectoData
+    };
+    const dialogRef = this.proyectoCreateMatDialog.open(ProyectoEconomicoFormlyModalComponent, config);
+  }
 }

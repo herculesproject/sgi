@@ -73,7 +73,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
     SgiAuthModule,
     CspSharedModule,
     SgoSharedModule,
-    FormlyModule.forRoot(),
+    FormlyModule.forChild(),
     FormlyMaterialModule
   ],
   providers: [

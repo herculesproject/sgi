@@ -32,7 +32,7 @@ import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.m
     SgiAuthModule,
     CspSharedModule,
     SgoSharedModule,
-    FormlyModule.forRoot(),
+    FormlyModule.forChild(),
     FormlyMaterialModule
   ],
   providers: [
