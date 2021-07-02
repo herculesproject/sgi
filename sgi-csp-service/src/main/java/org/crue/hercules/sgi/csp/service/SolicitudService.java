@@ -10,17 +10,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistInput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
+import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.EstadoSolicitudNotUpdatedException;
+import org.crue.hercules.sgi.csp.exceptions.MissingInvestigadorPrincipalInSolicitudProyectoEquipoException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -48,7 +55,6 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
-import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -65,6 +71,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -77,6 +84,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@Validated
 public class SolicitudService {
 
   private final RestApiProperties restApiProperties;
@@ -413,7 +421,7 @@ public class SolicitudService {
    * @return {@link Solicitud} actualizado.
    */
   @Transactional
-  public Solicitud cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) {
+  public Solicitud cambiarEstado(Long id, @Valid EstadoSolicitud estadoSolicitud) {
     log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
@@ -423,20 +431,20 @@ public class SolicitudService {
     // VALIDACIONES
 
     // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
+    if (!hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
+      throw new UserNotAuthorizedToModifySolicitudException();
+    }
 
     // El nuevo estado es diferente al estado actual de la solicitud
     if (estadoSolicitud.getEstado().equals(solicitud.getEstado().getEstado())) {
-      throw new IllegalArgumentException("La solicitud ya se encuentra en el estado al que se quiere modificar.");
+      throw new EstadoSolicitudNotUpdatedException();
     }
 
     // En caso de pasar de cualquier estado a cualquier otro estado que no sea
     // Desistida ni Renunciada se deben realizar validaciones
     if ((!estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.DESISTIDA)
-        && !estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.RENUNCIADA))
-        && !isValidCambioNoDesistidaRenunciada(solicitud)) {
-      throw new IllegalArgumentException("No se puede cambiar el estado de la Solicitud al estado seleccionado.");
+        && !estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.RENUNCIADA))) {
+      validateCambioNoDesistidaRenunciada(solicitud);
     }
 
     // Se cambia el estado de la solicitud
@@ -747,13 +755,13 @@ public class SolicitudService {
    * @return <code>true</code> Cumple condiciones para el cambio de estado.
    *         <code>false</code>No cumple condiciones.
    */
-  private boolean isValidCambioNoDesistidaRenunciada(Solicitud solicitud) {
-    log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - start");
+  private void validateCambioNoDesistidaRenunciada(Solicitud solicitud) {
+    log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - start");
 
     if (solicitud.getConvocatoriaId() != null
         && !hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())) {
-      log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-      return false;
+      log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+      throw new SolicitudWithoutRequeridedDocumentationException();
     }
 
     // Si el formulario es de tipo Estándar
@@ -761,33 +769,32 @@ public class SolicitudService {
 
       SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitud.getId()).orElse(null);
       if (solicitudProyecto == null) {
-        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-        return false;
+        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        throw new SolicitudProyectoNotFoundException(solicitud.getId());
       }
 
-      // En caso de que no tenga titulo o sea colaborativo y no tenga coordinador
-      // externo releno
-      if (StringUtils.isEmpty(solicitudProyecto.getTitulo())
-          || (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null)) {
-        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-        return false;
+      // En caso de sea colaborativo y no tenga coordinador externo
+      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null) {
+        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        throw new ColaborativoWithoutCoordinadorExternoException();
       }
 
       if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
-        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-        return false;
+        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
       }
 
       if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
             .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
-        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-        return !CollectionUtils.isEmpty(solicitudProyectoSocios);
 
+        if (CollectionUtils.isEmpty(solicitudProyectoSocios)) {
+          log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+          throw new SolicitudProyectoWithoutSocioCoordinadorException();
+        }
       }
     }
-    log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-    return true;
+    log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
