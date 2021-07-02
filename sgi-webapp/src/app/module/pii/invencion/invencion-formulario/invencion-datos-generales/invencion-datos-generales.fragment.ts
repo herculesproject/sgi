@@ -26,6 +26,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       descripcion: new FormControl('', [Validators.maxLength(250)]),
       tipoProteccion: new FormControl(null, [Validators.required]),
       subtipoProteccion: new FormControl(null),
+      proyecto: new FormControl(null),
       comentarios: new FormControl('', [Validators.maxLength(250)]),
     });
     return fb;
@@ -37,6 +38,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       fechaComunicacion: invencion.fechaComunicacion,
       descripcion: invencion.descripcion,
       tipoProteccion: invencion.tipoProteccion,
+      proyecto: invencion.proyecto,
       comentarios: invencion.comentarios
     } as IInvencion;
     this.invencion = invencion;
@@ -55,6 +57,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     invencion.fechaComunicacion = form.fechaComunicacion;
     invencion.descripcion = form.descripcion;
     invencion.tipoProteccion = form.tipoProteccion;
+    invencion.proyecto = form.proyecto;
     invencion.comentarios = form.comentarios;
 
     return invencion;

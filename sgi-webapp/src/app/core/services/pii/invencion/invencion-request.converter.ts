@@ -1,3 +1,4 @@
+import { IProyecto } from "@core/models/csp/proyecto";
 import { IInvencion } from "@core/models/pii/invencion";
 import { ITipoProteccion } from "@core/models/pii/tipo-proteccion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
@@ -15,6 +16,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       titulo: value.titulo,
       fechaComunicacion: LuxonUtils.fromBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
+      proyecto: { id: +value.proyectoRef } as IProyecto,
       tipoProteccion: { id: value.tipoProteccionId } as ITipoProteccion,
       comentarios: value.comentarios,
       activo: true
@@ -29,6 +31,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       titulo: value.titulo,
       fechaComunicacion: LuxonUtils.toBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
+      proyectoRef: value.proyecto?.id?.toString(),
       tipoProteccionId: value.tipoProteccion?.id,
       comentarios: value.comentarios
     };

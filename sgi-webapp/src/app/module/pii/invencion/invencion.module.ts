@@ -9,6 +9,7 @@ import { InvencionRoutingModule } from './invencion-routing.module';
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 
 @NgModule({
   declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent],
@@ -20,7 +21,8 @@ import { InvencionDatosGeneralesComponent } from './invencion-formulario/invenci
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    CspSharedModule
   ]
 })
 export class InvencionModule { }

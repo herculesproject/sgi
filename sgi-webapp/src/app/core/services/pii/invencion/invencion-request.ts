@@ -3,5 +3,6 @@ export interface IInvencionRequest {
   fechaComunicacion: string;
   descripcion: string;
   comentarios: string;
+  proyectoRef: string;
   tipoProteccionId: number;
 }

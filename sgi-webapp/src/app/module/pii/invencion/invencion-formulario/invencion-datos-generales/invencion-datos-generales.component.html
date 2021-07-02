@@ -83,6 +83,18 @@
       </div>
     </ng-container>
 
+    <!-- Proyecto -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.proyecto' | translate}}</mat-label>
+          <sgi-select-proyecto placeholder="{{'pii.invencion.proyecto' | translate}}" formControlName="proyecto">
+          </sgi-select-proyecto>
+        </mat-form-field>
+      </div>
+    </div>
+
     <!-- Comentarios -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
