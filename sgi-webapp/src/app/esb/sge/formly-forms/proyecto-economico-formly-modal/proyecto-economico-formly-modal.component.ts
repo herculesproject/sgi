@@ -7,6 +7,7 @@ import { CausaExencion, CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/p
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -87,8 +88,7 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
     private readonly proyectoService: ProyectoService,
     private readonly proyectoSgeService: ProyectoSgeService,
     private readonly solicitudProyectoService: SolicitudProyectoService,
-    private readonly proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    private readonly personaService: PersonaService
+    private readonly solicitudService: SolicitudService,
 
   ) {
     this.subscriptions.push(
@@ -151,7 +151,7 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
       switchMap((formlyData) => {
         const proyectoEconomico = formlyData.data.proyecto;
 
-        if (!formlyData.data.importePresupuesto && proyectoEconomico.solicitudId) {
+        if (!formlyData.data.importeTotalGastos && proyectoEconomico.solicitudId) {
           return this.findImportePresupuestoBySolicitudProyecto(proyectoEconomico, formlyData);
         } else {
           return of(formlyData);
@@ -160,8 +160,8 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
       switchMap((formlyData) => {
         const proyectoEconomico = formlyData.data.proyecto;
 
-        if (!formlyData.data.importePresupuesto) {
-          return this.findImportePresupuestoByConceptosGasto(proyectoEconomico, formlyData);
+        if (!formlyData.data.importeTotalGastos && proyectoEconomico.solicitudId) {
+          return this.findImportePresupuestoBySolicitudProyectoGastos(proyectoEconomico, formlyData);
         } else {
           return of(formlyData);
         }
@@ -185,14 +185,11 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
     );
   }
 
-  private findImportePresupuestoByConceptosGasto(proyectoEconomico: any, formlyData: IFormlyData): Observable<IFormlyData> {
-    const queryOptionsConceptoGasto: SgiRestFindOptions = {};
-    queryOptionsConceptoGasto.filter = new RSQLSgiRestFilter('proyectoId',
-      SgiRestFilterOperator.EQUALS, proyectoEconomico.id.toString());
-    return this.proyectoConceptoGastoService.findAll(queryOptionsConceptoGasto).pipe(
+  private findImportePresupuestoBySolicitudProyectoGastos(proyectoEconomico: any, formlyData: IFormlyData): Observable<IFormlyData> {
+    return this.solicitudService.findAllSolicitudProyectoPresupuesto(proyectoEconomico.solicitudId).pipe(
       map(response => {
         return response.items.reduce(
-          (total, proyectoConceptoGasto) => total + proyectoConceptoGasto.importeMaximo, 0);
+          (total, solicitudProyectoConceptoGasto) => total + solicitudProyectoConceptoGasto.importePresupuestado, 0);
       }),
       switchMap((result) => {
         formlyData.data.importeTotalGastos = result;
