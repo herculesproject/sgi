@@ -435,7 +435,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       );
 
       this.subscriptions.push(
-        this.loadEntidadesConvocantesModalidad(this.getValue().id, convocatoria.id).subscribe()
+        this.loadEntidadesConvocantesModalidad(this.getValue().id, convocatoria.id)
+          .subscribe((entidadesConvocantes) =>
+            this.entidadesConvocantesModalidad$.next(entidadesConvocantes)
+          )
       );
     } else if (!this.isEdit()) {
       // Clean dependencies
