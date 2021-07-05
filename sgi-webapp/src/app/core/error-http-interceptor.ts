@@ -15,7 +15,6 @@ import {
   NotFoundHttpProblem,
   PercentageIvaZeroHttpProblem,
   ProblemType,
-  RequestIdMismatchHttpProblem,
   TeamMemberOverlapHttpProblem,
   TypeMismatchHttpProblem,
   ValidationHttpProblem
@@ -60,8 +59,6 @@ export class SgiErrorHttpInterceptor implements HttpInterceptor {
         return new NotFoundHttpProblem(error.error);
       case ProblemType.PERCENTAGE_IVA_ZERO:
         return new PercentageIvaZeroHttpProblem(error.error);
-      case ProblemType.REQUEST_ID_MISMATCH:
-        return new RequestIdMismatchHttpProblem(error.error);
       case ProblemType.TEAM_MEMBER_OVERLAP:
         return new TeamMemberOverlapHttpProblem(error.error);
       case ProblemType.TYPE_MISMATCH:

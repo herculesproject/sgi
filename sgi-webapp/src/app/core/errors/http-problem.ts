@@ -10,7 +10,6 @@ export enum ProblemType {
   NOT_ACCEPTABLE = 'urn:problem-type:not-acceptable',
   NOT_FOUND = 'urn:problem-type:not-found',
   PERCENTAGE_IVA_ZERO = 'urn:problem-type:percentage-iva-zero',
-  REQUEST_ID_MISMATCH = 'urn:problem-type:request-id-missmatch',
   TEAM_MEMBER_OVERLAP = 'urn:problem-type:team-member-overlap',
   TYPE_MISMATCH = 'urn:problem-type:type-mismatch',
   UNKNOWN = 'urn:problem-type:unknown',
@@ -145,13 +144,6 @@ export class PercentageIvaZeroHttpProblem extends HttpProblem {
 
     this.parameter = responseBody.name;
     this.parameterType = responseBody.type;
-  }
-}
-
-export class RequestIdMismatchHttpProblem extends HttpProblem {
-  constructor(responseBody: Problem) {
-    super(responseBody);
-    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
