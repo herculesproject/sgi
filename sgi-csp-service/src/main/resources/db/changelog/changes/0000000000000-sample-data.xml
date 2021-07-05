@@ -3102,8 +3102,9 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="colaborativo" value="false" />
-      <column name="coordinador_externo" value="false" />
+      <column name="coordinado" value="false" />
+      <column name="coordinador_externo" value="null" />
+      <column name="colaborativo" value="null" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="false" />
       <column name="coste_hora" value="true" />
@@ -3130,8 +3131,9 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="colaborativo" value="true" />
+      <column name="coordinado" value="true" />
       <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" value="null" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
@@ -3158,8 +3160,9 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="colaborativo" value="true" />
+      <column name="coordinado" value="true" />
       <column name="coordinador_externo" value="true" />
+      <column name="colaborativo" value="null" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
