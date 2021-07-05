@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -17,7 +17,8 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { SpawnSyncOptionsWithStringEncoding } from 'child_process';
+import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { SOLICITUD_ROUTE_NAMES } from '../../../solicitud/solicitud-route-names';
@@ -186,15 +187,17 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
   showPresupuestoSolcitud() {
     this.subscriptions.push(this.solicitudService.hasSolicitudProyectoGlobal(this.formPart.proyecto.solicitudId as number).
       subscribe(value => {
+        let presupuestoSolicitud: UrlTree;
         if (value) {
-          this.router.navigate(['../',
+          presupuestoSolicitud = this.router.createUrlTree(['../',
             CSP_ROUTE_NAMES.SOLICITUD, this.formPart.proyecto.solicitudId, SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_GLOBAL],
             { relativeTo: this.route.parent.parent });
         } else {
-          this.router.navigate(['../',
+          presupuestoSolicitud = this.router.createUrlTree(['../',
             CSP_ROUTE_NAMES.SOLICITUD, this.formPart.proyecto.solicitudId, SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES],
             { relativeTo: this.route.parent.parent });
         }
+        window.open(presupuestoSolicitud.toString(), '_blank');
 
       }));
 
