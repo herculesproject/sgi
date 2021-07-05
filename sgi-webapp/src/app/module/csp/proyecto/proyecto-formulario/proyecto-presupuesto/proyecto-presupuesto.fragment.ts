@@ -68,7 +68,7 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     if (this.proyecto === null) {
       this.proyecto = {} as IProyecto;
     }
-    const form = this.getFormGroup().value;
+    const form = this.getFormGroup().getRawValue();
     this.proyecto.anualidades = form.anualidades;
     this.proyecto.importePresupuesto = form.importePresupuesto;
     this.proyecto.importePresupuestoSocios = form.importePresupuestoSocios;
