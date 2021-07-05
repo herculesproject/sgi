@@ -8,6 +8,9 @@ import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { EjecucionEconomicaDataResolver, EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { EjecucionEconomicaEditarComponent } from './ejecucion-economica-editar/ejecucion-economica-editar.component';
+import { EjecucionPresupuestariaEstadoActualComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-estado-actual/ejecucion-presupuestaria-estado-actual.component';
+import { EjecucionPresupuestariaGastosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-gastos/ejecucion-presupuestaria-gastos.component';
+import { EjecucionPresupuestariaIngresosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-ingresos/ejecucion-presupuestaria-ingresos.component';
 import { ProyectosComponent } from './ejecucion-economica-formulario/proyectos/proyectos.component';
 import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listado/ejecucion-economica-listado.component';
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from './ejecucion-economica-route-names';
@@ -49,6 +52,21 @@ const routes: SgiRoutes = [
         component: ProyectosComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: EJECUCION_ECONOMICA_ROUTE_NAMES.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL,
+        component: EjecucionPresupuestariaEstadoActualComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EJECUCION_ECONOMICA_ROUTE_NAMES.EJECUCION_PRESUPUESTARIA_GASTOS,
+        component: EjecucionPresupuestariaGastosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EJECUCION_ECONOMICA_ROUTE_NAMES.EJECUCION_PRESUPUESTARIA_INGRESOS,
+        component: EjecucionPresupuestariaIngresosComponent,
+        canDeactivate: [FragmentGuard]
+      }
     ]
   }
 ];

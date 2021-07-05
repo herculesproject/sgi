@@ -1,5 +1,3 @@
-
-
 export interface IAnualidadGastoResponse {
   id: number;
   proyectoAnualidadId: number;

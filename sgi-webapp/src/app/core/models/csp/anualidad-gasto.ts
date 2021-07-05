@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { IConceptoGasto } from './concepto-gasto';
 import { IProyectoAnualidad } from './proyecto-anualidad';
 import { IProyectoPartida } from './proyecto-partida';

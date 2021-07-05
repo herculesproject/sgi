@@ -11,6 +11,9 @@ import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { EjecucionEconomicaDataResolver } from './ejecucion-economica-data.resolver';
 import { EjecucionEconomicaEditarComponent } from './ejecucion-economica-editar/ejecucion-economica-editar.component';
+import { EjecucionPresupuestariaEstadoActualComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-estado-actual/ejecucion-presupuestaria-estado-actual.component';
+import { EjecucionPresupuestariaGastosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-gastos/ejecucion-presupuestaria-gastos.component';
+import { EjecucionPresupuestariaIngresosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-ingresos/ejecucion-presupuestaria-ingresos.component';
 import { ProyectosComponent } from './ejecucion-economica-formulario/proyectos/proyectos.component';
 import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listado/ejecucion-economica-listado.component';
 import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.module';
@@ -20,6 +23,9 @@ import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.m
     EjecucionEconomicaListadoComponent,
     EjecucionEconomicaEditarComponent,
     ProyectosComponent,
+    EjecucionPresupuestariaEstadoActualComponent,
+    EjecucionPresupuestariaGastosComponent,
+    EjecucionPresupuestariaIngresosComponent
   ],
   imports: [
     CommonModule,

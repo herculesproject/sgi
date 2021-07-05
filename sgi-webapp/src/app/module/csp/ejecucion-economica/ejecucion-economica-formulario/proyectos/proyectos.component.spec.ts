@@ -5,9 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
-import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -22,10 +19,9 @@ describe('ProyectosComponent', () => {
   let fixture: ComponentFixture<ProyectosComponent>;
   const routeData: Data = {
     [EJECUCION_ECONOMICA_DATA_KEY]: {
-      proyectoProyectoSge: {
-        proyecto: {} as IProyecto,
-        proyectoSge: {} as IProyectoSge
-      } as IProyectoProyectoSge
+      proyectoSge: {},
+      proyectosRelacionados: [],
+      readonly: false
     } as IEjecucionEconomicaData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);

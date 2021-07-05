@@ -1,27 +1,27 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
-import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { EJECUCION_ECONOMICA_DATA_KEY } from '../ejecucion-economica-data.resolver';
-import { EjecucionEconomicaActionService, IEjecucionEconomicaData } from '../ejecucion-economica.action.service';
-import { EjecucionEconomicaEditarComponent } from './ejecucion-economica-editar.component';
+import { EJECUCION_ECONOMICA_DATA_KEY } from '../../ejecucion-economica-data.resolver';
+import { EjecucionEconomicaActionService, IEjecucionEconomicaData } from '../../ejecucion-economica.action.service';
+import { EjecucionPresupuestariaEstadoActualComponent } from './ejecucion-presupuestaria-estado-actual.component';
 
-describe('EjecucionEconomicaEditarComponent', () => {
-  let component: EjecucionEconomicaEditarComponent;
-  let fixture: ComponentFixture<EjecucionEconomicaEditarComponent>;
+describe('EjecucionPresupuestariaEstadoActualComponent', () => {
+  let component: EjecucionPresupuestariaEstadoActualComponent;
+  let fixture: ComponentFixture<EjecucionPresupuestariaEstadoActualComponent>;
   const routeData: Data = {
     [EJECUCION_ECONOMICA_DATA_KEY]: {
       proyectoSge: {},
-      proyectosRelacionados: [],
+      proyectosRelacionados: [{ id: 1 } as IProyecto],
       readonly: false
     } as IEjecucionEconomicaData
   };
@@ -29,10 +29,7 @@ describe('EjecucionEconomicaEditarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        EjecucionEconomicaEditarComponent,
-        ActionFooterComponent
-      ],
+      declarations: [EjecucionPresupuestariaEstadoActualComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -43,10 +40,9 @@ describe('EjecucionEconomicaEditarComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        FlexLayoutModule,
-        SharedModule
       ],
       providers: [
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         EjecucionEconomicaActionService,
         SgiAuthService,
         { provide: ActivatedRoute, useValue: routeMock }
@@ -56,7 +52,7 @@ describe('EjecucionEconomicaEditarComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EjecucionEconomicaEditarComponent);
+    fixture = TestBed.createComponent(EjecucionPresupuestariaEstadoActualComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

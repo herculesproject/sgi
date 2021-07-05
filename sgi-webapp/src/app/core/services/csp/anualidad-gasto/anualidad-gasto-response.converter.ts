@@ -43,7 +43,7 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
       proyectoPartida: {
         id: value.proyectoPartida?.id,
         codigo: value.proyectoPartida?.codigo
-      } as IProyectoPartida,
+      },
       importeConcedido: value.importeConcedido,
       proyectoSgeRef: value.proyectoSgeRef
     };

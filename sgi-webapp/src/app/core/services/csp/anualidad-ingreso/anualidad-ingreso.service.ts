@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { ANUALIDAD_INGRESO_REQUEST_CONVERTER } from './anualidad-ingreso-request.converter';
 import { IAnualidadIngresoResponse } from './anualidad-ingreso-response';
 import { ANUALIDAD_INGRESO_RESPONSE_CONVERTER } from './anualidad-ingreso-response.converter';
+
 @Injectable({
   providedIn: 'root'
 })
