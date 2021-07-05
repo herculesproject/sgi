@@ -45,7 +45,7 @@ public class ProyectoProyectoSgeController {
    * @return {@link ProyectoProyectoSge} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-EJEC-V', 'CSP-EJEC-E')")
   ProyectoProyectoSge findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoProyectoSge returnValue = service.findById(id);

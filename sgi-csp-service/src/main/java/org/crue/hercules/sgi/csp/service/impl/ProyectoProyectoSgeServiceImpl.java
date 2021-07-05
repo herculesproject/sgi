@@ -98,8 +98,14 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   @Override
   public ProyectoProyectoSge findById(Long id) {
     log.debug("findById(Long id)  - start");
-    final ProyectoProyectoSge returnValue = repository.findById(id)
-        .orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(id));
+    // No tiene acceso a todos los UO
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-EJEC-V", "CSP-EJEC-E", "CSP-PRO-E" });
+    ProyectoProyectoSge returnValue = null;
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      returnValue = repository.findByIdAndProyectoUnidadGestionRefIn(id, unidadesGestion)
+          .orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(id));
+    }
     log.debug("findById(Long id)  - end");
     return returnValue;
 

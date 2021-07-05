@@ -22,9 +22,11 @@ import org.crue.hercules.sgi.csp.repository.AnualidadIngresoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAnualidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -158,6 +160,16 @@ public class ProyectoAnualidadService {
     List<AnualidadResumen> anulidadResumen = repository.getPartidasResumen(proyectoAnualidadId);
     log.debug("getPartidasResumen(Long proyectoAnualidadId) - end");
     return anulidadResumen;
+  }
+
+  public Page<ProyectoAnualidad> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    // TODO: Pendiente evaluar si es necesario retringir por unidad de gestión
+    Specification<ProyectoAnualidad> specs = SgiRSQLJPASupport.toSpecification(query);
+
+    Page<ProyectoAnualidad> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(String query, Pageable pageable) - end");
+    return returnValue;
   }
 
 }
