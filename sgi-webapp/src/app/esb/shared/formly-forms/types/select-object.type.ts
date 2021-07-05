@@ -38,9 +38,12 @@ export class SelectObjectTypeComponent extends FieldType implements OnInit {
     },
   };
 
-  constructor(
-  ) {
-    super();
+  // tslint:disable-next-line: variable-name
+  private _compareWith = (o1: any, o2: any) => {
+    if (o1 && o2) {
+      return o1[this.to.modelKeyCompareProp] === o2[this.to.modelKeyCompareProp];
+    }
+    return o1 === o2;
   }
 
   ngOnInit() {
@@ -52,14 +55,6 @@ export class SelectObjectTypeComponent extends FieldType implements OnInit {
     ];
 
     this.to.compareWith = this._compareWith;
-  }
-
-  // tslint:disable-next-line: variable-name
-  private _compareWith = (o1: any, o2: any) => {
-    if (o1 && o2) {
-      return o1[this.to.modelKeyCompareProp] === o2[this.to.modelKeyCompareProp];
-    }
-    return o1 === o2;
   }
 
   change($event: MatSelectChange) {

@@ -5,6 +5,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
 import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
@@ -77,7 +78,8 @@ import { NivelAcademicoModalComponent } from './modals/nivel-academico-modal/niv
     TranslateModule,
     FormsModule,
     SgiAuthModule,
-    CspSharedModule
+    CspSharedModule,
+    SgempSharedModule
   ],
   providers: [
     ConvocatoriaDataResolver

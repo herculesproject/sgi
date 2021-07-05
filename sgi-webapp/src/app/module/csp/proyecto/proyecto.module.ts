@@ -5,7 +5,9 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { CambioEstadoModalComponent } from './modals/proyecto-cambio-estado-modal/cambio-estado-modal.component';
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
@@ -89,7 +91,9 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     FormsModule,
     ReactiveFormsModule,
     CspSharedModule,
-    SgoSharedModule
+    SgoSharedModule,
+    SgpSharedModule,
+    SgempSharedModule
   ],
   providers: [
     ProyectoDataResolver,

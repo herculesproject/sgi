@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,7 +24,8 @@ import { ProyectoEconomicoFormlyModalComponent } from './proyecto-economico-form
     ReactiveFormsModule,
     FormlyMatDatepickerModule,
     FormlyMaterialModule,
-    FormlyModule.forChild(),
+    SharedFormlyFormsModule,
+    FormlyFormsModule
   ],
   exports: [
     ProyectoEconomicoFormlyModalComponent

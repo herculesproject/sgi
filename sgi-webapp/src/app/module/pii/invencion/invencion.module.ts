@@ -5,11 +5,12 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { InvencionRoutingModule } from './invencion-routing.module';
-import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
-import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
+import { InvencionRoutingModule } from './invencion-routing.module';
 
 @NgModule({
   declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent],
@@ -22,7 +23,8 @@ import { CspSharedModule } from '../../csp/shared/csp-shared.module';
     TranslateModule,
     FormsModule,
     SgiAuthModule,
-    CspSharedModule
+    CspSharedModule,
+    SgpSharedModule
   ]
 })
 export class InvencionModule { }

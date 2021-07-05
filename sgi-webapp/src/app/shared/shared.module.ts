@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
@@ -17,12 +18,8 @@ import { FooterCrearComponent } from './footers/footer-crear/footer-crear.compon
 import { LuxonDatePipe } from './luxon-date-pipe';
 import { RootComponent } from './root/root.component';
 import { SelectBooleanComponent } from './select-boolean/select-boolean.component';
-import { SearchEmpresaModalComponent } from './select-empresa/dialog/search-empresa.component';
-import { SelectEmpresaComponent } from './select-empresa/select-empresa.component';
 import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
-import { SearchPersonaModalComponent } from './select-persona/dialog/search-persona.component';
-import { SelectPersonaComponent } from './select-persona/select-persona.component';
 import { SelectComponent } from './select/select.component';
 
 @NgModule({
@@ -32,12 +29,8 @@ import { SelectComponent } from './select/select.component';
     ActionFooterComponent,
     ActionFooterButtonComponent,
     RootComponent,
-    SearchPersonaModalComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
-    SelectPersonaComponent,
-    SelectEmpresaComponent,
-    SearchEmpresaModalComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,
     LuxonDatePipe,
@@ -54,7 +47,8 @@ import { SelectComponent } from './select/select.component';
     MaterialDesignModule,
     TranslateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormlyFormsModule
   ],
   exports: [
     BreadcrumbComponent,
@@ -64,8 +58,6 @@ import { SelectComponent } from './select/select.component';
     RootComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
-    SelectPersonaComponent,
-    SelectEmpresaComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,
     LuxonDatePipe,
