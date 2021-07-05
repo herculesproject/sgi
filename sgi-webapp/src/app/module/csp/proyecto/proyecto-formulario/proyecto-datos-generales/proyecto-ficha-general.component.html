@@ -123,15 +123,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.ambito-geografico' | translate}}</mat-label>
-          <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
-            placeholder="{{'csp.proyecto.ambito-geografico' | translate}}" [matAutocomplete]="autoTipoAmbitoGeografico"
-            [required]="formPart.abiertoRequired">
-          <mat-autocomplete #autoTipoAmbitoGeografico="matAutocomplete" [displayWith]="getTipoAmbitoGeografico">
-            <mat-option *ngFor="let tipoAmbitoGeografico of tipoAmbitosGeograficos$ | async"
-              [value]="tipoAmbitoGeografico">
-              {{tipoAmbitoGeografico.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico" [required]="formPart.abiertoRequired">
+          </sgi-select-tipo-ambito-geografico>
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.ambitoGeograficoConvocatoria$ | async)"
             message="{{textoInfoAmbitoGeograficoConvocatoria}}">
           </sgi-field-info>
@@ -139,9 +132,6 @@
             {{'error.required.entity' | translate:msgParamAmbitoGeograficoEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.vacio">
-            {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.invalid">
             {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
           </mat-error>
         </mat-form-field>
@@ -157,15 +147,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}</mat-label>
-          <input matInput formControlName="unidadGestion" type="text" id="unidadGestion"
-            placeholder="{{'csp.proyecto.unidad-gestion' | translate}}" [matAutocomplete]="autoUnidadGestion"
-            (ngModelChange)="loadModelosEjecucion()" (keyup)="clearModeloEjecuccion()" required>
-          <mat-autocomplete #autoUnidadGestion="matAutocomplete" [displayWith]="getUnidadGestion">
-            <mat-option *ngFor="let unidadGestion of unidadesGestion$ | async" [value]="unidadGestion"
-              (click)="clearModeloEjecuccion()">
-              {{unidadGestion.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion" required>
+          </sgi-select-unidad-gestion>
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
@@ -175,9 +158,6 @@
           <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
             {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.invalid">
-            {{'error.invalid.entity' | translate:msgParamUnidadGestionEntity}}
-          </mat-error>
         </mat-form-field>
       </div>
 
@@ -186,14 +166,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.modelo-ejecucion' | translate}}</mat-label>
-          <input type="text" placeholder="{{'csp.proyecto.modelo-ejecucion' | translate}}" matInput
-            formControlName="modeloEjecucion" [matAutocomplete]="autoModeloEjecucion"
-            (ngModelChange)="loadFinalidades()" (click)="loadModelosEjecucion()" required>
-          <mat-autocomplete #autoModeloEjecucion="matAutocomplete" [displayWith]="getModeloEjecucion">
-            <mat-option *ngFor="let modeloEjecucion of modelosEjecucion$ | async" [value]="modeloEjecucion">
-              {{modeloEjecucion.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion" required
+            [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+            [resetOnChange]="unidadGestion.selectionChange">
+          </sgi-select-modelo-ejecucion>
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
@@ -203,9 +179,6 @@
           <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
             {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.invalid">
-            {{'error.invalid.entity' | translate:msgParamModeloEjecucionEntity}}
-          </mat-error>
         </mat-form-field>
       </div>
 
@@ -214,22 +187,15 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.finalidad' | translate}}</mat-label>
-          <input matInput formControlName="finalidad" type="text" id="finalidad"
-            placeholder="{{'csp.proyecto.finalidad' | translate}}" [matAutocomplete]="autoFinalidad"
-            [required]="formPart.abiertoRequired">
-          <mat-autocomplete #autoFinalidad="matAutocomplete" [displayWith]="getFinalidad">
-            <mat-option *ngFor="let finalidad of finalidades$ | async" [value]="finalidad">
-              {{finalidad.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-tipo-finalidad formControlName="finalidad" [required]="formPart.abiertoRequired"
+            [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+            [resetOnChange]="modeloEjecucion.selectionChange">
+          </sgi-select-tipo-finalidad>
           <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.finalidadConvocatoria$ | async)"
             message="{{textoInfoFinalidadConvocatoria}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">
             {{'error.required.entity' | translate:msgParamFinalidadEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.finalidad.errors?.invalid">
-            {{'error.invalid.entity' | translate:msgParamFinalidadEntity}}
           </mat-error>
         </mat-form-field>
       </div>

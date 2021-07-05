@@ -188,13 +188,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         disabled: this.isEdit()
       }),
       convocatoriaExterna: new FormControl(null, [Validators.maxLength(200)]),
-      unidadGestion: new FormControl('', [
-        Validators.required, IsEntityValidator.isValid()]),
-      modeloEjecucion: new FormControl('', [
-        Validators.required, IsEntityValidator.isValid()]),
-      finalidad: new FormControl('', [
-        IsEntityValidator.isValid()]),
-      ambitoGeografico: new FormControl(''),
+      unidadGestion: new FormControl(null, Validators.required),
+      modeloEjecucion: new FormControl(null, Validators.required),
+      finalidad: new FormControl(null),
+      ambitoGeografico: new FormControl(null),
       confidencial: new FormControl(null),
       clasificacionCVN: new FormControl(null),
       coordinado: new FormControl(null),
@@ -227,7 +224,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.iva.valueChanges.subscribe(
         (iva) => {
-          if (iva == 0) {
+          if (iva === 0) {
             this.mostrarCausaExencion = true;
           } else {
             this.mostrarCausaExencion = false;
@@ -362,8 +359,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     this.subscriptions.push(coordinado.valueChanges.subscribe((value: boolean) => {
       if (!value) {
-        this.getFormGroup().controls?.coordinadorExterno.setValue(undefined);
-        this.getFormGroup().controls?.colaborativo.setValue(undefined);
+        this.getFormGroup().controls?.coordinadorExterno.setValue(null);
+        this.getFormGroup().controls?.colaborativo.setValue(null);
         this.getFormGroup().controls?.coordinadorExterno.setValidators([]);
 
       } else {
@@ -399,9 +396,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       timesheet: proyecto.timesheet,
       permitePaquetesTrabajo: proyecto.permitePaquetesTrabajo,
       costeHora: proyecto.costeHora,
-      iva: proyecto.iva?.iva,
-      ivaFechaInicio: proyecto.iva?.fechaInicio,
-      ivaFechaFin: proyecto.iva?.fechaFin,
+      iva: proyecto.iva?.iva ?? null,
+      causaExencion: proyecto.causaExencion,
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
@@ -454,18 +450,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     }
     this.proyecto.unidadGestion = form.unidadGestion.value;
     this.proyecto.modeloEjecucion = form.modeloEjecucion.value;
-
-    if (form.finalidad.value) {
-      this.proyecto.finalidad = form.finalidad.value;
-    } else {
-      this.proyecto.finalidad = undefined;
-    }
-
-    if (form.ambitoGeografico.value) {
-      this.proyecto.ambitoGeografico = form.ambitoGeografico.value;
-    } else {
-      this.proyecto.ambitoGeografico = undefined;
-    }
+    this.proyecto.finalidad = form.finalidad.value;
+    this.proyecto.ambitoGeografico = form.ambitoGeografico.value;
     this.proyecto.confidencial = form.confidencial.value;
     this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
@@ -609,7 +595,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('iva').setValidators([
         Validators.required, Validators.min(0), Validators.max(100)]);
-      ;
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
     } else {
