@@ -7,9 +7,8 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
-import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
-import org.crue.hercules.sgi.csp.service.impl.RequisitoEquipoServiceImpl;
+import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -34,7 +33,7 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new RequisitoEquipoServiceImpl(repository, convocatoriaRepository, convocatoriaService);
+    service = new RequisitoEquipoService(repository, convocatoriaRepository, convocatoriaService);
   }
 
   @Test
@@ -72,7 +71,7 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id no puede ser null para crear RequisitoEquipo");
+        .hasMessage("The Identifier from Team Requirement can't be null");
   }
 
   @Test
@@ -80,15 +79,14 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     // given: Un nuevo RequisitoEquipo con convocatoria ya asignada
     Long convocatoriaId = 1L;
     RequisitoEquipo requisitoEquipoExistente = generarMockRequisitoEquipo(convocatoriaId);
-    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(convocatoriaId);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(requisitoEquipoExistente));
+    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(true);
 
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoEquipo
-    Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe RequisitoEquipo para la convocatoria %s", requisitoEquipo.getId());
+    Assertions.assertThatThrownBy(() -> service.create(requisitoEquipoExistente))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("There is already a Team Requirement related with the Call");
   }
 
   @Test
@@ -126,8 +124,7 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
     // when: Actualizamos el RequisitoEquipo
     // then: Lanza una excepcion porque el RequisitoEquipo no existe
     Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, null))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Convocatoria no puede ser null para actualizar RequisitoEquipo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("The Identifier from Team Requirement can't be null");
   }
 
   @Test

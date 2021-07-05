@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPRepository;
-import org.crue.hercules.sgi.csp.service.impl.RequisitoIPServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -33,7 +32,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new RequisitoIPServiceImpl(repository, convocatoriaRepository, convocatoriaService);
+    service = new RequisitoIPService(repository, convocatoriaRepository, convocatoriaService);
   }
 
   @Test
@@ -68,7 +67,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // when: Creamos el RequisitoIP
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id no puede ser null para crear RequisitoIP");
+        .hasMessage("The Identifier from Principal Researcher Requirement can't be null");
   }
 
   @Test
@@ -76,14 +75,14 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // given: Un nuevo RequisitoIP con convocatoria ya asignada
     Long convocatoriaId = 1L;
     RequisitoIP requisitoIPExistente = generarMockRequisitoIP(convocatoriaId);
-    RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(requisitoIPExistente));
+    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(true);
 
     // when: Creamos el RequisitoIP
     // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoIP
-    Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe RequisitoIP para la convocatoria %s", requisitoIP.getId());
+    Assertions.assertThatThrownBy(() -> service.create(requisitoIPExistente))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("There is already a Principal Researcher Requirement related with the Call");
   }
 
   @Test
