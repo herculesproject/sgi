@@ -48,7 +48,8 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
 
   msgParamCodigoPermitidoEntity = {};
   msgParamCodigoNoPermitidoEntity = {};
-  textoDelete: string;
+  textoDeletePermitido: string;
+  textoDeleteNoPermitido: string;
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -108,6 +109,18 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
     ).subscribe((value) => this.msgParamCodigoNoPermitidoEntity = { entity: value });
 
     this.translate.get(
+      PROYECTO_CONCEPTO_GASTO_ECONOMICO_PERMITIDO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeletePermitido = value);
+
+    this.translate.get(
       PROYECTO_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
@@ -117,7 +130,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
-    ).subscribe((value) => this.textoDelete = value);
+    ).subscribe((value) => this.textoDeleteNoPermitido = value);
   }
 
   openModal(codigoEconomicoListado?: CodigoEconomicoListado, rowIndex?: number): void {
@@ -206,8 +219,9 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
   }
 
   deleteCodigoEconomico(wrapper: StatusWrapper<IProyectoConceptoGastoCodigoEc>) {
+    const messageConfirmation = this.actionService.permitido ? this.textoDeletePermitido : this.textoDeleteNoPermitido;
     this.subscriptions.push(
-      this.dialogService.showConfirmation(this.textoDelete).subscribe(
+      this.dialogService.showConfirmation(messageConfirmation).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteCodigoEconomico(wrapper);

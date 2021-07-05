@@ -84,7 +84,7 @@
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="element.proyectoConceptoGasto"
-          (click)="deleteConceptoGasto(element.proyectoConceptoGasto)">
+          (click)="deleteConceptoGasto(element.proyectoConceptoGasto, true)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
       </td>
@@ -222,7 +222,7 @@
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="element.proyectoConceptoGasto"
-          (click)="deleteConceptoGasto(element.proyectoConceptoGasto)">
+          (click)="deleteConceptoGasto(element.proyectoConceptoGasto, false)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
       </td>

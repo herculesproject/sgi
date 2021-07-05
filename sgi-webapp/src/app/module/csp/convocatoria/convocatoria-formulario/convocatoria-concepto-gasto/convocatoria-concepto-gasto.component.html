@@ -67,7 +67,7 @@
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="formPart.canEdit"
-          (click)="deleteConvocatoriaConceptoGasto(wrapper)">
+          (click)="deleteConvocatoriaConceptoGasto(wrapper, true)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
       </td>
@@ -184,7 +184,7 @@
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="formPart.canEdit"
-          (click)="deleteConvocatoriaConceptoGasto(wrapper)">
+          (click)="deleteConvocatoriaConceptoGasto(wrapper, false)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
       </td>

@@ -49,7 +49,8 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
   msgParamCodigoPermitidoEntity = {};
   msgParamCodigoNoPermitidoEntity = {};
-  textoDelete: string;
+  textoDeletePermitido: string;
+  textoDeleteNoPermitido: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -105,6 +106,18 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     ).subscribe((value) => this.msgParamCodigoNoPermitidoEntity = { entity: value });
 
     this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_PERMITIDO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeletePermitido = value);
+
+    this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
@@ -114,7 +127,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
-    ).subscribe((value) => this.textoDelete = value);
+    ).subscribe((value) => this.textoDeleteNoPermitido = value);
   }
 
   openModal(wrapper?: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
@@ -210,8 +223,9 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   deleteConvocatoriaConceptoGastoCodigoEc(wrapper: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>) {
+    const messageConfirmation = this.actionService.permitido ? this.textoDeletePermitido : this.textoDeleteNoPermitido;
     this.subscriptions.push(
-      this.dialogService.showConfirmation(this.textoDelete).subscribe(
+      this.dialogService.showConfirmation(messageConfirmation).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaConceptoGastoCodigoEc(wrapper);

@@ -56,7 +56,8 @@ export class ProyectoConceptosGastoComponent extends FormFragmentComponent<Conce
 
   msgParamEntityPermitido = {};
   msgParamEntityNoPermitido = {};
-  textoDelete: string;
+  textoDeletePermitido: string;
+  textoDeleteNoPermitido: string;
 
   dataSourcePermitidos = new MatTableDataSource<ConceptoGastoListado>();
   dataSourceNoPermitidos = new MatTableDataSource<ConceptoGastoListado>();
@@ -134,6 +135,18 @@ export class ProyectoConceptosGastoComponent extends FormFragmentComponent<Conce
 
 
     this.translate.get(
+      PROYECTO_CONCEPTO_GASTO_PERMITIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeletePermitido = value);
+
+    this.translate.get(
       PROYECTO_CONCEPTO_GASTO_NO_PERMITIDO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
@@ -143,10 +156,11 @@ export class ProyectoConceptosGastoComponent extends FormFragmentComponent<Conce
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
-    ).subscribe((value) => this.textoDelete = value);
+    ).subscribe((value) => this.textoDeleteNoPermitido = value);
+
   }
 
-  deleteConceptoGasto(wrapper: StatusWrapper<IProyectoConceptoGasto>) {
+  deleteConceptoGasto(wrapper: StatusWrapper<IProyectoConceptoGasto>, isPermitido: boolean) {
     this.proyectoConceptoGastoService.hasCodigosEconomicos(wrapper.value.id).subscribe(res => {
       if (res) {
         this.subscriptions.push(
@@ -159,8 +173,9 @@ export class ProyectoConceptosGastoComponent extends FormFragmentComponent<Conce
           )
         );
       } else {
+        const messageConfirmation = isPermitido ? this.textoDeletePermitido : this.textoDeleteNoPermitido;
         this.subscriptions.push(
-          this.dialogService.showConfirmation(this.textoDelete).subscribe(
+          this.dialogService.showConfirmation(messageConfirmation).subscribe(
             (aceptado: boolean) => {
               if (aceptado) {
                 this.formPart.deleteProyectoConceptoGasto(wrapper);
