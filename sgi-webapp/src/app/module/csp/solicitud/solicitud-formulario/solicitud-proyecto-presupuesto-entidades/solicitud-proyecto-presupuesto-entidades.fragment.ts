@@ -55,27 +55,27 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
-      importePresupuestado: new FormControl('', [
+      importePresupuestado: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importeSolicitado: new FormControl('', [
+      importeSolicitado: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importePresupuestadoSocios: new FormControl('', [
+      importePresupuestadoSocios: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importeSolicitadoSocios: new FormControl('', [
+      importeSolicitadoSocios: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      totalImportePresupuestado: new FormControl('', [
+      totalImportePresupuestado: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      totalImporteSolicitado: new FormControl('', [
+      totalImporteSolicitado: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ])
@@ -89,7 +89,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
   }
 
   protected buildPatch(value: ISolicitudProyecto): { [key: string]: any; } {
-    this.solicitudProyecto = value;
+    this.solicitudProyecto = value ?? {} as ISolicitudProyecto;
     const result = {
       importePresupuestado: value.importePresupuestado,
       importePresupuestadoSocios: value.importePresupuestadoSocios,

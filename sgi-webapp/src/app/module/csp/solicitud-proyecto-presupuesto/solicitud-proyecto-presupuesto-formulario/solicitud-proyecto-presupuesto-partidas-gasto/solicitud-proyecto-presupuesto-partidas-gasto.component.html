@@ -25,9 +25,19 @@
     </ng-container>
 
     <!-- Importe Column -->
-    <ng-container matColumnDef="importe">
+    <ng-container matColumnDef="importePresupuestado">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe' | translate}}
+        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe-presupuestado' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let wrapper">
+        {{wrapper.partidaGasto.value.importePresupuestado}}
+      </td>
+    </ng-container>
+
+    <!-- Importe solicitado Column -->
+    <ng-container matColumnDef="importeSolicitado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe-solicitado' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
         {{wrapper.partidaGasto.value.importeSolicitado}}
@@ -35,12 +45,22 @@
     </ng-container>
 
     <!-- Importe total del presupuesto Column -->
-    <ng-container matColumnDef="importeTotal">
+    <ng-container matColumnDef="importeTotalPresupuestado">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe-total' | translate}}
+        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe-total-presupuestado' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.importeTotalConceptoGasto}}
+        {{wrapper.importeTotalPresupuestadoConceptoGasto}}
+      </td>
+    </ng-container>
+
+    <!-- Importe total solicitado Column -->
+    <ng-container matColumnDef="importeTotalSolicitado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.solicitud-proyecto-presupuesto.partida-gasto.importe-total-solicitado' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let wrapper">
+        {{wrapper.importeTotalSolicitadoConceptoGasto}}
       </td>
     </ng-container>
 
