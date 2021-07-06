@@ -781,15 +781,8 @@ public class ProyectoServiceImpl implements ProyectoService {
    * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
    * Proyecto
    *
-   * @param proyecto     el {@link Proyecto}
-   * @param convocatoria la {@link Convocatoria}
-   */
-  /**
-   * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
-   * Proyecto
-   *
-   * @param proyectoId
-   * @param convocatoriaId
+   * @param proyectoId     Identificador del {@link Proyecto}
+   * @param convocatoriaId Identificador de la {@link Convocatoria}
    */
   private void copyEntidadesConvocantesDeConvocatoria(Long proyectoId, Long convocatoriaId) {
     log.debug("copiarEntidadesConvocatesDeConvocatoria(Proyecto proyecto, Convocatoria convocatoria) - start");
@@ -961,6 +954,7 @@ public class ProyectoServiceImpl implements ProyectoService {
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
       proyecto.setFinalidad(convocatoria.getFinalidad());
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
+      proyecto.setClasificacionCVN(convocatoria.getClasificacionCVN());
     } else {
       proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }
