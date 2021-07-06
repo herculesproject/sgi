@@ -153,7 +153,12 @@ export class ProyectoAnualidadIngresoModalComponent extends
       ? { id: this.data.anualidadIngreso?.codigoEconomicoRef } as ICodigoEconomicoGasto
       : null;
     const identificadorSge = this.data.anualidadIngreso?.proyectoSgeRef
-      ? { id: this.data.anualidadIngreso?.proyectoSgeRef } as IProyectoSge
+      ? {
+        proyectoSge:
+          {
+            id: this.data.anualidadIngreso?.proyectoSgeRef
+          } as IProyectoSge
+      } as IProyectoProyectoSge
       : null;
     const proyectoPartida = this.data.anualidadIngreso?.proyectoPartida
       ? {

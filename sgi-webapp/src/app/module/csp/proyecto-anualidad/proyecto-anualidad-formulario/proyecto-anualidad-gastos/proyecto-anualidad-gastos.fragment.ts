@@ -58,7 +58,8 @@ export class ProyectoAnualidadGastosFragment extends Fragment {
     const index = current.findIndex(value => value.value.id === wrapper.value.id);
     if (index >= 0) {
       wrapper.setEdited();
-      this.anualidadGastos$.value[index] = wrapper;
+      current[index] = wrapper;
+      this.anualidadGastos$.next(current);
       this.setChanges(true);
     }
   }

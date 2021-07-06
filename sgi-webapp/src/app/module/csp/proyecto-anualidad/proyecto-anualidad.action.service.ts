@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TipoPartida } from '@core/enums/tipo-partida';
+import { IAnualidadResumen } from '@core/models/csp/anualidad-resumen';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
 import { ActionService } from '@core/services/action-service';
 import { AnualidadGastoService } from '@core/services/csp/anualidad-gasto/anualidad-gasto.service';
@@ -79,6 +80,40 @@ export class ProyectoAnualidadActionService extends ActionService {
         this.anualidadGastos.fechaInicioAnualidad = value;
       }
     }));
+
+    this.subscriptions.push(this.anualidadGastos.anualidadGastos$.subscribe(anualidadesGastos => {
+      const anualidadesIngresos =
+        this.anualidadResumen.anualidades$.value.filter(anualidadResumenIngreso => anualidadResumenIngreso.tipo === TipoPartida.INGRESO);
+
+      const anulidadesGasto = anualidadesGastos.map(anualidadGasto => {
+        return {
+          tipo: TipoPartida.GASTO,
+          codigoPartidaPresupuestaria: anualidadGasto.value.proyectoPartida.codigo,
+          importePresupuesto: anualidadGasto.value.importePresupuesto,
+          importeConcedido: anualidadGasto.value.importeConcedido
+        } as IAnualidadResumen;
+      });
+
+      this.anualidadResumen.anualidades$.next(anulidadesGasto.concat(anualidadesIngresos));
+
+    }));
+
+    this.subscriptions.push(this.anualidadIngresos.anualidadIngresos$.subscribe(anualidadesIngresos => {
+      const anualidadesGastos =
+        this.anualidadResumen.anualidades$.value.filter(anualidadResumenGastos => anualidadResumenGastos.tipo === TipoPartida.GASTO);
+
+      const anulidadesIngreso = anualidadesIngresos.map(anualidadIngreso => {
+        return {
+          tipo: TipoPartida.INGRESO,
+          codigoPartidaPresupuestaria: anualidadIngreso.value.proyectoPartida.codigo,
+          importeConcedido: anualidadIngreso.value.importeConcedido
+        } as IAnualidadResumen;
+      });
+
+      this.anualidadResumen.anualidades$.next(anualidadesGastos.concat(anulidadesIngreso));
+
+    }));
+
 
     this.subscriptions.push(this.datosGenerales.fechaFin$.subscribe(value => {
       if (value) {
