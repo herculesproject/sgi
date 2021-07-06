@@ -456,6 +456,5 @@ export class SolicitudActionService extends ActionService {
       needShow = false;
     }
     this.showAlertNotSocioCoordinadorExist$.next(needShow);
-    this.hasAnySolicitudProyectoSocioWithRolCoordinador$.next(!needShow);
   }
 }

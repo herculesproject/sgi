@@ -94,7 +94,7 @@ export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
         map((value: boolean) => {
           return {
             ...data,
-            hasAnySolicitudProyectoSocioWithRolCoordinador: value
+            hasAnySolicitudProyectoSocioWithRolCoordinador: data.solicitudProyecto?.coordinadorExterno ? value : true
           };
         }));
     } else {
