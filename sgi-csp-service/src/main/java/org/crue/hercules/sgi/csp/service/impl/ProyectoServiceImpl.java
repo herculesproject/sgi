@@ -1164,7 +1164,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           proyectoEquipo.rolProyecto(solicitudProyectoEquipo.getRolProyecto())
               .personaRef(solicitudProyectoEquipo.getPersonaRef());
           return proyectoEquipo.build();
-        }).collect(Collectors.toList());
+        }).filter(proyectoEquipo -> !proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaFin()))
+        .collect(Collectors.toList());
 
     this.proyectoEquipoService.update(proyecto.getId(), proyectoEquipos);
     log.debug("copyMiembrosEquipo(Proyecto proyecto) - end");
@@ -1269,7 +1270,11 @@ public class ProyectoServiceImpl implements ProyectoService {
               .fechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio())
               .fechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin()).build();
 
-          this.proyectoSocioPeriodoJustificacionService.create(proyectoSocioPeriodoJustificacion);
+          if (proyectoSocioPeriodoJustificacion.getFechaInicio() == null
+              || (proyectoSocioPeriodoJustificacion.getFechaInicio() != null
+                  && proyectoSocioPeriodoJustificacion.getFechaInicio().isBefore(proyecto.getFechaFin()))) {
+            this.proyectoSocioPeriodoJustificacionService.create(proyectoSocioPeriodoJustificacion);
+          }
         });
   }
 
@@ -1283,6 +1288,8 @@ public class ProyectoServiceImpl implements ProyectoService {
                 entidadPeriodoPagoSolicitud.getMes(), proyecto.getFechaBase()))
             .importe(entidadPeriodoPagoSolicitud.getImporte()).numPeriodo(entidadPeriodoPagoSolicitud.getNumPeriodo())
             .proyectoSocioId(proyectoSocio.getId()).build())
+        .filter(proyectoSocioPeriodoPago -> !proyectoSocioPeriodoPago.getFechaPrevistaPago()
+            .isAfter(proyecto.getFechaFin()))
         .collect(Collectors.toList());
     this.proyectoSocioPeriodoPagoService.update(proyectoSocio.getId(), proyectoSocioPeriodoPagos);
   }
@@ -1301,8 +1308,8 @@ public class ProyectoServiceImpl implements ProyectoService {
 
               .personaRef(entidadEquipoSolicitud.getPersonaRef()).rolProyecto(entidadEquipoSolicitud.getRolProyecto())
               .build();
-
-        }).collect(Collectors.toList());
+        }).filter(proyectoEquipoSocio -> !proyectoEquipoSocio.getFechaInicio().isAfter(proyecto.getFechaFin()))
+        .collect(Collectors.toList());
     this.proyectoEquipoSocioService.update(proyectoSocio.getId(), proyectoSocioEquipos);
   }
 
