@@ -49,6 +49,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
   textSaveOrUpdate: string;
 
   showDatosConvocatoriaCodigoEconomico: boolean;
+  disabledCopy = false;
 
   msgParamEntity = {};
   msgParamCodigoEconomigoSgeEntity = {};
@@ -95,6 +96,13 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
           this.formGroup.controls.fechaInicio.setValue(value.fechaInicio);
           this.formGroup.controls.fechaFin.setValue(value.fechaFin);
         }
+      }
+    ));
+
+    this.subscriptions.push(this.formGroup.valueChanges.subscribe(
+      () => {
+        this.disabledCopy = !compareConceptoGastoCodigoEc(this.data.convocatoriaConceptoGastoCodigoEc,
+          this.getDatosForm().proyectoConceptoGastoCodigoEc);
       }
     ));
   }
@@ -236,6 +244,8 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
       this.showDatosConvocatoriaCodigoEconomico = false;
     } else if (!proyectoCodigoEconomico) {
       this.showDatosConvocatoriaCodigoEconomico = true;
+      this.disabledCopy = !compareConceptoGastoCodigoEc(this.data.convocatoriaConceptoGastoCodigoEc,
+        this.getDatosForm().proyectoConceptoGastoCodigoEc);
     } else if (compareConceptoGastoCodigoEc(convocatoriaCodigoEconomico, proyectoCodigoEconomico)) {
       this.showDatosConvocatoriaCodigoEconomico = true;
     } else {

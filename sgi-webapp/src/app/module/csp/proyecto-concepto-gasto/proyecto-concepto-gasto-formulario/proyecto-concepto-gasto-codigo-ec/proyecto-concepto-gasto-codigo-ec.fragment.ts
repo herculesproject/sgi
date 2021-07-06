@@ -106,6 +106,22 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
         }
         )
       );
+    } else if (this.convocatoriaConceptoGastoId) {
+      this.subscriptions.push(
+        this.convocatoriaConceptoGastoService
+          .findAllConvocatoriaConceptoGastoCodigoEcs(this.convocatoriaConceptoGastoId)
+          .pipe(
+            map((response) => response.items.map(item => {
+              const codigoEconomicoListado = {
+                convocatoriaCodigoEconomico: item,
+              } as CodigoEconomicoListado;
+              return codigoEconomicoListado;
+            }))
+          ).subscribe(response => {
+            response.forEach(element => this.fillListadoFields(element));
+            this.proyectoConceptoGastoCodigosEcs$.next(response);
+          })
+      );
     }
   }
 

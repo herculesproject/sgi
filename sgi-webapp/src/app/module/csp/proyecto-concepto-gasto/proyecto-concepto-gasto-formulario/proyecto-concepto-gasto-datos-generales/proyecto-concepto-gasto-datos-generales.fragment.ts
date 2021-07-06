@@ -18,6 +18,8 @@ export class ProyectoConceptoGastoDatosGeneralesFragment extends FormFragment<IP
   public readonly conceptoGasto$: Subject<IConceptoGasto> = new BehaviorSubject<IConceptoGasto>(null);
 
   showDatosConvocatoriaConceptoGasto = false;
+  disabledCopy = false;
+  convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
 
   constructor(
     key: number,
@@ -79,6 +81,13 @@ export class ProyectoConceptoGastoDatosGeneralesFragment extends FormFragment<IP
       (value) => this.conceptoGasto$.next(value)
     ));
 
+    this.subscriptions.push(form.valueChanges.subscribe(
+      () => {
+        this.disabledCopy = !compareConceptoGasto(this.convocatoriaConceptoGasto, this.getValue(),
+          this.proyecto.fechaInicio, this.proyecto.fechaFin);
+      }
+    ));
+
     return form;
   }
 
@@ -114,6 +123,8 @@ export class ProyectoConceptoGastoDatosGeneralesFragment extends FormFragment<IP
   }
 
   setDatosConvocatoriaConceptoGasto(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
+    this.convocatoriaConceptoGasto = convocatoriaConceptoGasto;
+
     this.subscriptions.push(
       this.initialized$.pipe(
         skipWhile(initialized => !initialized)
@@ -150,6 +161,13 @@ export class ProyectoConceptoGastoDatosGeneralesFragment extends FormFragment<IP
             this.refreshInitialState();
           } else {
             this.getFormGroup().controls.conceptoGasto.setValue(convocatoriaConceptoGasto.conceptoGasto);
+            this.disabledCopy = !compareConceptoGasto(this.convocatoriaConceptoGasto,
+              {
+                conceptoGasto: this.convocatoriaConceptoGasto.conceptoGasto,
+                importeMaximo: null,
+                observaciones: null
+              } as IProyectoConceptoGasto,
+              this.proyecto.fechaInicio, this.proyecto.fechaFin);
           }
         }
       })
