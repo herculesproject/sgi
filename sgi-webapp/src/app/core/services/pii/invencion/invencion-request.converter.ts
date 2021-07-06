@@ -16,7 +16,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       titulo: value.titulo,
       fechaComunicacion: LuxonUtils.fromBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
-      proyecto: { id: +value.proyectoRef } as IProyecto,
+      proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
       tipoProteccion: { id: value.tipoProteccionId } as ITipoProteccion,
       comentarios: value.comentarios,
       activo: true

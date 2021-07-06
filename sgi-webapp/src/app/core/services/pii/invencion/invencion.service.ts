@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IInvencion } from '@core/models/pii/invencion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IInvencionRequest } from './invencion-request';
 import { INVENCION_REQUEST_CONVERTER } from './invencion-request.converter';
 import { IInvencionResponse } from './invencion-response';
@@ -12,12 +13,22 @@ import { INVENCION_RESPONSE_CONVERTER } from './invencion-response.converter';
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
   FindAllCtor<IInvencion, IInvencionResponse> &
+  FindByIdCtor<number, IInvencion, IInvencionResponse> &
   CreateCtor<IInvencion, IInvencion, IInvencionRequest, IInvencionResponse> &
+  UpdateCtor<number, IInvencion, IInvencion, IInvencionRequest, IInvencionResponse> &
   typeof SgiRestBaseService = mixinFindAll(
-    mixinCreate(
-      SgiRestBaseService,
-      INVENCION_REQUEST_CONVERTER,
-      INVENCION_RESPONSE_CONVERTER),
+    mixinFindById(
+      mixinCreate(
+        mixinUpdate(
+          SgiRestBaseService,
+          INVENCION_REQUEST_CONVERTER,
+          INVENCION_RESPONSE_CONVERTER
+        ),
+        INVENCION_REQUEST_CONVERTER,
+        INVENCION_RESPONSE_CONVERTER
+      ),
+      INVENCION_RESPONSE_CONVERTER
+    ),
     INVENCION_RESPONSE_CONVERTER
   );
 
@@ -44,6 +55,18 @@ export class InvencionService extends _InvencionServiceMixinBase {
       `${this.endpointUrl}/todos`,
       options,
       INVENCION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+ * Comprueba si existe una invencion
+ *
+ * @param id Id de la invencion
+ */
+  exists(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 }

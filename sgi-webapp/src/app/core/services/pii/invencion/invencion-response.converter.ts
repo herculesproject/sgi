@@ -16,7 +16,7 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       titulo: value.titulo,
       descripcion: value.descripcion,
       comentarios: value.comentarios,
-      proyecto: { id: +value.proyectoRef } as IProyecto,
+      proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
       tipoProteccion: {
         id: value.tipoProteccion.id,
         nombre: value.tipoProteccion.nombre,

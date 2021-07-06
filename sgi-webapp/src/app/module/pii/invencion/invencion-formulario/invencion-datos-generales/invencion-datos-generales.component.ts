@@ -26,6 +26,8 @@ const INVENCION_COMENTARIOS_KEY = marker('pii.invencion.comentarios');
 })
 export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInvencion> {
 
+  fxFlexProperties33: FxFlexProperties;
+  fxFlexProperties66: FxFlexProperties;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
@@ -37,6 +39,10 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
 
   readonly tiposProteccion$: Observable<ITipoProteccion[]>;
   subtiposProteccion$: Observable<ITipoProteccion[]>;
+
+  get isEdit() {
+    return this.fragment.isEdit();
+  }
 
   constructor(
     readonly actionService: InvencionActionService,
@@ -54,6 +60,18 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'column';
+
+    this.fxFlexProperties33 = new FxFlexProperties();
+    this.fxFlexProperties33.sm = '0 1 calc(33%-10px)';
+    this.fxFlexProperties33.md = '0 1 calc(33%-10px)';
+    this.fxFlexProperties33.gtMd = '0 1 calc(33%-10px)';
+    this.fxFlexProperties33.order = '2';
+
+    this.fxFlexProperties66 = new FxFlexProperties();
+    this.fxFlexProperties66.sm = '0 1 calc(66%-10px)';
+    this.fxFlexProperties66.md = '0 1 calc(66%-10px)';
+    this.fxFlexProperties66.gtMd = '0 1 calc(66%-10px)';
+    this.fxFlexProperties66.order = '1';
     this.tiposProteccion$ = this.tipoProteccionService.findAll().pipe(map(({ items }) => items));
   }
 

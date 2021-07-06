@@ -8,9 +8,12 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
+import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 import { INVENCION_ROUTE_NAMES } from './invencion-route-names';
+import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
+import { InvencionResolver, INVENCION_DATA_KEY } from './invencion.resolver';
 
 const MSG_LISTADO_TITLE = marker('menu.pii.invenciones');
 const MSG_NEW_TITLE = marker('title.new.entity');
@@ -36,7 +39,7 @@ const routes: SgiRoutes = [
       titleParams: {
         entity: INVENCION_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
       },
-      hasAuthorityForAnyUO: 'PII-INV-C'
+      hasAuthority: 'PII-INV-C'
     },
     children: [
       {
@@ -48,6 +51,36 @@ const routes: SgiRoutes = [
         path: INVENCION_ROUTE_NAMES.DATOS_GENERALES,
         component: InvencionDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
+      }
+    ]
+  },
+  {
+    path: `:${INVENCION_ROUTE_PARAMS.ID}`,
+    component: InvencionEditarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      [INVENCION_DATA_KEY]: InvencionResolver
+    },
+    data: {
+      title: INVENCION_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthority: ['PII-INV-V', 'PII-INV-E']
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: INVENCION_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: INVENCION_ROUTE_NAMES.DATOS_GENERALES,
+        component: InvencionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: '**',
+        redirectTo: INVENCION_ROUTE_NAMES.DATOS_GENERALES
       }
     ]
   }

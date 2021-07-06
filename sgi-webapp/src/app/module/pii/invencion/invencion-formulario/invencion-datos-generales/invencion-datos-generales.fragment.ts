@@ -3,16 +3,19 @@ import { IInvencion } from "@core/models/pii/invencion";
 import { FormFragment } from "@core/services/action-service";
 import { InvencionService } from "@core/services/pii/invencion/invencion.service";
 import { DateTime } from "luxon";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { NGXLogger } from "ngx-logger";
+import { EMPTY, Observable } from "rxjs";
+import { catchError, map, tap } from "rxjs/operators";
 
 export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   private invencion: IInvencion;
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     private invencionService: InvencionService,
+    private hasEditPerm: boolean
   ) {
     super(key);
     this.invencion = {} as IInvencion;
@@ -20,7 +23,8 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
   }
 
   protected buildFormGroup(): FormGroup {
-    const fb = new FormGroup({
+    const form = new FormGroup({
+      id: new FormControl({ value: '', disabled: true }),
       titulo: new FormControl('', [Validators.maxLength(50)]),
       fechaComunicacion: new FormControl(DateTime.now()),
       descripcion: new FormControl('', [Validators.maxLength(250)]),
@@ -29,11 +33,17 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       proyecto: new FormControl(null),
       comentarios: new FormControl('', [Validators.maxLength(250)]),
     });
-    return fb;
+
+    if (!this.hasEditPerm) {
+      form.disable();
+    }
+
+    return form;
   }
 
   protected buildPatch(invencion: IInvencion): { [key: string]: any; } {
     const result = {
+      id: invencion.id,
       titulo: invencion.titulo,
       fechaComunicacion: invencion.fechaComunicacion,
       descripcion: invencion.descripcion,
@@ -46,8 +56,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     return result;
   }
 
-  protected initializer(key: string | number): Observable<IInvencion> {
-    throw new Error("Method not implemented.");
+  protected initializer(key: number): Observable<IInvencion> {
+    return this.invencionService.findById(key).pipe(
+      catchError((err) => {
+        this.logger.error(err);
+        return EMPTY;
+      })
+    );
   }
 
   getValue(): IInvencion {
@@ -65,7 +80,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   saveOrUpdate(): Observable<string | number | void> {
     const invencion = this.getValue();
-    const observable$ = this.create(invencion);
+    const observable$ = this.isEdit() ? this.update(invencion) : this.create(invencion);
 
     return observable$.pipe(
       map((result: IInvencion) => {
@@ -75,6 +90,18 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
   }
 
   private create(invencion: IInvencion): Observable<IInvencion> {
-    return this.invencionService.create(invencion);
+    return this.invencionService.create(invencion).pipe(
+      tap((result: IInvencion) => {
+        this.invencion = result;
+      })
+    );
+  }
+
+  private update(invencion: IInvencion): Observable<IInvencion> {
+    return this.invencionService.update(invencion.id, invencion).pipe(
+      tap((result: IInvencion) => {
+        this.invencion = result;
+      })
+    );
   }
 }

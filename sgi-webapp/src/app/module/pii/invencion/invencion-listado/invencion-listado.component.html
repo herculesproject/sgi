@@ -3,45 +3,45 @@
 
     <!-- Buscador de invenciones -->
     <form class="formulario mat-elevation-z8" [formGroup]=" formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
-      [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      [fxLayout]="fxLayoutProperties.layout" [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <div fxFlex="85%" fxFlex.sm="50%" fxFlex.md="73%" [fxLayout.xs]="fxLayoutProperties.xs"
-        [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <div fxFlex="95%" fxFlex.sm="50%" fxFlex.md="73%" [fxLayout.xs]="fxLayoutProperties.xs"
+        [fxLayout]="fxLayoutProperties.layout" [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
         <!-- Nº de invención-->
-        <div class="col">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'pii.invencion.numero-invencion' | translate}}</mat-label>
             <input matInput placeholder="{{'pii.invencion.numero-invencion' | translate}}" formControlName="id">
           </mat-form-field>
         </div>
-        <div class="ml-10 col" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-          [fxLayoutGap]="fxLayoutProperties.gap">
 
-          <!-- Fecha de Comunicación Desde -->
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <mat-form-field class=" input-form">
-              <mat-label>{{'pii.invencion.fecha-comunicacion-desde' | translate}}</mat-label>
-              <input matInput formControlName="fechaComunicacionDesde" [matDatepicker]="fechaComunicacionDesde">
-              <mat-datepicker-toggle matSuffix [for]="fechaComunicacionDesde"></mat-datepicker-toggle>
-              <mat-datepicker #fechaComunicacionDesde></mat-datepicker>
-            </mat-form-field>
-          </div>
+        <!-- Fecha de Comunicación Desde -->
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <mat-form-field class=" input-form">
+            <mat-label>{{'pii.invencion.fecha-comunicacion-desde' | translate}}</mat-label>
+            <input matInput formControlName="fechaComunicacionDesde" [matDatepicker]="fechaComunicacionDesde">
+            <mat-datepicker-toggle matSuffix [for]="fechaComunicacionDesde"></mat-datepicker-toggle>
+            <mat-datepicker #fechaComunicacionDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-          <!-- Fecha de Comunicacion Hasta -->
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <mat-form-field class="input-form">
-              <mat-label>{{'pii.invencion.fecha-comunicacion-hasta' | translate}}</mat-label>
-              <input matInput formControlName="fechaComunicacionHasta" [matDatepicker]="fechaComunicacionHasta">
-              <mat-datepicker-toggle matSuffix [for]="fechaComunicacionHasta"></mat-datepicker-toggle>
-              <mat-datepicker #fechaComunicacionHasta></mat-datepicker>
-            </mat-form-field>
-          </div>
+        <!-- Fecha de Comunicacion Hasta -->
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <mat-form-field class="input-form">
+            <mat-label>{{'pii.invencion.fecha-comunicacion-hasta' | translate}}</mat-label>
+            <input matInput formControlName="fechaComunicacionHasta" [matDatepicker]="fechaComunicacionHasta">
+            <mat-datepicker-toggle matSuffix [for]="fechaComunicacionHasta"></mat-datepicker-toggle>
+            <mat-datepicker #fechaComunicacionHasta></mat-datepicker>
+          </mat-form-field>
         </div>
 
         <!-- Tipo de Protección -->
-        <div class="col">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'pii.invencion.tipo-proteccion' | translate}}</mat-label>
             <sgi-select-entity formControlName="tipoProteccion" [options]=" tiposProteccion$ | async">
@@ -50,16 +50,22 @@
         </div>
 
         <!-- Sector de Aplicación -->
-        <div class="col">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'pii.sector-aplicacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
             <sgi-select-entity formControlName="sectorAplicacion" [options]=" sectoresAplicacion$ | async">
             </sgi-select-entity>
           </mat-form-field>
         </div>
+      </div>
+
+      <div fxFlex="95%" fxFlex.sm="50%" fxFlex.md="73%" [fxLayout.xs]="fxLayoutProperties.xs"
+        [fxLayout]="fxLayoutProperties.layout" [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
         <!--Título-->
-        <div class="col">
+        <div [fxFlex.sm]="fxFlexProperties50.sm" [fxFlex.md]="fxFlexProperties50.md"
+          [fxFlex.gt-md]="fxFlexProperties50.gtMd" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'pii.invencion.titulo' | translate}}</mat-label>
             <input matInput placeholder="{{'pii.invencion.titulo' | translate}}" formControlName="titulo">
@@ -67,7 +73,8 @@
         </div>
 
         <!--Persona-->
-        <div class="col">
+        <div [fxFlex.sm]="fxFlexProperties50.sm" [fxFlex.md]="fxFlexProperties50.md"
+          [fxFlex.gt-md]="fxFlexProperties50.gtMd" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'pii.invencion.inventor' | translate}}</mat-label>
             <sgi-select-persona placeholder="{{'pii.invencion.inventor' | translate}}" formControlName="inventor"
@@ -75,6 +82,7 @@
             </sgi-select-persona>
           </mat-form-field>
         </div>
+
       </div>
 
       <div class="buttons-final">
@@ -92,7 +100,7 @@
 
     <!-- Listado de invenciones -->
     <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="invencion$ | async" matSort matSortActive="id"
-      matSortDirection="asc" matSortDisableClear>
+      matSortDirection="desc" matSortDisableClear>
       <!-- Nº de Invención -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.invencion.numero-invencion' | translate}}
@@ -138,6 +146,12 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let invencion">
+          <ng-container *sgiHasAnyAuthority="['PII-INV-E', 'PII-INV-V']">
+            <button *ngIf="invencion.activo ? true : false" mat-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[invencion.id]">
+              <mat-icon color="primary">border_color</mat-icon>
+            </button>
+          </ng-container>
         </td>
       </ng-container>
 

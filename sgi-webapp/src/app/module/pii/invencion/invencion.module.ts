@@ -11,9 +11,11 @@ import { InvencionCrearComponent } from './invencion-crear/invencion-crear.compo
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 import { InvencionRoutingModule } from './invencion-routing.module';
+import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
+import { InvencionResolver } from './invencion.resolver';
 
 @NgModule({
-  declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent],
+  declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent, InvencionEditarComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -25,6 +27,9 @@ import { InvencionRoutingModule } from './invencion-routing.module';
     SgiAuthModule,
     CspSharedModule,
     SgpSharedModule
+  ],
+  providers: [
+    InvencionResolver
   ]
 })
 export class InvencionModule { }

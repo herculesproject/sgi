@@ -36,6 +36,7 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
   textoCrear: string;
 
   fxFlexProperties: FxFlexProperties;
+  fxFlexProperties50: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   invencion$: Observable<IInvencion[]>;
 
@@ -57,8 +58,13 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(19%-10px)';
     this.fxFlexProperties.order = '2';
+
+    this.fxFlexProperties50 = new FxFlexProperties();
+    this.fxFlexProperties50.sm = '0 1 calc(50%-10px)';
+    this.fxFlexProperties50.md = '0 1 calc(50%-10px)';
+    this.fxFlexProperties50.gtMd = '0 1 calc(50%-10px)';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';

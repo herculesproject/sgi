@@ -1,10 +1,23 @@
 <section class="plan-investigacion-datos-generales">
   <h2>{{'label.datos-generales' | translate}}</h2>
   <form [formGroup]="formGroup">
-    <!-- Título -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+
+    <!-- Número de invención -->
+    <div *ngIf="isEdit" [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties33.md"
+        [fxFlex.gt-md]="fxFlexProperties33.gtMd" [fxFlexOrder]="fxFlexProperties33.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'pii.invencion.numero-invencion' | translate}}</mat-label>
+          <input matInput formControlName="id" type="text" id="id"
+            placeholder="{{'pii.invencion.numero-invencion'  | translate}}">
+        </mat-form-field>
+      </div>
+    </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+      [fxLayoutGap]="fxLayoutProperties.gap">
+      <!-- Título -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties66.md"
+        [fxFlex.gt-md]="fxFlexProperties66.gtMd" [fxFlexOrder]="fxFlexProperties66.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.titulo' | translate}}</mat-label>
           <input matInput formControlName="titulo" type="text" id="titulo"
@@ -17,12 +30,10 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </div>
 
-    <!-- Fecha Comunicación -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+      <!-- Fecha Comunicación -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties33.md"
+        [fxFlex.gt-md]="fxFlexProperties33.gtMd" [fxFlexOrder]="fxFlexProperties33.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.fecha-comunicacion' | translate}}</mat-label>
           <input matInput formControlName="fechaComunicacion" [matDatepicker]="fechaComunicacion" required>
