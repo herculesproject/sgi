@@ -233,7 +233,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         switchMap(solicitud => {
           if (solicitud?.convocatoriaId) {
             this.hasConvocatoria = true;
-            return this.convocatoriaService.findAreaTematicas(solicitud.id).pipe(
+            return this.convocatoriaService.findAreaTematicas(solicitud.convocatoriaId).pipe(
               map((results) => {
                 const nodes = results.items.map(convocatoriaAreaTematica => {
                   const area: AreaTematicaSolicitudData = {
