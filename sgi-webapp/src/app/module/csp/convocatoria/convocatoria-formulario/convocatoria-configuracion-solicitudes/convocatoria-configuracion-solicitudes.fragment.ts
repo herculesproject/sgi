@@ -60,8 +60,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     this.subscriptions.push(form.controls.fasePresentacionSolicitudes.valueChanges.subscribe(
       (value) => {
         if (value) {
-          form.controls.fechaInicioFase.setValue(value?.fechaInicio);
-          form.controls.fechaFinFase.setValue(value?.fechaFin);
+          form.controls.fechaInicioFase.setValue(value?.fechaInicio ?? null);
+          form.controls.fechaFinFase.setValue(value?.fechaFin ?? null);
         } else {
           form.controls.fechaInicioFase.setValue(null);
           form.controls.fechaFinFase.setValue(null);
@@ -74,12 +74,12 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   protected buildPatch(configuracionSolicitud: IConfiguracionSolicitud): { [key: string]: any; } {
     return {
-      tramitacionSGI: configuracionSolicitud ? configuracionSolicitud?.tramitacionSGI : false,
-      fasePresentacionSolicitudes: configuracionSolicitud ? configuracionSolicitud?.fasePresentacionSolicitudes : null,
-      fechaInicioFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio,
-      fechaFinFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin,
-      importeMaximoSolicitud: configuracionSolicitud ? configuracionSolicitud?.importeMaximoSolicitud : null,
-      formularioSolicitud: configuracionSolicitud ? configuracionSolicitud?.formularioSolicitud : null
+      tramitacionSGI: configuracionSolicitud?.tramitacionSGI ?? false,
+      fasePresentacionSolicitudes: configuracionSolicitud?.fasePresentacionSolicitudes ?? null,
+      fechaInicioFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio ?? null,
+      fechaFinFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin ?? null,
+      importeMaximoSolicitud: configuracionSolicitud?.importeMaximoSolicitud ?? null,
+      formularioSolicitud: configuracionSolicitud?.formularioSolicitud ?? null
     };
   }
 
