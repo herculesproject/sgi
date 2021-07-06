@@ -164,6 +164,26 @@ public class TipoProteccionService {
   }
 
   /**
+   * Obtener todas las entidades {@link TipoProteccion} que son subtipos del
+   * {@link TipoProteccion} pasado por parámetros
+   *
+   * @param id       del {@link TipoProteccion} padre
+   * @param pageable Información de la paginación.
+   * @param query    Información del/los filtros a aplicar.
+   * @return Lista de entidades {@link TipoProteccion} que son Subtipos paginadas
+   *         y/o filtradas.
+   */
+  public Page<TipoProteccion> findSubtipos(Long id, String query, Pageable pageable) {
+    log.debug("findSubtipos(Long id, String query, Pageable pageable) - start");
+    Specification<TipoProteccion> specs = TipoProteccionSpecifications.subtipos(id)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<TipoProteccion> returnValue = repository.findAll(specs, pageable);
+    log.debug("findSubtipos(Long id, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtener todas las entidades {@link TipoProteccion} activas paginadas y/o
    * filtradas.
    *
@@ -174,7 +194,7 @@ public class TipoProteccionService {
   public Page<TipoProteccion> findActivos(String query, Pageable pageable) {
     log.debug("findActivos(String query, Pageable pageable) - start");
     Specification<TipoProteccion> specs = TipoProteccionSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query));
+        .and(TipoProteccionSpecifications.noSubtipos()).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoProteccion> returnValue = repository.findAll(specs, pageable);
     log.debug("findActivos(String query, Pageable pageable) - end");
@@ -190,7 +210,8 @@ public class TipoProteccionService {
    */
   public Page<TipoProteccion> findAll(String query, Pageable pageable) {
     log.debug("findAll(String query, Pageable pageable) - start");
-    Specification<TipoProteccion> specs = SgiRSQLJPASupport.toSpecification(query);
+    Specification<TipoProteccion> specs = TipoProteccionSpecifications.noSubtipos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoProteccion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");

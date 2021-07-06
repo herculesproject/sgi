@@ -67,6 +67,28 @@
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion1 Subtipo1" />
+      <column name="descripcion" value="Consequat adipisicing eu culpa quis elit anim magna." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="tipo_proteccion_padre_id" value="1" />
+    </insert> 
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion1 Subtipo2" />
+      <column name="descripcion" value="Eiusmod fugiat proident in laboris tempor elit reprehenderit magna." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="tipo_proteccion_padre_id" value="1" />
+    </insert>
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
+      <column name="nombre" value="TipoProteccion1 Subtipo3" />
+      <column name="descripcion" value="Amet laborum nostrud nostrud culpa est mollit." />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="tipo_proteccion_padre_id" value="1" />
+      <column name="activo" value="false" />
+    </insert>
+    <insert tableName="tipo_proteccion">
+      <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="TipoProteccion2" />
       <column name="descripcion" value="Cillum adipisicing consequat sunt excepteur non aliquip sint." />
       <column name="tipo_propiedad" value="INTELECTUAL" />

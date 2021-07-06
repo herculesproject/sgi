@@ -101,6 +101,30 @@ public class TipoProteccionController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link TipoProteccion} que son
+   * Subtipos del {@link TipoProteccion} pasado por párametros.
+   * 
+   * @param query  Filtro de búsqueda.
+   * @param paging Información de Paginado.
+   * @return Lista de entidades {@link TipoProteccion} paginadas y/o filtradas.
+   */
+  @GetMapping("/{id}/subtipos")
+  @PreAuthorize("hasAnyAuthority('PII-TPR-V', 'PII-TPR-C', 'PII-TPR-E', 'PII-TPR-B', 'PII-TPR-R')")
+  ResponseEntity<Page<TipoProteccionOutput>> findSubtipos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findSubtipos(@PathVariable Long id,String query, Pageable paging) - start");
+    Page<TipoProteccion> page = service.findSubtipos(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findSubtipos(@PathVariable Long id,String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findSubtipos(@PathVariable Long id,String query, Pageable paging) - end");
+    return new ResponseEntity<>(convert(page), HttpStatus.OK);
+  }
+
+  /**
    * Devuelve el {@link TipoProteccion} con el id indicado.
    * 
    * @param id Identificador de {@link TipoProteccion}.
@@ -186,6 +210,11 @@ public class TipoProteccionController {
   private TipoProteccion convert(Long id, TipoProteccionInput tipoProteccionInput) {
     TipoProteccion tipoProteccion = modelMapper.map(tipoProteccionInput, TipoProteccion.class);
     tipoProteccion.setId(id);
+    if (tipoProteccionInput.getPadreId() != null) {
+      TipoProteccion padre = new TipoProteccion();
+      padre.setId(tipoProteccionInput.getPadreId());
+      tipoProteccion.setPadre(padre);
+    }
     return tipoProteccion;
   }
 

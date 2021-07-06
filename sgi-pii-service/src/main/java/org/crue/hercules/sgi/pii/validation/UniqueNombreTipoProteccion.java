@@ -12,9 +12,11 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UniqueNombreTipoProteccionValidator.class)
 public @interface UniqueNombreTipoProteccion {
+
   String message() default "{org.crue.hercules.sgi.pii.validation.UniqueNombreTipoProteccion.message}";
 
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};
+
 }
