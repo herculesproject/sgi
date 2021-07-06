@@ -22,12 +22,12 @@ const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_SAVE_ERROR = marker('error.save.entity');
 const MSG_UPDATE_ERROR = marker('error.update.entity');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
-const MSG_REACTIVE = marker('msg.csp.reactivate');
+const MSG_REACTIVE = marker('msg.reactivate.entity');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
-const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
-const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
+const MSG_ERROR_DEACTIVATE = marker('error.deactivate.entity');
+const MSG_SUCCESS_DEACTIVATE = marker('msg.deactivate.entity.success');
 
 @Component({
   selector: 'sgi-resultado-informe-patentabilidad-listado',
