@@ -20,8 +20,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -121,6 +123,40 @@ public class InvencionController {
     Invencion returnValue = service.create(convert(invencion));
     log.debug("create(Invencion invencion) - end");
     return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza la {@link Invencion} con el id indicado.
+   * 
+   * @param invencion {@link Invencion} a actualizar.
+   * @param id        id {@link Invencion} a actualizar.
+   * @return {@link Invencion} actualizado.
+   */
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('PII-INV-E')")
+  InvencionOutput update(@Valid @RequestBody InvencionInput invencion, @PathVariable Long id) {
+    log.debug("update(Invencion invencion, Long id) - start");
+    Invencion returnValue = service.update(convert(id, invencion));
+    log.debug("update(Invencion invencion, Long id) - end");
+    return convert(returnValue);
+  }
+
+  /**
+   * Comprueba la existencia de la {@link Invencion} con el id indicado.
+   * 
+   * @param id Identificador de {@link Invencion}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
+  public ResponseEntity<?> exists(@PathVariable Long id) {
+    log.debug("Invencion exists(Long id) - start");
+    if (service.existsById(id)) {
+      log.debug("Invencion exists(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Invencion exists(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   private InvencionOutput convert(Invencion invencion) {

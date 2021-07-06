@@ -1,5 +1,12 @@
 package org.crue.hercules.sgi.pii.service;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
+
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -28,9 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class InvencionService {
 
+  private final Validator validator;
+
   private final InvencionRepository repository;
 
-  public InvencionService(InvencionRepository invencionRepository) {
+  public InvencionService(Validator validator, InvencionRepository invencionRepository) {
+    this.validator = validator;
     this.repository = invencionRepository;
   }
 
@@ -111,5 +121,72 @@ public class InvencionService {
 
     log.debug("create(Invencion invencion) - end");
     return returnValue;
+  }
+
+  /**
+   * Actualizar {@link Invencion}.
+   *
+   * @param invencion la entidad {@link Invencion} a actualizar.
+   * @return la entidad {@link Invencion} persistida.
+   */
+  @Transactional
+  @Validated({ Invencion.OnActualizar.class })
+  public Invencion update(@Valid Invencion invencion) {
+    log.debug("update(Invencion invencion) - start");
+
+    Assert.notNull(invencion.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Invencion.class)).build());
+    Assert.notNull(invencion.getTipoProteccion(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage(TipoProteccion.class))
+            .parameter("entity", ApplicationContextSupport.getMessage(Invencion.class)).build());
+    Assert.notNull(invencion.getTipoProteccion().getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(TipoProteccion.class)).build());
+
+    return repository.findById(invencion.getId()).map(invencionExistente -> {
+
+      if (!invencionExistente.getTipoProteccion().getId().equals(invencion.getTipoProteccion().getId())) {
+        // Si estamos mofificando el TipoProteccion invocar validaciones asociadas
+        // a OnActualizarTipoProteccion
+        Set<ConstraintViolation<Invencion>> result = validator.validate(invencion,
+            Invencion.OnActualizarTipoProteccion.class);
+        if (!result.isEmpty()) {
+          throw new ConstraintViolationException(result);
+        }
+      }
+
+      // Establecemos los campos actualizables con los recibidos
+      invencionExistente.setTitulo(invencion.getTitulo());
+      invencionExistente.setFechaComunicacion(invencion.getFechaComunicacion());
+      invencionExistente.setDescripcion(invencion.getDescripcion());
+      invencionExistente.setComentarios(invencion.getComentarios());
+      invencionExistente.setProyectoRef(invencion.getProyectoRef());
+      invencionExistente.setTipoProteccion(invencion.getTipoProteccion());
+
+      // Actualizamos la entidad
+      Invencion returnValue = repository.save(invencionExistente);
+      log.debug("update(Invencion invencion) - end");
+      return returnValue;
+    }).orElseThrow(() -> new InvencionNotFoundException(invencion.getId()));
+  }
+
+  /**
+   * Comprueba la existencia de la {@link Invencion} por id.
+   *
+   * @param id el id de la entidad {@link Invencion}.
+   * @return true si existe y false en caso contrario.
+   */
+  public boolean existsById(final Long id) {
+    log.debug("existsById(final Long id)  - start", id);
+    final boolean existe = repository.existsById(id);
+    log.debug("existsById(final Long id)  - end", id);
+    return existe;
   }
 }

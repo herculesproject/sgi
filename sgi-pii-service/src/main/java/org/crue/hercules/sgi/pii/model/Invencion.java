@@ -68,6 +68,7 @@ public class Invencion extends BaseActivableEntity {
   /** Tipo de protección. */
   @ManyToOne
   @JoinColumn(name = "tipo_proteccion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_INVENCION_TIPOPROTECCION"))
+  @EntidadActiva(entityClass = TipoProteccion.class, groups = { OnActualizarTipoProteccion.class })
   private TipoProteccion tipoProteccion;
 
   // Relation mappings for JPA metamodel generation only
@@ -85,5 +86,12 @@ public class Invencion extends BaseActivableEntity {
    * Interfaz para marcar validaciones en la actualizacion de la entidad.
    */
   public interface OnActualizar {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion del campo
+   * TipoProteccion de la entidad.
+   */
+  public interface OnActualizarTipoProteccion {
   }
 }
