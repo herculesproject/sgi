@@ -226,9 +226,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         (iva) => {
           if (iva === 0) {
             this.mostrarCausaExencion = true;
+            form.controls.causaExencion.setValidators([Validators.required]);
           } else {
             this.mostrarCausaExencion = false;
+            form.controls.causaExencion.setValidators([]);
           }
+
+          form.controls.causaExencion.updateValueAndValidity();
         }
       )
     );
