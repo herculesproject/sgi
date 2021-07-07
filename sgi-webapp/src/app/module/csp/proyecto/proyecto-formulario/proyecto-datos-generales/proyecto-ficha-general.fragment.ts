@@ -523,7 +523,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
-      if (convocatoria.finalidad && (!this.proyecto.finalidad || !this.isEdit())) {
+      if (convocatoria.finalidad && !this.proyecto.finalidad && !this.isEdit()) {
         this.subscriptions.push(
           this.tipoFinalidadService.findById(convocatoria.finalidad.id).subscribe(tipoFinalidad => {
             this.getFormGroup().controls.finalidad.setValue(tipoFinalidad);
@@ -531,7 +531,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
-      if (convocatoria.ambitoGeografico && (!this.proyecto.ambitoGeografico || !this.isEdit())) {
+      if (convocatoria.ambitoGeografico && !this.proyecto.ambitoGeografico && !this.isEdit()) {
         this.subscriptions.push(
           this.tipoAmbitoGeograficoService.findById(convocatoria.ambitoGeografico.id).subscribe(tipoAmbitoGeografico => {
             this.getFormGroup().controls.ambitoGeografico.setValue(tipoAmbitoGeografico);
@@ -539,7 +539,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
-      this.getFormGroup().controls.clasificacionCVN.setValue(convocatoria.clasificacionCVN);
+      if (convocatoria.clasificacionCVN && !this.proyecto.clasificacionCVN && !this.isEdit()) {
+        this.getFormGroup().controls.clasificacionCVN.setValue(convocatoria.clasificacionCVN);
+      }
 
       const options: SgiRestFindOptions = {
         sort: new RSQLSgiRestSort('numPeriodo', SgiRestSortDirection.ASC)
