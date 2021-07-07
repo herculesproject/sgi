@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -96,8 +96,8 @@ export class ResultadoInformePatentabilidadModalComponent
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.resultadoInformePatentibilidad?.nombre),
-      descripcion: new FormControl(this.resultadoInformePatentibilidad?.descripcion),
+      nombre: new FormControl(this.resultadoInformePatentibilidad?.nombre, [Validators.maxLength(50)]),
+      descripcion: new FormControl(this.resultadoInformePatentibilidad?.descripcion, [Validators.maxLength(250)]),
     });
     return formGroup;
   }
