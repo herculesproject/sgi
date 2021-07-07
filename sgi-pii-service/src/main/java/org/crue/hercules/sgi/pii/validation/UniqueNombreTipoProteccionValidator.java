@@ -18,9 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UniqueNombreTipoProteccionValidator
     implements ConstraintValidator<UniqueNombreTipoProteccion, TipoProteccion> {
   private TipoProteccionRepository repository;
+  private String field;
 
   public UniqueNombreTipoProteccionValidator(TipoProteccionRepository repository) {
     this.repository = repository;
+  }
+
+  @Override
+  public void initialize(UniqueNombreTipoProteccion constraintAnnotation) {
+    ConstraintValidator.super.initialize(constraintAnnotation);
+    field = constraintAnnotation.field();
   }
 
   @Override
@@ -53,5 +60,10 @@ public class UniqueNombreTipoProteccionValidator
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(TipoProteccion.class));
+    // Disable default message to allow binding the message to a property
+    hibernateContext.disableDefaultConstraintViolation();
+    // Build a custom message for a property using the default message
+    hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+        .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
   }
 }
