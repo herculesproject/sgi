@@ -134,11 +134,16 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
   }
 
   openModal(codigoEconomicoListado?: CodigoEconomicoListado, rowIndex?: number): void {
+
+    // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación y paginación
+    this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
+    const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
+
     const proyectoConceptoGastoCodigoEcsTabla = this.dataSource.data
       .filter(codigoEconomico => codigoEconomico.proyectoCodigoEconomico)
       .map(codigoEconomico => codigoEconomico.proyectoCodigoEconomico.value);
 
-    proyectoConceptoGastoCodigoEcsTabla.splice(rowIndex, 1);
+    proyectoConceptoGastoCodigoEcsTabla.splice(row, 1);
 
     const data: ProyectoConceptoGastoCodigoEcDataModal = {
       proyectoConceptoGastoCodigoEc: codigoEconomicoListado.proyectoCodigoEconomico?.value,
@@ -163,7 +168,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
             this.formPart.addCodigoEconomico(codigoEconomico, modalData.convocatoriaConceptoGastoCodigoEc?.id);
           } else {
             const codigoEconomico = new StatusWrapper<IProyectoConceptoGastoCodigoEc>(modalData.proyectoConceptoGastoCodigoEc);
-            this.formPart.updateCodigoEconomico(codigoEconomico, rowIndex);
+            this.formPart.updateCodigoEconomico(codigoEconomico, row);
           }
         }
       }
