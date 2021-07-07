@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -1196,8 +1197,9 @@ public class ProyectoServiceImpl implements ProyectoService {
                 responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaBase()));
           }
           return proyectoResponsableEconomico;
-        }).filter(responsableEconomicoProyecto -> !responsableEconomicoProyecto.getFechaInicio()
-            .isAfter(proyecto.getFechaFin()))
+        }).filter(responsableEconomicoProyecto -> Objects.nonNull(responsableEconomicoProyecto))
+        .filter(responsableEconomicoProyecto -> Objects.isNull(responsableEconomicoProyecto.getFechaInicio())
+            || !responsableEconomicoProyecto.getFechaInicio().isAfter(proyecto.getFechaFin()))
         .collect(Collectors.toList());
 
     this.proyectoResponsableEconomicoService.updateProyectoResponsableEconomicos(proyecto.getId(),
