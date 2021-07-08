@@ -13,6 +13,7 @@ const MSG_INVENCION_TITLE = marker('pii.invencion');
 const MSG_TIPO_PROTECCION_TITLE = marker('pii.tipo-proteccion');
 const MSG_SECTOR_APLICACION_TITLE = marker('pii.sector-aplicacion');
 const MSG_RESULTADO_INFORME_PATENTABILIDAD_TITLE = marker('pii.resultado-informe-patentabilidad');
+const MSG_TIPO_PROCEDIMIENTO_TITLE = marker('pii.tipo-procedimiento');
 
 const routes: SgiRoutes = [
   {
@@ -78,6 +79,19 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_RESULTADO_INFORME_PATENTABILIDAD_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['PII-RIP-V', 'PII-RIP-C', 'PII-RIP-E', 'PII-RIP-B', 'PII-RIP-R']
+        }
+      },
+      {
+        path: PII_ROUTE_NAMES.TIPO_PROCEDIMIENTO,
+        loadChildren: () =>
+          import('./tipo-procedimiento/tipo-procedimiento.module').then(
+            (m) => m.TipoProcedimientoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_PROCEDIMIENTO_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthorityForAnyUO: ['PII-RIP-V', 'PII-RIP-C', 'PII-RIP-E', 'PII-RIP-B', 'PII-RIP-R']
         }

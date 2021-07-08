@@ -31,6 +31,10 @@
             [routerLink]="[PII_ROUTE_NAMES.RESULTADO_INFORME_PATENTABILIDAD]" [routerLinkActive]="['is-active']">
             {{'pii.resultado-informe-patentabilidad' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
           </a>
+          <a mat-list-item *sgiHasAnyAuthority="['PII-RIP-V', 'PII-RIP-C', 'PII-RIP-E','PII-RIP-B','PII-RIP-R']"
+            [routerLink]="[PII_ROUTE_NAMES.TIPO_PROCEDIMIENTO]" [routerLinkActive]="['is-active']">
+            {{'pii.tipo-procedimiento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
+          </a>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
