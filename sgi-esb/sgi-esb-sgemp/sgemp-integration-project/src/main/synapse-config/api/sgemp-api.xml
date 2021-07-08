@@ -38,6 +38,2578 @@
     </faultSequence>
   </resource>
 
+  <resource methods="POST" url-mapping="/empresas/formly">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sgemp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="PUT" uri-template="/empresas/formly/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sgemp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/empresas/formly/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sgemp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/empresas/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <payloadFactory media-type="json">
+        <format>
+[
+  {
+    "wrappers": [
+      "global"
+    ],
+    "templateOptions": {
+      "styles": "{ \"width\": \"900px\" }"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos Generales"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoSedeId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de sede",
+                  "placeholder": "Introduce tipo de sede",
+                  "required": true,
+                  "options": [
+                    {
+                      "value": "0",
+                      "label": "Entidad"
+                    },
+                    {
+                      "value": "1",
+                      "label": "Subentidad"
+                    }
+                  ]
+                }
+              },
+              {
+                "key": "datosEconomicos",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Datos económicos",
+                  "placeholder": "Introduce datos económicos",
+                  "required": true,
+                  "options": [
+                    {
+                      "value": true,
+                      "label": "Sí"
+                    },
+                    {
+                      "value": false,
+                      "label": "No"
+                    }
+                  ]
+                },
+                "expressionProperties": {
+                  "model.tipoTerceroId": "!model.datosEconomicos?null:model.tipoTerceroId",
+                  "model.tipoEmpresaId": "!model.datosEconomicos?null:model.tipoEmpresaId",
+                  "model.tipoEmpresaContabilidadId": "!model.datosEconomicos?null:model.tipoEmpresaContabilidadId",
+                  "model.tipoTerceroReinoUnidoId": "!model.datosEconomicos?null:model.tipoTerceroReinoUnidoId"
+                }
+              }
+            ]
+          },
+          {
+            "key": "entidadRazonSocial",
+            "type": "input",
+            "templateOptions": {
+              "label": "Entidad / Razón social",
+              "placeholder": "Introduce Entidad / Razón social",
+              "required": true
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoIdentificadorFiscalId",
+                "type": "select-tipos-identificadores",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de identificador fiscal",
+                  "placeholder": "Introduce tipo de identificador fiscal",
+                  "required": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "numeroIdentificadorFiscal",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número de identificador fiscal",
+                  "placeholder": "Introduce número de identificador fiscal",
+                  "required": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "table-crud-clasificaciones",
+            "key": "sectoresIndustriales",
+            "templateOptions": {
+              "title": "Sectores industriales",
+              "entity": "Sector industrial"
+            },
+            "fieldArray": {
+              "fieldGroup": [
+                {
+                  "key": "sectorIndustrial",
+                  "type": "input",
+                  "templateOptions": {
+                    "label": "Nivel seleccionado",
+                    "order": 20
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Contacto"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "paisContactoId",
+                "type": "select-paises",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "País",
+                  "placeholder": "Introduce país",
+                  "required": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "codigoPostalContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Código postal",
+                  "placeholder": "Introduce código postal",
+                  "required": false
+                },
+                "expressionProperties": {
+                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId==='011'"
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "ciudadContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Ciudad",
+                  "placeholder": "Introduce ciudad",
+                  "required": true
+                },
+                "expressionProperties": {
+                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId!=='011'"
+                }
+              },
+              {
+                "key": "tipoViaContactoId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de vía",
+                  "placeholder": "Introduce tipo de vía",
+                  "valueProp": "id",
+                  "labelProp": "nombre",
+                  "options": [
+                    {
+                      "id": "9",
+                      "nombre": "ALAMEDA"
+                    },
+                    {
+                      "id": "33",
+                      "nombre": "ALDEA"
+                    },
+                    {
+                      "id": "10",
+                      "nombre": "APARTAMENTO"
+                    },
+                    {
+                      "id": "34",
+                      "nombre": "AREA, ARRABAL"
+                    },
+                    {
+                      "id": "35",
+                      "nombre": "ARROYO"
+                    },
+                    {
+                      "id": "3",
+                      "nombre": "AVENIDA"
+                    },
+                    {
+                      "id": "36",
+                      "nombre": "BAJADA"
+                    },
+                    {
+                      "id": "37",
+                      "nombre": "BARRANCO"
+                    },
+                    {
+                      "id": "11",
+                      "nombre": "BARRIO"
+                    },
+                    {
+                      "id": "12",
+                      "nombre": "BLOQUE"
+                    },
+                    {
+                      "id": "1",
+                      "nombre": "CALLE"
+                    },
+                    {
+                      "id": "38",
+                      "nombre": "CALLEJA"
+                    },
+                    {
+                      "id": "13",
+                      "nombre": "CAMINO"
+                    },
+                    {
+                      "id": "6",
+                      "nombre": "CARRETERA"
+                    },
+                    {
+                      "id": "30",
+                      "nombre": "CARRIL"
+                    },
+                    {
+                      "id": "14",
+                      "nombre": "CASERIO"
+                    },
+                    {
+                      "id": "15",
+                      "nombre": "CHALET"
+                    },
+                    {
+                      "id": "39",
+                      "nombre": "COLEGIO"
+                    },
+                    {
+                      "id": "16",
+                      "nombre": "COLONIA"
+                    },
+                    {
+                      "id": "41",
+                      "nombre": "CONJUNTO"
+                    },
+                    {
+                      "id": "17",
+                      "nombre": "CUESTA"
+                    },
+                    {
+                      "id": "99",
+                      "nombre": "DIPUTACION"
+                    },
+                    {
+                      "id": "18",
+                      "nombre": "EDIFICIO"
+                    },
+                    {
+                      "id": "42",
+                      "nombre": "ENTRADA"
+                    },
+                    {
+                      "id": "43",
+                      "nombre": "ESCALINATA"
+                    },
+                    {
+                      "id": "44",
+                      "nombre": "EXPLANADA"
+                    },
+                    {
+                      "id": "45",
+                      "nombre": "EXTRAMUROS"
+                    },
+                    {
+                      "id": "46",
+                      "nombre": "EXTRARRADIO"
+                    },
+                    {
+                      "id": "47",
+                      "nombre": "FERROCARRIL"
+                    },
+                    {
+                      "id": "19",
+                      "nombre": "GLORIETA"
+                    },
+                    {
+                      "id": "48",
+                      "nombre": "GRAN VIA"
+                    },
+                    {
+                      "id": "20",
+                      "nombre": "GRUPO"
+                    },
+                    {
+                      "id": "49",
+                      "nombre": "HUERTA"
+                    },
+                    {
+                      "id": "50",
+                      "nombre": "JARDINES"
+                    },
+                    {
+                      "id": "51",
+                      "nombre": "LADO"
+                    },
+                    {
+                      "id": "21",
+                      "nombre": "LUGAR"
+                    },
+                    {
+                      "id": "22",
+                      "nombre": "MANZANA"
+                    },
+                    {
+                      "id": "52",
+                      "nombre": "MASIA"
+                    },
+                    {
+                      "id": "23",
+                      "nombre": "MERCADO"
+                    },
+                    {
+                      "id": "53",
+                      "nombre": "MONTE"
+                    },
+                    {
+                      "id": "54",
+                      "nombre": "MUELLE"
+                    },
+                    {
+                      "id": "55",
+                      "nombre": "MUNICIPIO"
+                    },
+                    {
+                      "id": "32",
+                      "nombre": "PARAJE"
+                    },
+                    {
+                      "id": "56",
+                      "nombre": "PARCELA"
+                    },
+                    {
+                      "id": "24",
+                      "nombre": "PARQUE"
+                    },
+                    {
+                      "id": "25",
+                      "nombre": "PASAJE"
+                    },
+                    {
+                      "id": "4",
+                      "nombre": "PASEO"
+                    },
+                    {
+                      "id": "2",
+                      "nombre": "PLAZA"
+                    },
+                    {
+                      "id": "26",
+                      "nombre": "POBLADO"
+                    },
+                    {
+                      "id": "27",
+                      "nombre": "POLIGONO"
+                    },
+                    {
+                      "id": "28",
+                      "nombre": "PROLONGACION"
+                    },
+                    {
+                      "id": "57",
+                      "nombre": "PUENTE"
+                    },
+                    {
+                      "id": "58",
+                      "nombre": "PUERTA"
+                    },
+                    {
+                      "id": "59",
+                      "nombre": "QUINTA"
+                    },
+                    {
+                      "id": "60",
+                      "nombre": "RAMAL"
+                    },
+                    {
+                      "id": "29",
+                      "nombre": "RAMBLA"
+                    },
+                    {
+                      "id": "61",
+                      "nombre": "RAMPA"
+                    },
+                    {
+                      "id": "62",
+                      "nombre": "RIERA"
+                    },
+                    {
+                      "id": "63",
+                      "nombre": "RINCON"
+                    },
+                    {
+                      "id": "5",
+                      "nombre": "RONDA"
+                    },
+                    {
+                      "id": "64",
+                      "nombre": "RUA"
+                    },
+                    {
+                      "id": "65",
+                      "nombre": "SALIDA"
+                    },
+                    {
+                      "id": "66",
+                      "nombre": "SECTOR, SECCION"
+                    },
+                    {
+                      "id": "67",
+                      "nombre": "SENDA"
+                    },
+                    {
+                      "id": "68",
+                      "nombre": "SOLAR, SALON"
+                    },
+                    {
+                      "id": "69",
+                      "nombre": "SUBIDA"
+                    },
+                    {
+                      "id": "70",
+                      "nombre": "TERRENOS"
+                    },
+                    {
+                      "id": "71",
+                      "nombre": "TORRENTE"
+                    },
+                    {
+                      "id": "7",
+                      "nombre": "TRAVESIA"
+                    },
+                    {
+                      "id": "8",
+                      "nombre": "URBANIZACION"
+                    },
+                    {
+                      "id": "31",
+                      "nombre": "VEREDA"
+                    },
+                    {
+                      "id": "72",
+                      "nombre": "VIA"
+                    },
+                    {
+                      "id": "73",
+                      "nombre": "VIA PUBLICA"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "nombreViaContacto",
+                "type": "input",
+                "className": "flex-2",
+                "templateOptions": {
+                  "label": "Nombre de vía",
+                  "placeholder": "Introduce nombre de vía"
+                }
+              },
+              {
+                "key": "numeroViaContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número",
+                  "placeholder": "Introduce número"
+                }
+              }
+            ]
+          },
+          {
+            "key": "ampliacion",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Ampliación",
+              "placeholder": "Introduce ampliación"
+            }
+          },
+          {
+            "key": "email",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Email",
+              "placeholder": "Introduce email"
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "telefonoContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Teléfono",
+                  "placeholder": "Introduce teléfono"
+                }
+              },
+              {
+                "key": "faxContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Fax",
+                  "placeholder": "Introduce fax"
+                }
+              }
+            ]
+          },
+          {
+            "key": "direccionWeb",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Dirección web",
+              "placeholder": "Introduce dirección web"
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Tipo de Entidad"
+        },
+        "hideExpression": "!model.datosEconomicos",
+        "fieldGroup": [
+          {
+            "key": "tipoTerceroId",
+            "type": "select-attributes",
+            "templateOptions": {
+              "label": "Tipo de tercero",
+              "placeholder": "Introduce tipo de tercero",
+              "required": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "propertyMappedToFormState": "tipoTerceroSelectedId",
+              "modelEditName": "mainModel",
+              "dataSelectPropertyValue": "id",
+              "dataSelectPropertyToFormState": "clase",
+              "dataSelect": [
+                {
+                  "id": "A",
+                  "nombre": "EXTRANJEROS NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "8",
+                  "nombre": "EXTRANJEROS RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ORGANISMOS PÚBLICOS (Q) Y CORP. LOCALES (P)",
+                  "clase": "J"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ORGANOS DE LA ADMIN. DEL ESTADO Y CC.AA.",
+                  "clase": "J"
+                },
+                {
+                  "id": "9U",
+                  "nombre": "PERSONA FISICA EXTRANJ CON NIU",
+                  "clase": "F"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONAS FISICAS: ESPAÑOLES NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "9",
+                  "nombre": "PERSONAS FISICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "F"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FISICAS: MENORES",
+                  "clase": "F"
+                },
+                {
+                  "id": "5",
+                  "nombre": "PERSONAS FISICAS: NIF ESPAÑOLES",
+                  "clase": "F"
+                },
+                {
+                  "id": "1",
+                  "nombre": "PERSONAS JURIDICAS: ESPAÑOLAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "21",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJ. ESTABLECIMIENTO PERM.",
+                  "clase": "J"
+                },
+                {
+                  "id": "2",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "20",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS NO RESIDENTES",
+                  "clase": "J"
+                },
+                {
+                  "id": "90",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "J"
+                },
+                {
+                  "id": "0",
+                  "nombre": "UNIVERSIDAD DE MURCIA",
+                  "clase": "J"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.options": "field.templateOptions.dataSelect",
+              "templateOptions.disabled": "!model.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoEmpresaId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad",
+              "placeholder": "Introduce tipo de entidad",
+              "required": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMON. AUTONOMICA"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMON. CENTRAL"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ADMON. LOCAL"
+                },
+                {
+                  "id": "9",
+                  "nombre": "ADMON. PAISES EXTRANJEROS"
+                },
+                {
+                  "id": "8",
+                  "nombre": "ASOCIACIONES"
+                },
+                {
+                  "id": "3",
+                  "nombre": "EMPR. EXTRANJERAS"
+                },
+                {
+                  "id": "4",
+                  "nombre": "EMPR. NACIONALES"
+                },
+                {
+                  "id": "10",
+                  "nombre": "EMPR. REGIONALES"
+                },
+                {
+                  "id": "7",
+                  "nombre": "FUNDACIONES"
+                },
+                {
+                  "id": "99",
+                  "nombre": "OTRAS"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FÍSICAS"
+                },
+                {
+                  "id": "13",
+                  "nombre": "UNIVERSIDAD EXTRANJERA"
+                },
+                {
+                  "id": "12",
+                  "nombre": "UNIVERSIDAD PRIVADA ESPAÑOLA"
+                },
+                {
+                  "id": "11",
+                  "nombre": "UNIVERSIDAD PÚBLICA ESPAÑOLA"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.disabled": "!model.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoEmpresaContabilidadId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad para contabilidad",
+              "placeholder": "Introduce tipo de entidad para contabilidad",
+              "required": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (CARM)"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (NO CARM)"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ADMINISTRACION PUBLICA ESTATAL"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMINISTRACION PUBLICA LOCAL Y DIPUTACIONES"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ORGANISMO EUROPEO O INTERNACIONAL"
+                },
+                {
+                  "id": "6",
+                  "nombre": "OTROS ENTES DEL SECTOR PUBLICO, EMPRESA O INSTITUCION PRIVADA"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONA FISICA"
+                },
+                {
+                  "id": "8",
+                  "nombre": "PROPIO"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.disabled": "!model.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoTerceroReinoUnidoId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de tercero Reino Unido",
+              "placeholder": "Introduce tipo de tercero Reino Unido",
+              "required": false,
+              "options": [
+                {
+                  "value": null,
+                  "label": ""
+                },
+                {
+                  "value": "S",
+                  "label": "Tercero normal"
+                },
+                {
+                  "value": "IN",
+                  "label": "Tercero de Irlanda del Norte"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.disabled": "!model.datosEconomicos",
+              "templateOptions.required": "model.datosEconomicos&amp;&amp;null!==model.paisContactoId&amp;&amp;model.paisContactoId==='006' &amp;&amp; formState.tipoTerceroSelectedId==='F'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+        </format>
+        <args/>
+      </payloadFactory>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/empresas/formly/update">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <payloadFactory media-type="json">
+        <format>
+[
+  {
+    "wrappers": [
+      "global"
+    ],
+    "templateOptions": {
+      "styles": "{ \"width\": \"900px\" }"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos Generales"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoSedeId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de sede",
+                  "placeholder": "Introduce tipo de sede",
+                  "disabled": true,
+                  "options": [
+                    {
+                      "value": "0",
+                      "label": "Entidad"
+                    },
+                    {
+                      "value": "1",
+                      "label": "Subentidad"
+                    }
+                  ]
+                }
+              },
+              {
+                "key": "datosEconomicos",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Datos económicos",
+                  "placeholder": "Introduce datos económicos",
+                  "options": [
+                    {
+                      "value": true,
+                      "label": "Sí"
+                    },
+                    {
+                      "value": false,
+                      "label": "No"
+                    }
+                  ]
+                },
+                "expressionProperties": {
+                  "templateOptions.disabled": "formState.mainModel.datosEconomicos"
+                }
+              }
+            ]
+          },
+          {
+            "key": "entidadRazonSocial",
+            "type": "input",
+            "templateOptions": {
+              "label": "Entidad / Razón social",
+              "placeholder": "Introduce Entidad / Razón social",
+              "disabled": true
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoIdentificadorFiscalId",
+                "type": "select-tipos-identificadores",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de identificador fiscal",
+                  "placeholder": "Introduce tipo de identificador fiscal",
+                  "disabled": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "numeroIdentificadorFiscal",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número de identificador fiscal",
+                  "placeholder": "Introduce número de identificador fiscal",
+                  "disabled": true
+                }
+              }
+            ]
+          },
+          {
+            "key": "entidadPrincipal",
+            "type": "input",
+            "templateOptions": {
+              "label": "Entidad principal",
+              "placeholder": "Introduce entidad principal",
+              "disabled": true
+            },
+            "hideExpression": "formState.mainModel.tipoSedeId!=='1'"
+          },
+          {
+            "type": "table-crud-clasificaciones",
+            "key": "sectoresIndustriales",
+            "templateOptions": {
+              "title": "Sectores industriales",
+              "entity": "Sector industrial"
+            },
+            "fieldArray": {
+              "fieldGroup": [
+                {
+                  "key": "sectorIndustrial",
+                  "type": "input",
+                  "templateOptions": {
+                    "label": "Nivel seleccionado",
+                    "order": 20
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Contacto"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "paisContactoId",
+                "type": "select-paises",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "País",
+                  "placeholder": "Introduce país",
+                  "required": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "codigoPostalContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Código postal",
+                  "placeholder": "Introduce código postal",
+                  "required": false
+                },
+                "expressionProperties": {
+                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId==='011'"
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "ciudadContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Ciudad",
+                  "placeholder": "Introduce ciudad",
+                  "required": true
+                },
+                "expressionProperties": {
+                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId!=='1'"
+                }
+              },
+              {
+                "key": "tipoViaContactoId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de vía",
+                  "placeholder": "Introduce tipo de vía",
+                  "valueProp": "id",
+                  "labelProp": "nombre",
+                  "options": [
+                    {
+                      "id": "9",
+                      "nombre": "ALAMEDA"
+                    },
+                    {
+                      "id": "33",
+                      "nombre": "ALDEA"
+                    },
+                    {
+                      "id": "10",
+                      "nombre": "APARTAMENTO"
+                    },
+                    {
+                      "id": "34",
+                      "nombre": "AREA, ARRABAL"
+                    },
+                    {
+                      "id": "35",
+                      "nombre": "ARROYO"
+                    },
+                    {
+                      "id": "3",
+                      "nombre": "AVENIDA"
+                    },
+                    {
+                      "id": "36",
+                      "nombre": "BAJADA"
+                    },
+                    {
+                      "id": "37",
+                      "nombre": "BARRANCO"
+                    },
+                    {
+                      "id": "11",
+                      "nombre": "BARRIO"
+                    },
+                    {
+                      "id": "12",
+                      "nombre": "BLOQUE"
+                    },
+                    {
+                      "id": "1",
+                      "nombre": "CALLE"
+                    },
+                    {
+                      "id": "38",
+                      "nombre": "CALLEJA"
+                    },
+                    {
+                      "id": "13",
+                      "nombre": "CAMINO"
+                    },
+                    {
+                      "id": "6",
+                      "nombre": "CARRETERA"
+                    },
+                    {
+                      "id": "30",
+                      "nombre": "CARRIL"
+                    },
+                    {
+                      "id": "14",
+                      "nombre": "CASERIO"
+                    },
+                    {
+                      "id": "15",
+                      "nombre": "CHALET"
+                    },
+                    {
+                      "id": "39",
+                      "nombre": "COLEGIO"
+                    },
+                    {
+                      "id": "16",
+                      "nombre": "COLONIA"
+                    },
+                    {
+                      "id": "41",
+                      "nombre": "CONJUNTO"
+                    },
+                    {
+                      "id": "17",
+                      "nombre": "CUESTA"
+                    },
+                    {
+                      "id": "99",
+                      "nombre": "DIPUTACION"
+                    },
+                    {
+                      "id": "18",
+                      "nombre": "EDIFICIO"
+                    },
+                    {
+                      "id": "42",
+                      "nombre": "ENTRADA"
+                    },
+                    {
+                      "id": "43",
+                      "nombre": "ESCALINATA"
+                    },
+                    {
+                      "id": "44",
+                      "nombre": "EXPLANADA"
+                    },
+                    {
+                      "id": "45",
+                      "nombre": "EXTRAMUROS"
+                    },
+                    {
+                      "id": "46",
+                      "nombre": "EXTRARRADIO"
+                    },
+                    {
+                      "id": "47",
+                      "nombre": "FERROCARRIL"
+                    },
+                    {
+                      "id": "19",
+                      "nombre": "GLORIETA"
+                    },
+                    {
+                      "id": "48",
+                      "nombre": "GRAN VIA"
+                    },
+                    {
+                      "id": "20",
+                      "nombre": "GRUPO"
+                    },
+                    {
+                      "id": "49",
+                      "nombre": "HUERTA"
+                    },
+                    {
+                      "id": "50",
+                      "nombre": "JARDINES"
+                    },
+                    {
+                      "id": "51",
+                      "nombre": "LADO"
+                    },
+                    {
+                      "id": "21",
+                      "nombre": "LUGAR"
+                    },
+                    {
+                      "id": "22",
+                      "nombre": "MANZANA"
+                    },
+                    {
+                      "id": "52",
+                      "nombre": "MASIA"
+                    },
+                    {
+                      "id": "23",
+                      "nombre": "MERCADO"
+                    },
+                    {
+                      "id": "53",
+                      "nombre": "MONTE"
+                    },
+                    {
+                      "id": "54",
+                      "nombre": "MUELLE"
+                    },
+                    {
+                      "id": "55",
+                      "nombre": "MUNICIPIO"
+                    },
+                    {
+                      "id": "32",
+                      "nombre": "PARAJE"
+                    },
+                    {
+                      "id": "56",
+                      "nombre": "PARCELA"
+                    },
+                    {
+                      "id": "24",
+                      "nombre": "PARQUE"
+                    },
+                    {
+                      "id": "25",
+                      "nombre": "PASAJE"
+                    },
+                    {
+                      "id": "4",
+                      "nombre": "PASEO"
+                    },
+                    {
+                      "id": "2",
+                      "nombre": "PLAZA"
+                    },
+                    {
+                      "id": "26",
+                      "nombre": "POBLADO"
+                    },
+                    {
+                      "id": "27",
+                      "nombre": "POLIGONO"
+                    },
+                    {
+                      "id": "28",
+                      "nombre": "PROLONGACION"
+                    },
+                    {
+                      "id": "57",
+                      "nombre": "PUENTE"
+                    },
+                    {
+                      "id": "58",
+                      "nombre": "PUERTA"
+                    },
+                    {
+                      "id": "59",
+                      "nombre": "QUINTA"
+                    },
+                    {
+                      "id": "60",
+                      "nombre": "RAMAL"
+                    },
+                    {
+                      "id": "29",
+                      "nombre": "RAMBLA"
+                    },
+                    {
+                      "id": "61",
+                      "nombre": "RAMPA"
+                    },
+                    {
+                      "id": "62",
+                      "nombre": "RIERA"
+                    },
+                    {
+                      "id": "63",
+                      "nombre": "RINCON"
+                    },
+                    {
+                      "id": "5",
+                      "nombre": "RONDA"
+                    },
+                    {
+                      "id": "64",
+                      "nombre": "RUA"
+                    },
+                    {
+                      "id": "65",
+                      "nombre": "SALIDA"
+                    },
+                    {
+                      "id": "66",
+                      "nombre": "SECTOR, SECCION"
+                    },
+                    {
+                      "id": "67",
+                      "nombre": "SENDA"
+                    },
+                    {
+                      "id": "68",
+                      "nombre": "SOLAR, SALON"
+                    },
+                    {
+                      "id": "69",
+                      "nombre": "SUBIDA"
+                    },
+                    {
+                      "id": "70",
+                      "nombre": "TERRENOS"
+                    },
+                    {
+                      "id": "71",
+                      "nombre": "TORRENTE"
+                    },
+                    {
+                      "id": "7",
+                      "nombre": "TRAVESIA"
+                    },
+                    {
+                      "id": "8",
+                      "nombre": "URBANIZACION"
+                    },
+                    {
+                      "id": "31",
+                      "nombre": "VEREDA"
+                    },
+                    {
+                      "id": "72",
+                      "nombre": "VIA"
+                    },
+                    {
+                      "id": "73",
+                      "nombre": "VIA PUBLICA"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "nombreViaContacto",
+                "type": "input",
+                "className": "flex-2",
+                "templateOptions": {
+                  "label": "Nombre de vía",
+                  "placeholder": "Introduce nombre de vía"
+                }
+              },
+              {
+                "key": "numeroViaContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número",
+                  "placeholder": "Introduce número"
+                }
+              }
+            ]
+          },
+          {
+            "key": "ampliacion",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Ampliación",
+              "placeholder": "Introduce ampliación"
+            }
+          },
+          {
+            "key": "email",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Email",
+              "placeholder": "Introduce email"
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "telefonoContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Teléfono",
+                  "placeholder": "Introduce teléfono"
+                }
+              },
+              {
+                "key": "faxContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Fax",
+                  "placeholder": "Introduce fax"
+                }
+              }
+            ]
+          },
+          {
+            "key": "direccionWeb",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Dirección web",
+              "placeholder": "Introduce dirección web"
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Tipo de Entidad"
+        },
+        "hideExpression": "!model.datosEconomicos",
+        "fieldGroup": [
+          {
+            "key": "tipoTerceroId",
+            "type": "select-attributes",
+            "templateOptions": {
+              "label": "Tipo de tercero",
+              "placeholder": "Introduce tipo de tercero",
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "propertyMappedToFormState": "tipoTerceroSelectedId",
+              "modelEditName": "mainModel",
+              "dataSelectPropertyValue": "id",
+              "dataSelectPropertyToFormState": "clase",
+              "dataSelect": [
+                {
+                  "id": "A",
+                  "nombre": "EXTRANJEROS NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "8",
+                  "nombre": "EXTRANJEROS RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ORGANISMOS PÚBLICOS (Q) Y CORP. LOCALES (P)",
+                  "clase": "J"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ORGANOS DE LA ADMIN. DEL ESTADO Y CC.AA.",
+                  "clase": "J"
+                },
+                {
+                  "id": "9U",
+                  "nombre": "PERSONA FISICA EXTRANJ CON NIU",
+                  "clase": "F"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONAS FISICAS: ESPAÑOLES NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "9",
+                  "nombre": "PERSONAS FISICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "F"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FISICAS: MENORES",
+                  "clase": "F"
+                },
+                {
+                  "id": "5",
+                  "nombre": "PERSONAS FISICAS: NIF ESPAÑOLES",
+                  "clase": "F"
+                },
+                {
+                  "id": "1",
+                  "nombre": "PERSONAS JURIDICAS: ESPAÑOLAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "21",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJ. ESTABLECIMIENTO PERM.",
+                  "clase": "J"
+                },
+                {
+                  "id": "2",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "20",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS NO RESIDENTES",
+                  "clase": "J"
+                },
+                {
+                  "id": "90",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "J"
+                },
+                {
+                  "id": "0",
+                  "nombre": "UNIVERSIDAD DE MURCIA",
+                  "clase": "J"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.options": "field.templateOptions.dataSelect",
+              "templateOptions.required": "!formState.mainModel.datosEconomicos &amp;&amp; model.datosEconomicos",
+              "templateOptions.disabled": "formState.mainModel.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoEmpresaId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad",
+              "placeholder": "Introduce tipo de entidad",
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMON. AUTONOMICA"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMON. CENTRAL"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ADMON. LOCAL"
+                },
+                {
+                  "id": "9",
+                  "nombre": "ADMON. PAISES EXTRANJEROS"
+                },
+                {
+                  "id": "8",
+                  "nombre": "ASOCIACIONES"
+                },
+                {
+                  "id": "3",
+                  "nombre": "EMPR. EXTRANJERAS"
+                },
+                {
+                  "id": "4",
+                  "nombre": "EMPR. NACIONALES"
+                },
+                {
+                  "id": "10",
+                  "nombre": "EMPR. REGIONALES"
+                },
+                {
+                  "id": "7",
+                  "nombre": "FUNDACIONES"
+                },
+                {
+                  "id": "99",
+                  "nombre": "OTRAS"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FÍSICAS"
+                },
+                {
+                  "id": "13",
+                  "nombre": "UNIVERSIDAD EXTRANJERA"
+                },
+                {
+                  "id": "12",
+                  "nombre": "UNIVERSIDAD PRIVADA ESPAÑOLA"
+                },
+                {
+                  "id": "11",
+                  "nombre": "UNIVERSIDAD PÚBLICA ESPAÑOLA"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.required": "!formState.mainModel.datosEconomicos &amp;&amp; model.datosEconomicos",
+              "templateOptions.disabled": "formState.mainModel.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoEmpresaContabilidadId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad para contabilidad",
+              "placeholder": "Introduce tipo de entidad para contabilidad",
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (CARM)"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (NO CARM)"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ADMINISTRACION PUBLICA ESTATAL"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMINISTRACION PUBLICA LOCAL Y DIPUTACIONES"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ORGANISMO EUROPEO O INTERNACIONAL"
+                },
+                {
+                  "id": "6",
+                  "nombre": "OTROS ENTES DEL SECTOR PUBLICO, EMPRESA O INSTITUCION PRIVADA"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONA FISICA"
+                },
+                {
+                  "id": "8",
+                  "nombre": "PROPIO"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.required": "!formState.mainModel.datosEconomicos &amp;&amp; model.datosEconomicos",
+              "templateOptions.disabled": "formState.mainModel.datosEconomicos"
+            }
+          },
+          {
+            "key": "tipoTerceroReinoUnidoId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de tercero Reino Unido",
+              "placeholder": "Introduce tipo de tercero Reino Unido",
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": null,
+                  "nombre": ""
+                },
+                {
+                  "id": "IN",
+                  "nombre": "TERCERO DE IRLANDA DEL NORTE"
+                },
+                {
+                  "id": "S",
+                  "nombre": "TERCERO NORMAL"
+                }
+              ]
+            },
+            "expressionProperties": {
+              "templateOptions.required": "model.datosEconomicos &amp;&amp; null!==model.paisContactoId &amp;&amp; model.paisContactoId==='006' &amp;&amp; formState.tipoTerceroSelectedId==='F' &amp;&amp; !(formState.mainModel.datosEconomicos &amp;&amp; null!==formState.mainModel.paisContactoId &amp;&amp; formState.mainModel.paisContactoId==='006' &amp;&amp; formState.mainModel.tipoTerceroSelectedId==='F')",
+              "templateOptions.disabled": "(formState.mainModel.datosEconomicos &amp;&amp; !(null!==model.paisContactoId &amp;&amp; model.paisContactoId==='006' &amp;&amp; formState.mainModel.tipoTerceroSelectedId==='F')) || (formState.mainModel.datosEconomicos &amp;&amp; null!==formState.mainModel.paisContactoId &amp;&amp; formState.mainModel.paisContactoId==='006' &amp;&amp; formState.mainModel.tipoTerceroSelectedId==='F')"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+        </format>
+        <args/>
+      </payloadFactory>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/empresas/formly/view">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgemp-add-x-api-key-sequence"/>
+      <payloadFactory media-type="json">
+        <format>
+[
+  {
+    "wrappers": [
+      "global"
+    ],
+    "templateOptions": {
+      "styles": "{ \"width\": \"900px\" }"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos Generales"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoSedeId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de sede",
+                  "placeholder": "Introduce tipo de sede",
+                  "disabled": true,
+                  "options": [
+                    {
+                      "value": "0",
+                      "label": "Entidad"
+                    },
+                    {
+                      "value": "1",
+                      "label": "Subentidad"
+                    }
+                  ]
+                }
+              },
+              {
+                "key": "datosEconomicos",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Datos económicos",
+                  "placeholder": "Introduce datos económicos",
+                  "disabled": true,
+                  "options": [
+                    {
+                      "value": true,
+                      "label": "Sí"
+                    },
+                    {
+                      "value": false,
+                      "label": "No"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "key": "entidadRazonSocial",
+            "type": "input",
+            "templateOptions": {
+              "label": "Entidad / Razón social",
+              "placeholder": "Introduce Entidad / Razón social",
+              "disabled": true
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "tipoIdentificadorFiscalId",
+                "type": "select-tipos-identificadores",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de identificador fiscal",
+                  "placeholder": "Introduce tipo de identificador fiscal",
+                  "disabled": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "numeroIdentificadorFiscal",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número de identificador fiscal",
+                  "placeholder": "Introduce número de identificador fiscal",
+                  "disabled": true
+                }
+              }
+            ]
+          },
+          {
+            "key": "entidadPrincipal",
+            "type": "input",
+            "templateOptions": {
+              "label": "Entidad principal",
+              "placeholder": "Introduce entidad principal",
+              "disabled": true,
+              "hideExpression": "model.tipoSedeId==='1'"
+            }
+          },
+          {
+            "type": "table-crud-clasificaciones",
+            "key": "sectoresIndustriales",
+            "templateOptions": {
+              "title": "Sectores industriales",
+              "entity": "Sector industrial",
+              "disabled": true
+            },
+            "fieldArray": {
+              "fieldGroup": [
+                {
+                  "key": "sectorIndustrial",
+                  "type": "input",
+                  "templateOptions": {
+                    "label": "Nivel seleccionado",
+                    "order": 20
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Contacto"
+        },
+        "fieldGroup": [
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "paisContactoId",
+                "type": "select-paises",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "País",
+                  "placeholder": "Introduce país",
+                  "disabled": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre"
+                }
+              },
+              {
+                "key": "codigoPostalContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Código postal",
+                  "placeholder": "Introduce código postal",
+                  "disabled": true
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "ciudadContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Ciudad",
+                  "placeholder": "Introduce ciudad",
+                  "disabled": true
+                }
+              },
+              {
+                "key": "tipoViaContactoId",
+                "type": "select",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Tipo de vía",
+                  "placeholder": "Introduce tipo de vía",
+                  "disabled": true,
+                  "valueProp": "id",
+                  "labelProp": "nombre",
+                  "options": [
+                    {
+                      "id": "9",
+                      "nombre": "ALAMEDA"
+                    },
+                    {
+                      "id": "33",
+                      "nombre": "ALDEA"
+                    },
+                    {
+                      "id": "10",
+                      "nombre": "APARTAMENTO"
+                    },
+                    {
+                      "id": "34",
+                      "nombre": "AREA, ARRABAL"
+                    },
+                    {
+                      "id": "35",
+                      "nombre": "ARROYO"
+                    },
+                    {
+                      "id": "3",
+                      "nombre": "AVENIDA"
+                    },
+                    {
+                      "id": "36",
+                      "nombre": "BAJADA"
+                    },
+                    {
+                      "id": "37",
+                      "nombre": "BARRANCO"
+                    },
+                    {
+                      "id": "11",
+                      "nombre": "BARRIO"
+                    },
+                    {
+                      "id": "12",
+                      "nombre": "BLOQUE"
+                    },
+                    {
+                      "id": "1",
+                      "nombre": "CALLE"
+                    },
+                    {
+                      "id": "38",
+                      "nombre": "CALLEJA"
+                    },
+                    {
+                      "id": "13",
+                      "nombre": "CAMINO"
+                    },
+                    {
+                      "id": "6",
+                      "nombre": "CARRETERA"
+                    },
+                    {
+                      "id": "30",
+                      "nombre": "CARRIL"
+                    },
+                    {
+                      "id": "14",
+                      "nombre": "CASERIO"
+                    },
+                    {
+                      "id": "15",
+                      "nombre": "CHALET"
+                    },
+                    {
+                      "id": "39",
+                      "nombre": "COLEGIO"
+                    },
+                    {
+                      "id": "16",
+                      "nombre": "COLONIA"
+                    },
+                    {
+                      "id": "41",
+                      "nombre": "CONJUNTO"
+                    },
+                    {
+                      "id": "17",
+                      "nombre": "CUESTA"
+                    },
+                    {
+                      "id": "99",
+                      "nombre": "DIPUTACION"
+                    },
+                    {
+                      "id": "18",
+                      "nombre": "EDIFICIO"
+                    },
+                    {
+                      "id": "42",
+                      "nombre": "ENTRADA"
+                    },
+                    {
+                      "id": "43",
+                      "nombre": "ESCALINATA"
+                    },
+                    {
+                      "id": "44",
+                      "nombre": "EXPLANADA"
+                    },
+                    {
+                      "id": "45",
+                      "nombre": "EXTRAMUROS"
+                    },
+                    {
+                      "id": "46",
+                      "nombre": "EXTRARRADIO"
+                    },
+                    {
+                      "id": "47",
+                      "nombre": "FERROCARRIL"
+                    },
+                    {
+                      "id": "19",
+                      "nombre": "GLORIETA"
+                    },
+                    {
+                      "id": "48",
+                      "nombre": "GRAN VIA"
+                    },
+                    {
+                      "id": "20",
+                      "nombre": "GRUPO"
+                    },
+                    {
+                      "id": "49",
+                      "nombre": "HUERTA"
+                    },
+                    {
+                      "id": "50",
+                      "nombre": "JARDINES"
+                    },
+                    {
+                      "id": "51",
+                      "nombre": "LADO"
+                    },
+                    {
+                      "id": "21",
+                      "nombre": "LUGAR"
+                    },
+                    {
+                      "id": "22",
+                      "nombre": "MANZANA"
+                    },
+                    {
+                      "id": "52",
+                      "nombre": "MASIA"
+                    },
+                    {
+                      "id": "23",
+                      "nombre": "MERCADO"
+                    },
+                    {
+                      "id": "53",
+                      "nombre": "MONTE"
+                    },
+                    {
+                      "id": "54",
+                      "nombre": "MUELLE"
+                    },
+                    {
+                      "id": "55",
+                      "nombre": "MUNICIPIO"
+                    },
+                    {
+                      "id": "32",
+                      "nombre": "PARAJE"
+                    },
+                    {
+                      "id": "56",
+                      "nombre": "PARCELA"
+                    },
+                    {
+                      "id": "24",
+                      "nombre": "PARQUE"
+                    },
+                    {
+                      "id": "25",
+                      "nombre": "PASAJE"
+                    },
+                    {
+                      "id": "4",
+                      "nombre": "PASEO"
+                    },
+                    {
+                      "id": "2",
+                      "nombre": "PLAZA"
+                    },
+                    {
+                      "id": "26",
+                      "nombre": "POBLADO"
+                    },
+                    {
+                      "id": "27",
+                      "nombre": "POLIGONO"
+                    },
+                    {
+                      "id": "28",
+                      "nombre": "PROLONGACION"
+                    },
+                    {
+                      "id": "57",
+                      "nombre": "PUENTE"
+                    },
+                    {
+                      "id": "58",
+                      "nombre": "PUERTA"
+                    },
+                    {
+                      "id": "59",
+                      "nombre": "QUINTA"
+                    },
+                    {
+                      "id": "60",
+                      "nombre": "RAMAL"
+                    },
+                    {
+                      "id": "29",
+                      "nombre": "RAMBLA"
+                    },
+                    {
+                      "id": "61",
+                      "nombre": "RAMPA"
+                    },
+                    {
+                      "id": "62",
+                      "nombre": "RIERA"
+                    },
+                    {
+                      "id": "63",
+                      "nombre": "RINCON"
+                    },
+                    {
+                      "id": "5",
+                      "nombre": "RONDA"
+                    },
+                    {
+                      "id": "64",
+                      "nombre": "RUA"
+                    },
+                    {
+                      "id": "65",
+                      "nombre": "SALIDA"
+                    },
+                    {
+                      "id": "66",
+                      "nombre": "SECTOR, SECCION"
+                    },
+                    {
+                      "id": "67",
+                      "nombre": "SENDA"
+                    },
+                    {
+                      "id": "68",
+                      "nombre": "SOLAR, SALON"
+                    },
+                    {
+                      "id": "69",
+                      "nombre": "SUBIDA"
+                    },
+                    {
+                      "id": "70",
+                      "nombre": "TERRENOS"
+                    },
+                    {
+                      "id": "71",
+                      "nombre": "TORRENTE"
+                    },
+                    {
+                      "id": "7",
+                      "nombre": "TRAVESIA"
+                    },
+                    {
+                      "id": "8",
+                      "nombre": "URBANIZACION"
+                    },
+                    {
+                      "id": "31",
+                      "nombre": "VEREDA"
+                    },
+                    {
+                      "id": "72",
+                      "nombre": "VIA"
+                    },
+                    {
+                      "id": "73",
+                      "nombre": "VIA PUBLICA"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "nombreViaContacto",
+                "type": "input",
+                "className": "flex-2",
+                "templateOptions": {
+                  "label": "Nombre de vía",
+                  "placeholder": "Introduce nombre de vía",
+                  "disabled": true
+                }
+              },
+              {
+                "key": "numeroViaContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Número",
+                  "placeholder": "Introduce número",
+                  "disabled": true
+                }
+              }
+            ]
+          },
+          {
+            "key": "ampliacion",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Ampliación",
+              "placeholder": "Introduce ampliación",
+              "disabled": true
+            }
+          },
+          {
+            "key": "email",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Email",
+              "placeholder": "Introduce email",
+              "disabled": true
+            }
+          },
+          {
+            "fieldGroupClassName": "row-formly",
+            "fieldGroup": [
+              {
+                "key": "telefonoContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Teléfono",
+                  "placeholder": "Introduce teléfono",
+                  "disabled": true
+                }
+              },
+              {
+                "key": "faxContacto",
+                "type": "input",
+                "className": "flex-1",
+                "templateOptions": {
+                  "label": "Fax",
+                  "placeholder": "Introduce fax",
+                  "disabled": true
+                }
+              }
+            ]
+          },
+          {
+            "key": "direccionWeb",
+            "type": "input",
+            "className": "flex-1",
+            "templateOptions": {
+              "label": "Dirección web",
+              "placeholder": "Introduce dirección web",
+              "disabled": true
+            }
+          }
+        ]
+      },
+      {
+        "wrappers": [
+          "mat-card-group"
+        ],
+        "templateOptions": {
+          "label": "Datos de Tipo de Entidad"
+        },
+        "hideExpression": "!model.datosEconomicos",
+        "fieldGroup": [
+          {
+            "key": "tipoTerceroId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de tercero",
+              "placeholder": "Introduce tipo de tercero",
+              "disabled": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "A",
+                  "nombre": "EXTRANJEROS NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "8",
+                  "nombre": "EXTRANJEROS RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ORGANISMOS PÚBLICOS (Q) Y CORP. LOCALES (P)",
+                  "clase": "J"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ORGANOS DE LA ADMIN. DEL ESTADO Y CC.AA.",
+                  "clase": "J"
+                },
+                {
+                  "id": "9U",
+                  "nombre": "PERSONA FISICA EXTRANJ CON NIU",
+                  "clase": "F"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONAS FISICAS: ESPAÑOLES NO RESIDENTES",
+                  "clase": "F"
+                },
+                {
+                  "id": "9",
+                  "nombre": "PERSONAS FISICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "F"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FISICAS: MENORES",
+                  "clase": "F"
+                },
+                {
+                  "id": "5",
+                  "nombre": "PERSONAS FISICAS: NIF ESPAÑOLES",
+                  "clase": "F"
+                },
+                {
+                  "id": "1",
+                  "nombre": "PERSONAS JURIDICAS: ESPAÑOLAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "21",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJ. ESTABLECIMIENTO PERM.",
+                  "clase": "J"
+                },
+                {
+                  "id": "2",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS",
+                  "clase": "J"
+                },
+                {
+                  "id": "20",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJERAS NO RESIDENTES",
+                  "clase": "J"
+                },
+                {
+                  "id": "90",
+                  "nombre": "PERSONAS JURIDICAS: EXTRANJEROS (FORMATO LIBRE)",
+                  "clase": "J"
+                },
+                {
+                  "id": "0",
+                  "nombre": "UNIVERSIDAD DE MURCIA",
+                  "clase": "J"
+                }
+              ]
+            }
+          },
+          {
+            "key": "tipoEmpresaId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad",
+              "placeholder": "Introduce tipo de entidad",
+              "disabled": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMON. AUTONOMICA"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMON. CENTRAL"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ADMON. LOCAL"
+                },
+                {
+                  "id": "9",
+                  "nombre": "ADMON. PAISES EXTRANJEROS"
+                },
+                {
+                  "id": "8",
+                  "nombre": "ASOCIACIONES"
+                },
+                {
+                  "id": "3",
+                  "nombre": "EMPR. EXTRANJERAS"
+                },
+                {
+                  "id": "4",
+                  "nombre": "EMPR. NACIONALES"
+                },
+                {
+                  "id": "10",
+                  "nombre": "EMPR. REGIONALES"
+                },
+                {
+                  "id": "7",
+                  "nombre": "FUNDACIONES"
+                },
+                {
+                  "id": "99",
+                  "nombre": "OTRAS"
+                },
+                {
+                  "id": "6",
+                  "nombre": "PERSONAS FÍSICAS"
+                },
+                {
+                  "id": "13",
+                  "nombre": "UNIVERSIDAD EXTRANJERA"
+                },
+                {
+                  "id": "12",
+                  "nombre": "UNIVERSIDAD PRIVADA ESPAÑOLA"
+                },
+                {
+                  "id": "11",
+                  "nombre": "UNIVERSIDAD PÚBLICA ESPAÑOLA"
+                }
+              ]
+            }
+          },
+          {
+            "key": "tipoEmpresaContabilidadId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de entidad para contabilidad",
+              "placeholder": "Introduce tipo de entidad para contabilidad",
+              "disabled": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": "2",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (CARM)"
+                },
+                {
+                  "id": "3",
+                  "nombre": "ADMINISTRACION PUBLICA AUTONOMICA (NO CARM)"
+                },
+                {
+                  "id": "4",
+                  "nombre": "ADMINISTRACION PUBLICA ESTATAL"
+                },
+                {
+                  "id": "1",
+                  "nombre": "ADMINISTRACION PUBLICA LOCAL Y DIPUTACIONES"
+                },
+                {
+                  "id": "5",
+                  "nombre": "ORGANISMO EUROPEO O INTERNACIONAL"
+                },
+                {
+                  "id": "6",
+                  "nombre": "OTROS ENTES DEL SECTOR PUBLICO, EMPRESA O INSTITUCION PRIVADA"
+                },
+                {
+                  "id": "7",
+                  "nombre": "PERSONA FISICA"
+                },
+                {
+                  "id": "8",
+                  "nombre": "PROPIO"
+                }
+              ]
+            }
+          },
+          {
+            "key": "tipoTerceroReinoUnidoId",
+            "type": "select",
+            "templateOptions": {
+              "label": "Tipo de tercero Reino Unido",
+              "placeholder": "Introduce tipo de tercero Reino Unido",
+              "disabled": true,
+              "valueProp": "id",
+              "labelProp": "nombre",
+              "options": [
+                {
+                  "id": null,
+                  "nombre": ""
+                },
+                {
+                  "id": "IN",
+                  "nombre": "TERCERO DE IRLANDA DEL NORTE"
+                },
+                {
+                  "id": "S",
+                  "nombre": "TERCERO NORMAL"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+        </format>
+        <args/>
+      </payloadFactory>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
   <!-- datos contacto -->
   <resource methods="GET" uri-template="/datos-contacto/empresa/{id}">
     <inSequence>
