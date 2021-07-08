@@ -1360,6 +1360,7 @@
   "pii.sector-aplicacion": "Sector{count,plural,=0{} one{} other{es}} de Aplicación",
   "pii.sector-aplicacion.descripcion": "Descripción",
   "pii.sector-aplicacion.nombre": "Nombre",
+  "pii.subtipo-proteccion": "Subtipo{count,plural,=0{} one{} other{s}} de Protección",
   "pii.tipo-propiedad.INDUSTRIAL": "Propiedad Industrial",
   "pii.tipo-propiedad.INTELECTUAL": "Propiedad Intelectual",
   "pii.tipo-proteccion": "Tipo{count,plural,=0{} one{} other{s}} de Protección",

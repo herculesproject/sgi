@@ -1,37 +1,29 @@
 <div class="scrollable-panel">
-  <section class="tipo-proteccion-listado">
+  <section class="subtipo-proteccion-listado">
 
     <!-- Listado de fuentes de financiación -->
-    <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="tipoProteccion$ | async" matSort
-      matSortActive="id" matSortDirection="asc" matSortDisableClear>
+    <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="dataSource" matSort matSortActive="id"
+      matSortDirection="asc" matSortDisableClear>
       <!-- Nombre -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-proteccion.nombre' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.nombre}}</td>
+        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.value.nombre}}</td>
       </ng-container>
 
       <!-- Descripción -->
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-proteccion.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.descripcion}}</td>
-      </ng-container>
-
-      <!-- TipoPropiedad -->
-      <ng-container matColumnDef="tipoPropiedad">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-proteccion.tipo-propiedad' | translate}}
-        </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{TIPO_PROPIEDAD_MAP.get(tipoProteccion.tipoPropiedad) |
-          translate}}
-        </td>
+        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.value.descripcion}}</td>
       </ng-container>
 
       <!-- Activo -->
       <ng-container matColumnDef="activo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.activo' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{(tipoProteccion.activo ? 'label.si' : 'label.no') | translate}}
+        <td mat-cell *matCellDef="let tipoProteccion">{{(tipoProteccion.value.activo ? 'label.si' : 'label.no') |
+          translate}}
         </td>
       </ng-container>
 
@@ -39,20 +31,20 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let tipoProteccion">
-          <ng-container *sgiHasAuthority="'PII-TPR-E'">
-            <button *ngIf="tipoProteccion.activo" [routerLink]="[tipoProteccion.id]" mat-button
+          <ng-container *sgiHasAnyAuthority="['PII-TPR-E']">
+            <button *ngIf="tipoProteccion.value.activo" (click)="openModal(tipoProteccion)" mat-button
               matTooltip="{{'btn.edit' | translate}}">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>
-          <ng-container *sgiHasAuthority="'PII-TPR-B'">
-            <button *ngIf="tipoProteccion.activo" mat-button matTooltip="{{'btn.delete' | translate}}"
+          <ng-container *sgiHasAnyAuthority="['PII-TPR-B']">
+            <button *ngIf="tipoProteccion.value.activo" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateTipoProteccion(tipoProteccion)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'PII-TPR-R'">
-            <button *ngIf="!tipoProteccion.activo" mat-button matTooltip="{{'btn.recover' | translate}}"
+            <button *ngIf="!tipoProteccion.value.activo" mat-button matTooltip="{{'btn.recover' | translate}}"
               (click)="activateTipoProteccion(tipoProteccion)">
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
@@ -64,11 +56,16 @@
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>
       <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+    <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
     </mat-paginator>
 
     <ng-container *sgiHasAuthority="'PII-TPR-C'">
-      <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW"></sgi-footer-crear>
+      <div class="separation-button">
+        <button color="three" mat-raised-button (click)="openModal(null)">
+          <mat-icon color="accent">add_circle</mat-icon>
+          {{ 'btn.add.entity' | translate:msgParamEntity }}
+        </button>
+      </div>
     </ng-container>
 
   </section>

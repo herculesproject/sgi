@@ -22,6 +22,7 @@ export class TipoProteccionDatosGeneralesComponent extends FormFragmentComponent
   msgParamNombreEntity = {};
   msgParamDescripcionEntity = {};
   msgParamTipoPropiedadEntity = {};
+  key: number;
 
   get TIPO_PROPIEDAD_MAP() {
     return TIPO_PROPIEDAD_MAP;
@@ -32,6 +33,7 @@ export class TipoProteccionDatosGeneralesComponent extends FormFragmentComponent
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    this.key = this.fragment.getKey() as number;
   }
 
   ngOnInit(): void {

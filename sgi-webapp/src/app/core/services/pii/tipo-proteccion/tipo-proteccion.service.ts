@@ -9,9 +9,7 @@ import {
   mixinCreate,
   mixinFindAll,
   mixinFindById,
-  mixinUpdate,
-  SgiRestBaseService,
-  SgiRestFindOptions,
+  mixinUpdate, SgiRestBaseService, SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
 } from '@sgi/framework/http';
@@ -70,10 +68,23 @@ export class TipoProteccionService extends _TipoProteccionServiceMixinBase {
   }
 
   /**
+   * Busca los Subtipos pertenecientes al {@link TipoProteccion} pasado por parámetro.
+   *
+   * @param id del {@link ITipoProteccion} padre 
+   * @returns lista de {@link ITipoProteccion}.
+   */
+  findSubtipos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoProteccion>> {
+    return this.find<ITipoProteccionResponse, ITipoProteccion>(
+      `${this.endpointUrl}/${id}/subtipos`,
+      options,
+      TIPO_PROTECCION_RESPONSE_CONVERTER
+    );
+  }
+  /**
    * Activar un Tipo de Resultado
    * @param options opciones de búsqueda.
    */
-  activar(id: number): Observable<void> {
+  activate(id: number): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/activar`, { id });
   }
 
@@ -81,8 +92,17 @@ export class TipoProteccionService extends _TipoProteccionServiceMixinBase {
    * Desactivar Tipo de Protección
    * @param options Opciones de búsqueda.
    */
-  desactivar(id: number): Observable<void> {
+  deactivate(id: number): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, { id });
+  }
+
+  /**
+   * TODO FIXME Implementar metodo consultando Backend
+   * Retorna un {@link boolean} con valor True si se puede editar el {@link ITipoPropiedad} al editar un {@link ITipoProteccion}
+   * @param options Opciones de búsqueda.
+   */
+  hasAssociatedSolicitudProteccion(id: number): boolean {
+    return Math.round(Math.random() * 10) % 2 === 0;
   }
 
 }

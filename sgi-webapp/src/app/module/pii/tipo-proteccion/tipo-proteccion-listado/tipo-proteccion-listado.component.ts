@@ -233,7 +233,7 @@ export class TipoProteccionListadoComponent extends AbstractTablePaginationCompo
     const subcription = this.dialogService.showConfirmation(this.textoDesactivar)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoProteccionService.desactivar(tipoProteccion.id);
+          return this.tipoProteccionService.deactivate(tipoProteccion.id);
         } else {
           return of();
         }
@@ -263,7 +263,7 @@ export class TipoProteccionListadoComponent extends AbstractTablePaginationCompo
     const subcription = this.dialogService.showConfirmation(this.textoReactivar)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoProteccionService.activar(tipoProteccion.id);
+          return this.tipoProteccionService.activate(tipoProteccion.id);
         } else {
           return of();
         }

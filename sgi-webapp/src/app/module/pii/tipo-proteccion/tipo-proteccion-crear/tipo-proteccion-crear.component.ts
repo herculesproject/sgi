@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -9,7 +9,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { shareReplay, switchMap, tap } from 'rxjs/operators';
+import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { PII_TIPO_PROTECCION_ROUTE_NAMES } from '../tipo-proteccion-route-names';
 import { TipoProteccionActionService } from '../tipo-proteccion.action.service';
 
@@ -26,7 +26,7 @@ const TIPO_PROTECCION_KEY = marker('pii.tipo-proteccion');
     TipoProteccionActionService
   ]
 })
-export class TipoProteccionCrearComponent extends ActionComponent {
+export class TipoProteccionCrearComponent extends ActionComponent implements OnInit {
 
   PII_TIPO_PROTECCION_ROUTE_NAMES = PII_TIPO_PROTECCION_ROUTE_NAMES;
   textoCrear$: Observable<string>;
@@ -45,7 +45,6 @@ export class TipoProteccionCrearComponent extends ActionComponent {
     super(router, route, actionService, dialogService);
   }
 
-  // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
@@ -55,7 +54,7 @@ export class TipoProteccionCrearComponent extends ActionComponent {
     const tituloSingular$ = this.translate.get(
       TIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).pipe(shareReplay());
+    ).pipe(take(1), shareReplay(1));
 
     this.textoCrear$ = tituloSingular$.pipe(
       switchMap((value) => {
@@ -63,28 +62,27 @@ export class TipoProteccionCrearComponent extends ActionComponent {
           MSG_BUTTON_SAVE,
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
-      }),
-      tap(ev => console.log(ev))
+      })
     );
 
-    tituloSingular$.pipe(
-      switchMap((value) => {
-        return this.translate.get(
-          MSG_SUCCESS,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.textoCrearSuccess = value);
-
-    tituloSingular$.pipe(
-      switchMap((value) => {
-        return this.translate.get(
-          MSG_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.textoCrearError = value);
-
+    this.subscriptions.push(...[
+      tituloSingular$.pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            MSG_SUCCESS,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.textoCrearSuccess = value),
+      tituloSingular$.pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            MSG_ERROR,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.textoCrearError = value)
+    ]);
   }
 
   saveOrUpdate(): void {
