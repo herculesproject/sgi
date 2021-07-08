@@ -2339,7 +2339,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutFechaPublicacion_ReturnsFalse() throws Exception {
     // given: existing id without FechaPublicacion
     Long id = 1L;
@@ -2396,7 +2396,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutAmbitoGeografico_ReturnsFalse() throws Exception {
     // given: existing id without AmbitoGeografico
     Long id = 1L;
