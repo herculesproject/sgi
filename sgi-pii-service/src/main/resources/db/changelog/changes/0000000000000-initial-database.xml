@@ -16,9 +16,12 @@
         <createSequence incrementBy="1" sequenceName="sector_aplicacion_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-6">
-        <createSequence incrementBy="1" sequenceName="tipo_proteccion_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="tipo_procedimiento_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-7">
+        <createSequence incrementBy="1" sequenceName="tipo_proteccion_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-8">
         <createTable tableName="invencion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencionPK"/>
@@ -46,7 +49,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-8">
+    <changeSet author="user (generated)" id="0000000000000-9">
         <createTable tableName="invencion_inventor">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_inventorPK"/>
@@ -66,7 +69,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-9">
+    <changeSet author="user (generated)" id="0000000000000-10">
         <createTable tableName="invencion_sector_aplicacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_sector_aplicacionPK"/>
@@ -83,7 +86,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-10">
+    <changeSet author="user (generated)" id="0000000000000-11">
         <createTable tableName="resultado_informe_patentabilidad">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="resultado_informe_patentabilidadPK"/>
@@ -101,7 +104,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-11">
+    <changeSet author="user (generated)" id="0000000000000-12">
         <createTable tableName="sector_aplicacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="sector_aplicacionPK"/>
@@ -121,7 +124,25 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-12">
+    <changeSet author="user (generated)" id="0000000000000-13">
+        <createTable tableName="tipo_procedimiento">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_procedimientoPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)"/>
+            <column name="nombre" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-14">
         <createTable tableName="tipo_proteccion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_proteccionPK"/>
@@ -143,19 +164,19 @@
             <column name="tipo_proteccion_padre_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-13">
+    <changeSet author="user (generated)" id="0000000000000-15">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_inventor" constraintName="FK_INVENCIONINVENTOR_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-14">
+    <changeSet author="user (generated)" id="0000000000000-16">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_sector_aplicacion" constraintName="FK_INVENCIONSECTORAPLICACION_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-15">
+    <changeSet author="user (generated)" id="0000000000000-17">
         <addForeignKeyConstraint baseColumnNames="sector_aplicacion_id" baseTableName="invencion_sector_aplicacion" constraintName="FK_INVENCIONSECTORAPLICACION_SECTORAPLICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sector_aplicacion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-16">
+    <changeSet author="user (generated)" id="0000000000000-18">
         <addForeignKeyConstraint baseColumnNames="tipo_proteccion_id" baseTableName="invencion" constraintName="FK_INVENCION_TIPOPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_proteccion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-17">
+    <changeSet author="user (generated)" id="0000000000000-19">
         <addForeignKeyConstraint baseColumnNames="tipo_proteccion_padre_id" baseTableName="tipo_proteccion" constraintName="FK_TIPO_PROTECCION_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_proteccion" validate="true"/>
     </changeSet>
 </databaseChangeLog>
