@@ -243,10 +243,6 @@
             <input
               attr.aria-label="{{'csp.proyecto-presupuesto.valor-calculado' | translate}}: {{'csp.proyecto-presupuesto.total-importe-presupuesto' | translate}}"
               matInput type="text" [value]="this.valoresCalculadosData.importeTotalPresupuesto" disabled>
-            <sgi-field-info matSuffix
-              [visible]="!formPart.readonly && this.formGroup.controls.totalImportePresupuesto.value && this.valoresCalculadosData.importeTotalPresupuesto !== this.formGroup.controls.totalImportePresupuesto.value"
-              message="{{'msg.csp.proyecto-presupuesto.warn' | translate}}" color="warn">
-            </sgi-field-info>
           </mat-form-field>
         </div>
         <div>
@@ -254,6 +250,10 @@
             <input
               attr.aria-label="{{'csp.proyecto-presupuesto.valor-manual' | translate}}: {{'csp.proyecto-presupuesto.total-importe-presupuesto' | translate}}"
               matInput type="number" formControlName="totalImportePresupuesto">
+            <sgi-field-info matSuffix
+              [visible]="!formPart.readonly && this.formGroup.controls.totalImportePresupuesto.value && this.valoresCalculadosData.importeTotalPresupuesto !== this.formGroup.controls.totalImportePresupuesto.value"
+              message="{{'msg.csp.proyecto-presupuesto.warn' | translate}}" color="warn">
+            </sgi-field-info>
           </mat-form-field>
         </div>
       </div>
