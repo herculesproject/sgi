@@ -13,9 +13,10 @@ import { InvencionListadoComponent } from './invencion-listado/invencion-listado
 import { InvencionRoutingModule } from './invencion-routing.module';
 import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
 import { InvencionResolver } from './invencion.resolver';
+import { SectorAplicacionModalComponent } from './modals/sector-aplicacion-modal/sector-aplicacion-modal.component';
 
 @NgModule({
-  declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent, InvencionEditarComponent],
+  declarations: [InvencionListadoComponent, InvencionCrearComponent, InvencionDatosGeneralesComponent, InvencionEditarComponent, SectorAplicacionModalComponent],
   imports: [
     CommonModule,
     SharedModule,

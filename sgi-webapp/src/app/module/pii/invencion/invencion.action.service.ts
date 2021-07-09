@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionService } from '@core/services/action-service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { InvencionDatosGeneralesFragment } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.fragment';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
@@ -28,6 +29,7 @@ export class InvencionActionService extends ActionService {
   constructor(
     invencionService: InvencionService,
     route: ActivatedRoute,
+    proyectoService: ProyectoService
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(INVENCION_ROUTE_PARAMS.ID));
@@ -36,7 +38,7 @@ export class InvencionActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, this.canEdit);
+    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, this.canEdit);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
   }

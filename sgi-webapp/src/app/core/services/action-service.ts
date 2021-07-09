@@ -363,6 +363,10 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
   private key: number | string;
   private edit: boolean;
 
+  get formGroupStatus$(): BehaviorSubject<GroupStatus> {
+    return this.group.status$;
+  }
+
   /**
    * Default constructor
    * @param key The identity key to use during initialization
