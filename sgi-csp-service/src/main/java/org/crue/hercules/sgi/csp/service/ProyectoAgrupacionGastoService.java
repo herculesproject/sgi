@@ -131,4 +131,13 @@ public class ProyectoAgrupacionGastoService {
     return returnValue;
   }
 
+  public Page<ProyectoAgrupacionGasto> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    // TODO: Pendiente evaluar si es necesario retringir por unidad de gestión
+    Specification<ProyectoAgrupacionGasto> specs = SgiRSQLJPASupport.toSpecification(query);
+
+    Page<ProyectoAgrupacionGasto> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(String query, Pageable pageable) - end");
+    return returnValue;
+  }
 }

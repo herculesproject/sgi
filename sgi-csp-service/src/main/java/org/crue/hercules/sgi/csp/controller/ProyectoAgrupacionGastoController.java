@@ -69,9 +69,9 @@ public class ProyectoAgrupacionGastoController {
   public ResponseEntity<ProyectoAgrupacionGastoOutput> create(
       @Valid @RequestBody ProyectoAgrupacionGastoInput proyectoAgrupacionGasto) {
     log.debug("create(ProyectoAgrupacionGasto proyectoAgrupacionGasto) - start");
-    ProyectoAgrupacionGasto returnValue = service.create(convertProyectoAgrupacionGasto(proyectoAgrupacionGasto));
+    ProyectoAgrupacionGasto returnValue = service.create(convert(proyectoAgrupacionGasto));
     log.debug("create(ProyectoAgrupacionGasto proyectoAgrupacionGasto) - end");
-    return new ResponseEntity<>(convertProyectoAgrupacionGastoOutput(returnValue), HttpStatus.CREATED);
+    return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
   }
 
   /**
@@ -87,9 +87,9 @@ public class ProyectoAgrupacionGastoController {
   public ProyectoAgrupacionGastoOutput update(@Valid @RequestBody ProyectoAgrupacionGastoInput proyectoAgrupacionGasto,
       @PathVariable Long id) {
     log.debug("update(ProyectoAgrupacionGasto proyectoAgrupacionGasto, Long id) - start");
-    ProyectoAgrupacionGasto returnValue = service.update(convertProyectoAgrupacionGasto(id, proyectoAgrupacionGasto));
+    ProyectoAgrupacionGasto returnValue = service.update(convert(id, proyectoAgrupacionGasto));
     log.debug("update(ProyectoAgrupacionGasto proyectoAgrupacionGasto, Long id) - end");
-    return convertProyectoAgrupacionGastoOutput(returnValue);
+    return convert(returnValue);
   }
 
   /**
@@ -121,7 +121,7 @@ public class ProyectoAgrupacionGastoController {
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoAgrupacionGastoOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
-    ProyectoAgrupacionGastoOutput returnValue = convertProyectoAgrupacionGastoOutput(service.findById(id));
+    ProyectoAgrupacionGastoOutput returnValue = convert(service.findById(id));
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -161,34 +161,62 @@ public class ProyectoAgrupacionGastoController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertAgrupacionGastoConcepto(page), HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoAgrupacionGasto}
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-E', 'CSP-EJEC-V', 'CSP-EJEC-INV-VR')")
+  ResponseEntity<Page<ProyectoAgrupacionGastoOutput>> findAll(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Page<ProyectoAgrupacionGasto> page = service.findAll(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
-  private ProyectoAgrupacionGastoOutput convertProyectoAgrupacionGastoOutput(
-      ProyectoAgrupacionGasto proyectoAgrupacionGasto) {
+  private ProyectoAgrupacionGastoOutput convert(ProyectoAgrupacionGasto proyectoAgrupacionGasto) {
     return modelMapper.map(proyectoAgrupacionGasto, ProyectoAgrupacionGastoOutput.class);
   }
 
-  private ProyectoAgrupacionGasto convertProyectoAgrupacionGasto(
-      ProyectoAgrupacionGastoInput proyectoAgrupacionGastoInput) {
-    return convertProyectoAgrupacionGasto(null, proyectoAgrupacionGastoInput);
+  private ProyectoAgrupacionGasto convert(ProyectoAgrupacionGastoInput proyectoAgrupacionGastoInput) {
+    return convert(null, proyectoAgrupacionGastoInput);
   }
 
-  private ProyectoAgrupacionGasto convertProyectoAgrupacionGasto(Long id,
-      ProyectoAgrupacionGastoInput proyectoAgrupacionGastoInput) {
+  private Page<ProyectoAgrupacionGastoOutput> convert(Page<ProyectoAgrupacionGasto> page) {
+    List<ProyectoAgrupacionGastoOutput> content = page.getContent().stream()
+        .map((proyectoAgrupacion) -> convert(proyectoAgrupacion)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private ProyectoAgrupacionGasto convert(Long id, ProyectoAgrupacionGastoInput proyectoAgrupacionGastoInput) {
     ProyectoAgrupacionGasto proyectoAgrupacionGasto = modelMapper.map(proyectoAgrupacionGastoInput,
         ProyectoAgrupacionGasto.class);
     proyectoAgrupacionGasto.setId(id);
     return proyectoAgrupacionGasto;
   }
 
-  private AgrupacionGastoConceptoOutput convert(AgrupacionGastoConcepto agrupacionGastoConcepto) {
+  private AgrupacionGastoConceptoOutput convertAgrupacionGastoConcepto(
+      AgrupacionGastoConcepto agrupacionGastoConcepto) {
     return modelMapper.map(agrupacionGastoConcepto, AgrupacionGastoConceptoOutput.class);
   }
 
-  private Page<AgrupacionGastoConceptoOutput> convert(Page<AgrupacionGastoConcepto> page) {
+  private Page<AgrupacionGastoConceptoOutput> convertAgrupacionGastoConcepto(Page<AgrupacionGastoConcepto> page) {
     List<AgrupacionGastoConceptoOutput> content = page.getContent().stream()
-        .map((agrupacionGastoConcepto) -> convert(agrupacionGastoConcepto)).collect(Collectors.toList());
+        .map((agrupacionGastoConcepto) -> convertAgrupacionGastoConcepto(agrupacionGastoConcepto))
+        .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
