@@ -206,12 +206,13 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
   private checkDisabledControls(numAnualidades: number) {
     if (this.formGroup.controls.anualidades.value === null) {
       this.formPart.disableAddAnualidad$.next(true);
-    } else if (!this.formGroup.controls.anualidades.value && numAnualidades > 0) {
-      this.formPart.disableAddAnualidad$.next(true);
+    } else if (numAnualidades > 0) {
+      if (!this.formGroup.controls.anualidades.value) {
+        this.formPart.disableAddAnualidad$.next(true);
+      }
       if (!this.formGroup.controls.anualidades.disabled) {
         this.formGroup.controls.anualidades.disable();
       }
-
     } else {
       this.formPart.disableAddAnualidad$.next(false);
       if (this.formGroup.controls.anualidades.disabled) {
