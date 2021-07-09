@@ -1,8 +1,7 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';

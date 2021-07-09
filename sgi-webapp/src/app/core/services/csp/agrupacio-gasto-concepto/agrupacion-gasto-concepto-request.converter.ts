@@ -1,5 +1,5 @@
 import { IAgrupacionGastoConcepto } from '@core/models/csp/agrupacion-gasto-concepto';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IAgrupacionGastoConceptoRequest } from './agrupacion-gasto-concepto-request';
 

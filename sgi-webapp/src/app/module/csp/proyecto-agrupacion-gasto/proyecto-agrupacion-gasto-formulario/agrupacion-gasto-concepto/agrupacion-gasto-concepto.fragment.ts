@@ -1,6 +1,6 @@
 import { IAgrupacionGastoConcepto } from '@core/models/csp/agrupacion-gasto-concepto';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { Fragment } from '@core/services/action-service';
 import { AgrupacionGastoConceptoService } from '@core/services/csp/agrupacio-gasto-concepto/agrupacion-gasto-concepto.service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';

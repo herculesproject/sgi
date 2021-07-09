@@ -1,7 +1,7 @@
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IAnualidadGastoResponse } from './anualidad-gasto-response';
 

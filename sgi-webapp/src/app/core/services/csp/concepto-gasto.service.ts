@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';

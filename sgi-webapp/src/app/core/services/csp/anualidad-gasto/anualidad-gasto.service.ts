@@ -2,16 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IAnualidadGastoResponse } from './anualidad-gasto-response';
 import { ANUALIDAD_GASTO_RESPONSE_CONVERTER } from './anualidad-gasto-response.converter';
 
+// tslint:disable-next-line: variable-name
+const _AnualidadGastoServiceMixinBase:
+  FindAllCtor<IAnualidadGasto, IAnualidadGastoResponse> &
+  typeof SgiRestBaseService = mixinFindAll(SgiRestBaseService, ANUALIDAD_GASTO_RESPONSE_CONVERTER);
+
 @Injectable({
   providedIn: 'root'
 })
-export class AnualidadGastoService extends SgiRestBaseService {
+export class AnualidadGastoService extends _AnualidadGastoServiceMixinBase {
   private static readonly MAPPING = '/anualidadgasto';
 
   constructor(protected http: HttpClient) {

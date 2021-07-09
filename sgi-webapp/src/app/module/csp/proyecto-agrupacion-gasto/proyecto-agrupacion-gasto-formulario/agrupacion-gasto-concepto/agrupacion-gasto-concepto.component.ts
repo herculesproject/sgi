@@ -8,7 +8,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAgrupacionGastoConcepto } from '@core/models/csp/agrupacion-gasto-concepto';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';

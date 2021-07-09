@@ -2,21 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IColumna } from '@core/models/sge/columna';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
+import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { environment } from '@env';
 import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 enum TipoOperacion {
-  EPA = 'EPA',
-  EPG = 'EPG',
-  EPI = 'EPI',
-  FJF = 'FJF',
-  FJV = 'FJV',
-  FJP = 'FJP',
-  DOG = 'DOG',
-  DOI = 'DOI',
-  DOM = 'DOM'
+  EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL = 'EPA',
+  EJECUCION_PRESUPUESTARIA_GASTOS = 'EPG',
+  EJECUCION_PRESUPUESTARIA_INGRESOS = 'EPI',
+  FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS = 'FJF',
+  FACTURAS_JUSTIFICANTES_VIAJES_DIETAS = 'FJV',
+  FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO = 'FJP',
+  DETALLE_OPERACIONES_GASTOS = 'DOG',
+  DETALLE_OPERACIONES_INGRESOS = 'DOI',
+  DETALLE_OPERACIONES_MODIFICACIONES = 'DOM'
 }
 
 @Injectable({
@@ -32,9 +33,9 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     );
   }
 
-  private getColumnas(proyectoEconomicoId: string, tipoOperacion: TipoOperacion): Observable<IColumna[]> {
+  private getColumnas(proyectoEconomicoId: string, tipoOperacion: TipoOperacion, reducido = false): Observable<IColumna[]> {
     const filter = new RSQLSgiRestFilter('proyectoId', SgiRestFilterOperator.EQUALS, proyectoEconomicoId)
-      .and('tipoOperacion', SgiRestFilterOperator.EQUALS, tipoOperacion);
+      .and('tipoOperacion', SgiRestFilterOperator.EQUALS, tipoOperacion).and('reducida', SgiRestFilterOperator.EQUALS, `${reducido}`);
     const options: SgiRestFindOptions = {
       filter
     };
@@ -46,25 +47,68 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     );
   }
 
-  getColumnasEstadoActual(proyectoEconomicoId: string): Observable<IColumna[]> {
-    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EPA);
+  getColumnasEjecucionPresupuestariaEstadoActual(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL);
   }
 
-  getColumnasGastos(proyectoEconomicoId: string): Observable<IColumna[]> {
-    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EPG);
+  getColumnasEjecucionPresupuestariaGastos(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_GASTOS);
   }
 
-  getColumnasIngresos(proyectoEconomicoId: string): Observable<IColumna[]> {
-    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EPI);
+  getColumnasEjecucionPresupuestariaIngresos(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_INGRESOS);
+  }
+
+  getColumnasDetalleOperacionesGastos(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS);
+  }
+
+  getColumnasDetalleOperacionesIngresos(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_INGRESOS);
+  }
+
+  getColumnasDetalleOperacionesModificaciones(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_MODIFICACIONES);
+  }
+
+  getColumnasFacturasGastos(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS, true);
+  }
+
+  getColumnasViajesDietas(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS, true);
+  }
+
+  getColumnasPersonalContratado(proyectoEconomicoId: string): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO, true);
   }
 
   private getDatosEconomicos(
-    proyectoEconomicoId: string, tipoOperacion: TipoOperacion, anualidades: string[] = []
+    proyectoEconomicoId: string,
+    tipoOperacion: TipoOperacion,
+    anualidades: string[] = [],
+    reducido = false,
+    fechaPagoRange?: { desde: string, hasta: string },
+    fechaDevengoRange?: { desde: string, hasta: string },
+    fechaContabilizacionRange?: { desde: string, hasta: string }
   ): Observable<IDatoEconomico[]> {
     const filter = new RSQLSgiRestFilter('proyectoId', SgiRestFilterOperator.EQUALS, proyectoEconomicoId)
-      .and('tipoOperacion', SgiRestFilterOperator.EQUALS, tipoOperacion);
+      .and('tipoOperacion', SgiRestFilterOperator.EQUALS, tipoOperacion)
+      .and('reducida', SgiRestFilterOperator.EQUALS, `${reducido}`);
     if (anualidades.length) {
       filter.and('anualidad', SgiRestFilterOperator.IN, anualidades);
+    }
+    if (fechaPagoRange?.desde && fechaPagoRange?.hasta) {
+      filter.and('fechaPago', SgiRestFilterOperator.GREATHER_OR_EQUAL, fechaPagoRange.desde)
+        .and('fechaPago', SgiRestFilterOperator.LOWER_OR_EQUAL, fechaPagoRange.hasta);
+    }
+    if (fechaDevengoRange?.desde && fechaDevengoRange?.hasta) {
+      filter.and('fechaDevengo', SgiRestFilterOperator.GREATHER_OR_EQUAL, fechaDevengoRange.desde)
+        .and('fechaDevengo', SgiRestFilterOperator.LOWER_OR_EQUAL, fechaDevengoRange.hasta);
+    }
+    if (fechaContabilizacionRange?.desde && fechaContabilizacionRange?.hasta) {
+      filter.and('fechaContabilizacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, fechaContabilizacionRange.desde)
+        .and('fechaContabilizacion', SgiRestFilterOperator.LOWER_OR_EQUAL, fechaContabilizacionRange.hasta);
     }
     const options: SgiRestFindOptions = {
       filter
@@ -77,16 +121,97 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     );
   }
 
-  getEstadoActual(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
-    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EPA, anualidades);
+  getEjecucionPresupuestariaEstadoActual(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, anualidades);
   }
 
-  getGastos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
-    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EPG, anualidades);
+  getEjecucionPresupuestariaGastos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_GASTOS, anualidades);
   }
 
-  getIngresos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
-    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EPI, anualidades);
+  getEjecucionPresupuestariaIngresos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_INGRESOS, anualidades);
   }
 
+  getDetalleOperacionesGastos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS, anualidades);
+  }
+
+  getDetalleOperacionesIngresos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_INGRESOS, anualidades);
+  }
+
+  getDetalleOperacionesModificaciones(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_MODIFICACIONES, anualidades);
+  }
+
+  getFacturasGastos(
+    proyectoEconomicoId: string,
+    anualidades: string[] = [],
+    fechaPagoRange?: { desde: string, hasta: string },
+    fechaDevengoRange?: { desde: string, hasta: string },
+    fechaContabilizacionRange?: { desde: string, hasta: string }
+  ): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(
+      proyectoEconomicoId,
+      TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS,
+      anualidades,
+      true,
+      fechaPagoRange,
+      fechaDevengoRange,
+      fechaContabilizacionRange
+    );
+  }
+
+  getViajesDietas(
+    proyectoEconomicoId: string,
+    anualidades: string[] = [],
+    fechaPagoRange?: { desde: string, hasta: string },
+    fechaDevengoRange?: { desde: string, hasta: string },
+    fechaContabilizacionRange?: { desde: string, hasta: string }
+  ): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(
+      proyectoEconomicoId,
+      TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS,
+      anualidades,
+      true,
+      fechaPagoRange,
+      fechaDevengoRange,
+      fechaContabilizacionRange
+    );
+  }
+
+  getPersonalContratado(
+    proyectoEconomicoId: string,
+    anualidades: string[] = [],
+    fechaPagoRange?: { desde: string, hasta: string },
+    fechaDevengoRange?: { desde: string, hasta: string },
+    fechaContabilizacionRange?: { desde: string, hasta: string }
+  ): Observable<IDatoEconomico[]> {
+    return this.getDatosEconomicos(
+      proyectoEconomicoId,
+      TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO,
+      anualidades,
+      true,
+      fechaPagoRange,
+      fechaDevengoRange,
+      fechaContabilizacionRange
+    );
+  }
+
+  private getDatoEconomicoDetalle(id: string, tipoOperacion: TipoOperacion): Observable<IDatoEconomicoDetalle> {
+    return this.http.get<IDatoEconomicoDetalle>(`${this.endpointUrl}/${id}`, { params: { tipoOperacion } });
+  }
+
+  getFacturaGasto(id: string): Observable<IDatoEconomicoDetalle> {
+    return this.getDatoEconomicoDetalle(id, TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS);
+  }
+
+  getViajeDieta(id: string): Observable<IDatoEconomicoDetalle> {
+    return this.getDatoEconomicoDetalle(id, TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS);
+  }
+
+  getPersonaContratada(id: string): Observable<IDatoEconomicoDetalle> {
+    return this.getDatoEconomicoDetalle(id, TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO);
+  }
 }

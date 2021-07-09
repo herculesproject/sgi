@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAgrupacionGastoConcepto } from '@core/models/csp/agrupacion-gasto-concepto';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { AgrupacionGastoConceptoService } from '@core/services/csp/agrupacio-gasto-concepto/agrupacion-gasto-concepto.service';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';

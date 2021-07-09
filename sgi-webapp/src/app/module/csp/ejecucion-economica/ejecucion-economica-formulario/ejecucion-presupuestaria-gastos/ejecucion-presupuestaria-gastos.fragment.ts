@@ -7,7 +7,8 @@ import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economic
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EjecucionPresupuestariaFragment, IColumnDefinition } from '../ejecucion-presupuestaria.fragment';
+import { IColumnDefinition } from '../desglose-economico.fragment';
+import { EjecucionPresupuestariaFragment } from '../ejecucion-presupuestaria.fragment';
 
 export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestariaFragment {
 
@@ -35,14 +36,14 @@ export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestar
   }
 
   protected getColumns(): Observable<IColumnDefinition[]> {
-    return this.ejecucionEconomicaService.getColumnasGastos(this.proyectoSge.id)
+    return this.ejecucionEconomicaService.getColumnasEjecucionPresupuestariaGastos(this.proyectoSge.id)
       .pipe(
         map(response => this.toColumnDefinition(response))
       );
   }
 
   protected getDatosEconomicos(anualidades: string[]): Observable<IDatoEconomico[]> {
-    return this.ejecucionEconomicaService.getGastos(this.proyectoSge.id, anualidades);
+    return this.ejecucionEconomicaService.getEjecucionPresupuestariaGastos(this.proyectoSge.id, anualidades);
   }
 
 }
