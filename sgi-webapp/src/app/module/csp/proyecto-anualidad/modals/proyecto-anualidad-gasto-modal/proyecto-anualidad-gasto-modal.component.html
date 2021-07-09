@@ -15,6 +15,9 @@
           [displayWith]="displayerIdentificadorSge" [compareWith]="comparerIdentificadorSge"
           [sortWith]="sorterIdentificadorSge">
         </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.identificadorSge.errors?.required">
+          {{'error.required.entity' | translate:msgParamProyectoSgeEntity}}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -166,7 +169,7 @@
             [displayWith]="displayerProyectoPartida">
           </sgi-select-entity>
           <mat-error *ngIf="formGroup.controls.partidaPresupuestaria.errors?.required">
-            {{'error.invalid.entity' | translate:msgParamPartidaPresupuestariaEntity}}
+            {{'error.required.entity' | translate:msgParamPartidaPresupuestariaEntity}}
           </mat-error>
         </mat-form-field>
       </div>

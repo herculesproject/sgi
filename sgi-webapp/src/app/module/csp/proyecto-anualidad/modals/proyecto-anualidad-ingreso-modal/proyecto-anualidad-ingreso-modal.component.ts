@@ -175,6 +175,16 @@ export class ProyectoAnualidadIngresoModalComponent extends
       }
     );
 
+    if (!this.data.anualidadIngreso?.proyectoSgeRef) {
+      this.subscriptions.push(
+        this.proyectosSge$.subscribe((values) => {
+          if (values.length === 1) {
+            this.formGroup.controls.identificadorSge.setValue(values[0]);
+          }
+        })
+      );
+    }
+
     return formGroup;
   }
 

@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatRadioChange } from '@angular/material/radio';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -40,6 +39,7 @@ const CODIGO_ECONOMICO_PERMITIDO_KEY = marker('csp.proyecto-anualidad.partida-ga
 const CONCEPTO_GASTO_KEY = marker('csp.proyecto-anualidad.partida-gasto.concepto-gasto');
 const PARTIDA_PRESUPUESTARIA_KEY = marker('csp.proyecto-anualidad.partida.partida-presupuestaria');
 const PROYECTO_PARTIDA_GASTO_KEY = marker('csp.proyecto-anualidad.partida-gasto');
+const PROYECTO_SGE_KEY = marker('csp.proyecto-anualidad.partida-gasto.identificador-sge');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoAnualidadGastoModalData {
@@ -86,6 +86,7 @@ export class ProyectoAnualidadGastoModalComponent extends
   msgParamPartidaPresupuestariaEntity = {};
   msgParamImporteEntity = {};
   msgParamFechaPrevistaEntity = {};
+  msgParamProyectoSgeEntity = {};
   title: string;
 
   optionsConceptoGasto: string[];
@@ -197,7 +198,15 @@ export class ProyectoAnualidadGastoModalComponent extends
     this.translate.get(
       PARTIDA_PRESUPUESTARIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPartidaPresupuestariaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamPartidaPresupuestariaEntity = {
+      entity: value,
+      ...MSG_PARAMS.CARDINALIRY.SINGULAR, ...MSG_PARAMS.GENDER.FEMALE
+    });
+
+    this.translate.get(
+      PROYECTO_SGE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamProyectoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   protected getDatosForm(): ProyectoAnualidadGastoModalData {
@@ -217,6 +226,7 @@ export class ProyectoAnualidadGastoModalComponent extends
     const codigoEconomico = this.data.anualidadGasto?.codigoEconomicoRef
       ? { id: this.data.anualidadGasto?.codigoEconomicoRef } as ICodigoEconomicoGasto
       : null;
+
     const identificadorSge = this.data.anualidadGasto?.proyectoSgeRef
       ? {
         proyectoSge:
@@ -267,14 +277,18 @@ export class ProyectoAnualidadGastoModalComponent extends
 
     this.subscriptions.push(
       this.proyectoService.findAllProyectoPartidas(this.data.proyectoId, optionsProyectoPartida)
-        .subscribe((response) => {
-          if (response.items.length === 1 && !identificadorSge) {
-            formGroup.controls.identificadorSge.setValue(response.items[0].id);
-          }
-          this.proyectosPartida$.next(response.items);
-        }
-        )
+        .subscribe((response) => this.proyectosPartida$.next(response.items))
     );
+
+    if (!this.data.anualidadGasto?.proyectoSgeRef) {
+      this.subscriptions.push(
+        this.proyectosSge$.subscribe((values) => {
+          if (values.length === 1) {
+            this.formGroup.controls.identificadorSge.setValue(values[0]);
+          }
+        })
+      );
+    }
 
     return formGroup;
   }
@@ -283,13 +297,13 @@ export class ProyectoAnualidadGastoModalComponent extends
     return proyectoSge?.proyectoSge?.id;
   }
 
-  sorterIdentificadorSge(o1: SelectValue<IProyectoSge>, o2: SelectValue<IProyectoSge>): number {
+  sorterIdentificadorSge(o1: SelectValue<IProyectoProyectoSge>, o2: SelectValue<IProyectoProyectoSge>): number {
     return o1?.displayText.toString().localeCompare(o2?.displayText.toString());
   }
 
-  comparerIdentificadorSge(o1: IProyectoSge, o2: IProyectoSge): boolean {
+  comparerIdentificadorSge(o1: IProyectoProyectoSge, o2: IProyectoProyectoSge): boolean {
     if (o1 && o2) {
-      return o1?.id === o2?.id;
+      return o1?.proyectoSge?.id === o2?.proyectoSge?.id;
     }
     return o1 === o2;
   }
