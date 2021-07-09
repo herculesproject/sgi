@@ -55,7 +55,7 @@
   <mat-paginator [pageSizeOptions]="elementsPage" showFirstLastButtons>
   </mat-paginator>
 
-  <div class="separation-button" *ngIf="!formPart.readonly">
+  <div class="separation-button">
     <button color="primary" class="rounded" mat-raised-button (click)="showPresupuestoCompleto()">
       <mat-icon>cases</mat-icon>
       {{'title.csp.presupuesto-completo'| translate}}
