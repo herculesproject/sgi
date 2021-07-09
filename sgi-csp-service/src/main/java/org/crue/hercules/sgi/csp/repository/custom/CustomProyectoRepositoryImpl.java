@@ -142,11 +142,11 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     // Define DTO projection
     cq.multiselect(
         // Total presupuesto universidad
-        cb.coalesce(sqlTotalConcedidoUniversidad.getSelection(), new BigDecimal(0)),
-        // Total concedido universidad
-        cb.coalesce(sqlTotalConcedidoUniversidad.getSelection(), new BigDecimal(0)),
+        cb.coalesce(sqlTotalPresupuestoUniversidad.getSelection(), new BigDecimal(0)),
         // Total presupuesto socio
         cb.coalesce(sqTotalPresupuestoSocio.getSelection(), new BigDecimal(0)),
+        // Total concedido universidad
+        cb.coalesce(sqlTotalConcedidoUniversidad.getSelection(), new BigDecimal(0)),
         // Total concedido socio
         cb.coalesce(sqTotalConcedidoSocio.getSelection(), new BigDecimal(0)));
     // Execute query

@@ -1556,6 +1556,25 @@ public class ProyectoServiceImpl implements ProyectoService {
     return returnValue;
   }
 
+  /**
+   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Solicitud}.
+   * 
+   * @param proyectoId Identificador de la entidad {@link Proyecto}.
+   * @return {@link ProyectoPresupuestoTotales}.
+   */
+  @Override
+  public ProyectoPresupuestoTotales getTotales(Long proyectoId) {
+    log.debug("getTotales(Long proyectoId) - start");
+    final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
+
+    returnValue.setImporteTotalPresupuesto(
+        returnValue.getImporteTotalPresupuestoUniversidad().add(returnValue.getImporteTotalPresupuestoSocios()));
+    returnValue.setImporteTotalConcedido(
+        returnValue.getImporteTotalConcedidoUniversidad().add(returnValue.getImporteTotalConcedidoSocios()));
+    log.debug("getTotales(Long proyectoId) - end");
+    return returnValue;
+  }
+
   private void checkCamposObligatoriosPorEstado(Proyecto proyecto, EstadoProyecto estadoProyecto) {
     // Validación de campos obligatorios según estados. Solo aplicaría en el
     // actualizar ya que en el crear el estado siempre será "Borrador"
@@ -1592,23 +1611,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
   }
 
-  /**
-   * Obtiene el {@link ProyectoPresupuestoTotales} de la {@link Solicitud}.
-   * 
-   * @param proyectoId Identificador de la entidad {@link Proyecto}.
-   * @return {@link ProyectoPresupuestoTotales}.
-   */
-  @Override
-  public ProyectoPresupuestoTotales getTotales(Long proyectoId) {
-    log.debug("getTotales(Long proyectoId) - start");
-    final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
 
-    returnValue.setImporteTotalPresupuesto(
-        returnValue.getImporteTotalPresupuestoUniversidad().add(returnValue.getImporteTotalPresupuestoSocios()));
-    returnValue.setImporteTotalConcedido(
-        returnValue.getImporteTotalConcedidoUniversidad().add(returnValue.getImporteTotalConcedidoSocios()));
-    log.debug("getTotales(Long proyectoId) - end");
-    return returnValue;
-  }
 
 }
