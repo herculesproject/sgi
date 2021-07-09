@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ClasificacionDataModal, ClasificacionModalComponent } from 'src/app/esb/sgo/shared/clasificacion-modal/clasificacion-modal.component';
+import { ClasificacionDataModal, ClasificacionModalComponent, TipoClasificacion } from 'src/app/esb/sgo/shared/clasificacion-modal/clasificacion-modal.component';
 import { BaseTableCRUDTypeComponent, TYPE_RENDER_COLUMN } from 'src/app/esb/shared/formly-forms/types/table-crud/base-table-crud.type';
 
 @Component({
@@ -76,7 +76,8 @@ export class TableCRUDClasificacionesTypeComponent extends BaseTableCRUDTypeComp
     });
 
     const data: ClasificacionDataModal = {
-      selectedClasificaciones: arrSelectedClasificaciones
+      selectedClasificaciones: arrSelectedClasificaciones,
+      tipoClasificacion: TipoClasificacion.SECTORES_INDUSTRIALES
     };
 
     const config = {

@@ -72,8 +72,8 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent implem
           switchMap((formlyData) => {
             return this.empresaService.getFormlyModelById(id).pipe(
               map((model) => {
-                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
                 formlyData.model = model;
+                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
                 return formlyData;
               }));
           })
@@ -94,8 +94,8 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent implem
           switchMap((formlyData) => {
             return this.empresaService.getFormlyModelById(id).pipe(
               map((model) => {
-                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
                 formlyData.model = model;
+                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
                 return formlyData;
               }));
           })

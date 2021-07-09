@@ -60,7 +60,7 @@ export class SelectAttributesTypeComponent extends FieldType implements OnInit {
     if (this.to.dataSelect && this.to.propertyMappedToFormState
       && this.to.dataSelectPropertyValue && this.to.dataSelectPropertyToFormState) {
       const dataSelectFilter = this.to.dataSelect.filter(item => item[this.to.dataSelectPropertyValue] === fieldId);
-      if (dataSelectFilter) {
+      if (dataSelectFilter && dataSelectFilter.length > 0 && dataSelectFilter[0]) {
         formStateObj[this.to.propertyMappedToFormState] = dataSelectFilter[0][this.to.dataSelectPropertyToFormState];
       }
     }

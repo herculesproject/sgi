@@ -63,6 +63,14 @@
           <button mat-button *ngIf="!empresaListado.selected" (click)="closeModal(empresaListado.empresa)">
             <mat-icon color="primary">done_outline</mat-icon>
           </button>
+          <button mat-button matTooltip="{{'btn.edit' | translate}}"
+            (click)="openEmpresaEditModal(empresaListado.empresa)">
+            <mat-icon color="primary">border_color</mat-icon>
+          </button>
+          <button mat-button matTooltip="{{'btn.view' | translate}}"
+            (click)="openEmpresaViewModal(empresaListado.empresa)">
+            <mat-icon color="primary">visibility</mat-icon>
+          </button>
           <span *ngIf="empresaListado.selected">
             {{'sgemp.empresa.seleccionada'| translate}}
           </span>
@@ -75,6 +83,12 @@
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
 
+  <div class="separation-button">
+    <button color="three" mat-raised-button (click)="openEmpresaCreateModal()">
+      <mat-icon color="accent">add_circle</mat-icon>
+      {{ 'btn.add.entity' | translate:msgParamEntity }}
+    </button>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
