@@ -8,7 +8,12 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
+import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
+import org.crue.hercules.sgi.pii.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.pii.model.Invencion;
+import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
+import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.service.InvencionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -18,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,15 +44,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InvencionController {
   public static final String MAPPING = "/invenciones";
+  public static final String PATH_SECTORES = "/{id}/sectoresaplicacion";
 
   private ModelMapper modelMapper;
 
   /** Invencion service */
   private final InvencionService service;
+  /** InvencionSectorAplicacion service */
+  private final InvencionSectorAplicacionService invencionSectorAplicacionService;
 
-  public InvencionController(ModelMapper modelMapper, InvencionService invencionService) {
+  public InvencionController(ModelMapper modelMapper, InvencionService invencionService,
+      InvencionSectorAplicacionService invencionSectorAplicacionService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
+    this.invencionSectorAplicacionService = invencionSectorAplicacionService;
   }
 
   /**
@@ -159,6 +170,53 @@ public class InvencionController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Devuelve las {@link InvencionSectorAplicacion} asociadas a la
+   * {@link Invencion} con el id indicado
+   * 
+   * @param id Identificador de {@link InvencionSectorAplicacion}
+   * @return {@link InvencionSectorAplicacion} correspondiente al id de la
+   *         {@link Invencion}
+   */
+  @GetMapping(PATH_SECTORES)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V', 'PII-INV-C')")
+  public List<InvencionSectorAplicacionOutput> findSectoresAplicacion(@PathVariable Long id) {
+    log.debug("findSectoresAplicacion(@PathVariable Long id) - start");
+    List<InvencionSectorAplicacionOutput> returnValue = convertInvencionSectoresAplicacion(
+        invencionSectorAplicacionService.findByInvencion(id));
+    log.debug("findSectoresAplicacion(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la lista de {@link InvencionSectorAplicacion} asociadas a la
+   * {@link Invencion} con el id indicado
+   * 
+   * @param id                 identificador de la {@link Invencion}
+   * @param sectoresAplicacion nueva lista de {@link InvencionSectorAplicacion} de
+   *                           la {@link Invencion}
+   * @return la nueva lista de {@link InvencionSectorAplicacion} asociadas a la
+   *         {@link Invencion}
+   */
+  @PatchMapping(PATH_SECTORES)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-C')")
+  public ResponseEntity<List<InvencionSectorAplicacionOutput>> updateSectoresAplicacion(@PathVariable Long id,
+      @Valid @RequestBody List<InvencionSectorAplicacionInput> sectoresAplicacion) {
+    log.debug("updateSectoresAplicacion(Long id, List<InvencionSectorAplicacionInput> sectoresAplicacion) - start");
+
+    sectoresAplicacion.stream().forEach(sectorAplicacion -> {
+      if (!sectorAplicacion.getInvencionId().equals(id)) {
+        throw new NoRelatedEntitiesException(InvencionSectorAplicacion.class, Invencion.class);
+      }
+    });
+
+    List<InvencionSectorAplicacionOutput> returnValue = convertInvencionSectoresAplicacion(
+        invencionSectorAplicacionService.updateSectoresAplicacion(id,
+            convertInvencionSectorAplicacionInputs(sectoresAplicacion)));
+    log.debug("updateSectoresAplicacion(Long id, List<InvencionSectorAplicacionInput> sectoresAplicacion) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   private InvencionOutput convert(Invencion invencion) {
     return modelMapper.map(invencion, InvencionOutput.class);
   }
@@ -178,5 +236,29 @@ public class InvencionController {
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private InvencionSectorAplicacion convert(Long id, InvencionSectorAplicacionInput input) {
+    InvencionSectorAplicacion entity = modelMapper.map(input, InvencionSectorAplicacion.class);
+    entity.setId(id);
+    return entity;
+  }
+
+  private InvencionSectorAplicacionOutput convert(InvencionSectorAplicacion entity) {
+    return modelMapper.map(entity, InvencionSectorAplicacionOutput.class);
+  }
+
+  private InvencionSectorAplicacion convert(InvencionSectorAplicacionInput input) {
+    return convert(null, input);
+  }
+
+  private List<InvencionSectorAplicacionOutput> convertInvencionSectoresAplicacion(
+      List<InvencionSectorAplicacion> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private List<InvencionSectorAplicacion> convertInvencionSectorAplicacionInputs(
+      List<InvencionSectorAplicacionInput> inputs) {
+    return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
   }
 }
