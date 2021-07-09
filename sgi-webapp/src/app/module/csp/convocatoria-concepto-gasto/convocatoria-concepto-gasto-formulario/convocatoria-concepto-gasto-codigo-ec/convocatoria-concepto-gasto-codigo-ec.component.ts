@@ -40,7 +40,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   private subscriptions: Subscription[] = [];
 
   elementosPagina: number[] = [5, 10, 25, 100];
-  displayedColumns: string[] = ['convocatoriaConceptoGasto.conceptoGasto.nombre', 'codigoEconomicoRef', 'fechaInicio', 'fechaFin', 'convocatoriaConceptoGasto.observaciones', 'acciones'];
+  displayedColumns: string[] = ['conceptoGasto.nombre', 'codigoEconomicoRef', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
 
   dataSource: MatTableDataSource<StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>> =
     new MatTableDataSource<StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>>();
@@ -130,10 +130,14 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     ).subscribe((value) => this.textoDeleteNoPermitido = value);
   }
 
-  openModal(wrapper?: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
+  openModal(wrapper?: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, rowIndex?: number): void {
+    // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación y paginación
+    this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
+    const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
+
     const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(element => element.value);
 
-    convocatoriaConceptoGastoCodigoEcsTabla.splice(numFila, 1);
+    convocatoriaConceptoGastoCodigoEcsTabla.splice(row, 1);
 
     const data: IConvocatoriaConceptoGastoCodigoEcModalComponent = {
       convocatoriaConceptoGastoCodigoEc: wrapper.value,
