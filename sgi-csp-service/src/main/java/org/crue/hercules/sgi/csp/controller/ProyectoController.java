@@ -1094,4 +1094,21 @@ public class ProyectoController {
 
   }
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si el {@link Proyecto}
+   * puede ser modificada.
+   * 
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
+  ResponseEntity<Convocatoria> modificable(@PathVariable Long id) {
+    log.debug("modificable(Long id) - start");
+    boolean returnValue = service.modificable(id, new String[] { "CSP-PRO-E", "CSP-PRO-V" });
+    log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -31,5 +33,16 @@ public interface ProyectoRepository
    * @return true si existe, false si no existe.
    */
   boolean existsBySolicitudId(Long solicitudId);
+
+  /**
+   * Comprueba si existe un {@link Proyecto} activo según su identificador y
+   * unidades de gestión
+   * 
+   * @param proyectoId      id del {@link Proyecto}.
+   * @param unidadesGestion referencias de las unidades de gestión del
+   *                        {@link Proyecto}
+   * @return true si existe, false si no existe.
+   */
+  boolean existsByIdAndUnidadGestionRefInAndActivoIsTrue(Long proyectoId, List<String> unidadesGestion);
 
 }

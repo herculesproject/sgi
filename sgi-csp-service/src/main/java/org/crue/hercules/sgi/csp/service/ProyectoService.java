@@ -98,4 +98,16 @@ public interface ProyectoService {
    */
   ProyectoPresupuestoTotales getTotales(Long proyectoId);
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si el {@link Proyecto}
+   * puede ser modificado. También se utilizará para permitir la creación,
+   * modificación o eliminación de ciertas entidades relacionadas con el
+   * {@link Proyecto}.
+   *
+   * @param proyectoId  Id del {@link Proyecto}.
+   * @param authorities Authorities a validar
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  boolean modificable(Long proyectoId, String[] authorities);
+
 }
