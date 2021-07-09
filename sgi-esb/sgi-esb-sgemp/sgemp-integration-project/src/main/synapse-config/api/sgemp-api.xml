@@ -1123,7 +1123,7 @@
                   "required": true
                 },
                 "expressionProperties": {
-                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId!=='1'"
+                  "templateOptions.required": "null!==model.paisContactoId &amp;&amp; model.paisContactoId!=='011'"
                 }
               },
               {
