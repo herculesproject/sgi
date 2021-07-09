@@ -301,7 +301,7 @@ public class ProyectoController {
    * @return Proyecto {@link Proyecto} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
   Proyecto findById(@PathVariable Long id) {
     log.debug("Proyecto findById(Long id) - start");
 
