@@ -2916,61 +2916,9 @@
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
       <sequence key="sgp-add-x-api-key-sequence"/>
-      <payloadFactory media-type="json">
-        <format>
-{
-  "personaId": "01117902",
-  "nombre": "ENRIQUE",
-  "apellidos": "SOMOZA MUÑOZ",
-  "tipoDocumentoId": "D",
-  "numeroDocumento": "01117902X",
-  "sexoId": "V",
-  "fechaNacimiento": "1963-02-24T00:00:00Z",
-  "paisNacimientoId": "011",
-  "regionNacimientoId": "14",
-  "ciudadNacimiento": "MURCIA",
-  "empresaId": "A0873643",
-  "fechaInicioVinculacion": "2021-05-10T22:00:00Z",
-  "tipoViaContactoId": "1",
-  "nombreViaContacto": "REMEDIOS",
-  "numeroViaContacto": "3",
-  "amplicacionDireccionContacto": "BLOQUE 3 ESC 2",
-  "paisContactoId": "011",
-  "regionContactoId": "14",
-  "provinciaContactoId": "30",
-  "codigoPostalContacto": "30002",
-  "ciudadContacto": "MURCIA",
-  "areaConocimientoId": "005",
-  "historicosEntidades": [
-    {
-      "entidad": "A0873643",
-      "inicioVinculacion": "2021-05-11T22:00:00Z",
-      "finVinculacion": "2021-05-21T22:00:00Z"
-    }
-  ],
-  "emails": [
-    "a@prueba.com",
-    "a@prueba.com"
-  ],
-  "telefonos": [
-    "666123456",
-    "666654321"
-  ],
-  "nivelAcademicoId": "1",
-  "fechaObtencion": "1985-02-14T22:00:00Z",
-  "categoriaPdiId": "DCA01",
-  "departamentoPdiId": "E555",
-  "fechaCategoriaPdi": "1990-01-14T22:00:00Z",
-  "fechaFinCategoriaPdi": "2021-06-30T22:00:00Z",
-  "categoriaPasId": null,
-  "unidadPasId": null,
-  "fechaCategoriaPas": null,
-  "fechaFinCategoriaPas": null
-}
-        </format>
-        <args/>
-      </payloadFactory>
-      <respond/>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
     </inSequence>
     <outSequence>
       <respond/>
