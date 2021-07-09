@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -34,6 +36,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { CONVOCATORIA_ID_KEY } from './solicitud-crear/solicitud-crear.guard';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudAutoevaluacionFragment } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.fragment';
@@ -50,6 +53,8 @@ import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formu
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
+
+const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 
 export interface ISolicitudData {
   readonly: boolean;
@@ -166,6 +171,9 @@ export class SolicitudActionService extends ActionService {
       this.data = route.snapshot.data[SOLICITUD_DATA_KEY];
       this.enableEdit();
       this.datosProyectoComplete$.next(this.data.hasSolicitudProyecto);
+      if (this.data.solicitud.convocatoriaId) {
+        this.addConvocatoriaLink(this.data.solicitud.convocatoriaId);
+      }
     }
 
     const isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
@@ -322,6 +330,14 @@ export class SolicitudActionService extends ActionService {
       this.datosGenerales.initialize();
     }
     this.hasAnySolicitudProyectoSocioWithRolCoordinador$.next(this.data?.hasAnySolicitudProyectoSocioWithRolCoordinador);
+  }
+
+  private addConvocatoriaLink(idConvocatoria: number): void {
+    this.addActionLink({
+      title: MSG_CONVOCATORIAS,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink: ['../..', CSP_ROUTE_NAMES.CONVOCATORIA, idConvocatoria.toString()]
+    });
   }
 
   saveOrUpdate(): Observable<void> {

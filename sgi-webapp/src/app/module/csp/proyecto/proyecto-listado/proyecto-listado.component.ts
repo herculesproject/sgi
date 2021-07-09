@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
@@ -14,6 +16,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ROUTE_NAMES } from '@core/route.names';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -30,7 +33,8 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOpt
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -88,6 +92,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
 
+  private convocatoriaId: number;
+
   get ESTADO_MAP() {
     return ESTADO_MAP;
   }
@@ -111,7 +117,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     private programaService: ProgramaService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
     private rolProyectoService: RolProyectoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private convocatoriaService: ConvocatoriaService,
+    route: ActivatedRoute,
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -124,11 +132,35 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    if (route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY)) {
+      this.convocatoriaId = Number(route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY));
+    }
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+
+    this.loadForm();
+
+    if (this.convocatoriaId) {
+      this.convocatoriaService.findById(this.convocatoriaId).pipe(
+        map((convocatoria) => {
+          this.formGroup.controls.convocatoria.patchValue(convocatoria);
+          this.busquedaAvanzada = true;
+          this.onSearch();
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          this.snackBarService.showError(this.msgError);
+          return of({} as IConvocatoria);
+        })
+      ).subscribe();
+    }
+  }
+
+  private loadForm() {
     this.formGroup = new FormGroup({
       titulo: new FormControl(''),
       acronimo: new FormControl(''),
@@ -143,7 +175,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       responsableProyecto: new FormControl({ value: '', disabled: true }),
       miembroEquipo: new FormControl({ value: '', disabled: true }),
       socioColaborador: new FormControl(''),
-      convocatoria: new FormControl(''),
+      convocatoria: new FormControl(undefined),
       entidadConvocante: new FormControl(''),
       planInvestigacion: new FormControl(''),
       entidadFinanciadora: new FormControl(''),

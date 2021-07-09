@@ -240,6 +240,11 @@ export interface ActionLink {
    * Router link of the action link
    */
   routerLink: string | string[];
+
+  /**
+   * Query params
+   */
+  queryParams?: {};
 }
 
 export abstract class Fragment implements IFragment {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { HttpProblem } from '@core/errors/http-problem';
@@ -30,6 +31,7 @@ import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-pers
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -81,6 +83,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   msgParamObservacionesEntity = {};
   msgParamUnidadGestionEntity = {};
 
+  private convocatoriaId: number;
+
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_CSP;
   }
@@ -109,7 +113,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
     private convocatoriaService: ConvocatoriaService,
-    private authService: SgiAuthService
+    private authService: SgiAuthService,
+    route: ActivatedRoute,
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -122,12 +127,34 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    if (route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY)) {
+      this.convocatoriaId = Number(route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY));
+    }
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
 
+    this.loadForm();
+
+    if (this.convocatoriaId) {
+      this.convocatoriaService.findById(this.convocatoriaId).pipe(
+        map((convocatoria) => {
+          this.formGroup.controls.convocatoria.patchValue(convocatoria);
+          this.onSearch();
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          this.snackBarService.showError(this.msgError);
+          return of({} as IConvocatoria);
+        })
+      ).subscribe();
+    }
+  }
+
+  private loadForm() {
     this.formGroup = new FormGroup({
       convocatoria: new FormControl(undefined),
       estadoSolicitud: new FormControl(''),
@@ -149,6 +176,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
     this.getFuentesFinanciacion();
     this.getPlanesInvestigacion();
+
+    this.filter = this.createFilter();
   }
 
   private setupI18N(): void {

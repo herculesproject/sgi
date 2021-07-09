@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { ActionService } from '@core/services/action-service';
@@ -31,6 +32,7 @@ import { NivelAcademicosService } from '@core/services/sgp/nivel-academico.servi
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { CONVOCATORIA_DATA_KEY } from './convocatoria-data.resolver';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
@@ -49,6 +51,10 @@ import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formul
 import { CONVOCATORIA_ROUTE_PARAMS } from './convocatoria-route-params';
 
 const MSG_REGISTRAR = marker('msg.csp.convocatoria.registrar');
+const MSG_SOLICITUDES = marker('csp.solicitud');
+const MSG_PROYECTOS = marker('csp.proyecto');
+
+export const CONVOCATORIA_ACTION_LINK_KEY = 'convocatoria';
 
 export interface IConvocatoriaData {
   readonly: boolean;
@@ -152,6 +158,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     if (this.id) {
       this.data = route.snapshot.data[CONVOCATORIA_DATA_KEY];
       this.enableEdit();
+      this.addSolicitudLink(this.id);
+      this.addProyectoLink(this.id);
     }
 
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
@@ -269,6 +277,23 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.datosGenerales.initialize();
   }
 
+  private addSolicitudLink(convocatoriaId: number): void {
+    this.addActionLink({
+      title: MSG_SOLICITUDES,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink: ['../..', CSP_ROUTE_NAMES.SOLICITUD],
+      queryParams: { [CONVOCATORIA_ACTION_LINK_KEY]: convocatoriaId }
+    });
+  }
+
+  private addProyectoLink(convocatoriaId: number): void {
+    this.addActionLink({
+      title: MSG_PROYECTOS,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink: ['../..', CSP_ROUTE_NAMES.PROYECTO],
+      queryParams: { [CONVOCATORIA_ACTION_LINK_KEY]: convocatoriaId }
+    });
+  }
   /**
    * Cuando se elimina una fase se actualizan los datos de la pestaña configuración solicitudes.
    */

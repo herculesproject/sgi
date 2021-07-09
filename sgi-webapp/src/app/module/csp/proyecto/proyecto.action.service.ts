@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
@@ -43,6 +45,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
+import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
 import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
@@ -67,6 +70,9 @@ import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-pro
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+
+const MSG_SOLICITUDES = marker('csp.solicitud');
+const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 
 export interface IProyectoData {
   proyecto: IProyecto;
@@ -209,8 +215,14 @@ export class ProyectoActionService extends ActionService {
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
     const id = Number(route.snapshot.paramMap.get(PROYECTO_ROUTE_PARAMS.ID));
 
-    if (id) {
+    if (this.data && id) {
       this.enableEdit();
+      if (this.data.proyecto?.solicitudId) {
+        this.addSolicitudLink(this.data.proyecto.solicitudId);
+      }
+      if (this.data.proyecto?.convocatoriaId) {
+        this.addConvocatoriaLink(this.data.proyecto.convocatoriaId);
+      }
     }
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
@@ -352,6 +364,21 @@ export class ProyectoActionService extends ActionService {
       // Inicializamos la ficha general de forma predeterminada
       this.fichaGeneral.initialize();
     }
+  }
+
+  private addSolicitudLink(idSolicitud: number): void {
+    this.addActionLink({
+      title: MSG_SOLICITUDES,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink: ['../..', CSP_ROUTE_NAMES.SOLICITUD, idSolicitud.toString()]
+    });
+  }
+  private addConvocatoriaLink(idConvocatoria: number): void {
+    this.addActionLink({
+      title: MSG_CONVOCATORIAS,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink: ['../..', CSP_ROUTE_NAMES.CONVOCATORIA, idConvocatoria.toString()]
+    });
   }
 
   /**
