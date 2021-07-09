@@ -330,6 +330,7 @@
         <artifactId>maven-help-plugin</artifactId>
         <executions>
           <execution>
+            <?m2e ignore?>
             <id>show-profiles</id>
             <phase>compile</phase>
             <goals>
