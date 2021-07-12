@@ -427,7 +427,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAnyAuthority="['CSP-PRO-B', 'CSP-PRO-B_' + proyecto.unidadGestion.id ]">
-            <button *ngIf="proyecto.activo ? true : false" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="proyecto.activo ? true : false" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateProyecto(proyecto)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
