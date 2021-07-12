@@ -98,7 +98,7 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button color="accent" (click)="saveOrUpdate()" mat-raised-button type="submit">
+  <button *ngIf="!this.data.readonly" color="accent" (click)="saveOrUpdate()" mat-raised-button type="submit">
     <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate |
     translate}}
   </button>

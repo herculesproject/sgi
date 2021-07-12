@@ -88,7 +88,7 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
 
   constructor(
     private dialogService: DialogService,
-    public actionService: ProyectoProrrogaActionService,
+    private actionService: ProyectoProrrogaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
     private documentoService: DocumentoService,
     private snackBar: SnackBarService,

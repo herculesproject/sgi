@@ -40,19 +40,20 @@ export class ProyectoSocioDataResolver extends SgiResolverResolver<IProyectoSoci
           if (!exists) {
             return throwError('NOT_FOUND');
           }
-          return this.loadProyectoSocioData(proyectoData.proyecto);
+          return this.loadProyectoSocioData(proyectoData);
         })
       );
     }
-    return this.loadProyectoSocioData(proyectoData.proyecto);
+    return this.loadProyectoSocioData(proyectoData);
   }
 
-  private loadProyectoSocioData(proyecto: IProyecto): Observable<IProyectoSocioData> {
-    return this.proyectoService.findAllProyectoSocioProyecto(proyecto.id).pipe(
+  private loadProyectoSocioData(proyectoData: IProyectoData): Observable<IProyectoSocioData> {
+    return this.proyectoService.findAllProyectoSocioProyecto(proyectoData.proyecto.id).pipe(
       map(socios => {
         return {
-          proyecto,
-          proyectoSocios: socios.items
+          proyecto: proyectoData.proyecto,
+          proyectoSocios: socios.items,
+          readonly: proyectoData.readonly
         };
       })
     );

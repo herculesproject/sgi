@@ -101,6 +101,10 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
       )
     );
 
+    if (this.readonly) {
+      form.disable();
+    }
+
     return form;
   }
 

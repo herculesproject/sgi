@@ -143,6 +143,11 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       comentarios: new FormControl(''),
       visible: new FormControl('')
     }));
+
+    if (this.actionService.readonly) {
+      this.group.form.disable();
+    }
+
     this.group.initialize();
 
     const idModeloEjecucion = this.actionService.modeloEjecucionId;

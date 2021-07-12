@@ -68,6 +68,11 @@ export class ProyectoConceptosGastoFragment extends FormFragment<ConceptoGastoLi
         IsEntityValidator.isValid()
       ])
     });
+
+    if (this.readonly) {
+      form.disable();
+    }
+
     return form;
   }
 

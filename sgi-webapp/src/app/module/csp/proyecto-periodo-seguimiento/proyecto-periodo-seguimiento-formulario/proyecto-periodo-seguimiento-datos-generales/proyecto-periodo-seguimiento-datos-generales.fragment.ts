@@ -23,7 +23,7 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
     private service: ProyectoPeriodoSeguimientoService,
     private proyecto: IProyecto,
     public readonly proyectoPeriodosSeguimiento: IProyectoPeriodoSeguimiento[],
-    private readonly
+    public readonly
   ) {
     super(key);
     this.proyectoPeriodoSeguimiento = { proyectoId: proyecto.id } as IProyectoPeriodoSeguimiento;

@@ -27,7 +27,7 @@ export class ProyectoConceptoGastoDatosGeneralesFragment extends FormFragment<IP
     private service: ProyectoConceptoGastoService,
     private selectedProyectoConceptosGasto: IProyectoConceptoGasto[],
     private permitido: boolean,
-    private readonly
+    public readonly: boolean
   ) {
     super(key);
     this.proyectoConceptoGasto = {

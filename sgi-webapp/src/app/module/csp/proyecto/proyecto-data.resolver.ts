@@ -28,7 +28,6 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
       map((proyecto) => {
         return {
           proyecto,
-          readonly: this.isReadonly(proyecto),
           disableCoordinadorExterno: false,
           hasAnyProyectoSocioCoordinador: false
         } as IProyectoData;
@@ -42,18 +41,24 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
             })
           );
       }),
-      switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data))
+      switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data)),
+      switchMap(data => this.isReadonly(data))
     );
   }
 
-  private isReadonly(proyecto: IProyecto): boolean {
-    if (!proyecto.activo) {
-      return true;
+  private isReadonly(data: IProyectoData): Observable<IProyectoData> {
+    if (data?.proyecto?.id) {
+      return this.service.modificable(data?.proyecto?.id)
+        .pipe(
+          map((value: boolean) => {
+            data.readonly = !value;
+            return data;
+          })
+        );
+    } else {
+      data.readonly = false;
+      return of(data);
     }
-    if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
-      return true;
-    }
-    return false;
   }
 
   private hasAnyProyectoSocioWithRolCoordinador(data: IProyectoData): Observable<IProyectoData> {

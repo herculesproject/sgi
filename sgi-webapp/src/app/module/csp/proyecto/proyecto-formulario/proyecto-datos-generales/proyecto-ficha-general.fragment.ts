@@ -335,6 +335,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
       this.subscribeToOnChangeHasPopulatedSocios();
 
+    } else {
+      form.disable();
     }
 
     return form;

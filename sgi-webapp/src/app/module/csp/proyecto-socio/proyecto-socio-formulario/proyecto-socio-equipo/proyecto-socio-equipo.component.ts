@@ -40,6 +40,10 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  get readonly(): boolean {
+    return this.actionService.readonly;
+  }
+
   constructor(
     private actionService: ProyectoSocioActionService,
     private matDialog: MatDialog,
@@ -120,7 +124,8 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
       fechaInicioMin: this.actionService.proyectoSocio?.fechaInicio,
       fechaFinMax: this.actionService.proyectoSocio?.fechaFin,
       showHorasDedicacion: false,
-      isEdit: Boolean(wrapper)
+      isEdit: Boolean(wrapper),
+      readonly: this.actionService.readonly
     };
 
     if (wrapper) {

@@ -32,6 +32,7 @@ export interface ProyectoAnualidadIngresoModalData {
   anualidadIngreso: IAnualidadIngreso;
   proyectoId: number;
   isEdit: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -183,6 +184,10 @@ export class ProyectoAnualidadIngresoModalComponent extends
           }
         })
       );
+    }
+
+    if (this.data.readonly) {
+      formGroup.disable();
     }
 
     return formGroup;

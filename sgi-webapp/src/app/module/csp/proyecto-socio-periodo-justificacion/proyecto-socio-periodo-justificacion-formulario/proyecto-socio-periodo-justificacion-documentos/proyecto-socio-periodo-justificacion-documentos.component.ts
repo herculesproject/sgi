@@ -90,9 +90,13 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
   hasChild = (_: number, node: NodeDocumentoProyecto) => node.childs.length > 0;
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
+  get readonly(): boolean {
+    return this.actionService.readonly;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
-    public actionService: ProyectoSocioPeriodoJustificacionActionService,
+    private actionService: ProyectoSocioPeriodoJustificacionActionService,
     private documentoService: DocumentoService,
     private tipoDocumentoService: TipoDocumentoService,
     private snackBar: SnackBarService,

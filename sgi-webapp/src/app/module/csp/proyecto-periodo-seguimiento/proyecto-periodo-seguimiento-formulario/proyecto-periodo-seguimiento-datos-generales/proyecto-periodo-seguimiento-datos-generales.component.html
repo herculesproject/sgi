@@ -235,7 +235,7 @@
         </mat-form-field>
       </div>
 
-      <div class="separation-button">
+      <div class="separation-button" *ngIf="!this.formPart.readonly">
         <button color="primary" aria-label="Center Align" mat-raised-button (click)="copyToProyecto()">
           {{'label.csp.proyecto-concepto-gasto'| translate}}
         </button>

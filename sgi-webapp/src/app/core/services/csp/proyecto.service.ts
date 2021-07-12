@@ -637,4 +637,16 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   getFormlyCreate(): Observable<FormlyFieldConfig[]> {
     return this.http.get<FormlyFieldConfig[]>(`${this.endpointUrl}/formly/create`);
   }
+
+  /**
+   * Comprueba si tiene permisos de edición del proyecto
+   *
+   * @param id Id del proyecto
+   */
+  modificable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

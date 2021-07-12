@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -41,19 +40,20 @@ export class ProyectoAgrupacionGastoDataResolver extends SgiResolverResolver<IPr
           if (!exists) {
             return throwError('NOT_FOUND');
           }
-          return this.loadProyectoAgrupacionGastoData(proyectoData.proyecto);
+          return this.loadProyectoAgrupacionGastoData(proyectoData);
         })
       );
     }
-    return this.loadProyectoAgrupacionGastoData(proyectoData.proyecto);
+    return this.loadProyectoAgrupacionGastoData(proyectoData);
   }
 
-  private loadProyectoAgrupacionGastoData(proyecto: IProyecto): Observable<IProyectoAgrupacionGastoData> {
-    return this.proyectoService.findAllAgrupacionesGasto(proyecto.id).pipe(
+  private loadProyectoAgrupacionGastoData(proyectoData: IProyectoData): Observable<IProyectoAgrupacionGastoData> {
+    return this.proyectoService.findAllAgrupacionesGasto(proyectoData.proyecto.id).pipe(
       map(values => {
         return {
-          proyecto,
-          proyectoAgrupacionesGasto: values.items
+          proyecto: proyectoData.proyecto,
+          proyectoAgrupacionesGasto: values.items,
+          readonly: proyectoData.readonly
         };
       })
     );

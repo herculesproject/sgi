@@ -68,6 +68,10 @@
                 (click)="openModal(true, wrapper)">
                 <mat-icon color="primary">border_color</mat-icon>
               </button>
+              <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
+                (click)="openModal(true, wrapper)">
+                <mat-icon color="primary">visibility</mat-icon>
+              </button>
             </ng-container>
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
               <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
@@ -164,6 +168,10 @@
               <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
                 (click)="openModal(false, wrapper)">
                 <mat-icon color="primary">border_color</mat-icon>
+              </button>
+              <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
+                (click)="openModal(false, wrapper)">
+                <mat-icon color="primary">visibility</mat-icon>
               </button>
             </ng-container>
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">

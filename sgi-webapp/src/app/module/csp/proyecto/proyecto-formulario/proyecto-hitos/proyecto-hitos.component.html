@@ -38,6 +38,10 @@
             (click)="openModal(hito)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
+          <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="actionService.readonly"
+            (click)="openModal(hito)">
+            <mat-icon color="primary">visibility</mat-icon>
+          </button>
         </ng-container>
         <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
           <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!actionService.readonly"

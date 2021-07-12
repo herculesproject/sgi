@@ -25,6 +25,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto>{
     key: number,
     private readonly logger: NGXLogger,
     private contextoProyectoService: ContextoProyectoService,
+    private readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -38,6 +39,11 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto>{
       resultados_previstos: new FormControl('', [Validators.maxLength(2000)]),
       propiedadResultados: new FormControl(''),
     });
+
+    if (this.readonly) {
+      form.disable();
+    }
+
     return form;
   }
 

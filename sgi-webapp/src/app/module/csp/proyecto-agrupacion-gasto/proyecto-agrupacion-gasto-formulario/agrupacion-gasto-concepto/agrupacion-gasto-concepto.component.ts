@@ -44,7 +44,7 @@ export class AgrupacionGastoConceptoComponent extends FragmentComponent implemen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private actionService: ProyectoAgrupacionGastoActionService,
+    public actionService: ProyectoAgrupacionGastoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -116,7 +116,7 @@ export class AgrupacionGastoConceptoComponent extends FragmentComponent implemen
       titleEntity: this.modalTitleEntity,
       entidad: null,
       selectedEntidades: this.dataSource.data.map(element => element.value),
-      readonly: false,
+      readonly: this.actionService.readonly,
       isEdit: false
     };
 

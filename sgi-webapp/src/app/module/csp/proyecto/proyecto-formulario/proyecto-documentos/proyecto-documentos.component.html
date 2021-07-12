@@ -87,22 +87,23 @@
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">
         <button *ngIf="viewMode === VIEW_MODE.VIEW" mat-button mat-raised-button color="primary" class="rounded"
-          [disabled]="!viewingNode.fichero" (click)="downloadFile(viewingNode)">
+          [disabled]="!viewingNode.fichero || actionService.readonly" (click)="downloadFile(viewingNode)">
           <mat-icon>arrow_downward</mat-icon>
           {{'btn.download.file' | translate}}
         </button>
         <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" color="accent" mat-button
           mat-raised-button (click)="acceptDetail()"
-          [disabled]="!status.complete || (status.complete && uploading)">{{'btn.ok' | translate}}</button>
+          [disabled]="!status.complete || (status.complete && uploading) || actionService.readonly">{{'btn.ok' |
+          translate}}</button>
         <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" class="link-cancelar" mat-button><span
             class="underline" (click)="cancelDetail()">{{'btn.cancel' | translate}}</span></button>
         <button *ngIf="viewMode === VIEW_MODE.VIEW" color="accent" class="rounded" mat-button mat-raised-button
-          (click)="switchToEdit()" [disabled]="docReadonly">
+          (click)="switchToEdit()" [disabled]="docReadonly || actionService.readonly">
           <mat-icon>edit</mat-icon>
           {{'btn.edit.entity'| translate:msgParamEntity}}
         </button>
         <button *ngIf="viewMode === VIEW_MODE.VIEW" color="warn" class="rounded" mat-button mat-raised-button
-          [disabled]="docReadonly" (click)="deleteDetail()">
+          [disabled]="docReadonly || actionService.readonly" (click)="deleteDetail()">
           <mat-icon>close</mat-icon>
           {{'btn.delete.entity' | translate:msgParamEntity}}
         </button>
@@ -113,7 +114,8 @@
 
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button color="three" aria-label="Center Align" mat-button mat-raised-button (click)="switchToNew()">
+      <button color="three" *ngIf="!actionService.readonly" aria-label="Center Align" mat-button mat-raised-button
+        (click)="switchToNew()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

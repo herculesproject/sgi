@@ -21,6 +21,7 @@ import { PROYECTO_SOCIO_ROUTE_PARAMS } from './proyecto-socio-route-params';
 export interface IProyectoSocioData {
   proyecto: IProyecto;
   proyectoSocios: IProyectoSocio[];
+  readonly: boolean;
 }
 
 @Injectable()
@@ -60,6 +61,9 @@ export class ProyectoSocioActionService extends ActionService {
     return !this.data.proyecto.coordinadorExterno;
   }
 
+  get readonly(): boolean {
+    return this.data.readonly;
+  }
 
   constructor(
     logger: NGXLogger,
@@ -80,7 +84,7 @@ export class ProyectoSocioActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoSocioDatosGeneralesFragment(id, this.data.proyecto.id,
-      proyectoSocioService, empresaService);
+      proyectoSocioService, empresaService, this.data.readonly);
     this.equipo = new ProyectoSocioEquipoFragment(logger, id, proyectoSocioService,
       proyectoEquipoSocioService, personaService);
     this.periodoPago = new ProyectoSocioPeriodoPagoFragment(logger, id, proyectoSocioService,

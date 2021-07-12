@@ -95,12 +95,18 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-          <button mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[wrapper.value.id]">
+          <button *ngIf="!actionService.readonly" mat-button matTooltip="{{'btn.edit' | translate}}"
+            [routerLink]="[wrapper.value.id]">
             <mat-icon color="primary">border_color</mat-icon>
+          </button>
+          <button *ngIf="actionService.readonly" mat-button matTooltip="{{'btn.view' | translate}}"
+            [routerLink]="[wrapper.value.id]">
+            <mat-icon color="primary">visibility</mat-icon>
           </button>
         </ng-container>
         <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-          <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteProyectoSocio(wrapper)">
+          <button *ngIf="!actionService.readonly" mat-button matTooltip="{{'btn.delete' | translate}}"
+            (click)="deleteProyectoSocio(wrapper)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </ng-container>
@@ -111,7 +117,8 @@
   </table>
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]">
+      <button *ngIf="!actionService.readonly" color="three" mat-button mat-raised-button
+        [routerLink]="[ROUTE_NAMES.NEW]">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

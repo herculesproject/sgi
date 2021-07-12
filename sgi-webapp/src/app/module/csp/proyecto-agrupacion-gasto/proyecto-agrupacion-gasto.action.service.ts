@@ -15,10 +15,12 @@ import { PROYECTO_AGRUPACION_GASTO_ROUTE_PARAMS } from './proyecto-agrupacion-ga
 export interface IProyectoAgrupacionGastoData {
   proyecto: IProyecto;
   proyectoAgrupacionesGasto: IProyectoAgrupacionGasto[];
+  readonly: boolean;
 }
 export interface IAgrupacionGastoConceptoData {
   agrupacion: IProyectoAgrupacionGasto;
   agrupacionGastoConceptos: IAgrupacionGastoConcepto[];
+  readonly: boolean;
 }
 
 @Injectable()
@@ -39,6 +41,10 @@ export class ProyectoAgrupacionGastoActionService extends ActionService {
 
   get proyectoId(): number {
     return this.data.proyecto.id;
+  }
+
+  get readonly(): boolean {
+    return this.data.readonly;
   }
 
   constructor(

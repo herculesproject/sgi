@@ -44,7 +44,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
 
   constructor(
     protected proyectoService: ProyectoService,
-    private actionService: ProyectoActionService,
+    public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -126,7 +126,8 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
       fechaInicioMin: this.actionService.proyecto.fechaInicio,
       fechaFinMax: this.actionService.proyecto.fechaFinDefinitiva ?? this.actionService.proyecto.fechaFin,
       showHorasDedicacion: true,
-      isEdit: Boolean(wrapper)
+      isEdit: Boolean(wrapper),
+      readonly: this.actionService.readonly
     };
 
     if (wrapper) {

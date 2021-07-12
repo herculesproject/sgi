@@ -48,6 +48,7 @@ export interface ProyectoAnualidadGastoModalData {
   fechaInicioAnualidad: DateTime;
   fechaFinAnualidad: DateTime;
   isEdit: boolean;
+  readonly: boolean;
 }
 
 export enum ConceptoGastoTipo {
@@ -288,6 +289,10 @@ export class ProyectoAnualidadGastoModalComponent extends
           }
         })
       );
+    }
+
+    if (this.data.readonly) {
+      formGroup.disable();
     }
 
     return formGroup;

@@ -93,6 +93,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
 
   private convocatoriaId: number;
+  mapModificable: Map<number, boolean> = new Map();
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -309,6 +310,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
             } else {
               requestsProyecto.push(of(proyectoData));
             }
+
+            if (this.authService.hasAnyAuthorityForAnyUO(['CSP-PRO-E', 'CSP-PRO-V'])) {
+              this.suscripciones.push(this.proyectoService.modificable(proyecto.id).subscribe((value) => {
+                this.mapModificable.set(proyecto.id, value);
+              }));
+            }
           });
           return of(response).pipe(
             tap(() => merge(...requestsProyecto).subscribe())
@@ -333,6 +340,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
               ));
             } else {
               requestsProyecto.push(of(proyectoData));
+            }
+
+            if (this.authService.hasAnyAuthorityForAnyUO(['CSP-PRO-E', 'CSP-PRO-V'])) {
+              this.suscripciones.push(this.proyectoService.modificable(proyecto.id).subscribe((value) => {
+                this.mapModificable.set(proyecto.id, value);
+              }));
             }
           });
           return of(response).pipe(

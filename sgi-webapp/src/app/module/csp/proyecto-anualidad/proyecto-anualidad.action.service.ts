@@ -47,6 +47,10 @@ export class ProyectoAnualidadActionService extends ActionService {
     return this.data.proyectoAnualidadResumen;
   }
 
+  get readonly(): boolean {
+    return this.data.readonly;
+  }
+
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
@@ -63,7 +67,7 @@ export class ProyectoAnualidadActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoAnualidadDatosGeneralesFragment(
-      id, this.data.proyecto, proyectoAnualidadService);
+      id, this.data.proyecto, proyectoAnualidadService, this.data.readonly);
     this.anualidadGastos = new ProyectoAnualidadGastosFragment(
       logger, id, this.data.proyecto.id, proyectoAnualidadService, anualidadGastoService);
     this.anualidadIngresos = new ProyectoAnualidadIngresosFragment(
