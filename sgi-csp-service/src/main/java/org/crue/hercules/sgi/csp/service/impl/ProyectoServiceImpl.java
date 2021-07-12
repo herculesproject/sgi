@@ -1645,7 +1645,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     if (!CollectionUtils.isEmpty(unidadesGestion)) {
       return repository.existsByIdAndUnidadGestionRefInAndActivoIsTrue(proyectoId, unidadesGestion);
     } else {
-      return false;
+      return true;
     }
   }
 
