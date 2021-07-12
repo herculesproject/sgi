@@ -188,7 +188,7 @@
         <mat-label>{{'csp.convocatoria.clasificacion-produccion-cientifica' | translate}}
         </mat-label>
         <sgi-select-enum formControlName="clasificacionCVN" [enumMap]="CLASIFICACION_CVN_MAP"
-          [disabled]="formPart.isConvocatoriaVinculada && formPart.hasProyectoVinculado">
+          [disabled]="(formPart.isConvocatoriaVinculada && formPart.hasProyectoVinculado) || !formPart.hasEditPerm">
         </sgi-select-enum>
         <sgi-field-info matSuffix
           [visible]="formPart.isConvocatoriaVinculada && formPart.hasProyectoVinculado && formPart.hasEditPerm"

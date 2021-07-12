@@ -15,6 +15,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { SexoService } from '@core/services/sgp/sexo.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { CategoriaProfesionalModalComponent, CategoriaProfesionalModalData } from '../../modals/categoria-profesional-modal/categoria-profesional-modal.component';
@@ -66,7 +67,8 @@ export class ConvocatoriaRequisitosIPComponent extends FormFragmentComponent<ICo
     private matDialog: MatDialog,
     private dialogService: DialogService,
     public translate: TranslateService,
-    private readonly sexoService: SexoService
+    private readonly sexoService: SexoService,
+    private authService: SgiAuthService
   ) {
     super(actionService.FRAGMENT.REQUISITOS_IP, actionService);
     this.formPart = this.fragment as ConvocatoriaRequisitosIPFragment;
@@ -265,6 +267,9 @@ export class ConvocatoriaRequisitosIPComponent extends FormFragmentComponent<ICo
       this.formGroup.controls.vinculacionUniversidad.enable({ emitEvent: false });
       this.disableVinculacionProfesional$.next(false);
     }
-  }
 
+    if (!this.authService.hasAnyAuthorityForAnyUO(['CSP-CON-E', 'CSP-CON-C'])) {
+      this.formGroup.controls.vinculacionUniversidad.disable({ emitEvent: false });
+    }
+  }
 }
