@@ -64,10 +64,12 @@
       </div>
     </div>
 
-    <!-- Tipor de Protección -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+      [fxLayoutGap]="fxLayoutProperties.gap">
+
+      <!-- Tipor de Protección -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties33.md"
+        [fxFlex.gt-md]="fxFlexProperties33.gtMd" [fxFlexOrder]="fxFlexProperties33.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.tipo-proteccion' | translate}}</mat-label>
           <sgi-select-entity formControlName="tipoProteccion" [options]=" tiposProteccion$ | async" required>
@@ -77,27 +79,23 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </div>
 
-    <!-- Subtipo de Protección -->
-    <ng-container *ngIf="subtiposProteccion$ | async as subtiposProteccion">
-      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
-        *ngIf="subtiposProteccion?.length">
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
+      <!-- Subtipo de Protección -->
+      <ng-container *ngIf="subtiposProteccion$ | async as subtiposProteccion">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties33.md"
+          [fxFlex.gt-md]="fxFlexProperties33.gtMd" [fxFlexOrder]="fxFlexProperties33.order"
+          *ngIf="subtiposProteccion?.length">
           <mat-form-field fxFill>
             <mat-label>{{'pii.invencion.subtipo-proteccion' | translate}}</mat-label>
             <sgi-select-entity formControlName="subtipoProteccion" [options]=" subtiposProteccion">
             </sgi-select-entity>
           </mat-form-field>
         </div>
-      </div>
-    </ng-container>
+      </ng-container>
 
-    <!-- Proyecto -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+      <!-- Proyecto -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties33.md"
+        [fxFlex.gt-md]="fxFlexProperties33.gtMd" [fxFlexOrder]="fxFlexProperties33.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.proyecto' | translate}}</mat-label>
           <sgi-select-proyecto placeholder="{{'pii.invencion.proyecto' | translate}}" formControlName="proyecto">
@@ -139,7 +137,8 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnsSectorAplicacion;"></tr>
         </table>
         <div class="separation-button" *ngIf="formPart.hasEditPerm">
-          <button color="three" mat-button mat-raised-button (click)="openModalSectorAplicacion()">
+          <button color="three" mat-button mat-raised-button (click)="openModalSectorAplicacion()"
+            *ngIf="formPart.initialized$ | async">
             <mat-icon color="accent">add_circle</mat-icon>
             {{ 'btn.add.entity' | translate:msgParamSectorAplicacionEntity }}
           </button>

@@ -121,6 +121,7 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
       .and('fechaComunicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaComunicacionDesde.value))
       .and('fechaComunicacion', SgiRestFilterOperator.LOWER_OR_EQUAL,
         LuxonUtils.toBackend(controls.fechaComunicacionHasta.value?.plus({ hour: 23, minutes: 59, seconds: 59 })))
+      // TODO incluir and anidado con or de tipoProteccion.id y tipoProteccion.padre.id
       .and('tipoProteccion.id', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString())
       .and('sectoresAplicacion.sectorAplicacion.id', SgiRestFilterOperator.EQUALS, controls.sectorAplicacion.value?.id?.toString())
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)

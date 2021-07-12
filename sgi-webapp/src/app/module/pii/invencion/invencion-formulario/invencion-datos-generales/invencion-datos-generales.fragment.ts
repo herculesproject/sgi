@@ -8,7 +8,7 @@ import { InvencionService } from "@core/services/pii/invencion/invencion.service
 import { StatusWrapper } from "@core/utils/status-wrapper";
 import { DateTime } from "luxon";
 import { NGXLogger } from "ngx-logger";
-import { BehaviorSubject, EMPTY, Observable, of } from "rxjs";
+import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from "rxjs";
 import { catchError, concatMap, map, switchMap, takeLast, tap } from "rxjs/operators";
 
 interface IInvencionDatosGeneralesFragmentStatus {
@@ -63,19 +63,20 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       titulo: invencion.titulo,
       fechaComunicacion: invencion.fechaComunicacion,
       descripcion: invencion.descripcion,
-      tipoProteccion: invencion.tipoProteccion,
+      tipoProteccion: invencion.tipoProteccion.padre ?? invencion.tipoProteccion,
+      subtipoProteccion: invencion.tipoProteccion.padre !== null ? invencion.tipoProteccion : null,
       proyecto: invencion.proyecto,
       comentarios: invencion.comentarios
-    } as IInvencion;
+    };
     this.invencion = invencion;
 
     return result;
   }
 
   protected initializer(key: number): Observable<IInvencion> {
-    return this.invencionService.findById(key).pipe(
-      tap(() => this.loadSectoresAplicacion(key)),
-      switchMap(invencion => {
+    return forkJoin({ invencion: this.invencionService.findById(key), sectoresAplicacion: this.loadSectoresAplicacion(key) }).pipe(
+      tap(({ sectoresAplicacion }) => this.sectoresAplicacion$.next(sectoresAplicacion)),
+      switchMap(({ invencion }) => {
         if (invencion.proyecto?.id) {
           return this.proyectoService.findById(invencion.proyecto.id).pipe(
             map(proyecto =>
@@ -92,17 +93,12 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     );
   }
 
-  private loadSectoresAplicacion(invencionId: number): void {
-    const subscription = this.invencionService.findSectoresAplicacion(invencionId).pipe(
+  private loadSectoresAplicacion(invencionId: number): Observable<StatusWrapper<IInvencionSectorAplicacion>[]> {
+    return this.invencionService.findSectoresAplicacion(invencionId).pipe(
       map(invencionSectoresAplicacion => invencionSectoresAplicacion.map(
         invencionSectorAplicacion => new StatusWrapper<IInvencionSectorAplicacion>(invencionSectorAplicacion))
       )
-    ).subscribe(
-      (sectoresAplicacion) => {
-        this.sectoresAplicacion$.next(sectoresAplicacion);
-      }
     );
-    this.subscriptions.push(subscription);
   }
 
   getValue(): IInvencion {
@@ -111,7 +107,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     invencion.titulo = form.titulo;
     invencion.fechaComunicacion = form.fechaComunicacion;
     invencion.descripcion = form.descripcion;
-    invencion.tipoProteccion = form.tipoProteccion;
+    invencion.tipoProteccion = form.subtipoProteccion ?? form.tipoProteccion;
     invencion.proyecto = form.proyecto;
     invencion.comentarios = form.comentarios;
 

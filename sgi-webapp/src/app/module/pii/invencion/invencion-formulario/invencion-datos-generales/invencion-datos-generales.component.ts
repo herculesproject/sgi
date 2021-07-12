@@ -14,7 +14,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
@@ -95,7 +94,7 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     this.subtiposProteccion$ = this.formGroup.controls.tipoProteccion.valueChanges.pipe(
       tap(_ => this.resetSubtipoProteccionControl()),
       switchMap(
-        ({ id }) => this.tipoProteccionService.findAll(this.createPadreIdFilter(id)).pipe(
+        ({ id }) => this.tipoProteccionService.findSubtipos(id).pipe(
           map(({ items }) => items)
         )));
   }
@@ -106,12 +105,6 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
 
   private resetSubtipoProteccionControl(): void {
     this.formGroup.controls.subtipoProteccion.reset();
-  }
-
-  private createPadreIdFilter(padreId: number): SgiRestFindOptions {
-    return {
-      filter: new RSQLSgiRestFilter('padre.id', SgiRestFilterOperator.EQUALS, padreId.toString())
-    };
   }
 
   private configSectorAplicacionSort(): void {
