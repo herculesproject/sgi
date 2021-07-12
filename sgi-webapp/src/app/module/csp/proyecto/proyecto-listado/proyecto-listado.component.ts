@@ -213,7 +213,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       switchMap((value) => {
         return this.translate.get(
           MSG_DEACTIVATE,
-          { entity: value }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoDesactivar = value);
