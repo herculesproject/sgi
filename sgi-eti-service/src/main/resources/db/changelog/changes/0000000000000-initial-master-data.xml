@@ -383,7 +383,7 @@
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="15" />
-      <column name="nombre" value="Resumen Anónimo no técnico RANT" />
+      <column name="nombre" value="Resumen Anónimo no técnico RNT" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
       <column name="activo" value="true" />
     </insert>
