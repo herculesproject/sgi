@@ -296,7 +296,8 @@ export class PeticionEvaluacionTareasModalComponent extends
     }
 
     this.data.tarea.memoria = this.formGroup.controls.memoria.value;
-    this.data.tarea.equipoTrabajo = this.formGroup.controls.equipoTrabajo.value;
+    this.data.tarea.equipoTrabajo = {} as IEquipoTrabajo;
+    this.data.tarea.equipoTrabajo.persona = this.formGroup.controls.equipoTrabajo.value;
 
     return this.data;
   }
@@ -310,7 +311,8 @@ export class PeticionEvaluacionTareasModalComponent extends
       formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
       formacion: new FormControl(this.data.tarea?.formacion),
       memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
-      equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' : this.data.tarea?.equipoTrabajo, [Validators.required])
+      equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' :
+        this.data.tarea?.equipoTrabajo.persona, [Validators.required])
     });
 
     formGroup.controls.memoria.valueChanges.subscribe((memoria) => {
