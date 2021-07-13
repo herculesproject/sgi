@@ -329,6 +329,17 @@
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
       <sequence key="sgp-add-x-api-key-sequence"/>
+
+       <!-- tipos via -->
+      <property value="/tipos-via" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+      <call blocking="true">
+        <endpoint key="sgo-endpoint"/>
+      </call>
+      <enrich>
+        <source clone="false" type="body"/>
+        <target type="property" property="tiposVia"/>
+      </enrich>
+
       <payloadFactory media-type="json">
         <format>
 [
@@ -530,300 +541,7 @@
                   "placeholder": "Introduce tipo de vía",
                   "valueProp": "id",
                   "labelProp": "nombre",
-                  "options": [
-                    {
-                      "id": "9",
-                      "nombre": "ALAMEDA"
-                    },
-                    {
-                      "id": "33",
-                      "nombre": "ALDEA"
-                    },
-                    {
-                      "id": "10",
-                      "nombre": "APARTAMENTO"
-                    },
-                    {
-                      "id": "34",
-                      "nombre": "AREA, ARRABAL"
-                    },
-                    {
-                      "id": "35",
-                      "nombre": "ARROYO"
-                    },
-                    {
-                      "id": "3",
-                      "nombre": "AVENIDA"
-                    },
-                    {
-                      "id": "36",
-                      "nombre": "BAJADA"
-                    },
-                    {
-                      "id": "37",
-                      "nombre": "BARRANCO"
-                    },
-                    {
-                      "id": "11",
-                      "nombre": "BARRIO"
-                    },
-                    {
-                      "id": "12",
-                      "nombre": "BLOQUE"
-                    },
-                    {
-                      "id": "1",
-                      "nombre": "CALLE"
-                    },
-                    {
-                      "id": "38",
-                      "nombre": "CALLEJA"
-                    },
-                    {
-                      "id": "13",
-                      "nombre": "CAMINO"
-                    },
-                    {
-                      "id": "6",
-                      "nombre": "CARRETERA"
-                    },
-                    {
-                      "id": "30",
-                      "nombre": "CARRIL"
-                    },
-                    {
-                      "id": "14",
-                      "nombre": "CASERIO"
-                    },
-                    {
-                      "id": "15",
-                      "nombre": "CHALET"
-                    },
-                    {
-                      "id": "39",
-                      "nombre": "COLEGIO"
-                    },
-                    {
-                      "id": "16",
-                      "nombre": "COLONIA"
-                    },
-                    {
-                      "id": "41",
-                      "nombre": "CONJUNTO"
-                    },
-                    {
-                      "id": "17",
-                      "nombre": "CUESTA"
-                    },
-                    {
-                      "id": "99",
-                      "nombre": "DIPUTACION"
-                    },
-                    {
-                      "id": "18",
-                      "nombre": "EDIFICIO"
-                    },
-                    {
-                      "id": "42",
-                      "nombre": "ENTRADA"
-                    },
-                    {
-                      "id": "43",
-                      "nombre": "ESCALINATA"
-                    },
-                    {
-                      "id": "44",
-                      "nombre": "EXPLANADA"
-                    },
-                    {
-                      "id": "45",
-                      "nombre": "EXTRAMUROS"
-                    },
-                    {
-                      "id": "46",
-                      "nombre": "EXTRARRADIO"
-                    },
-                    {
-                      "id": "47",
-                      "nombre": "FERROCARRIL"
-                    },
-                    {
-                      "id": "19",
-                      "nombre": "GLORIETA"
-                    },
-                    {
-                      "id": "48",
-                      "nombre": "GRAN VIA"
-                    },
-                    {
-                      "id": "20",
-                      "nombre": "GRUPO"
-                    },
-                    {
-                      "id": "49",
-                      "nombre": "HUERTA"
-                    },
-                    {
-                      "id": "50",
-                      "nombre": "JARDINES"
-                    },
-                    {
-                      "id": "51",
-                      "nombre": "LADO"
-                    },
-                    {
-                      "id": "21",
-                      "nombre": "LUGAR"
-                    },
-                    {
-                      "id": "22",
-                      "nombre": "MANZANA"
-                    },
-                    {
-                      "id": "52",
-                      "nombre": "MASIA"
-                    },
-                    {
-                      "id": "23",
-                      "nombre": "MERCADO"
-                    },
-                    {
-                      "id": "53",
-                      "nombre": "MONTE"
-                    },
-                    {
-                      "id": "54",
-                      "nombre": "MUELLE"
-                    },
-                    {
-                      "id": "55",
-                      "nombre": "MUNICIPIO"
-                    },
-                    {
-                      "id": "32",
-                      "nombre": "PARAJE"
-                    },
-                    {
-                      "id": "56",
-                      "nombre": "PARCELA"
-                    },
-                    {
-                      "id": "24",
-                      "nombre": "PARQUE"
-                    },
-                    {
-                      "id": "25",
-                      "nombre": "PASAJE"
-                    },
-                    {
-                      "id": "4",
-                      "nombre": "PASEO"
-                    },
-                    {
-                      "id": "2",
-                      "nombre": "PLAZA"
-                    },
-                    {
-                      "id": "26",
-                      "nombre": "POBLADO"
-                    },
-                    {
-                      "id": "27",
-                      "nombre": "POLIGONO"
-                    },
-                    {
-                      "id": "28",
-                      "nombre": "PROLONGACION"
-                    },
-                    {
-                      "id": "57",
-                      "nombre": "PUENTE"
-                    },
-                    {
-                      "id": "58",
-                      "nombre": "PUERTA"
-                    },
-                    {
-                      "id": "59",
-                      "nombre": "QUINTA"
-                    },
-                    {
-                      "id": "60",
-                      "nombre": "RAMAL"
-                    },
-                    {
-                      "id": "29",
-                      "nombre": "RAMBLA"
-                    },
-                    {
-                      "id": "61",
-                      "nombre": "RAMPA"
-                    },
-                    {
-                      "id": "62",
-                      "nombre": "RIERA"
-                    },
-                    {
-                      "id": "63",
-                      "nombre": "RINCON"
-                    },
-                    {
-                      "id": "5",
-                      "nombre": "RONDA"
-                    },
-                    {
-                      "id": "64",
-                      "nombre": "RUA"
-                    },
-                    {
-                      "id": "65",
-                      "nombre": "SALIDA"
-                    },
-                    {
-                      "id": "66",
-                      "nombre": "SECTOR, SECCION"
-                    },
-                    {
-                      "id": "67",
-                      "nombre": "SENDA"
-                    },
-                    {
-                      "id": "68",
-                      "nombre": "SOLAR, SALON"
-                    },
-                    {
-                      "id": "69",
-                      "nombre": "SUBIDA"
-                    },
-                    {
-                      "id": "70",
-                      "nombre": "TERRENOS"
-                    },
-                    {
-                      "id": "71",
-                      "nombre": "TORRENTE"
-                    },
-                    {
-                      "id": "7",
-                      "nombre": "TRAVESIA"
-                    },
-                    {
-                      "id": "8",
-                      "nombre": "URBANIZACION"
-                    },
-                    {
-                      "id": "31",
-                      "nombre": "VEREDA"
-                    },
-                    {
-                      "id": "72",
-                      "nombre": "VIA"
-                    },
-                    {
-                      "id": "73",
-                      "nombre": "VIA PUBLICA"
-                    }
-                  ]
+                  "options": $1
                 }
               }
             ]
@@ -960,7 +678,9 @@
   }
 ]
         </format>
-        <args/>
+        <args>
+          <arg expression="get-property('tiposVia')" literal="true"/>
+        </args>
       </payloadFactory>
       <respond/>
     </inSequence>
@@ -978,6 +698,17 @@
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
       <sequence key="sgp-add-x-api-key-sequence"/>
+
+      <!-- tipos via -->
+      <property value="/tipos-via" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+      <call blocking="true">
+        <endpoint key="sgo-endpoint"/>
+      </call>
+      <enrich>
+        <source clone="false" type="body"/>
+        <target type="property" property="tiposVia"/>
+      </enrich>
+
       <payloadFactory media-type="json">
         <format>
 [
@@ -1134,64 +865,14 @@
             "fieldGroup": [
               {
                 "key": "nivelAcademicoId",
-                "type": "select",
+                "type": "select-niveles-academicos",
                 "className": "flex-1",
                 "templateOptions": {
                   "label": "Nivel académico",
                   "placeholder": "Introduce nivel académico",
                   "disabled": true,
                   "valueProp": "id",
-                  "labelProp": "nombre",
-                  "options": [
-                    {
-                      "id": "4",
-                      "nombre": "BACHILLER, F.P. 2 GRADO"
-                    },
-                    {
-                      "id": "7",
-                      "nombre": "CERTIFICADO DE ESCOLARIDAD"
-                    },
-                    {
-                      "id": "3",
-                      "nombre": "DIPLOMADO, ING. TECNICO, F.P. 3"
-                    },
-                    {
-                      "id": "1",
-                      "nombre": "DOCTOR"
-                    },
-                    {
-                      "id": "5",
-                      "nombre": "F P 1 GRADO"
-                    },
-                    {
-                      "id": "6",
-                      "nombre": "GRADUADO ESCOLAR, ESTUDIOS PRIMARIO"
-                    },
-                    {
-                      "id": "B",
-                      "nombre": "GRADUADO O GRADUADA"
-                    },
-                    {
-                      "id": "D",
-                      "nombre": "GRADUADO SECUNDARIA"
-                    },
-                    {
-                      "id": "2",
-                      "nombre": "LICENCIADO, INGENIERO, ARQUITECTO"
-                    },
-                    {
-                      "id": "A",
-                      "nombre": "MASTER UNIVERSITARIO"
-                    },
-                    {
-                      "id": "9",
-                      "nombre": "SIN CLASIFICAR"
-                    },
-                    {
-                      "id": "C",
-                      "nombre": "TECNICO SUPERIOR/FP2"
-                    }
-                  ]
+                  "labelProp": "nombre"
                 }
               },
               {
@@ -1464,300 +1145,7 @@
                   "disabled": true,
                   "valueProp": "id",
                   "labelProp": "nombre",
-                  "options": [
-                    {
-                      "id": "9",
-                      "nombre": "ALAMEDA"
-                    },
-                    {
-                      "id": "33",
-                      "nombre": "ALDEA"
-                    },
-                    {
-                      "id": "10",
-                      "nombre": "APARTAMENTO"
-                    },
-                    {
-                      "id": "34",
-                      "nombre": "AREA, ARRABAL"
-                    },
-                    {
-                      "id": "35",
-                      "nombre": "ARROYO"
-                    },
-                    {
-                      "id": "3",
-                      "nombre": "AVENIDA"
-                    },
-                    {
-                      "id": "36",
-                      "nombre": "BAJADA"
-                    },
-                    {
-                      "id": "37",
-                      "nombre": "BARRANCO"
-                    },
-                    {
-                      "id": "11",
-                      "nombre": "BARRIO"
-                    },
-                    {
-                      "id": "12",
-                      "nombre": "BLOQUE"
-                    },
-                    {
-                      "id": "1",
-                      "nombre": "CALLE"
-                    },
-                    {
-                      "id": "38",
-                      "nombre": "CALLEJA"
-                    },
-                    {
-                      "id": "13",
-                      "nombre": "CAMINO"
-                    },
-                    {
-                      "id": "6",
-                      "nombre": "CARRETERA"
-                    },
-                    {
-                      "id": "30",
-                      "nombre": "CARRIL"
-                    },
-                    {
-                      "id": "14",
-                      "nombre": "CASERIO"
-                    },
-                    {
-                      "id": "15",
-                      "nombre": "CHALET"
-                    },
-                    {
-                      "id": "39",
-                      "nombre": "COLEGIO"
-                    },
-                    {
-                      "id": "16",
-                      "nombre": "COLONIA"
-                    },
-                    {
-                      "id": "41",
-                      "nombre": "CONJUNTO"
-                    },
-                    {
-                      "id": "17",
-                      "nombre": "CUESTA"
-                    },
-                    {
-                      "id": "99",
-                      "nombre": "DIPUTACION"
-                    },
-                    {
-                      "id": "18",
-                      "nombre": "EDIFICIO"
-                    },
-                    {
-                      "id": "42",
-                      "nombre": "ENTRADA"
-                    },
-                    {
-                      "id": "43",
-                      "nombre": "ESCALINATA"
-                    },
-                    {
-                      "id": "44",
-                      "nombre": "EXPLANADA"
-                    },
-                    {
-                      "id": "45",
-                      "nombre": "EXTRAMUROS"
-                    },
-                    {
-                      "id": "46",
-                      "nombre": "EXTRARRADIO"
-                    },
-                    {
-                      "id": "47",
-                      "nombre": "FERROCARRIL"
-                    },
-                    {
-                      "id": "19",
-                      "nombre": "GLORIETA"
-                    },
-                    {
-                      "id": "48",
-                      "nombre": "GRAN VIA"
-                    },
-                    {
-                      "id": "20",
-                      "nombre": "GRUPO"
-                    },
-                    {
-                      "id": "49",
-                      "nombre": "HUERTA"
-                    },
-                    {
-                      "id": "50",
-                      "nombre": "JARDINES"
-                    },
-                    {
-                      "id": "51",
-                      "nombre": "LADO"
-                    },
-                    {
-                      "id": "21",
-                      "nombre": "LUGAR"
-                    },
-                    {
-                      "id": "22",
-                      "nombre": "MANZANA"
-                    },
-                    {
-                      "id": "52",
-                      "nombre": "MASIA"
-                    },
-                    {
-                      "id": "23",
-                      "nombre": "MERCADO"
-                    },
-                    {
-                      "id": "53",
-                      "nombre": "MONTE"
-                    },
-                    {
-                      "id": "54",
-                      "nombre": "MUELLE"
-                    },
-                    {
-                      "id": "55",
-                      "nombre": "MUNICIPIO"
-                    },
-                    {
-                      "id": "32",
-                      "nombre": "PARAJE"
-                    },
-                    {
-                      "id": "56",
-                      "nombre": "PARCELA"
-                    },
-                    {
-                      "id": "24",
-                      "nombre": "PARQUE"
-                    },
-                    {
-                      "id": "25",
-                      "nombre": "PASAJE"
-                    },
-                    {
-                      "id": "4",
-                      "nombre": "PASEO"
-                    },
-                    {
-                      "id": "2",
-                      "nombre": "PLAZA"
-                    },
-                    {
-                      "id": "26",
-                      "nombre": "POBLADO"
-                    },
-                    {
-                      "id": "27",
-                      "nombre": "POLIGONO"
-                    },
-                    {
-                      "id": "28",
-                      "nombre": "PROLONGACION"
-                    },
-                    {
-                      "id": "57",
-                      "nombre": "PUENTE"
-                    },
-                    {
-                      "id": "58",
-                      "nombre": "PUERTA"
-                    },
-                    {
-                      "id": "59",
-                      "nombre": "QUINTA"
-                    },
-                    {
-                      "id": "60",
-                      "nombre": "RAMAL"
-                    },
-                    {
-                      "id": "29",
-                      "nombre": "RAMBLA"
-                    },
-                    {
-                      "id": "61",
-                      "nombre": "RAMPA"
-                    },
-                    {
-                      "id": "62",
-                      "nombre": "RIERA"
-                    },
-                    {
-                      "id": "63",
-                      "nombre": "RINCON"
-                    },
-                    {
-                      "id": "5",
-                      "nombre": "RONDA"
-                    },
-                    {
-                      "id": "64",
-                      "nombre": "RUA"
-                    },
-                    {
-                      "id": "65",
-                      "nombre": "SALIDA"
-                    },
-                    {
-                      "id": "66",
-                      "nombre": "SECTOR, SECCION"
-                    },
-                    {
-                      "id": "67",
-                      "nombre": "SENDA"
-                    },
-                    {
-                      "id": "68",
-                      "nombre": "SOLAR, SALON"
-                    },
-                    {
-                      "id": "69",
-                      "nombre": "SUBIDA"
-                    },
-                    {
-                      "id": "70",
-                      "nombre": "TERRENOS"
-                    },
-                    {
-                      "id": "71",
-                      "nombre": "TORRENTE"
-                    },
-                    {
-                      "id": "7",
-                      "nombre": "TRAVESIA"
-                    },
-                    {
-                      "id": "8",
-                      "nombre": "URBANIZACION"
-                    },
-                    {
-                      "id": "31",
-                      "nombre": "VEREDA"
-                    },
-                    {
-                      "id": "72",
-                      "nombre": "VIA"
-                    },
-                    {
-                      "id": "73",
-                      "nombre": "VIA PUBLICA"
-                    }
-                  ]
+                  "options": $1
                 }
               }
             ]
@@ -1929,7 +1317,9 @@
   }
 ]
         </format>
-        <args/>
+        <args>
+          <arg expression="get-property('tiposVia')" literal="true"/>
+        </args>
       </payloadFactory>
       <respond/>
     </inSequence>
@@ -1947,6 +1337,17 @@
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
       <sequence key="sgp-add-x-api-key-sequence"/>
+
+      <!-- tipos via -->
+      <property value="/tipos-via" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+      <call blocking="true">
+        <endpoint key="sgo-endpoint"/>
+      </call>
+      <enrich>
+        <source clone="false" type="body"/>
+        <target type="property" property="tiposVia"/>
+      </enrich>
+
       <payloadFactory media-type="json">
         <format>
 [
@@ -2103,64 +1504,14 @@
             "fieldGroup": [
               {
                 "key": "nivelAcademicoId",
-                "type": "select",
+                "type": "select-niveles-academicos",
                 "className": "flex-1",
                 "templateOptions": {
                   "label": "Nivel académico",
                   "placeholder": "Introduce nivel académico",
                   "disabled": true,
                   "valueProp": "id",
-                  "labelProp": "nombre",
-                  "options": [
-                    {
-                      "id": "4",
-                      "nombre": "BACHILLER, F.P. 2 GRADO"
-                    },
-                    {
-                      "id": "7",
-                      "nombre": "CERTIFICADO DE ESCOLARIDAD"
-                    },
-                    {
-                      "id": "3",
-                      "nombre": "DIPLOMADO, ING. TECNICO, F.P. 3"
-                    },
-                    {
-                      "id": "1",
-                      "nombre": "DOCTOR"
-                    },
-                    {
-                      "id": "5",
-                      "nombre": "F P 1 GRADO"
-                    },
-                    {
-                      "id": "6",
-                      "nombre": "GRADUADO ESCOLAR, ESTUDIOS PRIMARIO"
-                    },
-                    {
-                      "id": "B",
-                      "nombre": "GRADUADO O GRADUADA"
-                    },
-                    {
-                      "id": "D",
-                      "nombre": "GRADUADO SECUNDARIA"
-                    },
-                    {
-                      "id": "2",
-                      "nombre": "LICENCIADO, INGENIERO, ARQUITECTO"
-                    },
-                    {
-                      "id": "A",
-                      "nombre": "MASTER UNIVERSITARIO"
-                    },
-                    {
-                      "id": "9",
-                      "nombre": "SIN CLASIFICAR"
-                    },
-                    {
-                      "id": "C",
-                      "nombre": "TECNICO SUPERIOR/FP2"
-                    }
-                  ]
+                  "labelProp": "nombre"
                 }
               },
               {
@@ -2433,300 +1784,7 @@
                   "disabled": true,
                   "valueProp": "id",
                   "labelProp": "nombre",
-                  "options": [
-                    {
-                      "id": "9",
-                      "nombre": "ALAMEDA"
-                    },
-                    {
-                      "id": "33",
-                      "nombre": "ALDEA"
-                    },
-                    {
-                      "id": "10",
-                      "nombre": "APARTAMENTO"
-                    },
-                    {
-                      "id": "34",
-                      "nombre": "AREA, ARRABAL"
-                    },
-                    {
-                      "id": "35",
-                      "nombre": "ARROYO"
-                    },
-                    {
-                      "id": "3",
-                      "nombre": "AVENIDA"
-                    },
-                    {
-                      "id": "36",
-                      "nombre": "BAJADA"
-                    },
-                    {
-                      "id": "37",
-                      "nombre": "BARRANCO"
-                    },
-                    {
-                      "id": "11",
-                      "nombre": "BARRIO"
-                    },
-                    {
-                      "id": "12",
-                      "nombre": "BLOQUE"
-                    },
-                    {
-                      "id": "1",
-                      "nombre": "CALLE"
-                    },
-                    {
-                      "id": "38",
-                      "nombre": "CALLEJA"
-                    },
-                    {
-                      "id": "13",
-                      "nombre": "CAMINO"
-                    },
-                    {
-                      "id": "6",
-                      "nombre": "CARRETERA"
-                    },
-                    {
-                      "id": "30",
-                      "nombre": "CARRIL"
-                    },
-                    {
-                      "id": "14",
-                      "nombre": "CASERIO"
-                    },
-                    {
-                      "id": "15",
-                      "nombre": "CHALET"
-                    },
-                    {
-                      "id": "39",
-                      "nombre": "COLEGIO"
-                    },
-                    {
-                      "id": "16",
-                      "nombre": "COLONIA"
-                    },
-                    {
-                      "id": "41",
-                      "nombre": "CONJUNTO"
-                    },
-                    {
-                      "id": "17",
-                      "nombre": "CUESTA"
-                    },
-                    {
-                      "id": "99",
-                      "nombre": "DIPUTACION"
-                    },
-                    {
-                      "id": "18",
-                      "nombre": "EDIFICIO"
-                    },
-                    {
-                      "id": "42",
-                      "nombre": "ENTRADA"
-                    },
-                    {
-                      "id": "43",
-                      "nombre": "ESCALINATA"
-                    },
-                    {
-                      "id": "44",
-                      "nombre": "EXPLANADA"
-                    },
-                    {
-                      "id": "45",
-                      "nombre": "EXTRAMUROS"
-                    },
-                    {
-                      "id": "46",
-                      "nombre": "EXTRARRADIO"
-                    },
-                    {
-                      "id": "47",
-                      "nombre": "FERROCARRIL"
-                    },
-                    {
-                      "id": "19",
-                      "nombre": "GLORIETA"
-                    },
-                    {
-                      "id": "48",
-                      "nombre": "GRAN VIA"
-                    },
-                    {
-                      "id": "20",
-                      "nombre": "GRUPO"
-                    },
-                    {
-                      "id": "49",
-                      "nombre": "HUERTA"
-                    },
-                    {
-                      "id": "50",
-                      "nombre": "JARDINES"
-                    },
-                    {
-                      "id": "51",
-                      "nombre": "LADO"
-                    },
-                    {
-                      "id": "21",
-                      "nombre": "LUGAR"
-                    },
-                    {
-                      "id": "22",
-                      "nombre": "MANZANA"
-                    },
-                    {
-                      "id": "52",
-                      "nombre": "MASIA"
-                    },
-                    {
-                      "id": "23",
-                      "nombre": "MERCADO"
-                    },
-                    {
-                      "id": "53",
-                      "nombre": "MONTE"
-                    },
-                    {
-                      "id": "54",
-                      "nombre": "MUELLE"
-                    },
-                    {
-                      "id": "55",
-                      "nombre": "MUNICIPIO"
-                    },
-                    {
-                      "id": "32",
-                      "nombre": "PARAJE"
-                    },
-                    {
-                      "id": "56",
-                      "nombre": "PARCELA"
-                    },
-                    {
-                      "id": "24",
-                      "nombre": "PARQUE"
-                    },
-                    {
-                      "id": "25",
-                      "nombre": "PASAJE"
-                    },
-                    {
-                      "id": "4",
-                      "nombre": "PASEO"
-                    },
-                    {
-                      "id": "2",
-                      "nombre": "PLAZA"
-                    },
-                    {
-                      "id": "26",
-                      "nombre": "POBLADO"
-                    },
-                    {
-                      "id": "27",
-                      "nombre": "POLIGONO"
-                    },
-                    {
-                      "id": "28",
-                      "nombre": "PROLONGACION"
-                    },
-                    {
-                      "id": "57",
-                      "nombre": "PUENTE"
-                    },
-                    {
-                      "id": "58",
-                      "nombre": "PUERTA"
-                    },
-                    {
-                      "id": "59",
-                      "nombre": "QUINTA"
-                    },
-                    {
-                      "id": "60",
-                      "nombre": "RAMAL"
-                    },
-                    {
-                      "id": "29",
-                      "nombre": "RAMBLA"
-                    },
-                    {
-                      "id": "61",
-                      "nombre": "RAMPA"
-                    },
-                    {
-                      "id": "62",
-                      "nombre": "RIERA"
-                    },
-                    {
-                      "id": "63",
-                      "nombre": "RINCON"
-                    },
-                    {
-                      "id": "5",
-                      "nombre": "RONDA"
-                    },
-                    {
-                      "id": "64",
-                      "nombre": "RUA"
-                    },
-                    {
-                      "id": "65",
-                      "nombre": "SALIDA"
-                    },
-                    {
-                      "id": "66",
-                      "nombre": "SECTOR, SECCION"
-                    },
-                    {
-                      "id": "67",
-                      "nombre": "SENDA"
-                    },
-                    {
-                      "id": "68",
-                      "nombre": "SOLAR, SALON"
-                    },
-                    {
-                      "id": "69",
-                      "nombre": "SUBIDA"
-                    },
-                    {
-                      "id": "70",
-                      "nombre": "TERRENOS"
-                    },
-                    {
-                      "id": "71",
-                      "nombre": "TORRENTE"
-                    },
-                    {
-                      "id": "7",
-                      "nombre": "TRAVESIA"
-                    },
-                    {
-                      "id": "8",
-                      "nombre": "URBANIZACION"
-                    },
-                    {
-                      "id": "31",
-                      "nombre": "VEREDA"
-                    },
-                    {
-                      "id": "72",
-                      "nombre": "VIA"
-                    },
-                    {
-                      "id": "73",
-                      "nombre": "VIA PUBLICA"
-                    }
-                  ]
+                  "options": $1
                 }
               }
             ]
@@ -2898,7 +1956,9 @@
   }
 ]
         </format>
-        <args/>
+        <args>
+          <arg expression="get-property('tiposVia')" literal="true"/>
+        </args>
       </payloadFactory>
       <respond/>
     </inSequence>
