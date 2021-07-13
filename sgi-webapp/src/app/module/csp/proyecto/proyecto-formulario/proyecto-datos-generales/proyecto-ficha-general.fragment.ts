@@ -39,6 +39,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   selectedConvocatoria: IConvocatoria;
   seguimientoCientificos: IConvocatoriaPeriodoSeguimientoCientifico[] = [];
 
+  readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
+
   abiertoRequired: boolean;
   comentarioEstadoCancelado: boolean;
   mostrarSolicitud = false;
@@ -91,6 +93,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
+    this.subscriptions.push(
+      this.ultimaProrroga$.subscribe(
+        (value) => {
+          this.ultimaProrroga = value;
+          this.getFormGroup().controls.fechaFinDefinitiva.updateValueAndValidity();
+        }
+      ));
     this.loadHistoricoProyectoIVA(key);
     return this.service.findById(key).pipe(
       map(proyecto => {
@@ -180,9 +189,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
       fechaInicio: new FormControl(null, [
         Validators.required]),
-      fechaFin: new FormControl(null, [
-        Validators.required, this.buildValidatorFechaFin()]),
-      fechaFinDefinitiva: new FormControl(null, [this.buildValidatorFechaFin()]),
+      fechaFin: new FormControl(null, [Validators.required, this.buildValidatorFechaFin()]),
+      fechaFinDefinitiva: new FormControl(null, [this.buildValidatorFechaFinDefinitiva()]),
       convocatoria: new FormControl({
         value: '',
         disabled: this.isEdit()
@@ -213,7 +221,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
-          DateValidator.isAfter('fechaInicio', 'fechaFinDefinitiva')]
+          DateValidator.isAfter('fechaFin', 'fechaFinDefinitiva')]
       });
 
     this.subscriptions.push(
@@ -685,7 +693,19 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private buildValidatorFechaFin(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (this.ultimaProrroga && control.value && this.ultimaProrroga.fechaFin >= control.value) {
+      if (this.ultimaProrroga && control.value && this.ultimaProrroga.fechaFin <= control.value) {
+        return { afterThanProrroga: true };
+      }
+      return null;
+    };
+  }
+
+  private buildValidatorFechaFinDefinitiva(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (this.proyecto.fechaFin && control.value && this.proyecto.fechaFin >= control.value) {
+        return { after: true };
+      } else if (this.ultimaProrroga &&
+        this.ultimaProrroga.fechaFin > control.value) {
         return { afterThanProrroga: true };
       }
       return null;

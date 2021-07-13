@@ -825,7 +825,7 @@
   "csp.unidad-gestion.acronimo": "Acrónimo",
   "csp.unidad-gestion.nombre": "Nombre",
   "error.after.fecha-fin": "La fecha de fin debe ser posterior a la fecha de inicio",
-  "error.after.fecha-fin-definitiva": "La fecha de fin definitiva debe ser posterior a la fecha de inicio",
+  "error.after.fecha-fin-definitiva": "La fecha de fin definitiva debe ser posterior a la fecha de fin",
   "error.after.fecha-fin-definitiva-proyecto": "La fecha de fin de la prórroga debe ser posterior a la fecha de fin definitiva del proyecto",
   "error.after.fecha-fin-proyecto": "La fecha de fin de la prórroga debe ser posterior a la fecha de fin del proyecto",
   "error.after.mes-final": "El mes de fin debe ser mayor al mes de inicio",

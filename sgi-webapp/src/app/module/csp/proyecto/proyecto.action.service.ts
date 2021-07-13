@@ -44,7 +44,8 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
@@ -320,6 +321,11 @@ export class ProyectoActionService extends ActionService {
         this.subscriptions.push(
           proyectoService.hasProyectoSGE(id).subscribe(value => this.hasProyectoSGE$.next(value))
         );
+        this.subscriptions.push(
+          this.prorrogas.ultimaProrroga$.subscribe(
+            (value) => this.fichaGeneral.ultimaProrroga$.next(value)
+          )
+        );
 
         // Propagate changes
         this.subscriptions.push(
@@ -379,6 +385,26 @@ export class ProyectoActionService extends ActionService {
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
       routerLink: ['../..', CSP_ROUTE_NAMES.CONVOCATORIA, idConvocatoria.toString()]
     });
+  }
+
+  saveOrUpdate(): Observable<void> {
+    this.performChecks(true);
+    if (this.hasErrors()) {
+      return throwError('Errores');
+    }
+    if (this.isEdit()) {
+      let cascade = of(void 0);
+      if (this.prorrogas?.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.prorrogas.saveOrUpdate().pipe(tap(() => this.prorrogas.refreshInitialState(true))))
+        );
+      }
+      return cascade.pipe(
+        switchMap(() => super.saveOrUpdate())
+      );
+    } else {
+      return super.saveOrUpdate()
+    }
   }
 
   /**
