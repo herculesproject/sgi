@@ -715,10 +715,6 @@ public class ProyectoServiceImpl implements ProyectoService {
         .findFirstByProyectoIdOrderByFechaConcesionDesc(proyecto.getId());
 
     if (prorroga.isPresent()) {
-      Assert.isTrue(
-          proyecto.getFechaFin().isAfter(prorroga.get().getFechaFin())
-              || proyecto.getFechaFin().equals(prorroga.get().getFechaFin()),
-          "La fecha de fin debe ser posterior a la fecha de fin de la última prórroga");
       if (proyecto.getFechaFinDefinitiva() != null) {
         Assert.isTrue(
             proyecto.getFechaFinDefinitiva().isAfter(prorroga.get().getFechaFin())
