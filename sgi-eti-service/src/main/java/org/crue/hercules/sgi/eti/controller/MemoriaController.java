@@ -726,7 +726,7 @@ public class MemoriaController {
    * @return el {@link Informe}
    */
   @GetMapping("/{id}/informe/ultima-version")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V', 'ETI-EVC-EVALR')")
   public ResponseEntity<Informe> getInformeFormularioUltimaVersion(@PathVariable Long id) {
 
     Optional<Informe> returnValue = informeService.findFirstByMemoriaOrderByVersionDesc(id);
