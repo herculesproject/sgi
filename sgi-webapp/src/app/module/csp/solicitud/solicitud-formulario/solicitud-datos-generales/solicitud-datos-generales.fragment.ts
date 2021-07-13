@@ -28,12 +28,6 @@ export interface SolicitudModalidadEntidadConvocanteListado {
   modalidad: StatusWrapper<ISolicitudModalidad>;
 }
 
-export interface SolicitudModalidadEntidadConvocanteListado {
-  entidadConvocante: IConvocatoriaEntidadConvocante;
-  plan: IPrograma;
-  modalidad: StatusWrapper<ISolicitudModalidad>;
-}
-
 export interface SolicitudDatosGenerales extends ISolicitud {
   convocatoria: IConvocatoria;
 }
