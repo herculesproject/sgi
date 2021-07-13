@@ -109,7 +109,7 @@ public class TipoProteccionController {
    * @return Lista de entidades {@link TipoProteccion} paginadas y/o filtradas.
    */
   @GetMapping("/{id}/subtipos")
-  @PreAuthorize("hasAnyAuthority('PII-TPR-V', 'PII-TPR-C', 'PII-TPR-E', 'PII-TPR-B', 'PII-TPR-R')")
+  @PreAuthorize("hasAnyAuthority('PII-TPR-V', 'PII-TPR-C', 'PII-TPR-E', 'PII-TPR-B', 'PII-TPR-R', 'PII-INV-V', 'PII-INV-C', 'PII-INV-E')")
   ResponseEntity<Page<TipoProteccionOutput>> findSubtipos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findSubtipos(@PathVariable Long id,String query, Pageable paging) - start");
