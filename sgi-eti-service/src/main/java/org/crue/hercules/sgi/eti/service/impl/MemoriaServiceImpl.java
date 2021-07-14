@@ -735,15 +735,19 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   @Override
-  public Page<Memoria> findByComite(Long idComite, Pageable paging) {
-    log.debug("findByComite(Long idComite) - start");
+  public Page<Memoria> findByComiteAndPeticionEvaluacion(Long idComite, Long idPeticionEvaluacion, Pageable paging) {
+    log.debug("findByComiteAndPeticionEvaluacion(Long idComite, Long idPeticionEvaluacion, Pageable paging) - start");
 
     Assert.notNull(idComite,
         "El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
 
+    Assert.notNull(idPeticionEvaluacion,
+        "El identificador de la petición de evaluación no puede ser null para recuperar sus tipos de memoria asociados.");
+
     return comiteRepository.findByIdAndActivoTrue(idComite).map(comite -> {
-      log.debug("findByComite(Long idComite) - end");
-      return memoriaRepository.findByComiteIdAndActivoTrueAndComiteActivoTrue(idComite, paging);
+      log.debug("findByComiteAndPeticionEvaluacion(Long idComite, Long idPeticionEvaluacion, Pageable paging) - end");
+      return memoriaRepository.findByComiteIdAndPeticionEvaluacionIdAndActivoTrueAndComiteActivoTrue(idComite,
+          idPeticionEvaluacion, paging);
 
     }).orElseThrow(() -> new ComiteNotFoundException(idComite));
 
