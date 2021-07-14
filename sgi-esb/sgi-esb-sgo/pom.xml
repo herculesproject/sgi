@@ -10,6 +10,7 @@
   <description>sgi-esb-sgo</description>
   <modules>
     <module>sgo-integration-project</module>
+    <module>sgo-registry-resources</module>
     <module>sgo-composite-application</module>
   </modules>
 

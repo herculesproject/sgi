@@ -16,6 +16,9 @@
     <org.crue.hercules.sgi.esb.sgo.endpoint_._sgo-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgo.endpoint_._sgo-endpoint>
     <org.crue.hercules.sgi.esb.sgo.endpoint_._sgo-standalone-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgo.endpoint_._sgo-standalone-endpoint>
     <org.crue.hercules.sgi.esb.sgo.sequence_._sgo-add-x-api-key-sequence>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgo.sequence_._sgo-add-x-api-key-sequence>
+    <org.crue.hercules.sgi.esb.sgo.resource_._clasificacion-ids-transformer-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgo.resource_._clasificacion-ids-transformer-mediator>
+    <org.crue.hercules.sgi.esb.sgo.resource_._get-clasificacion-prefix-query-param-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgo.resource_._get-clasificacion-prefix-query-param-mediator>
+    <org.crue.hercules.sgi.esb.sgo.resource_._remove-clasificacion-prefix-query-param-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgo.resource_._remove-clasificacion-prefix-query-param-mediator>
     <org.crue.hercules.sgi.esb.sgo.api_._sgo-api>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgo.api_._sgo-api>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
     <timestamp>${maven.build.timestamp}</timestamp>
@@ -45,6 +48,24 @@
       <artifactId>sgo-add-x-api-key-sequence</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.crue.hercules.sgi.esb.sgo.resource</groupId>
+      <artifactId>clasificacion-ids-transformer-mediator</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.crue.hercules.sgi.esb.sgo.resource</groupId>
+      <artifactId>get-clasificacion-prefix-query-param-mediator</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.crue.hercules.sgi.esb.sgo.resource</groupId>
+      <artifactId>remove-clasificacion-prefix-query-param-mediator</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <type>zip</type>
     </dependency>
   </dependencies>
   <repositories>
