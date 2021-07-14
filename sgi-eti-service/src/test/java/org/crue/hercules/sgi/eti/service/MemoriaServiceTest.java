@@ -39,6 +39,7 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
+import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,11 +92,14 @@ public class MemoriaServiceTest extends BaseServiceTest {
   @Mock
   private InformeService informeFormularioService;
 
+  @Mock
+  private TareaRepository tareaRepository;
+
   @BeforeEach
   public void setUp() throws Exception {
     memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository, estadoRetrospectivaRepository,
         evaluacionRepository, comentarioRepository, informeFormularioService, peticionEvaluacionRepository,
-        comiteRepository, documentacionMemoriaRepository, respuestaRepository);
+        comiteRepository, documentacionMemoriaRepository, respuestaRepository, tareaRepository);
   }
 
   @Test

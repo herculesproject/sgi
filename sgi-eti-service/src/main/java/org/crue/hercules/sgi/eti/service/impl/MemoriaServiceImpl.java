@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
@@ -37,6 +38,7 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
+import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
@@ -90,11 +92,15 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Informe service */
   private final InformeService informeService;
 
+  /** Tarea repository */
+  private final TareaRepository tareaRepository;
+
   public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
       EstadoRetrospectivaRepository estadoRetrospectivaRepository, EvaluacionRepository evaluacionRepository,
       ComentarioRepository comentarioRepository, InformeService informeService,
       PeticionEvaluacionRepository peticionEvaluacionRepository, ComiteRepository comiteRepository,
-      DocumentacionMemoriaRepository documentacionMemoriaRepository, RespuestaRepository respuestaRepository) {
+      DocumentacionMemoriaRepository documentacionMemoriaRepository, RespuestaRepository respuestaRepository,
+      TareaRepository tareaRepository) {
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;
@@ -105,6 +111,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.comiteRepository = comiteRepository;
     this.documentacionMemoriaRepository = documentacionMemoriaRepository;
     this.respuestaRepository = respuestaRepository;
+    this.tareaRepository = tareaRepository;
   }
 
   /**
@@ -189,6 +196,16 @@ public class MemoriaServiceImpl implements MemoriaService {
     }).collect(Collectors.toList());
 
     respuestaRepository.saveAll(respuestaList);
+
+    /** Tarea */
+    List<Tarea> tareasMemoriaOriginal = tareaRepository.findAllByMemoriaId(memoria.getId());
+    if (!tareasMemoriaOriginal.isEmpty()) {
+      List<Tarea> tareasMemoriaCopy = tareasMemoriaOriginal.stream().map(tarea -> {
+        return new Tarea(null, tarea.getEquipoTrabajo(), nuevaMemoria, tarea.getTarea(), tarea.getFormacion(),
+            tarea.getFormacionEspecifica(), tarea.getOrganismo(), tarea.getAnio(), tarea.getTipoTarea());
+      }).collect(Collectors.toList());
+      tareaRepository.saveAll(tareasMemoriaCopy);
+    }
 
     log.debug("Memoria createModificada(Memoria memoria, id) - end");
     return memoriaCreada;
