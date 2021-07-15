@@ -461,7 +461,9 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="separation-button" *ngIf="this.dataSource.data.length>0">
+
+    <!-- Tabla historico IVA -->
+    <div class="separation-button" *ngIf="this.dataSource.data.length>1">
       <h3>{{'csp.proyecto-iva.historico' | translate}}</h3>
       <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="dataSource" matSort matSortActive="id"
         matSortDirection="asc" matSortDisableClear>
