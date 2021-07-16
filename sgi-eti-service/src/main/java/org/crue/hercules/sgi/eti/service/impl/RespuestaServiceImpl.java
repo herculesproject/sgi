@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -203,7 +205,9 @@ public class RespuestaServiceImpl implements RespuestaService {
       // en sus correspondientes tablas.
       guardarDatosRetrospectiva(formulario, respuesta.getId(), memoria);
       Bloque lastBloque = bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(formulario.getId());
-      Apartado lastApartado = apartadoRepository.findFirstByBloqueIdOrderByOrdenDesc(lastBloque.getId());
+      List<Apartado> ultimosApartados = apartadoRepository.findFirst2ByBloqueIdOrderByOrdenDesc(lastBloque.getId());
+      Apartado lastApartado = CollectionUtils.isEmpty(ultimosApartados) ? null
+          : ultimosApartados.get(ultimosApartados.size() - 1);
       Respuesta respuestaUltimoBloqueApartado = null;
       if (formulario.getId().toString().equals(ID_FORMULARIO_SEG_FINAL) && lastBloque != null) {
         respuestaUltimoBloqueApartado = respuestaRepository
