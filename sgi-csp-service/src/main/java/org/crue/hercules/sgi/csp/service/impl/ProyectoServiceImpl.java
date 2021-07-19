@@ -1158,7 +1158,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           proyectoEquipo.rolProyecto(solicitudProyectoEquipo.getRolProyecto())
               .personaRef(solicitudProyectoEquipo.getPersonaRef());
           return proyectoEquipo.build();
-        }).filter(proyectoEquipo -> !proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaFin()))
+        }).filter(proyectoEquipo -> Objects.nonNull(proyectoEquipo) && (Objects.isNull(proyectoEquipo.getFechaInicio())
+            || !proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
 
     this.proyectoEquipoService.update(proyecto.getId(), proyectoEquipos);
@@ -1302,7 +1303,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
               .personaRef(entidadEquipoSolicitud.getPersonaRef()).rolProyecto(entidadEquipoSolicitud.getRolProyecto())
               .build();
-        }).filter(proyectoEquipoSocio -> !proyectoEquipoSocio.getFechaInicio().isAfter(proyecto.getFechaFin()))
+        })
+        .filter(proyectoEquipoSocio -> Objects.nonNull(proyectoEquipoSocio)
+            && (Objects.isNull(proyectoEquipoSocio.getFechaInicio())
+                || !proyectoEquipoSocio.getFechaInicio().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
     this.proyectoEquipoSocioService.update(proyectoSocio.getId(), proyectoSocioEquipos);
   }
