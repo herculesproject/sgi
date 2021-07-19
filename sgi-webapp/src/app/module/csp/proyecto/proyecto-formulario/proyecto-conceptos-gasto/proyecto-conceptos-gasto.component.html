@@ -134,10 +134,10 @@
         <input matInput formControlName="porcentajeCosteIndirecto" type="number" id="porcentajeCosteIndirecto" min="0"
           placeholder="{{'csp.proyecto-concepto-gasto.costes-indirectos.porcentaje' | translate}}">
         <mat-error *ngIf="formGroup.controls.porcentajeCosteIndirecto.hasError('max')">
-          {{'error.max.digit' | translate}}
+          {{'error.max.entity' | translate:msgParamEntityPorcentajeCostesIndirectos}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.porcentajeCosteIndirecto.hasError('min')">
-          {{'error.csp.proyecto-concepto-gasto.min' | translate}}
+          {{'error.min.entity' | translate:msgParamEntityPorcentajeCostesIndirectos}}
         </mat-error>
       </mat-form-field>
     </div>

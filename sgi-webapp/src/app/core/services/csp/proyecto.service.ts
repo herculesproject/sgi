@@ -439,8 +439,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    *
    * @param id Proyecto
    */
-  hasProyectoSGE(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/proyectos-sge`;
+  hasProyectosSGE(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/proyectossge`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );
@@ -472,7 +472,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   findAllProyectosSgeProyecto(proyectoId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoProyectoSge>> {
     return this.find<IProyectoProyectoSgeBackend, IProyectoProyectoSge>(
-      `${this.endpointUrl}/${proyectoId}/proyectos-sge`,
+      `${this.endpointUrl}/${proyectoId}/proyectossge`,
       options,
       PROYECTO_PROYECTO_SGE_CONVERTER
     );

@@ -47,6 +47,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   mostrarCausaExencion = false;
   solicitudProyecto: ISolicitudProyecto;
   private ultimaProrroga: IProyectoProrroga;
+  private vinculacionesProyectosSge = false;
   finalidadConvocatoria: ITipoFinalidad;
   ambitoGeograficoConvocatoria: ITipoAmbitoGeografico;
   unidadGestionConvocatoria: IUnidadGestion;
@@ -68,7 +69,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   ambitoGeograficoConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   unidadGestionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   modeloEjecucionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  readonly vinculacionesProyectoSGE$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly vinculacionesProyectosSge$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -99,7 +100,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           this.ultimaProrroga = value;
           this.getFormGroup().controls.fechaFinDefinitiva.updateValueAndValidity();
         }
-      ));
+      )
+    );
     this.loadHistoricoProyectoIVA(key);
     return this.service.findById(key).pipe(
       map(proyecto => {
@@ -208,7 +210,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       timesheet: new FormControl(null),
       permitePaquetesTrabajo: new FormControl(null),
       costeHora: new FormControl(null),
-      iva: new FormControl(null, [Validators.min(0), Validators.max(100)]),
+      iva: new FormControl(null, [
+        Validators.min(0),
+        Validators.max(100),
+        this.buildValidatorIva()
+      ]),
       tipoHorasAnuales: new FormControl(''),
       causaExencion: new FormControl(null),
       observaciones: new FormControl(''),
@@ -320,8 +326,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
             }
           }
         ),
-        this.vinculacionesProyectoSGE$.subscribe(
+        this.vinculacionesProyectosSge$.subscribe(
           value => {
+            this.vinculacionesProyectosSge = value;
+            form.controls.iva.updateValueAndValidity();
+
             if (value) {
               form.controls.causaExencion.disable();
             }
@@ -767,4 +776,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.hasPopulatedSocios$.next(false);
     }
   }
+
+  private buildValidatorIva(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (this.vinculacionesProyectosSge && control.value === 0) {
+        return { ivaProyectosSge: true };
+      }
+      return null;
+    };
+  }
+
 }

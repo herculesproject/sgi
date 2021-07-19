@@ -142,7 +142,7 @@ export class ProyectoActionService extends ActionService {
   private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
   readonly showAlertNotSocioCoordinadorExist$ = new BehaviorSubject<boolean>(false);
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
-  private readonly hasProyectoSGE$ = new BehaviorSubject<boolean>(false);
+  private readonly hasProyectosSge$ = new BehaviorSubject<boolean>(false);
 
   get proyecto(): IProyecto {
     return this.fichaGeneral.getValue();
@@ -319,7 +319,7 @@ export class ProyectoActionService extends ActionService {
           proyectoService.hasProyectoDocumentos(id).subscribe(value => this.hasDocumentos$.next(value))
         );
         this.subscriptions.push(
-          proyectoService.hasProyectoSGE(id).subscribe(value => this.hasProyectoSGE$.next(value))
+          proyectoService.hasProyectosSGE(id).subscribe(value => this.hasProyectosSge$.next(value))
         );
         this.subscriptions.push(
           this.prorrogas.ultimaProrroga$.subscribe(
@@ -341,21 +341,16 @@ export class ProyectoActionService extends ActionService {
                 || this.hasDocumentos$.value
               );
             }
-          ),
-          this.hasProyectoSGE$.subscribe(
-            () => {
-              this.fichaGeneral.vinculacionesProyectoSGE$.next(
-                this.hasProyectoSGE$.value
-              );
-            }
-          ),
+          )
         );
+
+        this.subscriptions.push(this.hasProyectosSge$.subscribe(value => this.fichaGeneral.vinculacionesProyectosSge$.next(value)));
 
         // Syncronize changes
         this.subscriptions.push(this.plazos.plazos$.subscribe(value => this.hasFases$.next(!!value.length)));
         this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
         this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
-        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => this.hasProyectoSGE$.next(!!value.length)));
+        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => this.hasProyectosSge$.next(!!value.length)));
         this.subscriptions.push(this.fichaGeneral.coordinado$.subscribe(
           (value: boolean) => {
             this.showSocios$.next(value);
@@ -399,11 +394,16 @@ export class ProyectoActionService extends ActionService {
           switchMap(() => this.prorrogas.saveOrUpdate().pipe(tap(() => this.prorrogas.refreshInitialState(true))))
         );
       }
+      if (this.proyectosSge?.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.proyectosSge.saveOrUpdate().pipe(tap(() => this.proyectosSge.refreshInitialState(true))))
+        );
+      }
       return cascade.pipe(
         switchMap(() => super.saveOrUpdate())
       );
     } else {
-      return super.saveOrUpdate()
+      return super.saveOrUpdate();
     }
   }
 
