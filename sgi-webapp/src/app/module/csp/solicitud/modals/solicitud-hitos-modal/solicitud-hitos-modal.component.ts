@@ -87,6 +87,10 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
       this.formGroup.disable();
     }
 
+    if (this.data?.hito?.fecha) {
+      this.validarFecha(this.data.hito.fecha);
+    }
+
     this.createValidatorDate(this.data?.hito?.tipoHito);
 
     const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
