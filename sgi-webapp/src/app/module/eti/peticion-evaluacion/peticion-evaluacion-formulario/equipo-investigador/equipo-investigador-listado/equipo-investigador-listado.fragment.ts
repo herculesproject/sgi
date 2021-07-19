@@ -160,6 +160,22 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
   private getInvestigadorActual(): Observable<IEquipoTrabajoWithIsEliminable> {
     return this.personaService.findById(this.sgiAuthService.authStatus$?.getValue()?.userRefId)
       .pipe(
+        switchMap((persona) => {
+          return this.datosAcademicosService.findByPersonaId(persona.id).pipe(
+            map((datosAcademicos) => {
+              persona.datosAcademicos = datosAcademicos;
+              return persona;
+            }
+            ));
+        }),
+        switchMap((persona) => {
+          return this.vinculacionService.findByPersonaId(persona.id).pipe(
+            map((vinculacion) => {
+              persona.vinculacion = vinculacion;
+              return persona;
+            }
+            ));
+        }),
         map((persona) => {
           return {
             id: null,
