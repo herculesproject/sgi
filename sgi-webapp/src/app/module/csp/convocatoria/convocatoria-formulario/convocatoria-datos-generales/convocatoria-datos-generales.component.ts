@@ -7,7 +7,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { MSG_PARAMS } from '@core/i18n';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -49,6 +49,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   regimenesConcurrencia$: Observable<ITipoRegimenConcurrencia[]>;
 
   fxFlexProperties: FxFlexProperties;
+  fxFlexProperties2: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
@@ -82,6 +83,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     return CLASIFICACION_CVN_MAP;
   }
 
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
+
   constructor(
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
@@ -92,11 +97,11 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
 
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
-    this.fxFlexProperties.order = '2';
+    this.fxFlexProperties2 = new FxFlexProperties();
+    this.fxFlexProperties2.sm = '0 1 calc(72%)';
+    this.fxFlexProperties2.md = '0 1 calc(66%)';
+    this.fxFlexProperties2.gtMd = '0 1 calc(64%)';
+    this.fxFlexProperties2.order = '2';
 
     this.fxFlexPropertiesEntidad = new FxFlexProperties();
     this.fxFlexPropertiesEntidad.sm = '0 1 calc(36%-10px)';

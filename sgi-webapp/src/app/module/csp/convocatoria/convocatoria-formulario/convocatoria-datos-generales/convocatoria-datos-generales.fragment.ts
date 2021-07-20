@@ -80,6 +80,11 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       objeto: new FormControl('', Validators.maxLength(2000)),
       observaciones: new FormControl('', Validators.maxLength(2000))
     });
+
+    if (this.isEdit()) {
+      form.addControl('estado', new FormControl({ value: null, disabled: true }));
+    }
+
     if (!this.hasEditPerm) {
       form.disable();
     } else if (this.isConvocatoriaVinculada) {
@@ -134,6 +139,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
+      estado: convocatoria.estado
     };
 
     this.checkEstado(this.getFormGroup(), convocatoria);
