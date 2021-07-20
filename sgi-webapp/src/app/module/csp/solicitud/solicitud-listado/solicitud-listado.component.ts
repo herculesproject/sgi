@@ -200,7 +200,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       switchMap((value) => {
         return this.translate.get(
           MSG_DEACTIVATE,
-          { entity: value }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoDesactivar = value);
