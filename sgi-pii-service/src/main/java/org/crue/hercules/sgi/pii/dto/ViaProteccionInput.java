@@ -1,13 +1,11 @@
 package org.crue.hercules.sgi.pii.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
-import org.crue.hercules.sgi.pii.model.TipoProteccion;
+import org.crue.hercules.sgi.pii.model.ViaProteccion;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,19 +18,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TipoProteccionInput implements Serializable {
+public class ViaProteccionInput {
 
   @NotEmpty
-  @Size(max = TipoProteccion.NOMBRE_LENGTH)
+  @Size(max = ViaProteccion.NOMBRE_LENGTH)
   private String nombre;
 
   @NotEmpty
-  @Size(max = TipoProteccion.DESCRIPCION_LENGTH)
+  @Size(max = ViaProteccion.DESCRIPCION_LENGTH)
   private String descripcion;
 
   @NotNull
   private TipoPropiedad tipoPropiedad;
 
-  private Long padreId;
+  @NotNull
+  Integer mesesPrioridad;
+
+  @NotNull
+  Boolean paisEspecifico;
+
+  @NotNull
+  Boolean extensionInternacional;
+
+  @NotNull
+  Boolean variosPaises;
 
 }

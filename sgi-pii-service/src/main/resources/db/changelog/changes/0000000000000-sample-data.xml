@@ -71,7 +71,7 @@
       <column name="descripcion" value="Consequat adipisicing eu culpa quis elit anim magna." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
       <column name="tipo_proteccion_padre_id" value="1" />
-    </insert> 
+    </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="TipoProteccion1 Subtipo2" />
@@ -249,4 +249,76 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-via_proteccion">
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="España" />
+      <column name="descripcion" value="Tipo de vía de protección en España" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="false" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="PCT" />
+      <column name="descripcion" value="Protección internacional de las invenciones" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="true" />
+      <column name="varios_paises" value="false" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="Europea" />
+      <column name="descripcion" value="Tipo de vía de protección en Europa" />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="true" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="País específico" />
+      <column name="descripcion" value="Tipo de vía de protección en un pais específico" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="true" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="false" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="Registro autonómico" />
+      <column name="descripcion" value="Tipo de vía de protección para los registros autonómicos" />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="false" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="Acta notarial" />
+      <column name="descripcion" value="Tipo de vía de protección para las actas notariales" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="false" />
+    </insert>
+    <insert tableName="via_proteccion">
+      <column name="id" valueSequenceNext="via_proteccion_seq" />
+      <column name="nombre" value="Registro interno" />
+      <column name="descripcion" value="Vía de protección para un registro interno" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="meses_prioridad" value="1" />
+      <column name="pais_especifico" value="false" />
+      <column name="extension_internacional" value="false" />
+      <column name="varios_paises" value="false" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
