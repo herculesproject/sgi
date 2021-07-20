@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { TIPO_PROPIEDAD_MAP } from '@core/enums/tipo-propiedad';
 import { MSG_PARAMS } from '@core/i18n';
-import { ITipoProteccion, TIPO_PROPIEDAD_MAP } from '@core/models/pii/tipo-proteccion';
+import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
 import { TipoProteccionActionService } from '../../tipo-proteccion.action.service';

@@ -1,10 +1,13 @@
 import { TipoPropiedad } from "@core/enums/tipo-propiedad";
 
-export interface ITipoProteccionResponse {
+export interface IViaProteccionResponse {
   id: number;
   nombre: string;
   descripcion: string;
   tipoPropiedad: TipoPropiedad;
-  padre?: ITipoProteccionResponse;
+  mesesPrioridad: number;
+  paisEspecifico: boolean;
+  extensionInternacional: boolean;
+  variosPaises: boolean;
   activo: boolean;
 }

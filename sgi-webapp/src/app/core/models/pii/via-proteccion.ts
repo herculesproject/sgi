@@ -1,11 +1,13 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoPropiedad } from '@core/enums/tipo-propiedad';
 
-export interface ITipoProteccion {
+export interface IViaProteccion {
   id: number;
   nombre: string;
   descripcion: string;
   tipoPropiedad: TipoPropiedad;
-  padre: ITipoProteccion;
+  mesesPrioridad: number;
+  paisEspecifico: boolean;
+  extensionInternacional: boolean;
+  variosPaises: boolean;
   activo: boolean;
 }

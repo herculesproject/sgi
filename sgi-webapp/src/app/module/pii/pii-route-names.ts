@@ -3,5 +3,6 @@ export const PII_ROUTE_NAMES = {
   TIPO_PROTECCION: 'tipo-proteccion',
   SECTOR_APLICACION: 'sector-aplicacion',
   RESULTADO_INFORME_PATENTABILIDAD: 'resultado-informe-patentabilidad',
-  TIPO_PROCEDIMIENTO: 'tipo-procedimiento'
+  TIPO_PROCEDIMIENTO: 'tipo-procedimiento',
+  VIA_PROTECCION: 'via-proteccion'
 };

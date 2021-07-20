@@ -35,6 +35,10 @@
             [routerLink]="[PII_ROUTE_NAMES.TIPO_PROCEDIMIENTO]" [routerLinkActive]="['is-active']">
             {{'pii.tipo-procedimiento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
           </a>
+          <a mat-list-item *sgiHasAnyAuthority="['PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E','PII-VPR-B','PII-VPR-R']"
+            [routerLink]="[PII_ROUTE_NAMES.VIA_PROTECCION]" [routerLinkActive]="['is-active']">
+            {{'pii.via-proteccion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
+          </a>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
