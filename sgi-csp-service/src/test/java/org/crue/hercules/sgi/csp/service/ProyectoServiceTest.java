@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Validator;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -152,6 +154,8 @@ public class ProyectoServiceTest extends BaseServiceTest {
   SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
   @Mock
   ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
+  @Mock
+  Validator validator;
 
   private ProyectoService service;
 
@@ -171,7 +175,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
         solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository,
         proyectoPartidaService, convocatoriaPartidaService, proyectoIVARepository, proyectoProyectoSgeRepository,
         proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService, convocatoriaConceptoGastoCodigoEcRepository,
-        solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService);
+        solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService, validator);
   }
 
   @Test

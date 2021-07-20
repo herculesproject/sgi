@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -170,6 +175,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
   private final SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
   private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
+  private final Validator validator;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -207,7 +213,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService,
       ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository,
       SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository,
-      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService) {
+      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService, Validator validator) {
 
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
@@ -253,6 +259,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
     this.solicitudProyectoResponsableEconomicoRepository = solicitudProyectoResponsableEconomicoRepository;
     this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
+    this.validator = validator;
   }
 
   /**
@@ -354,7 +361,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       }
 
       // Si no se informa IVA igual o superior a 0 se elimina la causa de exención
-      if (proyectoActualizar.getIva() != null && proyectoActualizar.getIva().getIva() != null) {
+      if (proyectoActualizar.getIva() != null && proyectoActualizar.getIva().getIva() != null
+          && proyectoActualizar.getIva().getIva().equals(0)) {
         data.setCausaExencion(proyectoActualizar.getCausaExencion());
       } else {
         data.setCausaExencion(null);
@@ -612,15 +620,18 @@ public class ProyectoServiceImpl implements ProyectoService {
   private ProyectoIVA addProyectoIVA(Proyecto proyecto) {
     log.debug("addProyectoIVA(Proyecto proyecto) - start");
 
-    Assert.isTrue(proyecto.getIva().getIva() >= 0 || proyecto.getIva().getIva() <= 100,
-        "El porcentaje de IVA debe estar comprendido entre 0 y 100");
-
     ProyectoIVA proyectoIVA = new ProyectoIVA();
     proyectoIVA.setProyectoId(proyecto.getId());
     proyectoIVA.setIva(proyecto.getIva().getIva());
     proyectoIVA.setFechaInicio(proyecto.getFechaInicio());
     proyectoIVA.setFechaFin(null);
     proyectoIVA.setProyectoId(proyecto.getId());
+
+    Set<ConstraintViolation<ProyectoIVA>> result = validator.validate(proyectoIVA);
+    if (!result.isEmpty()) {
+      throw new ConstraintViolationException(result);
+    }
+
     ProyectoIVA returnValue = proyectoIVARepository.save(proyectoIVA);
 
     log.debug("addProyectoIVA(Proyecto proyecto) - end");
@@ -640,31 +651,10 @@ public class ProyectoServiceImpl implements ProyectoService {
   private ProyectoIVA updateProyectoIVA(Proyecto proyectoGuardado, Proyecto proyectoActualizado) {
     log.debug("updateProyectoIVA(Proyecto data, Proyecto proyectoActualizado) - start");
 
-    // Validar que no haya proyecto proyectosge vinculados, y si los hay que el
-    // porcentaje de IVA no se mayor que cero
-    Boolean isProyectospSGE = proyectoProyectoSGERepository.existsByProyectoId(proyectoGuardado.getId());
-
-    if (isProyectospSGE && (proyectoGuardado.getIva() != null && proyectoGuardado.getIva().getIva() != null
-        && proyectoActualizado.getIva() != null && proyectoActualizado.getIva().getIva() != null
-        && (proyectoGuardado.getIva().getIva() > 0 && proyectoActualizado.getIva().getIva() == 0))) {
-      throw new ProyectoIVAException();
-    }
-    // Al antiguo proyecto IVA le ponemos de fecha de fin actual
-    ProyectoIVA oldProyectoIVA = proyectoGuardado.getIva();
-    if (oldProyectoIVA != null && oldProyectoIVA.getIva() != null) {
-      oldProyectoIVA.setFechaFin(
-          Instant.now().atZone(ZoneId.systemDefault()).withHour(23).withMinute(59).withSecond(59).toInstant());
-      oldProyectoIVA = proyectoIVARepository.save(oldProyectoIVA);
-    }
-
     // Creamos un nuevo proyecto IVA
     ProyectoIVA newProyectoIVA = new ProyectoIVA();
     newProyectoIVA.setProyectoId(proyectoActualizado.getId());
     if (proyectoActualizado.getIva() != null && proyectoActualizado.getIva().getIva() != null) {
-
-      Assert.isTrue(proyectoActualizado.getIva().getIva() >= 0 || proyectoActualizado.getIva().getIva() <= 100,
-          "El porcentaje de IVA debe estar comprendido entre 0 y 100");
-
       newProyectoIVA.setIva(proyectoActualizado.getIva().getIva());
     } else {
       newProyectoIVA.setIva(null);
@@ -675,6 +665,28 @@ public class ProyectoServiceImpl implements ProyectoService {
     newProyectoIVA.setProyectoId(proyectoActualizado.getId());
 
     newProyectoIVA = proyectoIVARepository.save(newProyectoIVA);
+
+    Set<ConstraintViolation<ProyectoIVA>> result = validator.validate(newProyectoIVA);
+    if (!result.isEmpty()) {
+      throw new ConstraintViolationException(result);
+    }
+
+    // Validar que no haya proyecto proyectosge vinculados, y si los hay que el
+    // porcentaje de IVA sea mayor que cero
+    if (newProyectoIVA.getIva() != null && newProyectoIVA.getIva().equals(0)) {
+      Boolean hasProyectosSgeVinculados = proyectoProyectoSGERepository.existsByProyectoId(proyectoGuardado.getId());
+      if (hasProyectosSgeVinculados) {
+        throw new ProyectoIVAException();
+      }
+    }
+
+    // Al antiguo proyecto IVA le ponemos de fecha de fin actual
+    ProyectoIVA oldProyectoIVA = proyectoGuardado.getIva();
+    if (oldProyectoIVA != null && oldProyectoIVA.getIva() != null) {
+      oldProyectoIVA.setFechaFin(
+          Instant.now().atZone(ZoneId.systemDefault()).withHour(23).withMinute(59).withSecond(59).toInstant());
+      oldProyectoIVA = proyectoIVARepository.save(oldProyectoIVA);
+    }
 
     log.debug("updateProyectoIVA(Proyecto data, Proyecto proyectoActualizado) - end");
     return newProyectoIVA;

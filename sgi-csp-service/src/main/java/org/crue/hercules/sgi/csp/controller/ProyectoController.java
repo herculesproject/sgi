@@ -839,7 +839,7 @@ public class ProyectoController {
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/proyectos-sge")
+  @GetMapping("/{id}/proyectossge")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
   ResponseEntity<Page<ProyectoProyectoSge>> findAllProyectoProyectosSge(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
@@ -1108,6 +1108,22 @@ public class ProyectoController {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable(id, new String[] { "CSP-PRO-E", "CSP-PRO-V" });
     log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoFase}
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/proyectossge", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  ResponseEntity<Proyecto> hasProyectosSge(@PathVariable Long id) {
+    log.debug("hasProyectosSge(Long id) - start");
+    boolean returnValue = proyectoProyectoSgeService.existsByProyecto(id);
+    log.debug("hasProyectosSge(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

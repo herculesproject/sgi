@@ -160,4 +160,18 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     return returnValue;
   }
 
+  /**
+   * Indica si existen {@link ProyectoProyectoSge} de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador de la {@link Proyecto}
+   * @return si existen {@link ProyectoProyectoSge}
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    log.debug("existsByProyecto(Long proyectoId) - start");
+    boolean returnValue = repository.existsByProyectoId(proyectoId);
+    log.debug("existsByProyecto(Long proyectoId) - end");
+    return returnValue;
+  }
+
 }
