@@ -174,8 +174,6 @@ export class ProyectoContextoModalComponent extends
     const areaTematica = this.checkedNode?.areaTematica?.value;
     if (areaTematica) {
       this.data.areaTematica = areaTematica;
-    } else if (this.data.areaTematicaConvocatoria && this.nodeMap.size === 1) {
-      this.data.areaTematica = this.data.areaTematicaConvocatoria;
     } else {
       this.data.areaTematica = null;
     }

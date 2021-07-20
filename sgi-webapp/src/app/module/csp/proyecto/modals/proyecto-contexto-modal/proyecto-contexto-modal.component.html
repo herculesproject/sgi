@@ -33,11 +33,8 @@
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
               <li class="mat-tree-node">
                 <button mat-icon-button disabled></button>
-                <mat-label *ngIf="node === rootNodeConvocatoria">
-                  {{node.areaTematica.value.nombre}}
-                </mat-label>
-                <mat-checkbox *ngIf="node !== rootNodeConvocatoria" class="checkbox" color="primary"
-                  [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
+                  (change)="onCheckNode(node, $event)">
                   {{node.areaTematica.value.nombre}}
                 </mat-checkbox>
               </li>
