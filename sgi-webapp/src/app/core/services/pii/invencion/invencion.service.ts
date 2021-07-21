@@ -2,17 +2,29 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
+import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import {
+  CreateCtor,
+  FindAllCtor,
+  FindByIdCtor,
+  mixinCreate,
+  mixinFindAll,
+  mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
+} from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IInvencionDocumentoResponse } from './invencion-documento/invencion-documento-response';
+import { INVENCION_DOCUMENTO_RESPONSE_CONVERTER } from './invencion-documento/invencion-documento-response.converter';
 import { IInvencionRequest } from './invencion-request';
 import { INVENCION_REQUEST_CONVERTER } from './invencion-request.converter';
 import { IInvencionResponse } from './invencion-response';
 import { INVENCION_RESPONSE_CONVERTER } from './invencion-response.converter';
 import { INVENCION_SECTORAPLICACION_REQUEST_CONVERTER } from './invencion-sector-aplicacion/invencion-sector-aplicacion-request.converter';
 import { IInvencionSectorAplicacionResponse } from './invencion-sector-aplicacion/invencion-sector-aplicacion-response';
-import { INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER } from './invencion-sector-aplicacion/invencion-sector-aplicacion-response.converter';
+import {
+  INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER
+} from './invencion-sector-aplicacion/invencion-sector-aplicacion-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
@@ -40,6 +52,7 @@ const _InvencionServiceMixinBase:
   providedIn: 'root'
 })
 export class InvencionService extends _InvencionServiceMixinBase {
+
   private static readonly MAPPING = '/invenciones';
 
   constructor(protected http: HttpClient) {
@@ -50,10 +63,10 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
- * Muestra activos y no activos
- *
- * @param options opciones de búsqueda.
- */
+   * Muestra activos y no activos
+   *
+   * @param options opciones de búsqueda.
+   */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencion>> {
     return this.find<IInvencionResponse, IInvencion>(
       `${this.endpointUrl}/todos`,
@@ -63,10 +76,10 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
- * Comprueba si existe una invencion
- *
- * @param id Id de la invencion
- */
+   * Comprueba si existe una invencion
+   *
+   * @param id Id de la invencion
+   */
   exists(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
@@ -75,9 +88,9 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
- * Recupera los sectores de aplicación asociados a la Invencion con el id indicado
- * @param id Identificador de la Invencion
- */
+   * Recupera los sectores de aplicación asociados a la Invencion con el id indicado
+   * @param id Identificador de la Invencion
+   */
   findSectoresAplicacion(id: number): Observable<IInvencionSectorAplicacion[]> {
     const endpointUrl = `${this.endpointUrl}/${id}/sectoresaplicacion`;
     const params = new HttpParams().set('id', id.toString());
@@ -99,6 +112,19 @@ export class InvencionService extends _InvencionServiceMixinBase {
       INVENCION_SECTORAPLICACION_REQUEST_CONVERTER.fromTargetArray(sectoresAplicacion)
     ).pipe(
       map((response => INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
+  }
+  /**
+   * Obtiene todos los documentos de una invención dado el id
+   * @param id
+   * @param options
+   * @returns documentos de una invencion
+   */
+  public findAllInvencionDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencionDocumento>> {
+    return this.find<IInvencionDocumentoResponse, IInvencionDocumento>(
+      `${this.endpointUrl}/${id}/invenciondocumentos`,
+      options,
+      INVENCION_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 }
