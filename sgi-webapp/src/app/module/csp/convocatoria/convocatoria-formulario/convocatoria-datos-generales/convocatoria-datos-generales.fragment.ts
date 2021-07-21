@@ -100,7 +100,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       this.subscriptions.push(
         this.vinculacionesModeloEjecucion$.subscribe(
           value => {
-            if (value) {
+            if (value || !this.hasEditPerm) {
               form.controls.unidadGestion.disable();
               form.controls.modeloEjecucion.disable();
             }
@@ -201,17 +201,17 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     if (this.isEdit()) {
       this.configuracionSolicitudService.findByConvocatoriaId(this.getKey() as number).pipe(
         map(configuracionSolicitud => {
-          if (configuracionSolicitud === null) {
+          if (configuracionSolicitud === null && this.hasEditPerm) {
             this.showAddAreaTematica = true;
           }
-          else if (configuracionSolicitud.fasePresentacionSolicitudes === null) {
+          else if (configuracionSolicitud.fasePresentacionSolicitudes === null && this.hasEditPerm) {
             this.showAddAreaTematica = true;
           }
           return configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio ?? null;
         })
       ).subscribe(fechaInicio => {
         if ((this.convocatoria.estado === Estado.REGISTRADA || this.convocatoria.estado === Estado.BORRADOR)
-          && (fechaInicio === null || fechaInicio > fechaActual)) {
+          && (fechaInicio === null || fechaInicio > fechaActual) && this.hasEditPerm) {
           return this.showAddAreaTematica = true;
         }
         return this.showAddAreaTematica = false;

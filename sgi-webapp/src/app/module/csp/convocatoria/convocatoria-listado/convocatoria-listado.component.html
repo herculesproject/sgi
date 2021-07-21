@@ -320,8 +320,7 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let element">
           <ng-container *sgiHasAnyAuthority="['CSP-CON-V', 'CSP-CON-V_' + element.convocatoria.unidadGestion.id ]">
-            <button mat-button matTooltip="{{'btn.view' | translate}}"
-              *ngIf="!mapModificable.get(element.convocatoria.id)" [routerLink]="[element.convocatoria.id]">
+            <button mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[element.convocatoria.id]">
               <mat-icon color="primary">visibility</mat-icon>
             </button>
           </ng-container>

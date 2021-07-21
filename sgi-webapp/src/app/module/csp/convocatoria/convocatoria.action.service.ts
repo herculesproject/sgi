@@ -170,7 +170,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       this.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.id, convocatoriaService, convocatoriaEntidadConvocanteService,
-      empresaService, this.readonly);
+      empresaService, this.readonly, this.canEdit);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
       this.id, convocatoriaService, convocatoriaFaseService, configuracionSolicitudService, this.readonly, this.canEdit);
     this.hitos = new ConvocatoriaHitosFragment(this.id, convocatoriaService,
@@ -180,7 +180,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(this.id,
       convocatoriaService, convocatoriaSeguimientoCientificoService);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
-      this.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly);
+      this.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly, this.canEdit);
     this.enlaces = new ConvocatoriaEnlaceFragment(this.id, convocatoriaService,
       convocatoriaEnlaceService, this.readonly, this.canEdit);
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.id,
