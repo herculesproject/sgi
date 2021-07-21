@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
+@Validated
 public class TipoProcedimientoService {
 
   private final TipoProcedimientoRepository tipoProcedimientoRepository;
@@ -60,6 +61,7 @@ public class TipoProcedimientoService {
    * @param tipoProcedimiento la entidad {@link TipoProcedimiento} a guardar.
    * @return la entidad {@link TipoProcedimiento} persistida.
    */
+  @Validated({ TipoProcedimiento.OnCrear.class })
   public TipoProcedimiento create(@Valid TipoProcedimiento tipoProcedimiento) {
 
     Assert.isNull(tipoProcedimiento.getId(),
@@ -89,6 +91,7 @@ public class TipoProcedimientoService {
    * @param id Id del {@link TipoProcedimiento}.
    * @return Entidad {@link TipoProcedimiento} persistida activada.
    */
+  @Validated({ TipoProcedimiento.OnActivar.class })
   public TipoProcedimiento activar(Long id) {
 
     Assert.notNull(id,

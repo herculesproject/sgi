@@ -8,8 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.crue.hercules.sgi.pii.model.TipoProcedimiento.OnActivar;
+import org.crue.hercules.sgi.pii.model.TipoProcedimiento.OnCrear;
 import org.crue.hercules.sgi.pii.model.TipoProcedimiento.OnActualizar;
 import org.crue.hercules.sgi.pii.validation.EntidadActiva;
+import org.crue.hercules.sgi.pii.validation.UniqueNombreTipoProcedimiento;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +26,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 @SuperBuilder
 @EntidadActiva(entityClass = TipoProcedimiento.class, groups = { OnActualizar.class })
+@UniqueNombreTipoProcedimiento(groups = { OnActualizar.class, OnActivar.class, OnCrear.class })
 public class TipoProcedimiento extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "tipo_procedimiento";
