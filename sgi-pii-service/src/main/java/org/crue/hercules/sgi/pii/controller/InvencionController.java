@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
@@ -14,6 +15,8 @@ import org.crue.hercules.sgi.pii.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
 import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
+import org.crue.hercules.sgi.pii.model.InvencionDocumento;
+import org.crue.hercules.sgi.pii.service.InvencionDocumentoService;
 import org.crue.hercules.sgi.pii.service.InvencionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -52,12 +55,16 @@ public class InvencionController {
   private final InvencionService service;
   /** InvencionSectorAplicacion service */
   private final InvencionSectorAplicacionService invencionSectorAplicacionService;
+  private final InvencionDocumentoService invencionDocumentoService;
 
   public InvencionController(ModelMapper modelMapper, InvencionService invencionService,
-      InvencionSectorAplicacionService invencionSectorAplicacionService) {
+      InvencionSectorAplicacionService invencionSectorAplicacionService,
+      InvencionDocumentoService invencionDocumentoService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
     this.invencionSectorAplicacionService = invencionSectorAplicacionService;
+    this.invencionDocumentoService = invencionDocumentoService;
+
   }
 
   /**
@@ -260,5 +267,33 @@ public class InvencionController {
   private List<InvencionSectorAplicacion> convertInvencionSectorAplicacionInputs(
       List<InvencionSectorAplicacionInput> inputs) {
     return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
+  }
+
+  /**
+   * Devuelve una lista de {@link InvencionDocumento} relacionados a una invencion
+   * 
+   * @param id Identificador de {@link Invencion}.
+   * @return la lista de entidades {@link InvencionDocumento}
+   */
+  @GetMapping("/{invencionId}/invenciondocumentos")
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
+  ResponseEntity<Page<InvencionDocumentoOutput>> findInvencionDocumentosByInvencionId(@PathVariable Long invencionId,
+      @RequestPageable(sort = "s") Pageable paging) {
+
+    Page<InvencionDocumentoOutput> page = convertToPage(
+        invencionDocumentoService.findByInvencionId(invencionId, paging));
+
+    return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
+  }
+
+  private InvencionDocumentoOutput convert(InvencionDocumento invencionDocumento) {
+    return modelMapper.map(invencionDocumento, InvencionDocumentoOutput.class);
+  }
+
+  private Page<InvencionDocumentoOutput> convertToPage(Page<InvencionDocumento> page) {
+    List<InvencionDocumentoOutput> content = page.getContent().stream()
+        .map((invencionDocumento) -> convert(invencionDocumento)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 }
