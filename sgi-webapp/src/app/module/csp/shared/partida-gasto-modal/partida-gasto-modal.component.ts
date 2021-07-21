@@ -277,7 +277,7 @@ export class PartidaGastoModalComponent extends
       map(conceptoGatosCodigoEc => {
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
           const data: ConvocatoriaConceptoGastoCodigoEc = {
-            codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            codigoEconomico: conceptoGasto.codigoEconomico,
             convocatoriaConceptoGastoId: conceptoGasto.convocatoriaConceptoGastoId,
             convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
@@ -304,7 +304,7 @@ export class PartidaGastoModalComponent extends
       map(conceptoGatosCodigoEc => {
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
           const data: ConvocatoriaConceptoGastoCodigoEc = {
-            codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            codigoEconomico: conceptoGasto.codigoEconomico,
             convocatoriaConceptoGastoId: conceptoGasto.convocatoriaConceptoGastoId,
             convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
@@ -331,7 +331,7 @@ export class PartidaGastoModalComponent extends
           case 'permitidoHasta':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesFinal;
           case 'codigoEconomico':
-            return conceptoGastoCodigoEc.codigoEconomicoRef;
+            return conceptoGastoCodigoEc.codigoEconomico?.id;
           default:
             return conceptoGastoCodigoEc[property];
         }
@@ -347,7 +347,7 @@ export class PartidaGastoModalComponent extends
           case 'noPermitidoHasta':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesFinal;
           case 'codigoEconomico':
-            return conceptoGastoCodigoEc.codigoEconomicoRef;
+            return conceptoGastoCodigoEc.codigoEconomico?.id;
           default:
             return conceptoGastoCodigoEc[property];
         }

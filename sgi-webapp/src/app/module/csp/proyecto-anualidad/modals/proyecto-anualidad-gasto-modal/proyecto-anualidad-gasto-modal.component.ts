@@ -452,7 +452,7 @@ export class ProyectoAnualidadGastoModalComponent extends
 
   displayerCodigoEconomico(codigoEconomico: IProyectoConceptoGastoCodigoEc | ICodigoEconomicoGasto): string {
     return 'proyectoConceptoGasto' in codigoEconomico ?
-      codigoEconomico?.codigoEconomicoRef : codigoEconomico.id.toString();
+      codigoEconomico?.codigoEconomico.id : codigoEconomico.id.toString();
   }
 
   displayerProyectoPartida(proyectoPartida: IProyectoPartida): string {

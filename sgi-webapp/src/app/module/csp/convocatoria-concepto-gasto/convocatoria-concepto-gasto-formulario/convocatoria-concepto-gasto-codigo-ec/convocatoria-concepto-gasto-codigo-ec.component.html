@@ -27,7 +27,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria-elegibilidad.codigo-economico' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaConceptoGastoCodigoEc">
-        {{convocatoriaConceptoGastoCodigoEc.value.codigoEconomicoRef}}
+        {{convocatoriaConceptoGastoCodigoEc.value.codigoEconomico.id}} -
+        {{convocatoriaConceptoGastoCodigoEc.value.codigoEconomico.nombre}}
       </td>
     </ng-container>
 

@@ -8,11 +8,11 @@ export function compareConceptoGastoCodigoEc(
   convocatoriaCodigoEconomico: IConvocatoriaConceptoGastoCodigoEc,
   proyectoCodigoEconomico: IProyectoConceptoGastoCodigoEc): boolean {
 
-  return proyectoCodigoEconomico?.codigoEconomicoRef !== convocatoriaCodigoEconomico.codigoEconomicoRef
-    || proyectoCodigoEconomico?.fechaInicio?.toMillis() !== convocatoriaCodigoEconomico.fechaInicio?.toMillis()
-    || proyectoCodigoEconomico?.fechaFin?.toMillis() !== convocatoriaCodigoEconomico.fechaFin?.toMillis()
-    || (!!proyectoCodigoEconomico?.observaciones !== !!convocatoriaCodigoEconomico.observaciones
-      && proyectoCodigoEconomico?.observaciones !== convocatoriaCodigoEconomico.observaciones);
+  return proyectoCodigoEconomico?.codigoEconomico?.id !== convocatoriaCodigoEconomico?.codigoEconomico.id
+    || proyectoCodigoEconomico?.fechaInicio?.toMillis() !== convocatoriaCodigoEconomico?.fechaInicio?.toMillis()
+    || proyectoCodigoEconomico?.fechaFin?.toMillis() !== convocatoriaCodigoEconomico?.fechaFin?.toMillis()
+    || (!!proyectoCodigoEconomico?.observaciones !== !!convocatoriaCodigoEconomico?.observaciones
+      && proyectoCodigoEconomico?.observaciones !== convocatoriaCodigoEconomico?.observaciones);
 }
 
 export function compareConceptoGasto(

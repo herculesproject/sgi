@@ -166,13 +166,15 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
                 id: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
               },
               id: modalData.convocatoriaConceptoGastoCodigoEc.id,
-              codigoEconomicoRef: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef,
+              codigoEconomico: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomico,
               fechaInicio: modalData.convocatoriaConceptoGastoCodigoEc.fechaInicio,
               fechaFin: modalData.convocatoriaConceptoGastoCodigoEc.fechaFin,
               observaciones: modalData.convocatoriaConceptoGastoCodigoEc.observaciones,
               convocatoriaConceptoGastoId: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
             } as ConvocatoriaConceptoGastoCodigoEc;
-            convConceptoGastoEc.convocatoriaConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IConvocatoriaConceptoGasto;
+            convConceptoGastoEc.convocatoriaConceptoGasto = {
+              conceptoGasto: this.actionService.conceptoGasto
+            } as IConvocatoriaConceptoGasto;
             this.formPart.addConvocatoriaConceptoGastoCodigoEc(convConceptoGastoEc);
           }
         }
@@ -185,7 +187,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
     const convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc = {
       convocatoriaConceptoGastoId: this.fragment.getKey() as number,
-      codigoEconomicoRef: null,
+      codigoEconomico: null,
       fechaFin: null,
       fechaInicio: null,
       id: null,
@@ -213,7 +215,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
               id: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
             },
             id: modalData.convocatoriaConceptoGastoCodigoEc.id,
-            codigoEconomicoRef: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef,
+            codigoEconomico: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomico,
             fechaInicio: modalData.convocatoriaConceptoGastoCodigoEc.fechaInicio,
             fechaFin: modalData.convocatoriaConceptoGastoCodigoEc.fechaFin,
             observaciones: modalData.convocatoriaConceptoGastoCodigoEc.observaciones,

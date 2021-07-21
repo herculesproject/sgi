@@ -2,6 +2,7 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
+import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
@@ -30,7 +31,7 @@ export interface CodigoEconomicoListado {
   proyectoCodigoEconomico: StatusWrapper<IProyectoConceptoGastoCodigoEc>;
   convocatoriaCodigoEconomico: IConvocatoriaConceptoGastoCodigoEc;
   help: HelpIcon;
-  codigoEconomico: string;
+  codigoEconomico: ICodigoEconomicoGasto;
   fechaInicio: DateTime;
   fechaFin: DateTime;
   observaciones: string;
@@ -200,7 +201,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
             || (value.convocatoriaCodigoEconomico
               && value.convocatoriaCodigoEconomico.id === proyectoConceptoGasto.convocatoriaConceptoGastoCodigoEcId)
             || (value.proyectoCodigoEconomico
-              && value.proyectoCodigoEconomico.value.codigoEconomicoRef === proyectoConceptoGasto.codigoEconomicoRef
+              && value.proyectoCodigoEconomico.value.codigoEconomico.id === proyectoConceptoGasto.codigoEconomico.id
               && value.proyectoCodigoEconomico.value.fechaInicio?.toMillis() === proyectoConceptoGasto.fechaInicio?.toMillis()
               && value.proyectoCodigoEconomico.value.fechaFin?.toMillis() === proyectoConceptoGasto.fechaFin?.toMillis())
           );
@@ -226,7 +227,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
 
   private fillListadoFields(codigoEconomico: CodigoEconomicoListado): void {
     if (codigoEconomico.proyectoCodigoEconomico) {
-      codigoEconomico.codigoEconomico = codigoEconomico.proyectoCodigoEconomico.value.codigoEconomicoRef;
+      codigoEconomico.codigoEconomico = codigoEconomico.proyectoCodigoEconomico.value.codigoEconomico;
       codigoEconomico.fechaInicio = codigoEconomico.proyectoCodigoEconomico.value.fechaInicio;
       codigoEconomico.fechaFin = codigoEconomico.proyectoCodigoEconomico.value.fechaFin;
       codigoEconomico.observaciones = codigoEconomico.proyectoCodigoEconomico.value.observaciones;
@@ -247,7 +248,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
         };
       }
     } else {
-      codigoEconomico.codigoEconomico = codigoEconomico.convocatoriaCodigoEconomico.codigoEconomicoRef;
+      codigoEconomico.codigoEconomico = codigoEconomico.convocatoriaCodigoEconomico.codigoEconomico;
       codigoEconomico.fechaInicio = codigoEconomico.convocatoriaCodigoEconomico.fechaInicio;
       codigoEconomico.fechaFin = codigoEconomico.convocatoriaCodigoEconomico.fechaFin;
       codigoEconomico.observaciones = codigoEconomico.convocatoriaCodigoEconomico.observaciones;

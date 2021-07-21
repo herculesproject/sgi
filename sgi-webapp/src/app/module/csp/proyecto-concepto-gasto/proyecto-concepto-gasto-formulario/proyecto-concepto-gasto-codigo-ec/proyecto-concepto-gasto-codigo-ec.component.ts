@@ -182,7 +182,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
 
     const proyectoConceptoGastoCodigoEc: IProyectoConceptoGastoCodigoEc = {
       proyectoConceptoGasto: { id: this.fragment.getKey() as number } as IProyectoConceptoGasto,
-      codigoEconomicoRef: null,
+      codigoEconomico: null,
       fechaFin: null,
       fechaInicio: null,
       id: null,
@@ -210,7 +210,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
           const convConceptoGastoEc = {
             proyectoConceptoGasto: modalData.proyectoConceptoGastoCodigoEc.proyectoConceptoGasto,
             id: modalData.proyectoConceptoGastoCodigoEc.id,
-            codigoEconomicoRef: modalData.proyectoConceptoGastoCodigoEc.codigoEconomicoRef,
+            codigoEconomico: modalData.proyectoConceptoGastoCodigoEc.codigoEconomico,
             fechaInicio: modalData.proyectoConceptoGastoCodigoEc.fechaInicio,
             fechaFin: modalData.proyectoConceptoGastoCodigoEc.fechaFin,
             observaciones: modalData.proyectoConceptoGastoCodigoEc.observaciones,

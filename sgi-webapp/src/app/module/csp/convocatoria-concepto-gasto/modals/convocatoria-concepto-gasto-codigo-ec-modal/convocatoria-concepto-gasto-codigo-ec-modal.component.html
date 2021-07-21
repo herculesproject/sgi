@@ -10,10 +10,10 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}</mat-label>
-        <sgi-select formControlName="codigoEconomicoRef" required [options]="codigosEconomicos$ | async"
+        <sgi-select formControlName="codigoEconomico" required [options]="codigosEconomicos$ | async"
           [compareWith]="comparerCodigoEconomico" [displayWith]="displayerCodigoEconomico"
           [sortWith]="sorterCodigoEconomico"></sgi-select>
-        <mat-error *ngIf="formGroup.controls.codigoEconomicoRef.errors?.required">
+        <mat-error *ngIf="formGroup.controls.codigoEconomico.errors?.required">
           {{'error.required.entity' | translate:msgParamCodigoEconomigoSgeEntity}}
         </mat-error>
       </mat-form-field>
