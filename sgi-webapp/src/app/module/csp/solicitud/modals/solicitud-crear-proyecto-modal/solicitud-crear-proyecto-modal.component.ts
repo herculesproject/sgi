@@ -73,7 +73,10 @@ export class SolicitudCrearProyectoModalComponent
     this.setupI18N();
     if (this.data.solicitud.convocatoriaId) {
       this.subscriptions.push(this.convocatoriaService.findById(this.data.solicitud.convocatoriaId).subscribe(
-        (convocatoria => this.convocatoria = convocatoria)
+        (convocatoria => {
+          this.formGroup.controls.modeloEjecucion.setValue(convocatoria.modeloEjecucion)
+          this.formGroup.controls.modeloEjecucion.disable();
+        })
       ));
     }
   }
@@ -100,9 +103,7 @@ export class SolicitudCrearProyectoModalComponent
       {
         fechaInicio: new FormControl(null, [Validators.required]),
         fechaFin: new FormControl(null, [Validators.required]),
-        modeloEjecucion: new FormControl(
-          this.convocatoria?.modeloEjecucion,
-          [Validators.required]
+        modeloEjecucion: new FormControl(null, [Validators.required]
         )
       },
       {
