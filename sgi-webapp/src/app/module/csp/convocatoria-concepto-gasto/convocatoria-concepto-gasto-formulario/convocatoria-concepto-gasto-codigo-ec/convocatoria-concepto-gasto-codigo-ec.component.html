@@ -2,11 +2,6 @@
 <section class="convocatoriaConceptoGasto">
   <h2>{{'title.csp.convocatoria-elegibilidad.codigo-economico' | translate}}</h2>
 
-  <h3>
-    {{( actionService.permitido ? 'label.csp.convocatoria-elegibilidad.codigo-economico.permitido' :
-    'label.csp.convocatoria-elegibilidad.codigo-economico.no-permitido') | translate}}
-  </h3>
-
   <div *ngIf="actionService.blockAddCodigosEconomicos$ | async" class="info-message">
     {{'info.csp.convocatoria-elegibilidad.codigo-economico' | translate}}
   </div>
