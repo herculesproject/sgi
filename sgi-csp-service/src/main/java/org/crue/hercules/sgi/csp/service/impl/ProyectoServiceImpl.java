@@ -1285,7 +1285,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
           if (proyectoSocioPeriodoJustificacion.getFechaInicio() == null
               || (proyectoSocioPeriodoJustificacion.getFechaInicio() != null
-                  && proyectoSocioPeriodoJustificacion.getFechaInicio().isBefore(proyecto.getFechaFin()))) {
+                  && !proyectoSocioPeriodoJustificacion.getFechaInicio().isAfter(proyecto.getFechaFin()))) {
             this.proyectoSocioPeriodoJustificacionService.create(proyectoSocioPeriodoJustificacion);
           }
         });

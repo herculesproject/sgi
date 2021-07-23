@@ -3248,6 +3248,7 @@ industries" />
       <column name="titulo" value="Proyecto solicitud 1" />
       <column name="acronimo" value="PS1" />
       <column name="duracion" value="24" />
+      <column name="coordinado" valueBoolean="false" />
       <column name="colaborativo" valueBoolean="false" />
       <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
@@ -3263,6 +3264,7 @@ industries" />
       <column name="titulo" value="Proyecto solicitud 2" />
       <column name="acronimo" value="PS2" />
       <column name="duracion" value="24" />
+      <column name="coordinado" valueBoolean="true" />
       <column name="colaborativo" valueBoolean="true" />
       <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
@@ -3278,6 +3280,7 @@ industries" />
       <column name="titulo" value="Proyecto Solicitud 1 conv CGF/OPE-01" />
       <column name="acronimo" value="PS1OPE1" />
       <column name="duracion" value="36" />
+      <column name="coordinado" valueBoolean="true" />
       <column name="colaborativo" valueBoolean="true" />
       <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
@@ -3293,6 +3296,7 @@ industries" />
       <column name="titulo" value="Proyecto Solicitud 2 conv CGF/OPE-01" />
       <column name="acronimo" value="PS2OPE1" />
       <column name="duracion" value="24" />
+      <column name="coordinado" valueBoolean="false" />
       <column name="colaborativo" valueBoolean="false" />
       <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
@@ -3308,6 +3312,7 @@ industries" />
       <column name="titulo" value="Life solicitud de proyecto" />
       <column name="acronimo" value="PRopuesta life" />
       <column name="duracion" value="48" />
+      <column name="coordinado" valueBoolean="false" />
       <column name="colaborativo" valueBoolean="true" />
       <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
