@@ -10,6 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 const PROYECTO_CAMBIO_ESTADO_COMENTARIO = marker('csp.proyecto.estado-proyecto.comentario');
+const PROYECTO_CAMBIO_ESTADO_NUEVO_ESTADO = marker('csp.proyecto.cambio-estado.nuevo');
 
 export interface ProyectoCambioEstadoModalComponentData {
   estadoActual: Estado;
@@ -27,6 +28,7 @@ export class CambioEstadoModalComponent extends
   fxLayoutProperties: FxLayoutProperties;
 
   msgParamComentarioEntity = {};
+  msgParamNuevoEstadoEntity = {};
   readonly estadosNuevos: Map<string, string>;
 
   get ESTADO_MAP() {
@@ -60,9 +62,12 @@ export class CambioEstadoModalComponent extends
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_CAMBIO_ESTADO_COMENTARIO,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+      PROYECTO_CAMBIO_ESTADO_COMENTARIO
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      PROYECTO_CAMBIO_ESTADO_NUEVO_ESTADO
+    ).subscribe((value) => this.msgParamNuevoEstadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   protected getDatosForm(): ProyectoCambioEstadoModalComponentData {
@@ -76,7 +81,7 @@ export class CambioEstadoModalComponent extends
 
     const formGroup = new FormGroup({
       estadoActual: new FormControl({ value: this.data.estadoActual, disabled: true }),
-      estadoNuevo: new FormControl(this.data.estadoNuevo),
+      estadoNuevo: new FormControl(this.data.estadoNuevo, [Validators.required]),
       comentario: new FormControl('', [Validators.maxLength(2000)])
     });
 
