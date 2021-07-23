@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,6 +91,21 @@ public class ViaProteccionController {
   ViaProteccionOutput desactivar(@PathVariable Long id) {
 
     return convert(this.viaProteccionService.desactivar(id));
+  }
+
+  /**
+   * Actualiza el {@link ViaProteccion} con el id indicado.
+   * 
+   * @param viaProteccion {@link ViaProteccionInput} a actualizar.
+   * @param id            id del objeto {@link ViaProteccion} a actualizar.
+   * @return {@link ViaProteccionOutput} actualizado.
+   */
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('PII-VPR-E')")
+  ResponseEntity<ViaProteccionOutput> update(@Valid @RequestBody ViaProteccionInput viaProteccion,
+      @PathVariable Long id) {
+    return ResponseEntity.ok(convert(this.viaProteccionService.update(convert(id, viaProteccion))));
+
   }
 
   /****************/

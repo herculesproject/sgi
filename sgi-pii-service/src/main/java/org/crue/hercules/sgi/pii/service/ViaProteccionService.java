@@ -48,6 +48,7 @@ public class ViaProteccionService {
    * @param id Id del {@link ViaProteccion}.
    * @return Entidad {@link ViaProteccion} persistida activada.
    */
+  @Validated({ ViaProteccion.OnActivar.class })
   public ViaProteccion activar(Long id) {
 
     Assert.notNull(id,
@@ -113,5 +114,29 @@ public class ViaProteccionService {
     viaProteccion.setActivo(true);
 
     return this.viaProteccionRepository.save(viaProteccion);
+  }
+
+  @Validated({ ViaProteccion.OnActualizar.class })
+  public ViaProteccion update(@Valid ViaProteccion toUpdate) {
+
+    Assert.notNull(toUpdate.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(ViaProteccion.class)).build());
+
+    return this.viaProteccionRepository.findById(toUpdate.getId()).map(foundedVia -> {
+
+      foundedVia.setDescripcion(toUpdate.getDescripcion());
+      foundedVia.setNombre(toUpdate.getNombre());
+      foundedVia.setExtensionInternacional(toUpdate.getExtensionInternacional());
+      foundedVia.setMesesPrioridad(toUpdate.getMesesPrioridad());
+      foundedVia.setPaisEspecifico(toUpdate.getPaisEspecifico());
+      foundedVia.setTipoPropiedad(toUpdate.getTipoPropiedad());
+      foundedVia.setVariosPaises(toUpdate.getVariosPaises());
+
+      return this.viaProteccionRepository.save(foundedVia);
+    }).orElseThrow(() -> new ViaProteccionNotFoundException(toUpdate.getId()));
+
   }
 }

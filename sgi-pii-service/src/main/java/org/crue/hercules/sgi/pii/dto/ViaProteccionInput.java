@@ -31,16 +31,12 @@ public class ViaProteccionInput {
   @NotNull
   private TipoPropiedad tipoPropiedad;
 
-  @NotNull
   Integer mesesPrioridad;
 
-  @NotNull
   Boolean paisEspecifico;
 
-  @NotNull
   Boolean extensionInternacional;
 
-  @NotNull
   Boolean variosPaises;
 
 }
