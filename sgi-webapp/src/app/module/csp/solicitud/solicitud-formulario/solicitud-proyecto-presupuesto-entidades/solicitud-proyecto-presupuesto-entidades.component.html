@@ -42,7 +42,7 @@
         <ng-container>
           <button mat-button matTooltip="{{'btn.view' | translate}}"
             [routerLink]="['../', element.ajena ? SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD 
-            : formPart.tipoPresupuestoMixto ? SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA : SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA , element.entidadFinanciadora.empresa.id]">
+            : formPart.tipoPresupuestoMixto? SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA : SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA , element.entidadFinanciadora.empresa.id]">
             <mat-icon color="primary">visibility</mat-icon>
           </button>
         </ng-container>

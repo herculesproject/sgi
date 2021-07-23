@@ -131,7 +131,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
     let entidades$: Observable<EntidadFinanciadoraDesglosePresupuesto[]>;
 
     switch (tipoPresupuesto) {
-      case TipoPresupuesto.INDIVIDUAL:
+      case TipoPresupuesto.POR_ENTIDAD:
         entidades$ = merge(
           this.loadEntidadFinanciadoraConvocatoria(this.convocatoriaId),
           this.loadEntidadFinanciadoraSolicitud(this.solicitudId)

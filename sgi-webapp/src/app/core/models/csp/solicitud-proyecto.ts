@@ -28,11 +28,11 @@ export interface ISolicitudProyecto {
 export enum TipoPresupuesto {
   GLOBAL = 'GLOBAL',
   MIXTO = 'MIXTO',
-  INDIVIDUAL = 'INDIVIDUAL'
+  POR_ENTIDAD = 'POR_ENTIDAD',
 }
 
 export const TIPO_PRESUPUESTO_MAP: Map<TipoPresupuesto, string> = new Map([
   [TipoPresupuesto.GLOBAL, marker(`csp.solicitud-proyecto.tipo-presupuesto.GLOBAL`)],
   [TipoPresupuesto.MIXTO, marker(`csp.solicitud-proyecto.tipo-presupuesto.MIXTO`)],
-  [TipoPresupuesto.INDIVIDUAL, marker(`csp.solicitud-proyecto.tipo-presupuesto.INDIVIDUAL`)]
+  [TipoPresupuesto.POR_ENTIDAD, marker(`csp.solicitud-proyecto.tipo-presupuesto.POR_ENTIDAD`)],
 ]);
