@@ -291,6 +291,16 @@ export class ProyectoAnualidadGastoModalComponent extends
       );
     }
 
+    if (!this.data.anualidadGasto?.proyectoPartida) {
+      this.subscriptions.push(
+        this.proyectosPartida$.subscribe((values) => {
+          if (values.length === 1) {
+            this.formGroup.controls.partidaPresupuestaria.setValue(values[0]);
+          }
+        })
+      );
+    }
+
     if (this.data.readonly) {
       formGroup.disable();
     }
