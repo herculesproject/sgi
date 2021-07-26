@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -34,6 +35,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -89,12 +91,15 @@ public class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private RestTemplate restTemplate;
 
+  @Autowired
+  private SgiConfigProperties sgiConfigProperties;
+
   private SolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudService(restApiProperties, restTemplate, repository, estadoSolicitudRepository,
-        configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
+    service = new SolicitudService(sgiConfigProperties, restApiProperties, restTemplate, repository,
+        estadoSolicitudRepository, configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
         convocatoriaEntidadFinanciadoraRepository);

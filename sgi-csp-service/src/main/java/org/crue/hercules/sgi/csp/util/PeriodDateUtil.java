@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.util;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.TimeZone;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,24 +13,16 @@ public class PeriodDateUtil {
   private static final int MONTHS_TO_SUBTRACT = 1;
 
   public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, Integer mesInicial,
-      Instant fechaCalculoPeriodoRef) {
+      Instant fechaCalculoPeriodoRef, TimeZone timeZone) {
     if (mesInicial == null) {
       return null;
     }
 
-    OffsetDateTime fechaBase = fechaCalculoPeriodoRef.atOffset(ZoneOffset.UTC);
-
-    // Sumamos el desplazamiento UTC máximo antes de hacer los cálculos
-    // para que el cálculo de los días del mes de referencia sea correcto
-    fechaBase = fechaBase.plusSeconds(ZoneOffset.MAX.getTotalSeconds());
+    ZonedDateTime fechaBase = fechaCalculoPeriodoRef.atZone(timeZone.toZoneId());
 
     // El número de meses a sumar siempre es el mes en el que empezar menos uno (si
     // empezamos en el primer mes, no hay que sumar nada)
-    OffsetDateTime fechaInicioPeriodo = fechaBase.plusMonths(mesInicial - MONTHS_TO_SUBTRACT);
-
-    // Restamos el desplazamiento UTC máximo tras hacer los cálculos
-    // para recuperar la hora establecida inicialmente
-    fechaInicioPeriodo = fechaInicioPeriodo.minusSeconds(ZoneOffset.MAX.getTotalSeconds());
+    ZonedDateTime fechaInicioPeriodo = fechaBase.plusMonths(mesInicial - MONTHS_TO_SUBTRACT);
 
     Instant instantInicioPeriodo = fechaInicioPeriodo.toInstant();
 
@@ -40,28 +32,19 @@ public class PeriodDateUtil {
       return instantInicioPeriodo;
     }
     return fechaInicio.isAfter(instantInicioPeriodo) ? fechaInicio : instantInicioPeriodo;
-
   }
 
-  public static Instant calculateFechaFinPeriodo(Instant fechaFin, Integer mesFinal,
-      Instant fechaCalculoPeriodoRef) {
+  public static Instant calculateFechaFinPeriodo(Instant fechaFin, Integer mesFinal, Instant fechaCalculoPeriodoRef,
+      TimeZone timeZone) {
     if (mesFinal == null) {
       return null;
     }
 
-    OffsetDateTime fechaBase = fechaCalculoPeriodoRef.atOffset(ZoneOffset.UTC);
-
-    // Sumamos el desplazamiento UTC máximo antes de hacer los cálculos
-    // para que el cálculo de los días del mes de referencia sea correcto
-    fechaBase = fechaBase.plusSeconds(ZoneOffset.MAX.getTotalSeconds());
+    ZonedDateTime fechaBase = fechaCalculoPeriodoRef.atZone(timeZone.toZoneId());
 
     // Se calcula el primer día del mes siguiente y se resta un segundo para tener
     // el último mes del día del mes en el que finalizar a las 23:59.59
-    OffsetDateTime fechaFinPeriodo = fechaBase.plusMonths(mesFinal).minusSeconds(1);
-
-    // Restamos el desplazamiento UTC máximo tras hacer los cálculos
-    // para recuperar la hora establecida inicialmente
-    fechaFinPeriodo = fechaFinPeriodo.minusSeconds(ZoneOffset.MAX.getTotalSeconds());
+    ZonedDateTime fechaFinPeriodo = fechaBase.plusMonths(mesFinal).minusSeconds(1);
 
     Instant instantFinPeriodo = fechaFinPeriodo.toInstant();
 
@@ -71,7 +54,5 @@ public class PeriodDateUtil {
       return instantFinPeriodo;
     }
     return fechaFin.isBefore(instantFinPeriodo) ? fechaFin : instantFinPeriodo;
-
   }
-
 }

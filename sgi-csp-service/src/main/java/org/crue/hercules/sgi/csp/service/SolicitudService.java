@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistInput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
@@ -87,6 +87,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class SolicitudService {
 
+  private final SgiConfigProperties sgiConfigProperties;
   private final RestApiProperties restApiProperties;
   private final RestTemplate restTemplate;
   private final SolicitudRepository repository;
@@ -102,8 +103,8 @@ public class SolicitudService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
 
-  public SolicitudService(RestApiProperties restApiProperties, RestTemplate restTemplate,
-      SolicitudRepository repository, EstadoSolicitudRepository estadoSolicitudRepository,
+  public SolicitudService(SgiConfigProperties sgiConfigProperties, RestApiProperties restApiProperties,
+      RestTemplate restTemplate, SolicitudRepository repository, EstadoSolicitudRepository estadoSolicitudRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository, ProyectoRepository proyectoRepository,
       SolicitudProyectoRepository solicitudProyectoRepository,
       DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
@@ -113,6 +114,7 @@ public class SolicitudService {
       SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository,
       ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository) {
+    this.sgiConfigProperties = sgiConfigProperties;
     this.restApiProperties = restApiProperties;
     this.restTemplate = restTemplate;
     this.repository = repository;
@@ -633,7 +635,8 @@ public class SolicitudService {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    String codigoRegistroInterno = "SGI_SLC" + solicitudId + formatter.format(Instant.now().atZone(ZoneOffset.UTC));
+    String codigoRegistroInterno = "SGI_SLC" + solicitudId
+        + formatter.format(Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()));
 
     log.debug("generateCodigoRegistroInterno(Long solicitudId) - end");
     return codigoRegistroInterno;

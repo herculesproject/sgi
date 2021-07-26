@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.validation.Validator;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -54,6 +55,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -157,11 +159,14 @@ public class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   Validator validator;
 
+  @Autowired
+  private SgiConfigProperties sgiConfigProperties;
+
   private ProyectoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
+    service = new ProyectoServiceImpl(sgiConfigProperties, repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
         convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
         proyectoEntidadGestoraService, convocatoriaAreaTematicaRepository, contextoProyectoService,
