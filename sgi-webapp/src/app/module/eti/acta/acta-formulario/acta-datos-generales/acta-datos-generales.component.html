@@ -93,8 +93,8 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.resumen' | translate}}</mat-label>
         <textarea #resumen matInput formControlName="resumen" id="resumen"
-          placeholder="{{'eti.acta.resumen' | translate}}" required [readonly]="readonly" maxlength="8000"></textarea>
-        <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
+          placeholder="{{'eti.acta.resumen' | translate}}" required [readonly]="readonly" maxlength="4000"></textarea>
+        <mat-hint>{{resumen.value.length}} / 4000</mat-hint>
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.required">
           {{'error.required.entity' | translate:msgParamResumenEntity}}
         </mat-error>

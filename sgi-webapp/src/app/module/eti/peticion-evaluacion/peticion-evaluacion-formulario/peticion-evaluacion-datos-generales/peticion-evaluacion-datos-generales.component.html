@@ -148,8 +148,8 @@
     <!-- Resumen-->
     <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.resumen' | translate}}</mat-label>
-      <textarea #resumen matInput formControlName="resumen" type="text" maxlength="8000" required></textarea>
-      <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
+      <textarea #resumen matInput formControlName="resumen" type="text" maxlength="4000" required></textarea>
+      <mat-hint>{{resumen.value.length}} / 4000</mat-hint>
       <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
         {{'error.required.entity' | translate:msgParamResumenEntity}}
       </mat-error>
