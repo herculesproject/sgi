@@ -30,7 +30,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoComentario_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
-import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;

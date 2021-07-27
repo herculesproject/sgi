@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
@@ -62,6 +62,9 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
 
+  /** Propiedades de configuración de la aplicación */
+  private final SgiConfigProperties sgiConfigProperties;
+
   /** Comentario repository */
   private final ComentarioRepository comentarioRepository;
 
@@ -95,12 +98,13 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Tarea repository */
   private final TareaRepository tareaRepository;
 
-  public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
-      EstadoRetrospectivaRepository estadoRetrospectivaRepository, EvaluacionRepository evaluacionRepository,
-      ComentarioRepository comentarioRepository, InformeService informeService,
-      PeticionEvaluacionRepository peticionEvaluacionRepository, ComiteRepository comiteRepository,
-      DocumentacionMemoriaRepository documentacionMemoriaRepository, RespuestaRepository respuestaRepository,
-      TareaRepository tareaRepository) {
+  public MemoriaServiceImpl(SgiConfigProperties sgiConfigProperties, MemoriaRepository memoriaRepository,
+      EstadoMemoriaRepository estadoMemoriaRepository, EstadoRetrospectivaRepository estadoRetrospectivaRepository,
+      EvaluacionRepository evaluacionRepository, ComentarioRepository comentarioRepository,
+      InformeService informeService, PeticionEvaluacionRepository peticionEvaluacionRepository,
+      ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
+      RespuestaRepository respuestaRepository, TareaRepository tareaRepository) {
+    this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;
@@ -800,7 +804,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug("getReferenciaMemoria(Long id, String numReferencia) - start");
 
     // Referencia memoria
-    int anioActual = Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR);
+    int anioActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).get(ChronoField.YEAR);
     StringBuffer sbNumReferencia = new StringBuffer();
     sbNumReferencia.append(comite.getFormulario().getNombre()).append("/").append(anioActual).append("/");
 

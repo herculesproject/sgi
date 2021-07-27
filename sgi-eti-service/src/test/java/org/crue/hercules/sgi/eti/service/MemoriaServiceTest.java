@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
@@ -48,6 +49,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -95,11 +97,15 @@ public class MemoriaServiceTest extends BaseServiceTest {
   @Mock
   private TareaRepository tareaRepository;
 
+  @Autowired
+  private SgiConfigProperties sgiConfigProperties;
+
   @BeforeEach
   public void setUp() throws Exception {
-    memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository, estadoRetrospectivaRepository,
-        evaluacionRepository, comentarioRepository, informeFormularioService, peticionEvaluacionRepository,
-        comiteRepository, documentacionMemoriaRepository, respuestaRepository, tareaRepository);
+    memoriaService = new MemoriaServiceImpl(sgiConfigProperties, memoriaRepository, estadoMemoriaRepository,
+        estadoRetrospectivaRepository, evaluacionRepository, comentarioRepository, informeFormularioService,
+        peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
+        tareaRepository);
   }
 
   @Test
