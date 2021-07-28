@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IInvencion } from '@core/models/pii/invencion';
+import { IInvencionAreaConocimiento } from '@core/models/pii/invencion-area-conocimiento';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
 import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
 import { environment } from '@env';
@@ -16,6 +17,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IInvencionDocumentoResponse } from './invencion-documento/invencion-documento-response';
 import { INVENCION_DOCUMENTO_RESPONSE_CONVERTER } from './invencion-documento/invencion-documento-response.converter';
+import { INVENCION_AREACONOCIMIENTO_REQUEST_CONVERTER } from './invencion-area-conocimiento/invencion-area-conocimiento-request.converter';
+import { IInvencionAreaConocimientoResponse } from './invencion-area-conocimiento/invencion-area-conocimiento-response';
+import { INVENCION_AREACONOCIMIENTO_RESPONSE_CONVERTER } from './invencion-area-conocimiento/invencion-area-conocimiento-response.converter';
 import { IInvencionRequest } from './invencion-request';
 import { INVENCION_REQUEST_CONVERTER } from './invencion-request.converter';
 import { IInvencionResponse } from './invencion-response';
@@ -114,17 +118,44 @@ export class InvencionService extends _InvencionServiceMixinBase {
       map((response => INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
+
   /**
    * Obtiene todos los documentos de una invención dado el id
    * @param id
    * @param options
    * @returns documentos de una invencion
    */
-  public findAllInvencionDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencionDocumento>> {
+  findAllInvencionDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencionDocumento>> {
     return this.find<IInvencionDocumentoResponse, IInvencionDocumento>(
       `${this.endpointUrl}/${id}/invenciondocumentos`,
       options,
-      INVENCION_DOCUMENTO_RESPONSE_CONVERTER
+      INVENCION_DOCUMENTO_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Recupera las áreas de conocimiento asociadas a la Invencion con el id indicado
+   * @param id Identificador de la Invencion
+   */
+  findAreasConocimiento(id: number): Observable<IInvencionAreaConocimiento[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/areasconocimiento`;
+    return this.http.get<IInvencionAreaConocimientoResponse[]>(endpointUrl)
+      .pipe(
+        map(response => {
+          return INVENCION_AREACONOCIMIENTO_RESPONSE_CONVERTER.toTargetArray(response);
+        })
+      );
+  }
+
+  /**
+   * Actualiza las áreas de conocimiento  asociadas a la Invencion con el id indicado
+   * @param id Identificador del Invencion
+   * @param areasConocimiento areas de conocimiento a actualizar
+   */
+  updateAreasConocimiento(id: number, areasConocimiento: IInvencionAreaConocimiento[]): Observable<IInvencionAreaConocimiento[]> {
+    return this.http.patch<IInvencionAreaConocimientoResponse[]>(`${this.endpointUrl}/${id}/areasconocimiento`,
+      INVENCION_AREACONOCIMIENTO_REQUEST_CONVERTER.fromTargetArray(areasConocimiento)
+    ).pipe(
+      map((response => INVENCION_AREACONOCIMIENTO_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
 }

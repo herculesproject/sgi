@@ -1358,6 +1358,7 @@
   "pii.invencion-repartos": "Repartos",
   "pii.invencion-solicitudes-proteccion": "Solicitudes de protección",
   "pii.invencion-titularidad": "Titularidad",
+  "pii.invencion.area-procedencia": "Área{count,plural,=0{} one{} other{s}} de Procedencia",
   "pii.invencion.comentarios": "Comentarios",
   "pii.invencion.descripcion": "Descripción",
   "pii.invencion.fecha-comunicacion": "Fecha comunicación",

@@ -16,9 +16,10 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { AreaConocimientoDataModal, AreaConocimientoModalComponent } from 'src/app/esb/sgo/shared/area-conocimiento-modal/area-conocimiento-modal.component';
 import { InvencionActionService } from '../../invencion.action.service';
 import { SectorAplicacionModalComponent, SectorAplicacionModalData } from '../../modals/sector-aplicacion-modal/sector-aplicacion-modal.component';
-import { InvencionDatosGeneralesFragment } from './invencion-datos-generales.fragment';
+import { IInvencionAreaConocimientoListado, InvencionDatosGeneralesFragment } from './invencion-datos-generales.fragment';
 
 const MSG_DELETE_KEY = marker('msg.delete.entity');
 const INVENCION_TITULO_KEY = marker('pii.invencion.titulo');
@@ -27,6 +28,7 @@ const INVENCION_DESCRIPCION_KEY = marker('pii.invencion.descripcion');
 const INVENCION_TIPOPROTECCION_KEY = marker('pii.invencion.tipo-proteccion');
 const INVENCION_COMENTARIOS_KEY = marker('pii.invencion.comentarios');
 const SECTOR_APLICACION_KEY = marker('pii.sector-aplicacion');
+const AREA_PROCEDENCIA_KEY = marker('pii.invencion.area-procedencia');
 
 @Component({
   selector: 'sgi-invencion-datos-generales',
@@ -49,12 +51,19 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
   msgParamTipoProteccionEntity = {};
   msgParamComentariosEntity = {};
   msgParamSectorAplicacionEntity = {};
+  msgParamAreaConocimientoEntity = {};
   textoDeleteSectorAplicacion: string;
+  textoDeleteAreaConocimiento: string;
   showSectorAplicacionErrorMsg: boolean;
+  showAreaConocimientoErrorMsg: boolean;
 
   sectorAplicacionDataSource = new MatTableDataSource<StatusWrapper<IInvencionSectorAplicacion>>();
   displayedColumnsSectorAplicacion = ['sector', 'acciones'];
   @ViewChild('sortSectorAplicacion', { static: true }) sortSectorAplicacion: MatSort;
+
+  areaConocimientoDataSource = new MatTableDataSource<StatusWrapper<IInvencionAreaConocimientoListado>>();
+  displayedColumnsAreaConocimiento = ['niveles', 'nivelSeleccionado', 'acciones'];
+  @ViewChild('sortAreaConocimiento', { static: true }) sortAreaConocimiento: MatSort;
 
   readonly tiposProteccion$: Observable<ITipoProteccion[]>;
   subtiposProteccion$: Observable<ITipoProteccion[]>;
@@ -84,13 +93,9 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     super.ngOnInit();
     this.setupI18N();
     this.configSectorAplicacionSort();
-    this.subscriptions.push(this.formPart.getSectoresAplicacion$()
-      .pipe(
-        tap(elements => this.showSectorAplicacionErrorMsg = elements.length === 0)
-      )
-      .subscribe(elements => {
-        this.sectorAplicacionDataSource.data = elements;
-      }));
+    this.configAreaConocimientoSort();
+    this.subscribeToSectoresAplicacion();
+    this.subscribeToAreasConocimiento();
     this.subtiposProteccion$ = this.formGroup.controls.tipoProteccion.valueChanges.pipe(
       tap(_ => this.resetSubtipoProteccionControl()),
       switchMap(
@@ -101,6 +106,26 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  private subscribeToSectoresAplicacion(): void {
+    this.subscriptions.push(this.formPart.getSectoresAplicacion$()
+      .pipe(
+        tap(elements => this.showSectorAplicacionErrorMsg = elements.length === 0)
+      )
+      .subscribe(elements => {
+        this.sectorAplicacionDataSource.data = elements;
+      }));
+  }
+
+  private subscribeToAreasConocimiento(): void {
+    this.subscriptions.push(this.formPart.getAreasConocimiento$()
+      .pipe(
+        tap(elements => this.showAreaConocimientoErrorMsg = elements.length === 0)
+      )
+      .subscribe(elements => {
+        this.areaConocimientoDataSource.data = elements;
+      }));
   }
 
   private resetSubtipoProteccionControl(): void {
@@ -118,6 +143,21 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
         }
       };
     this.sectorAplicacionDataSource.sort = this.sortSectorAplicacion;
+  }
+
+  private configAreaConocimientoSort(): void {
+    this.areaConocimientoDataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IInvencionAreaConocimientoListado>, property: string) => {
+        switch (property) {
+          case 'niveles':
+            return wrapper.value.nivelesTexto;
+          case 'nivelSeleccionado':
+            return wrapper.value.nivelSeleccionado.nombre;
+          default:
+            return wrapper[property];
+        }
+      };
+    this.areaConocimientoDataSource.sort = this.sortAreaConocimiento;
   }
 
   /**
@@ -153,6 +193,45 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
       (sectorAplicacionSeleccionado) => {
         if (sectorAplicacionSeleccionado) {
           this.formPart.addSectorAplicacion(sectorAplicacionSeleccionado);
+        }
+      }
+    );
+  }
+
+  /**
+ * Desasociar el área de conocimiento
+ *
+ * @param wrapper el área
+ */
+  deleteAreaConocimiento(wrapper: StatusWrapper<IInvencionAreaConocimientoListado>): void {
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(this.textoDeleteAreaConocimiento).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteAreaConocimiento(wrapper);
+          }
+        }
+      )
+    );
+  }
+
+  /**
+ * Apertura de modal de Areas Conocimiento 
+ */
+  openModalAreaConocimiento(): void {
+    const data: AreaConocimientoDataModal = {
+      selectedAreasConocimiento: this.areaConocimientoDataSource.data.map(wrapper => wrapper.value.nivelSeleccionado),
+      multiSelect: true
+    };
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    const dialogRef = this.matDialog.open(AreaConocimientoModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (areas) => {
+        if (areas && areas.length > 0) {
+          this.formPart.addAreaConocimiento(areas);
         }
       }
     );
@@ -194,6 +273,19 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
           MSG_DELETE_KEY,
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         ).subscribe((valueDelete) => this.textoDeleteSectorAplicacion = valueDelete);
+      }
+    );
+
+    this.translate.get(
+      AREA_PROCEDENCIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe(
+      (value) => {
+        this.msgParamAreaConocimientoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR };
+        this.translate.get(
+          MSG_DELETE_KEY,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        ).subscribe((valueDelete) => this.textoDeleteAreaConocimiento = valueDelete);
       }
     );
   }

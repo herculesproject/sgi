@@ -1,27 +1,39 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IInvencion } from "@core/models/pii/invencion";
+import { IInvencionAreaConocimiento } from "@core/models/pii/invencion-area-conocimiento";
 import { IInvencionSectorAplicacion } from "@core/models/pii/invencion-sector-aplicacion";
 import { ISectorAplicacion } from "@core/models/pii/sector-aplicacion";
+import { IAreaConocimiento } from "@core/models/sgo/area-conocimiento";
 import { FormFragment } from "@core/services/action-service";
 import { ProyectoService } from "@core/services/csp/proyecto.service";
 import { InvencionService } from "@core/services/pii/invencion/invencion.service";
+import { AreaConocimientoService } from "@core/services/sgo/area-conocimiento.service";
 import { StatusWrapper } from "@core/utils/status-wrapper";
 import { DateTime } from "luxon";
 import { NGXLogger } from "ngx-logger";
-import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from "rxjs";
-import { catchError, concatMap, map, switchMap, takeLast, tap } from "rxjs/operators";
+import { BehaviorSubject, EMPTY, forkJoin, from, Observable, of, Subject } from "rxjs";
+import { catchError, concatMap, map, mergeMap, switchMap, take, takeLast, tap } from "rxjs/operators";
+
+export interface IInvencionAreaConocimientoListado extends IInvencionAreaConocimiento {
+  niveles: IAreaConocimiento[];
+  nivelesTexto: string;
+  nivelSeleccionado: IAreaConocimiento;
+}
 
 interface IInvencionDatosGeneralesFragmentStatus {
   hasChangesSectoresAplicacion: boolean;
+  hasChangesAreasConocimiento: boolean;
 }
 
 const FRAGMENT_STATUS_INITIAL_DATA: IInvencionDatosGeneralesFragmentStatus = {
-  hasChangesSectoresAplicacion: false
+  hasChangesSectoresAplicacion: false,
+  hasChangesAreasConocimiento: false
 } as const;
 
 export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   private sectoresAplicacion$ = new BehaviorSubject<StatusWrapper<IInvencionSectorAplicacion>[]>([]);
+  private areasConocimiento$ = new BehaviorSubject<StatusWrapper<IInvencionAreaConocimientoListado>[]>([]);
   private invencion: IInvencion;
   private fragmentStatus: IInvencionDatosGeneralesFragmentStatus;
 
@@ -30,6 +42,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     key: number,
     private readonly invencionService: InvencionService,
     private readonly proyectoService: ProyectoService,
+    private readonly areaConocimientoService: AreaConocimientoService,
     private readonly isEditPerm: boolean
   ) {
     super(key, true);
@@ -74,8 +87,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
   }
 
   protected initializer(key: number): Observable<IInvencion> {
-    return forkJoin({ invencion: this.invencionService.findById(key), sectoresAplicacion: this.loadSectoresAplicacion(key) }).pipe(
+    return forkJoin({
+      invencion: this.invencionService.findById(key),
+      sectoresAplicacion: this.loadSectoresAplicacion(key),
+      areasConocimiento: this.loadAreasConocimiento(key)
+    }).pipe(
       tap(({ sectoresAplicacion }) => this.sectoresAplicacion$.next(sectoresAplicacion)),
+      tap(({ areasConocimiento }) => this.areasConocimiento$.next(areasConocimiento)),
       switchMap(({ invencion }) => {
         if (invencion.proyecto?.id) {
           return this.proyectoService.findById(invencion.proyecto.id).pipe(
@@ -101,6 +119,66 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     );
   }
 
+  private loadAreasConocimiento(invencionId: number): Observable<StatusWrapper<IInvencionAreaConocimientoListado>[]> {
+    let areasConocimientoListado: StatusWrapper<IInvencionAreaConocimientoListado>[] = [];
+    const areasConocimientoListado$ = new Subject<StatusWrapper<IInvencionAreaConocimientoListado>[]>();
+    this.subscriptions.push(this.invencionService.findAreasConocimiento(invencionId).pipe(
+      map(response => response.map(invencionAreaConocimiento => {
+        const invencionAreaConocimientoListado: IInvencionAreaConocimientoListado = {
+          id: invencionAreaConocimiento.id,
+          invencion: invencionAreaConocimiento.invencion,
+          areaConocimiento: invencionAreaConocimiento.areaConocimiento,
+          nivelSeleccionado: invencionAreaConocimiento.areaConocimiento,
+          niveles: undefined,
+          nivelesTexto: ''
+        };
+        return invencionAreaConocimientoListado;
+      })),
+      switchMap((result) => {
+        return from(result).pipe(
+          mergeMap((invencionAreaConocimientoListado) => {
+            return this.areaConocimientoService.findById(invencionAreaConocimientoListado.nivelSeleccionado.id).pipe(
+              map((areaConocimiento) => {
+                invencionAreaConocimientoListado.nivelSeleccionado = areaConocimiento;
+                invencionAreaConocimientoListado.niveles = [areaConocimiento];
+              }),
+              switchMap(() => {
+                return this.getNiveles(invencionAreaConocimientoListado);
+              })
+            );
+          })
+        );
+      })
+    ).subscribe((proyectoAreaConocimiento) => {
+      proyectoAreaConocimiento.nivelesTexto = proyectoAreaConocimiento.niveles
+        .slice(1, proyectoAreaConocimiento.niveles.length)
+        .reverse()
+        .map(area => area.nombre).join(' - ');
+      areasConocimientoListado.push(new StatusWrapper<IInvencionAreaConocimientoListado>(proyectoAreaConocimiento));
+    },
+      err => { },
+      () => {
+        areasConocimientoListado$.next(areasConocimientoListado);
+      }));
+
+    return areasConocimientoListado$.pipe(take(1));
+  }
+
+  private getNiveles(invencionAreaConocimientoListado: IInvencionAreaConocimientoListado):
+    Observable<IInvencionAreaConocimientoListado> {
+    const lastLevel = invencionAreaConocimientoListado.niveles[invencionAreaConocimientoListado.niveles.length - 1];
+    if (!lastLevel.padreId) {
+      return of(invencionAreaConocimientoListado);
+    }
+
+    return this.areaConocimientoService.findById(lastLevel.padreId).pipe(
+      switchMap(area => {
+        invencionAreaConocimientoListado.niveles.push(area);
+        return this.getNiveles(invencionAreaConocimientoListado);
+      })
+    );
+  }
+
   getValue(): IInvencion {
     const form = this.getFormGroup().value;
     const invencion = this.invencion;
@@ -120,6 +198,10 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   getSectoresAplicacion$(): Observable<StatusWrapper<IInvencionSectorAplicacion>[]> {
     return this.sectoresAplicacion$.asObservable();
+  }
+
+  getAreasConocimiento$(): Observable<StatusWrapper<IInvencionAreaConocimientoListado>[]> {
+    return this.areasConocimiento$.asObservable();
   }
 
   saveOrUpdate(): Observable<string | number | void> {
@@ -147,6 +229,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
         concatMap((createdInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(createdInvencion))
       );
     }
+
+    if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesAreasConocimiento")) {
+      cascade = cascade.pipe(
+        concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
+      );
+    }
+
     return cascade;
   }
 
@@ -167,6 +256,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
         concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(updatedInvencion))
       );
     }
+
+    if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesAreasConocimiento")) {
+      cascade = cascade.pipe(
+        concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
+      );
+    }
+
     return cascade;
   }
 
@@ -207,6 +303,43 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       );
   }
 
+  private saveOrUpdateAreaConocimiento(invencion: IInvencion): Observable<IInvencion> {
+    const values = this.areasConocimiento$.value.map(wrapper => {
+      wrapper.value.invencion = invencion;
+      return wrapper.value;
+    }
+    );
+
+    return this.invencionService.updateAreasConocimiento(invencion.id, values)
+      .pipe(
+        takeLast(1),
+        tap(() => this.setChangesInvencionDatosGeneralesFragment({ hasChangesAreasConocimiento: false })),
+        map((invencionAreasConocimiento) => {
+          const newAreasConocimientoListado: IInvencionAreaConocimientoListado[] = [];
+          invencionAreasConocimiento.forEach(invencionAreaConocimiento => {
+            const areaConocimiento = this.areasConocimiento$.value.find(areaConocimiento =>
+              areaConocimiento.value.areaConocimiento.id === invencionAreaConocimiento.areaConocimiento.id
+            );
+            if (areaConocimiento) {
+              newAreasConocimientoListado.push(
+                {
+                  id: invencionAreaConocimiento.id,
+                  invencion: invencionAreaConocimiento.invencion,
+                  areaConocimiento: areaConocimiento.value.areaConocimiento,
+                  nivelSeleccionado: areaConocimiento.value.nivelSeleccionado,
+                  niveles: areaConocimiento.value.niveles,
+                  nivelesTexto: areaConocimiento.value.nivelesTexto
+                }
+              );
+            }
+          });
+          this.areasConocimiento$.next(
+            newAreasConocimientoListado.map(value => new StatusWrapper<IInvencionAreaConocimientoListado>(value)));
+        }),
+        switchMap(() => of(invencion))
+      );
+  }
+
   addSectorAplicacion(sectorAplicacion: ISectorAplicacion) {
     if (sectorAplicacion) {
       const invencionSectorAplicacion = {
@@ -217,8 +350,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       const current = this.sectoresAplicacion$.value;
       current.push(wrapped);
       this.sectoresAplicacion$.next(current);
-      this.setComplete(true);
-      this.setErrors(false);
+      this.checkComplete();
       this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: true });
     }
   }
@@ -232,10 +364,40 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       current.splice(index, 1);
       this.sectoresAplicacion$.next(current);
       if (!current.length) {
-        this.setComplete(false);
-        this.setErrors(true);
+        this.checkComplete();
       }
       this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: true });
+    }
+  }
+
+  addAreaConocimiento(invencionAreasConocimientoListado: IInvencionAreaConocimientoListado[]): void {
+    const wrappedList = invencionAreasConocimientoListado.map(invencionAreaConocimientoListado => {
+      invencionAreaConocimientoListado.invencion = this.invencion;
+      invencionAreaConocimientoListado.areaConocimiento = invencionAreaConocimientoListado.nivelSeleccionado;
+      const wrapped = new StatusWrapper<IInvencionAreaConocimientoListado>(invencionAreaConocimientoListado);
+      wrapped.setCreated();
+      return wrapped;
+    })
+
+    const current = this.areasConocimiento$.value;
+    current.push(...wrappedList);
+    this.areasConocimiento$.next(current);
+    this.checkComplete();
+    this.setChangesInvencionDatosGeneralesFragment({ hasChangesAreasConocimiento: true });
+  }
+
+  deleteAreaConocimiento(wrapper: StatusWrapper<IInvencionAreaConocimientoListado>): void {
+    const current = this.areasConocimiento$.value;
+    const index = current.findIndex(
+      (value) => value === wrapper
+    );
+    if (index >= 0) {
+      current.splice(index, 1);
+      this.areasConocimiento$.next(current);
+      if (!current.length) {
+        this.checkComplete();
+      }
+      this.setChangesInvencionDatosGeneralesFragment({ hasChangesAreasConocimiento: true });
     }
   }
 
@@ -250,5 +412,15 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   private hasChangesInvecionDatosGeneralesFragmentPart(key: keyof IInvencionDatosGeneralesFragmentStatus): boolean {
     return this.fragmentStatus[key];
+  }
+
+  private checkComplete() {
+    const isComplete = this.hasInvencionRequiredElemenmts();
+    this.setComplete(isComplete);
+    this.setErrors(!isComplete);
+  }
+
+  private hasInvencionRequiredElemenmts() {
+    return this.sectoresAplicacion$.value.length > 0 && this.areasConocimiento$.value.length > 0;
   }
 }

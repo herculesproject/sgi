@@ -16,6 +16,7 @@ import { InvencionResolver } from './invencion.resolver';
 import { SectorAplicacionModalComponent } from './modals/sector-aplicacion-modal/sector-aplicacion-modal.component';
 import { InvencionDocumentoComponent } from './invencion-formulario/invencion-documento/invencion-documento.component';
 import { InvencionDocumentoModalComponent } from './modals/invencion-documento-modal/invencion-documento-modal.component';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { InvencionDocumentoModalComponent } from './modals/invencion-documento-m
     FormsModule,
     SgiAuthModule,
     CspSharedModule,
-    SgpSharedModule
+    SgpSharedModule,
+    SgoSharedModule
   ],
   providers: [
     InvencionResolver

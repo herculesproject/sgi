@@ -10,6 +10,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { CspSharedModule } from 'src/app/module/csp/shared/csp-shared.module';
 import { InvencionActionService } from '../../invencion.action.service';
 
@@ -36,7 +37,8 @@ describe('InvencionDatosGeneralesComponent', () => {
         SgiAuthModule,
         LoggerTestingModule,
         SharedModule,
-        CspSharedModule
+        CspSharedModule,
+        SgoSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

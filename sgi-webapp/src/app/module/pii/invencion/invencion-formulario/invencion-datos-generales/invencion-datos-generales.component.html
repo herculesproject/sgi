@@ -105,49 +105,111 @@
     </div>
 
     <!-- Sectores de Aplicación -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <h3>{{'pii.sector-aplicacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL }}</h3>
+    <section class="invencion-sectores-aplicacion">
+      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <h3>{{'pii.sector-aplicacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL }}</h3>
 
-        <table mat-table [dataSource]="sectorAplicacionDataSource" matSort matSortActive="nombre" matSortDirection="asc"
-          matSortDisableClear #sortSectorAplicacion="matSort">
+          <table mat-table class="mat-elevation-z8 table-sectores-aplicacion" mat-table
+            [dataSource]="sectorAplicacionDataSource" matSort matSortActive="sector" matSortDirection="asc"
+            matSortDisableClear #sortSectorAplicacion="matSort">
 
-          <!-- Nombre Sector Aplicacion Column -->
-          <ng-container matColumnDef="sector">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'pii.invencion.sector' | translate}}
-            </th>
-            <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.sectorAplicacion.nombre}} </td>
-          </ng-container>
+            <!-- Nombre Sector Aplicacion Column -->
+            <ng-container matColumnDef="sector">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{'pii.invencion.sector' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.sectorAplicacion.nombre}} </td>
+            </ng-container>
 
-          <!-- Acciones Column -->
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
-            <td mat-cell *matCellDef="let wrapper; let i = index">
-              <ng-container>
-                <button *ngIf="formPart.hasEditPerm()" mat-button matTooltip="{{'btn.delete' | translate}}"
-                  (click)="deleteSectorAplicacion(wrapper)">
-                  <mat-icon color="warn">highlight_off</mat-icon>
-                </button>
-              </ng-container>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsSectorAplicacion"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsSectorAplicacion;"></tr>
-        </table>
-        <div class="separation-button" *ngIf="formPart.hasEditPerm">
-          <button color="three" mat-button mat-raised-button (click)="openModalSectorAplicacion()"
-            *ngIf="formPart.initialized$ | async">
-            <mat-icon color="accent">add_circle</mat-icon>
-            {{ 'btn.add.entity' | translate:msgParamSectorAplicacionEntity }}
-          </button>
+            <!-- Acciones Column -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+              <td mat-cell *matCellDef="let wrapper; let i = index">
+                <ng-container>
+                  <button *ngIf="formPart.hasEditPerm()" mat-button matTooltip="{{'btn.delete' | translate}}"
+                    (click)="deleteSectorAplicacion(wrapper)">
+                    <mat-icon color="warn">highlight_off</mat-icon>
+                  </button>
+                </ng-container>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsSectorAplicacion"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsSectorAplicacion;"></tr>
+          </table>
+          <div class="separation-button" *ngIf="formPart.hasEditPerm">
+            <button color="three" mat-button mat-raised-button (click)="openModalSectorAplicacion()"
+              *ngIf="(formPart.initialized$ | async) && formPart.hasEditPerm()">
+              <mat-icon color="accent">add_circle</mat-icon>
+              {{ 'btn.add.entity' | translate:msgParamSectorAplicacionEntity }}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <mat-error *ngIf="showSectorAplicacionErrorMsg">
-      {{'error.required.element' | translate:msgParamSectorAplicacionEntity}}
-    </mat-error>
+      <mat-error *ngIf="showSectorAplicacionErrorMsg">
+        {{'error.required.element' | translate:msgParamSectorAplicacionEntity}}
+      </mat-error>
+
+    </section>
+
+
+    <!-- Areas Conocimiento -->
+    <section class="invencion-areas-conocimiento">
+
+      <h2>{{'pii.invencion.area-procedencia' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+
+      <table class="mat-elevation-z8 table-areas-conocimiento" mat-table [dataSource]="areaConocimientoDataSource"
+        matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+
+        <!-- Niveles Column -->
+        <ng-container matColumnDef="niveles">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'csp.proyecto-area-conocimiento.niveles' | translate}} </th>
+          <td mat-cell *matCellDef="let wrapper" matTooltip="{{wrapper.value?.nivelesTexto}}">
+            {{wrapper.value?.nivelesTexto}}
+          </td>
+        </ng-container>
+
+        <!-- Nivel Seleccionado Column -->
+        <ng-container matColumnDef="nivelSeleccionado">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'csp.proyecto-area-conocimiento.nivelSeleccionado' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.nivelSeleccionado?.nombre}} </td>
+        </ng-container>
+
+        <!-- Acciones  Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+          <td mat-cell *matCellDef="let area">
+            <ng-container>
+              <button *ngIf="formPart.hasEditPerm()" mat-button matTooltip="{{'btn.delete' | translate}}"
+                (click)="deleteAreaConocimiento(area)">
+                <mat-icon color="warn">highlight_off</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsAreaConocimiento"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsAreaConocimiento;"></tr>
+
+      </table>
+
+      <div class="separation-button" *ngIf="formPart.hasEditPerm()">
+        <!-- Botón añadir Areas -->
+        <button color="three" mat-button mat-raised-button (click)="openModalAreaConocimiento()"
+          *ngIf="(formPart.initialized$ | async) && formPart.hasEditPerm()">
+          <mat-icon color="accent">add_circle</mat-icon>
+          {{ 'btn.add.entity' | translate:msgParamAreaConocimientoEntity }}
+        </button>
+      </div>
+
+      <mat-error *ngIf="showAreaConocimientoErrorMsg">
+        {{'error.required.element' | translate:msgParamAreaConocimientoEntity}}
+      </mat-error>
+
+    </section>
 
     <!-- Comentarios -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">

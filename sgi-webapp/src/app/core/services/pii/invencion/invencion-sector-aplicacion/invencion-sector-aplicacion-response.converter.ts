@@ -11,7 +11,7 @@ class IInvencionSectorAplicacionResponseConverter extends SgiBaseConverter<IInve
     }
 
     return {
-      id: undefined,
+      id: value.id,
       invencion: { id: value.invencionId } as IInvencion,
       sectorAplicacion: value.sectorAplicacion,
     };

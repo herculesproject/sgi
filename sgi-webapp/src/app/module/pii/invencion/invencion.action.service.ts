@@ -5,6 +5,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { InvencionDocumentoService } from '@core/services/pii/invencion/invencion-documento/invencion-documento.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { InvencionDatosGeneralesFragment } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.fragment';
 import { InvencionDocumentoFragment } from './invencion-formulario/invencion-documento/invencion-documento.fragment';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
@@ -36,7 +37,8 @@ export class InvencionActionService extends ActionService {
     invencionDocumentoService: InvencionDocumentoService,
     route: ActivatedRoute,
     proyectoService: ProyectoService,
-    documentoService: DocumentoService
+    documentoService: DocumentoService,
+    areaConocimientoService: AreaConocimientoService,
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(INVENCION_ROUTE_PARAMS.ID));
@@ -45,7 +47,7 @@ export class InvencionActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, this.canEdit);
+    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService, this.canEdit);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
