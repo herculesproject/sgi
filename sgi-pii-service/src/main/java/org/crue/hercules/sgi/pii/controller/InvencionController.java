@@ -7,13 +7,17 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
+import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
 import org.crue.hercules.sgi.pii.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.pii.model.Invencion;
+import org.crue.hercules.sgi.pii.model.InvencionAreaConocimiento;
 import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
+import org.crue.hercules.sgi.pii.service.InvencionAreaConocimientoService;
 import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.model.InvencionDocumento;
 import org.crue.hercules.sgi.pii.service.InvencionDocumentoService;
@@ -48,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InvencionController {
   public static final String MAPPING = "/invenciones";
   public static final String PATH_SECTORES = "/{id}/sectoresaplicacion";
+  public static final String PATH_AREAS = "/{id}/areasconocimiento";
 
   private ModelMapper modelMapper;
 
@@ -56,15 +61,18 @@ public class InvencionController {
   /** InvencionSectorAplicacion service */
   private final InvencionSectorAplicacionService invencionSectorAplicacionService;
   private final InvencionDocumentoService invencionDocumentoService;
+  /** InvencionAreaConocimientoService service */
+  private final InvencionAreaConocimientoService invencionAreaConocimientoService;
 
   public InvencionController(ModelMapper modelMapper, InvencionService invencionService,
       InvencionSectorAplicacionService invencionSectorAplicacionService,
-      InvencionDocumentoService invencionDocumentoService) {
+      InvencionDocumentoService invencionDocumentoService,
+      InvencionAreaConocimientoService invencionAreaConocimientoService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
     this.invencionSectorAplicacionService = invencionSectorAplicacionService;
     this.invencionDocumentoService = invencionDocumentoService;
-
+    this.invencionAreaConocimientoService = invencionAreaConocimientoService;
   }
 
   /**
@@ -181,7 +189,7 @@ public class InvencionController {
    * Devuelve las {@link InvencionSectorAplicacion} asociadas a la
    * {@link Invencion} con el id indicado
    * 
-   * @param id Identificador de {@link InvencionSectorAplicacion}
+   * @param id Identificador de {@link Invencion}
    * @return {@link InvencionSectorAplicacion} correspondiente al id de la
    *         {@link Invencion}
    */
@@ -222,6 +230,70 @@ public class InvencionController {
             convertInvencionSectorAplicacionInputs(sectoresAplicacion)));
     log.debug("updateSectoresAplicacion(Long id, List<InvencionSectorAplicacionInput> sectoresAplicacion) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las {@link InvencionAreaConocimiento} asociadas a la
+   * {@link Invencion} con el id indicado
+   * 
+   * @param id Identificador de {@link Invencion}
+   * @return {@link InvencionAreaConocimiento} correspondiente al id de la
+   *         {@link Invencion}
+   */
+  @GetMapping(PATH_AREAS)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V', 'PII-INV-C')")
+  public List<InvencionAreaConocimientoOutput> findAreasConocimiento(@PathVariable Long id) {
+    log.debug("findAreasConocimiento(@PathVariable Long id) - start");
+    List<InvencionAreaConocimientoOutput> returnValue = convertInvencionAreasConocimiento(
+        invencionAreaConocimientoService.findByInvencion(id));
+    log.debug("findAreasConocimiento(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la lista de {@link InvencionAreaConocimiento} asociadas a la
+   * {@link Invencion} con el id indicado
+   * 
+   * @param id                identificador de la {@link Invencion}
+   * @param areasConocimiento nueva lista de {@link InvencionAreaConocimiento} de
+   *                          la {@link Invencion}
+   * @return la nueva lista de {@link InvencionAreaConocimiento} asociadas a la
+   *         {@link Invencion}
+   */
+  @PatchMapping(PATH_AREAS)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-C')")
+  public ResponseEntity<List<InvencionAreaConocimientoOutput>> updateAreasConocimiento(@PathVariable Long id,
+      @Valid @RequestBody List<InvencionAreaConocimientoInput> areasConocimiento) {
+    log.debug("updateAreasConocimiento(Long id, List<InvencionAreaConocimientoInput> areasConocimiento) - start");
+
+    areasConocimiento.stream().forEach(areaConocimiento -> {
+      if (!areaConocimiento.getInvencionId().equals(id)) {
+        throw new NoRelatedEntitiesException(InvencionAreaConocimiento.class, Invencion.class);
+      }
+    });
+
+    List<InvencionAreaConocimientoOutput> returnValue = convertInvencionAreasConocimiento(
+        invencionAreaConocimientoService.updateAreasConocimiento(id,
+            convertInvencionAreaConocimientoInputs(areasConocimiento)));
+    log.debug("updateAreasConocimiento(Long id, List<InvencionAreaConocimientoInput> areasConocimiento) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista de {@link InvencionDocumento} relacionados a una invencion
+   * 
+   * @param id Identificador de {@link Invencion}.
+   * @return la lista de entidades {@link InvencionDocumento}
+   */
+  @GetMapping("/{invencionId}/invenciondocumentos")
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
+  ResponseEntity<Page<InvencionDocumentoOutput>> findInvencionDocumentosByInvencionId(@PathVariable Long invencionId,
+      @RequestPageable(sort = "s") Pageable paging) {
+
+    Page<InvencionDocumentoOutput> page = convertToPage(
+        invencionDocumentoService.findByInvencionId(invencionId, paging));
+
+    return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
   }
 
   private InvencionOutput convert(Invencion invencion) {
@@ -269,23 +341,6 @@ public class InvencionController {
     return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
   }
 
-  /**
-   * Devuelve una lista de {@link InvencionDocumento} relacionados a una invencion
-   * 
-   * @param id Identificador de {@link Invencion}.
-   * @return la lista de entidades {@link InvencionDocumento}
-   */
-  @GetMapping("/{invencionId}/invenciondocumentos")
-  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
-  ResponseEntity<Page<InvencionDocumentoOutput>> findInvencionDocumentosByInvencionId(@PathVariable Long invencionId,
-      @RequestPageable(sort = "s") Pageable paging) {
-
-    Page<InvencionDocumentoOutput> page = convertToPage(
-        invencionDocumentoService.findByInvencionId(invencionId, paging));
-
-    return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
-  }
-
   private InvencionDocumentoOutput convert(InvencionDocumento invencionDocumento) {
     return modelMapper.map(invencionDocumento, InvencionDocumentoOutput.class);
   }
@@ -295,5 +350,29 @@ public class InvencionController {
         .map((invencionDocumento) -> convert(invencionDocumento)).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private InvencionAreaConocimientoOutput convert(InvencionAreaConocimiento entity) {
+    return modelMapper.map(entity, InvencionAreaConocimientoOutput.class);
+  }
+
+  private InvencionAreaConocimiento convert(Long id, InvencionAreaConocimientoInput input) {
+    InvencionAreaConocimiento entity = modelMapper.map(input, InvencionAreaConocimiento.class);
+    entity.setId(id);
+    return entity;
+  }
+
+  private InvencionAreaConocimiento convert(InvencionAreaConocimientoInput input) {
+    return convert(null, input);
+  }
+
+  private List<InvencionAreaConocimientoOutput> convertInvencionAreasConocimiento(
+      List<InvencionAreaConocimiento> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private List<InvencionAreaConocimiento> convertInvencionAreaConocimientoInputs(
+      List<InvencionAreaConocimientoInput> inputs) {
+    return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
   }
 }

@@ -19,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Negocio de la entidad RequisitoIPNivelAcademico.
+ * Negocio de la entidad InvencionSectorAplicacion.
  */
 @Service
 @Slf4j

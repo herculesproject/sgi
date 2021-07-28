@@ -321,4 +321,18 @@
       <column name="varios_paises" value="false" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-invencion_area_conocimiento">
+    <insert tableName="invencion_area_conocimiento">
+      <column name="id" valueSequenceNext="invencion_area_conocimiento_seq" />
+      <column name="area_conocimiento_ref" value="560" />
+      <column name="invencion_id" value="1" />
+    </insert>
+    <insert tableName="invencion_area_conocimiento">
+      <column name="id" valueSequenceNext="invencion_area_conocimiento_seq" />
+      <column name="area_conocimiento_ref" value="560" />
+      <column name="invencion_id" value="2" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

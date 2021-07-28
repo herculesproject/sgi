@@ -97,7 +97,8 @@ public class InvencionService {
    * @return la entidad {@link Invencion} persistida.
    */
   @Transactional
-  public Invencion create(Invencion invencion) {
+  @Validated({ Invencion.OnCrear.class })
+  public Invencion create(@Valid Invencion invencion) {
     log.debug("create(Invencion invencion) - start");
 
     Assert.isNull(invencion.getId(),
