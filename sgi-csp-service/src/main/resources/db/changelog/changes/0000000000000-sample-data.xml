@@ -7,490 +7,490 @@
       <column name="nombre" value="AEI" />
       <column name="descripcion" value="Estructura de áreas y paneles científico técnicos de la Agencia Estatal de Investigación" />
       <column name="area_tematica_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CSO" />
       <column name="descripcion" value="Ciencias sociales" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="COM" />
       <column name="descripcion" value="Comunicación" />
       <column name="area_tematica_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CPO" />
       <column name="descripcion" value="Ciencia política" />
       <column name="area_tematica_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FEM" />
       <column name="descripcion" value="Estudios feministas, de las mujeres y de género" />
       <column name="area_tematica_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="GEO" />
       <column name="descripcion" value="Geografía" />
       <column name="area_tematica_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="SOC" />
       <column name="descripcion" value="Sociología y antropología social" />
       <column name="area_tematica_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="DER" />
       <column name="descripcion" value="Derecho" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ECO" />
       <column name="descripcion" value="Economía" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="EYA" />
       <column name="descripcion" value="Economía y sus aplicaciones" />
       <column name="area_tematica_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="EYF" />
       <column name="descripcion" value="Empresas y sus finanzas" />
       <column name="area_tematica_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MAE" />
       <column name="descripcion" value="Métodos de análisis económicos" />
       <column name="area_tematica_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FLA" />
       <column name="descripcion" value="Filología, literatura y arte" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ART" />
       <column name="descripcion" value="Arte, bellas artes y museística" />
       <column name="area_tematica_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MLP" />
       <column name="descripcion" value="Mente, lenguaje y procesamiento" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FIL" />
       <column name="descripcion" value="Filosofía" />
       <column name="area_tematica_padre_id" value="15" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="LYL" />
       <column name="descripcion" value="Lingüistica y lenguas" />
       <column name="area_tematica_padre_id" value="15" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="EDU" />
       <column name="descripcion" value="Ciencias de la educación" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FIS" />
       <column name="descripcion" value="Ciencias físicas" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="AYA" />
       <column name="descripcion" value="Astronomía y astrofísica" />
       <column name="area_tematica_padre_id" value="19" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ESP" />
       <column name="descripcion" value="Investigación espacial" />
       <column name="area_tematica_padre_id" value="19" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FPN" />
       <column name="descripcion" value="Física de  partículas y nuclear" />
       <column name="area_tematica_padre_id" value="19" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FYA" />
       <column name="descripcion" value="Física y sus aplicaciones" />
       <column name="area_tematica_padre_id" value="19" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MTM" />
       <column name="descripcion" value="Ciencias matemáticas" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="PHA" />
       <column name="descripcion" value="Estudios del pasado: Historia y arqueología" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ARQ" />
       <column name="descripcion" value="Arqueología" />
       <column name="area_tematica_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="HIS" />
       <column name="descripcion" value="Historia" />
       <column name="area_tematica_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="PSI" />
       <column name="descripcion" value="Psicología" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="PIN" />
       <column name="descripcion" value="Producción industrial e ingeniería civil" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="IBI" />
       <column name="descripcion" value="Ingeniería biomédica" />
       <column name="area_tematica_padre_id" value="29" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ICA" />
       <column name="descripcion" value="Ingeniería civil y arquitectura" />
       <column name="area_tematica_padre_id" value="29" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="IEA" />
       <column name="descripcion" value="Ingeniería eléctrica, electrónica y automática" />
       <column name="area_tematica_padre_id" value="29" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="INA" />
       <column name="descripcion" value="Ingeniería mecánica, naval y aeronáutica" />
       <column name="area_tematica_padre_id" value="29" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CTQ" />
       <column name="descripcion" value="Ciencia y tecnología química" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="IQM" />
       <column name="descripcion" value="Ingeniería química" />
       <column name="area_tematica_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="QMC" />
       <column name="descripcion" value="Química" />
       <column name="area_tematica_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="EYT" />
       <column name="descripcion" value="Energía y transporte" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ENE" />
       <column name="descripcion" value="Energía" />
       <column name="area_tematica_padre_id" value="37" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="TRA" />
       <column name="descripcion" value="Transporte" />
       <column name="area_tematica_padre_id" value="37" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MAT" />
       <column name="descripcion" value="Ciencia y tecnología de matereiales" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MBM" />
       <column name="descripcion" value="Materiales biomedicina" />
       <column name="area_tematica_padre_id" value="40" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MEN" />
       <column name="descripcion" value="Materiales energía y medioambiente" />
       <column name="area_tematica_padre_id" value="40" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MES" />
       <column name="descripcion" value="Materiales estructurales" />
       <column name="area_tematica_padre_id" value="40" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MFU" />
       <column name="descripcion" value="Materiales funcionalidad eléctrica" />
       <column name="area_tematica_padre_id" value="40" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="TIC" />
       <column name="descripcion" value="Tecnologías de la información y comunicaciones" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="INF" />
       <column name="descripcion" value="Ciencias de la computación e informática" />
       <column name="area_tematica_padre_id" value="45" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MNF" />
       <column name="descripcion" value="Microelectrónica, nanotecnología y fotónica" />
       <column name="area_tematica_padre_id" value="45" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="TCO" />
       <column name="descripcion" value="Tecnologías de las comunicaciones" />
       <column name="area_tematica_padre_id" value="45" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CTM" />
       <column name="descripcion" value="Ciencias y tecnologías medioambientales" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BDV" />
       <column name="descripcion" value="Biodiversidad" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CTA" />
       <column name="descripcion" value="Ciencias de la tierra y del agua" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CYA" />
       <column name="descripcion" value="Clima y atmósfera" />
       <column name="area_tematica_padre_id" value="34" />
-      <column name="activo" value="false" />
+      <column name="activo" valueBoolean="false" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CYA" />
       <column name="descripcion" value="Clima y atmósfera" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="MAR" />
       <column name="descripcion" value="Ciencia y tecnología marina" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="POL" />
       <column name="descripcion" value="Investigación polar" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="TMA" />
       <column name="descripcion" value="Tecnologías medioambientales" />
       <column name="area_tematica_padre_id" value="49" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CAA" />
       <column name="descripcion" value="Ciencias agrarias y agroalimentarias" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ALI" />
       <column name="descripcion" value="Ciencia y tecnologías de alimentos" />
       <column name="area_tematica_padre_id" value="57" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="AYF" />
       <column name="descripcion" value="Agricultura y forestal" />
       <column name="area_tematica_padre_id" value="57" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="GYA" />
       <column name="descripcion" value="Ganadería y agricultura" />
       <column name="area_tematica_padre_id" value="57" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BIO" />
       <column name="descripcion" value="Biociencias y biotecnología" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BIF" />
       <column name="descripcion" value="Biología integrativa y fisiología" />
       <column name="area_tematica_padre_id" value="61" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BMC" />
       <column name="descripcion" value="Biología molecular y celular" />
       <column name="area_tematica_padre_id" value="61" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BTC" />
       <column name="descripcion" value="Biotecnología" />
       <column name="area_tematica_padre_id" value="61" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="BME" />
       <column name="descripcion" value="Biomedicina" />
       <column name="area_tematica_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="CAN" />
       <column name="descripcion" value="Cáncer" />
       <column name="area_tematica_padre_id" value="65" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="DPT" />
       <column name="descripcion" value="Herramientas diagnósticas, pronósticas, terapéutic" />
       <column name="area_tematica_padre_id" value="65" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="ESN" />
       <column name="descripcion" value="Enfermedades del sistema nervioso" />
       <column name="area_tematica_padre_id" value="65" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="FOS" />
       <column name="descripcion" value="Fisiopatología de órganos y sistemas" />
       <column name="area_tematica_padre_id" value="65" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="area_tematica">
       <column name="id" valueSequenceNext="area_tematica_seq" />
       <column name="nombre" value="IIT" />
       <column name="descripcion" value="Inmunidad, infección y nuevas terapias" />
       <column name="area_tematica_padre_id" value="65" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -499,43 +499,43 @@
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Subvención UGI" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Contrato art. 83" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Explotación licencia" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Proyecto OTRI" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Convenio colaboración" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Subcontratación" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_ejecucion">
       <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
       <column name="nombre" value="Proyecto OPE" />
       <column name="descripcion" value="" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -544,19 +544,19 @@
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
       <column name="unidad_gestion_ref" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
       <column name="unidad_gestion_ref" value="1" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -566,224 +566,224 @@
       <column name="nombre" value="Plan Estatal 2017-2020" />
       <column name="descripcion" value="Plan Estatal de Investigación Científica y Técnica y de Innovación 2017-2020" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 2 -->
       <column name="nombre" value="Generación del conocimiento y fortalecimiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 3 -->
       <column name="nombre" value="Fortalecimiento institucional" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 4 -->
       <column name="nombre" value="Generación del conocimiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 5 -->
       <column name="nombre" value="Infraestructuras de investigación y equipamiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 6 -->
       <column name="nombre" value="Liderazgo empresarial en IDI" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 7 -->
       <column name="nombre" value="IDI Empresarial" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="6" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 8 -->
       <column name="nombre" value="Impulso a las tecnologías habilitadoras" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="6" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 9 -->
       <column name="nombre" value="Promoción del talento y su empleabilidad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 10 -->
       <column name="nombre" value="Formación en IDI" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 11 -->
       <column name="nombre" value="Incorporación" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 12 -->
       <column name="nombre" value="Movilidad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 13 -->
       <column name="nombre" value="Retos de la sociedad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 14 -->
       <column name="nombre" value="R2: Bioeconomía: sostenibilidad de los sistemas " />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 15 -->
       <column name="nombre" value="R5: Cambio climático" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 16 -->
       <column name="nombre" value="R7: Economía, sociedad y cultura digital" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 17 -->
       <column name="nombre" value="R3: Energía segura, eficiente y  limpia" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 18 -->
       <column name="nombre" value="R1: Salud, cambio demográfico y bienestar" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 19 -->
       <column name="nombre" value="R6: Ciencias sociales humanidades ciencia" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 20 -->
       <column name="nombre" value="R8: Seguridad, protección y defensa" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 21 -->
       <column name="nombre" value="R4: Transporte sostenible" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 22 -->
       <column name="nombre" value="Horizonte 2020" />
       <column name="descripcion" value="Programa Marco de Investigación e Innovación de la UE 2014-2020" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 23 -->
       <column name="nombre" value="Ciencia excelente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 24 -->
       <column name="nombre" value="Liderazgo industrial" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 25 -->
       <column name="nombre" value="Retos sociales" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 26 -->
       <column name="nombre" value="Clima, medio ambiente, eficiencia de los recursos" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 27 -->
       <column name="nombre" value="Energía segura, limpia y eficiente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 28 -->
       <column name="nombre" value="Salud, cambio demográfico y sociedad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 29 -->
       <column name="nombre" value="Seguridad alimentaria, invest marina y bioeconomía" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 30 -->
       <column name="nombre" value="Sociedades inclusivas, innovadoras y reflexivas" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 31 -->
       <column name="nombre" value="Sociedades seguras" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 32 -->
       <column name="nombre" value="Transporte inteligente, ecológico e integrado" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 33 -->
@@ -791,14 +791,14 @@
       <column name="descripcion" value="Decarbonisation of the EU building stock: innovative
 approaches and affordable solutions changing the market for buildings renovation" />
       <column name="programa_padre_id" value="22" />
-      <column name="activo" value="false" />
+      <column name="activo" valueBoolean="false" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 34 -->
       <column name="nombre" value="Energy efficiency" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 35 -->
@@ -806,63 +806,63 @@ approaches and affordable solutions changing the market for buildings renovation
       <column name="descripcion" value="Decarbonisation of the EU building stock: innovative
 approaches and affordable solutions changing the market for buildings renovation" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 36 -->
       <column name="nombre" value="LC-SC3-EE-2-2018-2019 " />
       <column name="descripcion" value="Integrated home renovation services" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 37 -->
       <column name="nombre" value="LC-SC3-EE-3-2019-2020" />
       <column name="descripcion" value="Stimulating demand for sustainable energy skills in the construction sector" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 38 -->
       <column name="nombre" value="LC-SC3-EE-4-2019-2020" />
       <column name="descripcion" value="Upgrading smartness of existing buildings through innovations for legacy equipment" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 39 -->
       <column name="nombre" value="LC-SC3-EE-5-2018-2019-2020 " />
       <column name="descripcion" value="Next-generation of Energy Performance Assessment and Certification" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 40 -->
       <column name="nombre" value="LC-SC3-EE-6-2018-2019-2020" />
       <column name="descripcion" value="Business case for industrial waste heat/cold recovery" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 41 -->
       <column name="nombre" value="LC-SC3-EE-8-2018-2019" />
       <column name="descripcion" value="Capacity building programmes to support implementation of energy audits" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 42 -->
       <column name="nombre" value="LC-SC3-EE-9-2018-2019" />
       <column name="descripcion" value="Innovative financing for energy efficiency investments" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 43 -->
       <column name="nombre" value="LC-SC3-EE-10-2018-2019-2020" />
       <column name="descripcion" value="Mainstreaming energy efficiency finance" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 44 -->
@@ -870,231 +870,231 @@ approaches and affordable solutions changing the market for buildings renovation
       <column name="descripcion" value="Enabling next-generation of smart energy services
 valorising energy efficiency and flexibility at demand-side as energy resource" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 45 -->
       <column name="nombre" value="LC-SC3-EE-11-2018-2019-2020" />
       <column name="descripcion" value="Aggregation - Project Development Assistance" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 46 -->
       <column name="nombre" value="LC-SC3-EE-14-2018-2019-2020" />
       <column name="descripcion" value="Socio-economic research conceptualising and modelling energy efficiency and energy demand" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 47 -->
       <column name="nombre" value="LC-SC3-EE-15-2018" />
       <column name="descripcion" value="New energy label driving and boosting innovation in products energy efficiency" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 48 -->
       <column name="nombre" value="LC-SC3-EE-16-2018-2019-2020" />
       <column name="descripcion" value="Supporting public authorities to implement the Energy Union" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 49 -->
       <column name="nombre" value="LC-SC3-EE-17-2019" />
       <column name="descripcion" value="European City Facility - European cities as key innovation hubs to unlock finance for energy efficiency" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 50 -->
       <column name="nombre" value="LC-SC3-EE-18-2019" />
       <column name="descripcion" value="Bioclimatic approaches for improving energy performance in buildings in Africa and Europe" />
       <column name="programa_padre_id" value="34" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 51 -->
       <column name="nombre" value="Buildings in energy transition (B4E)" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 52 -->
       <column name="nombre" value="LC-SC3-B4E-1-2020" />
       <column name="descripcion" value="Towards highly energy efficient and decarbonised buildings" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 53 -->
       <column name="nombre" value="LC-SC3-B4E-2-2020" />
       <column name="descripcion" value="Stimulating demand for sustainable energy skills in the building sector" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 54 -->
       <column name="nombre" value="LC-SC3-B4E-3-2020" />
       <column name="descripcion" value="Upgrading smartness of existing buildings through innovations for legacy equipment" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 55 -->
       <column name="nombre" value="LC-SC3-B4E-4-2020" />
       <column name="descripcion" value="Next-generation of Energy Performance Assessment and Certification" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 56 -->
       <column name="nombre" value="LC-SC3-B4E-5-2020" />
       <column name="descripcion" value="Integrated design concepts for energy-efficient ICT in buildings" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 57 -->
       <column name="nombre" value="LC-SC3-B4E-6-2020" />
       <column name="descripcion" value="Big data for buildings" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 58 -->
       <column name="nombre" value="LC-SC3-B4E-10-2020" />
       <column name="descripcion" value="Self-assessment and self-optimisation of buildings and appliances for a better energy performance" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 59 -->
       <column name="nombre" value="LC-SC3-B4E-7-2020" />
       <column name="descripcion" value="European building stock data 4.0" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 60 -->
       <column name="nombre" value="LC-SC3-B4E-8-2020" />
       <column name="descripcion" value="Renewable and energy efficient solutions for heating and/or cooling, and domestic hot water production in multi-apartment residential buildings" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 61 -->
       <column name="nombre" value="LC-SC3-B4E-9-2020" />
       <column name="descripcion" value="Support to the coordination of European smart buildings innovation community" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 62 -->
       <column name="nombre" value="LC-SC3-B4E-11-2020" />
       <column name="descripcion" value="Financing for energy efficiency investments - Smart Finance for Smart Buildings" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 63 -->
       <column name="nombre" value="LC-SC3-B4E-12-2020" />
       <column name="descripcion" value="National roundtables to implement the Smart Finance for Smart Buildings initiative" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 64 -->
       <column name="nombre" value="LC-SC3-B4E-13-2020" />
       <column name="descripcion" value="Aggregation - Project Development Assistance" />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 65 -->
       <column name="nombre" value="LC-SC3-B4E-14-2020" />
       <column name="descripcion" value="Enabling next-generation of smart energy services valorising energy efficiency and flexibility at demand-side " />
       <column name="programa_padre_id" value="51" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 66 -->
       <column name="nombre" value="Global leadership in renewables" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 67 -->
       <column name="nombre" value="LC-SC3-RES-1-2019-2020" />
       <column name="descripcion" value="Developing the next generation of renewable energy technologies" />
       <column name="programa_padre_id" value="66" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 68 -->
       <column name="nombre" value="LC-SC3-RES-2-2018" />
       <column name="descripcion" value="Disruptive innovation in clean energy technologies" />
       <column name="programa_padre_id" value="66" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 69 -->
       <column name="nombre" value="LC-SC3-RES-29-2019" />
       <column name="descripcion" value="Converting Sunlight to storable chemical energy" />
       <column name="programa_padre_id" value="66" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 70 -->
       <column name="nombre" value="LC-SC3-RES-3-2020" />
       <column name="descripcion" value="International Cooperation with USA and/or China on alternative renewable fuels from sunlight for energy, transport and chemical storage" />
       <column name="programa_padre_id" value="66" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 71 -->
       <column name="nombre" value="Smart and clean energy for consumers" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 72 -->
       <column name="nombre" value="Smart Cities and Communities" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 73 -->
       <column name="nombre" value="Smart citizen-centred energy system" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 74 -->
       <column name="nombre" value="Cross-cutting issues" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 75 -->
       <column name="nombre" value="Joint Actions" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 76 -->
       <column name="nombre" value="Smart Airports" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 77 -->
@@ -1102,371 +1102,371 @@ valorising energy efficiency and flexibility at demand-side as energy resource" 
       <column name="descripcion" value="Enabling near-zero CO2 emissions from fossil fuel power plants and carbon intensive
 industries" />
       <column name="programa_padre_id" value="27" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 78 -->
       <column name="nombre" value="INTERREG" />
       <column name="descripcion" value="INTERREG" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 79 -->
       <column name="nombre" value="PROGRAMA LIFE" />
       <column name="descripcion" value="PROGRAMA EUROPEO LIFE PARA LA CONSERVACIÓN DEL MEDIO AMBIENTE Y ACCIÓN POR EL CLIMA" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 80 -->
       <column name="nombre" value="H2020" />
       <column name="descripcion" value="" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 81 -->
       <column name="nombre" value="ciencia excelente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="80" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 82 -->
       <column name="nombre" value="msca" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="81" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 83 -->
       <column name="nombre" value="Plan 1" />
       <column name="descripcion" value="Plan 1" />
       <column name="programa_padre_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 84 -->
       <column name="nombre" value="programa 1" />
       <column name="descripcion" value="programa 1" />
       <column name="programa_padre_id" value="83" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 85 -->
       <column name="nombre" value="PROGRAMA LIFE A" />
       <column name="descripcion" value="PROGRAMA A DENTRO DE UN PLAN DE INVESTIGACIÓN" />
       <column name="programa_padre_id" value="79" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 86 -->
       <column name="nombre" value="PROGRAMA LIFE B" />
       <column name="descripcion" value="PROGRAMA LIFE B" />
       <column name="programa_padre_id" value="79" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 87 -->
       <column name="nombre" value="PROGRAMA LIFE C" />
       <column name="descripcion" value="PROGRAMA LIFE C" />
       <column name="programa_padre_id" value="79" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 88 -->
       <column name="nombre" value="Acción estratégica economía y sociedad digital" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 89 -->
       <column name="nombre" value="Acción estratégica salud" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 90 -->
       <column name="nombre" value="Proyectos IDI" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 91 -->
       <column name="nombre" value="Acciones de dinamización" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 92 -->
       <column name="nombre" value="Retos investigación" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 93 -->
       <column name="nombre" value="Pruebas de Concepto" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 94 -->
       <column name="nombre" value="Retos Colaboración" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 95 -->
       <column name="nombre" value="Incorporación de Jóvenes Investigadores" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 96 -->
       <column name="nombre" value="Programación Conjunta Internacional" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 97 -->
       <column name="nombre" value="Consorcios de Investigación Empresarial Nacional" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="90" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 98 -->
       <column name="nombre" value="Ayudas Plataformas Tecnológicas y de Innovación" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="91" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 99 -->
       <column name="nombre" value="Colaboración científico-técnica internacional" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="91" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 100 -->
       <column name="nombre" value="Fomento Cultura Científica e Innovación" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="91" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 101 -->
       <column name="nombre" value="ERC" />
       <column name="descripcion" value="European Research Council" />
       <column name="programa_padre_id" value="23" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 102 -->
       <column name="nombre" value="FET" />
       <column name="descripcion" value="Future and Emerging Technologies" />
       <column name="programa_padre_id" value="23" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 103 -->
       <column name="nombre" value="MSCA" />
       <column name="descripcion" value="Marie-Sklodowska-Curie Actions" />
       <column name="programa_padre_id" value="23" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 104 -->
       <column name="nombre" value="RI" />
       <column name="descripcion" value="Research Infrastructures" />
       <column name="programa_padre_id" value="23" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 105 -->
       <column name="nombre" value="LEIT" />
       <column name="descripcion" value="Leadership in enabling and industrial technologies" />
       <column name="programa_padre_id" value="24" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 106 -->
       <column name="nombre" value="ARF" />
       <column name="descripcion" value="Access to risk finance" />
       <column name="programa_padre_id" value="24" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 107 -->
       <column name="nombre" value="ISME" />
       <column name="descripcion" value="Innovation in SMEs" />
       <column name="programa_padre_id" value="24" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 108 -->
       <column name="nombre" value="COFUND" />
       <column name="descripcion" value="Acción Marie-Sklodowska Curie Co-funding of regional, national and International Programmes" />
       <column name="programa_padre_id" value="103" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 109 -->
       <column name="nombre" value="IF" />
       <column name="descripcion" value="Acción Marie Sklodowska-Curie Individual Fellowships" />
       <column name="programa_padre_id" value="103" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 110 -->
       <column name="nombre" value="ITN" />
       <column name="descripcion" value="Acción Marie Sklodowska Curie Innovative Training Networks " />
       <column name="programa_padre_id" value="103" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 111 -->
       <column name="nombre" value="RISE" />
       <column name="descripcion" value="Acción Marie Sklodowska-Curie Research and Innovation Staff Exchange" />
       <column name="programa_padre_id" value="103" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 112 -->
       <column name="nombre" value="AdG" />
       <column name="descripcion" value="Advanced Grants" />
       <column name="programa_padre_id" value="101" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 113 -->
       <column name="nombre" value="CoG" />
       <column name="descripcion" value="Consolidator Grant" />
       <column name="programa_padre_id" value="101" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 114 -->
       <column name="nombre" value="PoC" />
       <column name="descripcion" value="Proof of Concept" />
       <column name="programa_padre_id" value="101" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 115 -->
       <column name="nombre" value="StG" />
       <column name="descripcion" value="Starting Grants" />
       <column name="programa_padre_id" value="101" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 116 -->
       <column name="nombre" value="SyG" />
       <column name="descripcion" value="Synergy Grants" />
       <column name="programa_padre_id" value="101" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 117 -->
       <column name="nombre" value="FET  FLAGSHIPS" />
       <column name="descripcion" value="Iniciativas emblemáticas" />
       <column name="programa_padre_id" value="102" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 118 -->
       <column name="nombre" value="Graphene" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="117" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 119 -->
       <column name="nombre" value="Human Brain Project" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="117" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 120 -->
       <column name="nombre" value="FET OPEN" />
       <column name="descripcion" value=" Apoyo a nuevas ideas" />
       <column name="programa_padre_id" value="102" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 121 -->
       <column name="nombre" value="FET PROACTIVE" />
       <column name="descripcion" value="Fomento de temas y comunidades emergentes" />
       <column name="programa_padre_id" value="102" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 122 -->
       <column name="nombre" value="ERIC" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="104" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 123 -->
       <column name="nombre" value="ESFRI" />
       <column name="descripcion" value="Foro Estratégico Europeo sobre Infraestructuras de Investigación" />
       <column name="programa_padre_id" value="104" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 124 -->
       <column name="nombre" value="European Fellowships" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="109" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 125 -->
       <column name="nombre" value=" EF - ST" />
       <column name="descripcion" value="Standard European Fellowship" />
       <column name="programa_padre_id" value="124" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 126 -->
       <column name="nombre" value="EF - CAR" />
       <column name="descripcion" value="Career Restart Panel" />
       <column name="programa_padre_id" value="124" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 127 -->
       <column name="nombre" value="EF - RI" />
       <column name="descripcion" value="Reintegration Panel " />
       <column name="programa_padre_id" value="124" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 128 -->
       <column name="nombre" value="EF - SE" />
       <column name="descripcion" value="Society and Entreprise Panel" />
       <column name="programa_padre_id" value="124" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="programa">
       <column name="id" valueSequenceNext="programa_seq" /> <!-- 129 -->
       <column name="nombre" value="Global Fellowships" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="109" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1475,37 +1475,37 @@ industries" />
       <column name="id" valueSequenceNext="fuente_financiacion_seq" />
       <column name="nombre" value="Plan Estatal 2020" />
       <column name="descripcion" value="null" />
-      <column name="fondo_estructural" value="false" />
+      <column name="fondo_estructural" valueBoolean="false" />
       <column name="tipo_ambito_geografico_id" value="4" />
       <column name="tipo_origen_fuente_financiacion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="fuente_financiacion">
       <column name="id" valueSequenceNext="fuente_financiacion_seq" />
       <column name="nombre" value="Plan propio 2020-2025" />
       <column name="descripcion" value="null" />
-      <column name="fondo_estructural" value="false" />
+      <column name="fondo_estructural" valueBoolean="false" />
       <column name="tipo_ambito_geografico_id" value="2" />
       <column name="tipo_origen_fuente_financiacion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="fuente_financiacion">
       <column name="id" valueSequenceNext="fuente_financiacion_seq" />
       <column name="nombre" value="Idepa" />
       <column name="descripcion" value="null" />
-      <column name="fondo_estructural" value="true" />
+      <column name="fondo_estructural" valueBoolean="true" />
       <column name="tipo_ambito_geografico_id" value="3" />
       <column name="tipo_origen_fuente_financiacion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="fuente_financiacion">
       <column name="id" valueSequenceNext="fuente_financiacion_seq" />
       <column name="nombre" value="Horizonte 2020" />
       <column name="descripcion" value="null" />
-      <column name="fondo_estructural" value="true" />
+      <column name="fondo_estructural" valueBoolean="true" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="tipo_origen_fuente_financiacion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1514,79 +1514,79 @@ industries" />
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Bases convocatoria" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Formulario solicitud" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Borrador contrato" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Presupuesto" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Solicitud baja miembro equipo" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Solicitud cambio IP" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Memoria científica" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Justificación" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Justificante asistencia congreso" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Documento técnico" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Documento de gestión" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="CVN" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="CVA" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1595,19 +1595,19 @@ industries" />
       <column name="id" valueSequenceNext="tipo_enlace_seq" />
       <column name="nombre" value="Publicación convocatoria" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_enlace">
       <column name="id" valueSequenceNext="tipo_enlace_seq" />
       <column name="nombre" value="Presentación solicitudes" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_enlace">
       <column name="id" valueSequenceNext="tipo_enlace_seq" />
       <column name="nombre" value="Portal de justificación" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1616,13 +1616,13 @@ industries" />
       <column name="id" valueSequenceNext="modelo_tipo_enlace_seq" />
       <column name="tipo_enlace_id" value="1" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_enlace">
       <column name="id" valueSequenceNext="modelo_tipo_enlace_seq" />
       <column name="tipo_enlace_id" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1631,49 +1631,49 @@ industries" />
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Presentación interna solicitudes" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Presentación solicitudes entidad externa" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Presentación contrato a empresa" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Presentación contrato Vicerrectorado" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Presentación alegaciones" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Verificación de cvs" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Ejecución de contrato" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_fase">
       <column name="id" valueSequenceNext="tipo_fase_seq" />
       <column name="nombre" value="Ejecución de proyecto" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1682,82 +1682,82 @@ industries" />
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="2" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="true" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="true" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="1" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="true" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="true" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="4" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="3" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="1" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="true" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="true" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="true" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="true" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="6" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="7" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_fase">
       <column name="id" valueSequenceNext="modelo_tipo_fase_seq" />
       <column name="tipo_fase_id" value="8" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1767,77 +1767,77 @@ industries" />
       <column name="tipo_documento_id" value="3" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="modelo_tipo_fase_id" value="3" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="3" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="modelo_tipo_fase_id" value="4" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="1" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="5" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="10" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="9" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="6" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="9" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="12" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="null" />
-      <column name="activo" value="false" />
+      <column name="activo" valueBoolean="false" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="13" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="null" />
-      <column name="activo" value="false" />
+      <column name="activo" valueBoolean="false" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="13" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="5" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
       <column name="tipo_documento_id" value="12" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="modelo_tipo_fase_id" value="5" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1846,49 +1846,49 @@ industries" />
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyecto I+D" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Acuerdo confidencialidad" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Asesoría técnica" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Infraestructuras" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Movilidad" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Contrato RRHH" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Congreso" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyecto colaborativo" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1897,19 +1897,19 @@ industries" />
       <column name="id" valueSequenceNext="tipo_financiacion_seq" />
       <column name="nombre" value="Subvención" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_financiacion">
       <column name="id" valueSequenceNext="tipo_financiacion_seq" />
       <column name="nombre" value="Préstamo" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_financiacion">
       <column name="id" valueSequenceNext="tipo_financiacion_seq" />
       <column name="nombre" value="Facturación" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1918,37 +1918,37 @@ industries" />
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="6" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="8" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="2" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="3" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -1957,43 +1957,43 @@ industries" />
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Firma contrato por empresa" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Firma contrato por Universidad" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Sustitución IP" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Baja miembro equipo" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Presentación resolución" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Alegación admisión" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_hito">
       <column name="id" valueSequenceNext="tipo_hito_seq" />
       <column name="nombre" value="Alegación aceptación" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2002,91 +2002,91 @@ industries" />
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="4" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="6" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="true" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="true" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="5" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="true" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="true" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="7" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="solicitud" value="true" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="true" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="1" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="2" />
       <column name="modelo_ejecucion_id" value="2" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="3" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="6" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="true" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="false" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="true" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="modelo_tipo_hito">
       <column name="id" valueSequenceNext="modelo_tipo_hito_seq" />
       <column name="tipo_hito_id" value="4" />
       <column name="modelo_ejecucion_id" value="7" />
-      <column name="solicitud" value="false" />
-      <column name="convocatoria" value="false" />
-      <column name="proyecto" value="true" />
-      <column name="activo" value="true" />
+      <column name="solicitud" valueBoolean="false" />
+      <column name="convocatoria" valueBoolean="false" />
+      <column name="proyecto" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2095,55 +2095,55 @@ industries" />
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Inventariable" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Fungible" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Viajes y dietas" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Infraestructuras" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Costes indirectos" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Alojamiento" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Alquiler de inventariable" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Gastos de personal" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Contratación" />
       <column name="descripcion" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2165,7 +2165,7 @@ industries" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="4" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2184,7 +2184,7 @@ industries" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2203,7 +2203,7 @@ industries" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2222,7 +2222,7 @@ industries" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2241,7 +2241,7 @@ industries" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2260,7 +2260,7 @@ industries" />
       <column name="duracion" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
@@ -2279,7 +2279,7 @@ industries" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2305,7 +2305,7 @@ industries" />
       <column name="tipo_fase_id" value="null" />
       <column name="tipo_documento_id" value="1" />
       <column name="nombre" value="Bases convocatoria" />
-      <column name="publico" value="true" />
+      <column name="publico" valueBoolean="true" />
       <column name="observaciones" value="null" />
       <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
     </insert>
@@ -2500,7 +2500,7 @@ industries" />
       <column name="concepto_gasto_id" value="1" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="10000" />
-      <column name="permitido" value="true" />
+      <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="3" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2511,7 +2511,7 @@ industries" />
       <column name="concepto_gasto_id" value="5" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="null" />
-      <column name="permitido" value="true" />
+      <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="2" />
       <column name="mes_final" value="5" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2522,7 +2522,7 @@ industries" />
       <column name="concepto_gasto_id" value="3" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="null" />
-      <column name="permitido" value="false" />
+      <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="7" />
       <column name="mes_final" value="10" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2533,7 +2533,7 @@ industries" />
       <column name="concepto_gasto_id" value="1" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="null" />
-      <column name="permitido" value="false" />
+      <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="null" />
       <column name="mes_final" value="null" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2544,7 +2544,7 @@ industries" />
       <column name="concepto_gasto_id" value="1" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="20000" />
-      <column name="permitido" value="true" />
+      <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="12" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2555,7 +2555,7 @@ industries" />
       <column name="concepto_gasto_id" value="3" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="30000" />
-      <column name="permitido" value="true" />
+      <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="13" />
       <column name="mes_final" value="24" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2566,7 +2566,7 @@ industries" />
       <column name="concepto_gasto_id" value="8" />
       <column name="observaciones" value="null" />
       <column name="importe_maximo" value="null" />
-      <column name="permitido" value="false" />
+      <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="null" />
       <column name="mes_final" value="null" />
       <column name="porcentaje_coste_indirecto" value="null" />
@@ -2620,7 +2620,7 @@ industries" />
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
       <column name="convocatoria_id" value="1" />
-      <column name="tramitacion_sgi" value="true" />
+      <column name="tramitacion_sgi" valueBoolean="true" />
       <column name="convocatoria_fase_id" value="2" />
       <column name="importe_maximo_solicitud" value="null" />
       <column name="formulario_solicitud" value="ESTANDAR" />
@@ -2628,7 +2628,7 @@ industries" />
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
       <column name="convocatoria_id" value="2" />
-      <column name="tramitacion_sgi" value="false" />
+      <column name="tramitacion_sgi" valueBoolean="false" />
       <column name="convocatoria_fase_id" value="null" />
       <column name="importe_maximo_solicitud" value="null" />
       <column name="formulario_solicitud" value="ESTANDAR" />
@@ -2636,7 +2636,7 @@ industries" />
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
       <column name="convocatoria_id" value="3" />
-      <column name="tramitacion_sgi" value="false" />
+      <column name="tramitacion_sgi" valueBoolean="false" />
       <column name="convocatoria_fase_id" value="null" />
       <column name="importe_maximo_solicitud" value="null" />
       <column name="formulario_solicitud" value="ESTANDAR" />
@@ -2644,7 +2644,7 @@ industries" />
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
       <column name="convocatoria_id" value="4" />
-      <column name="tramitacion_sgi" value="false" />
+      <column name="tramitacion_sgi" valueBoolean="false" />
       <column name="convocatoria_fase_id" value="5" />
       <column name="importe_maximo_solicitud" value="null" />
       <column name="formulario_solicitud" value="ESTANDAR" />
@@ -2680,7 +2680,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="3" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2694,7 +2694,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="3" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2708,7 +2708,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2722,7 +2722,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2736,7 +2736,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2750,7 +2750,7 @@ industries" />
       <column name="convocatoria_externa" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
@@ -2764,7 +2764,7 @@ industries" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2885,7 +2885,7 @@ industries" />
       <column name="tipo_hito_id" value="6" />
       <column name="fecha" value="2021-01-31T23:00:00Z" />
       <column name="comentario" value="null" />
-      <column name="genera_aviso" value="false" />
+      <column name="genera_aviso" valueBoolean="false" />
     </insert>
   </changeSet>
 
@@ -2895,40 +2895,40 @@ industries" />
       <column name="abreviatura" value="COORD" />
       <column name="nombre" value="Coordinador" />
       <column name="descripcion" value="null" />
-      <column name="coordinador" value="true" />
-      <column name="activo" value="true" />
+      <column name="coordinador" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
       <column name="abreviatura" value="SOCIO" />
       <column name="nombre" value="Socio" />
       <column name="descripcion" value="null" />
-      <column name="coordinador" value="false" />
-      <column name="activo" value="true" />
+      <column name="coordinador" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
       <column name="abreviatura" value="TERPA" />
       <column name="nombre" value="Tercera parte" />
       <column name="descripcion" value="null" />
-      <column name="coordinador" value="false" />
-      <column name="activo" value="true" />
+      <column name="coordinador" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
       <column name="abreviatura" value="PARTN" />
       <column name="nombre" value="Partner organisation" />
       <column name="descripcion" value="null" />
-      <column name="coordinador" value="false" />
-      <column name="activo" value="true" />
+      <column name="coordinador" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
       <column name="abreviatura" value="OTROS" />
       <column name="nombre" value="Otros" />
       <column name="descripcion" value="null" />
-      <column name="coordinador" value="false" />
-      <column name="activo" value="true" />
+      <column name="coordinador" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -2938,130 +2938,130 @@ industries" />
       <column name="abreviatura" value="IP" />
       <column name="nombre" value="Investigador/a principal" />
       <column name="descripcion" value="Investigador/a principal" />
-      <column name="rol_principal" value="true" />
+      <column name="rol_principal" valueBoolean="true" />
       <column name="orden" value="PRIMARIO" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="COIP" />
       <column name="nombre" value="Co-Investigador/a Principal" />
       <column name="descripcion" value="Co-Investigador/a Principal" />
-      <column name="rol_principal" value="true" />
+      <column name="rol_principal" valueBoolean="true" />
       <column name="orden" value="SECUNDARIO" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PDI" />
       <column name="nombre" value="PDI – UMU" />
       <column name="descripcion" value="PDI – UMU miembro E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PDIEX" />
       <column name="nombre" value="PDI – EXTERNO" />
       <column name="descripcion" value="PDI – EXTERNO miembro E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="ASESR" />
       <column name="nombre" value="Asesor científico" />
       <column name="descripcion" value="Asesor científico E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PAS" />
       <column name="nombre" value="PAS E.I." />
       <column name="descripcion" value="PAS E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PFOEI" />
       <column name="nombre" value="Personal en formación E.I." />
       <column name="descripcion" value="Personal en formación E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="COLEI" />
       <column name="nombre" value="Colaborador E.I." />
       <column name="descripcion" value="Colaborador E.I." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PCOET" />
       <column name="nombre" value="Personal contratado E.T." />
       <column name="descripcion" value="Personal contratado E.T." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="TRABAJO" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PFOET" />
       <column name="nombre" value="Personal en formación E.T." />
       <column name="descripcion" value="Personal en formación E.T." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="TRABAJO" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="RPET" />
       <column name="nombre" value="Resto personal E.T." />
       <column name="descripcion" value="Resto personal E.T." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="TRABAJO" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="COLET" />
       <column name="nombre" value="Colaborador E.T." />
       <column name="descripcion" value="Colaborador E.T." />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="TRABAJO" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="rol_proyecto">
       <column name="id" valueSequenceNext="rol_proyecto_seq" />
       <column name="abreviatura" value="PRASC" />
       <column name="nombre" value="Profesorado Asociado" />
       <column name="descripcion" value="Profesorado Asociado" />
-      <column name="rol_principal" value="false" />
+      <column name="rol_principal" valueBoolean="false" />
       <column name="orden" value="null" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -3100,18 +3100,18 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="confidencial" value="false" />
+      <column name="confidencial" valueBoolean="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="coordinado" value="false" />
+      <column name="coordinado" valueBoolean="false" />
       <column name="coordinador_externo" value="null" />
       <column name="colaborativo" value="null" />
-      <column name="timesheet" value="true" />
-      <column name="paquetes_trabajo" value="false" />
-      <column name="coste_hora" value="true" />
+      <column name="timesheet" valueBoolean="true" />
+      <column name="paquetes_trabajo" valueBoolean="false" />
+      <column name="coste_hora" valueBoolean="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="true" />
-      <column name="activo" value="true" />
+      <column name="anualidades" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
@@ -3129,18 +3129,18 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="confidencial" value="false" />
+      <column name="confidencial" valueBoolean="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="coordinado" value="true" />
-      <column name="coordinador_externo" value="false" />
+      <column name="coordinado" valueBoolean="true" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="colaborativo" value="null" />
-      <column name="timesheet" value="true" />
-      <column name="paquetes_trabajo" value="true" />
-      <column name="coste_hora" value="true" />
+      <column name="timesheet" valueBoolean="true" />
+      <column name="paquetes_trabajo" valueBoolean="true" />
+      <column name="coste_hora" valueBoolean="true" />
       <column name="tipo_horas_anuales" value="REAL" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="false" />
-      <column name="activo" value="true" />
+      <column name="anualidades" valueBoolean="false" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
@@ -3158,18 +3158,18 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="confidencial" value="false" />
+      <column name="confidencial" valueBoolean="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
-      <column name="coordinado" value="true" />
-      <column name="coordinador_externo" value="true" />
+      <column name="coordinado" valueBoolean="true" />
+      <column name="coordinador_externo" valueBoolean="true" />
       <column name="colaborativo" value="null" />
-      <column name="timesheet" value="true" />
-      <column name="paquetes_trabajo" value="true" />
-      <column name="coste_hora" value="true" />
+      <column name="timesheet" valueBoolean="true" />
+      <column name="paquetes_trabajo" valueBoolean="true" />
+      <column name="coste_hora" valueBoolean="true" />
       <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="observaciones" value="" />
-      <column name="anualidades" value="true" />
-      <column name="activo" value="true" />
+      <column name="anualidades" valueBoolean="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -3220,7 +3220,7 @@ industries" />
       <column name="fuente_financiacion_id" value="4" />
       <column name="tipo_financiacion_id" value="1" />
       <column name="porcentaje_financiacion" value="80" />
-      <column name="ajena" value="false" />
+      <column name="ajena" valueBoolean="false" />
     </insert>
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
@@ -3229,7 +3229,7 @@ industries" />
       <column name="fuente_financiacion_id" value="4" />
       <column name="tipo_financiacion_id" value="1" />
       <column name="porcentaje_financiacion" value="100" />
-      <column name="ajena" value="false" />
+      <column name="ajena" valueBoolean="false" />
     </insert>
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
@@ -3238,7 +3238,7 @@ industries" />
       <column name="fuente_financiacion_id" value="2" />
       <column name="tipo_financiacion_id" value="2" />
       <column name="porcentaje_financiacion" value="20" />
-      <column name="ajena" value="true" />
+      <column name="ajena" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -3248,8 +3248,8 @@ industries" />
       <column name="titulo" value="Proyecto solicitud 1" />
       <column name="acronimo" value="PS1" />
       <column name="duracion" value="24" />
-      <column name="colaborativo" value="false" />
-      <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" valueBoolean="false" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -3263,8 +3263,8 @@ industries" />
       <column name="titulo" value="Proyecto solicitud 2" />
       <column name="acronimo" value="PS2" />
       <column name="duracion" value="24" />
-      <column name="colaborativo" value="true" />
-      <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" valueBoolean="true" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -3278,8 +3278,8 @@ industries" />
       <column name="titulo" value="Proyecto Solicitud 1 conv CGF/OPE-01" />
       <column name="acronimo" value="PS1OPE1" />
       <column name="duracion" value="36" />
-      <column name="colaborativo" value="true" />
-      <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" valueBoolean="true" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -3293,8 +3293,8 @@ industries" />
       <column name="titulo" value="Proyecto Solicitud 2 conv CGF/OPE-01" />
       <column name="acronimo" value="PS2OPE1" />
       <column name="duracion" value="24" />
-      <column name="colaborativo" value="false" />
-      <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" valueBoolean="false" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -3308,8 +3308,8 @@ industries" />
       <column name="titulo" value="Life solicitud de proyecto" />
       <column name="acronimo" value="PRopuesta life" />
       <column name="duracion" value="48" />
-      <column name="colaborativo" value="true" />
-      <column name="coordinador_externo" value="false" />
+      <column name="colaborativo" valueBoolean="true" />
+      <column name="coordinador_externo" valueBoolean="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -3357,7 +3357,7 @@ industries" />
       <column name="importe_solicitado" value="1000.00" />
       <column name="importe_presupuestado" value="3000.00" />
       <column name="observaciones" value="null" />
-      <column name="financiacion_ajena" value="false" />
+      <column name="financiacion_ajena" valueBoolean="false" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
@@ -3368,7 +3368,7 @@ industries" />
       <column name="importe_solicitado" value="2000.00" />
       <column name="importe_presupuestado" value="3000.00" />
       <column name="observaciones" value="null" />
-      <column name="financiacion_ajena" value="false" />
+      <column name="financiacion_ajena" valueBoolean="false" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
@@ -3379,7 +3379,7 @@ industries" />
       <column name="importe_solicitado" value="12000.00" />
       <column name="importe_presupuestado" value="15000.00" />
       <column name="observaciones" value="null" />
-      <column name="financiacion_ajena" value="false" />
+      <column name="financiacion_ajena" valueBoolean="false" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
@@ -3390,7 +3390,7 @@ industries" />
       <column name="importe_solicitado" value="15000.00" />
       <column name="importe_presupuestado" value="20000.00" />
       <column name="observaciones" value="null" />
-      <column name="financiacion_ajena" value="false" />
+      <column name="financiacion_ajena" valueBoolean="false" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
@@ -3401,7 +3401,7 @@ industries" />
       <column name="importe_solicitado" value="32000.00" />
       <column name="importe_presupuestado" value="33000.00" />
       <column name="observaciones" value="null" />
-      <column name="financiacion_ajena" value="false" />
+      <column name="financiacion_ajena" valueBoolean="false" />
     </insert>
   </changeSet>
 
@@ -3556,7 +3556,7 @@ industries" />
       <column name="tipo_hito_id" value="3" />
       <column name="fecha" value="2021-02-11T00:00:00Z" />
       <column name="comentario" value="null" />
-      <column name="genera_aviso" value="true" />
+      <column name="genera_aviso" valueBoolean="true" />
     </insert>
   </changeSet>
 
@@ -3580,7 +3580,7 @@ industries" />
       <column name="documento_ref" value="79538260-d67e-44ed-ac6c-2aae5a33ac45" />
       <column name="tipo_documento_id" value="null" />
       <column name="comentario" value="null" />
-      <column name="visible" value="true" />
+      <column name="visible" valueBoolean="true" />
     </insert>
   </changeSet>
 
