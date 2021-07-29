@@ -6,11 +6,13 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 const PROYECTO_CAMBIO_ESTADO_COMENTARIO = marker('csp.proyecto.estado-proyecto.comentario');
 const PROYECTO_CAMBIO_ESTADO_NUEVO_ESTADO = marker('csp.proyecto.cambio-estado.nuevo');
+const MSG_CAMBIO_ESTADO_CONFIRMACION = marker('confirmacion.csp.proyecto.cambio-estado');
 
 export interface ProyectoCambioEstadoModalComponentData {
   estadoActual: Estado;
@@ -35,10 +37,12 @@ export class CambioEstadoModalComponent extends
     return ESTADO_MAP;
   }
 
-  constructor(public matDialogRef: MatDialogRef<CambioEstadoModalComponent>,
+  constructor(
+    public matDialogRef: MatDialogRef<CambioEstadoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoCambioEstadoModalComponentData,
     protected snackBarService: SnackBarService,
-    private readonly translate: TranslateService) {
+    private readonly translate: TranslateService,
+    private confirmDialogService: DialogService) {
     super(snackBarService, matDialogRef, data);
 
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -86,6 +90,16 @@ export class CambioEstadoModalComponent extends
     });
 
     return formGroup;
+  }
+
+  saveOrUpdate(): void {
+
+    this.confirmDialogService.showConfirmation(MSG_CAMBIO_ESTADO_CONFIRMACION).subscribe(
+      (aceptado: boolean) => {
+        if (aceptado) {
+          super.saveOrUpdate();
+        }
+      });
   }
 
   ngOnDestroy(): void {
