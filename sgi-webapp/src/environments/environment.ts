@@ -45,7 +45,8 @@ export const environment = {
       /\/api\/pii.*/i,
     ]
   } as SgiAuthConfig,
-  version
+  version,
+  defaultTimeZone: 'Europe/Madrid'
 };
 
 /*

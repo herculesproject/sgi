@@ -8,6 +8,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SgiErrorHttpInterceptor } from '@core/error-http-interceptor';
 import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
+import { TimeZoneService } from '@core/services/timezone.service';
+import { TIME_ZONE } from '@core/time-zone';
 import { environment } from '@env';
 import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -96,6 +98,11 @@ const appInitializerFn = (appConfig: ConfigService) => {
       provide: HTTP_INTERCEPTORS,
       useClass: SgiErrorHttpInterceptor,
       multi: true
+    },
+    {
+      provide: TIME_ZONE,
+      useFactory: (timeZoneService: TimeZoneService) => timeZoneService.zone$,
+      deps: [TimeZoneService]
     }
   ],
   bootstrap: [AppComponent]

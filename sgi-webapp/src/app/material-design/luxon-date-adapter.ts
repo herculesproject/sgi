@@ -1,6 +1,8 @@
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
 import { DateAdapter, MatDateFormats, MAT_DATE_LOCALE } from '@angular/material/core';
+import { TIME_ZONE } from '@core/time-zone';
 import { DateTime, DateTimeOptions, Info } from 'luxon';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 export const LUXON_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -53,16 +55,32 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 
 /** Adapts Luxon Dates for use with Angular Material. */
 @Injectable()
-export class LuxonDateAdapter extends DateAdapter<DateTime> {
+export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy {
+  // tslint:disable-next-line: variable-name
   private _useUTC: boolean;
+  // tslint:disable-next-line: variable-name
+  private _timeZone: string;
+  private readonly subscription: Subscription;
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
+  constructor(
+    @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
+    @Inject(TIME_ZONE) timeZone: string | Observable<string> | Subject<string>,
     @Optional() @Inject(LUXON_DATE_ADAPTER_OPTIONS)
-    options?: LuxonDateAdapterOptions) {
-
+    options?: LuxonDateAdapterOptions
+  ) {
     super();
     this._useUTC = options ? !!options.useUtc : false;
     this.setLocale(dateLocale || DateTime.local().locale);
+    if (timeZone instanceof Subject || timeZone instanceof Observable) {
+      this.subscription = timeZone.subscribe((value) => this._timeZone = value);
+    }
+    else {
+      this._timeZone = timeZone;
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   setLocale(locale: string) {
@@ -145,11 +163,11 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
       throw Error(`Invalid date "${date}". Reason: "${result.invalidReason}".`);
     }
 
-    return result.setLocale(this.locale);
+    return result.setLocale(this.locale).setZone(this._timeZone);
   }
 
   today(): DateTime {
-    return (this._useUTC ? DateTime.utc() : DateTime.local()).setLocale(this.locale);
+    return (this._useUTC ? DateTime.utc() : DateTime.local()).setLocale(this.locale).setZone(this._timeZone);
   }
 
   parse(value: any, parseFormat: string): DateTime | null {
@@ -186,19 +204,20 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
     }
     return date
       .setLocale(this.locale)
+      .setZone(this._timeZone)
       .toFormat(displayFormat, { timeZone: this._useUTC ? 'utc' : undefined });
   }
 
   addCalendarYears(date: DateTime, years: number): DateTime {
-    return date.plus({ years }).setLocale(this.locale);
+    return date.plus({ years }).setLocale(this.locale).setZone(this._timeZone);
   }
 
   addCalendarMonths(date: DateTime, months: number): DateTime {
-    return date.plus({ months }).setLocale(this.locale);
+    return date.plus({ months }).setLocale(this.locale).setZone(this._timeZone);
   }
 
   addCalendarDays(date: DateTime, days: number): DateTime {
-    return date.plus({ days }).setLocale(this.locale);
+    return date.plus({ days }).setLocale(this.locale).setZone(this._timeZone);
   }
 
   toIso8601(date: DateTime): string {
@@ -243,7 +262,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
   /** Gets the options that should be used when constructing a new `DateTime` object. */
   private _getOptions(): DateTimeOptions {
     return {
-      zone: this._useUTC ? 'utc' : undefined,
+      zone: this._useUTC ? 'utc' : this._timeZone,
       locale: this.locale
     };
   }

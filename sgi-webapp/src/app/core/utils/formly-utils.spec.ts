@@ -1,4 +1,6 @@
+import { environment } from '@env';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { Settings } from 'luxon';
 import { FormlyUtils } from './formly-utils';
 
 describe('FormlyUtils', () => {
@@ -765,7 +767,11 @@ describe('FormlyUtils', () => {
   const formlyUtils = (FormlyUtils as any);
 
   beforeEach(() => {
+    Settings.defaultZoneName = environment.defaultTimeZone;
+  });
 
+  afterEach(() => {
+    Settings.defaultZoneName = undefined;
   });
 
   it('Comprueba que se cambian las fechas de tipo datepicker y dateTimePicker al parsear de JSON a Model y a la inversa', () => {
@@ -774,7 +780,7 @@ describe('FormlyUtils', () => {
     formlyUtils.convertStringToDateTime(modelPersona);
     formlyUtils.convertDateTimeToString(modelPersona, formlyPersona);
     console.log(modelPersona);
-    expect(modelPersona.fechaNacimiento === '2021-05-10').toBeTruthy();
+    expect(modelPersona.fechaNacimiento === '2021-05-11').toBeTruthy();
     expect(modelPersona.fechaCategoriaPdi === '2021-05-24T22:00:00Z').toBeTruthy();
     expect(modelPersona.fechaFinCategoriaPdi === '2021-05-25T22:00:00Z').toBeTruthy();
   });
