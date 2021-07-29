@@ -45,8 +45,8 @@ public class SolicitudProyecto extends BaseEntity {
     GLOBAL,
     /** Mixto */
     MIXTO,
-    /** Individual */
-    INDIVIDUAL;
+    /** Por Entidad */
+    POR_ENTIDAD,
   }
 
   /**

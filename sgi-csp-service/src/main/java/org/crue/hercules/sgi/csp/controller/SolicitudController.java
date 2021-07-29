@@ -826,7 +826,7 @@ public class SolicitudController {
    * 
    * @param id Id de la Solicitud
    * @return {@link HttpStatus.OK} si es tipo Global,
-   *         {@link HttpStatus.NO_CONTENT} Mixto o Individual
+   *         {@link HttpStatus.NO_CONTENT} Por Entidad o Mixto
    */
   @RequestMapping(path = "/{id}/solicitudproyecto-global", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E')")
