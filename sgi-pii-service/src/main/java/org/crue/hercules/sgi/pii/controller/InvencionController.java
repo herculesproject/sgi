@@ -177,6 +177,35 @@ public class InvencionController {
   }
 
   /**
+   * Activa la {@link Invencion} con id indicado.
+   * 
+   * @param id Identificador de {@link Invencion}.
+   * @return {@link Invencion} actualizada.
+   */
+  @PatchMapping("/{id}/activar")
+  @PreAuthorize("hasAuthority('PII-INV-R')")
+  InvencionOutput activar(@PathVariable Long id) {
+    log.debug("activar(Long id) - start");
+    Invencion returnValue = service.activar(id);
+    log.debug("activar(Long id) - end");
+    return convert(returnValue);
+  }
+
+  /**
+   * Desactiva la {@link Invencion} con id indicado.
+   * 
+   * @param id Identificador de {@link Invencion}.
+   */
+  @PatchMapping("/{id}/desactivar")
+  @PreAuthorize("hasAuthority('PII-INV-B')")
+  InvencionOutput desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
+    Invencion returnValue = service.desactivar(id);
+    log.debug("desactivar(Long id) - end");
+    return convert(returnValue);
+  }
+
+  /**
    * Comprueba la existencia de la {@link Invencion} con el id indicado.
    * 
    * @param id Identificador de {@link Invencion}.

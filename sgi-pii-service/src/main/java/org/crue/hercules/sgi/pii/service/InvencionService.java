@@ -179,6 +179,66 @@ public class InvencionService {
   }
 
   /**
+   * Activa la {@link Invencion}.
+   *
+   * @param id Id de la {@link Invencion}.
+   * @return la entidad {@link Invencion} persistida.
+   */
+  @Transactional
+  public Invencion activar(Long id) {
+    log.debug("activar(Long id) - start");
+
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Invencion.class)).build());
+
+    return repository.findById(id).map(invencion -> {
+      if (invencion.getActivo()) {
+        // Si esta activo no se hace nada
+        return invencion;
+      }
+
+      invencion.setActivo(true);
+
+      Invencion returnValue = repository.save(invencion);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new InvencionNotFoundException(id));
+  }
+
+  /**
+   * Desactiva la {@link Invencion}.
+   *
+   * @param id Id de la {@link Invencion}.
+   * @return la entidad {@link Invencion} persistida.
+   */
+  @Transactional
+  public Invencion desactivar(Long id) {
+    log.debug("desactivar(Long id) - start");
+
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Invencion.class)).build());
+
+    return repository.findById(id).map(invencion -> {
+      if (!invencion.getActivo()) {
+        // Si no esta activo no se hace nada
+        return invencion;
+      }
+
+      invencion.setActivo(false);
+
+      Invencion returnValue = repository.save(invencion);
+      log.debug("desactivar(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new InvencionNotFoundException(id));
+  }
+
+  /**
    * Comprueba la existencia de la {@link Invencion} por id.
    *
    * @param id el id de la entidad {@link Invencion}.
