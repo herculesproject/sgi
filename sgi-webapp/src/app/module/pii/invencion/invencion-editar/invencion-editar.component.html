@@ -15,7 +15,8 @@
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthority="['PII-INV-V','PII-INV-E']"
       [route]="[INVENCION_ROUTE_NAMES.INFORME_PATENTABILIDAD]"
-      [title]="'pii.invencion-informe-patentabilidad' | translate">
+      [title]="'pii.invencion-informe-patentabilidad' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.INFORME_PATENTABILIDAD)">
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthority="['PII-INV-V','PII-INV-E']"
       [route]="[INVENCION_ROUTE_NAMES.SOLICITUDES_PROTECCION]"

@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IInformePatentabilidad } from '@core/models/pii/informe-patentabilidad';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionAreaConocimiento } from '@core/models/pii/invencion-area-conocimiento';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
@@ -20,6 +21,8 @@ import { INVENCION_DOCUMENTO_RESPONSE_CONVERTER } from './invencion-documento/in
 import { INVENCION_AREACONOCIMIENTO_REQUEST_CONVERTER } from './invencion-area-conocimiento/invencion-area-conocimiento-request.converter';
 import { IInvencionAreaConocimientoResponse } from './invencion-area-conocimiento/invencion-area-conocimiento-response';
 import { INVENCION_AREACONOCIMIENTO_RESPONSE_CONVERTER } from './invencion-area-conocimiento/invencion-area-conocimiento-response.converter';
+import { IInformePatentabilidadResponse } from '../informe-patentabilidad/informe-patentabilidad-response';
+import { INFORME_PATENTABILIDAD_RESPONSE_CONVERTER } from '../informe-patentabilidad/informe-patentabilidad-response.converter';
 import { IInvencionRequest } from './invencion-request';
 import { INVENCION_REQUEST_CONVERTER } from './invencion-request.converter';
 import { IInvencionResponse } from './invencion-response';
@@ -157,5 +160,19 @@ export class InvencionService extends _InvencionServiceMixinBase {
     ).pipe(
       map((response => INVENCION_AREACONOCIMIENTO_RESPONSE_CONVERTER.toTargetArray(response)))
     );
+  }
+
+  /**
+  * Recupera los informes de patentabilidad asociados a la Invencion con el id indicado
+  * @param id Identificador de la Invencion
+  */
+  findInformesPatentabilidad(id: number): Observable<IInformePatentabilidad[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/informespatentabilidad`;
+    return this.http.get<IInformePatentabilidadResponse[]>(endpointUrl)
+      .pipe(
+        map(response => {
+          return INFORME_PATENTABILIDAD_RESPONSE_CONVERTER.toTargetArray(response);
+        })
+      );
   }
 }

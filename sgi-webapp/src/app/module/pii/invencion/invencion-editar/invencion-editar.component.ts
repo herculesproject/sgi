@@ -33,6 +33,10 @@ export class InvencionEditarComponent extends ActionComponent {
   textoUpdateSuccess: string;
   textoUpdateError: string;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,

@@ -17,6 +17,9 @@ import { SectorAplicacionModalComponent } from './modals/sector-aplicacion-modal
 import { InvencionDocumentoComponent } from './invencion-formulario/invencion-documento/invencion-documento.component';
 import { InvencionDocumentoModalComponent } from './modals/invencion-documento-modal/invencion-documento-modal.component';
 import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
+import { InvencionInformesPatentabilidadComponent } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.component';
+import { InformePatentabilidadModalComponent } from './modals/informe-patentabilidad-modal/informe-patentabilidad-modal.component';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
     InvencionEditarComponent,
     SectorAplicacionModalComponent,
     InvencionDocumentoComponent,
-    InvencionDocumentoModalComponent
+    InvencionDocumentoModalComponent,
+    InvencionInformesPatentabilidadComponent,
+    InformePatentabilidadModalComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +44,8 @@ import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
     SgiAuthModule,
     CspSharedModule,
     SgpSharedModule,
-    SgoSharedModule
+    SgoSharedModule,
+    SgempSharedModule
   ],
   providers: [
     InvencionResolver
