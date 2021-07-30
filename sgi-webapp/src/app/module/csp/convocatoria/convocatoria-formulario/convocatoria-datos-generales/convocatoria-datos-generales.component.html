@@ -191,6 +191,10 @@
         <mat-label>{{'csp.convocatoria.regimen-concurrencia' | translate}}</mat-label>
         <sgi-select-entity formControlName="regimenConcurrencia" [options]="regimenesConcurrencia$ | async">
         </sgi-select-entity>
+        <sgi-field-info matSuffix
+          [visible]="formPart.isConvocatoriaVinculada && (formPart.hasProyectoVinculado$ | async) && formPart.hasEditPerm"
+          message="{{'csp.convocatoria.regimen-concurrencia.vinculada' | translate}}">
+        </sgi-field-info>
       </mat-form-field>
     </div>
 
@@ -200,11 +204,10 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.clasificacion-produccion-cientifica' | translate}}
         </mat-label>
-        <sgi-select-enum formControlName="clasificacionCVN" [enumMap]="CLASIFICACION_CVN_MAP"
-          [disabled]="(formPart.isConvocatoriaVinculada && formPart.hasProyectoVinculado) || !formPart.hasEditPerm">
+        <sgi-select-enum formControlName="clasificacionCVN" [enumMap]="CLASIFICACION_CVN_MAP">
         </sgi-select-enum>
         <sgi-field-info matSuffix
-          [visible]="formPart.isConvocatoriaVinculada && formPart.hasProyectoVinculado && formPart.hasEditPerm"
+          [visible]="formPart.isConvocatoriaVinculada && (formPart.hasProyectoVinculado$ | async) && formPart.hasEditPerm"
           message="{{'csp.convocatoria.clasificacion-produccion.vinculada' | translate}}">
         </sgi-field-info>
       </mat-form-field>

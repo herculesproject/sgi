@@ -211,6 +211,7 @@
   "csp.convocatoria.plazo-abierto": "Abierto plazo de presentación de solicitudes",
   "csp.convocatoria.referencia": "Identificación",
   "csp.convocatoria.regimen-concurrencia": "Régimen de concurrencia",
+  "csp.convocatoria.regimen-concurrencia.vinculada": "No se puede modificar el campo porque existen proyectos vinculados a la convocatoria.",
   "csp.convocatoria.registrar": "Registrar Convocatoria",
   "csp.convocatoria.restricciones-nivel-academico": "Restricciones sobre Nivel Académico",
   "csp.convocatoria.restricciones-vinculacion-universidad": "Restricciones sobre vinculación con Universidad",

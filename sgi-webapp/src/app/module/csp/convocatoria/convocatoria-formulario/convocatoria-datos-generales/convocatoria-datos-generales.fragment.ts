@@ -33,7 +33,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
   public showAddAreaTematica: boolean;
-  public hasProyectoVinculado: boolean;
+  public hasProyectoVinculado$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   readonly modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
   readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -92,7 +92,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       form.controls.modeloEjecucion.disable();
       form.controls.entidadGestora.disable();
       form.controls.duracion.disable();
-      form.controls.regimenConcurrencia.disable();
     }
 
     this.subscriptions.push(
@@ -117,6 +116,20 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         )
       );
     }
+
+    this.subscriptions.push(
+      this.hasProyectoVinculado$.subscribe(
+        value => {
+          if (value && this.isConvocatoriaVinculada) {
+            form.controls.regimenConcurrencia.disable();
+            form.controls.clasificacionCVN.disable();
+          } else {
+            form.controls.regimenConcurrencia.enable();
+            form.controls.clasificacionCVN.enable();
+          }
+        }
+      )
+    );
 
     this.checkEstado(form, this.convocatoria);
     return form;
@@ -228,11 +241,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private checkHasProyectoVinculado(key): void {
-    this.subscriptions.push(
-      this.proyectoService.findAllProyectosByConvocatoria(key).subscribe(
-        (proyectos) => this.hasProyectoVinculado = !!proyectos.total
-      )
-    );
+    this.subscriptions.push(this.proyectoService.findAllProyectosByConvocatoria(key).subscribe(
+      (proyectos) => this.hasProyectoVinculado$.next(Boolean(!!proyectos.total))
+    ));
   }
 
   private loadAreasTematicas(id: number): void {
