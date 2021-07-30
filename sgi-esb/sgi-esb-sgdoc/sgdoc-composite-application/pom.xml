@@ -13,27 +13,17 @@
   <name>sgdoc-composite-application</name>
   <description>sgdoc-composite-application</description>
   <properties>
-    <org.crue.hercules.sgi.esb.sgdoc.lib_._fileconnector-connector>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgdoc.lib_._fileconnector-connector>
-    <org.crue.hercules.sgi.esb.sgdoc.api_._API-SGDOC>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgdoc.api_._API-SGDOC>
+
+    <org.crue.hercules.sgi.esb.sgdoc.api_._sgdoc-api>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgdoc.api_._sgdoc-api>
     <org.crue.hercules.sgi.esb.sgdoc.endpoint_._sgdoc-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgdoc.endpoint_._sgdoc-endpoint>
-    <org.crue.hercules.sgi.esb.sgdoc.resource_._get-relative-file-path-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgdoc.resource_._get-relative-file-path-mediator>
-    <org.crue.hercules.sgi.esb.sgdoc.resource_._generate-relative-file-path-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgdoc.resource_._generate-relative-file-path-mediator>
-    <org.crue.hercules.sgi.esb.sgdoc.dataservice_._sgdoc-service>capp/DataServicesServer</org.crue.hercules.sgi.esb.sgdoc.dataservice_._sgdoc-service>
-    <org.crue.hercules.sgi.esb.sgdoc.lib_._file-connector>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgdoc.lib_._file-connector>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
     <timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sgdoc.dataservice</groupId>
-      <artifactId>sgdoc-service</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>dbs</type>
-    </dependency>
-    <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgdoc.api</groupId>
-      <artifactId>API-SGDOC</artifactId>
+      <artifactId>sgdoc-api</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
@@ -42,24 +32,6 @@
       <artifactId>sgdoc-endpoint</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sgdoc.lib</groupId>
-      <artifactId>fileconnector-connector</artifactId>
-      <version>3.0.3</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sgdoc.resource</groupId>
-      <artifactId>generate-relative-file-path-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sgdoc.resource</groupId>
-      <artifactId>get-relative-file-path-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
     </dependency>
   </dependencies>
   <repositories>

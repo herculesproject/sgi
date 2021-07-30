@@ -9,13 +9,11 @@
   <name>sgi-esb-sgdoc</name>
   <description>sgi-esb-sgdoc</description>
   <modules>
-    <module>sgdoc-registry</module>
-    <module>sgdoc-connector-exporter</module>
-    <module>sgdoc-data-service</module>
     <module>sgdoc-integration-project</module>
     <module>sgdoc-composite-application</module>
   </modules>
-   <!-- ********************************************** -->
+
+  <!-- ********************************************** -->
   <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
   <!-- ********************************************** -->
 
@@ -39,77 +37,18 @@
       <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
   </properties>
 
-  <build />
-  <profiles>
-    <profile>
-      <id>Solution</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-eclipse-plugin</artifactId>
-            <version>2.9</version>
-            <configuration>
-              <buildcommands />
-              <projectnatures>
-                <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
-              </projectnatures>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>Docker</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-eclipse-plugin</artifactId>
-            <version>2.9</version>
-            <configuration>
-              <buildcommands />
-              <projectnatures>
-                <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
-              </projectnatures>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>Kubernetes</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-eclipse-plugin</artifactId>
-            <version>2.9</version>
-            <configuration>
-              <buildcommands />
-              <projectnatures>
-                <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
-              </projectnatures>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-eclipse-plugin</artifactId>
-            <version>2.9</version>
-            <configuration>
-              <buildcommands />
-              <projectnatures>
-                <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
-              </projectnatures>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <buildcommands />
+          <projectnatures>
+            <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
+          </projectnatures>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
