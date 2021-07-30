@@ -26,7 +26,8 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto>{
     key: number,
     private readonly logger: NGXLogger,
     private contextoProyectoService: ContextoProyectoService,
-    private readonly: boolean
+    private readonly: boolean,
+    public isVisor: boolean,
   ) {
     super(key, true);
     this.setComplete(true);
@@ -42,6 +43,9 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto>{
     });
 
     if (this.readonly) {
+      form.disable();
+    }
+    if (this.isVisor) {
       form.disable();
     }
 

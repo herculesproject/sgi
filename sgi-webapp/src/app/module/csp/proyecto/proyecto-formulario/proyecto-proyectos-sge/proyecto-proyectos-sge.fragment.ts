@@ -18,7 +18,8 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     private service: ProyectoProyectoSgeService,
     private proyectoService: ProyectoService,
     private proyectoSgeService: ProyectoSgeService,
-    public readonly: boolean
+    public readonly: boolean,
+    public isVisor: boolean
   ) {
     super(key);
     this.setComplete(true);

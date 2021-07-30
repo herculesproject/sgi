@@ -85,7 +85,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private proyectoIvaService: ProyectoIVAService,
     public readonly: boolean,
     public disableCoordinadorExterno: boolean,
-    private hasAnyProyectoSocioCoordinador: boolean
+    private hasAnyProyectoSocioCoordinador: boolean,
+    public isVisor: boolean,
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -179,7 +180,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   protected buildFormGroup(): FormGroup {
-
     const form = new FormGroup({
       estado: new FormControl({
         value: '',
@@ -229,6 +229,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
           DateValidator.isAfter('fechaFin', 'fechaFinDefinitiva')]
       });
+
+    if (this.isVisor) {
+      form.disable();
+    }
 
     this.subscriptions.push(
       form.controls.convocatoria.valueChanges.subscribe(
@@ -320,7 +324,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
               form.controls.unidadGestion.disable();
               form.controls.modeloEjecucion.disable();
             }
-            else {
+            else if (!this.isVisor) {
               form.controls.unidadGestion.enable();
               form.controls.modeloEjecucion.enable();
             }
@@ -334,7 +338,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
             if (value) {
               form.controls.causaExencion.disable();
             }
-            else {
+            else if (!this.isVisor) {
               form.controls.causaExencion.enable();
             }
           }
@@ -587,9 +591,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
       // Enable fields
-      this.getFormGroup().controls.unidadGestion.enable();
-      this.getFormGroup().controls.convocatoriaExterna.enable();
-
+      if (!this.isVisor) {
+        this.getFormGroup().controls.unidadGestion.enable();
+        this.getFormGroup().controls.convocatoriaExterna.enable();
+      }
       this.unidadGestionConvocatoria = null;
       this.ambitoGeograficoConvocatoria = null;
       this.finalidadConvocatoria = null;
@@ -742,7 +747,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private disableCoordinadoFormControl(value: boolean) {
     if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
       this.getFormGroup()?.controls.coordinado.disable({ emitEvent: false });
-    } else {
+    } else if (!this.isVisor) {
       this.getFormGroup()?.controls.coordinado.enable({ emitEvent: false });
     }
   }
@@ -771,7 +776,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     }
     if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
       this.getFormGroup()?.controls.coordinado.disable();
-    } else {
+    } else if (!this.isVisor) {
       this.getFormGroup()?.controls.coordinado.enable();
       this.hasPopulatedSocios$.next(false);
     }

@@ -43,6 +43,7 @@ import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -80,6 +81,7 @@ export interface IProyectoData {
   readonly: boolean;
   disableCoordinadorExterno: boolean;
   hasAnyProyectoSocioCoordinador: boolean;
+  isVisor: boolean;
 }
 
 @Injectable()
@@ -210,7 +212,8 @@ export class ProyectoActionService extends ActionService {
     proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
     translate: TranslateService,
-    proyectoAnualidadService: ProyectoAnualidadService
+    proyectoAnualidadService: ProyectoAnualidadService,
+    authService: SgiAuthService,
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -231,7 +234,8 @@ export class ProyectoActionService extends ActionService {
       modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService,
       this.data?.readonly,
       this.data?.disableCoordinadorExterno,
-      this.data?.hasAnyProyectoSocioCoordinador
+      this.data?.hasAnyProyectoSocioCoordinador,
+      this.data.isVisor
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -244,33 +248,33 @@ export class ProyectoActionService extends ActionService {
       this.plazos = new ProyectoPlazosFragment(id, proyectoService, proyectoPlazoService);
       this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(logger, id, proyectoService, empresaService);
       this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(id, proyectoService, proyectoPaqueteTrabajoService);
-      this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService, this.readonly);
+      this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService, this.readonly, this.data.isVisor);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
         id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
       this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(
-        fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly);
+        fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly, this.data.isVisor);
       this.areaConocimiento = new ProyectoAreaConocimientoFragment(this.data?.proyecto?.id,
-        proyectoAreaConocimiento, proyectoService, areaConocimientoService, this.readonly);
+        proyectoAreaConocimiento, proyectoService, areaConocimientoService, this.readonly, this.data.isVisor);
       this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
       this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);
       this.documentos = new ProyectoDocumentosFragment(
         id, convocatoriaService, solicitudService, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
         proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate);
       this.clasificaciones = new ProyectoClasificacionesFragment(id, proyectoClasificacionService, proyectoService,
-        clasificacionService, this.readonly);
+        clasificacionService, this.readonly, this.data.isVisor);
       this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
-        proyectoSgeService, this.readonly);
+        proyectoSgeService, this.readonly, this.data.isVisor);
       this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, this.data?.proyecto,
         proyectoService, proyectoPartidaService, convocatoriaService, this.readonly);
       this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
-        convocatoriaService, this.readonly);
+        convocatoriaService, this.readonly, this.data.isVisor);
       this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService,
-        solicitudService, this.readonly);
+        solicitudService, this.readonly, this.data.isVisor);
       this.responsableEconomico = new ProyectoResponsableEconomicoFragment(id, proyectoService, proyectoResponsableEconomicoService,
         personaService, this.readonly);
       this.proyectoAgrupacionGasto = new ProyectoAgrupacionGastoFragment(this.data?.proyecto?.id, proyectoService,
-        proyectoAgrupacionGastoService, this.readonly);
+        proyectoAgrupacionGastoService, this.readonly, this.data.isVisor);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);

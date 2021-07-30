@@ -99,7 +99,7 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" mat-raised-button
+    <button *ngIf="!this.formPart.isVisor" color="three" aria-label="Center Align" mat-raised-button
       [routerLink]="['../', PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO, ROUTE_NAMES.NEW]">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntityPermitido }}
@@ -236,7 +236,7 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" mat-raised-button
+    <button *ngIf="!this.formPart.isVisor" color="three" aria-label="Center Align" mat-raised-button
       [routerLink]="['../', PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO, ROUTE_NAMES.NEW]">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntityNoPermitido }}

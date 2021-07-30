@@ -8,7 +8,7 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
 
@@ -26,7 +26,8 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     private proyectoService: ProyectoService,
     private proyectoAnualidadService: ProyectoAnualidadService,
     private solicitudService: SolicitudService,
-    public readonly: boolean
+    public readonly: boolean,
+    public isVisor: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -106,7 +107,7 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
         Validators.max(2_147_483_647)
       ])
     });
-    if (this.readonly) {
+    if (this.readonly || this.isVisor) {
       form.disable();
     }
     return form;

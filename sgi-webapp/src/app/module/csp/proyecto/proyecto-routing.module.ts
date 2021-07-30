@@ -112,12 +112,20 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.HITOS,
         component: ProyectoHitosComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.SOCIOS,
         component: ProyectoSociosComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
@@ -132,7 +140,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.FASES,
         component: ProyectoPlazosComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.CONTEXTO_PROYECTO,
@@ -171,7 +183,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS,
         component: ProyectoHistoricoEstadosComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.CLASIFICACIONES,
@@ -181,39 +197,67 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.IDENTIFICACION,
         component: ProyectoProyectosSgeComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS,
         component: ProyectoPartidasPresupuestariasComponent,
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.AGRUPACIONES_GASTO,
         component: ProyectoAgrupacionesGastoComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
         component: ProyectoConceptosGastoComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO,
-        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD
+        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO,
-        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD
+        redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       },
       {
         path: PROYECTO_ROUTE_NAMES.PRESUPUESTO,
         component: ProyectoPresupuestoComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
       },
       {
         path: PROYECTO_ROUTE_NAMES.RESPONSABLE_ECONOMICO,
         component: ProyectoResponsableEconomicoComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
+        },
       }
     ]
   },

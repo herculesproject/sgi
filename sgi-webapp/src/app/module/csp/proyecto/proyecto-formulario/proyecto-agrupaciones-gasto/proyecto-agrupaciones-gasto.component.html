@@ -25,8 +25,8 @@
             [routerLink]="[wrapper.value.id]">
             <mat-icon color="primary">visibility</mat-icon>
           </button>
-          <button *ngIf="!this.formPart.readonly" mat-button matTooltip="{{'btn.delete' | translate}}"
-            (click)="deleteAgrupacion(wrapper)">
+          <button *ngIf="!this.formPart.readonly && !this.formPart.isVisor" mat-button
+            matTooltip="{{'btn.delete' | translate}}" (click)="deleteAgrupacion(wrapper)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </ng-container>
@@ -42,7 +42,7 @@
 
   <div class="separation-button" *ngIf="!formPart.readonly">
     <!-- Botón añadir Areas -->
-    <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]">
+    <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

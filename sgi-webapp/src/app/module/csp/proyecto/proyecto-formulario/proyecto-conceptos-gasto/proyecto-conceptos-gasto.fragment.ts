@@ -52,7 +52,8 @@ export class ProyectoConceptosGastoFragment extends FormFragment<ConceptoGastoLi
     private proyectoService: ProyectoService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private convocatoriaService: ConvocatoriaService,
-    public readonly: boolean
+    public readonly: boolean,
+    public isVisor: boolean,
   ) {
     super(key, true);
     this.setComplete(true);

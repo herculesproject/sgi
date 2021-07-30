@@ -45,7 +45,7 @@
 
   <div class="separation-button" *ngIf="!formPart.readonly">
     <!-- Botón añadir Areas -->
-    <button color="three" mat-button mat-raised-button (click)="openModal()">
+    <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

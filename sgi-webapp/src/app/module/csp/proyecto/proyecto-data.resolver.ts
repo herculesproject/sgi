@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Estado } from '@core/models/csp/estado-proyecto';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -19,7 +18,12 @@ export const PROYECTO_DATA_KEY = 'proyectoData';
 @Injectable()
 export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
 
-  constructor(logger: NGXLogger, router: Router, snackBar: SnackBarService, private service: ProyectoService) {
+  constructor(
+    logger: NGXLogger,
+    router: Router,
+    snackBar: SnackBarService,
+    private service: ProyectoService,
+    private authService: SgiAuthService) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
 
@@ -29,7 +33,8 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
         return {
           proyecto,
           disableCoordinadorExterno: false,
-          hasAnyProyectoSocioCoordinador: false
+          hasAnyProyectoSocioCoordinador: false,
+          isVisor: this.authService.hasAuthorityForAnyUO('CSP-PRO-V')
         } as IProyectoData;
       }),
       switchMap(data => {

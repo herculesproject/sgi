@@ -15,7 +15,8 @@ export class ProyectoAgrupacionGastoFragment extends Fragment {
     key: number,
     private proyectoService: ProyectoService,
     private proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
-    public readonly: boolean
+    public readonly: boolean,
+    public isVisor: boolean
   ) {
     super(key);
     this.setComplete(true);
