@@ -14,6 +14,7 @@ import { ViaProteccionService } from '@core/services/pii/via-proteccion/via-prot
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpProblem } from '@core/errors/http-problem';
+import { ViaProteccionModalComponent } from '../via-proteccion-modal/via-proteccion-modal.component';
 
 const MSG_ERROR = marker('error.load');
 const MSG_CREATE = marker('btn.add.entity');
@@ -280,6 +281,26 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
       panelClass: 'sgi-dialog-container',
       data: viaProteccion
     };
+    const dialogRef = this.matDialog.open(ViaProteccionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (result: IViaProteccion) => {
+        if (result) {
+          const subscription = viaProteccion ? this.viaProteccionService.update(viaProteccion.id, result) :
+            this.viaProteccionService.create(result);
+
+          subscription.subscribe(() => {
+            this.snackBarService.showSuccess(viaProteccion ? this.textUpdateSuccess : this.textCrearSuccess);
+            this.loadTable();
+          }, (error) => {
+            this.logger.error(error);
+            if (error instanceof HttpProblem) {
+              this.snackBarService.showError(error);
+            } else {
+              this.snackBarService.showError(viaProteccion ? this.textUpdateError : this.textCrearError);
+            }
+          });
+        }
+      });
   }
 
 }

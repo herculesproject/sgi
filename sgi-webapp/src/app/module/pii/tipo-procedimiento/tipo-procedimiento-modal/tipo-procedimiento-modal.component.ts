@@ -9,7 +9,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
-import { TipoProteccionActionService } from '../../tipo-proteccion/tipo-proteccion.action.service';
 
 const TIPO_PROCEDIMIENTO_KEY = marker('pii.tipo-procedimiento');
 const TIPO_PROCEDIMIENTO_NOMBRE_KEY = marker('pii.tipo-procedimiento.nombre');

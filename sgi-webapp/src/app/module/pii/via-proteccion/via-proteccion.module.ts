@@ -7,9 +7,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ViaProteccionRoutingModule } from './via-proteccion-routing.module';
+import { ViaProteccionModalComponent } from './via-proteccion-modal/via-proteccion-modal.component';
 
 @NgModule({
-  declarations: [ViaProteccionListadoComponent],
+  declarations: [ViaProteccionListadoComponent, ViaProteccionModalComponent],
   imports: [
     CommonModule,
     SharedModule,
