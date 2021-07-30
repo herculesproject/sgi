@@ -335,4 +335,41 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-informe_patentabilidad">
+    <insert tableName="informe_patentabilidad">
+      <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha" value="2021-06-28T18:00:00Z" />
+      <column name="nombre" value="Informe pantentabilidad 1 Invencion 1" />
+      <column name="documento_ref" value="1" />
+      <column name="resultado_informe_patentabilidad_id" value="1" />
+      <column name="entidad_creadora_ref" value="1" />
+      <column name="contacto_entidad_creadora" value="666666666" />
+      <column name="contacto_examinador" value="666666666" />
+      <column name="comentarios" value="El primer informe sobre la Invencion 1" />
+    </insert>
+    <insert tableName="informe_patentabilidad">
+      <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha" value="2021-07-09T18:00:00Z" />
+      <column name="nombre" value="Informe pantentabilidad 2 Invencion 1" />
+      <column name="documento_ref" value="2" />
+      <column name="resultado_informe_patentabilidad_id" value="2" />
+      <column name="entidad_creadora_ref" value="1" />
+      <column name="contacto_entidad_creadora" value="666666666" />
+      <column name="contacto_examinador" value="666666666" />
+    </insert>
+    <insert tableName="informe_patentabilidad">
+      <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha" value="2021-07-10T18:00:00Z" />
+      <column name="nombre" value="Informe pantentabilidad 3 Invencion 1" />
+      <column name="documento_ref" value="3" />
+      <column name="resultado_informe_patentabilidad_id" value="3" />
+      <column name="entidad_creadora_ref" value="2" />
+      <column name="contacto_entidad_creadora" value="666666666" />
+      <column name="contacto_examinador" value="666666666" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

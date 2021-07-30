@@ -9,15 +9,18 @@ import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
+import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
 import org.crue.hercules.sgi.pii.exceptions.NoRelatedEntitiesException;
+import org.crue.hercules.sgi.pii.model.InformePatentabilidad;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionAreaConocimiento;
 import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
 import org.crue.hercules.sgi.pii.service.InvencionAreaConocimientoService;
+import org.crue.hercules.sgi.pii.service.InformePatentabilidadService;
 import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.model.InvencionDocumento;
 import org.crue.hercules.sgi.pii.service.InvencionDocumentoService;
@@ -53,6 +56,7 @@ public class InvencionController {
   public static final String MAPPING = "/invenciones";
   public static final String PATH_SECTORES = "/{id}/sectoresaplicacion";
   public static final String PATH_AREAS = "/{id}/areasconocimiento";
+  public static final String PATH_INFORMESPATENTABILIDAD = "/{id}/informespatentabilidad";
 
   private ModelMapper modelMapper;
 
@@ -64,15 +68,20 @@ public class InvencionController {
   /** InvencionAreaConocimientoService service */
   private final InvencionAreaConocimientoService invencionAreaConocimientoService;
 
+  /** InformePatentabilidadService service */
+  private final InformePatentabilidadService informePatentabilidadService;
+
   public InvencionController(ModelMapper modelMapper, InvencionService invencionService,
       InvencionSectorAplicacionService invencionSectorAplicacionService,
       InvencionDocumentoService invencionDocumentoService,
-      InvencionAreaConocimientoService invencionAreaConocimientoService) {
+      InvencionAreaConocimientoService invencionAreaConocimientoService,
+      InformePatentabilidadService informePatentabilidadService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
     this.invencionSectorAplicacionService = invencionSectorAplicacionService;
     this.invencionDocumentoService = invencionDocumentoService;
     this.invencionAreaConocimientoService = invencionAreaConocimientoService;
+    this.informePatentabilidadService = informePatentabilidadService;
   }
 
   /**
@@ -296,6 +305,24 @@ public class InvencionController {
     return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
   }
 
+  /**
+   * Devuelve los {@link InformePatentabilidad} asociados a la {@link Invencion}
+   * con el id indicado
+   * 
+   * @param id Identificador de {@link Invencion}
+   * @return {@link InformePatentabilidad} correspondientes al id de la
+   *         {@link Invencion}
+   */
+  @GetMapping(PATH_INFORMESPATENTABILIDAD)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V')")
+  public List<InformePatentabilidadOutput> findInformesPatentabilidad(@PathVariable Long id) {
+    log.debug("findInformesPatentabilidad(@PathVariable Long id) - start");
+    List<InformePatentabilidadOutput> returnValue = convertInformesPatentabilidad(
+        informePatentabilidadService.findByInvencion(id));
+    log.debug("findInformesPatentabilidad(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
   private InvencionOutput convert(Invencion invencion) {
     return modelMapper.map(invencion, InvencionOutput.class);
   }
@@ -374,5 +401,13 @@ public class InvencionController {
   private List<InvencionAreaConocimiento> convertInvencionAreaConocimientoInputs(
       List<InvencionAreaConocimientoInput> inputs) {
     return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
+  }
+
+  private List<InformePatentabilidadOutput> convertInformesPatentabilidad(List<InformePatentabilidad> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private InformePatentabilidadOutput convert(InformePatentabilidad entity) {
+    return modelMapper.map(entity, InformePatentabilidadOutput.class);
   }
 }

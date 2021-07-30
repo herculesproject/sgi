@@ -31,8 +31,7 @@ public class TipoProteccionSpecifications {
    * Devuelve los {@link TipoProteccion} que son Subtipos del
    * {@link TipoProteccion} pasado por parámetros
    * 
-   * {@link Long} Id del {@link TipoProteccion} padre.
-   * 
+   * @param id {@link Long} Id del {@link TipoProteccion} padre.
    * @return Specification para obtener los {@link TipoProteccion} que son
    *         Subtipos del {@link TipoProteccion} pasado por parámetro.
    */

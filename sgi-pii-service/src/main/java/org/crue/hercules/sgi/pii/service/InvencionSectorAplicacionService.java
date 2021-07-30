@@ -41,12 +41,12 @@ public class InvencionSectorAplicacionService {
    *         {@link Invencion}.
    */
   public List<InvencionSectorAplicacion> findByInvencion(Long invencionId) {
-    log.debug("findByInvencion(Long requisitoIPId) - start");
+    log.debug("findByInvencion(Long invencionId) - start");
 
     Specification<InvencionSectorAplicacion> specs = InvencionSectorAplicacionSpecifications.byInvencionId(invencionId);
 
     List<InvencionSectorAplicacion> returnValue = repository.findAll(specs);
-    log.debug("findByInvencion(Long requisitoIPId) - end");
+    log.debug("findByInvencion(Long invencionId) - end");
     return returnValue;
   }
 
