@@ -88,6 +88,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-equipo_trabajo">
     <insert tableName="equipo_trabajo">
       <column name="id" valueSequenceNext="equipo_trabajo_seq" />
@@ -115,6 +116,7 @@
       <column name="persona_ref" value="22481020" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-retrospectiva">
     <insert tableName="retrospectiva">
       <column name="id" valueSequenceNext="retrospectiva_seq" />
@@ -122,6 +124,7 @@
       <column name="fecha_retrospectiva" value="2020-12-01T00:00:00Z" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-memoria">
     <insert tableName="memoria">
       <column name="id" valueSequenceNext="memoria_seq" />
@@ -179,6 +182,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-estado_memoria">
     <insert tableName="estado_memoria">
       <column name="id" valueSequenceNext="estado_memoria_seq" />
@@ -301,6 +305,7 @@
       <column name="fecha_estado" value="2019-06-15T00:00:00Z" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-evaluador">
     <insert tableName="evaluador">
       <column name="id" valueSequenceNext="evaluador_seq" />
@@ -380,6 +385,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-tarea">
     <insert tableName="tarea">
       <column name="id" valueSequenceNext="tarea_seq" />
@@ -421,6 +427,7 @@
       <column name="tarea" value="Tarea1" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-documentacion_memoria">
     <insert tableName="documentacion_memoria">
       <column name="id" valueSequenceNext="documentacion_memoria_seq" />
@@ -563,6 +570,7 @@
       <column name="nombre" value="Documento 7" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-convocatoria_reunion">
     <insert tableName="convocatoria_reunion">
       <column name="id" valueSequenceNext="convocatoria_reunion_seq" />
@@ -625,6 +633,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-acta">
     <insert tableName="acta">
       <column name="id" valueSequenceNext="acta_seq" />
@@ -679,6 +688,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-estado-acta">
     <insert tableName="estado_acta">
       <column name="id" valueSequenceNext="estado_acta_seq" />
@@ -717,6 +727,7 @@
       <column name="fecha_estado" value="2020-09-13T00:00:00Z" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-asistentes">
     <insert tableName="asistentes">
       <column name="id" valueSequenceNext="asistentes_seq" />
@@ -779,6 +790,7 @@
       <column name="asistencia" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-evaluacion">
     <insert tableName="evaluacion">
       <column name="id" valueSequenceNext="evaluacion_seq" />
@@ -832,6 +844,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-informe">
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
@@ -876,6 +889,7 @@
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-comentario">
     <insert tableName="comentario">
       <column name="id" valueSequenceNext="comentario_seq" />
@@ -918,344 +932,591 @@
       <column name="texto" value="Comentario4" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-respuesta">
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de seres humanos' and bloque_id=(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"justificacion": "Justificación de prueba"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_01.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos' and bloque_id=(select id from eti.bloque where orden = '2' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"equipoInvestigador": [ { "nombre": "nombre-005", "nif": "00000005M", "vinculacion": "PDI", "nivelAcademico": null, "tarea": "Tarea1", "experiencia": "Experiencia1" }, { "nombre": "nombre-007", "nif": "00000007F", "vinculacion": "PDI", "nivelAcademico": null, "tarea": "Tarea2", "experiencia": "Experiencia2" } ]} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_02.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Referencias de publicaciones científicas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"referenciasPublicaciones": "Referencias de publicaciones científicas"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_03.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Intervenciones o pruebas en seres humanos' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"intervencionesSeresHumanosRadio": "si", "intervencionesSeresHumanosCheck": [ "entrevistasEncuestas", "otras" ], "otrasTexto": "Otra intervención o prueba en seres humanos"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_04.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Proceso de reclutamiento' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_4_1": {"descripcionProcesoReclutamiento": "Proceso de reclutamiento", "fechaReclutamiento": "2020-10-29T00:00:00Z"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_05.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigado' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_4_2": {"reclutamientoPersonalAjenoRadio": "si", "tipoCompensacionRadio": "si", "tipoCompensacionTexto": "El reclutamiento recibe compensación especial"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_06.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Descripción de las intervenciones o pruebas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_4_3": {"descripcionIntervenciones": "Intervenciones de prueba"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_07.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos para la participación' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_4_4": {"incentivosParticipacionRadio": "si", "incentivosParticipacionTexto": "Se llevan un incentivo por participar"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_08.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Muestras biológicas de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"muestrasBiologicasRadio": "si", "muestrasBiologicasCheck": ["celulasgerminales"]} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_09.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Origen de las muestras' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_5_1": { "recogidasExpresamente": true, "recogidasApartirDeMuestras": true, "especificarRecogidasApartirDeMuestras": "Especificación de muestras recogidas de otro proceso", "procedentesBiobanco": true, "especificarProcedentesBiobanco": "Especificación de muestras procedentes de un biobanco", "procedentesColeccion": true, "especificarProcedentesColeccion": "Especificación de muestras procedentes de otra colección" }} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_10.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Destino de las muestras de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap3_5_2": { "destruccion": true, "especificarDestruccion": "Especificación de como se destruiran las muestras", "conservacion": true, "cesionBiobanco": true, "especificarCesionBiobanco": "Especificación de como se cederán las muestras a un biobanco", "usoColeccionMuestras": true, "especificarUsoColeccionMuestras": "Especificación de como se integraran las muestras en una colección", "incorporacionColeccionMuestras": true, "especificarIncorporacionColeccionMuestras": "Especificación de como se incorporaran las muestras a otra colección de muestras" }} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_11.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Datos de carácter personal' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"datosCaracterPersonalRadio": "si", "numeroRegistrosTratamientoDatos": "Registro 334747"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_12.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_1_1": { "tipoRiesgosOMolestiasCheck": [ "intromisionIntimidad" ] }} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_13.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Valoración de los riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_1_2": { "valoracionRiesgosMolestiasCheck": [ "riesgoSuperior"], "riesgoSuperiorTexto": "Justificación riesgo superior al mínimo"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_14.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Minimización del riesgo o molestias superiores al mínimo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_1_3": { "minimizacionRiesgo": "Mecanismos de reducción del riesgo"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_15.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aseguramiento del daño' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_1_4": { "aseguramientoDanoRadio": "si", "numPoliza": "POLIZA-3443"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_16.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Selección equitativa de la muestra' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"equitativaMuestra": "Justificación selección equitativa de la muestra"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_17.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de grupos vulnerables' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"gruposVulnerablesRadio": "si", "especificarColectivoVulnerables": "Colectivo de personas vulnerables", "justificarPersonasMenosVulnerables": "Justifación de no utilizar personas menos vulnerables", "especificarBeneficiosInvestigacionVulnerables": "Beneficios de la investigación con personas vulnerables"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_18.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Información y consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"informacionConsentimientoRadio": "si", "informacionConsentimientoMotivoTexto": "Motivo por el que se solicita consentimiento"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_19.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_4_1": { "tipoConsentimientoCheck": [ "cesion" ]}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_20.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudios genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"estudiosGeneticosRadio": "si", "pruebaPredectivaRadio": "otra", "otraPruebaPredictiva": "Otra prueba predictiva", "finesRadio": "otros", "otrosFines": "Otro fin" } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_21.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Resultado del estudio genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_5_1": { "resultadoEstudioGeneticoRadio": "si", "especificarResultadoEstudioGenetico": "Información relevante del estudio genético"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_22.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Consejo genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_5_2": { "proporcionarConsejoGeneticoRadio": "si", "personaExpertaConsejoGeneticoRadio": "si", "documentoConsejoGeneticoRadio": "si"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_23.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='No discriminación por motivos genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_5_3": { "noDiscriminacionMotivosGeneticos": "Medidas de prevención de la discriminación por motivos genéticos"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_24.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudiantes como sujetos de investigación' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"estudiantesSujetosInvestigacionRadio": "si", "especificarEstudiantesSujetosInvestigacion": "Estudiantes de la facultad de medicina", "justificarEstudiantesSujetosInvestigacion": "Justificación de estudiantes como sujetos de investigación"} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_25.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de estudiantes' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_1": { "justificacionUsoEstudiantesRadio": "no", "motivosNoPlanteamientoSustitucion": "Motivo por el que los estudiantes no son un grupo especifico"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_26.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Beneficio formativo para el estudiante' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_2": { "beneficioFormativoEstudianteRadio": "si", "especificarBeneficioFormativo": "Beneficio del estudiante"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_27.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Vinculación académica con el equipo investigador' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_3": { "vinculacionAcademicaEquipoInvestigadorRadio": "si", "especificarVinculacion": "Vinculación academica con la investigación", "calificacionEstudiantesRadio": "no", "medidasEspecialesEquipoInvestigadorRadio": "otras","especificarOtras": "Medidas especiales para la protección de la voluntariedad de los alumnos"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_28.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos académicos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_4": { "incentivosAcademicosRadio": "si", "describirIncentivos": "Incentivos académicos"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_29.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Uso de tiempo lectivo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_5": { "usoTiempoLectivoRadio": "si", "horarioYduracion": "Horario lectivo"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_30.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Actividades alternativas' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_6": { "actividadesAlternativas": "Actividades alternativas"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_31.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de la privacidad' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"ap4_6_7": { "proteccionPrivacidad": "Medidas de protección de la privacidad"}} ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_32.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de consentimiento' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="4" />
-      <column name="valor">
-        <![CDATA[ { "documentoConsentimiento": 4 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_33.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de cesión de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="5" />
-      <column name="valor">
-        <![CDATA[ {"documentoCesion": 5 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_34.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de autorización' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="6" />
-      <column name="valor">
-        <![CDATA[ {"documentoAutorizacion": 6 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_35.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de aceptación de colaboración' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="7" />
-      <column name="valor">
-        <![CDATA[ {"documentoAceptacionColaboracion": 7 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_36.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Informe de la Comisión de Garantías' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="8" />
-      <column name="valor">
-        <![CDATA[ {"informeComisionGarantiasRadio": 8 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_37.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Acuerdo de transferencia de muestras' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="9" />
-      <column name="valor">
-        <![CDATA[ {"acuerdoTransferenciaMuestras": 9 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_38.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de registro de tratamiento de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="10" />
-      <column name="valor">
-        <![CDATA[ {"documentoRegistroTratamientoDatos": 10 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_39.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documentación adicional' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="11" />
-      <column name="valor">
-        <![CDATA[ {"documentacionAdicional": 11 } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_40.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
+
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aclaraciones al comité' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor">
-        <![CDATA[ {"aclaracionesComite": "Aclaraciones al comité" } ]]>
-      </column>
+      <column name="valor" value="" />
     </insert>
+    <update tableName="respuesta">
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_41.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueSequenceCurrent="respuesta_seq" />
+      </whereParams>
+    </update>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-conflicto_interes">
     <insert tableName="conflicto_interes">
       <column name="id" valueSequenceNext="conflicto_interes_seq" />
