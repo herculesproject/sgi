@@ -1,18 +1,20 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IInvencion } from "@core/models/pii/invencion";
 import { IInvencionAreaConocimiento } from "@core/models/pii/invencion-area-conocimiento";
+import { IInvencionDocumento } from "@core/models/pii/invencion-documento";
 import { IInvencionSectorAplicacion } from "@core/models/pii/invencion-sector-aplicacion";
 import { ISectorAplicacion } from "@core/models/pii/sector-aplicacion";
 import { IAreaConocimiento } from "@core/models/sgo/area-conocimiento";
 import { FormFragment } from "@core/services/action-service";
 import { ProyectoService } from "@core/services/csp/proyecto.service";
+import { InvencionDocumentoService } from "@core/services/pii/invencion/invencion-documento/invencion-documento.service";
 import { InvencionService } from "@core/services/pii/invencion/invencion.service";
 import { AreaConocimientoService } from "@core/services/sgo/area-conocimiento.service";
 import { StatusWrapper } from "@core/utils/status-wrapper";
 import { DateTime } from "luxon";
 import { NGXLogger } from "ngx-logger";
 import { BehaviorSubject, EMPTY, forkJoin, from, Observable, of, Subject } from "rxjs";
-import { catchError, concatMap, map, mergeMap, switchMap, take, takeLast, tap } from "rxjs/operators";
+import { catchError, map, mergeMap, switchMap, take, takeLast, tap } from "rxjs/operators";
 
 export interface IInvencionAreaConocimientoListado extends IInvencionAreaConocimiento {
   niveles: IAreaConocimiento[];
@@ -23,17 +25,25 @@ export interface IInvencionAreaConocimientoListado extends IInvencionAreaConocim
 interface IInvencionDatosGeneralesFragmentStatus {
   hasChangesSectoresAplicacion: boolean;
   hasChangesAreasConocimiento: boolean;
+  hasChangesDocumentos?: boolean;
 }
 
-const FRAGMENT_STATUS_INITIAL_DATA: IInvencionDatosGeneralesFragmentStatus = {
+const CREATE_FRAGMENT_STATUS_INITIAL_DATA: IInvencionDatosGeneralesFragmentStatus = {
   hasChangesSectoresAplicacion: false,
-  hasChangesAreasConocimiento: false
+  hasChangesAreasConocimiento: false,
+  hasChangesDocumentos: false,
+} as const;
+
+const EDIT_FRAGMENT_STATUS_INITIAL_DATA: IInvencionDatosGeneralesFragmentStatus = {
+  hasChangesSectoresAplicacion: false,
+  hasChangesAreasConocimiento: false,
 } as const;
 
 export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
   private sectoresAplicacion$ = new BehaviorSubject<StatusWrapper<IInvencionSectorAplicacion>[]>([]);
   private areasConocimiento$ = new BehaviorSubject<StatusWrapper<IInvencionAreaConocimientoListado>[]>([]);
+  private documentos$ = new BehaviorSubject<StatusWrapper<IInvencionDocumento>[]>([]);
   private invencion: IInvencion;
   private fragmentStatus: IInvencionDatosGeneralesFragmentStatus;
 
@@ -43,12 +53,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     private readonly invencionService: InvencionService,
     private readonly proyectoService: ProyectoService,
     private readonly areaConocimientoService: AreaConocimientoService,
+    private readonly invencionDocumentoService: InvencionDocumentoService,
     private readonly isEditPerm: boolean
   ) {
     super(key, true);
     this.invencion = {} as IInvencion;
     this.invencion.activo = true;
-    this.fragmentStatus = FRAGMENT_STATUS_INITIAL_DATA;
+    this.fragmentStatus = this.isEdit() ? EDIT_FRAGMENT_STATUS_INITIAL_DATA : CREATE_FRAGMENT_STATUS_INITIAL_DATA;
   }
 
   protected buildFormGroup(): FormGroup {
@@ -204,6 +215,10 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     return this.areasConocimiento$.asObservable();
   }
 
+  getDocumentos$(): Observable<StatusWrapper<IInvencionDocumento>[]> {
+    return this.documentos$.asObservable();
+  }
+
   saveOrUpdate(): Observable<string | number | void> {
     const invencion = this.getValue();
     const observable$ = this.isEdit() ? this.update(invencion) : this.create(invencion);
@@ -226,13 +241,19 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
     if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesSectoresAplicacion")) {
       cascade = cascade.pipe(
-        concatMap((createdInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(createdInvencion))
+        mergeMap((createdInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(createdInvencion))
       );
     }
 
     if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesAreasConocimiento")) {
       cascade = cascade.pipe(
-        concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
+        mergeMap((createdInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(createdInvencion))
+      );
+    }
+
+    if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesDocumentos")) {
+      cascade = cascade.pipe(
+        mergeMap((createdInvencion: IInvencion) => this.saveDocumento(createdInvencion))
       );
     }
 
@@ -253,13 +274,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
 
     if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesSectoresAplicacion")) {
       cascade = cascade.pipe(
-        concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(updatedInvencion))
+        mergeMap((updatedInvencion: IInvencion) => this.saveOrUpdateSectoresAplicacion(updatedInvencion))
       );
     }
 
     if (this.hasChangesInvecionDatosGeneralesFragmentPart("hasChangesAreasConocimiento")) {
       cascade = cascade.pipe(
-        concatMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
+        mergeMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
       );
     }
 
@@ -340,7 +361,28 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       );
   }
 
-  addSectorAplicacion(sectorAplicacion: ISectorAplicacion) {
+  private saveDocumento(invencion: IInvencion): Observable<IInvencion> {
+    const values = this.documentos$.value.map(wrapper => {
+      wrapper.value.invencionId = invencion.id;
+      return wrapper.value;
+    }
+    );
+
+    return from(values)
+      .pipe(
+        mergeMap(
+          (invencionDocumento) => this.invencionDocumentoService.create(invencionDocumento)
+            .pipe(
+              catchError(() => of(void 0))
+            )
+        ),
+        takeLast(1),
+        tap(() => this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: false })),
+        switchMap(() => of(invencion))
+      );
+  }
+
+  addSectorAplicacion(sectorAplicacion: ISectorAplicacion): void {
     if (sectorAplicacion) {
       const invencionSectorAplicacion = {
         sectorAplicacion
@@ -401,7 +443,32 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     }
   }
 
-  setChangesInvencionDatosGeneralesFragment(status: Partial<IInvencionDatosGeneralesFragmentStatus> = {}): void {
+  addDocumento(invencionDocumento: IInvencionDocumento): void {
+    const wrapped = new StatusWrapper<IInvencionDocumento>(invencionDocumento);
+    wrapped.setCreated();
+    const current = this.documentos$.value;
+    current.push(wrapped);
+    this.documentos$.next(current);
+    this.checkComplete();
+    this.setChangesInvencionDatosGeneralesFragment({ hasChangesDocumentos: true });
+  }
+
+  deleteDocumento(wrapper: StatusWrapper<IInvencionDocumento>): void {
+    const current = this.documentos$.value;
+    const index = current.findIndex(
+      (value) => value === wrapper
+    );
+    if (index >= 0) {
+      current.splice(index, 1);
+      this.documentos$.next(current);
+      if (!current.length) {
+        this.checkComplete();
+      }
+      this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: true });
+    }
+  }
+
+  private setChangesInvencionDatosGeneralesFragment(status: Partial<IInvencionDatosGeneralesFragmentStatus> = {}): void {
     this.fragmentStatus = { ...this.fragmentStatus, ...status };
     this.setChanges(this.hasChangesInvecionDatosGeneralesFragment());
   }
@@ -414,13 +481,21 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     return this.fragmentStatus[key];
   }
 
-  private checkComplete() {
+  private checkComplete(): void {
     const isComplete = this.hasInvencionRequiredElemenmts();
     this.setComplete(isComplete);
     this.setErrors(!isComplete);
   }
 
-  private hasInvencionRequiredElemenmts() {
+  private hasInvencionRequiredElemenmts(): boolean {
+    return this.isEdit() ? this.hasInvencionEditingRequiredElements() : this.hasInvencionCreationRequiredElements();
+  }
+
+  private hasInvencionCreationRequiredElements(): boolean {
+    return this.sectoresAplicacion$.value.length > 0 && this.areasConocimiento$.value.length > 0 && this.documentos$.value.length > 0;
+  }
+
+  private hasInvencionEditingRequiredElements(): boolean {
     return this.sectoresAplicacion$.value.length > 0 && this.areasConocimiento$.value.length > 0;
   }
 }

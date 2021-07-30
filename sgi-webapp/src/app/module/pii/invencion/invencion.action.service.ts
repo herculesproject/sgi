@@ -54,7 +54,7 @@ export class InvencionActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService, this.canEdit);
+    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService, invencionDocumentoService, this.canEdit);
 
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

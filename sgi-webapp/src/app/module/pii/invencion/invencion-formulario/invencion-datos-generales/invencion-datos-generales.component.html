@@ -160,7 +160,7 @@
       <h2>{{'pii.invencion.area-procedencia' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
 
       <table class="mat-elevation-z8 table-areas-conocimiento" mat-table [dataSource]="areaConocimientoDataSource"
-        matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+        matSort matSortActive="id" matSortDirection="asc" matSortDisableClear #sortAreaConocimiento="matSort">
 
         <!-- Niveles Column -->
         <ng-container matColumnDef="niveles">
@@ -207,6 +207,69 @@
 
       <mat-error *ngIf="showAreaConocimientoErrorMsg">
         {{'error.required.element' | translate:msgParamAreaConocimientoEntity}}
+      </mat-error>
+
+    </section>
+
+    <!-- Documentación de comunicación de invención -->
+    <section class="invencion-documentos" *ngIf="!isEdit">
+
+      <h2>{{'pii.invencion.documentacion-comunicacion' | translate}}</h2>
+
+      <table class="mat-elevation-z8 table-documentos" mat-table [dataSource]="documentoDataSource" matSort
+        matSortActive="id" matSortDirection="asc" matSortDisableClear #sortDocumento="matSort">
+
+        <!-- Fecha de Añadido Column -->
+        <ng-container matColumnDef="fechaAnadido">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'pii.invencion.documentacion-comunicacion.fechaAnadido' | translate}} </th>
+          <td mat-cell *matCellDef="let wrapper">
+            {{wrapper.value?.fechaAnadido | luxon:'shortDate'}}
+          </td>
+        </ng-container>
+
+        <!-- Nombre Column -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'pii.invencion.documentacion-comunicacion.nombre' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.nombre}} </td>
+        </ng-container>
+
+        <!-- Fichero Column -->
+        <ng-container matColumnDef="fichero">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{'pii.invencion.documentacion-comunicacion.fichero' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.documento?.nombre}} </td>
+        </ng-container>
+
+        <!-- Acciones  Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+          <td mat-cell *matCellDef="let wrapper">
+            <ng-container>
+              <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteDocumento(wrapper)">
+                <mat-icon color="warn">highlight_off</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsDocumento"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsDocumento;"></tr>
+
+      </table>
+
+      <div class="separation-button">
+        <!-- Botón añadir Areas -->
+        <button color="three" mat-button mat-raised-button (click)="openModalDocumento()">
+          <mat-icon color="accent">add_circle</mat-icon>
+          {{ 'btn.add.entity' | translate:msgParamDocumentoComunicacionEntity }}
+        </button>
+      </div>
+
+      <mat-error *ngIf="showDocumentosErrorMsg">
+        {{'error.required.element' | translate:msgParamDocumentoComunicacionEntity}}
       </mat-error>
 
     </section>

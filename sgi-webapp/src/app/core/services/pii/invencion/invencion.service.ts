@@ -83,6 +83,22 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
+   * Activar la invención
+   * @param options id de la invención.
+   */
+  activar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/activar`, { id });
+  }
+
+  /**
+   * Desactivar la invención
+   * @param options id de la invención.
+   */
+  desactivar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, { id });
+  }
+
+  /**
    * Comprueba si existe una invencion
    *
    * @param id Id de la invencion

@@ -6,18 +6,23 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencion } from '@core/models/pii/invencion';
+import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { DateTime } from 'luxon';
 import { Observable, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AreaConocimientoDataModal, AreaConocimientoModalComponent } from 'src/app/esb/sgo/shared/area-conocimiento-modal/area-conocimiento-modal.component';
 import { InvencionActionService } from '../../invencion.action.service';
+import { InvencionDocumentoModalComponent } from '../../modals/invencion-documento-modal/invencion-documento-modal.component';
 import { SectorAplicacionModalComponent, SectorAplicacionModalData } from '../../modals/sector-aplicacion-modal/sector-aplicacion-modal.component';
 import { IInvencionAreaConocimientoListado, InvencionDatosGeneralesFragment } from './invencion-datos-generales.fragment';
 
@@ -29,6 +34,8 @@ const INVENCION_TIPOPROTECCION_KEY = marker('pii.invencion.tipo-proteccion');
 const INVENCION_COMENTARIOS_KEY = marker('pii.invencion.comentarios');
 const SECTOR_APLICACION_KEY = marker('pii.sector-aplicacion');
 const AREA_PROCEDENCIA_KEY = marker('pii.invencion.area-procedencia');
+const DOCUMENTO_COMUNICACION_KEY = marker('pii.invencion.documentacion-comunicacion');
+const MSG_DELETE_FILE_ERROR = marker('error.file.delete');
 
 @Component({
   selector: 'sgi-invencion-datos-generales',
@@ -52,10 +59,13 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
   msgParamComentariosEntity = {};
   msgParamSectorAplicacionEntity = {};
   msgParamAreaConocimientoEntity = {};
+  msgParamDocumentoComunicacionEntity = {};
   textoDeleteSectorAplicacion: string;
   textoDeleteAreaConocimiento: string;
+  textoDeleteDocumento: string;
   showSectorAplicacionErrorMsg: boolean;
   showAreaConocimientoErrorMsg: boolean;
+  showDocumentosErrorMsg: boolean;
 
   sectorAplicacionDataSource = new MatTableDataSource<StatusWrapper<IInvencionSectorAplicacion>>();
   displayedColumnsSectorAplicacion = ['sector', 'acciones'];
@@ -64,6 +74,10 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
   areaConocimientoDataSource = new MatTableDataSource<StatusWrapper<IInvencionAreaConocimientoListado>>();
   displayedColumnsAreaConocimiento = ['niveles', 'nivelSeleccionado', 'acciones'];
   @ViewChild('sortAreaConocimiento', { static: true }) sortAreaConocimiento: MatSort;
+
+  documentoDataSource = new MatTableDataSource<StatusWrapper<IInvencionDocumento>>();
+  displayedColumnsDocumento = ['fechaAnadido', 'nombre', 'fichero', 'acciones'];
+  @ViewChild('sortDocumento', { static: true }) sortDocumento: MatSort;
 
   readonly tiposProteccion$: Observable<ITipoProteccion[]>;
   subtiposProteccion$: Observable<ITipoProteccion[]>;
@@ -82,6 +96,8 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     private readonly tipoProteccionService: TipoProteccionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
+    private readonly documentoService: DocumentoService,
+    private readonly snackBar: SnackBarService,
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as InvencionDatosGeneralesFragment;
@@ -94,8 +110,10 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     this.setupI18N();
     this.configSectorAplicacionSort();
     this.configAreaConocimientoSort();
+    this.configDocumentoSort()
     this.subscribeToSectoresAplicacion();
     this.subscribeToAreasConocimiento();
+    this.subscribeToDocumentos();
     this.subtiposProteccion$ = this.formGroup.controls.tipoProteccion.valueChanges.pipe(
       tap(_ => this.resetSubtipoProteccionControl()),
       switchMap(
@@ -125,6 +143,16 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
       )
       .subscribe(elements => {
         this.areaConocimientoDataSource.data = elements;
+      }));
+  }
+
+  private subscribeToDocumentos(): void {
+    this.subscriptions.push(this.formPart.getDocumentos$()
+      .pipe(
+        tap(elements => this.showDocumentosErrorMsg = elements.length === 0)
+      )
+      .subscribe(elements => {
+        this.documentoDataSource.data = elements;
       }));
   }
 
@@ -158,6 +186,23 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
         }
       };
     this.areaConocimientoDataSource.sort = this.sortAreaConocimiento;
+  }
+
+  private configDocumentoSort(): void {
+    this.documentoDataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IInvencionDocumento>, property: string) => {
+        switch (property) {
+          case 'fechaAnadido':
+            return wrapper.value.fechaAnadido;
+          case 'nombre':
+            return wrapper.value.nombre;
+          case 'fichero':
+            return wrapper.value.documento.nombre;
+          default:
+            return wrapper[property];
+        }
+      };
+    this.documentoDataSource.sort = this.sortAreaConocimiento;
   }
 
   /**
@@ -216,8 +261,8 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
   }
 
   /**
- * Apertura de modal de Areas Conocimiento 
- */
+   * Apertura de modal de Areas Conocimiento 
+   */
   openModalAreaConocimiento(): void {
     const data: AreaConocimientoDataModal = {
       selectedAreasConocimiento: this.areaConocimientoDataSource.data.map(wrapper => wrapper.value.nivelSeleccionado),
@@ -232,6 +277,43 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
       (areas) => {
         if (areas && areas.length > 0) {
           this.formPart.addAreaConocimiento(areas);
+        }
+      }
+    );
+  }
+
+  /**
+   * Eliminar Documento de la Invencion
+   * @param wrapper el documento
+   */
+  deleteDocumento(wrapper: StatusWrapper<IInvencionDocumento>): void {
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(this.textoDeleteDocumento)
+        .pipe(
+          filter(aceptado => aceptado),
+          mergeMap(() => this.documentoService.eliminarFichero(wrapper.value.documento.documentoRef))
+        ).subscribe(
+          () => {
+            this.formPart.deleteDocumento(wrapper);
+          },
+          () => this.snackBar.showError(MSG_DELETE_FILE_ERROR)
+        )
+    );
+  }
+
+  /**
+   * Apertura de modal de Documentos
+   */
+  openModalDocumento(): void {
+    const config = {
+      panelClass: 'sgi-dialog-container',
+    };
+    const dialogRef = this.matDialog.open(InvencionDocumentoModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (result: IInvencionDocumento) => {
+        if (result) {
+          result.fechaAnadido = DateTime.now();
+          this.formPart.addDocumento(result);
         }
       }
     );
@@ -288,6 +370,18 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
         ).subscribe((valueDelete) => this.textoDeleteAreaConocimiento = valueDelete);
       }
     );
+
+    this.translate.get(
+      DOCUMENTO_COMUNICACION_KEY
+    ).subscribe((value) => {
+      this.msgParamDocumentoComunicacionEntity = {
+        entity: value, ...MSG_PARAMS.GENDER.FEMALE
+      };
+      this.translate.get(
+        MSG_DELETE_KEY,
+        { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+      ).subscribe((valueDelete) => this.textoDeleteDocumento = valueDelete);
+    });
   }
 
   private initFlexProperties() {
