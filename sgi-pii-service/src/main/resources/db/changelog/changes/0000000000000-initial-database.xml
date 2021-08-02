@@ -25,15 +25,21 @@
         <createSequence incrementBy="1" sequenceName="sector_aplicacion_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-9">
-        <createSequence incrementBy="1" sequenceName="tipo_procedimiento_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="solicitud_proteccion_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-10">
-        <createSequence incrementBy="1" sequenceName="tipo_proteccion_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="tipo_caducidad_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-11">
-        <createSequence incrementBy="1" sequenceName="via_proteccion_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="tipo_procedimiento_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-12">
+        <createSequence incrementBy="1" sequenceName="tipo_proteccion_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-13">
+        <createSequence incrementBy="1" sequenceName="via_proteccion_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-14">
         <createTable tableName="informe_patentabilidad">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="informe_patentabilidadPK"/>
@@ -69,7 +75,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-13">
+    <changeSet author="user (generated)" id="0000000000000-15">
         <createTable tableName="invencion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencionPK"/>
@@ -97,7 +103,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-14">
+    <changeSet author="user (generated)" id="0000000000000-16">
         <createTable tableName="invencion_area_conocimiento">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_area_conocimientoPK"/>
@@ -114,7 +120,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-15">
+    <changeSet author="user (generated)" id="0000000000000-17">
         <createTable tableName="invencion_documento">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_documentoPK"/>
@@ -137,7 +143,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-16">
+    <changeSet author="user (generated)" id="0000000000000-18">
         <createTable tableName="invencion_inventor">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_inventorPK"/>
@@ -157,7 +163,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-17">
+    <changeSet author="user (generated)" id="0000000000000-19">
         <createTable tableName="invencion_sector_aplicacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="invencion_sector_aplicacionPK"/>
@@ -174,7 +180,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-18">
+    <changeSet author="user (generated)" id="0000000000000-20">
         <createTable tableName="resultado_informe_patentabilidad">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="resultado_informe_patentabilidadPK"/>
@@ -192,7 +198,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-19">
+    <changeSet author="user (generated)" id="0000000000000-21">
         <createTable tableName="sector_aplicacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="sector_aplicacionPK"/>
@@ -212,7 +218,60 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-20">
+    <changeSet author="user (generated)" id="0000000000000-22">
+        <createTable tableName="solicitud_proteccion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_proteccionPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="agente_propiedad_ref" type="VARCHAR(255)"/>
+            <column name="comentarios" type="VARCHAR(500)"/>
+            <column name="estado" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_caducidad" type="date"/>
+            <column name="fecha_concesion" type="date"/>
+            <column name="fecha_fin_prior_pres_fas_nac_rec" type="date"/>
+            <column name="fecha_prioridad_solicitud" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_publicacioin" type="date"/>
+            <column name="numero_concesion" type="VARCHAR(24)"/>
+            <column name="numero_publicacion" type="VARCHAR(24)"/>
+            <column name="numero_registro" type="VARCHAR(24)"/>
+            <column name="numero_solicitud" type="VARCHAR(24)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pais_proteccion_ref" type="VARCHAR(255)"/>
+            <column name="titulo" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invencion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_caducidad_id" type="BIGINT"/>
+            <column name="via_proteccion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-23">
+        <createTable tableName="tipo_caducidad">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_caducidadPK"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-24">
         <createTable tableName="tipo_procedimiento">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_procedimientoPK"/>
@@ -230,7 +289,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-21">
+    <changeSet author="user (generated)" id="0000000000000-25">
         <createTable tableName="tipo_proteccion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_proteccionPK"/>
@@ -252,7 +311,7 @@
             <column name="tipo_proteccion_padre_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-22">
+    <changeSet author="user (generated)" id="0000000000000-26">
         <createTable tableName="via_proteccion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="via_proteccionPK"/>
@@ -275,31 +334,40 @@
             <column name="varios_paises" type="BOOLEAN"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-23">
+    <changeSet author="user (generated)" id="0000000000000-27">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="informe_patentabilidad" constraintName="FK_INFORMEPATENTABILIDAD_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-24">
+    <changeSet author="user (generated)" id="0000000000000-28">
         <addForeignKeyConstraint baseColumnNames="resultado_informe_patentabilidad_id" baseTableName="informe_patentabilidad" constraintName="FK_INFORMEPATENTABILIDAD_RESULTADOINFORMEPATENTABILIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="resultado_informe_patentabilidad" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-25">
+    <changeSet author="user (generated)" id="0000000000000-29">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_area_conocimiento" constraintName="FK_INVENCIONAREACONOCIMIENTO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-26">
+    <changeSet author="user (generated)" id="0000000000000-30">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_documento" constraintName="FK_INVENCIONDOCUMENTO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-27">
+    <changeSet author="user (generated)" id="0000000000000-31">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_inventor" constraintName="FK_INVENCIONINVENTOR_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-28">
+    <changeSet author="user (generated)" id="0000000000000-32">
         <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_sector_aplicacion" constraintName="FK_INVENCIONSECTORAPLICACION_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-29">
+    <changeSet author="user (generated)" id="0000000000000-33">
         <addForeignKeyConstraint baseColumnNames="sector_aplicacion_id" baseTableName="invencion_sector_aplicacion" constraintName="FK_INVENCIONSECTORAPLICACION_SECTORAPLICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sector_aplicacion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-30">
+    <changeSet author="user (generated)" id="0000000000000-34">
         <addForeignKeyConstraint baseColumnNames="tipo_proteccion_id" baseTableName="invencion" constraintName="FK_INVENCION_TIPOPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_proteccion" validate="true"/>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-31">
+    <changeSet author="user (generated)" id="0000000000000-35">
+        <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="solicitud_proteccion" constraintName="FK_SOLICITUDPROTECCION_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-36">
+        <addForeignKeyConstraint baseColumnNames="tipo_caducidad_id" baseTableName="solicitud_proteccion" constraintName="FK_SOLICITUDPROTECCION_TIPOCADUCIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_caducidad" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-37">
+        <addForeignKeyConstraint baseColumnNames="via_proteccion_id" baseTableName="solicitud_proteccion" constraintName="FK_SOLICITUDPROTECCION_VIAPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="via_proteccion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-38">
         <addForeignKeyConstraint baseColumnNames="tipo_proteccion_padre_id" baseTableName="tipo_proteccion" constraintName="FK_TIPO_PROTECCION_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_proteccion" validate="true"/>
     </changeSet>
 </databaseChangeLog>

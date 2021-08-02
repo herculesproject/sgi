@@ -117,9 +117,9 @@ public class ViaProteccionController {
   }
 
   private ViaProteccion convert(Long id, ViaProteccionInput viaProteccionInput) {
-    ViaProteccion TipoProcedimiento = modelMapper.map(viaProteccionInput, ViaProteccion.class);
-    TipoProcedimiento.setId(id);
-    return TipoProcedimiento;
+    ViaProteccion viaProteccion = modelMapper.map(viaProteccionInput, ViaProteccion.class);
+    viaProteccion.setId(id);
+    return viaProteccion;
   }
 
   private Page<ViaProteccionOutput> convert(Page<ViaProteccion> page) {

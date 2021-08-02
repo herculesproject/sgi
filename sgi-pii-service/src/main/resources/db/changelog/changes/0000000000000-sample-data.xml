@@ -274,7 +274,7 @@
       <column name="id" valueSequenceNext="via_proteccion_seq" />
       <column name="nombre" value="Europea" />
       <column name="descripcion" value="Tipo de vía de protección en Europa" />
-      <column name="tipo_propiedad" value="INTELECTUAL" />
+      <column name="tipo_propiedad" value="INDUSTRIAL" />
       <column name="meses_prioridad" value="1" />
       <column name="pais_especifico" valueBoolean="false" />
       <column name="extension_internacional" valueBoolean="false" />
@@ -372,4 +372,60 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-tipo_caducidad">
+    <insert tableName="tipo_caducidad">
+      <column name="id" valueSequenceNext="tipo_caducidad_seq" />
+      <column name="descripcion" value="Tipo caducidad 1" />
+    </insert>
+    <insert tableName="tipo_caducidad">
+      <column name="id" valueSequenceNext="tipo_caducidad_seq" />
+      <column name="descripcion" value="Tipo caducidad 2" />
+    </insert>
+  </changeSet>
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proteccion">
+    <insert tableName="solicitud_proteccion">
+      <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
+      <column name="titulo" value="Solicitud Proteccion Test 1" />
+      <column name="via_proteccion_id" value="1" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha_fin_prior_pres_fas_nac_rec" value="2021-07-22" />
+      <column name="fecha_prioridad_solicitud" value="2020-07-22" />
+      <column name="numero_solicitud" value="P123456" />
+      <column name="numero_publicacion" value="ES12345" />
+      <column name="estado" value="PUBLICADA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="solicitud_proteccion">
+      <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
+      <column name="titulo" value="Solicitud Proteccion Test 2" />
+      <column name="via_proteccion_id" value="3" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha_prioridad_solicitud" value="2021-07-22" />
+      <column name="numero_solicitud" value="EP123456" />
+      <column name="estado" value="SOLICITADA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="solicitud_proteccion">
+      <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
+      <column name="titulo" value="Solicitud Proteccion Test 2" />
+      <column name="via_proteccion_id" value="7" />
+      <column name="invencion_id" value="1" />
+      <column name="fecha_prioridad_solicitud" value="2021-07-22" />
+      <column name="numero_solicitud" value="SOL123456" />
+      <column name="estado" value="SOLICITADA" />
+      <column name="numero_registro" value="RII123456" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="solicitud_proteccion">
+      <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
+      <column name="titulo" value="Solicitud Proteccion Test 4 INTELECTUAL" />
+      <column name="via_proteccion_id" value="6" />
+      <column name="invencion_id" value="4" />
+      <column name="fecha_prioridad_solicitud" value="2021-07-23" />
+      <column name="numero_solicitud" value="SOL123458" />
+      <column name="estado" value="SOLICITADA" />
+      <column name="numero_registro" value="RII123459" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

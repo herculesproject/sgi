@@ -21,8 +21,8 @@ public class InvencionDocumentoService {
   /**
    * Devuelve una página de objetos {@link InvencionDocumento}
    * 
-   * @param invencionId
-   * @param pageable
+   * @param invencionId id de la invención
+   * @param pageable    objeto descriptor de la paginación
    * @return pagina de entidades {@link InvencionDocumento}
    */
   public Page<InvencionDocumento> findByInvencionId(Long invencionId, Pageable pageable) {
@@ -48,7 +48,8 @@ public class InvencionDocumentoService {
   /**
    * Actualiza un objeto de tipo {@link InvencionDocumento}
    * 
-   * @param invencionDocumento
+   * @param invencionDocumento objeto de tipo {@link InvencionDocumento} a
+   *                           actualizar
    * @return {@link InvencionDocumento} actualizado.
    */
   public InvencionDocumento update(InvencionDocumento invencionDocumento) {

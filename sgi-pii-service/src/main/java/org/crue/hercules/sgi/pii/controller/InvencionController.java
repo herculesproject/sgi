@@ -6,25 +6,28 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
+import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
-import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
+import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
 import org.crue.hercules.sgi.pii.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.pii.model.InformePatentabilidad;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionAreaConocimiento;
-import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
-import org.crue.hercules.sgi.pii.service.InvencionAreaConocimientoService;
-import org.crue.hercules.sgi.pii.service.InformePatentabilidadService;
-import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.model.InvencionDocumento;
+import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
+import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
+import org.crue.hercules.sgi.pii.service.InformePatentabilidadService;
+import org.crue.hercules.sgi.pii.service.InvencionAreaConocimientoService;
 import org.crue.hercules.sgi.pii.service.InvencionDocumentoService;
+import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.service.InvencionService;
+import org.crue.hercules.sgi.pii.service.SolicitudProteccionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,6 +68,7 @@ public class InvencionController {
   /** InvencionSectorAplicacion service */
   private final InvencionSectorAplicacionService invencionSectorAplicacionService;
   private final InvencionDocumentoService invencionDocumentoService;
+  private final SolicitudProteccionService solicitudProteccionService;
   /** InvencionAreaConocimientoService service */
   private final InvencionAreaConocimientoService invencionAreaConocimientoService;
 
@@ -75,13 +79,15 @@ public class InvencionController {
       InvencionSectorAplicacionService invencionSectorAplicacionService,
       InvencionDocumentoService invencionDocumentoService,
       InvencionAreaConocimientoService invencionAreaConocimientoService,
-      InformePatentabilidadService informePatentabilidadService) {
+      InformePatentabilidadService informePatentabilidadService,
+      final SolicitudProteccionService solicitudProteccionService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
     this.invencionSectorAplicacionService = invencionSectorAplicacionService;
     this.invencionDocumentoService = invencionDocumentoService;
     this.invencionAreaConocimientoService = invencionAreaConocimientoService;
     this.informePatentabilidadService = informePatentabilidadService;
+    this.solicitudProteccionService = solicitudProteccionService;
   }
 
   /**
@@ -438,5 +444,34 @@ public class InvencionController {
 
   private InformePatentabilidadOutput convert(InformePatentabilidad entity) {
     return modelMapper.map(entity, InformePatentabilidadOutput.class);
+  }
+
+  /**
+   * Devuelve una lista de {@link SolicitudProteccion} relacionados a una
+   * invencion
+   * 
+   * @param id Identificador de {@link Invencion}.
+   * @return la lista de entidades {@link SolicitudProteccion}
+   */
+  @GetMapping("/{invencionId}/solicitudesproteccion")
+  @PreAuthorize("hasAuthority('PII-INV-E')")
+  ResponseEntity<Page<SolicitudProteccionOutput>> findSolicitudesProteccionByInvencionId(@PathVariable Long invencionId,
+      @RequestPageable(sort = "s") Pageable paging) {
+
+    Page<SolicitudProteccionOutput> page = convertToPageSolicitudProteccion(
+        solicitudProteccionService.findByInvencionId(invencionId, paging));
+
+    return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
+  }
+
+  private SolicitudProteccionOutput convert(SolicitudProteccion solicitudProteccion) {
+    return modelMapper.map(solicitudProteccion, SolicitudProteccionOutput.class);
+  }
+
+  private Page<SolicitudProteccionOutput> convertToPageSolicitudProteccion(Page<SolicitudProteccion> page) {
+    List<SolicitudProteccionOutput> content = page.getContent().stream()
+        .map((solicitudProteccion) -> convert(solicitudProteccion)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 }

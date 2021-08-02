@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.pii.dto;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,5 +34,6 @@ public class InvencionOutput {
     private Long id;
     private String nombre;
     private TipoProteccion padre;
+    private TipoPropiedad tipoPropiedad;
   }
 }
