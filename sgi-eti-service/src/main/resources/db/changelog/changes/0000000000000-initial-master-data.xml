@@ -757,7 +757,7 @@
       <column name="nombre" value="Valor social del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_1_1.json" />
@@ -774,7 +774,7 @@
       <column name="nombre" value="Justificación del uso de seres humanos" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_1_2.json" />
@@ -792,7 +792,7 @@
       <column name="nombre" value="Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_2_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_2_1.json" />
@@ -810,7 +810,7 @@
       <column name="nombre" value="Objetivos científicos del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_1.json" />
@@ -827,7 +827,7 @@
       <column name="nombre" value="Diseño metodológico del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_2.json" />
@@ -844,7 +844,7 @@
       <column name="nombre" value="Referencias de publicaciones científicas" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_3_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_3.json" />
@@ -861,7 +861,7 @@
       <column name="nombre" value="Intervenciones o pruebas en seres humanos" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_3_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_4.json" />
@@ -878,7 +878,7 @@
       <column name="nombre" value="Proceso de reclutamiento" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_3_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_4_1.json" />
@@ -895,7 +895,7 @@
       <column name="nombre" value="Reclutamiento realizado por personal ajeno al equipo investigado" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_3_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_4_2.json" />
@@ -912,7 +912,7 @@
       <column name="nombre" value="Descripción de las intervenciones o pruebas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_3_4_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_4_3.json" />
@@ -929,7 +929,7 @@
       <column name="nombre" value="Incentivos para la participación" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_3_4_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_4_4.json" />
@@ -946,7 +946,7 @@
       <column name="nombre" value="Muestras biológicas de origen humano" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m10_apartado_3_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_5.json" />
@@ -963,7 +963,7 @@
       <column name="nombre" value="Origen de las muestras" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Muestras biológicas de origen humano')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_3_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_5_1.json" />
@@ -980,7 +980,7 @@
       <column name="nombre" value="Destino de las muestras de origen humano" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Muestras biológicas de origen humano')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_3_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_5_2.json" />
@@ -997,7 +997,7 @@
       <column name="nombre" value="Datos de carácter personal" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m10_apartado_3_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_3_6.json" />
@@ -1015,7 +1015,7 @@
       <column name="nombre" value="Ponderación de los riesgos o molestias" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_1.json" />
@@ -1032,7 +1032,7 @@
       <column name="nombre" value="Tipo de riesgos o molestias" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Ponderación de los riesgos o molestias')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_4_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_1_1.json" />
@@ -1049,7 +1049,7 @@
       <column name="nombre" value="Valoración de los riesgos o molestias" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Ponderación de los riesgos o molestias')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_4_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_1_2.json" />
@@ -1066,7 +1066,7 @@
       <column name="nombre" value="Minimización del riesgo o molestias superiores al mínimo" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Ponderación de los riesgos o molestias')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_4_1_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_1_3.json" />
@@ -1083,7 +1083,7 @@
       <column name="nombre" value="Aseguramiento del daño" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Ponderación de los riesgos o molestias')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_4_1_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_1_4.json" />
@@ -1100,7 +1100,7 @@
       <column name="nombre" value="Selección equitativa de la muestra" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_2.json" />
@@ -1117,7 +1117,7 @@
       <column name="nombre" value="Protección de grupos vulnerables" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_4_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_3.json" />
@@ -1134,7 +1134,7 @@
       <column name="nombre" value="Información y consentimiento" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_4_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_4.json" />
@@ -1151,7 +1151,7 @@
       <column name="nombre" value="Tipo de consentimiento" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Información y consentimiento')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_4_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_4_1.json" />
@@ -1168,7 +1168,7 @@
       <column name="nombre" value="Información obligatoria mínima" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Información y consentimiento')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_4_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_4_2.json" />
@@ -1185,7 +1185,7 @@
       <column name="nombre" value="Estudios genéticos" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m10_apartado_4_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_5.json" />
@@ -1202,7 +1202,7 @@
       <column name="nombre" value="Resultado del estudio genético" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudios genéticos')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_4_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_5_1.json" />
@@ -1219,7 +1219,7 @@
       <column name="nombre" value="Consejo genético" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudios genéticos')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_4_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_5_2.json" />
@@ -1236,7 +1236,7 @@
       <column name="nombre" value="No discriminación por motivos genéticos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudios genéticos')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_4_5_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_5_3.json" />
@@ -1253,7 +1253,7 @@
       <column name="nombre" value="Estudiantes como sujetos de investigación" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m10_apartado_4_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6.json" />
@@ -1270,7 +1270,7 @@
       <column name="nombre" value="Justificación del uso de estudiantes" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_4_6_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_1.json" />
@@ -1287,7 +1287,7 @@
       <column name="nombre" value="Beneficio formativo para el estudiante" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_4_6_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_2.json" />
@@ -1304,7 +1304,7 @@
       <column name="nombre" value="Vinculación académica con el equipo investigador" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_4_6_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_3.json" />
@@ -1321,7 +1321,7 @@
       <column name="nombre" value="Incentivos académicos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_4_6_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_4.json" />
@@ -1338,7 +1338,7 @@
       <column name="nombre" value="Uso de tiempo lectivo" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m10_apartado_4_6_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_5.json" />
@@ -1355,7 +1355,7 @@
       <column name="nombre" value="Actividades alternativas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m10_apartado_4_6_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_6.json" />
@@ -1372,7 +1372,7 @@
       <column name="nombre" value="Protección de la privacidad" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Estudiantes como sujetos de investigación')" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m10_apartado_4_6_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_4_6_7.json" />
@@ -1390,7 +1390,7 @@
       <column name="nombre" value="Documento de consentimiento" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m10_apartado_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_1.json" />
@@ -1407,7 +1407,7 @@
       <column name="nombre" value="Documento de cesión de datos" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m10_apartado_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_2.json" />
@@ -1424,7 +1424,7 @@
       <column name="nombre" value="Documento de autorización" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m10_apartado_5_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_3.json" />
@@ -1441,7 +1441,7 @@
       <column name="nombre" value="Documento de aceptación de colaboración" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m10_apartado_5_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_4.json" />
@@ -1458,7 +1458,7 @@
       <column name="nombre" value="Informe de la Comisión de Garantías" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m10_apartado_5_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_5.json" />
@@ -1475,7 +1475,7 @@
       <column name="nombre" value="Acuerdo de transferencia de muestras" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m10_apartado_5_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_6.json" />
@@ -1492,7 +1492,7 @@
       <column name="nombre" value="Documento de registro de tratamiento de datos" />
       <column name="padre_id" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m10_apartado_5_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_7.json" />
@@ -1509,7 +1509,7 @@
       <column name="nombre" value="Documentación adicional" />
       <column name="padre_id" />
       <column name="orden" value="8" />
-      <column name="esquema" value="clob/m10_apartado_5_8.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_8.json" />
@@ -1526,7 +1526,7 @@
       <column name="nombre" value="Aclaraciones al comité" />
       <column name="padre_id" />
       <column name="orden" value="9" />
-      <column name="esquema" value="clob/m10_apartado_5_9.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_9.json" />
@@ -1545,7 +1545,7 @@
       <column name="nombre" value="Valor social del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_1_1.json" />
@@ -1562,7 +1562,7 @@
       <column name="nombre" value="Fin específico del proyecto" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Valor social del proyecto' and bloque_id = (select id from bloque where orden = '1' and formulario_id = (select id from formulario where nombre = 'M20')))" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_1_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_1_1_1.json" />
@@ -1579,7 +1579,7 @@
       <column name="nombre" value="Justificación del uso de animales" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_1_2.json" />
@@ -1596,7 +1596,7 @@
       <column name="nombre" value="Personal que llevará a cabo las tareas animales" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_2_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_2_1.json" />
@@ -1613,7 +1613,7 @@
       <column name="nombre" value="Objetivos científicos del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_1.json" />
@@ -1630,7 +1630,7 @@
       <column name="nombre" value="Diseño metodológico del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_2.json" />
@@ -1647,7 +1647,7 @@
       <column name="nombre" value="Título descriptivo" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_3_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_3.json" />
@@ -1664,7 +1664,7 @@
       <column name="nombre" value="Tipo de proyecto" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m20_apartado_3_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_4.json" />
@@ -1681,7 +1681,7 @@
       <column name="nombre" value="Lugar en el que se realizarán las intervenciones de los animales" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m20_apartado_3_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_5.json" />
@@ -1698,7 +1698,7 @@
       <column name="nombre" value="Datos referentes a los animales de experimentación" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m20_apartado_3_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6.json" />
@@ -1715,7 +1715,7 @@
       <column name="nombre" value="Definición" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los animales de experimentación')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_3_6_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_1.json" />
@@ -1732,7 +1732,7 @@
       <column name="nombre" value="Animales modificados genéticamente" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los animales de experimentación')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_3_6_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_2.json" />
@@ -1749,7 +1749,7 @@
       <column name="nombre" value="Animales protegidos o en peligro de extinción" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los animales de experimentación')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_3_6_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_3.json" />
@@ -1766,7 +1766,7 @@
       <column name="nombre" value="Número de animales a utilizar" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los animales de experimentación')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m20_apartado_3_6_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_4.json" />
@@ -1783,7 +1783,7 @@
       <column name="nombre" value="Periodo del proyecto durante el que se utilizarán los animales" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los animales de experimentación')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m20_apartado_3_6_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_5.json" />
@@ -1800,7 +1800,7 @@
       <column name="nombre" value="Proceso de experimentación al que va a ser sometido el animal" />
       <column name="padre_id" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m20_apartado_3_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7.json" />
@@ -1817,7 +1817,7 @@
       <column name="nombre" value="Intervenciones/procedimientos que se realizarán al animal" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_3_7_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_1.json" />
@@ -1834,7 +1834,7 @@
       <column name="nombre" value="Duración del proceso de experimentación" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_3_7_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_2.json" />
@@ -1851,7 +1851,7 @@
       <column name="nombre" value="Referencias de publicaciones científicas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_3_7_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_3.json" />
@@ -1868,7 +1868,7 @@
       <column name="nombre" value="Intervenciones quirúrgicas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m20_apartado_3_7_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_4.json" />
@@ -1885,7 +1885,7 @@
       <column name="nombre" value="Analgesia" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m20_apartado_3_7_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_5.json" />
@@ -1902,7 +1902,7 @@
       <column name="nombre" value="Anestesia" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m20_apartado_3_7_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_6.json" />
@@ -1919,7 +1919,7 @@
       <column name="nombre" value="Administración de sustancias" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m20_apartado_3_7_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_7.json" />
@@ -1936,7 +1936,7 @@
       <column name="nombre" value="Agentes biológicos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="8" />
-      <column name="esquema" value="clob/m20_apartado_3_7_8.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_8.json" />
@@ -1953,7 +1953,7 @@
       <column name="nombre" value="Administración de isótopos radiactivos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="9" />
-      <column name="esquema" value="clob/m20_apartado_3_7_9.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_9.json" />
@@ -1970,7 +1970,7 @@
       <column name="nombre" value="Extracción de sangre" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="10" />
-      <column name="esquema" value="clob/m20_apartado_3_7_10.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_10.json" />
@@ -1987,7 +1987,7 @@
       <column name="nombre" value="Privación de aliminto y/o agua" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="11" />
-      <column name="esquema" value="clob/m20_apartado_3_7_11.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_11.json" />
@@ -2004,7 +2004,7 @@
       <column name="nombre" value="Destino final" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="12" />
-      <column name="esquema" value="clob/m20_apartado_3_7_12.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_12.json" />
@@ -2021,7 +2021,7 @@
       <column name="nombre" value="Eutanasia" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="13" />
-      <column name="esquema" value="clob/m20_apartado_3_7_13.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_13.json" />
@@ -2038,7 +2038,7 @@
       <column name="nombre" value="Mantenimiento con vida" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="14" />
-      <column name="esquema" value="clob/m20_apartado_3_7_14.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_14.json" />
@@ -2055,7 +2055,7 @@
       <column name="nombre" value="Relación y protocolo de sustancias y agentes biológicos administradas incluídas anestesia y analgesia" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
       <column name="orden" value="15" />
-      <column name="esquema" value="clob/m20_apartado_3_7_15.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_15.json" />
@@ -2072,7 +2072,7 @@
       <column name="nombre" value="Reemplazo" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_1.json" />
@@ -2089,7 +2089,7 @@
       <column name="nombre" value="Métodos alternativos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reemplazo')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_4_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_1_1.json" />
@@ -2106,7 +2106,7 @@
       <column name="nombre" value="Fuentes consultadas para búsqueda de métodos alternativos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reemplazo')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_4_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_1_2.json" />
@@ -2123,7 +2123,7 @@
       <column name="nombre" value="Elección de la especie" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reemplazo')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_4_1_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_1_3.json" />
@@ -2140,7 +2140,7 @@
       <column name="nombre" value="Refinamiento" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2.json" />
@@ -2157,7 +2157,7 @@
       <column name="nombre" value="Valoración de la severidad y medidas correctoras ante el dolor, sufrimiento o la angustia del animal" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Refinamiento')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_4_2_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2_1.json" />
@@ -2174,7 +2174,7 @@
       <column name="nombre" value="No aplicación de medidas correctoras" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Refinamiento')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_4_2_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2_2.json" />
@@ -2191,7 +2191,7 @@
       <column name="nombre" value="Severidad global" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Refinamiento')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_4_2_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2_3.json" />
@@ -2208,7 +2208,7 @@
       <column name="nombre" value="Protocolo de supervisión" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Refinamiento')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m20_apartado_4_2_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2_4.json" />
@@ -2225,7 +2225,7 @@
       <column name="nombre" value="Criterios de punto final" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Refinamiento')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m20_apartado_4_2_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_2_5.json" />
@@ -2242,7 +2242,7 @@
       <column name="nombre" value="Reducción" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_4_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_3.json" />
@@ -2259,7 +2259,7 @@
       <column name="nombre" value="Justificación del tamaño muestral y tratamiento estadístico" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_4_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_3_1.json" />
@@ -2276,7 +2276,7 @@
       <column name="nombre" value="Reutilización" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_4_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_3_2.json" />
@@ -2293,7 +2293,7 @@
       <column name="nombre" value="Excepciones de reutilización" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_4_3_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_3_3.json" />
@@ -2311,7 +2311,7 @@
       <column name="nombre" value="Acreditaciones" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m20_apartado_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_1.json" />
@@ -2328,7 +2328,7 @@
       <column name="nombre" value="Informe veterinario" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m20_apartado_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_2.json" />
@@ -2345,7 +2345,7 @@
       <column name="nombre" value="Evaluación retrospectiva" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m20_apartado_5_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_3.json" />
@@ -2362,7 +2362,7 @@
       <column name="nombre" value="Situaciones especiales, excepcionales o salvaguardias legales" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m20_apartado_5_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_4.json" />
@@ -2379,7 +2379,7 @@
       <column name="nombre" value="Resumen no técnico (RNT)" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m20_apartado_5_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_5.json" />
@@ -2396,7 +2396,7 @@
       <column name="nombre" value="Documentación adicional" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m20_apartado_5_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_6.json" />
@@ -2413,7 +2413,7 @@
       <column name="nombre" value="Aclaraciones al comité" />
       <column name="padre_id" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m20_apartado_5_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_5_7.json" />
@@ -2433,7 +2433,7 @@
       <column name="nombre" value="Valor social del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_1_1.json" />
@@ -2450,7 +2450,7 @@
       <column name="nombre" value="Justificación del uso de agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_1_2.json" />
@@ -2468,7 +2468,7 @@
       <column name="nombre" value="Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_2_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_2_1.json" />
@@ -2486,7 +2486,7 @@
       <column name="nombre" value="Objetivos científicos del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_1.json" />
@@ -2503,7 +2503,7 @@
       <column name="nombre" value="Objetivos científicos del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_2.json" />
@@ -2520,7 +2520,7 @@
       <column name="nombre" value="Referencias de publicaciones científicas" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_3_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_3.json" />
@@ -2537,7 +2537,7 @@
       <column name="nombre" value="Tipo de exposición" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_3_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4.json" />
@@ -2554,7 +2554,7 @@
       <column name="nombre" value="Exposición no intencionada o incidental" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Tipo de exposición')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_3_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_1.json" />
@@ -2571,7 +2571,7 @@
       <column name="nombre" value="Exposición deliberada" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Tipo de exposición')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_3_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_2.json" />
@@ -2588,7 +2588,7 @@
       <column name="nombre" value="Uso confinado de OMG" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Tipo de exposición')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_3_4_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_3.json" />
@@ -2605,7 +2605,7 @@
       <column name="nombre" value="Sustancias químicas peligrosas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Tipo de exposición')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_3_4_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_4.json" />
@@ -2622,7 +2622,7 @@
       <column name="nombre" value="Sustancias radiactivas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Tipo de exposición')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_3_4_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_5.json" />
@@ -2639,7 +2639,7 @@
       <column name="nombre" value="Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_3_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5.json" />
@@ -2656,7 +2656,7 @@
       <column name="nombre" value="Microorganismos/Parásitos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_3_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_1.json" />
@@ -2673,7 +2673,7 @@
       <column name="nombre" value="Cultivos celulares" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_3_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_2.json" />
@@ -2690,7 +2690,7 @@
       <column name="nombre" value="Material biológico" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_3_5_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_3.json" />
@@ -2707,7 +2707,7 @@
       <column name="nombre" value="Organismo modificado genéticamente" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_3_5_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_4.json" />
@@ -2724,7 +2724,7 @@
       <column name="nombre" value="Sustancias químicas peligrosas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_3_5_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_5.json" />
@@ -2741,7 +2741,7 @@
       <column name="nombre" value="Sustancias radiactivas, equipo radiológico, instalación radiactiva" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m30_apartado_3_5_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_5_6.json" />
@@ -2758,7 +2758,7 @@
       <column name="nombre" value="Frecuencia y periodicidad de uso" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m30_apartado_3_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_6.json" />
@@ -2775,7 +2775,7 @@
       <column name="nombre" value="Trayectoria completa de los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" />
       <column name="orden" value="7" />
-      <column name="esquema" value="clob/m30_apartado_3_7.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_7.json" />
@@ -2793,7 +2793,7 @@
       <column name="nombre" value="Evaluación del riesgo" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1.json" />
@@ -2810,7 +2810,7 @@
       <column name="nombre" value="Nivel de riesgo" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1_1.json" />
@@ -2827,7 +2827,7 @@
       <column name="nombre" value="Características del riesgo de los agentes biológicos y/o material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1_2.json" />
@@ -2844,7 +2844,7 @@
       <column name="nombre" value="Nivel de riesgo" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_4_1_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1_3.json" />
@@ -2861,7 +2861,7 @@
       <column name="nombre" value="Efectos nocivos que puedan derivarse del uso de agentes, material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_4_1_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1_4.json" />
@@ -2878,7 +2878,7 @@
       <column name="nombre" value="Tratamiento profiláctico disponible" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_4_1_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_1_5.json" />
@@ -2895,7 +2895,7 @@
       <column name="nombre" value="Medidas técnicas de seguridad" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2.json" />
@@ -2912,7 +2912,7 @@
       <column name="nombre" value="Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_2_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1.json" />
@@ -2929,7 +2929,7 @@
       <column name="nombre" value="Laboratorio de la Universidad" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_2_1_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1.json" />
@@ -2946,7 +2946,7 @@
       <column name="nombre" value="Otro centro o lugar ajeno a la Universidad" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_2_1_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_2.json" />
@@ -2963,7 +2963,7 @@
       <column name="nombre" value="Sustitución" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_2_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_2.json" />
@@ -2980,7 +2980,7 @@
       <column name="nombre" value="Reducción de riesgos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3.json" />
@@ -2997,7 +2997,7 @@
       <column name="nombre" value="Control de la exposición" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3_1.json" />
@@ -3014,7 +3014,7 @@
       <column name="nombre" value="Medidas de reducción de la exposición" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3_2.json" />
@@ -3031,7 +3031,7 @@
       <column name="nombre" value="Medidas de protección" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3_3.json" />
@@ -3048,7 +3048,7 @@
       <column name="nombre" value="Métodos de descontaminación/desinfección" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3_4.json" />
@@ -3065,7 +3065,7 @@
       <column name="nombre" value="Gestión de residuos" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_4_2_3_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_2_3_5.json" />
@@ -3082,7 +3082,7 @@
       <column name="nombre" value="Vigilancia y protección de la salud" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_4_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_3.json" />
@@ -3099,7 +3099,7 @@
       <column name="nombre" value="Vacunación" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Vigilancia y protección de la salud')" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_4_3_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_3_1.json" />
@@ -3116,7 +3116,7 @@
       <column name="nombre" value="Medidas especiales de protección" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Vigilancia y protección de la salud')" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_4_3_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_4_3_2.json" />
@@ -3135,7 +3135,7 @@
       <column name="nombre" value="Acreditaciones" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/m30_apartado_5_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_1.json" />
@@ -3152,7 +3152,7 @@
       <column name="nombre" value="Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/m30_apartado_5_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_2.json" />
@@ -3169,7 +3169,7 @@
       <column name="nombre" value="Seguro de accidentes y responsabilidad civil" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/m30_apartado_5_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_3.json" />
@@ -3186,7 +3186,7 @@
       <column name="nombre" value="Protocolo de actuación en caso de accidente biológico" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/m30_apartado_5_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_4.json" />
@@ -3203,7 +3203,7 @@
       <column name="nombre" value="Documentación adicional" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/m30_apartado_5_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_5.json" />
@@ -3220,7 +3220,7 @@
       <column name="nombre" value="Aclaraciones al comité" />
       <column name="padre_id" />
       <column name="orden" value="6" />
-      <column name="esquema" value="clob/m30_apartado_5_6.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_5_6.json" />
@@ -3238,7 +3238,7 @@
       <column name="nombre" value="Descripción y resumen" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/seguimiento_anual.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_anual.json" />
@@ -3256,7 +3256,7 @@
       <column name="nombre" value="Fecha de inicio de la actividad investigadora" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/seguimiento_final_apartado_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_final_apartado_1.json" />
@@ -3273,7 +3273,7 @@
       <column name="nombre" value="Equipo investigador" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/seguimiento_final_apartado_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_final_apartado_2.json" />
@@ -3290,7 +3290,7 @@
       <column name="nombre" value="Diseño metodológico" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/seguimiento_final_apartado_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_final_apartado_3.json" />
@@ -3307,7 +3307,7 @@
       <column name="nombre" value="Aspectos éticos específicos" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/seguimiento_final_apartado_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_final_apartado_4.json" />
@@ -3324,7 +3324,7 @@
       <column name="nombre" value="Aclaraciones" />
       <column name="padre_id" />
       <column name="orden" value="5" />
-      <column name="esquema" value="clob/seguimiento_final_apartado_5.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/seguimiento_final_apartado_5.json" />
@@ -3342,7 +3342,7 @@
       <column name="nombre" value="Objetivos" />
       <column name="padre_id" />
       <column name="orden" value="1" />
-      <column name="esquema" value="clob/retrospectiva_apartado_1.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/retrospectiva_apartado_1.json" />
@@ -3359,7 +3359,7 @@
       <column name="nombre" value="Supervisión" />
       <column name="padre_id" />
       <column name="orden" value="2" />
-      <column name="esquema" value="clob/retrospectiva_apartado_2.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/retrospectiva_apartado_2.json" />
@@ -3376,7 +3376,7 @@
       <column name="nombre" value="Severidad" />
       <column name="padre_id" />
       <column name="orden" value="3" />
-      <column name="esquema" value="clob/retrospectiva_apartado_3.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/retrospectiva_apartado_3.json" />
@@ -3393,7 +3393,7 @@
       <column name="nombre" value="Reducción, reemplazo y refinamiento" />
       <column name="padre_id" />
       <column name="orden" value="4" />
-      <column name="esquema" value="clob/retrospectiva_apartado_4.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/retrospectiva_apartado_4.json" />
@@ -3421,7 +3421,7 @@
       <column name="id" valueSequenceNext="formly_seq" />
       <column name="nombre" value="CHECKLIST" />
       <column name="version" value="1" />
-      <column name="esquema" value="clob/checklist.json" />
+      <column name="esquema" value="{}" />
     </insert>
     <update tableName="formly">
       <column name="esquema" valueClobFile="clob/checklist.json" />

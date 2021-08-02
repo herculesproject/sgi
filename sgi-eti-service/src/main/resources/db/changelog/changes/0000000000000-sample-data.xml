@@ -938,7 +938,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de seres humanos' and bloque_id=(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_01.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_01.json" />
@@ -952,7 +952,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos' and bloque_id=(select id from eti.bloque where orden = '2' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_02.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_02.json" />
@@ -966,7 +966,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Referencias de publicaciones científicas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_03.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_03.json" />
@@ -980,7 +980,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Intervenciones o pruebas en seres humanos' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_04.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_04.json" />
@@ -994,7 +994,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Proceso de reclutamiento' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_05.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_05.json" />
@@ -1008,7 +1008,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigado' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_06.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_06.json" />
@@ -1022,7 +1022,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Descripción de las intervenciones o pruebas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_07.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_07.json" />
@@ -1036,7 +1036,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos para la participación' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_08.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_08.json" />
@@ -1050,7 +1050,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Muestras biológicas de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_09.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_09.json" />
@@ -1064,7 +1064,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Origen de las muestras' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_10.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_10.json" />
@@ -1078,7 +1078,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Destino de las muestras de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_11.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_11.json" />
@@ -1092,7 +1092,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Datos de carácter personal' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_12.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_12.json" />
@@ -1106,7 +1106,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_13.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_13.json" />
@@ -1120,7 +1120,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Valoración de los riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_14.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_14.json" />
@@ -1134,7 +1134,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Minimización del riesgo o molestias superiores al mínimo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_15.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_15.json" />
@@ -1148,7 +1148,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aseguramiento del daño' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_16.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_16.json" />
@@ -1162,7 +1162,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Selección equitativa de la muestra' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_17.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_17.json" />
@@ -1176,7 +1176,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de grupos vulnerables' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_18.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_18.json" />
@@ -1190,7 +1190,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Información y consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_19.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_19.json" />
@@ -1204,7 +1204,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_20.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_20.json" />
@@ -1218,7 +1218,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudios genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_21.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_21.json" />
@@ -1232,7 +1232,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Resultado del estudio genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_22.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_22.json" />
@@ -1246,7 +1246,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Consejo genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_23.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_23.json" />
@@ -1260,7 +1260,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='No discriminación por motivos genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_24.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_24.json" />
@@ -1274,7 +1274,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudiantes como sujetos de investigación' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_25.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_25.json" />
@@ -1288,7 +1288,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de estudiantes' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_26.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_26.json" />
@@ -1302,7 +1302,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Beneficio formativo para el estudiante' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_27.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_27.json" />
@@ -1316,7 +1316,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Vinculación académica con el equipo investigador' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_28.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_28.json" />
@@ -1330,7 +1330,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos académicos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_29.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_29.json" />
@@ -1344,7 +1344,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Uso de tiempo lectivo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_30.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_30.json" />
@@ -1358,7 +1358,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Actividades alternativas' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_31.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_31.json" />
@@ -1372,7 +1372,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de la privacidad' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_32.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_32.json" />
@@ -1387,7 +1387,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de consentimiento' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="4" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_33.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_33.json" />
@@ -1402,7 +1402,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de cesión de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="5" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_34.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_34.json" />
@@ -1417,7 +1417,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de autorización' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="6" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_35.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_35.json" />
@@ -1432,7 +1432,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de aceptación de colaboración' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="7" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_36.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_36.json" />
@@ -1447,7 +1447,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Informe de la Comisión de Garantías' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="8" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_37.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_37.json" />
@@ -1462,7 +1462,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Acuerdo de transferencia de muestras' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="9" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_38.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_38.json" />
@@ -1477,7 +1477,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documento de registro de tratamiento de datos' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="10" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_39.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_39.json" />
@@ -1492,7 +1492,7 @@
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Documentación adicional' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="11" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_40.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_40.json" />
@@ -1506,7 +1506,7 @@
       <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aclaraciones al comité' and bloque_id=(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
-      <column name="valor" value="sample-clob/M10-2019-001_respuesta_41.json" />
+      <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
       <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_41.json" />
