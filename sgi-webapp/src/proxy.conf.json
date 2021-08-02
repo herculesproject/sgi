@@ -54,10 +54,7 @@
     "logLevel": "debug"
   },
   "/api/sgdoc": {
-    "target": "http://192.168.3.127:8280",
-    "pathRewrite": {
-      "^/api/sgdoc": "/sgdoc"
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"

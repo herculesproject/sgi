@@ -43,6 +43,7 @@ export const environment = {
       /\/api\/sgo.*/i,
       /\/api\/sge.*/i,
       /\/api\/pii.*/i,
+      /\/api\/sgdoc.*/i
     ]
   } as SgiAuthConfig,
   version,
