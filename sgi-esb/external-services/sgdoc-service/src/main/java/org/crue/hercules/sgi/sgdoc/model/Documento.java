@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -39,10 +37,7 @@ public class Documento implements Serializable {
   private Integer version;
 
   @Lob
-  // @Type Required for mapping binary in postgresql
-  // Remove for H2
-  @Type(type = "org.hibernate.type.BinaryType")
-  @Column(name = "archivo")
+  @Column(name = "archivo", columnDefinition = "blob")
   private byte[] archivo;
 
   @Column(name = "fecha_creacion")
