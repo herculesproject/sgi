@@ -27,7 +27,7 @@ const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const SOLICITUD_HITO_KEY = marker('csp.solicitud-hito');
 const SOLICITUD_HITO_COMENTARIO_KEY = marker('csp.solicitud-hito.comentario');
-const SOLICITUD_HITO_FECHA_INICIO_KEY = marker('csp.solicitud-hito.fecha-inicio');
+const SOLICITUD_HITO_FECHA_INICIO_KEY = marker('csp.solicitud-hito.fecha');
 const SOLICITUD_HITO_TIPO_KEY = marker('csp.solicitud-hito.tipo');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
