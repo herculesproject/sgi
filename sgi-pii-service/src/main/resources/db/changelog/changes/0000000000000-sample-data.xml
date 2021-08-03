@@ -123,7 +123,7 @@
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Invencion 1" />
-      <column name="fecha_comunicacion" value="2021-06-22T15:00:00Z" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T15:00:00" />
       <column name="descripcion" value="Invención numero uno" />
       <column name="comentarios" value="" />
       <column name="tipo_proteccion_id" value="1" />
@@ -132,7 +132,7 @@
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Invencion 2" />
-      <column name="fecha_comunicacion" value="2021-06-22T16:00:00Z" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T16:00:00" />
       <column name="descripcion" value="Invención numero dos" />
       <column name="comentarios" value="" />
       <column name="tipo_proteccion_id" value="1" />
@@ -141,7 +141,7 @@
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Invencion 3" />
-      <column name="fecha_comunicacion" value="2021-06-22T17:00:00Z" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T17:00:00" />
       <column name="descripcion" value="Invención numero tres" />
       <column name="comentarios" value="" />
       <column name="tipo_proteccion_id" value="2" />
@@ -150,7 +150,7 @@
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Invencion 4" />
-      <column name="fecha_comunicacion" value="2021-06-22T18:00:00Z" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T18:00:00" />
       <column name="descripcion" value="Invención numero cuatro" />
       <column name="comentarios" value="" />
       <column name="tipo_proteccion_id" value="3" />
@@ -159,7 +159,7 @@
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Invencion con comentarios" />
-      <column name="fecha_comunicacion" value="2021-06-22T20:00:00Z" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T20:00:00" />
       <column name="descripcion" value="Invención con comentarios especiales" />
       <column name="comentarios" value="Este es un comentario especial" />
       <column name="tipo_proteccion_id" value="4" />
@@ -339,7 +339,7 @@
     <insert tableName="informe_patentabilidad">
       <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
       <column name="invencion_id" value="1" />
-      <column name="fecha" value="2021-06-28T18:00:00Z" />
+      <column name="fecha" valueDate="2021-06-28T18:00:00" />
       <column name="nombre" value="Informe pantentabilidad 1 Invencion 1" />
       <column name="documento_ref" value="1" />
       <column name="resultado_informe_patentabilidad_id" value="1" />
@@ -351,7 +351,7 @@
     <insert tableName="informe_patentabilidad">
       <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
       <column name="invencion_id" value="1" />
-      <column name="fecha" value="2021-07-09T18:00:00Z" />
+      <column name="fecha" valueDate="2021-07-09T18:00:00" />
       <column name="nombre" value="Informe pantentabilidad 2 Invencion 1" />
       <column name="documento_ref" value="2" />
       <column name="resultado_informe_patentabilidad_id" value="2" />
@@ -362,7 +362,7 @@
     <insert tableName="informe_patentabilidad">
       <column name="id" valueSequenceNext="informe_patentabilidad_seq" />
       <column name="invencion_id" value="1" />
-      <column name="fecha" value="2021-07-10T18:00:00Z" />
+      <column name="fecha" valueDate="2021-07-10T18:00:00" />
       <column name="nombre" value="Informe pantentabilidad 3 Invencion 1" />
       <column name="documento_ref" value="3" />
       <column name="resultado_informe_patentabilidad_id" value="3" />
