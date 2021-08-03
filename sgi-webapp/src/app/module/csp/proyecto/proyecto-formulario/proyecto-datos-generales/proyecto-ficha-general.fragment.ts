@@ -1,6 +1,5 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
@@ -22,7 +21,6 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
-import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -37,7 +35,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private proyecto: IProyecto;
 
   selectedConvocatoria: IConvocatoria;
-  seguimientoCientificos: IConvocatoriaPeriodoSeguimientoCientifico[] = [];
 
   readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
 
@@ -514,8 +511,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @param convocatoria una convocatoria
    */
   private onConvocatoriaChange(convocatoria: IConvocatoria): void {
-    this.seguimientoCientificos = [];
-
     if (convocatoria) {
       if (convocatoria.codigo) {
         this.getFormGroup().controls.convocatoriaExterna.setValue(convocatoria.codigo);
@@ -566,14 +561,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       const options: SgiRestFindOptions = {
         sort: new RSQLSgiRestSort('numPeriodo', SgiRestSortDirection.ASC)
       };
-      this.subscriptions.push(
-        this.convocatoriaService.findSeguimientosCientificos(convocatoria.id, options).subscribe(
-          res => {
-            this.seguimientoCientificos = res.items;
-            this.checkFechas();
-          }
-        )
-      );
       this.getFormGroup().controls.convocatoriaExterna.disable();
 
       this.unidadGestionConvocatoria = convocatoria.unidadGestion;
@@ -660,42 +647,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    */
   private getUnidadGestion(id: number): Observable<IUnidadGestion> {
     return this.unidadGestionService.findById(id);
-  }
-
-  checkFechas(): void {
-    const inicioForm = this.getFormGroup().get('fechaInicio');
-    const finForm = this.getFormGroup().get('fechaFin');
-    this.deleteErrorRange(finForm);
-    if (this.seguimientoCientificos.length > 0) {
-      if (inicioForm.value && finForm.value) {
-        const mesInicial = this.seguimientoCientificos[0].mesInicial;
-        const mesFinal = this.seguimientoCientificos[this.seguimientoCientificos.length - 1].mesFinal;
-        const inicioProyecto = inicioForm.value.plus({ months: mesInicial - 1 });
-        const finProyecto = inicioForm.value.plus({ months: mesFinal - 1 });
-        if (inicioProyecto >= inicioForm.value && finProyecto <= finForm.value) {
-          return;
-        }
-        this.addErrorRange(finForm);
-      }
-    }
-  }
-
-  private deleteErrorRange(formControl: AbstractControl): void {
-    if (formControl.errors) {
-      delete formControl.errors.range;
-      if (Object.keys(formControl.errors).length === 0) {
-        formControl.setErrors(null);
-      }
-    }
-  }
-
-  private addErrorRange(formControl: AbstractControl): void {
-    if (formControl.errors) {
-      formControl.errors.range = true;
-    } else {
-      formControl.setErrors({ range: true });
-    }
-    formControl.markAsTouched({ onlySelf: true });
   }
 
   private buildValidatorFechaFin(): ValidatorFn {

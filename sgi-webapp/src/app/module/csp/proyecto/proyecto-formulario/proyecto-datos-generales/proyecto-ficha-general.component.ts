@@ -222,14 +222,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
           }
         }
       ));
-
-    this.subscriptions.push(
-      merge(
-        this.formGroup.controls.fechaInicio.valueChanges,
-        this.formGroup.controls.fechaFin.valueChanges,
-        this.formGroup.controls.convocatoria.valueChanges,
-      ).subscribe(() => this.formPart.checkFechas())
-    );
   }
 
   private setupI18N(): void {
