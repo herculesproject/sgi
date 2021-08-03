@@ -224,7 +224,7 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
 
   protected initColumns(): void {
     if (this.authService.hasAuthority('CSP-TGTO-R')) {
-      this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+      this.columnas = ['nombre', 'descripcion', 'costesIndirectos', 'activo', 'acciones'];
     } else {
       this.columnas = ['nombre', 'descripcion', 'acciones'];
     }

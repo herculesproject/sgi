@@ -25,6 +25,18 @@
           placeholder="{{'csp.concepto-gasto.descripcion' | translate}}"></textarea>
       </mat-form-field>
     </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <mat-form-field>
+        <mat-label>{{'label.csp.concepto-gasto.costesIndirectos' | translate}}
+        </mat-label>
+        <sgi-select-boolean formControlName="costesIndirectos" required></sgi-select-boolean>
+        <sgi-field-info matSuffix [visible]="true" message="{{textoToolTip}}">
+        </sgi-field-info>
+        <mat-error *ngIf="formGroup.controls.costesIndirectos.errors?.required">
+          {{'error.required.entity' | translate:msgParamCostesIndirectos}}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>

@@ -21,6 +21,7 @@ describe('AgrupacionGastoConceptoModalComponent', () => {
     nombre: undefined,
     descripcion: undefined,
     activo: undefined,
+    costesIndirectos: true,
   };
 
   const newData: AgrupacionGastoConceptoModalData = {

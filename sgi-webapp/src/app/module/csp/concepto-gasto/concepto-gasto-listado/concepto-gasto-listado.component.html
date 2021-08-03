@@ -51,6 +51,15 @@
         <td mat-cell *matCellDef="let conceptoGasto">{{conceptoGasto.descripcion}}</td>
       </ng-container>
 
+      <!-- Costes Indirectos  -->
+      <ng-container matColumnDef="costesIndirectos" *sgiHasAuthority="'CSP-TGTO-R'">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.costesIndirectos' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let conceptoGasto">{{(conceptoGasto.costesIndirectos ? 'label.si' : 'label.no') |
+          translate}}
+        </td>
+      </ng-container>
+
       <!-- Activo -->
       <ng-container matColumnDef="activo" *sgiHasAuthority="'CSP-TGTO-R'">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.activo' | translate}}
