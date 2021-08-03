@@ -412,7 +412,7 @@
     </insert>
     <insert tableName="tarea">
       <column name="id" valueSequenceNext="tarea_seq" />
-      <column name="equipo_trabajo_id" valueComputed="(select id from equipo_trabajo where persona_ref='22481020' limit 1)" />
+      <column name="equipo_trabajo_id" valueComputed="(select max(id) from equipo_trabajo where persona_ref='22481020' )" />
       <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M20/2020/002')" />
       <column name="formacion_especifica_id" valueComputed="(select id from formacion_especifica where id=4)" />
       <column name="organismo" value="Organismo4" />
@@ -421,7 +421,7 @@
     </insert>
     <insert tableName="tarea">
       <column name="id" valueSequenceNext="tarea_seq" />
-      <column name="equipo_trabajo_id" valueComputed="(select id from equipo_trabajo where persona_ref='22481020' limit 1)" />
+      <column name="equipo_trabajo_id" valueComputed="(select max(id) from equipo_trabajo where persona_ref='22481020' )" />
       <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M10/2020/001')" />
       <column name="formacion" value="Experiencia1" />
       <column name="tarea" value="Tarea1" />
