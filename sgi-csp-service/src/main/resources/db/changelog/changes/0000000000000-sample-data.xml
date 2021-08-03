@@ -2101,48 +2101,56 @@ industries" />
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Fungible" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Viajes y dietas" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Infraestructuras" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Costes indirectos" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Alojamiento" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Alquiler de inventariable" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="false" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Gastos de personal" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="true" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="concepto_gasto">
       <column name="id" valueSequenceNext="concepto_gasto_seq" />
       <column name="nombre" value="Contratación" />
       <column name="descripcion" value="null" />
+      <column name="costes_indirectos" valueBoolean="true" />
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>

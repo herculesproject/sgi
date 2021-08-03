@@ -125,6 +125,7 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
     ConceptoGasto conceptoGasto = ConceptoGasto.builder()
         .nombre("nombreConceptoGasto" + suffix)
         .activo(Boolean.TRUE)
+        .costesIndirectos(true)
         .build();
     entityManager.persistAndFlush(conceptoGasto);
 

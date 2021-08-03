@@ -360,6 +360,9 @@
             <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
+            <column defaultValueBoolean="false" name="costes_indirectos" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column name="descripcion" type="VARCHAR(250)"/>
             <column name="nombre" type="VARCHAR(50)">
                 <constraints nullable="false"/>

@@ -134,6 +134,7 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
     ConceptoGasto conceptoGasto = ConceptoGasto.builder()
         .nombre("nombreConceptoGasto" + suffix)
         .activo(Boolean.TRUE)
+        .costesIndirectos(true)
         .build();
     entityManager.persistAndFlush(conceptoGasto);
 
