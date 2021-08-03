@@ -2153,9 +2153,9 @@ industries" />
       <column name="unidad_gestion_ref" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="codigo" value="CGF/UGI-01" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Título de la referencia CGF/UGI-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2172,9 +2172,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-01" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Título de la referencia CG/OPE-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2191,9 +2191,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-02" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Título de la referencia CGF/OPE-02" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2210,9 +2210,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-03" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Título referencia CGF/OPE-3" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2229,9 +2229,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-04" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Título CGF/OPE-04" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2248,9 +2248,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="H2020-MSCA-IF-2020" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="Marie Sklodowska Curie Individual Fellowship" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2267,9 +2267,9 @@ industries" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="LIFE 2020- CLIMATE ACTION- CCA" />
-      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
-      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
+      <column name="fecha_publicacion" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_provisional" valueDate="2021-02-15T23:00:00" />
+      <column name="fecha_concesion" valueDate="2021-02-16T23:00:00" />
       <column name="titulo" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -2399,48 +2399,48 @@ industries" />
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="1" />
       <column name="tipo_fase_id" value="2" />
-      <column name="fecha_inicio" value="2021-02-14T23:00:00Z" />
-      <column name="fecha_fin" value="2021-02-26T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-02-14T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-02-26T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="1" />
       <column name="tipo_fase_id" value="1" />
-      <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
-      <column name="fecha_fin" value="2021-02-20T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-01-31T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-02-20T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="2" />
       <column name="tipo_fase_id" value="1" />
-      <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
-      <column name="fecha_fin" value="2021-02-28T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-01-31T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-02-28T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="2" />
       <column name="tipo_fase_id" value="2" />
-      <column name="fecha_inicio" value="2021-02-28T23:00:00Z" />
-      <column name="fecha_fin" value="2021-03-13T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-02-28T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-03-13T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="4" />
       <column name="tipo_fase_id" value="1" />
-      <column name="fecha_inicio" value="2021-02-01T23:00:00Z" />
-      <column name="fecha_fin" value="2021-02-28T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-02-01T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-02-28T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="id" valueSequenceNext="convocatoria_fase_seq" />
       <column name="convocatoria_id" value="4" />
       <column name="tipo_fase_id" value="2" />
-      <column name="fecha_inicio" value="2021-02-28T23:00:00Z" />
-      <column name="fecha_fin" value="2021-03-14T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-02-28T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-03-14T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
   </changeSet>
@@ -2452,8 +2452,8 @@ industries" />
       <column name="num_periodo" value="1" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="12" />
-      <column name="fecha_inicio_presentacion" value="2021-11-30T23:00:00Z" />
-      <column name="fecha_fin_presentacion" value="2021-12-31T22:59:59Z" />
+      <column name="fecha_inicio_presentacion" valueDate="2021-11-30T23:00:00" />
+      <column name="fecha_fin_presentacion" valueDate="2021-12-31T22:59:59" />
       <column name="observaciones" value="null" />
       <column name="tipo" value="PERIODICO" />
     </insert>
@@ -2463,8 +2463,8 @@ industries" />
       <column name="num_periodo" value="2" />
       <column name="mes_inicial" value="13" />
       <column name="mes_final" value="24" />
-      <column name="fecha_inicio_presentacion" value="2022-11-30T23:00:00Z" />
-      <column name="fecha_fin_presentacion" value="2022-12-31T22:59:59Z" />
+      <column name="fecha_inicio_presentacion" valueDate="2022-11-30T23:00:00" />
+      <column name="fecha_fin_presentacion" valueDate="2022-12-31T22:59:59" />
       <column name="observaciones" value="null" />
       <column name="tipo" value="PERIODICO" />
     </insert>
@@ -2474,8 +2474,8 @@ industries" />
       <column name="num_periodo" value="1" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="18" />
-      <column name="fecha_inicio_presentacion" value="2022-05-31T22:00:00Z" />
-      <column name="fecha_fin_presentacion" value="2022-06-30T21:59:59Z" />
+      <column name="fecha_inicio_presentacion" valueDate="2022-05-31T22:00:00" />
+      <column name="fecha_fin_presentacion" valueDate="2022-06-30T21:59:59" />
       <column name="observaciones" value="null" />
       <column name="tipo" value="PERIODICO" />
     </insert>
@@ -2485,8 +2485,8 @@ industries" />
       <column name="num_periodo" value="2" />
       <column name="mes_inicial" value="19" />
       <column name="mes_final" value="36" />
-      <column name="fecha_inicio_presentacion" value="2023-11-30T23:00:00Z" />
-      <column name="fecha_fin_presentacion" value="2023-12-31T22:59:59Z" />
+      <column name="fecha_inicio_presentacion" valueDate="2023-11-30T23:00:00" />
+      <column name="fecha_fin_presentacion" valueDate="2023-12-31T22:59:59" />
       <column name="observaciones" value="null" />
       <column name="tipo" value="FINAL" />
     </insert>
@@ -2578,40 +2578,40 @@ industries" />
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="1" />
       <column name="codigo_economico_ref" value="IB" />
-      <column name="fecha_inicio" value="2020-09-30T22:00:00Z" />
-      <column name="fecha_fin" value="2021-12-31T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2020-09-30T22:00:00" />
+      <column name="fecha_fin" valueDate="2021-12-31T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="2" />
       <column name="codigo_economico_ref" value="MA" />
-      <column name="fecha_inicio" value="2020-11-30T23:00:00Z" />
-      <column name="fecha_fin" value="2021-12-01T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2020-11-30T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-12-01T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="5" />
       <column name="codigo_economico_ref" value="IB" />
-      <column name="fecha_inicio" value="2020-09-30T22:00:00Z" />
-      <column name="fecha_fin" value="2020-11-01T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2020-09-30T22:00:00" />
+      <column name="fecha_fin" valueDate="2020-11-01T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="4" />
       <column name="codigo_economico_ref" value="DA" />
-      <column name="fecha_inicio" value="2020-10-30T22:00:00Z" />
-      <column name="fecha_fin" value="2020-12-01T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2020-10-30T22:00:00" />
+      <column name="fecha_fin" valueDate="2020-12-01T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto_codigo_ec">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
       <column name="convocatoria_concepto_gasto_id" value="6" />
       <column name="codigo_economico_ref" value="JS" />
-      <column name="fecha_inicio" value="2020-11-30T23:00:00Z" />
-      <column name="fecha_fin" value="2021-12-01T22:59:59Z" />
+      <column name="fecha_inicio" valueDate="2020-11-30T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-12-01T22:59:59" />
       <column name="observaciones" value="null" />
     </insert>
   </changeSet>
@@ -2773,49 +2773,49 @@ industries" />
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="1" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="2" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="3" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="4" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="5" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-02-01T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="6" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-02-02T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="solicitud_id" value="7" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-02-02T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
   </changeSet>
@@ -2883,7 +2883,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_hito_seq" />
       <column name="solicitud_id" value="4" />
       <column name="tipo_hito_id" value="6" />
-      <column name="fecha" value="2021-01-31T23:00:00Z" />
+      <column name="fecha" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
       <column name="genera_aviso" valueBoolean="false" />
     </insert>
@@ -3090,9 +3090,9 @@ industries" />
       <column name="titulo" value="Proyecto 1 CGF/OPE-1" />
       <column name="acronimo" value="PCGFOPE1" />
       <column name="codigo_externo" value="PCGFOPE1" />
-      <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
-      <column name="fecha_fin" value="2022-12-31T22:59:59Z" />
-      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
+      <column name="fecha_inicio" valueDate="2021-01-31T23:00:00" />
+      <column name="fecha_fin" valueDate="2022-12-31T22:59:59" />
+      <column name="fecha_base" valueDate="2021-04-30T22:00:00" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
@@ -3119,9 +3119,9 @@ industries" />
       <column name="titulo" value="Título proyecto CGF/OPE2" />
       <column name="acronimo" value="PCGFOPE2" />
       <column name="codigo_externo" value="PCGFOPE2" />
-      <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
-      <column name="fecha_fin" value="2023-12-05T22:59:59Z" />
-      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
+      <column name="fecha_inicio" valueDate="2021-01-31T23:00:00" />
+      <column name="fecha_fin" valueDate="2023-12-05T22:59:59" />
+      <column name="fecha_base" valueDate="2021-04-30T22:00:00" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
@@ -3148,9 +3148,9 @@ industries" />
       <column name="titulo" value="Proyecto conv CGF/OPE-3" />
       <column name="acronimo" value="PCOPE-3" />
       <column name="codigo_externo" value="PCOPE-3" />
-      <column name="fecha_inicio" value="2021-02-01T23:00:00Z" />
-      <column name="fecha_fin" value="2021-04-30T21:59:59Z" />
-      <column name="fecha_base" value="2021-04-30T22:00:00Z" />
+      <column name="fecha_inicio" valueDate="2021-02-01T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-04-30T21:59:59" />
+      <column name="fecha_base" valueDate="2021-04-30T22:00:00" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
@@ -3178,21 +3178,21 @@ industries" />
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="proyecto_id" value="1" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="proyecto_id" value="2" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-01-31T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="proyecto_id" value="3" />
       <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
+      <column name="fecha_estado" valueDate="2021-02-01T23:00:00" />
       <column name="comentario" value="null" />
     </insert>
   </changeSet>
@@ -3344,10 +3344,10 @@ industries" />
       <column name="id" valueSequenceNext="proyecto_prorroga_seq" />
       <column name="proyecto_id" value="2" />
       <column name="num_prorroga" value="1" />
-      <column name="fecha_concesion" value="2021-02-01T23:00:00Z" />
+      <column name="fecha_concesion" valueDate="2021-02-01T23:00:00" />
       <column name="tipo" value="TIEMPO" />
       <column name="importe" value="null" />
-      <column name="fecha_fin" value="2023-12-05T22:59:59Z" />
+      <column name="fecha_fin" valueDate="2023-12-05T22:59:59" />
       <column name="observaciones" value="" />
     </insert>
   </changeSet>
@@ -3559,7 +3559,7 @@ industries" />
       <column name="id" valueSequenceNext="proyecto_hito_seq" />
       <column name="proyecto_id" value="2" />
       <column name="tipo_hito_id" value="3" />
-      <column name="fecha" value="2021-02-11T00:00:00Z" />
+      <column name="fecha" valueDate="2021-02-11T00:00:00" />
       <column name="comentario" value="null" />
       <column name="genera_aviso" valueBoolean="true" />
     </insert>
@@ -3570,8 +3570,8 @@ industries" />
       <column name="id" valueSequenceNext="proyecto_paquete_trabajo_seq" />
       <column name="proyecto_id" value="2" />
       <column name="nombre" value="WP1" />
-      <column name="fecha_inicio" value="2021-02-01T23:00:00Z" />
-      <column name="fecha_fin" value="2021-05-28T21:59:59Z" />
+      <column name="fecha_inicio" valueDate="2021-02-01T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-05-28T21:59:59" />
       <column name="persona_mes" value="1.4" />
       <column name="descripcion" value="null" />
     </insert>
