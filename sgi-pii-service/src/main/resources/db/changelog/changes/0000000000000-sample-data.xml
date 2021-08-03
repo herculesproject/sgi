@@ -393,7 +393,7 @@
       <column name="numero_solicitud" value="P123456" />
       <column name="numero_publicacion" value="ES12345" />
       <column name="estado" value="PUBLICADA" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud_proteccion">
       <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
@@ -403,7 +403,7 @@
       <column name="fecha_prioridad_solicitud" value="2021-07-22" />
       <column name="numero_solicitud" value="EP123456" />
       <column name="estado" value="SOLICITADA" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud_proteccion">
       <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
@@ -414,7 +414,7 @@
       <column name="numero_solicitud" value="SOL123456" />
       <column name="estado" value="SOLICITADA" />
       <column name="numero_registro" value="RII123456" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="solicitud_proteccion">
       <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
@@ -425,7 +425,7 @@
       <column name="numero_solicitud" value="SOL123458" />
       <column name="estado" value="SOLICITADA" />
       <column name="numero_registro" value="RII123459" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 </databaseChangeLog>
