@@ -1,4 +1,6 @@
+import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
+import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { DateTime } from 'luxon';
 
@@ -28,6 +30,34 @@ export function comparePeriodoSeguimiento(
     || proyectoPeriodoSeguimiento.fechaInicioPresentacion?.toMillis() !== convocatoriaPeriodoSeguimiento.fechaInicioPresentacion?.toMillis()
     || proyectoPeriodoSeguimiento.fechaFinPresentacion?.toMillis() !== convocatoriaPeriodoSeguimiento.fechaFinPresentacion?.toMillis()
     || (proyectoPeriodoSeguimiento.observaciones !== convocatoriaPeriodoSeguimiento.observaciones);
+}
+
+export function comparePeriodoJustificacion(
+  convocactoriaPeriodoJustificacion: IConvocatoriaPeriodoJustificacion,
+  proyectoPeriodojustificacion: IProyectoPeriodoJustificacion,
+  fechaInicioProyecto: DateTime,
+  fechaFinProyecto: DateTime): boolean {
+
+  let fechaInicioConvocatoriaPeriodoSeguimiento: DateTime;
+  if (convocactoriaPeriodoJustificacion.mesInicial) {
+    fechaInicioConvocatoriaPeriodoSeguimiento =
+      getFechaInicioPeriodoSeguimiento(fechaInicioProyecto, convocactoriaPeriodoJustificacion.mesInicial);
+  }
+
+  let fechaFinConvocatoriaConceptoGasto: DateTime;
+  if (convocactoriaPeriodoJustificacion.mesFinal) {
+    fechaFinConvocatoriaConceptoGasto = getFechaFinPeriodoSeguimiento(fechaInicioProyecto, fechaFinProyecto,
+      convocactoriaPeriodoJustificacion.mesFinal, fechaInicioConvocatoriaPeriodoSeguimiento);
+  }
+
+  return convocactoriaPeriodoJustificacion.numPeriodo !== convocactoriaPeriodoJustificacion.numPeriodo
+    || proyectoPeriodojustificacion.tipoJustificacion !== convocactoriaPeriodoJustificacion.tipo
+    || proyectoPeriodojustificacion.fechaInicio?.toMillis() !== fechaInicioConvocatoriaPeriodoSeguimiento?.toMillis()
+    || proyectoPeriodojustificacion.fechaFin?.toMillis() !== fechaFinConvocatoriaConceptoGasto?.toMillis()
+    || proyectoPeriodojustificacion.fechaInicioPresentacion?.toMillis() !==
+    convocactoriaPeriodoJustificacion.fechaInicioPresentacion?.toMillis()
+    || proyectoPeriodojustificacion.fechaFinPresentacion?.toMillis() !== convocactoriaPeriodoJustificacion.fechaFinPresentacion?.toMillis()
+    || (proyectoPeriodojustificacion.observaciones !== convocactoriaPeriodoJustificacion.observaciones);
 }
 
 

@@ -56,6 +56,7 @@ import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
+import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
@@ -79,6 +80,8 @@ import { IProyectoAgrupacionGastoResponse } from './proyecto-agrupacion-gasto/pr
 import { PROYECTO_AGRUPACION_GASTO_RESPONSE_CONVERTER } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response.converter';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
 import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
+import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';
+import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 
@@ -599,6 +602,20 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       `${this.endpointUrl}/${proyectoId}/proyectoagrupaciongasto`,
       options,
       PROYECTO_AGRUPACION_GASTO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Devuelve el listado de IProyectoPeriodoJustificacion de un IProyecto
+   *
+   * @param id Id del IProyecto
+   */
+  findAllPeriodoJustificacion(proyectoId: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IProyectoPeriodoJustificacion>> {
+    return this.find<IProyectoPeriodoJustificacionResponse, IProyectoPeriodoJustificacion>(
+      `${this.endpointUrl}/${proyectoId}/proyectoperiodojustificacion`,
+      options,
+      PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER
     );
   }
 

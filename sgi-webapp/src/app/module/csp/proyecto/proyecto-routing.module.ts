@@ -11,6 +11,7 @@ import { ProyectoDataResolver, PROYECTO_DATA_KEY } from './proyecto-data.resolve
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
 import { ProyectoAgrupacionesGastoComponent } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.component';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
+import { ProyectoCalendarioJustificacionComponent } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.component';
 import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
@@ -258,7 +259,12 @@ const routes: SgiAuthRoutes = [
         data: {
           hasAuthorityForAnyUO: 'CSP-PRO-E'
         },
-      }
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.CALENDARIO_JUSTIFICACION,
+        component: ProyectoCalendarioJustificacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {

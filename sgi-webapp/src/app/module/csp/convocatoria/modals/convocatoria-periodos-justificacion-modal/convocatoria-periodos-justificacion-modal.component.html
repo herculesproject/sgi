@@ -23,7 +23,7 @@
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-periodo-justificacion.tipo' | translate}}</mat-label>
-        <sgi-select-enum formControlName="tipo" required [enumMap]="TIPO_MAP"></sgi-select-enum>
+        <sgi-select-enum formControlName="tipo" required [enumMap]="TIPO_JUSTIFICACION_MAP"></sgi-select-enum>
         <mat-error *ngIf="formGroup.controls.tipo.errors?.required">
           {{ 'error.required.entity' | translate:msgParamTipoEntity }}
         </mat-error>

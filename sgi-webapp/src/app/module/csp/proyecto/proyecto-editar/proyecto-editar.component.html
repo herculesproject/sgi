@@ -119,6 +119,11 @@
         [title]="'csp.proyecto-agrupacion-gasto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.AGRUPACIONES_GASTO)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_JUSTIFICACION]"
+        [title]="'csp.proyectos.configuracion-economica.calendario_justificacion' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_JUSTIFICACION)">
+      </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
   </ng-container>
   <ng-container footer>

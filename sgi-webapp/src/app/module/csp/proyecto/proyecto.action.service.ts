@@ -23,6 +23,7 @@ import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
 import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
 import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
+import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -51,6 +52,7 @@ import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
 import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
+import { ProyectoCalendarioJustificacionFragment } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.fragment';
 import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
 import { ProyectoConceptosGastoFragment } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
@@ -109,7 +111,8 @@ export class ProyectoActionService extends ActionService {
     ELEGIBILIDAD: 'elegibilidad',
     PRESUPUESTO: 'presupuesto',
     REPONSABLE_ECONOMICO: 'responsable-economico',
-    AGRUPACIONES_GASTO: 'agrupaciones-gasto'
+    AGRUPACIONES_GASTO: 'agrupaciones-gasto',
+    CALENDARIO_JUSTIFICACION: 'calendario-justificacion'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -134,6 +137,7 @@ export class ProyectoActionService extends ActionService {
   private presupuesto: ProyectoPresupuestoFragment;
   private responsableEconomico: ProyectoResponsableEconomicoFragment;
   private proyectoAgrupacionGasto: ProyectoAgrupacionGastoFragment;
+  private proyectoCalendarioJustificacion: ProyectoCalendarioJustificacionFragment;
 
   private readonly data: IProyectoData;
 
@@ -213,7 +217,7 @@ export class ProyectoActionService extends ActionService {
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
     translate: TranslateService,
     proyectoAnualidadService: ProyectoAnualidadService,
-    authService: SgiAuthService,
+    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -275,6 +279,8 @@ export class ProyectoActionService extends ActionService {
         personaService, this.readonly);
       this.proyectoAgrupacionGasto = new ProyectoAgrupacionGastoFragment(this.data?.proyecto?.id, proyectoService,
         proyectoAgrupacionGastoService, this.readonly, this.data?.isVisor);
+      this.proyectoCalendarioJustificacion = new ProyectoCalendarioJustificacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
+        proyectoService, proyectoPeriodoJustificacionService, convocatoriaService);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -297,6 +303,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.PRESUPUESTO, this.presupuesto);
       this.addFragment(this.FRAGMENT.REPONSABLE_ECONOMICO, this.responsableEconomico);
       this.addFragment(this.FRAGMENT.AGRUPACIONES_GASTO, this.proyectoAgrupacionGasto);
+      this.addFragment(this.FRAGMENT.CALENDARIO_JUSTIFICACION, this.proyectoCalendarioJustificacion);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {
