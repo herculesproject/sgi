@@ -172,19 +172,33 @@
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="1" />
       <column name="inventor_ref" value="01889311" />
-      <column name="participacion" value="100" />
+      <column name="participacion" value="40.50" />
+    </insert>
+    <insert tableName="invencion_inventor">
+      <column name="id" valueSequenceNext="invencion_inventor_seq" />
+      <column name="invencion_id" value="1" />
+      <column name="inventor_ref" value="01925489" />
+      <column name="participacion" value="50.50" />
+    </insert>
+    <insert tableName="invencion_inventor">
+      <column name="id" valueSequenceNext="invencion_inventor_seq" />
+      <column name="invencion_id" value="1" />
+      <column name="inventor_ref" value="U0186304" />
+      <column name="participacion" value="9" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="2" />
       <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100" />
+      <column name="reparto_universidad" value="true" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="3" />
       <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100" />
+      <column name="reparto_universidad" value="true" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
@@ -196,6 +210,7 @@
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="5" />
       <column name="inventor_ref" value="01925489" />
+      <column name="reparto_universidad" value="true" />
       <column name="participacion" value="100" />
     </insert>
   </changeSet>
