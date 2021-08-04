@@ -17,6 +17,8 @@ public @interface UniqueNombreTipoProteccion {
 
   String field() default "org.crue.hercules.sgi.pii.model.UniqueNombreTipoProteccion.name";
 
+  String subtipoProteccionMessage() default "org.crue.hercules.sgi.pii.model.TipoProteccion.subtipo.message";
+
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};

@@ -19,6 +19,7 @@ public class UniqueNombreTipoProteccionValidator
     implements ConstraintValidator<UniqueNombreTipoProteccion, TipoProteccion> {
   private TipoProteccionRepository repository;
   private String field;
+  private String subtipoProteccionMesage;
 
   public UniqueNombreTipoProteccionValidator(TipoProteccionRepository repository) {
     this.repository = repository;
@@ -28,6 +29,7 @@ public class UniqueNombreTipoProteccionValidator
   public void initialize(UniqueNombreTipoProteccion constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
     field = constraintAnnotation.field();
+    subtipoProteccionMesage = constraintAnnotation.subtipoProteccionMessage();
   }
 
   @Override
@@ -37,10 +39,11 @@ public class UniqueNombreTipoProteccionValidator
       return false;
     }
 
+    final Boolean isSubtipo = value.getPadre() != null;
     Specification<TipoProteccion> specs = TipoProteccionSpecifications.activos();
     specs = specs.and((root, query, cb) -> {
-      return (value.getPadre() != null) ? cb.isNotNull(root.get(TipoProteccion_.padre))
-          : cb.isNull(root.get(TipoProteccion_.padre));
+      return (isSubtipo) ? cb.and(cb.isNotNull(root.get(TipoProteccion_.padre)),
+          cb.equal(root.get(TipoProteccion_.padre), value.getPadre())) : cb.isNull(root.get(TipoProteccion_.padre));
     });
     specs = specs.and((root, query, cb) -> {
       return cb.equal(root.get(TipoProteccion_.nombre), value.getNombre());
@@ -50,16 +53,19 @@ public class UniqueNombreTipoProteccionValidator
     boolean returnValue = !tipoProteccion.stream().anyMatch(tipo -> tipo.getId() != value.getId());
 
     if (!returnValue) {
-      addEntityMessageParameter(context);
+      addEntityMessageParameter(context, isSubtipo);
     }
     return returnValue;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context) {
+  private void addEntityMessageParameter(ConstraintValidatorContext context, Boolean isSubtipo) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-    hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(TipoProteccion.class));
+
+    final String errorMessage = isSubtipo ? ApplicationContextSupport.getMessage(this.subtipoProteccionMesage)
+        : ApplicationContextSupport.getMessage(TipoProteccion.class);
+    hibernateContext.addMessageParameter("entity", errorMessage);
     // Disable default message to allow binding the message to a property
     hibernateContext.disableDefaultConstraintViolation();
     // Build a custom message for a property using the default message
