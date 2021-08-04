@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
@@ -47,6 +48,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
@@ -158,6 +160,9 @@ public class ProyectoController {
   /** ProyectoResponsableEconomicoService */
   private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
 
+  /** ProyectoPeriodoJustificacionService */
+  private final ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -186,6 +191,7 @@ public class ProyectoController {
    * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
    * @param proyectoResponsableEconomicoService               {@link ProyectoResponsableEconomicoService}.
    * @param proyectoAgrupacionGastoService                    {@link ProyectoAgrupacionGastoService}.
+   * @param proyectoPeriodoJustificacionService               {@link ProyectoPeriodoJustificacionService}.
    */
   public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
       ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
@@ -202,7 +208,8 @@ public class ProyectoController {
       ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
       ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService,
       ProyectoResponsableEconomicoService proyectoResponsableEconomicoService,
-      ProyectoAgrupacionGastoService proyectoAgrupacionGastoService) {
+      ProyectoAgrupacionGastoService proyectoAgrupacionGastoService,
+      ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService) {
     this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
@@ -227,6 +234,7 @@ public class ProyectoController {
     this.proyectoConceptoGastoService = proyectoConceptoGastoService;
     this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
     this.proyectoAgrupacionGastoService = proyectoAgrupacionGastoService;
+    this.proyectoPeriodoJustificacionService = proyectoPeriodoJustificacionService;
   }
 
   /**
@@ -1029,6 +1037,30 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoAgrupacionGastoByProyectoId(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de todos los
+   * {@link ProyectoPeriodoJustificacion}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoperiodojustificacion")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoPeriodoJustificacion>> findAllPeriodoJustificacionByProyectoId(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllPeriodoJustificacionByProyectoId(Long id, String query, Pageable paging) - start");
+    Page<ProyectoPeriodoJustificacion> page = proyectoPeriodoJustificacionService.findAllByProyectoId(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllPeriodoJustificacionByProyectoId(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllPeriodoJustificacionByProyectoId(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

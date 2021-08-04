@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
@@ -135,7 +136,10 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
 
   @MockBean
-  private ProyectoAgrupacionGastoService prroyectoAgrupacionGastoService;
+  private ProyectoAgrupacionGastoService proyectoAgrupacionGastoService;
+
+  @MockBean
+  private ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
