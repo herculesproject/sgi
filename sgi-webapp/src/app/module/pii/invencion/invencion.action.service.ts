@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionService } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { InvencionDocumentoService } from '@core/services/pii/invencion/invencion-documento/invencion-documento.service';
-import { InvencionDocumentoFragment } from './invencion-formulario/invencion-documento/invencion-documento.fragment';
 import { InformePatentabilidadService } from '@core/services/pii/informe-patentabilidad/informe-patentabilidad.service';
+import { InvencionDocumentoService } from '@core/services/pii/invencion/invencion-documento/invencion-documento.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
+import { NGXLogger } from 'ngx-logger';
 import { InvencionDatosGeneralesFragment } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.fragment';
+import { InvencionDocumentoFragment } from './invencion-formulario/invencion-documento/invencion-documento.fragment';
 import { InvencionInformesPatentabilidadFragment } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.fragment';
+import { InvencionInventorFragment } from './invencion-formulario/invencion-inventor/invencion-inventor.fragment';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
 import { INVENCION_DATA_KEY } from './invencion.resolver';
 
@@ -27,11 +30,13 @@ export class InvencionActionService extends ActionService {
     DATOS_GENERALES: 'datos-generales',
     DOCUMENTOS: 'documentos',
     INFORME_PATENTABILIDAD: 'informe-patentabilidad',
+    INVENCION_INVENTOR: 'invencion-inventor'
   };
 
   private datosGenerales: InvencionDatosGeneralesFragment;
   private documentos: InvencionDocumentoFragment;
   private informesPatentabilidad: InvencionInformesPatentabilidadFragment;
+  private invencionInventoresFragment: InvencionInventorFragment;
 
   get canEdit(): boolean {
     return this.data?.canEdit ?? true;
@@ -46,18 +51,25 @@ export class InvencionActionService extends ActionService {
     areaConocimientoService: AreaConocimientoService,
     informePatentabilidadService: InformePatentabilidadService,
     empresaService: EmpresaService,
+    personaService: PersonaService,
+    readonly logger: NGXLogger,
   ) {
     super();
+
     this.id = Number(route.snapshot.paramMap.get(INVENCION_ROUTE_PARAMS.ID));
     if (this.id) {
       this.data = route.snapshot.data[INVENCION_DATA_KEY];
       this.enableEdit();
     }
 
-    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService, invencionDocumentoService, this.canEdit);
+    this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService,
+      invencionDocumentoService, this.canEdit);
+    this.invencionInventoresFragment = new InvencionInventorFragment(this.id, logger, invencionService,
+      personaService, empresaService, this.canEdit);
 
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+    this.addFragment(this.FRAGMENT.INVENCION_INVENTOR, this.invencionInventoresFragment);
 
     if (this.isEdit()) {
       this.documentos = new InvencionDocumentoFragment(this.id, invencionService, invencionDocumentoService, documentoService);
@@ -69,5 +81,6 @@ export class InvencionActionService extends ActionService {
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
       this.addFragment(this.FRAGMENT.INFORME_PATENTABILIDAD, this.informesPatentabilidad);
     }
+
   }
 }

@@ -8,7 +8,8 @@
       [route]="[INVENCION_ROUTE_NAMES.DOCUMENTOS]" [title]="'pii.invencion-documentos' | translate">
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthority="['PII-INV-V','PII-INV-E']"
-      [route]="[INVENCION_ROUTE_NAMES.EQUIPO_INVENTOR]" [title]="'pii.invencion-equipo-inventor' | translate">
+      [route]="[INVENCION_ROUTE_NAMES.EQUIPO_INVENTOR]" [title]="'pii.invencion-equipo-inventor' | translate"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.INVENCION_INVENTOR)">
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthority="['PII-INV-V','PII-INV-E']"
       [route]="[INVENCION_ROUTE_NAMES.TITULARIDAD]" [title]="'pii.invencion-titularidad' | translate">
