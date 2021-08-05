@@ -12,13 +12,12 @@ public class PeriodDateUtil {
 
   private static final int MONTHS_TO_SUBTRACT = 1;
 
-  public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, Integer mesInicial,
-      Instant fechaCalculoPeriodoRef, TimeZone timeZone) {
+  public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, Integer mesInicial, TimeZone timeZone) {
     if (mesInicial == null) {
       return null;
     }
 
-    ZonedDateTime fechaBase = fechaCalculoPeriodoRef.atZone(timeZone.toZoneId());
+    ZonedDateTime fechaBase = fechaInicio.atZone(timeZone.toZoneId());
 
     // El número de meses a sumar siempre es el mes en el que empezar menos uno (si
     // empezamos en el primer mes, no hay que sumar nada)
@@ -26,21 +25,15 @@ public class PeriodDateUtil {
 
     Instant instantInicioPeriodo = fechaInicioPeriodo.toInstant();
 
-    // La fecha de inicio del periodo nunca puede ser anterior a la fecha de inicio
-    // del proyecto
-    if (fechaInicio == null) {
-      return instantInicioPeriodo;
-    }
-    return fechaInicio.isAfter(instantInicioPeriodo) ? fechaInicio : instantInicioPeriodo;
+    return instantInicioPeriodo;
   }
 
-  public static Instant calculateFechaFinPeriodo(Instant fechaFin, Integer mesFinal, Instant fechaCalculoPeriodoRef,
-      TimeZone timeZone) {
+  public static Instant calculateFechaFinPeriodo(Instant fechaInicio, Integer mesFinal, Instant fechaFin, TimeZone timeZone) {
     if (mesFinal == null) {
       return null;
     }
 
-    ZonedDateTime fechaBase = fechaCalculoPeriodoRef.atZone(timeZone.toZoneId());
+    ZonedDateTime fechaBase = fechaInicio.atZone(timeZone.toZoneId());
 
     // Se calcula el primer día del mes siguiente y se resta un segundo para tener
     // el último mes del día del mes en el que finalizar a las 23:59.59

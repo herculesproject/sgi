@@ -109,11 +109,6 @@ public class Proyecto extends BaseEntity {
   @NotNull
   private Instant fechaInicio;
 
-  /** Fecha Base. */
-  @Column(name = "fecha_base", nullable = false)
-  @NotNull
-  private Instant fechaBase;
-
   /** Fecha Fin. */
   @Column(name = "fecha_fin", nullable = false)
   @NotNull

@@ -1281,7 +1281,6 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
     proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setActivo(true);
-    proyecto.setFechaBase(Instant.now());
 
     if (id != null) {
       proyecto.setEstado(estadoProyecto);

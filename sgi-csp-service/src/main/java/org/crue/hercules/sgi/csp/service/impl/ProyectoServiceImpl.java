@@ -1,10 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -440,6 +438,10 @@ public class ProyectoServiceImpl implements ProyectoService {
     if (!CollectionUtils.isEmpty(equipos)) {
       equipos.stream().map(equipo -> {
         equipo.setFechaFin(fechaFinNew);
+        if (equipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
+          // La fecha de inicio nunca puede ser superior a la de fin
+          equipo.setFechaInicio(fechaFinNew);
+        }
         return equipo;
       }).collect(Collectors.toList());
     }
@@ -662,8 +664,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     } else {
       newProyectoIVA.setIva(null);
     }
-    newProyectoIVA.setFechaInicio(Instant.now().atZone(ZoneId.systemDefault()).plusDays(1).withHour(00).withMinute(00)
-        .withSecond(00).toInstant());
+    newProyectoIVA.setFechaInicio(Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).plusDays(1)
+        .withHour(00).withMinute(00).withSecond(00).toInstant());
     newProyectoIVA.setFechaFin(null);
     newProyectoIVA.setProyectoId(proyectoActualizado.getId());
 
@@ -686,8 +688,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     // Al antiguo proyecto IVA le ponemos de fecha de fin actual
     ProyectoIVA oldProyectoIVA = proyectoGuardado.getIva();
     if (oldProyectoIVA != null && oldProyectoIVA.getIva() != null) {
-      oldProyectoIVA.setFechaFin(
-          Instant.now().atZone(ZoneId.systemDefault()).withHour(23).withMinute(59).withSecond(59).toInstant());
+      oldProyectoIVA.setFechaFin(Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).withHour(23)
+          .withMinute(59).withSecond(59).toInstant());
       oldProyectoIVA = proyectoIVARepository.save(oldProyectoIVA);
     }
 
@@ -900,9 +902,9 @@ public class ProyectoServiceImpl implements ProyectoService {
           projectBuilder.numPeriodo(convocatoriaSeguimiento.getNumPeriodo())
               .tipoSeguimiento(convocatoriaSeguimiento.getTipoSeguimiento()).proyectoId(proyecto.getId())
               .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-                  convocatoriaSeguimiento.getMesInicial(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()))
-              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-                  convocatoriaSeguimiento.getMesFinal(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
+                  convocatoriaSeguimiento.getMesInicial(), sgiConfigProperties.getTimeZone()))
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                  convocatoriaSeguimiento.getMesFinal(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone()));
 
           if (convocatoriaSeguimiento.getFechaInicioPresentacion() != null) {
             projectBuilder.fechaInicioPresentacion(convocatoriaSeguimiento.getFechaInicioPresentacion());
@@ -912,12 +914,14 @@ public class ProyectoServiceImpl implements ProyectoService {
           }
           projectBuilder.observaciones(convocatoriaSeguimiento.getObservaciones());
 
-          // Solo se copian los seguimientos científicos que encajen dentro del rango
-          // del proyecto
-          if (projectBuilder.build().getFechaInicio() == null || (projectBuilder.build().getFechaInicio() != null
-              && projectBuilder.build().getFechaInicio().isBefore(proyecto.getFechaFin()))) {
-            projectBuilder.convocatoriaPeriodoSeguimientoId(convocatoriaSeguimiento.getId());
-            this.proyectoPeriodoSeguimientoService.create(projectBuilder.build());
+          projectBuilder.convocatoriaPeriodoSeguimientoId(convocatoriaSeguimiento.getId());
+          ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = projectBuilder.build();
+          // Solamente crearemos el ProyectoPeriodoSeguimiento si sus fechas calculadas
+          // están dentro de las fechas del proyecto
+          if (proyectoPeriodoSeguimiento.getFechaInicio() == null || proyecto.getFechaFin() == null
+              || (proyectoPeriodoSeguimiento.getFechaInicio() != null && proyecto.getFechaFin() != null
+                  && !proyectoPeriodoSeguimiento.getFechaInicio().isAfter(proyecto.getFechaFin()))) {
+            this.proyectoPeriodoSeguimientoService.create(proyectoPeriodoSeguimiento);
           }
         });
 
@@ -1160,21 +1164,25 @@ public class ProyectoServiceImpl implements ProyectoService {
 
           log.debug("Copy SolicitudProyectoEquipo with id: {0}", solicitudProyectoEquipo.getId());
 
-          ProyectoEquipo.ProyectoEquipoBuilder proyectoEquipo = ProyectoEquipo.builder();
-          proyectoEquipo.proyectoId(proyecto.getId());
+          ProyectoEquipo.ProyectoEquipoBuilder proyectoEquipoBuilder = ProyectoEquipo.builder();
+          proyectoEquipoBuilder.proyectoId(proyecto.getId());
           if (solicitudProyectoEquipo.getMesInicio() != null) {
-            proyectoEquipo.fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-                solicitudProyectoEquipo.getMesInicio(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
+            proyectoEquipoBuilder.fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+                solicitudProyectoEquipo.getMesInicio(), sgiConfigProperties.getTimeZone()));
           }
           if (solicitudProyectoEquipo.getMesFin() != null) {
-            proyectoEquipo.fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-                solicitudProyectoEquipo.getMesFin(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
+            proyectoEquipoBuilder.fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                solicitudProyectoEquipo.getMesFin(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone()));
           }
-          proyectoEquipo.rolProyecto(solicitudProyectoEquipo.getRolProyecto())
+          proyectoEquipoBuilder.rolProyecto(solicitudProyectoEquipo.getRolProyecto())
               .personaRef(solicitudProyectoEquipo.getPersonaRef());
-          return proyectoEquipo.build();
-        }).filter(proyectoEquipo -> Objects.nonNull(proyectoEquipo) && (Objects.isNull(proyectoEquipo.getFechaInicio())
-            || !proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaFin())))
+          return proyectoEquipoBuilder.build();
+        })
+        // Solamente crearemos el ProyectoEquipo si sus fechas calculadas están dentro
+        // de las fechas del proyecto
+        .filter(proyectoEquipo -> proyectoEquipo.getFechaInicio() == null || proyecto.getFechaFin() == null
+            || (proyectoEquipo.getFechaInicio() != null && proyecto.getFechaFin() != null
+                && !proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
 
     this.proyectoEquipoService.update(proyecto.getId(), proyectoEquipos);
@@ -1200,18 +1208,22 @@ public class ProyectoServiceImpl implements ProyectoService {
               .proyectoId(proyecto.getId()).personaRef(responsableEconomicoSolicitud.getPersonaRef()).build();
 
           if (responsableEconomicoSolicitud.getMesInicio() != null) {
-            proyectoResponsableEconomico.setFechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(
-                proyecto.getFechaInicio(), responsableEconomicoSolicitud.getMesInicio(), proyecto.getFechaBase(),
-                sgiConfigProperties.getTimeZone()));
+            proyectoResponsableEconomico
+                .setFechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+                    responsableEconomicoSolicitud.getMesInicio(), sgiConfigProperties.getTimeZone()));
           }
           if (responsableEconomicoSolicitud.getMesFin() != null) {
-            proyectoResponsableEconomico.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-                responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
+            proyectoResponsableEconomico.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                responsableEconomicoSolicitud.getMesFin(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone()));
           }
           return proyectoResponsableEconomico;
-        }).filter(responsableEconomicoProyecto -> Objects.nonNull(responsableEconomicoProyecto))
-        .filter(responsableEconomicoProyecto -> Objects.isNull(responsableEconomicoProyecto.getFechaInicio())
-            || !responsableEconomicoProyecto.getFechaInicio().isAfter(proyecto.getFechaFin()))
+        })
+        // Solamente crearemos el ResponsableEconomicoProyecto si sus fechas calculadas
+        // están dentro de las fechas del proyecto
+        .filter(responsableEconomicoProyecto -> responsableEconomicoProyecto.getFechaInicio() == null
+            || proyecto.getFechaFin() == null
+            || (responsableEconomicoProyecto.getFechaInicio() != null && proyecto.getFechaFin() != null
+                && !responsableEconomicoProyecto.getFechaInicio().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
 
     this.proyectoResponsableEconomicoService.updateProyectoResponsableEconomicos(proyecto.getId(),
@@ -1235,14 +1247,19 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       ProyectoSocio proyectoSocio = createProyectoSocio(proyecto, entidadSolicitud);
 
-      ProyectoSocio proyectoSocioCreado = this.proyectoSocioService.create(proyectoSocio);
+      // Solamente crearemos el ProyectoSocio si sus fechas calculadas están dentro de
+      // las fechas del proyecto
+      if (proyectoSocio.getFechaInicio() == null || proyecto.getFechaFin() == null
+          || (proyectoSocio.getFechaInicio() != null && proyecto.getFechaFin() != null
+              && !proyectoSocio.getFechaInicio().isAfter(proyecto.getFechaFin()))) {
+        ProyectoSocio proyectoSocioCreado = this.proyectoSocioService.create(proyectoSocio);
 
-      copyProyectoEquipoSocio(proyecto, entidadSolicitud, proyectoSocioCreado);
+        copyProyectoEquipoSocio(proyecto, entidadSolicitud, proyectoSocioCreado);
 
-      copyProyectoSocioPeriodoPago(proyecto, entidadSolicitud, proyectoSocioCreado);
+        copyProyectoSocioPeriodoPago(proyecto, entidadSolicitud, proyectoSocioCreado);
 
-      copyProyectoSocioPeriodoJusitificacion(proyecto, entidadSolicitud, proyectoSocioCreado);
-
+        copyProyectoSocioPeriodoJusitificacion(proyecto, entidadSolicitud, proyectoSocioCreado);
+      }
     });
     log.debug("copySocios(Proyecto proyecto) - end");
   }
@@ -1254,9 +1271,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         .numInvestigadores(entidadSolicitud.getNumInvestigadores()).build();
 
     proyectoSocio.setFechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-        entidadSolicitud.getMesInicio(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
-    proyectoSocio.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-        entidadSolicitud.getMesFin(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()));
+        entidadSolicitud.getMesInicio(), sgiConfigProperties.getTimeZone()));
+    proyectoSocio.setFechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+        entidadSolicitud.getMesFin(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone()));
 
     return proyectoSocio;
   }
@@ -1273,18 +1290,19 @@ public class ProyectoServiceImpl implements ProyectoService {
           ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = ProyectoSocioPeriodoJustificacion
               .builder().proyectoSocioId(proyectoSocioCreado.getId())
               .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-                  entidadPeriodoJustificacionSolicitud.getMesInicial(), proyecto.getFechaBase(),
-                  sgiConfigProperties.getTimeZone()))
-              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-                  entidadPeriodoJustificacionSolicitud.getMesFinal(), proyecto.getFechaBase(),
+                  entidadPeriodoJustificacionSolicitud.getMesInicial(), sgiConfigProperties.getTimeZone()))
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                  entidadPeriodoJustificacionSolicitud.getMesFinal(), proyecto.getFechaFin(),
                   sgiConfigProperties.getTimeZone()))
               .numPeriodo(entidadPeriodoJustificacionSolicitud.getNumPeriodo())
               .observaciones(entidadPeriodoJustificacionSolicitud.getObservaciones())
               .fechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio())
               .fechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin()).build();
 
-          if (proyectoSocioPeriodoJustificacion.getFechaInicio() == null
-              || (proyectoSocioPeriodoJustificacion.getFechaInicio() != null
+          // Solamente crearemos el ProyectoSocioPeriodoJustificacion si sus fechas
+          // calculadas están dentro de las fechas del proyecto
+          if (proyectoSocioPeriodoJustificacion.getFechaInicio() == null || proyecto.getFechaFin() == null
+              || (proyectoSocioPeriodoJustificacion.getFechaInicio() != null && proyecto.getFechaFin() != null
                   && !proyectoSocioPeriodoJustificacion.getFechaInicio().isAfter(proyecto.getFechaFin()))) {
             this.proyectoSocioPeriodoJustificacionService.create(proyectoSocioPeriodoJustificacion);
           }
@@ -1298,11 +1316,15 @@ public class ProyectoServiceImpl implements ProyectoService {
         .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId()).stream()
         .map((entidadPeriodoPagoSolicitud) -> ProyectoSocioPeriodoPago.builder()
             .fechaPrevistaPago(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-                entidadPeriodoPagoSolicitud.getMes(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()))
+                entidadPeriodoPagoSolicitud.getMes(), sgiConfigProperties.getTimeZone()))
             .importe(entidadPeriodoPagoSolicitud.getImporte()).numPeriodo(entidadPeriodoPagoSolicitud.getNumPeriodo())
             .proyectoSocioId(proyectoSocio.getId()).build())
-        .filter(proyectoSocioPeriodoPago -> !proyectoSocioPeriodoPago.getFechaPrevistaPago()
-            .isAfter(proyecto.getFechaFin()))
+        // Solamente crearemos el ProyectoSocioPeriodoPago si sus fechas calculadas
+        // están dentro de las fechas del proyecto
+        .filter(proyectoSocioPeriodoPago -> proyectoSocioPeriodoPago.getFechaPrevistaPago() == null
+            || proyecto.getFechaFin() == null
+            || (proyectoSocioPeriodoPago.getFechaPrevistaPago() != null && proyecto.getFechaFin() != null
+                && !proyectoSocioPeriodoPago.getFechaPrevistaPago().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
     this.proyectoSocioPeriodoPagoService.update(proyectoSocio.getId(), proyectoSocioPeriodoPagos);
   }
@@ -1315,16 +1337,19 @@ public class ProyectoServiceImpl implements ProyectoService {
           log.debug("Copy SolicitudProyectoSocioEquipo with id: {0}", entidadEquipoSolicitud.getId());
           return ProyectoSocioEquipo.builder()
               .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-                  entidadEquipoSolicitud.getMesInicio(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()))
-              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-                  entidadEquipoSolicitud.getMesFin(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone()))
+                  entidadEquipoSolicitud.getMesInicio(), sgiConfigProperties.getTimeZone()))
+              .fechaFin(PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+                  entidadEquipoSolicitud.getMesFin(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone()))
 
               .personaRef(entidadEquipoSolicitud.getPersonaRef()).rolProyecto(entidadEquipoSolicitud.getRolProyecto())
               .build();
         })
-        .filter(proyectoEquipoSocio -> Objects.nonNull(proyectoEquipoSocio)
-            && (Objects.isNull(proyectoEquipoSocio.getFechaInicio())
-                || !proyectoEquipoSocio.getFechaInicio().isAfter(proyecto.getFechaFin())))
+        // Solamente crearemos el ProyectoSocioEquipo si sus fechas calculadas
+        // están dentro de las fechas del proyecto
+        .filter(
+            proyectoEquipoSocio -> proyectoEquipoSocio.getFechaInicio() == null || proyecto.getFechaFin() == null
+                || (proyectoEquipoSocio.getFechaInicio() != null && proyecto.getFechaFin() != null
+                    && !proyectoEquipoSocio.getFechaInicio().isAfter(proyecto.getFechaFin())))
         .collect(Collectors.toList());
     this.proyectoEquipoSocioService.update(proyectoSocio.getId(), proyectoSocioEquipos);
   }
@@ -1366,20 +1391,21 @@ public class ProyectoServiceImpl implements ProyectoService {
       conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
 
       Instant fechaInicio = PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-          conceptoGastoConvocatoria.getMesInicial(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone());
+          conceptoGastoConvocatoria.getMesInicial(), sgiConfigProperties.getTimeZone());
       conceptoGastoProyecto.setFechaInicio(fechaInicio);
 
-      Instant fechaFin = PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaFin(),
-          conceptoGastoConvocatoria.getMesFinal(), proyecto.getFechaBase(), sgiConfigProperties.getTimeZone());
+      Instant fechaFin = PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
+          conceptoGastoConvocatoria.getMesFinal(), proyecto.getFechaFin(), sgiConfigProperties.getTimeZone());
       conceptoGastoProyecto.setFechaFin(fechaFin);
 
-      // Solo se copian los conceptos que tengan fechas que encajen dentro del rango
-      // del proyecto
-      if (conceptoGastoProyecto.getFechaInicio() == null || (conceptoGastoProyecto.getFechaInicio() != null
-          && conceptoGastoProyecto.getFechaInicio().isBefore(proyecto.getFechaFin()))) {
+      // Solamente crearemos el ProyectoConceptoGasto si sus fechas
+      // calculadas están dentro de las fechas del proyecto
+      if (conceptoGastoProyecto.getFechaInicio() == null || proyecto.getFechaFin() == null
+          || (conceptoGastoProyecto.getFechaInicio() != null && proyecto.getFechaFin() != null
+              && !conceptoGastoProyecto.getFechaInicio().isAfter(proyecto.getFechaFin()))) {
         ProyectoConceptoGasto conceptoGastoCopiado = this.proyectoConceptoGastoService.create(conceptoGastoProyecto);
         this.copyConceptoGastoCodigosEc(conceptoGastoCopiado.getConvocatoriaConceptoGastoId(),
-            conceptoGastoCopiado.getId());
+            conceptoGastoCopiado.getId(), proyecto);
       }
 
     });
@@ -1394,8 +1420,11 @@ public class ProyectoServiceImpl implements ProyectoService {
    *                                    {@link ConvocatoriaConceptoGasto}
    * @param proyectoConceptoGastoId     Identificador del
    *                                    {@link ProyectoConceptoGasto}
+   * @param proyecto                    El {@link Proyecto} al que se copian los
+   *                                    codigos economicos
    */
-  private void copyConceptoGastoCodigosEc(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) {
+  private void copyConceptoGastoCodigosEc(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId,
+      Proyecto proyecto) {
     log.debug("copyConceptosGasto(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) - start");
     List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicosConceptosGastoConvocatoria = convocatoriaConceptoGastoCodigoEcRepository
         .findAllByConvocatoriaConceptoGastoId(convocatoriaConceptoGastoId);
@@ -1407,12 +1436,27 @@ public class ProyectoServiceImpl implements ProyectoService {
           codigoEconomicoProyecto.setProyectoConceptoGastoId(proyectoConceptoGastoId);
           codigoEconomicoProyecto.setCodigoEconomicoRef(codigoEconomicoConvocatoria.getCodigoEconomicoRef());
           codigoEconomicoProyecto.setFechaInicio(codigoEconomicoConvocatoria.getFechaInicio());
-          codigoEconomicoProyecto.setFechaFin(codigoEconomicoConvocatoria.getFechaFin());
+          Instant fechaFin = codigoEconomicoConvocatoria.getFechaFin();
+          Instant fechaFinProyecto = proyecto.getFechaFin();
+          if (fechaFin != null && fechaFinProyecto != null) {
+            // La fechaFin nunca puede ser posterior a la fechaFin del proyecto
+            if (fechaFin.isAfter(fechaFinProyecto)) {
+              fechaFin = fechaFinProyecto;
+            }
+          }
+          codigoEconomicoProyecto.setFechaFin(fechaFin);
           codigoEconomicoProyecto.setObservaciones(codigoEconomicoConvocatoria.getObservaciones());
           codigoEconomicoProyecto.setConvocatoriaConceptoGastoCodigoEcId(codigoEconomicoConvocatoria.getId());
 
           return codigoEconomicoProyecto;
-        }).collect(Collectors.toList());
+        })
+        // Solamente crearemos el ProyectoConceptoGastoCodigoEc si sus fechas calculadas
+        // están dentro de las fechas del proyecto
+        .filter(codigoEconomicoProyecto -> codigoEconomicoProyecto.getFechaInicio() == null
+            || proyecto.getFechaFin() == null
+            || (codigoEconomicoProyecto.getFechaInicio() != null && proyecto.getFechaFin() != null
+                && !codigoEconomicoProyecto.getFechaInicio().isAfter(proyecto.getFechaFin())))
+        .collect(Collectors.toList());
 
     this.proyectoConceptoGastoCodigoEcService.update(proyectoConceptoGastoId, proyectoConceptoGastoCodigoEcs);
     log.debug("copyConceptosGasto(Long convocatoriaConceptoGastoId, Long proyectoConceptoGastoId) - end");
