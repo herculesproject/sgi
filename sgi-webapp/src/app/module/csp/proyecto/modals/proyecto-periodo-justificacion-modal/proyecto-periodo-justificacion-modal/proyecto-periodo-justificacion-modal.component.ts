@@ -186,7 +186,7 @@ export class ProyectoPeriodoJustificacionModalComponent
         {
           value: this.data.convocatoriaPeriodoJustificacion?.mesInicial ?
             getFechaFinPeriodoSeguimiento(this.data.proyecto.fechaInicio, this.data.proyecto.fechaFin,
-              this.data.convocatoriaPeriodoJustificacion.mesFinal, this.data.proyectoPeriodoJustificacion?.fechaInicio) : null,
+              this.data.convocatoriaPeriodoJustificacion.mesFinal) : null,
           disabled: true
         }, [Validators.required]),
       fechaInicioPresentacionConvocatoria: new FormControl(

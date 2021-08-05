@@ -132,7 +132,6 @@ export class SolicitudCrearProyectoModalComponent
       fechaInicio: this.formGroup.controls.fechaInicio.value,
       fechaFin: this.formGroup.controls.fechaFin.value,
       modeloEjecucion: this.formGroup.controls.modeloEjecucion.value,
-      fechaBase: DateTime.local(this.formGroup.controls.fechaInicio.value.year, this.formGroup.controls.fechaInicio.value.month)
     } as IProyecto;
   }
 

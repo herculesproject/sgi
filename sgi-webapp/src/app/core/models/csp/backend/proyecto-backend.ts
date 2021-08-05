@@ -67,8 +67,6 @@ export interface IProyectoBackend {
   activo: boolean;
   /** Tipo de seguimiento */
   tipoSeguimiento: TipoSeguimiento;
-  /** Fecha Base */
-  fechaBase: string;
   /** Importe presupuesto */
   importePresupuesto: number;
   /** Importe concedido */

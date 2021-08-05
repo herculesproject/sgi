@@ -240,7 +240,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
 
       if (periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.mesFinal) {
         periodoSeguimientoListado.fechaFin = getFechaFinPeriodoSeguimiento(this.proyecto.fechaInicio, this.proyecto.fechaFin,
-          periodoSeguimientoListado.convocatoriaPeriodoSeguimiento.mesFinal, periodoSeguimientoListado.fechaInicio);
+          periodoSeguimientoListado.convocatoriaPeriodoSeguimiento.mesFinal);
       }
 
       periodoSeguimientoListado.

@@ -505,13 +505,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     this.proyecto.coordinadorExterno = form.coordinadorExterno.value;
 
-    if (form.fechaInicio.value) {
-      this.proyecto.fechaBase = DateTime.local(form.fechaInicio.value.year, form.fechaInicio.value.month);
-    }
-    else {
-      this.proyecto.fechaBase = undefined;
-    }
-
     return this.proyecto;
   }
 

@@ -20,7 +20,7 @@ export function comparePeriodoSeguimiento(
   let fechaFinConvocatoriaConceptoGasto: DateTime;
   if (convocatoriaPeriodoSeguimiento.mesFinal) {
     fechaFinConvocatoriaConceptoGasto = getFechaFinPeriodoSeguimiento(fechaInicioProyecto, fechaFinProyecto,
-      convocatoriaPeriodoSeguimiento.mesFinal, fechaInicioConvocatoriaPeriodoSeguimiento);
+      convocatoriaPeriodoSeguimiento.mesFinal);
   }
 
   return convocatoriaPeriodoSeguimiento.numPeriodo !== convocatoriaPeriodoSeguimiento.numPeriodo
@@ -47,7 +47,7 @@ export function comparePeriodoJustificacion(
   let fechaFinConvocatoriaConceptoGasto: DateTime;
   if (convocactoriaPeriodoJustificacion.mesFinal) {
     fechaFinConvocatoriaConceptoGasto = getFechaFinPeriodoSeguimiento(fechaInicioProyecto, fechaFinProyecto,
-      convocactoriaPeriodoJustificacion.mesFinal, fechaInicioConvocatoriaPeriodoSeguimiento);
+      convocactoriaPeriodoJustificacion.mesFinal);
   }
 
   return convocactoriaPeriodoJustificacion.numPeriodo !== convocactoriaPeriodoJustificacion.numPeriodo
@@ -63,52 +63,36 @@ export function comparePeriodoJustificacion(
 
 
 /**
- * Obtiene la fecha resultante de sumarle a la fecha de inicio del proyecto el numero de meses de mesInicialPeriodoSeguimiento,
- * si la fecha de inicio del proyecto es mayor que la resultante para el concepto devuelve la del proyecto.
+ * Obtiene la fecha de inicio del periodo seguimiento.
+ *   - A la fecha de inicio del proyecto se suma el numero de meses correspondiente (menos uno)
  *
  * @param fechaInicioProyecto fecha de inicio del proyecto
  * @param mesInicialPeriodoSeguimiento mes inicial del periodo seguimiento en la convocatoria
  * @returns la fecha de inicio
  */
 export function getFechaInicioPeriodoSeguimiento(fechaInicioProyecto: DateTime, mesInicialPeriodoSeguimiento: number): DateTime {
-  let fechaInicioPeriodoSeguimiento = fechaInicioProyecto.plus({ months: mesInicialPeriodoSeguimiento - 1 });
-
-  if (mesInicialPeriodoSeguimiento > 1) {
-    fechaInicioPeriodoSeguimiento = fechaInicioPeriodoSeguimiento.set({
-      day: 1, hour: 0, minute: 0, second: 0
-    });
-  }
-
-  return fechaInicioPeriodoSeguimiento;
+  return fechaInicioProyecto.plus({ months: mesInicialPeriodoSeguimiento - 1 });
 }
 
 /**
  * Obtiene la fecha de fin del periodo seguimiento.
- *  - Si la fecha resultante de sumar el numero de meses a la fecha de inicio del proyecto
- *    esta dentro del rango del proyecto o la fecha inicio del periodo de seguimiento es posterior a la fecha de fin del proyecto,
- *   el ultimo dia del mes resultante de la suma a las 23:59:59
- *  - Si la fecha de fin es posterior a la fecha de fin del proyecto y la fecha de inicio del periodo de seguimiento
- *    esta dentro del proyecto, la fecha de fin del proyecto
+ *  - A la fecha de inicio del proyecto se suma el numero de meses correspondiente y se resta un segundo (para que sea el día anterior)
+ *  - Si la fecha de fin es posterior a la fecha de fin del proyecto se usa la fecha de fin del proyecto
  *
  * @param fechaInicioProyecto fecha de inicio del proyecto
  * @param fechaFinProyecto  fecha de fin del proyecto
  * @param mesFinalPeriodoSeguimiento mes final del concepto de gasto en la convocatoria
- * @param fechaInicioPeriodoSeguimiento fecha de inicio del concepto de gasto
  * @returns la fecha de fin
  */
 export function getFechaFinPeriodoSeguimiento(
   fechaInicioProyecto: DateTime, fechaFinProyecto: DateTime,
-  mesFinalPeriodoSeguimiento: number, fechaInicioPeriodoSeguimiento: DateTime): DateTime {
+  mesFinalPeriodoSeguimiento: number): DateTime {
 
   let fechaFinConvocatoriaPeriodoSeguimiento = fechaInicioProyecto
-    .plus({ months: mesFinalPeriodoSeguimiento - 1 })
-    .set({ hour: 23, minute: 59, second: 59 });
+    .plus({ months: mesFinalPeriodoSeguimiento })
+    .plus({ second: -1 });
 
-  fechaFinConvocatoriaPeriodoSeguimiento = fechaFinConvocatoriaPeriodoSeguimiento
-    .set({ day: fechaFinConvocatoriaPeriodoSeguimiento.daysInMonth });
-
-  if ((!fechaInicioPeriodoSeguimiento || fechaInicioPeriodoSeguimiento < fechaFinProyecto)
-    && fechaFinProyecto < fechaFinConvocatoriaPeriodoSeguimiento) {
+  if (fechaFinProyecto != null && fechaFinConvocatoriaPeriodoSeguimiento > fechaFinProyecto) {
     fechaFinConvocatoriaPeriodoSeguimiento = fechaFinProyecto;
   }
 

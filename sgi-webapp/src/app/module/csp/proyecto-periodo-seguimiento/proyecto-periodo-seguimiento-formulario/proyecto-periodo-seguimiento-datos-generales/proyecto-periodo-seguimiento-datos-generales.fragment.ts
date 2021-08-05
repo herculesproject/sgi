@@ -167,7 +167,7 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
 
           if (convocatoriaPeriodoSeguimiento.mesFinal) {
             this.getFormGroup().controls.fechaFinConvocatoria.setValue(getFechaFinPeriodoSeguimiento(this.proyecto.fechaInicio,
-              this.proyecto.fechaFin, convocatoriaPeriodoSeguimiento.mesFinal, fechaInicioPeriodoSeguimiento));
+              this.proyecto.fechaFin, convocatoriaPeriodoSeguimiento.mesFinal));
           }
 
           if (this.proyectoPeriodoSeguimiento.id) {

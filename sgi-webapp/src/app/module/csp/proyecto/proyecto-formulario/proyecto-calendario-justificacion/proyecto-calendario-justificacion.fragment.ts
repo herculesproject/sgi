@@ -263,7 +263,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
 
       if (periodoJustificacionListado.convocatoriaPeriodoJustificacion?.mesFinal) {
         periodoJustificacionListado.fechaFin = getFechaFinPeriodoSeguimiento(this.proyecto.fechaInicio, this.proyecto.fechaFin,
-          periodoJustificacionListado.convocatoriaPeriodoJustificacion.mesFinal, periodoJustificacionListado.fechaInicio);
+          periodoJustificacionListado.convocatoriaPeriodoJustificacion.mesFinal);
       }
       periodoJustificacionListado.help = {
         class: HelpIconClass.DANGER,
