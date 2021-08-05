@@ -70,9 +70,9 @@ public class SgiWebSecurityConfig {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
       .and()
-        // Require authentication for all requests except for error
+        // Require authentication for all requests except for error and health checks
         .authorizeRequests()
-        .antMatchers("/error").permitAll()
+        .antMatchers("/error", "/actuator/health/liveness", "/actuator/health/readiness").permitAll()
         .antMatchers("/**").authenticated()
       .and()
         // Validate tokens through configured OpenID Provider
