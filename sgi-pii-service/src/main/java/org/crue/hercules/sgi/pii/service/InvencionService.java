@@ -12,7 +12,6 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.exceptions.InvencionNotFoundException;
 import org.crue.hercules.sgi.pii.model.Invencion;
-import org.crue.hercules.sgi.pii.model.SectorAplicacion;
 import org.crue.hercules.sgi.pii.model.TipoProteccion;
 import org.crue.hercules.sgi.pii.repository.InvencionRepository;
 import org.crue.hercules.sgi.pii.repository.specification.InvencionSpecifications;
@@ -27,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Service para gestionar {@link SectorAplicacion}.
+ * Service para gestionar {@link Invencion}.
  */
 @Service
 @Slf4j

@@ -397,6 +397,7 @@
       <column name="descripcion" value="Tipo caducidad 2" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proteccion">
     <insert tableName="solicitud_proteccion">
       <column name="id" valueSequenceNext="solicitud_proteccion_seq" />
@@ -443,4 +444,32 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-tramo_reparto">
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" value="1" />
+      <column name="hasta" value="3001" />
+      <column name="porcentaje_universidad" value="40.00" />
+      <column name="porcentaje_inventores" value="60.00" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" value="3002" />
+      <column name="hasta" value="10001" />
+      <column name="porcentaje_universidad" value="45.00" />
+      <column name="porcentaje_inventores" value="55.00" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" value="10002" />
+      <column name="hasta" value="100001" />
+      <column name="porcentaje_universidad" value="49.50" />
+      <column name="porcentaje_inventores" value="50.50" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
