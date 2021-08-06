@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
 import { InvencionDocumentoModalComponent } from '../../modals/invencion-documento-modal/invencion-documento-modal.component';
 import { InvencionDocumentoFragment } from './invencion-documento.fragment';

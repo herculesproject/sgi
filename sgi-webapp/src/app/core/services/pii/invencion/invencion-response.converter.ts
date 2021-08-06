@@ -23,7 +23,8 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
         padre: value.tipoProteccion.padre !== null ? {
           id: value.tipoProteccion.padre?.id,
           nombre: value.tipoProteccion.padre?.nombre
-        } : null
+        } : null,
+        tipoPropiedad: value.tipoProteccion.tipoPropiedad
       } as ITipoProteccion,
       activo: value.activo
     };
@@ -45,7 +46,8 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
         padre: value.tipoProteccion.padre !== null ? {
           id: value.tipoProteccion.padre?.id,
           nombre: value.tipoProteccion.padre?.nombre
-        } : null
+        } : null,
+        tipoPropiedad: value.tipoProteccion.tipoPropiedad
       },
       activo: value.activo
     };

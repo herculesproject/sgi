@@ -1,4 +1,4 @@
-import { marker } from "@biesbjerg/ngx-translate-extract-marker";
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 export enum TipoPropiedad {
   INTELECTUAL = 'INTELECTUAL',

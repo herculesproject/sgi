@@ -1,3 +1,5 @@
+import { TipoPropiedad } from '@core/enums/tipo-propiedad';
+
 export interface IInvencionResponse {
   id: number;
   titulo: string;
@@ -11,7 +13,8 @@ export interface IInvencionResponse {
     padre: {
       id: number;
       nombre: string;
-    }
+    };
+    tipoPropiedad: TipoPropiedad;
   }
   activo: boolean;
 }

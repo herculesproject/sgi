@@ -38,6 +38,9 @@ import { IInvencionSectorAplicacionResponse } from './invencion-sector-aplicacio
 import {
   INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER
 } from './invencion-sector-aplicacion/invencion-sector-aplicacion-response.converter';
+import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from './solicitud-proteccion/solicitud-proteccion-response.converter';
+import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
+import { ISolicitudProteccionResponse } from './solicitud-proteccion/solicitud-proteccion-response';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
@@ -146,8 +149,8 @@ export class InvencionService extends _InvencionServiceMixinBase {
 
   /**
    * Obtiene todos los documentos de una invención dado el id
-   * @param id
-   * @param options
+   * @param id id de la invencion
+   * @param options opciones de busqueda
    * @returns documentos de una invencion
    */
   findAllInvencionDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencionDocumento>> {
@@ -231,4 +234,18 @@ export class InvencionService extends _InvencionServiceMixinBase {
         map((response => INVENCION_INVENTOR_RESPONSE_CONVERTER.toTargetArray(response ?? [])))
       )
 
+
+  /**
+   * Obtiene la lista de solicitudes de proteccion asociadas a una invencion
+   * @param id id de la invencion
+   * @param options opciones de busqueda
+   * @returns lista de solicitudes de proteccion asociadas a la invencion
+   */
+  public findAllSolicitudesProteccion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudProteccion>> {
+    return this.find<ISolicitudProteccionResponse, ISolicitudProteccion>(
+      `${this.endpointUrl}/${id}/solicitudesproteccion`,
+      options,
+      SOLICITUD_PROTECCION_RESPONSE_CONVERTER
+    );
+  }
 }

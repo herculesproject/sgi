@@ -148,7 +148,6 @@ export class ViaProteccionModalComponent
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) =>
       this.msgParamMesesPrioridadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
-
   }
 
   private initLayoutProperties() {

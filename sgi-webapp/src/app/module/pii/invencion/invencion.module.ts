@@ -22,6 +22,7 @@ import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { InvencionInformesPatentabilidadComponent } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.component';
 import { InformePatentabilidadModalComponent } from './modals/informe-patentabilidad-modal/informe-patentabilidad-modal.component';
 import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
+import { SolicitudProteccionComponent } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
     InvencionInformesPatentabilidadComponent,
     InformePatentabilidadModalComponent,
     InvencionInventorComponent,
-    InvencionInventorModalComponent
+    InvencionInventorModalComponent,
+    SolicitudProteccionComponent
   ],
   imports: [
     CommonModule,
