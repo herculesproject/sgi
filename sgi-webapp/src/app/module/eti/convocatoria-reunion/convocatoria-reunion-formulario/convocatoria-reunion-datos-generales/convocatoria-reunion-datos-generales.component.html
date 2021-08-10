@@ -89,34 +89,19 @@
       </mat-form-field>
     </div>
 
-    <!-- Hora inicio -->
+    <!-- Hora -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.convocatoria-reunion.hora-inicio' | translate}}</mat-label>
-        <input matInput formControlName="horaInicio" id="horaInicio" type="number"
-          placeholder="{{'eti.convocatoria-reunion.hora-inicio' | translate}}" required>
+        <input matTimepicker #timepicker="matTimepicker" formControlName="horaInicio" disableDialogOpenOnClick="true"
+          strict="false" okLabel="{{ 'btn.ok' | translate }}" cancelLabel="{{ 'btn.cancel' | translate }}" required>
+        <button mat-icon-button type="button" matSuffix (click)="timepicker.showDialog()" color="primary"
+          [disabled]="formGroup.controls.horaInicio.disabled">
+          <mat-icon>access_time</mat-icon>
+        </button>
         <mat-error *ngIf="formGroup.controls.horaInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamHoraInicioEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.noValido">
-          {{'error.invalid.entity' | translate:msgParamHoraInicioEntity}}
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <!-- Minuto inicio -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field>
-        <mat-label>{{'eti.convocatoria-reunion.minuto-inicio' | translate}}</mat-label>
-        <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
-          placeholder="{{'eti.convocatoria-reunion.minuto-inicio' | translate}}" required>
-        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.required">
-          {{'error.required.entity' | translate:msgParamMinutoInicioEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.noValido">
-          {{'error.invalid.entity' | translate:msgParamMinutoInicioEntity}}
         </mat-error>
       </mat-form-field>
     </div>

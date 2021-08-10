@@ -740,6 +740,9 @@ export class Group implements IGroup {
     } else if (x instanceof DateTime && y instanceof DateTime) {
       // if is DateTime compare with Milliseconds to ignore locale
       return x.toMillis() === y.toMillis();
+    } else if (x instanceof Date && y instanceof Date) {
+      // if is Date compare with Milliseconds to ignore locale
+      return x.getTime() === y.getTime();
     } else {
       for (const p in x) {
         if (!x.hasOwnProperty(p)) {

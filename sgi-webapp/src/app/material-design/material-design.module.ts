@@ -33,6 +33,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { TIME_ZONE } from '@core/time-zone';
+import { MatTimepickerModule } from 'mat-timepicker';
 import { LuxonDateAdapter, LUXON_DATE_FORMATS } from './luxon-date-adapter';
 import { LuxonDateTimeAdapter, LUXON_DATETIME_FORMATS } from './luxon-datetime-adapter';
 
@@ -69,7 +70,8 @@ import { LuxonDateTimeAdapter, LUXON_DATETIME_FORMATS } from './luxon-datetime-a
     FlexLayoutModule,
     MatTreeModule,
     MatStepperModule,
-    NgxMatDatetimePickerModule
+    NgxMatDatetimePickerModule,
+    MatTimepickerModule
   ],
   providers: [
     {
