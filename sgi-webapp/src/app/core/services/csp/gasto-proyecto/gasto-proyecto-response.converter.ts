@@ -14,15 +14,15 @@ class GastoProyectoResponseConverter extends SgiBaseConverter<IGastoProyectoResp
       proyectoId: value.proyectoId,
       gastoRef: value.gastoRef,
       conceptoGasto: {
-        id: value.conceptoGasto.id,
-        nombre: value.conceptoGasto.nombre,
-        descripcion: value.conceptoGasto.nombre
+        id: value.conceptoGasto?.id,
+        nombre: value.conceptoGasto?.nombre,
+        descripcion: value.conceptoGasto?.descripcion
       } as IConceptoGasto,
       estado: {
-        id: value.estado.id,
-        estado: value.estado.estado,
-        fechaEstado: LuxonUtils.fromBackend(value.estado.fechaEstado),
-        comentario: value.estado.comentario,
+        id: value.estado?.id,
+        estado: value.estado?.estado,
+        fechaEstado: LuxonUtils.fromBackend(value.estado?.fechaEstado),
+        comentario: value.estado?.comentario,
         gastoProyectoId: value.id
       },
       fechaCongreso: LuxonUtils.fromBackend(value.fechaCongreso),
@@ -41,7 +41,7 @@ class GastoProyectoResponseConverter extends SgiBaseConverter<IGastoProyectoResp
       conceptoGasto: {
         id: value.conceptoGasto.id,
         nombre: value.conceptoGasto.nombre,
-        descripcion: value.conceptoGasto.nombre
+        descripcion: value.conceptoGasto.descripcion
       },
       estado: {
         id: value.estado.id,

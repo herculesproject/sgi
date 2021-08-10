@@ -9,7 +9,7 @@ import {
   RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult
 } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +80,22 @@ export class PersonaService extends SgiMutableRestService<string, IPersonaBacken
 
   getFormlyView(): Observable<FormlyFieldConfig[]> {
     return this.http.get<FormlyFieldConfig[]>(`${this.endpointUrl}/formly/view`);
+  }
+
+  /**
+   * Busca la persona que tenga el numero de documento
+   *
+   * @param numeroDocumento Numero de documento
+   * @returns la persona con ese numero de documento
+   */
+  findByNumeroDocumento(numeroDocumento: string): Observable<IPersona> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('numeroDocumento', SgiRestFilterOperator.EQUALS, numeroDocumento)
+    };
+
+    return this.findAll(options).pipe(
+      map(result => result.items[0])
+    );
   }
 
 }

@@ -4,7 +4,6 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { AnualidadGastoService } from '@core/services/csp/anualidad-gasto/anualidad-gasto.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
@@ -44,7 +43,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     personaService: PersonaService,
     proyectoAnualidadService: ProyectoAnualidadService,
     private proyectoAgrupacionGasto: ProyectoAgrupacionGastoService,
-    private gastoProyectoService: GastoProyectoService
+    protected gastoProyectoService: GastoProyectoService
   ) {
     super(key, proyectoSge, proyectosRelacionados, proyectoService, personaService, proyectoAnualidadService);
     this.setComplete(true);
@@ -81,7 +80,12 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   protected abstract getColumns(): Observable<IColumnDefinition[]>;
 
-  protected abstract getDatosEconomicos(anualidades: string[], devengosRang?: any, contabilizacionRange?: any, pagosRang?: any): Observable<IDatoEconomico[]>;
+  protected abstract getDatosEconomicos(
+    anualidades: string[],
+    devengosRang?: any,
+    contabilizacionRange?: any,
+    pagosRang?: any
+  ): Observable<IDatoEconomico[]>;
 
   protected buildRows(datosEconomicos: IDatoEconomico[]): Observable<RowTreeDesglose<IDesglose>[]> {
     return from(datosEconomicos).pipe(
@@ -92,7 +96,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         return this.gastoProyectoService.findAll(options).pipe(
           map(response => {
             if (response.items.length) {
-              datoEconomico.proyecto = this.proyectosMap.get(response.items[0].id.toString());
+              datoEconomico.proyecto = this.proyectosMap.get(response.items[0].proyectoId.toString());
               datoEconomico.conceptoGasto = response.items[0].conceptoGasto;
             }
             else {

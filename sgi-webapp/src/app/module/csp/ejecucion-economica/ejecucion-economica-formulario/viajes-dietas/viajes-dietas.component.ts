@@ -3,13 +3,14 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
-import { ViajesDietasModalComponent } from '../../modals/viajes-dietas-modal/viajes-dietas-modal.component';
+import { DatoEconomicoDetalleModalData, ViajesDietasModalComponent } from '../../modals/viajes-dietas-modal/viajes-dietas-modal.component';
 import { RowTreeDesglose } from '../desglose-economico.fragment';
 import { IDesglose } from '../facturas-justificantes.fragment';
 import { ViajesDietasFragment } from './viajes-dietas.fragment';
@@ -37,6 +38,7 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
   constructor(
     actionService: EjecucionEconomicaActionService,
     private ejecucionEconomicaService: EjecucionEconomicaService,
+    private gastoProyectoService: GastoProyectoService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.VIAJES_DIETAS, actionService);
@@ -57,13 +59,37 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
   }
 
   showDetail(element: IDesglose): void {
-    this.subscriptions.push(this.ejecucionEconomicaService.getViajeDieta(element.id).subscribe(
+    this.subscriptions.push(this.ejecucionEconomicaService.getViajeDieta(element.id).pipe(
+      map(detalle => {
+        const datoEconomicoDetalle = detalle as DatoEconomicoDetalleModalData;
+        datoEconomicoDetalle.proyectosSgi = this.formPart.relaciones$.value.map(relacion => relacion.proyecto);
+        datoEconomicoDetalle.proyecto = element.proyecto;
+        return datoEconomicoDetalle;
+      }),
+      switchMap((detalle) => {
+        detalle.gastoProyecto = this.formPart.updatedGastosProyectos.get(element.id);
+        if (!detalle.gastoProyecto) {
+          return this.gastoProyectoService.findByGastoRef(element.id).pipe(
+            map(gastoProyecto => {
+              detalle.gastoProyecto = gastoProyecto;
+              return detalle;
+            })
+          );
+        }
+        return of(detalle);
+      })
+    ).subscribe(
       (detalle) => {
-        const config: MatDialogConfig<IDatoEconomicoDetalle> = {
+        const config: MatDialogConfig<DatoEconomicoDetalleModalData> = {
           panelClass: 'sgi-dialog-container',
           data: detalle
         };
-        this.matDialog.open(ViajesDietasModalComponent, config);
+        const dialogRef = this.matDialog.open(ViajesDietasModalComponent, config);
+        dialogRef.afterClosed().subscribe((modalData: DatoEconomicoDetalleModalData) => {
+          if (modalData) {
+            this.formPart.updateGastoProyecto(modalData.gastoProyecto);
+          }
+        });
       }
     ));
   }
