@@ -10,16 +10,16 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { SectorAplicacionModalComponent } from './sector-aplicacion-modal.component';
+import { TramoRepartoModalComponent } from './tramo-reparto-modal.component';
 
-describe('SectorAplicacionModalComponent', () => {
-  let component: SectorAplicacionModalComponent;
-  let fixture: ComponentFixture<SectorAplicacionModalComponent>;
+describe('TramoRepartoModalComponent', () => {
+  let component: TramoRepartoModalComponent;
+  let fixture: ComponentFixture<TramoRepartoModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SectorAplicacionModalComponent
+        TramoRepartoModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -41,7 +41,7 @@ describe('SectorAplicacionModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SectorAplicacionModalComponent);
+    fixture = TestBed.createComponent(TramoRepartoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

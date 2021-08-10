@@ -15,6 +15,7 @@ const MSG_SECTOR_APLICACION_TITLE = marker('pii.sector-aplicacion');
 const MSG_RESULTADO_INFORME_PATENTABILIDAD_TITLE = marker('pii.resultado-informe-patentabilidad');
 const MSG_TIPO_PROCEDIMIENTO_TITLE = marker('pii.tipo-procedimiento');
 const MSG_VIA_PROTECCION_TITLE = marker('pii.via-proteccion');
+const MSG_TRAMO_REPARTO_TITLE = marker('pii.tramo-reparto');
 
 const routes: SgiRoutes = [
   {
@@ -108,6 +109,19 @@ const routes: SgiRoutes = [
           title: MSG_VIA_PROTECCION_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthorityForAnyUO: ['PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E', 'PII-VPR-B', 'PII-VPR-R']
+        }
+      },
+      {
+        path: PII_ROUTE_NAMES.TRAMO_REPARTO,
+        loadChildren: () =>
+          import('./tramo-reparto/tramo-reparto.module').then(
+            (m) => m.TramoRepartoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TRAMO_REPARTO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['PII-TRE-V', 'PII-TRE-C', 'PII-TRE-E', 'PII-TRE-B', 'PII-TRE-R']
         }
       },
       { path: '**', component: null }

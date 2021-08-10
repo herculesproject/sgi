@@ -20,8 +20,8 @@ export class NumberValidator {
 
       const numeroAnteriorNumber = numeroAnteriorControl.value;
       const numeroPosteriorNumber = numeroPosteriorControl.value;
-
-      if (numeroPosteriorNumber && (!numeroAnteriorNumber || numeroAnteriorNumber >= numeroPosteriorNumber)) {
+      // if a 0 number (falsy value) is patched into the form !numeroAnteriorNumber is true
+      if (numeroPosteriorNumber && ((!numeroAnteriorNumber && numeroAnteriorNumber !== 0) || numeroAnteriorNumber >= numeroPosteriorNumber)) {
         numeroPosteriorControl.setErrors({ after: true });
         numeroPosteriorControl.markAsTouched({ onlySelf: true });
       } else if (numeroPosteriorControl.errors) {
@@ -95,4 +95,43 @@ export class NumberValidator {
     };
   }
 
+  /**
+   * Comprueba que el sumatorio de los campos pasados como parámetros es igual al valor inicial
+   * (Sólo hace la comprobación cuando todos los inputs indicados no tienen otros errores)
+   *
+   * @param value Valor al que tiene que ser igual el sumatorio de los campos indicados.
+   * @param fieldsName Array con el nombre de los campos a sumar.
+   */
+  static fieldsSumEqualsToValue(value: number, ...fieldsName: string[]): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      let hasAnyControlOtherErrors = false;
+      const totalValue = fieldsName.reduce(
+        (accum, fieldName) => {
+          const control = formGroup.controls[fieldName];
+          const { fieldsSumNotEqualsToValue, ...otherErrors } = control.errors ?? {};
+          hasAnyControlOtherErrors = hasAnyControlOtherErrors || Object.keys(otherErrors).length > 0;
+          const value = Number(control.value === null ? NaN : control.value);
+          return accum + value;
+        },
+        0
+      );
+      if (hasAnyControlOtherErrors || isNaN(totalValue) || totalValue === value) {
+        fieldsName.forEach(fieldName => {
+          const control = formGroup.controls[fieldName];
+          if (control.errors?.fieldsSumNotEqualsToValue) {
+            delete control.errors.fieldsSumNotEqualsToValue;
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        });
+        return null;
+      } else {
+        fieldsName.forEach(fieldName => {
+          const control = formGroup.controls[fieldName];
+          control.setErrors({ fieldsSumNotEqualsToValue: true });
+          control.markAsTouched({ onlySelf: true });
+        });
+        return { fieldsSumNotEqualsToValue: { value } };
+      }
+    };
+  }
 }

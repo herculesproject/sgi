@@ -35,6 +35,10 @@
             [routerLink]="[PII_ROUTE_NAMES.TIPO_PROCEDIMIENTO]" [routerLinkActive]="['is-active']">
             {{'pii.tipo-procedimiento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
           </a>
+          <a mat-list-item *sgiHasAnyAuthority="['PII-TRE-V', 'PII-TRE-C', 'PII-TRE-E', 'PII-TRE-B', 'PII-TRE-R']"
+            [routerLink]="[PII_ROUTE_NAMES.TRAMO_REPARTO]" [routerLinkActive]="['is-active']">
+            {{'pii.tramo-reparto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
+          </a>
           <a mat-list-item *sgiHasAnyAuthority="['PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E','PII-VPR-B','PII-VPR-R']"
             [routerLink]="[PII_ROUTE_NAMES.VIA_PROTECCION]" [routerLinkActive]="['is-active']">
             {{'pii.via-proteccion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
