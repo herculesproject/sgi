@@ -22,8 +22,6 @@ const MSG_ACEPTAR = marker('btn.ok');
 export class TipoProteccionSubtipoModalComponent
   extends BaseModalComponent<StatusWrapper<ITipoProteccion>, TipoProteccionSubtipoModalComponent> implements OnInit, OnDestroy {
 
-  subtipoProteccion: StatusWrapper<ITipoProteccion>;
-
   msgParamNombreEntity = {};
   msgParamDescripcionEntity = {};
   title: string;
@@ -37,11 +35,6 @@ export class TipoProteccionSubtipoModalComponent
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, subtipoProteccion);
-    if (subtipoProteccion) {
-      this.subtipoProteccion = subtipoProteccion;
-    } else {
-      this.subtipoProteccion = new StatusWrapper<ITipoProteccion>({ activo: true } as ITipoProteccion);
-    }
   }
 
   ngOnInit(): void {
@@ -71,18 +64,22 @@ export class TipoProteccionSubtipoModalComponent
 
   protected getDatosForm(): StatusWrapper<ITipoProteccion> {
     if (this.formGroup.touched) {
-      this.subtipoProteccion.value.nombre = this.formGroup.controls.nombre.value;
-      this.subtipoProteccion.value.descripcion = this.formGroup.controls.descripcion.value;
-      this.subtipoProteccion.setEdited();
+      this.entity.value.nombre = this.formGroup.controls.nombre.value;
+      this.entity.value.descripcion = this.formGroup.controls.descripcion.value;
+      if (!this.entity.created) {
+        this.entity.setEdited();
+      }
     }
-    return this.subtipoProteccion;
+
+    return this.entity;
   }
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.subtipoProteccion?.value.nombre, [Validators.maxLength(50)]),
-      descripcion: new FormControl(this.subtipoProteccion?.value.descripcion, [Validators.maxLength(250)]),
+      nombre: new FormControl(this.entity?.value.nombre, [Validators.maxLength(50)]),
+      descripcion: new FormControl(this.entity?.value.descripcion, [Validators.maxLength(250)]),
     });
+
     return formGroup;
   }
 

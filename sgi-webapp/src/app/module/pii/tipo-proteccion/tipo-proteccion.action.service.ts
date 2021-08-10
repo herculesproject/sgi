@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { ActionService } from '@core/services/action-service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { TipoProteccionDatosGeneralesFragment } from './tipo-proteccion-formulario/tipo-proteccion-datos-generales/tipo-proteccion-datos-generales.fragment';
 import { TipoProteccionSubtiposFragment } from './tipo-proteccion-formulario/tipo-proteccion-subtipos/tipo-proteccion-subtipos.fragment';
@@ -26,7 +27,8 @@ export class TipoProteccionActionService extends ActionService {
   constructor(
     private readonly logger: NGXLogger,
     private route: ActivatedRoute,
-    private tipoProteccionService: TipoProteccionService
+    private tipoProteccionService: TipoProteccionService,
+    private readonly snackBarService: SnackBarService
   ) {
     super();
     this.tipoProteccion = {} as ITipoProteccion;
@@ -40,7 +42,7 @@ export class TipoProteccionActionService extends ActionService {
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.tipoProteccionDatosGenerales);
 
     this.tipoProteccionSubtipos = new TipoProteccionSubtiposFragment(this.logger, this.tipoProteccion?.id,
-      this.tipoProteccionService);
+      this.tipoProteccionService, this.snackBarService);
     this.addFragment(this.FRAGMENT.SUBTIPOS, this.tipoProteccionSubtipos);
   }
 

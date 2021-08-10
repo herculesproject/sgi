@@ -4,6 +4,18 @@
   </section>
   <section class="tipo-proteccion-datos-generales-datos" fxFill fxLayout="row wrap">
     <form [formGroup]="formGroup" fxFill fxLayout="row wrap" fxLayoutGap="10px">
+      <!-- TipoPropiedad -->
+      <div fxFlex="calc(50 - 10px)">
+        <mat-form-field>
+          <mat-label>{{'pii.tipo-proteccion.tipo-propiedad' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoPropiedad" [enumMap]="TIPO_PROPIEDAD_MAP"
+            [required]="FormGroupUtil.hasValidator(this.formGroup,'tipoPropiedad','required')"></sgi-select-enum>
+          <mat-error
+            *ngIf="FormGroupUtil.hasValidator(this.formGroup,'tipoPropiedad','required') && formGroup.controls.tipoPropiedad.errors?.required">
+            {{'error.required.entity' | translate:msgParamTipoPropiedadEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
       <!-- Nombre -->
       <div fxFlex="calc(50 - 10px)">
         <mat-form-field>
@@ -15,18 +27,6 @@
           </mat-error>
           <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <!-- TipoPropiedad -->
-      <div fxFlex="calc(50 - 10px)">
-        <mat-form-field>
-          <mat-label>{{'pii.tipo-proteccion.tipo-propiedad' | translate}}</mat-label>
-          <sgi-select-enum formControlName="tipoPropiedad" [enumMap]="TIPO_PROPIEDAD_MAP"
-            [required]="FormGroupUtil.hasValidator(this.formGroup,'tipoPropiedad','required')"></sgi-select-enum>
-          <mat-error
-            *ngIf="FormGroupUtil.hasValidator(this.formGroup,'tipoPropiedad','required') && formGroup.controls.tipoPropiedad.errors?.required">
-            {{'error.required.entity' | translate:msgParamTipoPropiedadEntity}}
           </mat-error>
         </mat-form-field>
       </div>

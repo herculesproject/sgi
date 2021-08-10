@@ -13,7 +13,7 @@ import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { PII_TIPO_PROTECCION_ROUTE_NAMES } from '../tipo-proteccion-route-names';
 import { TipoProteccionActionService } from '../tipo-proteccion.action.service';
 
-const MSG_BUTTON_EDIT = marker('btn.edit.entity');
+const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
 const TIPO_PROTECCION_KEY = marker('pii.tipo-proteccion');
@@ -65,11 +65,10 @@ export class TipoProteccionEditarComponent extends ActionComponent implements On
     this.textoActualizar$ = tituloSingular$.pipe(
       switchMap((value) => {
         return this.translate.get(
-          MSG_BUTTON_EDIT,
+          MSG_BUTTON_SAVE,
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
-      }),
-      tap(ev => console.log(ev))
+      })
     );
 
     this.subscriptions.push(...[

@@ -31,12 +31,6 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let tipoProteccion">
-          <ng-container *sgiHasAnyAuthority="['PII-TPR-E']">
-            <button *ngIf="tipoProteccion.value.activo" (click)="openModal(tipoProteccion)" mat-button
-              matTooltip="{{'btn.edit' | translate}}">
-              <mat-icon color="primary">border_color</mat-icon>
-            </button>
-          </ng-container>
           <ng-container *sgiHasAnyAuthority="['PII-TPR-B']">
             <button *ngIf="tipoProteccion.value.activo" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateTipoProteccion(tipoProteccion)">
