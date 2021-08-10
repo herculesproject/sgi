@@ -1387,7 +1387,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       conceptoGastoProyecto.setImporteMaximo(conceptoGastoConvocatoria.getImporteMaximo());
       conceptoGastoProyecto.setPermitido(conceptoGastoConvocatoria.getPermitido());
       conceptoGastoProyecto.setObservaciones(conceptoGastoConvocatoria.getObservaciones());
-      conceptoGastoProyecto.setPorcentajeCosteIndirecto(conceptoGastoConvocatoria.getPorcentajeCosteIndirecto());
       conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
 
       Instant fechaInicio = PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
