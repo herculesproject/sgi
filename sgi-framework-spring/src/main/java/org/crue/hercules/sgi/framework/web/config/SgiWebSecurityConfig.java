@@ -64,13 +64,13 @@ public class SgiWebSecurityConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       log.debug("configure(HttpSecurity http) - start");
-    // @formatter:off
-    http
+      // @formatter:off
+      http
         // Configure session management as a basis for a classic, server side rendered application
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
       .and()
-        // Require authentication for all requests except for error and health checks
+        // Require authentication for all requests except for error, health checks and login
         .authorizeRequests()
         .antMatchers("/error", "/actuator/health/liveness", "/actuator/health/readiness").permitAll()
         .antMatchers("/**").authenticated()
@@ -81,53 +81,59 @@ public class SgiWebSecurityConfig {
           .jwtAuthenticationConverter(jwtAuthenticationConverter())
         .and()
       .and();
-
-    // @formatter:on
-      if (csrfEnabled) {
-      // @formatter:off
-      http
-        // CSRF protection by cookie
-        .csrf()
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-    // @formatter:on
-      } else {
-      // @formatter:off
-      http
-        // CSRF protection disabled
-        .csrf()
-        .disable();
-    }
-
-    // @formatter:on
-      if (!frameoptionsEnabled) {
-      // @formatter:off
-      http
-        .headers()
-        // Disable X-Frame-Options
-        .frameOptions().disable();
-    }
-
-    // @formatter:on
-      if (loginEnabled) {
-      // @formatter:off
-      http
-          // This is the point where OAuth2 login of Spring 5 gets enabled
-          .oauth2Login()
-            .userInfoEndpoint()
-            .oidcUserService(keycloakOidcUserService())
-          .and()
-        .and()
-          // Propagate logouts via /logout to Keycloak
-          .logout()
-          .addLogoutHandler(keycloakLogoutHandler());
       // @formatter:on
+
+      if (csrfEnabled) {
+        // @formatter:off
+        http
+          // CSRF protection by cookie
+          .csrf()
+          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        // @formatter:on
+      } else {
+        // @formatter:off
+        http
+          // CSRF protection disabled
+          .csrf()
+          .disable();
+        // @formatter:on
+      }
+
+      if (!frameoptionsEnabled) {
+        // @formatter:off
+        http
+          .headers()
+          // Disable X-Frame-Options
+          .frameOptions().disable();
+        // @formatter:on
+      }
+
+      if (loginEnabled) {
+        // @formatter:off
+        http
+            // This is the point where OAuth2 login of Spring 5 gets enabled
+            .oauth2Login()
+              .userInfoEndpoint()
+              .oidcUserService(keycloakOidcUserService())
+            .and()
+          .and()
+            // Propagate logouts via /logout to Keycloak
+            .logout()
+            .addLogoutHandler(keycloakLogoutHandler());
+        // @formatter:on
       }
 
       if (webSecurityExceptionHandler != null) {
-        http
-            // Handle Spring Security exceptions
-            .exceptionHandling().accessDeniedHandler(webSecurityExceptionHandler)
-            .authenticationEntryPoint(webSecurityExceptionHandler);
+        if (loginEnabled) {
+          http
+              // Handle Spring Security exceptions
+              .exceptionHandling().accessDeniedHandler(webSecurityExceptionHandler);
+        } else {
+          http
+              // Handle Spring Security exceptions
+              .exceptionHandling().accessDeniedHandler(webSecurityExceptionHandler)
+              .authenticationEntryPoint(webSecurityExceptionHandler);
+        }
       }
       log.debug("configure(HttpSecurity http) - end");
     }
