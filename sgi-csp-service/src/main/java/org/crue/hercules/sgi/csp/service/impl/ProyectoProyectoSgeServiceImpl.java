@@ -105,6 +105,8 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     if (!CollectionUtils.isEmpty(unidadesGestion)) {
       returnValue = repository.findByIdAndProyectoUnidadGestionRefIn(id, unidadesGestion)
           .orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(id));
+    } else {
+      returnValue = repository.findById(id).orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(id));
     }
     log.debug("findById(Long id)  - end");
     return returnValue;

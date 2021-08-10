@@ -3128,6 +3128,7 @@ industries" />
       <column name="codigo_externo" value="PCGFOPE2" />
       <column name="fecha_inicio" valueDate="2021-01-31T23:00:00" />
       <column name="fecha_fin" valueDate="2023-12-05T22:59:59" />
+      <column name="fecha_fin_definitiva" valueDate="2023-12-06T22:59:59" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
