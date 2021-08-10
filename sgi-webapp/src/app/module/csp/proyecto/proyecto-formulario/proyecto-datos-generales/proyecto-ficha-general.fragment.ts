@@ -241,7 +241,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
             && !this.getFormGroup().controls.fechaFin.value) {
             const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({
               months: form.controls.convocatoria.value.duracion,
-              days: -1
+              seconds: -1
             });
             this.getFormGroup().controls.fechaFin.setValue(fechaFin);
           }
@@ -532,7 +532,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         && !this.getFormGroup().controls.fechaFin.value) {
         const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({
           months: convocatoria.duracion,
-          days: -1
+          seconds: -1
         });
         this.getFormGroup().controls.fechaFin.setValue(fechaFin);
       }
