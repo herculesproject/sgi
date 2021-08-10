@@ -181,7 +181,8 @@ export class SolicitudCrearProyectoModalComponent
 
   private getFechaFinProyecto(fecha: DateTime): void {
     if (fecha && this.data?.solicitudProyecto?.duracion) {
-      const fechaFin = fecha.plus({ months: this.data?.solicitudProyecto?.duracion });
+      const fechaFin = fecha.plus({ months: this.data?.solicitudProyecto?.duracion, days: -1 });
+      // fechaFin.day = fecha.day - 1;
       this.formGroup.controls.fechaFin.setValue(fechaFin);
     }
   }

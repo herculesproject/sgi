@@ -234,7 +234,19 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       form.controls.convocatoria.valueChanges.subscribe(
         (convocatoria) => this.onConvocatoriaChange(convocatoria)
-      )
+      ),
+      form.controls.fechaInicio.valueChanges.subscribe(
+        (fechaInicio) => {
+          if (form.controls.convocatoria.value && (form.controls.convocatoria.value.duracion && fechaInicio)
+            && !this.getFormGroup().controls.fechaFin.value) {
+            const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({
+              months: form.controls.convocatoria.value.duracion,
+              days: -1
+            });
+            this.getFormGroup().controls.fechaFin.setValue(fechaFin);
+          }
+        })
+
     );
     this.subscriptions.push(
       form.controls.iva.valueChanges.subscribe(
@@ -518,7 +530,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
       if (convocatoria.duracion && this.getFormGroup().controls.fechaInicio.value
         && !this.getFormGroup().controls.fechaFin.value) {
-        const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({ months: convocatoria.duracion });
+        const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({
+          months: convocatoria.duracion,
+          days: -1
+        });
         this.getFormGroup().controls.fechaFin.setValue(fechaFin);
       }
 
