@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.framework.web.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -169,8 +170,15 @@ public class SgiWebSecurityConfig {
           log.debug("convert(final Jwt jwt) - start");
           final Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");
           if (realmAccess == null) {
-            Collection<GrantedAuthority> returnValue = Arrays
-                .asList(new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_USER") });
+            Collection<GrantedAuthority> returnValue = new ArrayList<>(
+                Arrays.asList(new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_USER") }));
+            String scopes = (String) jwt.getClaims().get("scope");
+            if (scopes != null) {
+              List<String> scopeList = Arrays.asList(((String) scopes).split(" "));
+              returnValue.addAll(scopeList.stream().map((scope) -> new SimpleGrantedAuthority("SCOPE_" + scope))
+                  .collect(Collectors.toList()));
+            }
+
             log.warn("No realm_acces found in token");
             log.debug("convert(final Jwt jwt) - end");
             return returnValue;
