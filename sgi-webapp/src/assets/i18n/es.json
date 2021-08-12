@@ -273,6 +273,7 @@
   "csp.estado-solicitud.CONCEDIDA_PROVISIONAL_NO_ALEGADA": "Concedida provisional no alegada",
   "csp.estado-solicitud.DENEGADA": "Denegada",
   "csp.estado-solicitud.DENEGADA_PROVISIONAL": "Denegada provisional",
+  "csp.estado-solicitud.DENEGADA_PROVISIONAL_ALEGADA": "Denegada provisional alegada",
   "csp.estado-solicitud.DENEGADA_PROVISIONAL_NO_ALEGADA": "Denegada provisional no alegada",
   "csp.estado-solicitud.DESISTIDA": "Desistida",
   "csp.estado-solicitud.EXCLUIDA_DEFINITIVA": "Excluida definitiva",
