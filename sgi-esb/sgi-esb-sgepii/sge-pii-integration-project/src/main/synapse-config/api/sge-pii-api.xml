@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sge-pii" name="sge-pii-api" publishSwagger="/_system/governance/swagger_files/sge-pii-swagger.yaml" xmlns="http://ws.apache.org/ns/synapse">
+
+  <!-- gastos de invención -->
+  <resource methods="GET" url-mapping="/gastos-invencion">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sge-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/gastos-invencion/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sge-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+    <resource methods="GET" url-mapping="/gastos-invencion/columnas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sge-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <!-- ingresos de invención -->
+  <resource methods="GET" url-mapping="/ingresos-invencion">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sge-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" url-mapping="/ingresos-invencion/columnas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sge-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+    <!-- invenciones -->
+  <resource methods="GET" url-mapping="/invenciones">
+    <inSequence>
+      <send>
+        <endpoint key="sgi-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="HEAD" uri-template="/invenciones/{id}">
+    <inSequence>
+      <send>
+        <endpoint key="sgi-pii-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+</api>
