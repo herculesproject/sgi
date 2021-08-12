@@ -3,17 +3,13 @@ package org.crue.hercules.sgi.csp.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
-import org.crue.hercules.sgi.csp.dto.eti.ChecklistInput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
@@ -55,15 +51,13 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
+import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,8 +67,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -470,7 +462,7 @@ public class SolicitudService {
           if (peticionEvaluacionRef == null) {
             final ResponseEntity<ChecklistOutput> responseChecklistOutput = restTemplate.exchange(
                 restApiProperties.getEtiUrl() + "/checklists/{id}", HttpMethod.GET,
-                buildRequest(null, (ChecklistInput) null), ChecklistOutput.class, idChecklist);
+                new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), ChecklistOutput.class, idChecklist);
 
             ChecklistOutput checklistOutput = responseChecklistOutput.getBody();
             // En el caso que que en la Pestaña de Autoevaluación ética exista una respuesta
@@ -502,7 +494,8 @@ public class SolicitudService {
 
               ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacion = restTemplate.exchange(
                   restApiProperties.getEtiUrl() + "/peticionevaluaciones", HttpMethod.POST,
-                  buildRequest(null, peticionEvaluacionRequest), PeticionEvaluacion.class);
+                  new HttpEntityBuilder<>(peticionEvaluacionRequest).withCurrentUserAuthorization().build(),
+                  PeticionEvaluacion.class);
 
               // Guardar el PeticionEvaluacion.id
               PeticionEvaluacion peticionEvaluacion = responsePeticionEvaluacion.getBody();
@@ -524,7 +517,8 @@ public class SolicitudService {
                 // campo "estadoFinanciacion" a "Denegado"
                 ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
                     restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    buildRequest(null, null), PeticionEvaluacion.class, peticionEvaluacionRef);
+                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                    peticionEvaluacionRef);
 
                 PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
                 if (peticionEvaluacionDenegada != null) {
@@ -532,7 +526,8 @@ public class SolicitudService {
 
                   responsePeticionEvaluacionDenegada = restTemplate.exchange(
                       restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      buildRequest(null, peticionEvaluacionDenegada), PeticionEvaluacion.class, peticionEvaluacionRef);
+                      new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
+                      PeticionEvaluacion.class, peticionEvaluacionRef);
                 } else {
                   // throw exception
                   throw new GetPeticionEvaluacionException();
@@ -546,7 +541,8 @@ public class SolicitudService {
                 // campo "estadoFinanciacion" a "Concedido"
                 ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
                     restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    buildRequest(null, null), PeticionEvaluacion.class, peticionEvaluacionRef);
+                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                    peticionEvaluacionRef);
 
                 PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
                 if (peticionEvaluacionConcedida != null) {
@@ -554,7 +550,8 @@ public class SolicitudService {
 
                   responsePeticionEvaluacionConcedida = restTemplate.exchange(
                       restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      buildRequest(null, peticionEvaluacionConcedida), PeticionEvaluacion.class, peticionEvaluacionRef);
+                      new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
+                      PeticionEvaluacion.class, peticionEvaluacionRef);
                 } else {
                   // throw exception
                   throw new GetPeticionEvaluacionException();
@@ -837,31 +834,6 @@ public class SolicitudService {
     // finanicacionAjena = false)
     return solicitudProyectoPresupuestoRepository
         .sumImporteSolicitadoBySolicitudIdAndFinanciacionAjenaIsFalse(solicitud.getId());
-  }
-
-  private <T> HttpEntity<T> buildRequest(HttpHeaders headers, T entity) {
-    headers = (headers != null ? headers : new HttpHeaders());
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-    // Reutilizamos las credenciales del usuario
-    Optional<HttpServletRequest> req = getCurrentHttpRequest();
-    if (req.isPresent()) {
-      HttpServletRequest httpServletRequest = req.get();
-      String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-      if (authorization != null) {
-        headers.set(HttpHeaders.AUTHORIZATION, authorization);
-      }
-    }
-
-    HttpEntity<T> request = new HttpEntity<>(entity, headers);
-    return request;
-  }
-
-  private static Optional<HttpServletRequest> getCurrentHttpRequest() {
-    return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
-        .filter(ServletRequestAttributes.class::isInstance).map(ServletRequestAttributes.class::cast)
-        .map(ServletRequestAttributes::getRequest);
   }
 
 }
