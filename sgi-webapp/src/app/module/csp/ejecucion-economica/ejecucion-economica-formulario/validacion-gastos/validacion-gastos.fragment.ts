@@ -9,7 +9,7 @@ import { Fragment } from '@core/services/action-service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { GastoService } from '@core/services/sge/gasto.service';
+import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { concatAll, concatMap, map, switchMap, tap } from 'rxjs/operators';

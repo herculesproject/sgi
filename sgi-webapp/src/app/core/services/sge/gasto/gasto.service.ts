@@ -2,20 +2,28 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IColumna } from '@core/models/sge/columna';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
+import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGastoDetalleResponse } from './gasto-detalle-response';
 
 enum Estado {
   PENDIENTE = 'PENDIENTE',
   VALIDADO = 'VALIDADO'
 }
 
+// tslint:disable-next-line: variable-name
+const _GastoServiceMixinBase:
+  FindByIdCtor<string, IDatoEconomicoDetalle, IGastoDetalleResponse> &
+  typeof SgiRestBaseService =
+  mixinFindById(SgiRestBaseService);
+
 @Injectable({
   providedIn: 'root'
 })
-export class GastoService extends SgiRestBaseService {
+export class GastoService extends _GastoServiceMixinBase {
   private static readonly MAPPING = '/gastos';
 
   constructor(protected http: HttpClient) {

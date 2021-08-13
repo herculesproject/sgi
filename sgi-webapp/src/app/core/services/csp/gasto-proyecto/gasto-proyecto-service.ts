@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { environment } from '@env';
 import {

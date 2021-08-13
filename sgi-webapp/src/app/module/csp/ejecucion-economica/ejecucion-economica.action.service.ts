@@ -8,7 +8,7 @@ import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agru
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
-import { GastoService } from '@core/services/sge/gasto.service';
+import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { DetalleOperacionesGastosFragment } from './ejecucion-economica-formulario/detalle-operaciones-gastos/detalle-operaciones-gastos.fragment';

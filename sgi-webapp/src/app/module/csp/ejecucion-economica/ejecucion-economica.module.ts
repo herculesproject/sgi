@@ -29,6 +29,7 @@ import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listad
 import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.module';
 import { FacturasGastosModalComponent } from './modals/facturas-gastos-modal/facturas-gastos-modal.component';
 import { PersonalContratadoModalComponent } from './modals/personal-contratado-modal/personal-contratado-modal.component';
+import { ValidacionGastosModalComponent } from './modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-dietas-modal.component';
 
 @NgModule({
@@ -51,7 +52,8 @@ import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-
     TableProyectosRelacionadosComponent,
     FilterFechasComponent,
     DetalleEconomicoComponent,
-    ValidacionGastosComponent
+    ValidacionGastosComponent,
+    ValidacionGastosModalComponent
   ],
   imports: [
     CommonModule,

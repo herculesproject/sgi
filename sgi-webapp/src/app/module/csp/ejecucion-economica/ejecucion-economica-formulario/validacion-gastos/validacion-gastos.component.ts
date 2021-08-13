@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
-import { EstadoTipo, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
+import { GastoDetalleModalData, ValidacionGastosModalComponent } from '../../modals/validacion-gastos-modal/validacion-gastos-modal.component';
+import { EstadoTipo, ESTADO_TIPO_MAP, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
 
 @Component({
   selector: 'sgi-validacion-gastos',
@@ -28,7 +31,9 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
   @ViewChild(MatSort, { static: true }) private sort: MatSort;
 
   constructor(
-    public actionService: EjecucionEconomicaActionService
+    public actionService: EjecucionEconomicaActionService,
+    private matDialog: MatDialog,
+    private gastoService: GastoService
   ) {
     super(actionService.FRAGMENT.VALIDACION_GASTOS, actionService);
     this.formPart = this.fragment as ValidacionGastosFragment;
@@ -36,6 +41,7 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
 
   ngOnInit(): void {
     super.ngOnInit();
+
     this.loadForm();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (gasto: ValidacionGasto, property: string) => {
@@ -85,6 +91,21 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  showDetail(element: ValidacionGasto): void {
+    this.subscriptions.push(this.gastoService.findById(element.id).subscribe(
+      (detalle) => {
+        console.error(detalle);
+        const gastoDetalle = detalle as GastoDetalleModalData;
+        gastoDetalle.estado = ESTADO_TIPO_MAP.get(this.formGroup.controls.estado.value);
+        const config: MatDialogConfig<GastoDetalleModalData> = {
+          panelClass: 'sgi-dialog-container',
+          data: gastoDetalle
+        };
+        this.matDialog.open(ValidacionGastosModalComponent, config);
+      }
+    ));
   }
 
   private loadForm() {

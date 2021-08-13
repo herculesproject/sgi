@@ -144,9 +144,13 @@
           <mat-header-cell mat-header-cell *matHeaderCellDef>
             {{ 'label.actions' | translate }}
           </mat-header-cell>
-          <mat-cell mat-cell *matCellDef="let gasto">
+          <mat-cell mat-cell *matCellDef="let element">
+            <button mat-button (click)="showDetail(element)">
+              <mat-icon color="primary">visibility</mat-icon>
+            </button>
           </mat-cell>
         </ng-container>
+
         <mat-header-row *matHeaderRowDef="formPart.displayColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: formPart.displayColumns;"></mat-row>
       </mat-table>
