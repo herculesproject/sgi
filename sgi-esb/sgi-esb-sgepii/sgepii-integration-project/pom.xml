@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.crue.hercules.sgi.esb.sge-pii</groupId>
-    <artifactId>sgi-esb-sge-pii</artifactId>
+    <groupId>org.crue.hercules.sgi.esb.sgepii</groupId>
+    <artifactId>sgi-esb-sgepii</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>sge-pii-integration-project</artifactId>
+  <artifactId>sgepii-integration-project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>sge-pii-integration-project</name>
+  <name>sgepii-integration-project</name>
   <description>Proyecto para la integración del SGI con el SGE-PII (Sistema de Gestión Económica)</description>
   <properties>
     <maven.test.skip>true</maven.test.skip>

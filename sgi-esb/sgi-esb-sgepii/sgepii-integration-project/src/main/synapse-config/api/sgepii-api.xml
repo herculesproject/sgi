@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/sge-pii" name="sge-pii-api" publishSwagger="/_system/governance/swagger_files/sge-pii-swagger.yaml" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/sgepii" name="sgepii-api" publishSwagger="/_system/governance/swagger_files/sgepii-swagger.yaml" xmlns="http://ws.apache.org/ns/synapse">
 
   <!-- gastos de invención -->
   <resource methods="GET" url-mapping="/gastos-invencion">
@@ -7,9 +7,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <sequence key="sgepii-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sge-pii-endpoint"/>
+        <endpoint key="sgepii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -25,9 +25,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <sequence key="sgepii-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sge-pii-endpoint"/>
+        <endpoint key="sgepii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -43,9 +43,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <sequence key="sgepii-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sge-pii-endpoint"/>
+        <endpoint key="sgepii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -62,9 +62,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <sequence key="sgepii-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sge-pii-endpoint"/>
+        <endpoint key="sgepii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -80,9 +80,9 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sge-pii-add-x-api-key-sequence"/>
+      <sequence key="sgepii-add-x-api-key-sequence"/>
       <send>
-        <endpoint key="sge-pii-endpoint"/>
+        <endpoint key="sgepii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -97,7 +97,7 @@
   <resource methods="GET" url-mapping="/invenciones">
     <inSequence>
       <send>
-        <endpoint key="sgi-pii-endpoint"/>
+        <endpoint key="sgipii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>
@@ -111,7 +111,7 @@
   <resource methods="HEAD" uri-template="/invenciones/{id}">
     <inSequence>
       <send>
-        <endpoint key="sgi-pii-endpoint"/>
+        <endpoint key="sgipii-endpoint"/>
       </send>
     </inSequence>
     <outSequence>

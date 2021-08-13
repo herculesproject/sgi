@@ -2,46 +2,46 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.crue.hercules.sgi.esb.sge-pii</groupId>
-    <artifactId>sgi-esb-sge-pii</artifactId>
+    <groupId>org.crue.hercules.sgi.esb.sgepii</groupId>
+    <artifactId>sgi-esb-sgepii</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>sge-pii-composite-application</artifactId>
+  <artifactId>sgepii-composite-application</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>carbon/application</packaging>
-  <name>sgi-esb-sge-pii-composite-application</name>
-  <description>sgi-esb-sge-pii-composite-application</description>
+  <name>sgi-esb-sgepii-composite-application</name>
+  <description>sgi-esb-sgepii-composite-application</description>
   <properties>
-    <org.crue.hercules.sgi.esb.sge-pii.endpoint_._sge-pii-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sge-pii.endpoint_._sge-pii-endpoint>
-    <org.crue.hercules.sgi.esb.sge-pii.endpoint_._sgi-pii-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sge-pii.endpoint_._sgi-pii-endpoint>
-    <org.crue.hercules.sgi.esb.sge-pii.sequence_._sge-pii-add-x-api-key-sequence>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sge-pii.sequence_._sge-pii-add-x-api-key-sequence>
-    <org.crue.hercules.sgi.esb.sge-pii.api_._sge-pii-api>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sge-pii.api_._sge-pii-api>
+    <org.crue.hercules.sgi.esb.sgepii.endpoint_._sgepii-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgepii.endpoint_._sgepii-endpoint>
+    <org.crue.hercules.sgi.esb.sgepii.endpoint_._sgipii-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgepii.endpoint_._sgipii-endpoint>
+    <org.crue.hercules.sgi.esb.sgepii.sequence_._sgepii-add-x-api-key-sequence>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgepii.sequence_._sgepii-add-x-api-key-sequence>
+    <org.crue.hercules.sgi.esb.sgepii.api_._sgepii-api>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgepii.api_._sgepii-api>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sge-pii.api</groupId>
-      <artifactId>sge-pii-api</artifactId>
+      <groupId>org.crue.hercules.sgi.esb.sgepii.api</groupId>
+      <artifactId>sgepii-api</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sge-pii.endpoint</groupId>
-      <artifactId>sge-pii-endpoint</artifactId>
+      <groupId>org.crue.hercules.sgi.esb.sgepii.endpoint</groupId>
+      <artifactId>sgepii-endpoint</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sge-pii.endpoint</groupId>
-      <artifactId>sgi-pii-endpoint</artifactId>
+      <groupId>org.crue.hercules.sgi.esb.sgepii.endpoint</groupId>
+      <artifactId>sgipii-endpoint</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.sge-pii.sequence</groupId>
-      <artifactId>sge-pii-add-x-api-key-sequence</artifactId>
+      <groupId>org.crue.hercules.sgi.esb.sgepii.sequence</groupId>
+      <artifactId>sgepii-add-x-api-key-sequence</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>

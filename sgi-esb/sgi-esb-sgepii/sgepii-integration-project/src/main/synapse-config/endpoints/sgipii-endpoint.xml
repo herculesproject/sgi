@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="sgi-pii-endpoint" xmlns="http://ws.apache.org/ns/synapse">
-  <address uri="$SYSTEM:SGI_ESB_SGI_PII_SERVICE_URL">
+<endpoint name="sgipii-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+  <address uri="$SYSTEM:SGI_ESB_SGIPII_SERVICE_URL">
     <timeout>
       <duration>60000</duration>
       <responseAction>fault</responseAction>
