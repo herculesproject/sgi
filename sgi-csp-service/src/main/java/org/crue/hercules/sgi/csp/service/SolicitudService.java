@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.csp.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -11,6 +13,7 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
+import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -502,6 +505,11 @@ public class SolicitudService {
               if (peticionEvaluacion != null) {
                 solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
                 solicitudProyecto = solicitudProyectoRepository.save(solicitudProyecto);
+
+                // Copiamos el equipo de trabajo de una solicitud (personaRef
+                // SolicitudProyectoEquipo)
+                // a una petición de evalaución (personaRef EquipoTrabajo)
+                copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion, solicitudProyecto.getId());
               } else {
                 // throw exception
                 throw new GetPeticionEvaluacionException();
@@ -569,6 +577,40 @@ public class SolicitudService {
 
     log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - end");
     return returnValue;
+  }
+
+  /**
+   * Copia todos los miembros del equipo de una {@link Solicitud} a un Equipo de
+   * Trabajo de una Petición de Evaluación Ética
+   *
+   * @param proyecto entidad {@link Proyecto}
+   */
+  private void copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion,
+      Long solicitudProyectoId) {
+
+    log.debug(
+        "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - start");
+
+    solicitudProyectoEquipoRepository.findAllBySolicitudProyectoId(solicitudProyectoId).stream()
+        .map((solicitudProyectoEquipo) -> {
+          log.debug("Copy SolicitudProyectoEquipo with id: {0}", solicitudProyectoEquipo.getId());
+          EquipoTrabajo.EquipoTrabajoBuilder equipoTrabajo = EquipoTrabajo.builder();
+          equipoTrabajo.peticionEvaluacion(peticionEvaluacion);
+          equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
+          return equipoTrabajo.build();
+        }).distinct().forEach((equipoTrabajo) -> {
+          ResponseEntity<EquipoTrabajo> responseEquipoTrabajo = restTemplate.exchange(
+              restApiProperties.getEtiUrl() + "/peticionevaluaciones/" + peticionEvaluacion.getId()
+                  + "/equipos-trabajo",
+              HttpMethod.POST, new HttpEntityBuilder<>(equipoTrabajo).withCurrentUserAuthorization().build(),
+              EquipoTrabajo.class);
+          if (responseEquipoTrabajo == null) {
+            // throw exception
+            throw new GetPeticionEvaluacionException();
+          }
+        });
+    log.debug(
+        "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - end");
   }
 
   /**
