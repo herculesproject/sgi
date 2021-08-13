@@ -89,7 +89,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               {{'csp.proyecto-anualidad.partida-gasto.concepto-gasto.codigo-economico' | translate}}
             </th>
-            <td mat-cell *matCellDef="let data">{{data.codigoEconomico?.id}}</td>
+            <td mat-cell *matCellDef="let data">
+              {{data.codigoEconomico?.id}}
+              {{data.codigoEconomico?.nombre ? ' - ' + data.codigoEconomico.nombre : '' }}
+            </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="columnsCodigosEcPermitidos"></tr>
           <tr mat-row *matRowDef="let row; columns: columnsCodigosEcPermitidos;"></tr>
@@ -124,7 +127,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               {{'csp.proyecto-anualidad.partida-gasto.concepto-gasto.codigo-economico' | translate}}
             </th>
-            <td mat-cell *matCellDef="let data">{{data.codigoEconomico?.id}}</td>
+            <td mat-cell *matCellDef="let data">
+              {{data.codigoEconomico?.id}}
+              {{data.codigoEconomico?.nombre ? ' - ' + data.codigoEconomico.nombre : '' }}
+            </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="columnsCodigosEcNoPermitidos"></tr>
           <tr mat-row *matRowDef="let row; columns: columnsCodigosEcNoPermitidos;"></tr>

@@ -7,9 +7,10 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
+import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, merge, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { compareConceptoGastoCodigoEc } from '../../proyecto-concepto-gasto.utils';
 
@@ -46,6 +47,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
+    private codigoEconomicoGastoService: CodigoEconomicoGastoService,
     public readonly: boolean
   ) {
     super(key);
@@ -100,7 +102,26 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
               requestConvocatoriaCodigosEconomicos = of(codigosEconomicosListado);
             }
             return requestConvocatoriaCodigosEconomicos;
-          })
+          }),
+          switchMap(response => {
+            const requestsCodigoEconomico: Observable<CodigoEconomicoListado>[] = [];
+            response.forEach(codigoEconomicoListado => {
+              const codigoEconomicoId = codigoEconomicoListado.proyectoCodigoEconomico?.value.codigoEconomico.id
+                ?? codigoEconomicoListado.convocatoriaCodigoEconomico.codigoEconomico.id;
+              requestsCodigoEconomico.push(
+                this.codigoEconomicoGastoService.findById(codigoEconomicoId)
+                  .pipe(
+                    map(codigoEconomico => {
+                      codigoEconomicoListado.codigoEconomico = codigoEconomico;
+                      return codigoEconomicoListado;
+                    })
+                  )
+              );
+            });
+            return of(response).pipe(
+              tap(() => merge(...requestsCodigoEconomico).subscribe())
+            );
+          }),
         ).subscribe(response => {
           response.forEach(element => this.fillListadoFields(element));
           this.proyectoConceptoGastoCodigosEcs$.next(response);
@@ -117,7 +138,24 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
                 convocatoriaCodigoEconomico: item,
               } as CodigoEconomicoListado;
               return codigoEconomicoListado;
-            }))
+            })),
+            switchMap(response => {
+              const requestsCodigoEconomico: Observable<CodigoEconomicoListado>[] = [];
+              response.forEach(codigoEconomicoListado => {
+                requestsCodigoEconomico.push(
+                  this.codigoEconomicoGastoService.findById(codigoEconomicoListado.convocatoriaCodigoEconomico.codigoEconomico.id)
+                    .pipe(
+                      map(codigoEconomico => {
+                        codigoEconomicoListado.codigoEconomico = codigoEconomico;
+                        return codigoEconomicoListado;
+                      })
+                    )
+                );
+              });
+              return of(response).pipe(
+                tap(() => merge(...requestsCodigoEconomico).subscribe())
+              );
+            }),
           ).subscribe(response => {
             response.forEach(element => this.fillListadoFields(element));
             this.proyectoConceptoGastoCodigosEcs$.next(response);

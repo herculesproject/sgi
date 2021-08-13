@@ -97,7 +97,7 @@ export class ProyectoAnualidadGastoModalComponent extends
   proyectosPartida$ = new BehaviorSubject<IProyectoPartida[]>([]);
 
   conceptosGasto$: Observable<IConceptoGasto[] | IProyectoConceptoGasto[]>;
-  codigosEconomicos$: Observable<IProyectoConceptoGastoCodigoEc[] | ICodigoEconomicoGasto[]>;
+  codigosEconomicos$: Observable<ICodigoEconomicoGasto[]>;
 
   conceptosGastoCodigoEcPermitidos = new MatTableDataSource<IProyectoConceptoGastoCodigoEc>();
   conceptosGastoCodigoEcNoPermitidos = new MatTableDataSource<IProyectoConceptoGastoCodigoEc>();
@@ -212,8 +212,7 @@ export class ProyectoAnualidadGastoModalComponent extends
 
   protected getDatosForm(): ProyectoAnualidadGastoModalData {
     this.data.anualidadGasto.proyectoSgeRef = this.formGroup.controls.identificadorSge.value.proyectoSge.id;
-    this.data.anualidadGasto.codigoEconomicoRef =
-      this.formGroup.controls.codigoEconomico.value?.id;
+    this.data.anualidadGasto.codigoEconomico = this.formGroup.controls.codigoEconomico.value;
     this.data.anualidadGasto.importeConcedido = this.formGroup.controls.importeConcedido.value;
     this.data.anualidadGasto.importePresupuesto = this.formGroup.controls.importePresupuesto.value;
     this.data.anualidadGasto.proyectoPartida = this.formGroup.controls.partidaPresupuestaria.value;
@@ -224,10 +223,6 @@ export class ProyectoAnualidadGastoModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
-    const codigoEconomico = this.data.anualidadGasto?.codigoEconomicoRef
-      ? { id: this.data.anualidadGasto?.codigoEconomicoRef } as ICodigoEconomicoGasto
-      : null;
-
     const identificadorSge = this.data.anualidadGasto?.proyectoSgeRef
       ? {
         proyectoSge:
@@ -265,7 +260,7 @@ export class ProyectoAnualidadGastoModalComponent extends
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
         conceptoGasto: new FormControl(conceptoGasto, Validators.required),
         codigoEconomicoFiltro: new FormControl(codigoEconomicoFiltro),
-        codigoEconomico: new FormControl(codigoEconomico),
+        codigoEconomico: new FormControl(this.data.anualidadGasto?.codigoEconomico),
         partidaPresupuestaria: new FormControl(proyectoPartida, Validators.required),
         importePresupuesto: new FormControl(this.data.anualidadGasto.importePresupuesto, Validators.required),
         importeConcedido: new FormControl(this.data.anualidadGasto.importeConcedido, Validators.required),
@@ -390,6 +385,15 @@ export class ProyectoAnualidadGastoModalComponent extends
                   codigoEconomico.proyectoConceptoGasto = proyectoConceptoGasto;
                   return codigoEconomico;
                 }),
+                switchMap(proyectoConceptoGastoCodgioEc => {
+                  return this.codigoEconomicoGastoService.findById(proyectoConceptoGastoCodgioEc.codigoEconomico.id)
+                    .pipe(
+                      map(response => {
+                        proyectoConceptoGastoCodgioEc.codigoEconomico = response;
+                        return proyectoConceptoGastoCodgioEc;
+                      })
+                    );
+                })
               );
             });
 
@@ -427,6 +431,15 @@ export class ProyectoAnualidadGastoModalComponent extends
                   codogoEconomico.proyectoConceptoGasto = proyectoConceptoGasto;
                   return codogoEconomico;
                 }),
+                switchMap(proyectoConceptoGastoCodigoEc => {
+                  return this.codigoEconomicoGastoService.findById(proyectoConceptoGastoCodigoEc.codigoEconomico.id)
+                    .pipe(
+                      map(response => {
+                        proyectoConceptoGastoCodigoEc.codigoEconomico = response;
+                        return proyectoConceptoGastoCodigoEc;
+                      })
+                    );
+                })
               );
             });
 
@@ -452,7 +465,11 @@ export class ProyectoAnualidadGastoModalComponent extends
     });
 
     if (codigoEconomicoTipo === CodigoEconomicoTipo.PERMITIDO) {
-      this.codigosEconomicos$ = of(this.conceptosGastoCodigoEcPermitidos.data);
+      this.codigosEconomicos$ = of(this.conceptosGastoCodigoEcPermitidos.data).pipe(
+        map(proyectoConceptoGastoCodigoEcs =>
+          proyectoConceptoGastoCodigoEcs.map(proyectoConceptoGastoCodigoEc => proyectoConceptoGastoCodigoEc.codigoEconomico)
+        )
+      );
     } else {
       this.codigosEconomicos$ = this.codigoEconomicoGastoService.findAll().pipe(
         map(response => response.items)
@@ -460,9 +477,8 @@ export class ProyectoAnualidadGastoModalComponent extends
     }
   }
 
-  displayerCodigoEconomico(codigoEconomico: IProyectoConceptoGastoCodigoEc | ICodigoEconomicoGasto): string {
-    return 'proyectoConceptoGasto' in codigoEconomico ?
-      codigoEconomico?.codigoEconomico.id : codigoEconomico.id.toString();
+  displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto): string {
+    return `${codigoEconomico?.id} - ${codigoEconomico?.nombre ?? ''}` ?? '';
   }
 
   displayerProyectoPartida(proyectoPartida: IProyectoPartida): string {

@@ -15,7 +15,7 @@ import { DateValidator } from '@core/validators/date-validator';
 import { SelectValidator } from '@core/validators/select-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { compareConceptoGastoCodigoEc } from '../../proyecto-concepto-gasto.utils';
 
 const MSG_ANADIR = marker('btn.add');
@@ -46,6 +46,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
   fxLayoutProperties: FxLayoutProperties;
 
   codigosEconomicos$: Observable<ICodigoEconomicoGasto[]>;
+  private codigosEconomicos: ICodigoEconomicoGasto[];
   textSaveOrUpdate: string;
 
   showDatosConvocatoriaCodigoEconomico: boolean;
@@ -70,7 +71,8 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     this.fxLayoutProperties.xs = 'column';
 
     this.codigosEconomicos$ = codigoEconomicoGastoService.findAll().pipe(
-      map(response => response.items)
+      map(response => response.items),
+      tap(response => this.codigosEconomicos = response)
     );
   }
 
@@ -166,7 +168,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
   }
 
   displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto) {
-    return codigoEconomico?.id ?? '';
+    return `${codigoEconomico?.id} - ${codigoEconomico?.nombre}` ?? '';
   }
 
   sorterCodigoEconomico(o1: SelectValue<ICodigoEconomicoGasto>, o2: SelectValue<ICodigoEconomicoGasto>): number {
@@ -177,7 +179,9 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     if (!this.data.proyectoConceptoGastoCodigoEc) {
       this.data.proyectoConceptoGastoCodigoEc = {} as IProyectoConceptoGastoCodigoEc;
     }
-    this.data.proyectoConceptoGastoCodigoEc.codigoEconomico = this.formGroup.controls.codigoEconomico.value;
+    const codigoEconomicoForm = this.codigosEconomicos?.find(codigoEconomico =>
+      codigoEconomico.id === this.formGroup.controls.codigoEconomico.value.id);
+    this.data.proyectoConceptoGastoCodigoEc.codigoEconomico = codigoEconomicoForm;
     this.data.proyectoConceptoGastoCodigoEc.observaciones = this.formGroup.controls.observaciones.value;
     this.data.proyectoConceptoGastoCodigoEc.fechaInicio = this.formGroup.controls.fechaInicio.value;
     this.data.proyectoConceptoGastoCodigoEc.fechaFin = this.formGroup.controls.fechaFin.value;

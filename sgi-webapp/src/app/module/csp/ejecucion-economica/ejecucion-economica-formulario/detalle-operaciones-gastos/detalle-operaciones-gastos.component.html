@@ -50,6 +50,7 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
             {{element.item.codigoEconomico?.id}}
+            {{element.item.codigoEconomico?.nombre ? ' - ' + element.item.codigoEconomico.nombre : '' }}
           </mat-cell>
         </ng-container>
 

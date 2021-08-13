@@ -97,7 +97,7 @@ export class ProyectoAnualidadIngresoModalComponent extends
     this.setupI18N();
 
     this.subscriptions.push(this.codigosEconomicos$.subscribe(
-      (codigosEconomicos) => this.formGroup.controls.codigoEconomicoRef.setValidators(
+      (codigosEconomicos) => this.formGroup.controls.codigoEconomico.setValidators(
         SelectValidator.isSelectOption(codigosEconomicos.map(cod => cod.id), true)
       )
     ));
@@ -143,16 +143,13 @@ export class ProyectoAnualidadIngresoModalComponent extends
 
   protected getDatosForm(): ProyectoAnualidadIngresoModalData {
     this.data.anualidadIngreso.proyectoSgeRef = this.formGroup.controls.identificadorSge.value.proyectoSge.id;
-    this.data.anualidadIngreso.codigoEconomicoRef = this.formGroup.controls.codigoEconomicoRef.value.id;
+    this.data.anualidadIngreso.codigoEconomico = this.formGroup.controls.codigoEconomico.value;
     this.data.anualidadIngreso.importeConcedido = this.formGroup.controls.importeConcedido.value;
     this.data.anualidadIngreso.proyectoPartida = this.formGroup.controls.proyectoPartida.value;
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
-    const codigoEconomico = this.data.anualidadIngreso?.codigoEconomicoRef
-      ? { id: this.data.anualidadIngreso?.codigoEconomicoRef } as ICodigoEconomicoGasto
-      : null;
     const identificadorSge = this.data.anualidadIngreso?.proyectoSgeRef
       ? {
         proyectoSge:
@@ -171,7 +168,7 @@ export class ProyectoAnualidadIngresoModalComponent extends
       {
         identificadorSge: new FormControl(identificadorSge, [Validators.required]),
         proyectoPartida: new FormControl(proyectoPartida, [Validators.required]),
-        codigoEconomicoRef: new FormControl(codigoEconomico),
+        codigoEconomico: new FormControl(this.data.anualidadIngreso?.codigoEconomico),
         importeConcedido: new FormControl(this.data.anualidadIngreso.importeConcedido, [Validators.required]),
       }
     );
@@ -213,7 +210,7 @@ export class ProyectoAnualidadIngresoModalComponent extends
   }
 
   displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto): string {
-    return codigoEconomico?.id ?? '';
+    return `${codigoEconomico?.id} - ${codigoEconomico?.nombre ?? ''}` ?? '';
   }
 
   sorterCodigoEconomico(o1: SelectValue<ICodigoEconomicoGasto>, o2: SelectValue<ICodigoEconomicoGasto>): number {

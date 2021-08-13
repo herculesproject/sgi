@@ -2,6 +2,7 @@ import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
+import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IAnualidadGastoResponse } from './anualidad-gasto-response';
 
@@ -17,7 +18,7 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
         id: value.conceptoGasto?.id,
         nombre: value.conceptoGasto?.nombre
       } as IConceptoGasto,
-      codigoEconomicoRef: value.codigoEconomicoRef,
+      codigoEconomico: { id: value.codigoEconomicoRef } as ICodigoEconomicoGasto,
       importePresupuesto: value.importePresupuesto,
       proyectoPartida: {
         id: value.proyectoPartida.id,
@@ -38,7 +39,7 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
         id: value.conceptoGasto?.id,
         nombre: value.conceptoGasto?.nombre
       } as IConceptoGasto,
-      codigoEconomicoRef: value.codigoEconomicoRef,
+      codigoEconomicoRef: value.codigoEconomico?.id,
       importePresupuesto: value.importePresupuesto,
       proyectoPartida: {
         id: value.proyectoPartida?.id,
