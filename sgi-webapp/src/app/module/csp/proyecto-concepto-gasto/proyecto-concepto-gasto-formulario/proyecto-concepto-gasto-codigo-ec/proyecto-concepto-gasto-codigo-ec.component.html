@@ -35,7 +35,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.proyecto-concepto-gasto-codigo-economico.fecha-inicio' | translate}} </th>
       <td mat-cell *matCellDef="let element">
-        {{element.fechaInicio | luxon:'short'}}
+        {{element.fechaInicio | luxon:'shortDate'}}
       </td>
     </ng-container>
 
@@ -44,7 +44,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.proyecto-concepto-gasto-codigo-economico.fecha-fin' | translate}} </th>
       <td mat-cell *matCellDef="let element">
-        {{element.fechaFin | luxon:'short'}}
+        {{element.fechaFin | luxon:'shortDate'}}
       </td>
     </ng-container>
 

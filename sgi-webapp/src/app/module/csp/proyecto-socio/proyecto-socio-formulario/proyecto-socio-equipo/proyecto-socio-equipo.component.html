@@ -33,7 +33,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto-socio.equipo.fecha-inicio'
         | translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaInicio | luxon: 'short'}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaInicio | luxon: 'shortDate'}}
       </td>
     </ng-container>
 
@@ -42,7 +42,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto-socio.equipo.fecha-fin'
         | translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaFin | luxon: 'short'}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaFin | luxon: 'shortDate'}}
       </td>
     </ng-container>
 

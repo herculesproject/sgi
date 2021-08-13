@@ -24,20 +24,20 @@
     <!-- desde -->
     <mat-form-field>
       <mat-label>{{'label.desde' | translate}}</mat-label>
-      <input matInput formControlName="fechaInicioDesde" [ngxMatDatetimePicker]="pickerFechaInicioDesde"
+      <input matInput formControlName="fechaInicioDesde" [matDatepicker]="pickerFechaInicioDesde"
         [placeholder]="'label.desde' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioDesde"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaInicioDesde showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaInicioDesde>
+      </mat-datepicker>
     </mat-form-field>
     <!-- hasta -->
-    <mat-form-field>
+    <mat-form-field sgiEndDate>
       <mat-label>{{'label.hasta' | translate}}</mat-label>
-      <input matInput formControlName="fechaInicioHasta" [ngxMatDatetimePicker]="pickerFechaInicioHasta"
+      <input matInput formControlName="fechaInicioHasta" [matDatepicker]="pickerFechaInicioHasta"
         [placeholder]="'label.hasta' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioHasta"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaInicioHasta showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaInicioHasta>
+      </mat-datepicker>
     </mat-form-field>
 
     <!-- Fecha fin proyecto -->
@@ -47,20 +47,20 @@
     <!-- desde -->
     <mat-form-field>
       <mat-label>{{'label.desde' | translate}}</mat-label>
-      <input matInput formControlName="fechaFinDesde" [ngxMatDatetimePicker]="pickerFechaFinDesde"
+      <input matInput formControlName="fechaFinDesde" [matDatepicker]="pickerFechaFinDesde"
         [placeholder]="'label.desde' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaFinDesde"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaFinDesde showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaFinDesde>
+      </mat-datepicker>
     </mat-form-field>
     <!-- hasta -->
-    <mat-form-field>
+    <mat-form-field sgiEndDate>
       <mat-label>{{'label.hasta' | translate}}</mat-label>
-      <input matInput formControlName="fechaFinHasta" [ngxMatDatetimePicker]="pickerFechaFinHasta"
+      <input matInput formControlName="fechaFinHasta" [matDatepicker]="pickerFechaFinHasta"
         [placeholder]="'label.hasta' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaFinHasta"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaFinHasta showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaFinHasta>
+      </mat-datepicker>
     </mat-form-field>
 
   </form>

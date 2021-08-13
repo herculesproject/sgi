@@ -56,7 +56,7 @@
         {{'info.csp.proyecto-socio.fecha-inicio' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value.fechaInicio | luxon:'short'}}
+        {{wrapper.value.fechaInicio | luxon:'shortDate'}}
       </td>
     </ng-container>
 
@@ -66,7 +66,7 @@
         {{'info.csp.proyecto-socio.fecha-fin' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value.fechaFin | luxon:'short'}}
+        {{wrapper.value.fechaFin | luxon:'shortDate'}}
       </td>
     </ng-container>
 

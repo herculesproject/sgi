@@ -34,10 +34,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { TIME_ZONE } from '@core/time-zone';
 import { MatTimepickerModule } from 'mat-timepicker';
-import { LuxonDateAdapter, LUXON_DATE_FORMATS } from './luxon-date-adapter';
+import { EndDateDirective } from './end-date.directive';
+import { LuxonDateAdapter, LUXON_DATE_ADAPTER_OPTIONS, LUXON_DATE_FORMATS } from './luxon-date-adapter';
 import { LuxonDateTimeAdapter, LUXON_DATETIME_FORMATS } from './luxon-datetime-adapter';
 
 @NgModule({
+  declarations: [
+    EndDateDirective
+  ],
   exports: [
     MatSidenavModule,
     MatIconModule,
@@ -71,13 +75,14 @@ import { LuxonDateTimeAdapter, LUXON_DATETIME_FORMATS } from './luxon-datetime-a
     MatTreeModule,
     MatStepperModule,
     NgxMatDatetimePickerModule,
-    MatTimepickerModule
+    MatTimepickerModule,
+    EndDateDirective
   ],
   providers: [
     {
       provide: DateAdapter,
       useClass: LuxonDateAdapter,
-      deps: [MAT_DATE_LOCALE, TIME_ZONE]
+      deps: [MAT_DATE_LOCALE, TIME_ZONE, LUXON_DATE_ADAPTER_OPTIONS]
     },
     {
       provide: MAT_DATE_FORMATS,

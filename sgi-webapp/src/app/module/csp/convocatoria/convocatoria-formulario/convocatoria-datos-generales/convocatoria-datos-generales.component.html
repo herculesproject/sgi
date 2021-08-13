@@ -117,10 +117,10 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field color="primary">
         <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaPublicacion" formControlName="fechaPublicacion" required>
+        <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion" required>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaPublicacion showSeconds="true" [defaultTime]="[0,0,0]">
-        </ngx-mat-datetime-picker>
+        <mat-datepicker #pickerFechaPublicacion>
+        </mat-datepicker>
         <mat-error *ngIf="formGroup.controls.fechaPublicacion.errors?.required">
           {{ 'error.required.entity' | translate:msgParamFechaPublicacionEntity }}
         </mat-error>
@@ -132,10 +132,10 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field color="primary">
         <mat-label>{{'csp.convocatoria.fecha-provisional'| translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaProvisional" formControlName="fechaProvisional">
+        <input matInput [matDatepicker]="pickerFechaProvisional" formControlName="fechaProvisional">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaProvisional"></mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaProvisional showSeconds="true" [defaultTime]="[0,0,0]">
-        </ngx-mat-datetime-picker>
+        <mat-datepicker #pickerFechaProvisional>
+        </mat-datepicker>
       </mat-form-field>
     </div>
 
@@ -144,10 +144,10 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field color="primary">
         <mat-label>{{'csp.convocatoria.fecha-concesion'| translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaConcesion" formControlName="fechaConcesion">
+        <input matInput [matDatepicker]="pickerFechaConcesion" formControlName="fechaConcesion">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaConcesion"></mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaConcesion showSeconds="true" [defaultTime]="[0,0,0]">
-        </ngx-mat-datetime-picker>
+        <mat-datepicker #pickerFechaConcesion>
+        </mat-datepicker>
       </mat-form-field>
     </div>
 

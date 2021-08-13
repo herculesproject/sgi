@@ -47,11 +47,11 @@
         <div>
           <mat-form-field>
             <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-inicio' | translate}}</mat-label>
-            <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required
+            <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required
               (blur)="recalcularNumPeriodo()">
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
-            </ngx-mat-datetime-picker>
+            <mat-datepicker #pickerFechaInicio>
+            </mat-datepicker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{ 'error.required.entity' | translate:msgParamFechaInicioEntity }}
             </mat-error>
@@ -62,12 +62,12 @@
         </div>
         <!-- Fecha fin -->
         <div>
-          <mat-form-field>
+          <mat-form-field sgiEndDate>
             <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-fin' | translate}}</mat-label>
-            <input matInput [ngxMatDatetimePicker]="pickerFechafin" formControlName="fechaFin" required>
+            <input matInput [matDatepicker]="pickerFechafin" formControlName="fechaFin" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechafin"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #pickerFechafin showSeconds="true" [defaultTime]="[23,59,59]">
-            </ngx-mat-datetime-picker>
+            <mat-datepicker #pickerFechafin>
+            </mat-datepicker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
               {{ 'error.required.entity' | translate:msgParamFechaFinEntity }}
             </mat-error>

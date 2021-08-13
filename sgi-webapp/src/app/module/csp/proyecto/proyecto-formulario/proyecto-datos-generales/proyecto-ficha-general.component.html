@@ -210,10 +210,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field color="primary">
           <mat-label>{{'csp.proyecto.fecha-inicio'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaInicio>
+          </mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
@@ -226,12 +226,12 @@
       <!-- Fecha fin -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
+        <mat-form-field color="primary" sgiEndDate>
           <mat-label>{{'csp.proyecto.fecha-fin'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
+          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaFin>
+          </mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaFinEntity}}
           </mat-error>
@@ -250,12 +250,12 @@
       <!-- Fecha fin Definitiva -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
+        <mat-form-field color="primary" sgiEndDate>
           <mat-label>{{'csp.proyecto.fecha-fin-definitiva'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaFinDefinitiva" formControlName="fechaFinDefinitiva">
+          <input matInput [matDatepicker]="pickerFechaFinDefinitiva" formControlName="fechaFinDefinitiva">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFinDefinitiva"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaFinDefinitiva showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaFinDefinitiva>
+          </mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaFinDefinitiva.errors?.after">
             {{'error.after.fecha-fin-definitiva' | translate}}
           </mat-error>

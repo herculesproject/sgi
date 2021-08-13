@@ -101,26 +101,24 @@
         <!-- Fecha posterior -->
         <mat-form-field color="primary">
           <mat-label>{{'csp.convocatoria-requisito-ip.fecha-posterior'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaMaximaNivelAcademico"
-            formControlName="fechaMaximaNivelAcademico">
+          <input matInput [matDatepicker]="pickerFechaMaximaNivelAcademico" formControlName="fechaMaximaNivelAcademico">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaMaximaNivelAcademico">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaMaximaNivelAcademico showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaMaximaNivelAcademico>
+          </mat-datepicker>
         </mat-form-field>
       </div>
 
       <!-- Fecha anterior -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
+        <mat-form-field color="primary" sgiEndDate>
           <mat-label>{{'csp.convocatoria-requisito-ip.fecha-anterior'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaMinimaNivelAcademico"
-            formControlName="fechaMinimaNivelAcademico">
+          <input matInput [matDatepicker]="pickerFechaMinimaNivelAcademico" formControlName="fechaMinimaNivelAcademico">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaMinimaNivelAcademico">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaMinimaNivelAcademico showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaMinimaNivelAcademico>
+          </mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaMinimaNivelAcademico.errors?.after">
             {{'error.after.fecha-fin' | translate}}
           </mat-error>
@@ -202,26 +200,26 @@
         <!-- Fecha posterior -->
         <mat-form-field color="primary">
           <mat-label>{{'csp.convocatoria-requisito-ip.fecha-posterior'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaMaximaCategoriaProfesional"
+          <input matInput [matDatepicker]="pickerFechaMaximaCategoriaProfesional"
             formControlName="fechaMaximaCategoriaProfesional">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaMaximaCategoriaProfesional">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaMaximaCategoriaProfesional showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaMaximaCategoriaProfesional>
+          </mat-datepicker>
         </mat-form-field>
       </div>
 
       <!-- Fecha anterior -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
+        <mat-form-field color="primary" sgiEndDate>
           <mat-label>{{'csp.convocatoria-requisito-ip.fecha-anterior'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaMinimaCategoriaProfesional"
+          <input matInput [matDatepicker]="pickerFechaMinimaCategoriaProfesional"
             formControlName="fechaMinimaCategoriaProfesional">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaMinimaCategoriaProfesional">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaMinimaCategoriaProfesional showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaMinimaCategoriaProfesional>
+          </mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaMinimaCategoriaProfesional.errors?.after">
             {{'error.after.fecha-fin' | translate}}
           </mat-error>

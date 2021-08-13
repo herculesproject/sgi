@@ -25,20 +25,20 @@
     <!-- Fecha desde -->
     <mat-form-field>
       <mat-label>{{'csp.convocatoria.fecha-publicacion-desde' | translate}}</mat-label>
-      <input matInput formControlName="fechaPublicacionDesde" [ngxMatDatetimePicker]="pickerFechaPublicacionDesde"
+      <input matInput formControlName="fechaPublicacionDesde" [matDatepicker]="pickerFechaPublicacionDesde"
         [placeholder]="'csp.convocatoria.fecha-publicacion-desde' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionDesde"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaPublicacionDesde showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaPublicacionDesde>
+      </mat-datepicker>
     </mat-form-field>
     <!-- Fecha hasta -->
-    <mat-form-field>
+    <mat-form-field sgiEndDate>
       <mat-label>{{'csp.convocatoria.fecha-publicacion-hasta' | translate}}</mat-label>
-      <input matInput formControlName="fechaPublicacionHasta" [ngxMatDatetimePicker]="pickerFechaPublicacionHasta"
+      <input matInput formControlName="fechaPublicacionHasta" [matDatepicker]="pickerFechaPublicacionHasta"
         [placeholder]="'csp.convocatoria.fecha-publicacion-hasta' | translate">
       <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionHasta"></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #pickerFechaPublicacionHasta showSeconds="true" [defaultTime]="[0,0,0]">
-      </ngx-mat-datetime-picker>
+      <mat-datepicker #pickerFechaPublicacionHasta>
+      </mat-datepicker>
     </mat-form-field>
     <mat-checkbox formControlName="abiertoPlazoPresentacionSolicitud">
       {{'csp.convocatoria.plazo-abierto' | translate}}</mat-checkbox>

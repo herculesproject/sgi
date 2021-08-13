@@ -16,6 +16,13 @@ export const LUXON_DATE_FORMATS: MatDateFormats = {
   },
 };
 
+export interface LuxonTime {
+  hour: number;
+  minute: number;
+  second: number;
+  milisecond: number;
+}
+
 /** Configurable options for {@see LuxonDateAdapter}. */
 export interface LuxonDateAdapterOptions {
   /**
@@ -24,6 +31,7 @@ export interface LuxonDateAdapterOptions {
    * {@default false}
    */
   useUtc: boolean;
+  defaultTime: LuxonTime;
 }
 
 /** InjectionToken for LuxonDateAdapter to configure options. */
@@ -37,7 +45,13 @@ export const LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<LuxonDateAdapterOpt
 /** @docs-private */
 export function LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): LuxonDateAdapterOptions {
   return {
-    useUtc: false
+    useUtc: false,
+    defaultTime: {
+      hour: 0,
+      minute: 0,
+      second: 0,
+      milisecond: 0
+    }
   };
 }
 
@@ -61,15 +75,20 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy
   // tslint:disable-next-line: variable-name
   private _timeZone: string;
   private readonly subscription: Subscription;
+  // tslint:disable-next-line: variable-name
+  private _defaultTime: LuxonTime;
+
 
   constructor(
     @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
     @Inject(TIME_ZONE) timeZone: string | Observable<string> | Subject<string>,
-    @Optional() @Inject(LUXON_DATE_ADAPTER_OPTIONS)
+    @Inject(LUXON_DATE_ADAPTER_OPTIONS)
     options?: LuxonDateAdapterOptions
   ) {
     super();
     this._useUTC = options ? !!options.useUtc : false;
+    this._defaultTime = options.defaultTime;
+
     this.setLocale(dateLocale || DateTime.local().locale);
     if (timeZone instanceof Subject || timeZone instanceof Observable) {
       this.subscription = timeZone.subscribe((value) => this._timeZone = value);
@@ -157,7 +176,15 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy
 
     // Luxon uses 1-indexed months so we need to add one to the month.
     const result =
-      this._useUTC ? DateTime.utc(year, month + 1, date) : DateTime.local(year, month + 1, date);
+      this._useUTC
+        ? DateTime.utc(
+          year, month + 1, date,
+          this._defaultTime.hour, this._defaultTime.minute, this._defaultTime.second, this._defaultTime.milisecond
+        )
+        : DateTime.local(
+          year, month + 1, date,
+          this._defaultTime.hour, this._defaultTime.minute, this._defaultTime.second, this._defaultTime.milisecond
+        );
 
     if (!this.isValid(result)) {
       throw Error(`Invalid date "${date}". Reason: "${result.invalidReason}".`);
@@ -177,22 +204,47 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy
       const iso8601Date = DateTime.fromISO(value, options);
 
       if (this.isValid(iso8601Date)) {
-        return iso8601Date;
+        return iso8601Date.set({
+          hour: this._defaultTime.hour,
+          minute: this._defaultTime.minute,
+          second: this._defaultTime.second,
+          millisecond: this._defaultTime.milisecond
+        });
       }
 
       const fromFormat = DateTime.fromFormat(value, parseFormat, options);
 
       if (this.isValid(fromFormat)) {
-        return fromFormat;
+        return fromFormat.set({
+          hour: this._defaultTime.hour,
+          minute: this._defaultTime.minute,
+          second: this._defaultTime.second,
+          millisecond: this._defaultTime.milisecond
+        });
       }
 
       return this.invalid();
     } else if (typeof value === 'number') {
-      return DateTime.fromMillis(value, options);
+      return DateTime.fromMillis(value, options).set({
+        hour: this._defaultTime.hour,
+        minute: this._defaultTime.minute,
+        second: this._defaultTime.second,
+        millisecond: this._defaultTime.milisecond
+      });
     } else if (value instanceof Date) {
-      return DateTime.fromJSDate(value, options);
+      return DateTime.fromJSDate(value, options).set({
+        hour: this._defaultTime.hour,
+        minute: this._defaultTime.minute,
+        second: this._defaultTime.second,
+        millisecond: this._defaultTime.milisecond
+      });
     } else if (value instanceof DateTime) {
-      return DateTime.fromMillis(value.toMillis(), options);
+      return DateTime.fromMillis(value.toMillis(), options).set({
+        hour: this._defaultTime.hour,
+        minute: this._defaultTime.minute,
+        second: this._defaultTime.second,
+        millisecond: this._defaultTime.milisecond
+      });
     }
 
     return null;
@@ -242,7 +294,12 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy
       date = DateTime.fromISO(value, options);
     }
     if (date && this.isValid(date)) {
-      return date;
+      return date.set({
+        hour: this._defaultTime.hour,
+        minute: this._defaultTime.minute,
+        second: this._defaultTime.second,
+        millisecond: this._defaultTime.milisecond
+      });
     }
     return super.deserialize(value);
   }

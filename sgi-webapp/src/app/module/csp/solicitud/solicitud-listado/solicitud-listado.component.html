@@ -164,26 +164,24 @@
             <mat-form-field>
               <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-desde' | translate}}</mat-label>
               <input matInput formControlName="fechaPublicacionConvocatoriaDesde"
-                [ngxMatDatetimePicker]="pickerFechaPublicacionConvocatoriaDesde"
+                [matDatepicker]="pickerFechaPublicacionConvocatoriaDesde"
                 [placeholder]="'csp.solicitud.fecha-publicacion-convocatoria-desde' | translate">
               <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionConvocatoriaDesde"></mat-datepicker-toggle>
-              <ngx-mat-datetime-picker #pickerFechaPublicacionConvocatoriaDesde showSeconds="true"
-                [defaultTime]="[0,0,0]">
-              </ngx-mat-datetime-picker>
+              <mat-datepicker #pickerFechaPublicacionConvocatoriaDesde>
+              </mat-datepicker>
             </mat-form-field>
           </div>
 
           <!-- fechaPublicacionConvocatoriaHasta-->
           <div class="col">
-            <mat-form-field>
+            <mat-form-field sgiEndDate>
               <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-hasta' | translate}}</mat-label>
               <input matInput formControlName="fechaPublicacionConvocatoriaHasta"
-                [ngxMatDatetimePicker]="pickerFechaPublicacionConvocatoriaHasta"
+                [matDatepicker]="pickerFechaPublicacionConvocatoriaHasta"
                 [placeholder]="'csp.solicitud.fecha-publicacion-convocatoria-hasta' | translate">
               <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionConvocatoriaHasta"></mat-datepicker-toggle>
-              <ngx-mat-datetime-picker #pickerFechaPublicacionConvocatoriaHasta showSeconds="true"
-                [defaultTime]="[0,0,0]">
-              </ngx-mat-datetime-picker>
+              <mat-datepicker #pickerFechaPublicacionConvocatoriaHasta>
+              </mat-datepicker>
             </mat-form-field>
           </div>
 
@@ -349,7 +347,7 @@
           {{'csp.solicitud.estado-solicitud.fecha' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.estado?.fechaEstado | luxon:'short' }}
+          {{ element.estado?.fechaEstado | luxon:'shortDate' }}
         </td>
       </ng-container>
 

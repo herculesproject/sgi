@@ -30,7 +30,7 @@
         {{'csp.ejecucion-economica.fecha-inicio' | translate}}
       </th>
       <td mat-cell *matCellDef="let element">
-        {{element.proyecto?.fechaInicio | luxon:'short'}}
+        {{element.proyecto?.fechaInicio | luxon:'shortDate'}}
       </td>
     </ng-container>
 
@@ -40,7 +40,7 @@
         {{'csp.ejecucion-economica.fecha-fin' | translate}}
       </th>
       <td mat-cell *matCellDef="let element">
-        {{element.proyecto?.fechaFin | luxon:'short'}}
+        {{element.proyecto?.fechaFin | luxon:'shortDate'}}
       </td>
     </ng-container>
 

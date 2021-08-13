@@ -100,7 +100,7 @@
           {{'csp.solicitud.estado-solicitud.fecha' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.estado?.fechaEstado | luxon:'short' }}
+          {{ element.estado?.fechaEstado | luxon:'shortDate' }}
         </td>
       </ng-container>
 
