@@ -79,7 +79,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'CSP-THITO-B'">
-            <button *ngIf="tipoHito.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="tipoHito.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateTipoHito(tipoHito)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>

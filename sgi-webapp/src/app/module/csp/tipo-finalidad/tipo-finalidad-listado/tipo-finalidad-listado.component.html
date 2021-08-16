@@ -78,7 +78,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'CSP-TFIN-B'">
-            <button *ngIf="tipoFinalidad.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="tipoFinalidad.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateTipoFinalidad(tipoFinalidad)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>

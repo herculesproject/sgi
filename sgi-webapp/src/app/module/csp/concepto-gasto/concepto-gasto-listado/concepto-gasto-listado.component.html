@@ -79,7 +79,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'CSP-TGTO-B'">
-            <button *ngIf="conceptoGasto.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="conceptoGasto.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateConceptoGasto(conceptoGasto)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>

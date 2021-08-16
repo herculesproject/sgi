@@ -71,7 +71,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'CSP-TFNA-B'">
-            <button *ngIf="tipoFinanciacion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="tipoFinanciacion.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateTipoFinanciacion(tipoFinanciacion)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>

@@ -75,7 +75,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-B'">
-            <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deactivateModeloEjecucion(modeloEjecucion)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
