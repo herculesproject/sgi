@@ -675,11 +675,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private buildValidatorFechaFinDefinitiva(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (this.proyecto.fechaFin && control.value && this.proyecto.fechaFin >= control.value) {
-        return { after: true };
-      } else if (this.ultimaProrroga &&
+      if (this.ultimaProrroga &&
         this.ultimaProrroga.fechaFin > control.value) {
         return { afterThanProrroga: true };
+      }
+      if (this.proyecto.fechaFin && control.value && this.proyecto.fechaFin >= control.value) {
+        return { after: true };
       }
       return null;
     };
