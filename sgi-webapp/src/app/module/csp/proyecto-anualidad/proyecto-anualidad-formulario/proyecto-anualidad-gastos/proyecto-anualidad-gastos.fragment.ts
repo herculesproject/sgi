@@ -36,7 +36,7 @@ export class ProyectoAnualidadGastosFragment extends Fragment {
               const requestsCodigoEconomico: Observable<IAnualidadGasto>[] = [];
               response.items.forEach(anualidadGasto => {
                 requestsCodigoEconomico.push(
-                  this.codigoEconomicoGastoService.findById(anualidadGasto.codigoEconomico.id)
+                  this.codigoEconomicoGastoService.findById(anualidadGasto.codigoEconomico?.id)
                     .pipe(
                       map(codigoEconomico => {
                         anualidadGasto.codigoEconomico = codigoEconomico;

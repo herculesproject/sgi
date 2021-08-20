@@ -18,7 +18,7 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
         id: value.conceptoGasto?.id,
         nombre: value.conceptoGasto?.nombre
       } as IConceptoGasto,
-      codigoEconomico: { id: value.codigoEconomicoRef } as ICodigoEconomicoGasto,
+      codigoEconomico: value.codigoEconomicoRef ? { id: value.codigoEconomicoRef } as ICodigoEconomicoGasto : null,
       importePresupuesto: value.importePresupuesto,
       proyectoPartida: {
         id: value.proyectoPartida.id,
