@@ -132,6 +132,6 @@
     }
   },
   {
-    "template": "<p><b>En el caso de que se conteste a una de las preguntas que <i>Sí</i> es necesario someter la investigación ante la Comisión de Ética de investigación y se creará de forma automática la petición de la evaluación de la comisión, estando accesible en el módulo de Ética al pulsar el botón de Enviar respuestas</b></p>"
+    "template": "<p><b>En el caso de que se conteste a una de las preguntas que Sí es necesario someter la investigación ante la Comisión de Ética de investigación. Se creará de forma automática la solicitud de petición de la evaluación de la comisión, estando accesible en el módulo de Ética, al cambiar el estado de la solicitud</b></p>"
   }
 ]
