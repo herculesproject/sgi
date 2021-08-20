@@ -109,6 +109,9 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     // Inicializa los combos
     this.getComites();
     this.getTiposConvocatoriaReunion();
+    if (!this.formFragment.isEdit()) {
+      this.getConvocantesComite();
+    }
   }
 
   private setupI18N(): void {
@@ -283,6 +286,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
           return of(asistentes);
         })
       );
+    } else {
+      this.formGroup.get('convocantes').setValue(convocantes);
     }
     return of();
   }
