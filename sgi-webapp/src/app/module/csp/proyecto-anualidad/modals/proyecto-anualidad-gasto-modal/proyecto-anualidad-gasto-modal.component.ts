@@ -231,9 +231,7 @@ export class ProyectoAnualidadGastoModalComponent extends
           } as IProyectoSge
       } as IProyectoProyectoSge
       : null;
-    const proyectoPartida = this.data.anualidadGasto?.proyectoPartida
-      ? { id: this.data.anualidadGasto?.proyectoPartida.id } as IProyectoPartida
-      : null;
+    const proyectoPartida = this.data.anualidadGasto?.proyectoPartida ?? null;
 
     const conceptoGasto = this.data.anualidadGasto?.conceptoGasto
       ? {
