@@ -121,8 +121,8 @@
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-        <!-- solicitante -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        <!-- solicitante Investigador -->
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="35" [fxFlex.gt-md]="35"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud.solicitante' | translate}}</mat-label>
@@ -134,8 +134,8 @@
 
         <!-- activo -->
         <ng-container *sgiHasAuthorityForAnyUO="'CSP-SOL-R'">
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="15" [fxFlex.gt-md]="15"
+            [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field>
               <mat-label>{{'label.activo' | translate}}</mat-label>
               <mat-select matNativeControl formControlName="activo">
