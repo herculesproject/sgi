@@ -241,24 +241,24 @@ public class RespuestaServiceImpl implements RespuestaService {
     if (apartado.isPresent()) {
       switch (apartado.get().getBloque().getFormulario().getId().toString()) {
         case ID_FORMULARIO_SEG_ANUAL:
-          if (memoria.getEstadoActual().getId() != Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL) {
+          if (memoria.getEstadoActual().getId() < Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL) {
             memoriaService.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL);
           }
           break;
         case ID_FORMULARIO_SEG_FINAL:
-          if (memoria.getEstadoActual().getId() != Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL) {
+          if (memoria.getEstadoActual().getId() < Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL) {
             memoriaService.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL);
           }
           break;
         case ID_FORMULARIO_RETROSPECTIVA:
           if (memoria.getRetrospectiva() != null && memoria.getRetrospectiva().getEstadoRetrospectiva()
-              .getId() != Constantes.ESTADO_RETROSPECTIVA_COMPLETADA) {
+              .getId() < Constantes.ESTADO_RETROSPECTIVA_COMPLETADA) {
             retrospectivaService.updateEstadoRetrospectiva(memoria.getRetrospectiva(),
                 Constantes.ESTADO_RETROSPECTIVA_COMPLETADA);
           }
           break;
         default:
-          if (memoria.getEstadoActual().getId() != Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA) {
+          if (memoria.getEstadoActual().getId() < Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA) {
             memoriaService.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA);
           }
           break;
