@@ -4,10 +4,13 @@
       <div>
         <span>{{title}}</span>
         <span *ngIf="status$ | async as status;">
-          <mat-icon *ngIf="status.changes && !status.errors" aria-hidden="false" class="icons warning-icon">
+          <mat-icon *ngIf="status.changes && !status.errors && !status.problems" aria-hidden="false"
+            class="icons warning-icon">
             error_outline</mat-icon>
-          <mat-icon *ngIf="status.errors" aria-hidden="false" class="icons danger-icon">
+          <mat-icon *ngIf="status.errors && !status.problems" aria-hidden="false" class="icons danger-icon">
             error</mat-icon>
+          <mat-icon *ngIf="status.problems && status.changes" ria-hidden="false" class="icons danger-icon">
+            report_problem</mat-icon>
         </span>
       </div>
     </mat-expansion-panel-header>

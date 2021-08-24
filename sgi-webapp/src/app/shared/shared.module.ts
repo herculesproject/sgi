@@ -15,7 +15,15 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
+import { FragmentContentComponent } from './fragment-content/fragment-content.component';
+import { FragmentTitleComponent } from './fragment-title/fragment-title.component';
+import { FragmentComponent } from './fragment/fragment.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
+import { MenuContentComponent, MenuContentFooter } from './menu-content/menu-content.component';
+import { MenuGroupComponent } from './menu-group/menu-group.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
+import { MenuSubItemComponent } from './menu-subitem/menu-subitem.component';
+import { ProblemPanelComponent } from './problem-panel/problem-panel.component';
 import { RootComponent } from './root/root.component';
 import { SelectBooleanComponent } from './select-boolean/select-boolean.component';
 import { SelectEntityComponent } from './select-entity/select-entity.component';
@@ -39,7 +47,16 @@ import { SelectComponent } from './select/select.component';
     SelectEntityComponent,
     SelectEnumComponent,
     FieldInfoComponent,
-    ActionComponent
+    ActionComponent,
+    ProblemPanelComponent,
+    FragmentComponent,
+    FragmentTitleComponent,
+    FragmentContentComponent,
+    MenuContentComponent,
+    MenuContentFooter,
+    MenuItemComponent,
+    MenuGroupComponent,
+    MenuSubItemComponent
   ],
   imports: [
     CommonModule,
@@ -66,7 +83,14 @@ import { SelectComponent } from './select/select.component';
     SelectEntityComponent,
     SelectEnumComponent,
     FieldInfoComponent,
-    ActionComponent
+    ActionComponent,
+    ProblemPanelComponent,
+    FragmentComponent,
+    MenuContentComponent,
+    MenuContentFooter,
+    MenuItemComponent,
+    MenuGroupComponent,
+    MenuSubItemComponent
   ]
 })
 export class SharedModule { }

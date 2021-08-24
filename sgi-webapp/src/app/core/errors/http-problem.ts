@@ -22,6 +22,7 @@ export interface Problem {
   readonly status: number;
   readonly detail: string;
   readonly instance: string;
+  managed: boolean;
   [name: string]: any;
 }
 
@@ -31,6 +32,7 @@ export class HttpProblem extends Error implements Problem {
   readonly status: number;
   readonly detail: string;
   readonly instance: string;
+  managed = false;
 
   constructor(responseBody: Problem) {
     super(responseBody.detail);

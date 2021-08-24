@@ -1,5 +1,4 @@
-<section class="acta-asistentes">
-  <h2>{{'eti.acta.asistente' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'eti.acta.asistente' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="asistentes$ | async" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
@@ -53,4 +52,4 @@
   </table>
 
 
-</section>
+</sgi-fragment>

@@ -1,5 +1,5 @@
-<section class="entidades-convocantes-listado">
-  <h2>{{'menu.csp.proyectos.entidades' | translate}} - {{ 'menu.csp.proyectos.entidades-convocantes' | translate }}</h2>
+<sgi-fragment
+  title="{{'menu.csp.proyectos.entidades' | translate}} - {{ 'menu.csp.proyectos.entidades-convocantes' | translate }}">
   <!-- Entidades convocantes listado -->
   <div>
     <table mat-table [dataSource]="dataSource" matSort matSortActive="nombre" matSortDirection="asc"
@@ -87,4 +87,4 @@
       </button>
     </div>
   </ng-container>
-</section>
+</sgi-fragment>

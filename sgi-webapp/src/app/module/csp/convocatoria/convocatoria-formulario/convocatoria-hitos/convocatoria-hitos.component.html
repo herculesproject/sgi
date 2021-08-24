@@ -1,5 +1,4 @@
-<section class="convocatoria-hitos">
-  <h2>{{'csp.hito' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'csp.hito' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}">
 
   <div *ngIf="!(actionService.hasModeloEjecucion$ | async)" class="info-message">
     {{'info.csp.hito' | translate}}
@@ -66,4 +65,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

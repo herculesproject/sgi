@@ -99,8 +99,11 @@ export class AreaTematicaEditarComponent extends ActionComponent {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
       (err) => {
-        this.logger.error(err); if (err instanceof HttpProblem) {
-          this.snackBarService.showError(err);
+        this.logger.error(err);
+        if (err instanceof HttpProblem) {
+          if (!!!err.managed) {
+            this.snackBarService.showError(err);
+          }
         }
         else {
           this.snackBarService.showError(this.textoUpdateError);

@@ -1,5 +1,4 @@
-<section class="peticionEvaluacion-datos-generales">
-  <h2>{{'label.datos-generales' | translate}}</h2>
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <ng-container *ngIf="this.fragment.isEdit()">
@@ -190,4 +189,4 @@
       </mat-error>
     </mat-form-field>
   </form>
-</section>
+</sgi-fragment>

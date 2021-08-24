@@ -1,6 +1,5 @@
-<section>
-  <h2>{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'title.csp.proyecto-proyecto-sge' | translate}}
-  </h2>
+<sgi-fragment
+  title="{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'title.csp.proyecto-proyecto-sge' | translate}}">
 
   <table class="mat-elevation-z8" mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
     matSortDisableClear>
@@ -52,4 +51,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

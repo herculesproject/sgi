@@ -1,7 +1,5 @@
 <!-- Convocatoria Partidas Presupuestarias -->
-<section class="convocatoria-partida-presupuestaria">
-
-  <h2>{{'csp.convocatoria-partida-presupuestaria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'csp.convocatoria-partida-presupuestaria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
 
   <table class="mat-elevation-z8 table-partidas-presupuestarias" mat-table [dataSource]="dataSource" matSort
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
@@ -70,4 +68,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

@@ -6,12 +6,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
-import { CspMenuPrincipalComponent } from './csp-menu-principal/csp-menu-principal.component';
 import { CspRootComponent } from './csp-root/csp-root.component';
 import { CspRoutingModule } from './csp-routing.module';
 
 @NgModule({
-  declarations: [CspRootComponent, CspMenuPrincipalComponent, CspInicioComponent],
+  declarations: [
+    CspRootComponent,
+    CspInicioComponent
+  ],
   imports: [
     SharedModule,
     CommonModule,
@@ -24,5 +26,4 @@ import { CspRoutingModule } from './csp-routing.module';
   ],
   providers: []
 })
-export class CspModule {
-}
+export class CspModule { }

@@ -1,6 +1,10 @@
 @import "colors.scss";
 
 :host {
+  mat-divider {
+    margin-top:10px;
+    padding-bottom:10px;
+  }
   .mat-icon.warning { 
     color: map-get($custom-colors, warning); 
   }

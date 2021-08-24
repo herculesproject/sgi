@@ -1,6 +1,5 @@
 <!-- Memoria Evaluaciones listado -->
-<section class="memoria-evaluacion-listado">
-  <h2>{{'eti.memoria.evaluacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'eti.memoria.evaluacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <table class="mat-elevation-z8 table-evaluacion" mat-table [dataSource]="dataSource" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
@@ -60,5 +59,5 @@
   <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
   </mat-paginator>
 
-</section>
+</sgi-fragment>
 <!-- FIN Memoria Evaluaciones listado-->

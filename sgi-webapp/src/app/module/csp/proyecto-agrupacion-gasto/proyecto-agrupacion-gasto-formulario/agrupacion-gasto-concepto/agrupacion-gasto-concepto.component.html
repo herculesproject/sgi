@@ -1,5 +1,4 @@
-<section class="aguapcion-gasto-concepto">
-  <h2>{{'title.csp.concepto-gasto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'title.csp.concepto-gasto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <table class="mat-elevation-z8 table-agrupacion-gasto-conceptos" mat-table [dataSource]="dataSource" matSort
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
@@ -37,4 +36,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

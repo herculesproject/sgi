@@ -1,6 +1,5 @@
-<section>
-  <h2>{{'menu.csp.ejecucion-economica.detalle-operaciones' | translate}} -
-    {{'menu.csp.ejecucion-economica.detalle-operaciones.ingresos' | translate}}</h2>
+<sgi-fragment title="{{'menu.csp.ejecucion-economica.detalle-operaciones' | translate}} -
+    {{'menu.csp.ejecucion-economica.detalle-operaciones.ingresos' | translate}}">
   <div fxLayout="column" fxLayoutGap="10px">
     <sgi-ejecucion-economica-table-proyectos-relacionados [data]="formPart.relaciones$ | async">
     </sgi-ejecucion-economica-table-proyectos-relacionados>
@@ -74,4 +73,4 @@
       </mat-table>
     </div>
   </div>
-</section>
+</sgi-fragment>

@@ -1,8 +1,6 @@
 <!-- Agrupacion Gasto -->
-<section class="proyecto-agrupaciones-gasto">
-
-  <h2>{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'csp.proyecto-agrupacion-gasto' |
-    translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'csp.proyecto-agrupacion-gasto' |
+    translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
 
   <table class="mat-elevation-z8 table-agrupaciones-gasto" mat-table [dataSource]="dataSource" matSort
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
@@ -48,4 +46,4 @@
     </button>
   </div>
 
-</section>
+</sgi-fragment>

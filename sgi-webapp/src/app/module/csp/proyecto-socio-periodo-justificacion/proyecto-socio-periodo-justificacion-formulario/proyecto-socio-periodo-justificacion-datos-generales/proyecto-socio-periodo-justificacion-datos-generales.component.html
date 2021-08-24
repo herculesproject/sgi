@@ -1,5 +1,4 @@
-<section class="proyecto-socio-periodo-justificacion.datos-generales">
-  <h2>{{'label.datos-generales' | translate}}</h2>
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
   <form [formGroup]="formGroup">
     <!-- numPeriodo -->
     <div *ngIf="this.fragment.isEdit()" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -179,4 +178,4 @@
     </div>
 
   </form>
-</section>
+</sgi-fragment>

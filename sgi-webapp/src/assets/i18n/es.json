@@ -1361,6 +1361,7 @@
   "msg.eti.memoria.estado-anterior.success": "Se ha reestablecido el estado anterior de la memoria correctamente",
   "msg.file.upload.success": "Fichero adjuntado correctamente",
   "msg.footer.changes": "Este formulario presenta cambios que no se han guardado",
+  "msg.footer.problems": "Se han producido errores en el guardado",
   "msg.proyecto-concepto-gasto.create.success": "Se ha asignado correctamente el concepto de gasto al proyecto",
   "msg.reactivate.entity": "¿Desea reactivar {gender,select,male{el} female{la} other{el/la}} {entity}?",
   "msg.reactivate.entity.success": "{entity} reactivad{gender,select,male{o} female{a} other{o/a}} correctamente",

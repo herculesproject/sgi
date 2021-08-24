@@ -1,6 +1,5 @@
 <!-- Memoria datos generales -->
-<section>
-  <h2>{{'label.datos-generales' | translate}}</h2>
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <!-- Referencia de la memoria -->
@@ -95,4 +94,4 @@
       </div>
     </ng-container>
   </form>
-</section>
+</sgi-fragment>

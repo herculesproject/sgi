@@ -12,7 +12,7 @@ $breadcrumbTextColorActive: map-get($palette-primary, 500);
   box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
   border-bottom: solid #{$borderWidth} rgba(0, 0, 0, 0.12);
   .migas {
-    padding: 5px 20px 5px 20px;
+    padding: 0px 15px 0px 15px;
     .breadcrumb {
       --uiBreadcrumbDividerColor: var(--breadcrumbDividerColor, inherit);
       --uiBreadcrumbDividerSize: var(--breadcrumbDividerSize, 16px);

@@ -1,7 +1,5 @@
 <!-- Convocatoria enlace -->
-<section class="convocatoria-enlace">
-
-  <h2>{{'csp.convocatoria-enlace' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'csp.convocatoria-enlace' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
 
   <div *ngIf="!(actionService.hasModeloEjecucion$ | async)" class="info-message">
     {{'info.csp.convocatoria-enlace' | translate}}
@@ -66,4 +64,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

@@ -1,7 +1,6 @@
 <!-- Convocatoria enlace -->
-<section class="convocatoria-plazos-fases">
-  <h2>{{'menu.csp.proyectos.fases-hitos' | translate}} - {{ 'csp.proyecto-fase' |
-    translate:MSG_PARAMS.CARDINALIRY.PLURAL }}</h2>
+<sgi-fragment title="{{'menu.csp.proyectos.fases-hitos' | translate}} - {{ 'csp.proyecto-fase' |
+    translate:MSG_PARAMS.CARDINALIRY.PLURAL }}">
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-plazos-fases">
 
@@ -59,13 +58,13 @@
   </mat-paginator>
 
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-  <div class="separation-button">
-    <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!actionService.readonly"
-      (click)="openModalPlazos()">
-      <mat-icon color="accent">add_circle</mat-icon>
-      {{ 'btn.add.entity' | translate:msgParamEntity }}
-    </button>
-  </div>
+    <div class="separation-button">
+      <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!actionService.readonly"
+        (click)="openModalPlazos()">
+        <mat-icon color="accent">add_circle</mat-icon>
+        {{ 'btn.add.entity' | translate:msgParamEntity }}
+      </button>
+    </div>
   </ng-container>
 
-</section>
+</sgi-fragment>

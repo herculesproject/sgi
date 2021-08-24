@@ -1,3 +1,4 @@
+import { MSG_PARAMS } from '@core/i18n';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { Fragment } from '@core/services/action-service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
@@ -16,6 +17,10 @@ export class TipoProteccionSubtiposFragment extends Fragment {
   subtiposProteccion$ = new BehaviorSubject<StatusWrapper<ITipoProteccion>[]>([]);
   subtiposProteccionToDeactivate$: StatusWrapper<ITipoProteccion>[] = [];
   subtiposProteccionToActivate$: StatusWrapper<ITipoProteccion>[] = [];
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     private readonly logger: NGXLogger,

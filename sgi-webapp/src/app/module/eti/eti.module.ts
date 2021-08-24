@@ -5,12 +5,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { EtiInicioComponent } from './eti-inicio/eti-inicio.component';
-import { EtiMenuPrincipalComponent } from './eti-menu-principal/eti-menu-principal.component';
 import { EtiRootComponent } from './eti-root/eti-root.component';
 import { EtiRoutingModule } from './eti-routing.module';
 
 @NgModule({
-  declarations: [EtiRootComponent, EtiMenuPrincipalComponent, EtiInicioComponent],
+  declarations: [
+    EtiRootComponent,
+    EtiInicioComponent
+  ],
   imports: [
     SharedModule,
     CommonModule,
@@ -20,5 +22,4 @@ import { EtiRoutingModule } from './eti-routing.module';
     SgiAuthModule
   ]
 })
-export class EtiModule {
-}
+export class EtiModule { }

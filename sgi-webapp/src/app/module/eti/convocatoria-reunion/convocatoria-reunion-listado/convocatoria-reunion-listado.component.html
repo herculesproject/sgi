@@ -1,5 +1,5 @@
 <!-- Convocatoria reunion listado -->
-<section class="convocatoria-reunion-listado">
+<sgi-menu-content>
   <!-- Buscador de convocatorias reunión -->
   <form class="formulario  mat-elevation-z8" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
     [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -166,7 +166,9 @@
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
 
-</section>
-<sgi-footer-crear *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
-</sgi-footer-crear>
+  <sgi-menu-content-footer *sgiHasAuthorityForAnyUO="'ETI-CNV-C'">
+    <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+    </sgi-footer-crear>
+  </sgi-menu-content-footer>
+</sgi-menu-content>
 <!-- FIN Convocatoria reunion listado-->

@@ -1,6 +1,5 @@
 <!-- Convocatoria concepto-gasto-codigo-ec -->
-<section class="convocatoriaConceptoGasto">
-  <h2>{{'title.csp.convocatoria-elegibilidad.codigo-economico' | translate}}</h2>
+<sgi-fragment title="{{'title.csp.convocatoria-elegibilidad.codigo-economico' | translate}}">
 
   <div *ngIf="actionService.blockAddCodigosEconomicos$ | async" class="info-message">
     {{'info.csp.convocatoria-elegibilidad.codigo-economico' | translate}}
@@ -99,4 +98,4 @@
       {{'btn.add.entity'| translate:msgParamCodigoNoPermitidoEntity}}
     </button>
   </div>
-</section>
+</sgi-fragment>

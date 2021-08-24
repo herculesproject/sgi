@@ -1,5 +1,4 @@
-<section class="entidades-convocantes-listado">
-  <h2>{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <!-- Entidades convocantes listado -->
   <div>
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-unidad">
@@ -62,4 +61,4 @@
       <mat-icon color="accent">add_circle</mat-icon> {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

@@ -1,5 +1,4 @@
-<section class="acta-memoria">
-  <h2>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="memorias$ | async" matSort
     matSortActive="memoria.id" matSortDirection="asc" matSortDisableClear>
 
@@ -34,4 +33,4 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-</section>
+</sgi-fragment>

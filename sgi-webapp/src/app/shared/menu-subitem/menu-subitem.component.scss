@@ -1,0 +1,23 @@
+@import "colors.scss";
+@import "typography.scss";
+
+:host {
+  display:block;
+  a {
+    color: map-get($custom-colors, black);
+    background: map-get($custom-colors, white);
+    border-radius: 18px;
+    padding: 5px 12px;
+    margin-top: 5px;
+    line-height: 1.27em;
+    display: block;
+    font-size: 0.85em;
+   
+    &:hover,
+    &:focus,
+    &.is-active {
+      font-weight: bold;
+      background: map-get($custom-colors, white);
+    }
+  }
+}

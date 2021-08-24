@@ -1,7 +1,5 @@
 <!-- Convocatoria enlace -->
-<section class="convocatoria-plazos-fases">
-
-  <h2>{{'csp.convocatoria-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+<sgi-fragment title="{{'csp.convocatoria-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <div *ngIf="!(actionService.hasModeloEjecucion$ | async)" class="info-message">
     {{'info.csp.hito' | translate}}
   </div>
@@ -75,4 +73,4 @@
     </button>
   </div>
 
-</section>
+</sgi-fragment>

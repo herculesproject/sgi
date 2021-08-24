@@ -1,6 +1,4 @@
-<section class="solicitud-equipo-proyecto">
-
-  <h2>{{'menu.csp.solicitudes.equipos-proyecto' | translate}}</h2>
+<sgi-fragment title="{{'menu.csp.solicitudes.equipos-proyecto' | translate}}">
 
   <!-- Error no Solicitante -->
   <div *ngIf="formPart.hasErrors()" class="info-message">
@@ -72,4 +70,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>
-</section>
+</sgi-fragment>

@@ -1,6 +1,5 @@
 <!-- Convocatoria concepto-gasto -->
-<section class="convocatoriaConceptoGasto">
-  <h2>{{'csp.convocatoria-elegibilidad' | translate}}</h2>
+<sgi-fragment title="{{'csp.convocatoria-elegibilidad' | translate}}">
 
   <h3>{{'csp.convocatoria-concepto-gasto-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
   <table class="mat-elevation-z8 table-convocatoriaConceptoGasto-permitidos" mat-table
@@ -88,9 +87,9 @@
       {{ 'btn.add.entity' | translate:msgParamEntityPermitido }}
     </button>
   </div>
-</section>
-<mat-divider></mat-divider>
-<section>
+
+  <mat-divider></mat-divider>
+
   <h3>{{'title.csp.convocatoria-concepto-gasto.costes-indirectos' | translate}}</h3>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -123,9 +122,9 @@
     </div>
 
   </form>
-</section>
-<mat-divider></mat-divider>
-<section class="convocatoriaConceptoGasto">
+
+  <mat-divider></mat-divider>
+
   <h3>{{'csp.convocatoria-concepto-gasto-no-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
   <table class="mat-elevation-z8 table-convocatoriaConceptoGasto-nopermitidos" mat-table
     [dataSource]="dataSourceNoPermitidos" matSort matSortDisableClear #sortNoPermitidos="matSort">
@@ -205,4 +204,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntityNoPermitido }}
     </button>
   </div>
-</section>
+</sgi-fragment>

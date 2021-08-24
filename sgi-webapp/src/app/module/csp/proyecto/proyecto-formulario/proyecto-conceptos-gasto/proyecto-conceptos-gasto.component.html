@@ -1,5 +1,5 @@
-<section>
-  <h2>{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'csp.proyecto-elegibilidad' | translate}}</h2>
+<sgi-fragment
+  title="{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'csp.proyecto-elegibilidad' | translate}}">
 
   <!-- Conceptos de gasto permitidos-->
   <h3>{{'csp.proyecto-concepto-gasto-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
@@ -105,12 +105,10 @@
       {{ 'btn.add.entity' | translate:msgParamEntityPermitido }}
     </button>
   </div>
-</section>
 
-<mat-divider></mat-divider>
+  <mat-divider></mat-divider>
 
-<!-- Costes indirectos -->
-<section>
+  <!-- Costes indirectos -->
   <h3>{{'title.csp.proyecto-concepto-gasto.costes-indirectos' | translate}}</h3>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -143,12 +141,10 @@
     </div>
 
   </form>
-</section>
 
-<mat-divider></mat-divider>
+  <mat-divider></mat-divider>
 
-<!-- Conceptos de gasto no permitidos-->
-<section>
+  <!-- Conceptos de gasto no permitidos-->
   <h3>{{'csp.proyecto-concepto-gasto-no-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
   <table class="mat-elevation-z8" mat-table [dataSource]="dataSourceNoPermitidos" matSort matSortDisableClear
     #sortNoPermitidos="matSort">
@@ -242,4 +238,4 @@
       {{ 'btn.add.entity' | translate:msgParamEntityNoPermitido }}
     </button>
   </div>
-</section>
+</sgi-fragment>

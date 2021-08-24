@@ -95,7 +95,9 @@ export class ModeloEjecucionEditarComponent extends ActionComponent {
       (error) => {
         this.logger.error(error);
         if (error instanceof HttpProblem) {
-          this.snackBarService.showError(error);
+          if (!!!error.managed) {
+            this.snackBarService.showError(error);
+          }
         }
         else {
           this.snackBarService.showError(this.textoCrearError);

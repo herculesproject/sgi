@@ -13,12 +13,12 @@
   }
   .botonera {
     height: 100%;
-    padding-left: 25px;
+    padding-left: 5px;
     .link-cancelar {
       font-weight: bold;
       color: map-get($custom-colors, black);
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 5px;
+      padding-right: 5px;
       span.underline {
         text-decoration: underline;
       }
