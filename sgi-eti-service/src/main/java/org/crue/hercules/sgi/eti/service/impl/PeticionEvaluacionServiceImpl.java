@@ -86,8 +86,6 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           "PeticionEvaluacion fuenteFinanciacion no puede ser null si existeFinanciacion");
       Assert.notNull(peticionEvaluacion.getEstadoFinanciacion(),
           "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
-      Assert.notNull(peticionEvaluacion.getImporteFinanciacion(),
-          "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
     }
 
     if (peticionEvaluacion.getValorSocial() != null
