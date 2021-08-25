@@ -52,6 +52,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ConvocatoriaService extends SgiMutableRestService<number, IConvocatoriaBackend, IConvocatoria> {
+
   private static readonly MAPPING = '/convocatorias';
 
   constructor(protected http: HttpClient) {
@@ -400,6 +401,20 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    */
   tramitable(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/tramitable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  public hasSolicitudesReferenced(convocatoriaId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${convocatoriaId}/solicitudesreferenced`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  public hasProyectosReferenced(convocatoriaId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${convocatoriaId}/proyectosreferenced`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { Estado } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { ActionService } from '@core/services/action-service';
@@ -59,6 +60,9 @@ export const CONVOCATORIA_ACTION_LINK_KEY = 'convocatoria';
 export interface IConvocatoriaData {
   readonly: boolean;
   canEdit: boolean;
+  showSolicitudesLink: boolean;
+  showProyectosLink: boolean;
+  estado: Estado;
 }
 
 @Injectable()
@@ -278,6 +282,9 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   }
 
   private addSolicitudLink(convocatoriaId: number): void {
+    if (Estado.BORRADOR === this.data.estado || !this.data.showSolicitudesLink) {
+      return;
+    }
     this.addActionLink({
       title: MSG_SOLICITUDES,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
@@ -287,6 +294,9 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   }
 
   private addProyectoLink(convocatoriaId: number): void {
+    if (Estado.BORRADOR === this.data.estado || !this.data.showProyectosLink) {
+      return;
+    }
     this.addActionLink({
       title: MSG_PROYECTOS,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
