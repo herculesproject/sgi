@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -110,4 +113,12 @@ public interface ProyectoService {
    */
   boolean modificable(Long proyectoId, String[] authorities);
 
+  /**
+   * Obtiene todos los ids de {@link Proyecto} que cumplan las condiciones
+   * indicadas en la query.
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Proyecto}.
+   */
+  List<Long> findIds(String query);
 }

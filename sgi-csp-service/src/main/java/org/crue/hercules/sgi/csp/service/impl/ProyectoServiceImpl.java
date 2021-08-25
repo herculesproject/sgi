@@ -1699,4 +1699,23 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
   }
 
+  /**
+   * Obtiene todos los ids de {@link Proyecto} que cumplan las condiciones
+   * indicadas en la query.
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Proyecto}.
+   */
+  @Override
+  public List<Long> findIds(String query) {
+    log.debug("findIds(String query) - start");
+
+    List<Long> returnValue = repository.findIds(SgiRSQLJPASupport.toSpecification(query,
+        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
+
+    log.debug("findIds(String query) - end");
+
+    return returnValue;
+  }
+
 }

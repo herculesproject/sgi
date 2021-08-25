@@ -1159,4 +1159,26 @@ public class ProyectoController {
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Obtiene los ids de {@link Proyecto} que cumplan las condiciones indicadas en
+   * el filtro de búsqueda
+   * 
+   * @param query filtro de búsqueda.
+   * @return lista de ids de {@link Proyecto}.
+   */
+  @GetMapping("/modificados-ids")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<List<Long>> findIds(@RequestParam(name = "q", required = false) String query) {
+    log.debug("findIds(String query) - start");
+
+    List<Long> returnValue = service.findIds(query);
+
+    if (returnValue.isEmpty()) {
+      log.debug("findIds(String query) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findIds(String query) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
 }
