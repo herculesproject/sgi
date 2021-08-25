@@ -619,7 +619,7 @@
             <column defaultValueBoolean="false" name="requiere_retrospectiva" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="titulo" type="VARCHAR(250)"/>
+            <column name="titulo" type="VARCHAR(2000)"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
