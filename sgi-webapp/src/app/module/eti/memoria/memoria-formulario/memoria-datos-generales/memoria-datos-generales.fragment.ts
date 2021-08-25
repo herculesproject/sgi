@@ -69,7 +69,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
         Validators.required
       ],
       titulo: [
-        { value: this.isEdit() ? this.memoria.titulo : '', disabled: this.readonly }
+        { value: this.isEdit() ? this.memoria.titulo : '', disabled: this.readonly }, Validators.maxLength(2000)
       ],
       personaResponsable: [
         { value: null, disabled: this.readonly }
