@@ -2058,151 +2058,176 @@ industries" />
 
     <!-- UPDATED HERCULES-4482 -->
     <!-- subvención -->
+    <!-- 1 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 2 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="7" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 3 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="5" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 4 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="6" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 5 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="8" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 6 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="4" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 7 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="20" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 8 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="2" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 9 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="21" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 10 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="19" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 11 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="28" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 12 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="22" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 13 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="23" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 14 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="24" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 15 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="25" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 16 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="11" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 17 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="10" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 18 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="18" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 19 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="26" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 20 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="27" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 21 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
-      <column name="tipo_finalidad_id" value="13" />
+      <column name="tipo_finalidad_id" value="12" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <!-- Facturación 9 -->
+    <!-- 22 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="14" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 23 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="13" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 24 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="15" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 25 -->
     <!-- Recursos Propios 10 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
@@ -2210,102 +2235,119 @@ industries" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 26 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="16" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 27 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="7" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 28 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="5" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 29 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="6" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 30 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="8" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 31 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="20" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 32 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="2" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 33 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="19" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 34 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="28" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 35 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="25" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 36 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="11" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 37 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="10" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 38 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="26" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 39 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="27" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 40 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="9" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 41 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
       <column name="tipo_finalidad_id" value="17" />
       <column name="modelo_ejecucion_id" value="3" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <!-- 42 -->
     <!-- Préstamo 4 -->
     <insert tableName="modelo_tipo_finalidad">
       <column name="id" valueSequenceNext="modelo_tipo_finalidad_seq" />
@@ -2531,7 +2573,7 @@ industries" />
       <column name="titulo" value="Título de la referencia CGF/UGI-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="7" />
+      <column name="tipo_finalidad_id" value="20" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="24" />
@@ -2550,7 +2592,7 @@ industries" />
       <column name="titulo" value="Título de la referencia CG/OPE-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
@@ -2569,7 +2611,7 @@ industries" />
       <column name="titulo" value="Título de la referencia CGF/OPE-02" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
@@ -2588,7 +2630,7 @@ industries" />
       <column name="titulo" value="Título referencia CGF/OPE-3" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
       <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="48" />
@@ -2607,7 +2649,7 @@ industries" />
       <column name="titulo" value="Título CGF/OPE-04" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="24" />
@@ -2626,7 +2668,7 @@ industries" />
       <column name="titulo" value="Marie Sklodowska Curie Individual Fellowship" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="null" />
@@ -2645,7 +2687,7 @@ industries" />
       <column name="titulo" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="estado" value="BORRADOR" />
       <column name="duracion" value="48" />
@@ -3470,7 +3512,7 @@ industries" />
       <column name="fecha_fin" valueDate="2022-12-31T22:59:59" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="convocatoria_id" value="2" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
@@ -3503,7 +3545,7 @@ industries" />
       <column name="fecha_fin_definitiva" valueDate="2023-12-06T22:59:59" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="convocatoria_id" value="3" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
@@ -3535,7 +3577,7 @@ industries" />
       <column name="fecha_fin" valueDate="2021-04-30T21:59:59" />
       <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="1" />
-      <column name="tipo_finalidad_id" value="12" />
+      <column name="tipo_finalidad_id" value="22" />
       <column name="convocatoria_id" value="4" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
