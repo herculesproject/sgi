@@ -87,7 +87,7 @@ export class MemoriaCrearComponent extends ActionComponent implements OnInit {
     if (idComite) {
       this.memoriaService.findConvocatoriaReunionProxima(idComite).pipe(
         switchMap((convocatoriaReunion: IConvocatoriaReunion) => {
-          return this.getTextoCrear(convocatoriaReunion)
+          return this.getTextoCrear(convocatoriaReunion);
         }),
       ).subscribe((value) => {
         this.actionService.saveOrUpdate().subscribe(
@@ -105,10 +105,11 @@ export class MemoriaCrearComponent extends ActionComponent implements OnInit {
           },
           () => {
             this.snackBarService.showSuccess(value);
-            this.router.navigateByUrl(this.from);
+            const memoriaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+            this.router.navigate([`../${memoriaId}`], { relativeTo: this.activatedRoute });
           }
         );
-      })
+      });
     } else {
       this.actionService.saveOrUpdate().subscribe(
         () => { },
@@ -125,7 +126,8 @@ export class MemoriaCrearComponent extends ActionComponent implements OnInit {
         },
         () => {
           this.snackBarService.showSuccess(this.textoActualizarSuccess);
-          this.router.navigateByUrl(this.from);
+          const memoriaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+          this.router.navigate([`../${memoriaId}`], { relativeTo: this.activatedRoute });
         }
       );
     }

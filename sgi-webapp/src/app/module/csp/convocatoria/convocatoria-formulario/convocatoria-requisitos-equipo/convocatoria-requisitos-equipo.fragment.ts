@@ -279,7 +279,14 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
         takeLast(1),
         map((results) => {
           this.nivelesAcademicos$.next(
-            results.map(value => new StatusWrapper<IRequisitoEquipoNivelAcademico>(value)));
+            results.map(
+              (value) => {
+                value.nivelAcademico = values.find(
+                  nivelAcademico => nivelAcademico.nivelAcademico.id === value.nivelAcademico.id
+                ).nivelAcademico;
+                return new StatusWrapper<IRequisitoEquipoNivelAcademico>(value);
+              })
+          );
         }),
         switchMap(() => of(requisitoIp))
       );
@@ -297,7 +304,14 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
         takeLast(1),
         map((results) => {
           this.categoriasProfesionales$.next(
-            results.map(value => new StatusWrapper<IRequisitoEquipoCategoriaProfesional>(value)));
+            results.map(
+              (value) => {
+                value.categoriaProfesional = values.find(
+                  categoriaProfesional => categoriaProfesional.categoriaProfesional.id === value.categoriaProfesional.id
+                ).categoriaProfesional;
+                return new StatusWrapper<IRequisitoEquipoCategoriaProfesional>(value);
+              })
+          );
         }),
         switchMap(() => of(requisitoIp))
       );

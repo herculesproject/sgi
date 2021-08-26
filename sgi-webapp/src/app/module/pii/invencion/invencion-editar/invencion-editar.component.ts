@@ -109,7 +109,6 @@ export class InvencionEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoUpdateSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

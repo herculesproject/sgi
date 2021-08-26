@@ -105,7 +105,6 @@ export class ModeloEjecucionEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
       }
     );
   }

@@ -289,7 +289,14 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
         takeLast(1),
         map((results) => {
           this.nivelesAcademicos$.next(
-            results.map(value => new StatusWrapper<IRequisitoIPNivelAcademico>(value)));
+            results.map(
+              (value) => {
+                value.nivelAcademico = values.find(
+                  nivelAcademico => nivelAcademico.nivelAcademico.id === value.nivelAcademico.id
+                ).nivelAcademico;
+                return new StatusWrapper<IRequisitoIPNivelAcademico>(value);
+              })
+          );
         }),
         switchMap(() => of(requisitoIp))
       );
@@ -307,11 +314,17 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
         takeLast(1),
         map((results) => {
           this.categoriasProfesionales$.next(
-            results.map(value => new StatusWrapper<IRequisitoIPCategoriaProfesional>(value)));
+            results.map(
+              (value) => {
+                value.categoriaProfesional = values.find(
+                  categoriaProfesional => categoriaProfesional.categoriaProfesional.id === value.categoriaProfesional.id
+                ).categoriaProfesional;
+                return new StatusWrapper<IRequisitoIPCategoriaProfesional>(value);
+              })
+          );
         }),
         switchMap(() => of(requisitoIp))
       );
   }
-
 
 }

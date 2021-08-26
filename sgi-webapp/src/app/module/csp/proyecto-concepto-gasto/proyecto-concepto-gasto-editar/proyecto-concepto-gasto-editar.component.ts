@@ -107,7 +107,6 @@ export class ProyectoConceptoGastoEditarComponent extends ActionComponent implem
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     );
   }

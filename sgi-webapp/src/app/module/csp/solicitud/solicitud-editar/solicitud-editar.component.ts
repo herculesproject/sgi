@@ -132,7 +132,6 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
@@ -185,7 +184,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
               this.snackBarService.showSuccess(MSG_CAMBIO_ESTADO_SUCCESS);
               this.router.navigate(['../'], { relativeTo: this.activatedRoute });
             }
-          );;
+          );
         }
 
       }

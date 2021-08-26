@@ -104,7 +104,6 @@ export class SolicitudProyectoSocioEditarComponent extends ActionComponent imple
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

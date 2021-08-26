@@ -104,7 +104,6 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     );
   }

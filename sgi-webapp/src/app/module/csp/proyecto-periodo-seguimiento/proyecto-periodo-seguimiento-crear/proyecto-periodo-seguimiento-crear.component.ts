@@ -103,7 +103,8 @@ export class ProyectoPeriodoSeguimientoCrearComponent extends ActionComponent im
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const proyectoPeriodoId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${proyectoPeriodoId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

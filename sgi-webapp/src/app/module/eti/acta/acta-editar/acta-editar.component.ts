@@ -102,7 +102,6 @@ export class ActaEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

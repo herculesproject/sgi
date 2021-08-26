@@ -107,7 +107,6 @@ export class TipoProteccionEditarComponent extends ActionComponent implements On
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
       }
     );
   }

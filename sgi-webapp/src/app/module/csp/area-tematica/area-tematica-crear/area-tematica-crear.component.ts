@@ -109,7 +109,8 @@ export class AreaTematicaCrearComponent extends ActionComponent implements OnIni
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        const areaTematicaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${areaTematicaId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

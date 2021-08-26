@@ -100,7 +100,6 @@ export class ProyectoAgrupacionGastoEditarComponent extends ActionComponent impl
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

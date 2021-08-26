@@ -101,7 +101,6 @@ export class PeticionEvaluacionEditarComponent extends ActionComponent implement
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

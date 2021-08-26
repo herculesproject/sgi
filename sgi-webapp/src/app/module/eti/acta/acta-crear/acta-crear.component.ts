@@ -97,7 +97,8 @@ export class ActaCrearComponent extends ActionComponent implements OnInit {
       },
       () => {
         this.snackBarService.showSuccess(this.textoSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const actaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${actaId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

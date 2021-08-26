@@ -111,7 +111,6 @@ export class AreaTematicaEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoUpdateSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
       }
     );
   }

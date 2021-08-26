@@ -103,7 +103,8 @@ export class ProyectoCrearComponent extends ActionComponent implements OnInit {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const proyectoId = this.actionService.getFragment(this.actionService.FRAGMENT.FICHA_GENERAL).getKey();
+        this.router.navigate([`../${proyectoId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

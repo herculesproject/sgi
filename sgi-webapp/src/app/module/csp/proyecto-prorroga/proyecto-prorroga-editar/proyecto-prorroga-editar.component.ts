@@ -104,7 +104,6 @@ export class ProyectoProrrogaEditarComponent extends ActionComponent implements 
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     ));
   }

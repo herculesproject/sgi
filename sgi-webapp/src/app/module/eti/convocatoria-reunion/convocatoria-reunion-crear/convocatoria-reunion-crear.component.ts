@@ -97,7 +97,8 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const convocatoriaReunionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${convocatoriaReunionId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

@@ -102,7 +102,6 @@ export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     );
   }

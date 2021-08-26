@@ -103,7 +103,23 @@ export class ProyectoAnualidadGastosFragment extends Fragment {
         takeLast(1),
         map((results) => {
           this.anualidadGastos$.next(
-            results.map(value => new StatusWrapper<IAnualidadGasto>(value)));
+            results.map(
+              (value) => {
+                value.conceptoGasto = values.find(
+                  anualidad => anualidad.conceptoGasto.id === value.conceptoGasto.id && anualidad.proyectoSgeRef === value.proyectoSgeRef
+                    && anualidad.proyectoPartida.id === value.proyectoPartida.id
+                ).conceptoGasto;
+                value.codigoEconomico = values.find(
+                  anualidad => anualidad.conceptoGasto.id === value.conceptoGasto.id && anualidad.proyectoSgeRef === value.proyectoSgeRef
+                    && anualidad.proyectoPartida.id === value.proyectoPartida.id
+                ).codigoEconomico;
+                value.proyectoPartida = values.find(
+                  anualidad => anualidad.conceptoGasto.id === value.conceptoGasto.id && anualidad.proyectoSgeRef === value.proyectoSgeRef
+                    && anualidad.proyectoPartida.id === value.proyectoPartida.id
+                ).proyectoPartida;
+                return new StatusWrapper<IAnualidadGasto>(value);
+              })
+          );
         }),
         tap(() => {
           if (this.isSaveOrUpdateComplete()) {

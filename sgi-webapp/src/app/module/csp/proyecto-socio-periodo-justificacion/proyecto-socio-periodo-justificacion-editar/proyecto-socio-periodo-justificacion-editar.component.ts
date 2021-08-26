@@ -103,7 +103,6 @@ export class ProyectoSocioPeriodoJustificacionEditarComponent extends ActionComp
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

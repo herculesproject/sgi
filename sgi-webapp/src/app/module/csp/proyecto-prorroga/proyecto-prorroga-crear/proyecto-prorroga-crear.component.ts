@@ -103,7 +103,8 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent implements O
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const proyectoProrrogaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${proyectoProrrogaId}`], { relativeTo: this.activatedRoute });
       }
     ));
   }

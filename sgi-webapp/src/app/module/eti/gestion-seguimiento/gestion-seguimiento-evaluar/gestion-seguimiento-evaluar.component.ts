@@ -99,7 +99,6 @@ export class GestionSeguimientoEvaluarComponent extends ActionComponent implemen
       },
       () => {
         this.snackBarService.showSuccess(this.textoSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

@@ -103,7 +103,8 @@ export class ProyectoAnualidadCrearComponent extends ActionComponent implements 
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const proyectoAnualidadId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${proyectoAnualidadId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

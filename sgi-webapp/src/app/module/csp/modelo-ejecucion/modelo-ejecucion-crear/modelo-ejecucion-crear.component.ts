@@ -105,7 +105,8 @@ export class ModeloEjecucionCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        const modeloEjecucionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${modeloEjecucionId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

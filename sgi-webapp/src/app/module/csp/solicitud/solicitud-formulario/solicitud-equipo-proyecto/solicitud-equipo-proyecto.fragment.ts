@@ -77,8 +77,11 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     ).pipe(
       map((peridosJustificacionActualizados) => {
         this.proyectoEquipos$.next(
-          peridosJustificacionActualizados
-            .map(solicitudProyectoEquipo => new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo)));
+          peridosJustificacionActualizados.map((solicitudProyectoEquipo) => {
+            solicitudProyectoEquipo.persona = solicitudProyectoEquipos.find(
+              equipo => equipo.persona.id === solicitudProyectoEquipo.persona.id).persona;
+            return new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo);
+          }));
       }),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {

@@ -96,7 +96,6 @@ export class SeguimientoEvaluarComponent extends ActionComponent implements OnIn
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

@@ -104,7 +104,6 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent i
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     );
   }

@@ -96,7 +96,8 @@ export class EvaluadorCrearComponent extends ActionComponent implements OnInit {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const evaluadorId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${evaluadorId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

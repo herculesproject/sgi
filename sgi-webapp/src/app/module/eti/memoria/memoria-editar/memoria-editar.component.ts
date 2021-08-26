@@ -103,12 +103,6 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
       },
       () => {
         this.snackBarService.showSuccess(this.textoActualizarSuccess);
-        if (this.from) {
-          this.router.navigateByUrl(this.from);
-        }
-        else {
-          this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-        }
       }
     );
   }

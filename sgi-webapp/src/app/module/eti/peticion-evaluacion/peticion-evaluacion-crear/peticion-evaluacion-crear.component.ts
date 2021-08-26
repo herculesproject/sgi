@@ -105,7 +105,8 @@ export class PeticionEvaluacionCrearComponent extends ActionComponent implements
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const peticionEvaluacionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${peticionEvaluacionId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

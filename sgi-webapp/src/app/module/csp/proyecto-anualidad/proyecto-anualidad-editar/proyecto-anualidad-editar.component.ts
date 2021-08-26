@@ -103,7 +103,6 @@ export class ProyectoAnualidadEditarComponent extends ActionComponent implements
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

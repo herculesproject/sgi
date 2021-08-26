@@ -97,7 +97,6 @@ export class EvaluadorEditarComponent extends ActionComponent implements OnInit 
       },
       () => {
         this.snackBarService.showSuccess(this.textoActualizarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

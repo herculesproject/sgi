@@ -107,7 +107,15 @@ export class ConvocatoriaConceptoGastoCodigoEcFragment extends Fragment {
       map((results) => {
         // TODO: Hacer maching con los datos preexistente para mantener el ConvocatoriaCodigoEconomico cargado
         this.convocatoriaConceptoGastoCodigoEcs$.next(
-          results.map(value => new StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>(value as ConvocatoriaConceptoGastoCodigoEc)));
+          results.map(
+            (value) => {
+              (value as ConvocatoriaConceptoGastoCodigoEc).convocatoriaConceptoGasto = values.find(
+                convocatoriaConceptoGastoCodigoEc =>
+                  convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId === value.convocatoriaConceptoGastoId
+              ).convocatoriaConceptoGasto;
+              return new StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>(value as ConvocatoriaConceptoGastoCodigoEc);
+            })
+        );
       }),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {

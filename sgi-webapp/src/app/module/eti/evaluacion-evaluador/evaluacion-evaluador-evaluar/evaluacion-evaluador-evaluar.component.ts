@@ -99,7 +99,6 @@ export class EvaluacionEvaluadorEvaluarComponent extends ActionComponent impleme
       },
       () => {
         this.snackBarService.showSuccess(this.textoSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

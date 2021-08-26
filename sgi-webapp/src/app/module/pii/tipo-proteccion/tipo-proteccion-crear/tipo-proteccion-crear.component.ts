@@ -101,7 +101,8 @@ export class TipoProteccionCrearComponent extends ActionComponent implements OnI
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        const tipoProteccionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${tipoProteccionId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

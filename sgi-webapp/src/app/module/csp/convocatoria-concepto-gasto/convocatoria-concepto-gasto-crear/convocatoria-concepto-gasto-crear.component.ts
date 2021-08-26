@@ -76,7 +76,8 @@ export class ConvocatoriaConceptoGastoCrearComponent extends ActionComponent imp
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const convocatoriaConceptoGastoId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${convocatoriaConceptoGastoId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

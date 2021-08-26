@@ -106,7 +106,8 @@ export class ConvocatoriaCrearComponent extends ActionComponent implements OnIni
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        const convocatoriaId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${convocatoriaId}`], { relativeTo: this.activatedRoute });
       }
     );
   }

@@ -103,7 +103,6 @@ export class ConvocatoriaConceptoGastoEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.returnUrl();
       }
     );
   }

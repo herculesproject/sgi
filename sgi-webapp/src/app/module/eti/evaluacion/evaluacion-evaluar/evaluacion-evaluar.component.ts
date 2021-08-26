@@ -100,7 +100,6 @@ export class EvaluacionEvaluarComponent extends ActionComponent implements OnIni
       },
       () => {
         this.snackBarService.showSuccess(this.textoSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
