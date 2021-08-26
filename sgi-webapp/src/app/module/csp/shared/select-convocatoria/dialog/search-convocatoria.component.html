@@ -123,8 +123,23 @@
           {{element.entidadFinanciadora.fuenteFinanciacion?.nombre}}
         </td>
       </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'label.actions' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container>
+            <button color="three" mat-raised-button (click)="closeModal(row.convocatoria)">
+              {{'btn.select' | translate}}
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [mat-dialog-close]="row.convocatoria"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
     </mat-paginator>
