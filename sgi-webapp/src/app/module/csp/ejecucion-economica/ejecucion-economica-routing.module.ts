@@ -17,6 +17,7 @@ import { EjecucionPresupuestariaIngresosComponent } from './ejecucion-economica-
 import { FacturasGastosComponent } from './ejecucion-economica-formulario/facturas-gastos/facturas-gastos.component';
 import { PersonalContratadoComponent } from './ejecucion-economica-formulario/personal-contratado/personal-contratado.component';
 import { ProyectosComponent } from './ejecucion-economica-formulario/proyectos/proyectos.component';
+import { ValidacionGastosComponent } from './ejecucion-economica-formulario/validacion-gastos/validacion-gastos.component';
 import { ViajesDietasComponent } from './ejecucion-economica-formulario/viajes-dietas/viajes-dietas.component';
 import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listado/ejecucion-economica-listado.component';
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from './ejecucion-economica-route-names';
@@ -101,6 +102,11 @@ const routes: SgiRoutes = [
       {
         path: EJECUCION_ECONOMICA_ROUTE_NAMES.PERSONAL_CONTRATADO,
         component: PersonalContratadoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EJECUCION_ECONOMICA_ROUTE_NAMES.VALIDACION_GASTOS,
+        component: ValidacionGastosComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

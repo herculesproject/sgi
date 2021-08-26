@@ -8,6 +8,7 @@ import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agru
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
+import { GastoService } from '@core/services/sge/gasto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { DetalleOperacionesGastosFragment } from './ejecucion-economica-formulario/detalle-operaciones-gastos/detalle-operaciones-gastos.fragment';
@@ -19,6 +20,7 @@ import { EjecucionPresupuestariaIngresosFragment } from './ejecucion-economica-f
 import { FacturasGastosFragment } from './ejecucion-economica-formulario/facturas-gastos/facturas-gastos.fragment';
 import { PersonalContratadoFragment } from './ejecucion-economica-formulario/personal-contratado/personal-contratado.fragment';
 import { ProyectosFragment } from './ejecucion-economica-formulario/proyectos/proyectos.fragment';
+import { ValidacionGastosFragment } from './ejecucion-economica-formulario/validacion-gastos/validacion-gastos.fragment';
 import { ViajesDietasFragment } from './ejecucion-economica-formulario/viajes-dietas/viajes-dietas.fragment';
 import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-params';
 
@@ -41,7 +43,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     DETALLE_OPERACIONES_MODIFICACIONES: 'detalle-operaciones-modificaciones',
     FACTURAS_GASTOS: 'facturas-gastos',
     VIAJES_DIETAS: 'viajes-dietas',
-    PERSONAL_CONTRATADO: 'personal-contratado'
+    PERSONAL_CONTRATADO: 'personal-contratado',
+    VALIDACION_GASTOS: 'validacion-gastos'
   };
 
   private proyectos: ProyectosFragment;
@@ -54,6 +57,7 @@ export class EjecucionEconomicaActionService extends ActionService {
   private facturasGastos: FacturasGastosFragment;
   private viajesDietas: ViajesDietasFragment;
   private personalContratado: PersonalContratadoFragment;
+  private validacionGastos: ValidacionGastosFragment;
 
   private readonly data: IEjecucionEconomicaData;
 
@@ -64,7 +68,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoAnualidadService: ProyectoAnualidadService,
     ejecucionEconomicaService: EjecucionEconomicaService,
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
-    gastoProyectoService: GastoProyectoService
+    gastoProyectoService: GastoProyectoService,
+    gastoService: GastoService
   ) {
     super();
 
@@ -112,6 +117,9 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoService, personaService, proyectoAnualidadService, proyectoAgrupacionGastoService,
       gastoProyectoService, ejecucionEconomicaService);
 
+    this.validacionGastos = new ValidacionGastosFragment(
+      id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService, proyectoAgrupacionGastoService);
+
     this.addFragment(this.FRAGMENT.PROYECTOS, this.proyectos);
     this.addFragment(this.FRAGMENT.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, this.ejecucionPresupuestariaEstadoActual);
     this.addFragment(this.FRAGMENT.EJECUCION_PRESUPUESTARIA_GASTOS, this.ejecucionPresupuestariaGastos);
@@ -122,6 +130,7 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.FACTURAS_GASTOS, this.facturasGastos);
     this.addFragment(this.FRAGMENT.VIAJES_DIETAS, this.viajesDietas);
     this.addFragment(this.FRAGMENT.PERSONAL_CONTRATADO, this.personalContratado);
+    this.addFragment(this.FRAGMENT.VALIDACION_GASTOS, this.validacionGastos);
   }
 
 }

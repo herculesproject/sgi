@@ -23,6 +23,7 @@ import { EjecucionPresupuestariaIngresosComponent } from './ejecucion-economica-
 import { FacturasGastosComponent } from './ejecucion-economica-formulario/facturas-gastos/facturas-gastos.component';
 import { PersonalContratadoComponent } from './ejecucion-economica-formulario/personal-contratado/personal-contratado.component';
 import { ProyectosComponent } from './ejecucion-economica-formulario/proyectos/proyectos.component';
+import { ValidacionGastosComponent } from './ejecucion-economica-formulario/validacion-gastos/validacion-gastos.component';
 import { ViajesDietasComponent } from './ejecucion-economica-formulario/viajes-dietas/viajes-dietas.component';
 import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listado/ejecucion-economica-listado.component';
 import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.module';
@@ -49,7 +50,8 @@ import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-
     PersonalContratadoModalComponent,
     TableProyectosRelacionadosComponent,
     FilterFechasComponent,
-    DetalleEconomicoComponent
+    DetalleEconomicoComponent,
+    ValidacionGastosComponent
   ],
   imports: [
     CommonModule,
