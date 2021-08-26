@@ -13,9 +13,6 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 
 const IMPORTE_INSCRIPCION_KEY = marker('csp.ejecucion-economica.facturas-justificantes.importe-inscripcion');
 const PROYECTO_KEY = marker('csp.ejecucion-economica.facturas-justificantes.proyecto-sgi');
@@ -72,13 +69,6 @@ export class ViajesDietasModalComponent
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadVinculacion();
-
-    this.subscriptions.push(
-      this.formGroup.controls.proyecto.valueChanges.subscribe(() => {
-        this.loadVinculacion();
-      })
-    );
   }
 
   protected getFormGroup(): FormGroup {
@@ -133,37 +123,6 @@ export class ViajesDietasModalComponent
     ).subscribe((value) => this.msgParamProyecto = {
       entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
     });
-  }
-
-  private loadVinculacion() {
-    const identificadorPerceptorProveedor = this.data.campos?.find(campo => campo.nombre === 'Identificador Perceptor/Proveedor')?.valor;
-    const proyectoId = this.data.proyecto?.id ?? this.formGroup.controls.proyecto.value?.id;
-    if (identificadorPerceptorProveedor && proyectoId) {
-      this.subscriptions.push(
-        this.personaService.findByNumeroDocumento(identificadorPerceptorProveedor).pipe(
-          switchMap(persona => {
-            if (persona) {
-              const options: SgiRestFindOptions = {
-                filter: new RSQLSgiRestFilter('personaRef', SgiRestFilterOperator.EQUALS, persona.id)
-              };
-
-              return this.proyectoService.findAllProyectoEquipo(Number(proyectoId), options).pipe(
-                map(proyectoEquipo => {
-                  let vinculacion: string;
-                  if (proyectoEquipo.items) {
-                    vinculacion = proyectoEquipo.items[0].rolProyecto.nombre;
-                  }
-                  return vinculacion;
-                })
-              );
-            }
-            return of(undefined);
-          })
-        ).subscribe(vinculacion => {
-          this.data.vinculacion = vinculacion;
-        })
-      );
-    }
   }
 
 }
