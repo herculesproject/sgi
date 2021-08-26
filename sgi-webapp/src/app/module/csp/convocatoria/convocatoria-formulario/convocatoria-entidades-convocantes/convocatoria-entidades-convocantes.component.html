@@ -1,7 +1,7 @@
 <sgi-fragment title="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
   <!-- Entidades convocantes listado -->
-  <div>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-unidad">
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="dataSource" matSort>
       <!-- Nombre Column -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria-entidad-convocante.nombre' | translate}}</th>

@@ -4,5 +4,7 @@
 <mat-dialog-actions align="center">
   <button color="accent" mat-raised-button (click)="confirmacionClick()" mat-dialog-close
     tabindex="-1">{{continuarButtonText | translate}}</button>
-  <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1">{{cancelButtonText | translate}}</button>
+  <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1">
+    <span class="underline">{{cancelButtonText| translate}}</span>
+  </button>
 </mat-dialog-actions>

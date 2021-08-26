@@ -1,9 +1,8 @@
 <sgi-fragment
   title="{{'menu.csp.proyectos.entidades' | translate}} - {{ 'menu.csp.proyectos.entidades-convocantes' | translate }}">
   <!-- Entidades convocantes listado -->
-  <div>
-    <table mat-table [dataSource]="dataSource" matSort matSortActive="nombre" matSortDirection="asc"
-      class="mat-elevation-z8 table-unidad">
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="nombre" matSortDirection="asc">
       <!-- Nombre Column -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>

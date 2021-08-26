@@ -6,6 +6,7 @@ import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
+import { ActionFooterMessageComponent } from './action-footer/action-footer-message/action-footer-message.component';
 import { ActionFooterComponent } from './action-footer/action-footer.component';
 import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
 import { ActionFragmentMenuGroupComponent } from './action-fragment-menu-group/action-fragment-menu-group.component';
@@ -18,6 +19,9 @@ import { FooterCrearComponent } from './footers/footer-crear/footer-crear.compon
 import { FragmentContentComponent } from './fragment-content/fragment-content.component';
 import { FragmentTitleComponent } from './fragment-title/fragment-title.component';
 import { FragmentComponent } from './fragment/fragment.component';
+import { IconChangesComponent } from './icon-changes/icon-changes.component';
+import { IconErrorsComponent } from './icon-errors/icon-errors.component';
+import { IconProblemsComponent } from './icon-problems/icon-problems.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
 import { MenuContentComponent, MenuContentFooter } from './menu-content/menu-content.component';
 import { MenuGroupComponent } from './menu-group/menu-group.component';
@@ -40,6 +44,10 @@ import { SelectComponent } from './select/select.component';
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SgiFileUploadComponent,
+    IconChangesComponent,
+    IconErrorsComponent,
+    IconProblemsComponent,
+    ActionFooterMessageComponent,
     ActionFragmentMenuGroupComponent,
     LuxonDatePipe,
     SelectBooleanComponent,
@@ -77,6 +85,10 @@ import { SelectComponent } from './select/select.component';
     ActionFragmentLinkItemComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,
+    IconChangesComponent,
+    IconErrorsComponent,
+    IconProblemsComponent,
+    ActionFooterMessageComponent,
     LuxonDatePipe,
     SelectBooleanComponent,
     SelectComponent,

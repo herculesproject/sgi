@@ -1,8 +1,7 @@
 <sgi-fragment title="{{'csp.convocatoria-seguimiento-cientifico' | translate}}">
   <!-- Entidades convocantes listado -->
-  <div>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-unidad" matSort matSortActive="id"
-      matSortDirection="asc" matSortDisableClear>
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
       <!-- numPeriodo Column -->
       <ng-container matColumnDef="numPeriodo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
