@@ -155,7 +155,7 @@ public class SolicitudProyectoController {
   }
 
   @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/periodospago", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Object> hasSolicitudProyectoSocioPeriodosPago(
       @PathVariable(required = true) Long solicitudProyectoId) {
 
@@ -164,7 +164,7 @@ public class SolicitudProyectoController {
   }
 
   @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/periodosjustificacion", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Object> hasSolicitudProyectoSocioPeriodosJustificacion(
       @PathVariable(required = true) Long solicitudProyectoId) {
 
@@ -175,7 +175,7 @@ public class SolicitudProyectoController {
   }
 
   @RequestMapping(path = "/{solicitudProyectoId}/solicitudproyectosocios/coordinador", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Object> hasAnySolicitudProyectoSocioWithRolCoordinador(
       @PathVariable(required = true) Long solicitudProyectoId) {
 

@@ -404,7 +404,7 @@ public class SolicitudController {
    * @return {@link SolicitudProyecto}
    */
   @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.GET)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<SolicitudProyecto> findSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("findSolictudProyectoDatos(Long id) - start");
     SolicitudProyecto returnValue = solicitudProyectoService.findBySolicitud(id);
@@ -426,7 +426,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectosocio")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   ResponseEntity<Page<SolicitudProyectoSocio>> findAllSolicitudProyectoSocio(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoSocio(Long id, String query, Pageable paging) - start");
@@ -695,7 +695,7 @@ public class SolicitudController {
    * @return {@link Solicitud} actualizado.
    */
   @PatchMapping("/{id}/cambiar-estado")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
   Solicitud cambiarEstado(@PathVariable Long id, @RequestBody EstadoSolicitud estadoSolicitud) {
     log.debug("presentar(Long id) - start");
 

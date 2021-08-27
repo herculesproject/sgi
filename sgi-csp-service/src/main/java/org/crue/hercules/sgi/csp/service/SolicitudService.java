@@ -444,7 +444,6 @@ public class SolicitudService {
 
     // Se cambia el estado de la solicitud
     // Actualiza el estado actual de la solicitud con el nuevo estado
-    estadoSolicitud.setFechaEstado(Instant.now());
     estadoSolicitud = estadoSolicitudRepository.save(estadoSolicitud);
     solicitud.setEstado(estadoSolicitud);
 
@@ -782,8 +781,8 @@ public class SolicitudService {
    */
   private boolean hasPermisosEdicion(String unidadGestionRef) {
     String authority = "CSP-SOL-E";
-    return SgiSecurityContextHolder.hasAuthority(authority)
-        || SgiSecurityContextHolder.hasAuthorityForUO(authority, unidadGestionRef);
+    return SgiSecurityContextHolder.hasAuthority(authority) || SgiSecurityContextHolder
+        .hasAnyAuthorityForUO(new String[] { "CSP-SOL-E", "CSP-SOL-INV-ER" }, unidadGestionRef);
   }
 
   /**
