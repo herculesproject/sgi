@@ -155,7 +155,9 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
     const data: SolicitudCambioEstadoModalComponentData = {
       estadoActual: this.actionService.estado,
       estadoNuevo: null,
+      fechaEstado: null,
       comentario: null,
+      isInvestigador: this.actionService.isInvestigador
     };
     const config = {
       panelClass: 'sgi-dialog-container',
@@ -167,6 +169,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         if (modalData) {
           const estadoSolicitud = {
             estado: modalData.estadoNuevo,
+            fechaEstado: modalData.fechaEstado,
             comentario: modalData.comentario
           } as IEstadoSolicitud;
           this.actionService.cambiarEstado(estadoSolicitud).subscribe(

@@ -99,6 +99,7 @@ export class SolicitudActionService extends ActionService {
   private clasificaciones: SolicitudProyectoClasificacionesFragment;
   private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
   private autoevaluacion: SolicitudAutoevaluacionFragment;
+  public readonly isInvestigador: boolean;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -176,7 +177,7 @@ export class SolicitudActionService extends ActionService {
       }
     }
 
-    const isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
+    this.isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
     const idConvocatoria = history.state[CONVOCATORIA_ID_KEY];
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(
@@ -191,10 +192,10 @@ export class SolicitudActionService extends ActionService {
       unidadGestionService,
       authService,
       this.readonly,
-      isInvestigador
+      this.isInvestigador
     );
 
-    if (isInvestigador && idConvocatoria) {
+    if (this.isInvestigador && idConvocatoria) {
       this.loadConvocatoria(idConvocatoria);
     }
 
@@ -225,7 +226,7 @@ export class SolicitudActionService extends ActionService {
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     // Por ahora solo está implementado para investigador la pestaña datos generales
-    if (this.isEdit() && !isInvestigador) {
+    if (this.isEdit() && !this.isInvestigador) {
       this.addFragment(this.FRAGMENT.HITOS, this.hitos);
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
@@ -319,7 +320,7 @@ export class SolicitudActionService extends ActionService {
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
         this.proyectoDatos.initialize();
       }
-    } else if (this.isEdit() && isInvestigador) {
+    } else if (this.isEdit() && this.isInvestigador) {
       this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
         (value) => {
           this.convocatoria = value;
@@ -444,7 +445,7 @@ export class SolicitudActionService extends ActionService {
    * Cambio de estado a **Presentada** desde:
    * - **Borrador**
    */
-  cambiarEstado(estadoNuevo: IEstadoSolicitud): Observable<void> {
+  cambiarEstado(estadoNuevo: IEstadoSolicitud): Observable<IEstadoSolicitud> {
     return this.solicitudService.cambiarEstado(this.datosGenerales.getKey() as number, estadoNuevo);
   }
 

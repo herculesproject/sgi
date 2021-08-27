@@ -391,10 +391,13 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param estadoSolicitud Nuevo estado de la solicitud.
    */
 
-  cambiarEstado(id: number, estadoSolicitud: IEstadoSolicitud): Observable<void> {
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/cambiar-estado`, estadoSolicitud);
+  cambiarEstado(id: number, estadoSolicitud: IEstadoSolicitud): Observable<IEstadoSolicitud> {
+    return this.http.patch<IEstadoSolicitudBackend>(`${this.endpointUrl}/${id}/cambiar-estado`,
+      ESTADO_SOLICITUD_CONVERTER.fromTarget(estadoSolicitud)
+    ).pipe(
+      map((response => ESTADO_SOLICITUD_CONVERTER.toTarget(response)))
+    );
   }
-
   /**
    * Devuelve el listado de solicitudes que puede ver un investigador
    *
