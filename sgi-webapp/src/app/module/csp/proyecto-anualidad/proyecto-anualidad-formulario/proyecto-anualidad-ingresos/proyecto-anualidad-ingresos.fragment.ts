@@ -32,7 +32,7 @@ export class ProyectoAnualidadIngresosFragment extends Fragment {
           .pipe(
             switchMap(response => {
               const requestsCodigoEconomico: Observable<IAnualidadIngreso>[] = [];
-              response.items.forEach(anualidadIngreso => {
+              response.items.filter(anualidad => anualidad.codigoEconomico?.id).forEach(anualidadIngreso => {
                 requestsCodigoEconomico.push(
                   this.codigoEconomicoIngresoService.findById(anualidadIngreso.codigoEconomico.id)
                     .pipe(
@@ -107,7 +107,7 @@ export class ProyectoAnualidadIngresosFragment extends Fragment {
                   anualidad =>
                     anualidad.codigoEconomico?.id === value.codigoEconomico?.id && anualidad.proyectoPartida.id === value.proyectoPartida.id
                     && anualidad.proyectoSgeRef === value.proyectoSgeRef
-                ).codigoEconomico;
+                )?.codigoEconomico;
                 value.proyectoPartida = values.find(
                   anualidad =>
                     anualidad.codigoEconomico?.id === value.codigoEconomico?.id && anualidad.proyectoPartida.id === value.proyectoPartida.id

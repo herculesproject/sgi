@@ -27,7 +27,7 @@
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10 separation-button">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}</mat-label>
-        <sgi-select formControlName="codigoEconomico" required [options]="codigosEconomicos$ | async"
+        <sgi-select formControlName="codigoEconomico" [options]="codigosEconomicos$ | async"
           [compareWith]="comparerCodigoEconomico" [displayWith]="displayerCodigoEconomico"
           [sortWith]="sorterCodigoEconomico">
         </sgi-select>

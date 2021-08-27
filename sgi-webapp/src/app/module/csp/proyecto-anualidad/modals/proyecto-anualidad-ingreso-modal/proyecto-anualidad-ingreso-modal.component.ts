@@ -150,6 +150,7 @@ export class ProyectoAnualidadIngresoModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
+
     const identificadorSge = this.data.anualidadIngreso?.proyectoSgeRef
       ? {
         proyectoSge:
@@ -164,11 +165,27 @@ export class ProyectoAnualidadIngresoModalComponent extends
         codigo: this.data.anualidadIngreso?.proyectoPartida.codigo
       } as IProyectoPartida
       : null;
+
+    const proyectoPartidaFormControl = new FormControl(proyectoPartida, Validators.required);
+
+    // TODO: Sincronizar la carga
+    this.proyectoService.findAllProyectoPartidas(this.data.proyectoId).subscribe(partidas => {
+      if (proyectoPartida == null && partidas.items.filter(partida => partida.tipoPartida === TipoPartida.INGRESO).length === 1) {
+        proyectoPartidaFormControl.setValue(partidas.items.filter(partida => partida.tipoPartida === TipoPartida.INGRESO)[0]);
+      } else {
+        proyectoPartidaFormControl.setValue(proyectoPartida);
+      }
+    });
+
     const formGroup = new FormGroup(
       {
         identificadorSge: new FormControl(identificadorSge, [Validators.required]),
-        proyectoPartida: new FormControl(proyectoPartida, [Validators.required]),
-        codigoEconomico: new FormControl(this.data.anualidadIngreso?.codigoEconomico),
+        proyectoPartida: proyectoPartidaFormControl,
+        codigoEconomico: new FormControl(
+          this.data.anualidadIngreso?.codigoEconomico?.id
+            ? this.data.anualidadIngreso?.codigoEconomico
+            : null
+        ),
         importeConcedido: new FormControl(this.data.anualidadIngreso.importeConcedido, [Validators.required]),
       }
     );
