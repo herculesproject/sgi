@@ -1656,11 +1656,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(proyecto.getConfidencial() != null,
           "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
-      Assert.isTrue(proyecto.getColaborativo() != null,
-          "El campo colaborativo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      Assert.isTrue(proyecto.getCoordinado() != null,
+          "El campo Proyecto coordinado debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
-      Assert.isTrue(proyecto.getCoordinadorExterno() != null,
-          "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      if (proyecto.getCoordinado() != null && proyecto.getCoordinado() == true) {
+        Assert.isTrue(proyecto.getCoordinadorExterno() != null,
+            "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      }
 
       Assert.isTrue(proyecto.getTimesheet() != null,
           "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
