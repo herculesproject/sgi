@@ -3,10 +3,10 @@
   <form [formGroup]="formGroup">
     <div fxFlex>
       <!-- Concepto Gasto -->
-      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign" fxLayoutGap="10px">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
-          <mat-form-field fxFill>
+          <mat-form-field>
             <mat-label>
               {{'csp.proyecto-concepto-gasto' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
             </mat-label>
@@ -17,6 +17,19 @@
             </mat-error>
           </mat-form-field>
         </div>
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <!--Costes Indirectos-->
+          <mat-form-field>
+            <mat-label>{{'label.csp.concepto-gasto.costes-indirectos' | translate}}
+            </mat-label>
+            <sgi-select-boolean formControlName="costesIndirectos" required></sgi-select-boolean>
+            <mat-error *ngIf="formGroup.controls.costesIndirectos.errors?.required">
+              {{'error.required.entity' | translate:msgParamCostesIndirectos}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
       </div>
 
       <!-- Importe máximo -->
@@ -112,12 +125,25 @@
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
-          <mat-form-field fxFill>
+          <mat-form-field>
             <mat-label>
               {{'csp.proyecto-concepto-gasto' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
             </mat-label>
             <sgi-select-entity formControlName="conceptoGastoConvocatoria" [options]="conceptosGasto$ | async">
             </sgi-select-entity>
+          </mat-form-field>
+        </div>
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <!--Costes Indirectos-->
+          <mat-form-field>
+            <mat-label>{{'label.csp.concepto-gasto.costes-indirectos' | translate}}
+            </mat-label>
+            <sgi-select-boolean formControlName="costesIndirectos" required></sgi-select-boolean>
+
+            <mat-error *ngIf="formGroup.controls.costesIndirectos.errors?.required">
+              {{'error.required.entity' | translate:msgParamCostesIndirectos}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

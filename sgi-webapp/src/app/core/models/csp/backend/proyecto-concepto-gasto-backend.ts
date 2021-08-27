@@ -9,6 +9,5 @@ export interface IProyectoConceptoGastoBackend {
   fechaInicio: string;
   fechaFin: string;
   observaciones: string;
-  porcentajeCosteIndirecto: number;
   convocatoriaConceptoGastoId: number;
 }

@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormFragmentComponent } from '@core/component/fragment.component';
+import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -31,7 +31,7 @@ const PORCENTAJE_COSTES_INDIRECTOS_KEY = marker('csp.convocatoria-concepto-gasto
   templateUrl: './proyecto-conceptos-gasto.component.html',
   styleUrls: ['./proyecto-conceptos-gasto.component.scss']
 })
-export class ProyectoConceptosGastoComponent extends FormFragmentComponent<ConceptoGastoListado[]> implements OnInit, OnDestroy {
+export class ProyectoConceptosGastoComponent extends FragmentComponent implements OnInit, OnDestroy {
   ROUTE_NAMES = ROUTE_NAMES;
 
   get PROYECTO_ROUTE_NAMES() {
@@ -51,9 +51,9 @@ export class ProyectoConceptosGastoComponent extends FormFragmentComponent<Conce
 
   elementosPagina = [5, 10, 25, 100];
   displayedColumnsPermitidos =
-    ['helpIcon', 'conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+    ['helpIcon', 'conceptoGasto.nombre', 'conceptoGasto.descripcion', 'conceptoGasto.costesIndirectos', 'importeMaximo', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
   displayedColumnsNoPermitidos =
-    ['helpIcon', 'conceptoGasto.nombre', 'conceptoGasto.descripcion', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+    ['helpIcon', 'conceptoGasto.nombre', 'conceptoGasto.descripcion', 'conceptoGasto.costesIndirectos', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
 
   msgParamEntityPermitido = {};
   msgParamEntityNoPermitido = {};

@@ -11,8 +11,7 @@ import { switchMap } from 'rxjs/operators';
 
 const CONCEPTO_GASTO_KEY = marker('csp.concepto-gasto');
 const CONCEPTO_GASTO_NOMBRE_KEY = marker('csp.concepto-gasto.nombre');
-const CONCEPTO_GASTO_COSTES_INDIRECTOS_TOOLTIP = marker('csp.concepto-gasto.costesIndirectos.tooltip');
-const CONCEPTO_GASTO_COSTES_INDIRECTOS = marker('label.costesIndirectos');
+const CONCEPTO_GASTO_COSTES_INDIRECTOS = marker('label.costes-indirectos');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -66,10 +65,6 @@ export class ConceptoGastoModalComponent extends
       CONCEPTO_GASTO_COSTES_INDIRECTOS,
     ).subscribe((value) => this.msgParamCostesIndirectos = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
-    this.translate.get(
-      CONCEPTO_GASTO_COSTES_INDIRECTOS_TOOLTIP,
-    ).subscribe((value) => this.textoToolTip = value);
-
     if (this.conceptoGasto.nombre) {
       this.translate.get(
         CONCEPTO_GASTO_KEY,
@@ -106,7 +101,7 @@ export class ConceptoGastoModalComponent extends
     return new FormGroup({
       nombre: new FormControl(this.conceptoGasto?.nombre),
       descripcion: new FormControl(this.conceptoGasto?.descripcion),
-      costesIndirectos: new FormControl(this.conceptoGasto?.costesIndirectos, Validators.required)
+      costesIndirectos: new FormControl({ value: this.conceptoGasto?.costesIndirectos, disabled: true }, Validators.required)
     });
   }
 
