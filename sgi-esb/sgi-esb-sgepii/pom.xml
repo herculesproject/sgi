@@ -9,6 +9,7 @@
   <description>sgi-esb-sgepii</description>
   <modules>
     <module>sgepii-integration-project</module>
+    <module>sgepii-registry-resources</module>
     <module>sgepii-composite-application</module>
   </modules>
   <!-- ********************************************** -->

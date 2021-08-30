@@ -101,6 +101,7 @@
       </send>
     </inSequence>
     <outSequence>
+      <script key="gov:scripts/sgepii/invenciones-response-converter-mediator.js" language="js"/>
       <respond/>
     </outSequence>
     <faultSequence>
