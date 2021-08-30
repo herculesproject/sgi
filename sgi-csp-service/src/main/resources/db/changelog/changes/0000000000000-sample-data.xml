@@ -3458,6 +3458,10 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-proyecto">
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-15T10:00:00" />
       <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Proyecto 1 CGF/OPE-1" />
       <column name="acronimo" value="PCGFOPE1" />
@@ -3486,6 +3490,10 @@ industries" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-20T10:00:00" />
       <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Título proyecto CGF/OPE2" />
       <column name="acronimo" value="PCGFOPE2" />
@@ -3515,6 +3523,10 @@ industries" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
       <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Proyecto conv CGF/OPE-3" />
       <column name="acronimo" value="PCOPE-3" />
@@ -3585,17 +3597,28 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-proyecto_entidad_financiadora">
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-02-01T10:00:00" />
       <column name="proyecto_id" value="1" />
       <column name="entidad_ref" value="G0021150" />
+      <column name="importe_financiacion" value="null" />
       <column name="fuente_financiacion_id" value="4" />
       <column name="tipo_financiacion_id" value="1" />
       <column name="porcentaje_financiacion" value="80" />
       <column name="ajena" valueBoolean="false" />
     </insert>
+
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-02-01T10:00:00" />
       <column name="proyecto_id" value="2" />
       <column name="entidad_ref" value="G0021150" />
+      <column name="importe_financiacion" value="null" />
       <column name="fuente_financiacion_id" value="4" />
       <column name="tipo_financiacion_id" value="1" />
       <column name="porcentaje_financiacion" value="100" />
@@ -3603,11 +3626,44 @@ industries" />
     </insert>
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-02-01T10:00:00" />
       <column name="proyecto_id" value="2" />
       <column name="entidad_ref" value="00058228" />
+      <column name="importe_financiacion" value="null" />
       <column name="fuente_financiacion_id" value="2" />
       <column name="tipo_financiacion_id" value="2" />
       <column name="porcentaje_financiacion" value="20" />
+      <column name="ajena" valueBoolean="true" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="proyecto_id" value="3" />
+      <column name="entidad_ref" value="Q3018001" />
+      <column name="importe_financiacion" value="30000" />
+      <column name="fuente_financiacion_id" value="1" />
+      <column name="tipo_financiacion_id" value="2" />
+      <column name="porcentaje_financiacion" value="null" />
+      <column name="ajena" valueBoolean="false" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="proyecto_id" value="3" />
+      <column name="entidad_ref" value="00090577" />
+      <column name="importe_financiacion" value="null" />
+      <column name="fuente_financiacion_id" value="null" />
+      <column name="tipo_financiacion_id" value="1" />
+      <column name="porcentaje_financiacion" value="50" />
       <column name="ajena" valueBoolean="true" />
     </insert>
   </changeSet>
@@ -3699,10 +3755,45 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-contexto_proyecto">
     <insert tableName="contexto_proyecto">
       <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-15T10:00:00" />
       <column name="proyecto_id" value="1" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
-      <column name="resultados_previstos" value="null" />
+      <column name="resultados_previstos" value="Resultados previstos del proyecto con título Proyecto 1 CGF/OPE-1" />
+      <column name="propiedad_resultados" value="null" />
+      <column name="area_tematica_convocatoria_id" value="61" />
+      <column name="area_tematica_id" value="null" />
+    </insert>
+
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-20T10:00:00" />
+      <column name="proyecto_id" value="2" />
+      <column name="objetivos" value="null" />
+      <column name="intereses" value="null" />
+      <column name="resultados_previstos" value="Resultados previstos del proyecto con título Título proyecto CGF/OPE2" />
+      <column name="propiedad_resultados" value="null" />
+      <column name="area_tematica_convocatoria_id" value="61" />
+      <column name="area_tematica_id" value="null" />
+    </insert>
+
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="proyecto_id" value="3" />
+      <column name="objetivos" value="null" />
+      <column name="intereses" value="null" />
+      <column name="resultados_previstos" value="Resultados previstos del proyecto con título Proyecto conv CGF/OPE-3" />
       <column name="propiedad_resultados" value="null" />
       <column name="area_tematica_convocatoria_id" value="61" />
       <column name="area_tematica_id" value="null" />
@@ -3962,19 +4053,40 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-proyecto_entidad_gestora">
     <insert tableName="proyecto_entidad_gestora">
       <column name="id" valueSequenceNext="proyecto_entidad_gestora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-07-21T11:34:22" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-07-21T11:34:22" />
       <column name="proyecto_id" value="1" />
       <column name="entidad_ref" value="G0021150" />
     </insert>
     <insert tableName="proyecto_entidad_gestora">
       <column name="id" valueSequenceNext="proyecto_entidad_gestora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-08-20T07:45:49" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-20T07:45:49" />
       <column name="proyecto_id" value="2" />
-      <column name="entidad_ref" value="00061172" />
+      <column name="entidad_ref" value="S2816021" />
+    </insert>
+    <insert tableName="proyecto_entidad_gestora">
+      <column name="id" valueSequenceNext="proyecto_entidad_gestora_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="proyecto_id" value="3" />
+      <column name="entidad_ref" value="G0021150" />
     </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-proyecto_entidad_convocante">
     <insert tableName="proyecto_entidad_convocante">
       <column name="id" valueSequenceNext="proyecto_entidad_convocante_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-15T10:00:00" />
       <column name="proyecto_id" value="1" />
       <column name="entidad_ref" value="G0021150" />
       <column name="programa_convocatoria_id" value="34" />
@@ -3982,13 +4094,21 @@ industries" />
     </insert>
     <insert tableName="proyecto_entidad_convocante">
       <column name="id" valueSequenceNext="proyecto_entidad_convocante_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-01T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-20T10:00:00" />
       <column name="proyecto_id" value="2" />
-      <column name="entidad_ref" value="G0021150" />
+      <column name="entidad_ref" value="00090577" />
       <column name="programa_convocatoria_id" value="27" />
       <column name="programa_id" value="null" />
     </insert>
     <insert tableName="proyecto_entidad_convocante">
       <column name="id" valueSequenceNext="proyecto_entidad_convocante_seq" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-02-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
       <column name="proyecto_id" value="3" />
       <column name="entidad_ref" value="G0021150" />
       <column name="programa_convocatoria_id" value="51" />
@@ -4028,6 +4148,69 @@ industries" />
       <column name="id" valueSequenceNext="agrupacion_gasto_concepto_seq" />
       <column name="agrupacion_gasto_id" value="1" />
       <column name="concepto_gasto_id" value="3" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-proyecto_equipo">
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="1" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-08-19T08:37:32" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-19T08:37:32" />
+      <column name="persona_ref" value="27477512" />
+      <column name="rol_proyecto_id" value="1" />
+    </insert>
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="1" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-08-19T08:37:32" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-19T08:37:32" />
+      <column name="persona_ref" value="49170836" />
+      <column name="rol_proyecto_id" value="2" />
+    </insert>
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="2" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="persona_ref" value="48734989" />
+      <column name="rol_proyecto_id" value="1" />
+    </insert>
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="2" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-08-19T08:37:32" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-08-19T08:37:32" />
+      <column name="persona_ref" value="77504284" />
+      <column name="rol_proyecto_id" value="6" />
+    </insert>
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="3" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="persona_ref" value="01889311" />
+      <column name="rol_proyecto_id" value="1" />
+    </insert>
+    <insert tableName="proyecto_equipo">
+      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="proyecto_id" value="3" />
+      <column name="created_by" value="00391433" />
+      <column name="creation_date" valueDate="2021-03-02T10:00:00" />
+      <column name="last_modified_by" value="00391433" />
+      <column name="last_modified_date" valueDate="2021-03-02T10:00:00" />
+      <column name="persona_ref" value="02591317" />
+      <column name="rol_proyecto_id" value="8" />
     </insert>
   </changeSet>
 
