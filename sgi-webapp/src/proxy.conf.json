@@ -53,6 +53,12 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/api/sgepii": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/api/sgdoc": {
     "target": "http://sgi-esb:8080",
     "changeOrigin": true,

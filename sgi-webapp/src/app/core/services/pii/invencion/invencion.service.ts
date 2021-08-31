@@ -41,6 +41,9 @@ import {
 import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from './solicitud-proteccion/solicitud-proteccion-response.converter';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion/solicitud-proteccion-response';
+import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
+import { IInvencionGastoResponse } from './invencion-gasto/invencion-gasto-response';
+import { INVENCION_GASTO_RESPONSE_CONVERTER } from './invencion-gasto/invencion-gasto-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
@@ -247,5 +250,20 @@ export class InvencionService extends _InvencionServiceMixinBase {
       options,
       SOLICITUD_PROTECCION_RESPONSE_CONVERTER
     );
+  }
+
+  /**
+ * Recupera los Gastos asociados a la Invencion con el id indicado.
+ *
+ * @param id Id de la Invencion
+ */
+  findGastos(id: number): Observable<IInvencionGasto[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/gastos`;
+    return this.http.get<IInvencionGastoResponse[]>(endpointUrl)
+      .pipe(
+        map(response => {
+          return INVENCION_GASTO_RESPONSE_CONVERTER.toTargetArray(response);
+        })
+      );
   }
 }

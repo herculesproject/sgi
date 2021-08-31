@@ -9,11 +9,13 @@ import { InvencionService } from '@core/services/pii/invencion/invencion.service
 import { SolicitudProteccionService } from '@core/services/pii/invencion/solicitud-proteccion/solicitud-proteccion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { GastosInvencionService } from '@core/services/sgepii/gastos-invencion.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { InvencionDatosGeneralesFragment } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.fragment';
 import { InvencionDocumentoFragment } from './invencion-formulario/invencion-documento/invencion-documento.fragment';
+import { InvencionGastosFragment } from './invencion-formulario/invencion-gastos/invencion-gastos.fragment';
 import { InvencionInformesPatentabilidadFragment } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.fragment';
 import { InvencionInventorFragment } from './invencion-formulario/invencion-inventor/invencion-inventor.fragment';
 import { SolicitudProteccionFragment } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.fragment';
@@ -35,7 +37,8 @@ export class InvencionActionService extends ActionService {
     DOCUMENTOS: 'documentos',
     INFORME_PATENTABILIDAD: 'informe-patentabilidad',
     INVENCION_INVENTOR: 'invencion-inventor',
-    SOLICITUDES_PROTECCION: 'solicitudes-proteccion'
+    SOLICITUDES_PROTECCION: 'solicitudes-proteccion',
+    GASTOS: 'gastos'
   };
 
   private datosGenerales: InvencionDatosGeneralesFragment;
@@ -43,6 +46,7 @@ export class InvencionActionService extends ActionService {
   private informesPatentabilidad: InvencionInformesPatentabilidadFragment;
   private invencionInventoresFragment: InvencionInventorFragment;
   private solicitudesProteccion: SolicitudProteccionFragment;
+  private invencionGastos: InvencionGastosFragment;
 
   get canEdit(): boolean {
     return this.data?.canEdit ?? true;
@@ -59,7 +63,8 @@ export class InvencionActionService extends ActionService {
     empresaService: EmpresaService,
     personaService: PersonaService,
     readonly logger: NGXLogger,
-    private solicitudProteccionService: SolicitudProteccionService
+    solicitudProteccionService: SolicitudProteccionService,
+    gastosInvencionService: GastosInvencionService
   ) {
     super();
 
@@ -91,6 +96,9 @@ export class InvencionActionService extends ActionService {
       this.solicitudesProteccion = new SolicitudProteccionFragment(this.id, invencionService, solicitudProteccionService,
         this.data.tipoPropiedad);
       this.addFragment(this.FRAGMENT.SOLICITUDES_PROTECCION, this.solicitudesProteccion);
+
+      this.invencionGastos = new InvencionGastosFragment(this.id, gastosInvencionService, invencionService, solicitudProteccionService);
+      this.addFragment(this.FRAGMENT.GASTOS, this.invencionGastos);
     }
 
   }

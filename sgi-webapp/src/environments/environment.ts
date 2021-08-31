@@ -16,6 +16,7 @@ export const environment = {
     sgdoc: '/api/sgdoc',
     sge: '/api/sge',
     sgemp: '/api/sgemp',
+    sgepii: '/api/sgepii',
     sgo: '/api/sgo',
     pii: '/api/pii'
   },
@@ -40,6 +41,7 @@ export const environment = {
       /\/api\/usr.*/i,
       /\/api\/sgp.*/i,
       /\/api\/sgemp.*/i,
+      /\/api\/sgepii.*/i,
       /\/api\/sgo.*/i,
       /\/api\/sge.*/i,
       /\/api\/pii.*/i,

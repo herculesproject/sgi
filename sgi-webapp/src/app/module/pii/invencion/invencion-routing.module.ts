@@ -11,6 +11,7 @@ import { InvencionCrearComponent } from './invencion-crear/invencion-crear.compo
 import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
 import { InvencionDocumentoComponent } from './invencion-formulario/invencion-documento/invencion-documento.component';
+import { InvencionGastosComponent } from './invencion-formulario/invencion-gastos/invencion-gastos.component';
 import { InvencionInformesPatentabilidadComponent } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.component';
 import { InvencionInventorComponent } from './invencion-formulario/invencion-inventor/invencion-inventor.component';
 import { SolicitudProteccionComponent } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.component';
@@ -103,6 +104,11 @@ const routes: SgiRoutes = [
       {
         path: INVENCION_ROUTE_NAMES.SOLICITUDES_PROTECCION,
         component: SolicitudProteccionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: INVENCION_ROUTE_NAMES.GASTOS,
+        component: InvencionGastosComponent,
         canDeactivate: [FragmentGuard]
       },
       {
