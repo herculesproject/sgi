@@ -70,15 +70,12 @@ export class ProyectoCalendarioJustificacionComponent extends FragmentComponent 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    const subscription = this.formPart?.periodoJustificaciones$?.subscribe(
-      (proyectoPeridosJustificaciones) => {
-        this.dataSource.data = proyectoPeridosJustificaciones;
-      }
-    );
-    this.subscriptions.push(subscription);
-
     this.dataSource = new MatTableDataSource<IPeriodoJustificacionListado>();
     this.dataSource.paginator = this.paginator;
+    this.subscriptions.push(this.formPart.periodoJustificaciones$.subscribe(
+      (proyectoPeridosJustificaciones) => {
+        this.dataSource.data = proyectoPeridosJustificaciones;
+      }));
     this.dataSource.sortingDataAccessor =
       (periodoJustificacionListado: IPeriodoJustificacionListado, property: string) => {
         switch (property) {

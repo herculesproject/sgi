@@ -250,7 +250,6 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
         };
       }
     } else {
-      // periodoJustificacionListado.numPeriodo = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.numPeriodo;
       periodoJustificacionListado.tipoJustificacion = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.tipo;
       periodoJustificacionListado.fechaInicioPresentacion =
         periodoJustificacionListado.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion;
