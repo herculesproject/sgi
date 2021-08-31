@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionGastoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionInventorInput;
 import org.crue.hercules.sgi.pii.dto.InvencionInventorOutput;
@@ -22,12 +23,14 @@ import org.crue.hercules.sgi.pii.model.InformePatentabilidad;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionAreaConocimiento;
 import org.crue.hercules.sgi.pii.model.InvencionDocumento;
+import org.crue.hercules.sgi.pii.model.InvencionGasto;
 import org.crue.hercules.sgi.pii.model.InvencionInventor;
 import org.crue.hercules.sgi.pii.model.InvencionSectorAplicacion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.service.InformePatentabilidadService;
 import org.crue.hercules.sgi.pii.service.InvencionAreaConocimientoService;
 import org.crue.hercules.sgi.pii.service.InvencionDocumentoService;
+import org.crue.hercules.sgi.pii.service.InvencionGastoService;
 import org.crue.hercules.sgi.pii.service.InvencionInventorService;
 import org.crue.hercules.sgi.pii.service.InvencionSectorAplicacionService;
 import org.crue.hercules.sgi.pii.service.InvencionService;
@@ -65,6 +68,7 @@ public class InvencionController {
   public static final String PATH_AREAS = "/{id}/areasconocimiento";
   public static final String PATH_INFORMESPATENTABILIDAD = "/{id}/informespatentabilidad";
   public static final String PATH_INVENCION_INVENTOR = "/{invencionId}/invencion-inventores";
+  public static final String PATH_INVENCION_GASTO = "/{invencionId}/gastos";
 
   private ModelMapper modelMapper;
 
@@ -83,12 +87,16 @@ public class InvencionController {
   /** Invencion service */
   private final InvencionInventorService invencionInventorService;
 
+  /** InvencionGasto service */
+  private final InvencionGastoService invencionGastoService;
+
   public InvencionController(ModelMapper modelMapper, InvencionService invencionService,
       InvencionSectorAplicacionService invencionSectorAplicacionService,
       InvencionDocumentoService invencionDocumentoService,
       InvencionAreaConocimientoService invencionAreaConocimientoService,
       InformePatentabilidadService informePatentabilidadService,
-      final SolicitudProteccionService solicitudProteccionService, InvencionInventorService invencionInventorService) {
+      final SolicitudProteccionService solicitudProteccionService, InvencionInventorService invencionInventorService,
+      InvencionGastoService invencionGastoService) {
     this.modelMapper = modelMapper;
     this.service = invencionService;
     this.invencionInventorService = invencionInventorService;
@@ -97,6 +105,7 @@ public class InvencionController {
     this.invencionAreaConocimientoService = invencionAreaConocimientoService;
     this.informePatentabilidadService = informePatentabilidadService;
     this.solicitudProteccionService = solicitudProteccionService;
+    this.invencionGastoService = invencionGastoService;
   }
 
   /**
@@ -422,6 +431,23 @@ public class InvencionController {
     return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
   }
 
+  /**
+   * Devuelve los {@link InvencionGasto} asociados a la {@link Invencion} con el
+   * id indicado
+   * 
+   * @param invencionId Identificador de {@link Invencion}
+   * @return {@link InvencionGasto} correspondientes al id de la {@link Invencion}
+   */
+  @GetMapping(PATH_INVENCION_GASTO)
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
+  public List<InvencionGastoOutput> findInvencionGastosByInvencionId(@PathVariable Long invencionId) {
+    log.debug("findInvencionGastosByInvencionId(@PathVariable Long id) - start");
+    List<InvencionGastoOutput> returnValue = convertInvencionGasto(
+        invencionGastoService.findByInvencionId(invencionId));
+    log.debug("findInvencionGastosByInvencionId(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
   private InvencionOutput convert(Invencion invencion) {
     return modelMapper.map(invencion, InvencionOutput.class);
   }
@@ -542,4 +568,11 @@ public class InvencionController {
     return inputs.stream().map((input) -> convert(id, input)).collect(Collectors.toList());
   }
 
+  private List<InvencionGastoOutput> convertInvencionGasto(List<InvencionGasto> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private InvencionGastoOutput convert(InvencionGasto entity) {
+    return modelMapper.map(entity, InvencionGastoOutput.class);
+  }
 }
