@@ -65,13 +65,13 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       id: new FormControl({ value: '', disabled: true }),
-      titulo: new FormControl('', [Validators.maxLength(50)]),
+      titulo: new FormControl('', [Validators.maxLength(250)]),
       fechaComunicacion: new FormControl(DateTime.now()),
-      descripcion: new FormControl('', [Validators.maxLength(250)]),
+      descripcion: new FormControl('', [Validators.maxLength(2000)]),
       tipoProteccion: new FormControl(null, [Validators.required]),
       subtipoProteccion: new FormControl(null),
       proyecto: new FormControl(null),
-      comentarios: new FormControl('', [Validators.maxLength(250)]),
+      comentarios: new FormControl('', [Validators.maxLength(2000)]),
     });
 
     if (!this.hasEditPerm()) {
