@@ -211,8 +211,30 @@ export class InvencionInventorFragment extends Fragment {
     const invencionInventoresToPersist = this._invencionInventores$.value.concat(this._invencionInventoresDelete$.value);
     return this.invencionService.
       bulkSaveOrUpdateInvencionInventores(this.getKey() as number, invencionInventoresToPersist.map(elem => elem.value)).pipe(
+        tap(invencionInventoresPersisted => this.refreshInvencionInventoresData(invencionInventoresPersisted)),
         switchMap(e => of(void 0))
       );
+  }
+
+  private refreshInvencionInventoresData(invencionInventoresPersisted: IInvencionInventor[]): void {
+    this._invencionInventoresDelete$.next([]);
+    const currentInvencionInventores = this._invencionInventores$.value.map((wrapper) => wrapper.value);
+    const invencionInventoresRefreshed = invencionInventoresPersisted.map(invencionInventorPersisted => {
+      this.copyInvencionInventorRelatedAttributes(this.findInvencionInventorSource(currentInvencionInventores, invencionInventorPersisted), invencionInventorPersisted);
+      return new StatusWrapper(invencionInventorPersisted);
+    });
+    this._invencionInventores$.next(invencionInventoresRefreshed);
+  }
+
+  private findInvencionInventorSource(currentInvencionInventores: IInvencionInventor[], invencionInventorPersisted: IInvencionInventor): IInvencionInventor | undefined {
+    return currentInvencionInventores.find(currentInventor => currentInventor.inventor.id === invencionInventorPersisted.inventor.id);
+  }
+
+  private copyInvencionInventorRelatedAttributes(source: IInvencionInventor | undefined, target: IInvencionInventor): void {
+    if (source) {
+      target.invencion = source.invencion;
+      target.inventor = source.inventor;
+    }
   }
 
   private _isValidIndex(array: StatusWrapper<IInvencionInventor>[], index: number): boolean {
