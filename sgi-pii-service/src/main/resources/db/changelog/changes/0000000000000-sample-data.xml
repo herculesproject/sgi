@@ -413,8 +413,8 @@
       <column name="titulo" value="Solicitud Proteccion Test 1" />
       <column name="via_proteccion_id" value="1" />
       <column name="invencion_id" value="1" />
-      <column name="fecha_fin_prior_pres_fas_nac_rec" valueDate="2021-07-22" />
-      <column name="fecha_prioridad_solicitud" valueDate="2020-07-22" />
+      <column name="fecha_fin_prior_pres_fas_nac_rec" valueDate="2021-07-22T00:00:00" />
+      <column name="fecha_prioridad_solicitud" valueDate="2020-07-22T00:00:00" />
       <column name="numero_solicitud" value="P123456" />
       <column name="numero_publicacion" value="ES12345" />
       <column name="estado" value="PUBLICADA" />
@@ -425,7 +425,7 @@
       <column name="titulo" value="Solicitud Proteccion Test 2" />
       <column name="via_proteccion_id" value="3" />
       <column name="invencion_id" value="1" />
-      <column name="fecha_prioridad_solicitud" valueDate="2021-07-22" />
+      <column name="fecha_prioridad_solicitud" valueDate="2021-07-22T00:00:00" />
       <column name="numero_solicitud" value="EP123456" />
       <column name="estado" value="SOLICITADA" />
       <column name="activo" valueBoolean="true" />
@@ -435,7 +435,7 @@
       <column name="titulo" value="Solicitud Proteccion Test 2" />
       <column name="via_proteccion_id" value="7" />
       <column name="invencion_id" value="1" />
-      <column name="fecha_prioridad_solicitud" valueDate="2021-07-22" />
+      <column name="fecha_prioridad_solicitud" valueDate="2021-07-22T00:00:00" />
       <column name="numero_solicitud" value="SOL123456" />
       <column name="estado" value="SOLICITADA" />
       <column name="numero_registro" value="RII123456" />
@@ -446,7 +446,7 @@
       <column name="titulo" value="Solicitud Proteccion Test 4 INTELECTUAL" />
       <column name="via_proteccion_id" value="6" />
       <column name="invencion_id" value="4" />
-      <column name="fecha_prioridad_solicitud" valueDate="2021-07-23" />
+      <column name="fecha_prioridad_solicitud" valueDate="2021-07-23T00:00:00" />
       <column name="numero_solicitud" value="SOL123458" />
       <column name="estado" value="SOLICITADA" />
       <column name="numero_registro" value="RII123459" />

@@ -69,7 +69,7 @@ public class InvencionService {
    */
   public Page<Invencion> findAll(String query, Pageable pageable) {
     log.debug("findAll(String query, Pageable pageable) - start");
-    Specification<Invencion> specs = SgiRSQLJPASupport.toSpecification(query);
+    Specification<Invencion> specs = InvencionSpecifications.distinct().and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Invencion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
