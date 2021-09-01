@@ -306,22 +306,45 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
   }
 
   private saveOrUpdateSectoresAplicacion(invencion: IInvencion): Observable<IInvencion> {
-    const values = this.sectoresAplicacion$.value.map(wrapper => {
+    const invencionSectoresAplicacionToSave = this.sectoresAplicacion$.value.map(wrapper => {
       wrapper.value.invencion = invencion;
       return wrapper.value;
     }
     );
 
-    return this.invencionService.updateSectoresAplicacion(invencion.id, values)
+    return this.invencionService.updateSectoresAplicacion(invencion.id, invencionSectoresAplicacionToSave)
       .pipe(
         takeLast(1),
         tap(() => this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: false })),
-        map((results) => {
+        tap((invencionSectoresAplicacionSaved) => {
           this.sectoresAplicacion$.next(
-            results.map(value => new StatusWrapper<IInvencionSectorAplicacion>(value)));
+            invencionSectoresAplicacionSaved.map(invencionSectorAplicacionSaved => {
+              this.copyInvencionSectorAplicacionRelatedAttributes(
+                this.getSourceInvencionSectorAplicacion(invencionSectoresAplicacionToSave, invencionSectorAplicacionSaved),
+                invencionSectorAplicacionSaved
+              );
+              return new StatusWrapper<IInvencionSectorAplicacion>(invencionSectorAplicacionSaved);
+            }));
         }),
         switchMap(() => of(invencion))
       );
+  }
+
+  private getSourceInvencionSectorAplicacion(
+    invencionSectoresAplicacionToSave: IInvencionSectorAplicacion[],
+    invencionSectorAplicacionSaved: IInvencionSectorAplicacion
+  ): IInvencionSectorAplicacion | undefined {
+    return invencionSectoresAplicacionToSave.find(invencionSectorAplicacionToSave => invencionSectorAplicacionToSave.sectorAplicacion.id === invencionSectorAplicacionSaved.sectorAplicacion.id);
+  }
+
+  private copyInvencionSectorAplicacionRelatedAttributes(
+    source: IInvencionSectorAplicacion | undefined,
+    target: IInvencionSectorAplicacion
+  ): void {
+    if (source) {
+      target.invencion = source.invencion;
+      target.sectorAplicacion = source.sectorAplicacion;
+    }
   }
 
   private saveOrUpdateAreaConocimiento(invencion: IInvencion): Observable<IInvencion> {
