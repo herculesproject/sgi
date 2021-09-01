@@ -93,15 +93,15 @@
             <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="comentarios" type="VARCHAR(250)"/>
-            <column name="descripcion" type="VARCHAR(250)">
+            <column name="comentarios" type="VARCHAR(2000)"/>
+            <column name="descripcion" type="VARCHAR(2000)">
                 <constraints nullable="false"/>
             </column>
             <column name="fecha_comunicacion" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="proyecto_ref" type="VARCHAR(50)"/>
-            <column name="titulo" type="VARCHAR(50)">
+            <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>
             <column name="tipo_proteccion_id" type="BIGINT">
