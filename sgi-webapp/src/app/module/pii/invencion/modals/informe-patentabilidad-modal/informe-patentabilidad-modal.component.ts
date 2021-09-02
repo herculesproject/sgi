@@ -186,11 +186,13 @@ export class InformePatentabilidadModalComponent extends BaseModalComponent<IInf
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamComentariosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
-    if (this.data.informePatentabilidad?.id) {
+    if (this.data.informePatentabilidad?.nombre) {
       this.translate.get(
         INFORME_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
+
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     } else {
       this.translate.get(
         INFORME_KEY,
@@ -203,9 +205,9 @@ export class InformePatentabilidadModalComponent extends BaseModalComponent<IInf
           );
         })
       ).subscribe((value) => this.title = value);
-    }
 
-    this.textSaveOrUpdate = this.data.informePatentabilidad.id ? MSG_ACEPTAR : MSG_ANADIR;
+      this.textSaveOrUpdate = MSG_ANADIR;
+    }
   }
 
   private initFlexProperties(): void {
