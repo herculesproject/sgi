@@ -28,8 +28,8 @@ const INFORME_CONTACTO_EXAMINADOR_KEY = marker('pii.invencion-informe-patentabil
 const INFORME_COMENTARIOS_KEY = marker('pii.invencion-informe-patentabilidad.comentarios');
 const INFORME_KEY = marker('pii.invencion-informe-patentabilidad');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
-const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
-const MSG_UPLOAD_ERROR = marker('error.file.upload');
+const MSG_UPLOAD_SUCCESS = marker('pii.invencion-informe-patentabilidad.file.upload.success');
+const MSG_UPLOAD_ERROR = marker('pii.invencion-informe-patentabilidad.file.upload.error');
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 
 export interface IInformePatentabilidadModalData {

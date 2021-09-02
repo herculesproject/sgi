@@ -1412,6 +1412,8 @@
   "pii.invencion-informe-patentabilidad.entidad-creadora": "Entidad Creadora",
   "pii.invencion-informe-patentabilidad.fecha-informe": "Fecha Informe",
   "pii.invencion-informe-patentabilidad.fichero": "Fichero",
+  "pii.invencion-informe-patentabilidad.file.upload.error": "Error al adjuntar el fichero al Informe de Patentabilidad",
+  "pii.invencion-informe-patentabilidad.file.upload.success": "Fichero adjuntado al Informe de Pantentabilidad",
   "pii.invencion-informe-patentabilidad.nombre": "Nombre",
   "pii.invencion-informe-patentabilidad.resultado": "Resultado",
   "pii.invencion-ingresos": "Ingresos",
