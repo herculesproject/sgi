@@ -190,9 +190,9 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
           this.formPart.addPartidaGasto(partidaGasto);
         } else if (!wrapper.created) {
           const wrapperUpdated = new StatusWrapper<ISolicitudProyectoPresupuesto>(wrapper.value);
-          this.updateImportesTotales();
           this.formPart.updatePartidaGasto(wrapperUpdated);
         }
+        this.updateImportesTotales();
       }
     });
   }
