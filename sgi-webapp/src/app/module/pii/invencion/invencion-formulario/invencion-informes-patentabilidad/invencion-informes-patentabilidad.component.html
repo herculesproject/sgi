@@ -62,7 +62,7 @@
               </button>
               <button *ngIf="hasInformePatentabilidadDocumentoReady(informePatentabilidad.value)" mat-button
                 matTooltip="{{'btn.download.file' | translate}}" (click)="downloadFile(informePatentabilidad)">
-                <mat-icon>arrow_downward</mat-icon>
+                <mat-icon color="primary">arrow_downward</mat-icon>
               </button>
               <button *ngIf="formPart.hasEditPerm()" mat-button matTooltip="{{'btn.delete' | translate}}"
                 (click)="deleteInformePatentabilidad(informePatentabilidad)">
