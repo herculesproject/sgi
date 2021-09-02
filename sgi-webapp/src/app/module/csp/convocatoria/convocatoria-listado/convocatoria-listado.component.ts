@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { HttpProblem } from '@core/errors/http-problem';
@@ -28,7 +29,9 @@ const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_LOAD = marker('error.load');
 const MSG_REACTIVE = marker('msg.csp.reactivate');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
+const MSG_SUCCESS_CLONED = marker('msg.cloned.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
+const MSG_ERROR_CLONING = marker('error.cloning.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
 const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
 const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
@@ -62,6 +65,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   textoSuccessDesactivar: string;
   textoSuccessReactivar: string;
   textoErrorReactivar: string;
+  private textErrorCloning: string;
+  private textSuccessClonation: string;
 
   busquedaAvanzada = false;
 
@@ -89,7 +94,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private empresaService: EmpresaService,
     private dialogService: DialogService,
     public authService: SgiAuthService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     super(snackBarService, MSG_ERROR_LOAD);
     this.fxFlexProperties = new FxFlexProperties();
@@ -221,6 +228,30 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         );
       })
     ).subscribe((value) => this.textoErrorReactivar = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_CLONED,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textSuccessClonation = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_CLONING,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textErrorCloning = value);
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
@@ -440,6 +471,23 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   hasAuthorityDelete(unidadGestionId: number): boolean {
     return this.authService.hasAuthorityForAnyUO('CSP-CON-B') ||
       this.authService.hasAuthorityForAnyUO('CSP-CON-B_' + unidadGestionId);
+  }
+
+  clone(convocatoriaToCloneId: number): void {
+    this.suscripciones.push(
+      this.convocatoriaService.clone(convocatoriaToCloneId)
+        .subscribe((id: number) => {
+          this.snackBarService.showSuccess(this.textSuccessClonation);
+          this.router.navigate([`../${id}`], { relativeTo: this.activatedRoute });
+        }, (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textErrorCloning);
+          }
+        }));
   }
 
 }

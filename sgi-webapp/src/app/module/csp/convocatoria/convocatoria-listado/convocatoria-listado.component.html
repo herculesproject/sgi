@@ -335,6 +335,12 @@
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
           </ng-container>
+          <ng-container *sgiHasAnyAuthority="['CSP-CON-E', 'CSP-CON-E_' + element.convocatoria.unidadGestion.id ]">
+            <button *ngIf="element.convocatoria.activo===true" mat-button matTooltip="{{'btn.clone' | translate}}"
+              (click)="clone(element.convocatoria.id)">
+              <mat-icon color="primary">control_point_duplicate</mat-icon>
+            </button>
+          </ng-container>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>

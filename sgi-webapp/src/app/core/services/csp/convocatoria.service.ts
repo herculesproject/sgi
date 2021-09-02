@@ -457,4 +457,9 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       );
   }
 
+  public clone(convocatoriaId: number): Observable<number> {
+    const url = `${this.endpointUrl}/${convocatoriaId}/clone`;
+    return this.http.post<number>(url, {});
+  }
+
 }
