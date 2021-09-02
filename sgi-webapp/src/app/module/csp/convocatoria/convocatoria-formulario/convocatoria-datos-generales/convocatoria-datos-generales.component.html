@@ -115,13 +115,10 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field color="primary">
         <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion" required>
+        <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaPublicacion>
         </mat-datepicker>
-        <mat-error *ngIf="formGroup.controls.fechaPublicacion.errors?.required">
-          {{ 'error.required.entity' | translate:msgParamFechaPublicacionEntity }}
-        </mat-error>
       </mat-form-field>
     </div>
 
