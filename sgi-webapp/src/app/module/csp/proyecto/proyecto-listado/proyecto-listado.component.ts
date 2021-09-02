@@ -173,6 +173,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       fechaFinDesde: new FormControl(),
       fechaFinHasta: new FormControl(),
       ambitoGeografico: new FormControl(''),
+      codigoSge: new FormControl(''),
       responsableProyecto: new FormControl({ value: '', disabled: true }),
       miembroEquipo: new FormControl({ value: '', disabled: true }),
       socioColaborador: new FormControl(''),
@@ -387,6 +388,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
       .or('fechaFinDefinitiva', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
+      .and('identificadoresSge.proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.codigoSge.value?.toString())
       .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.id)
       .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('socios.empresaRef', SgiRestFilterOperator.EQUALS, controls.socioColaborador.value?.id)

@@ -190,6 +190,15 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
+        <!-- Codigo de identificacion SGE-->
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <mat-form-field class="input-form">
+            <mat-label>{{'csp.proyecto-proyecto-sge.codigo-sge' | translate}}</mat-label>
+            <input matInput formControlName="codigoSge" type="text" id="codigoSge"
+              placeholder="{{'csp.proyecto-proyecto-sge.codigo-sge' | translate}}">
+          </mat-form-field>
+        </div>
       </div>
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
