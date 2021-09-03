@@ -11,15 +11,14 @@ import { DialogService } from '@core/services/dialog.service';
 import { Status, StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, of, Subscription } from 'rxjs';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
 import { InvencionInventorModalComponent, InvencionInventorModalData } from '../../modals/invencion-inventor-modal/invencion-inventor-modal.component';
 import { InvencionInventorFragment } from './invencion-inventor.fragment';
 
 const INVENCION_INVENTOR_KEY = marker('pii.invencion.inventor');
-const INVENCION_INVENTOR_PARTICIPACION_ERROR = marker('pii.invencion-inventor.participacion.error');
-const MSG_DEACTIVATE = marker('msg.deactivate.entity');
-const MSG_REACTIVATE = marker('msg.reactivate.entity');
+const INVENCION_INVENTOR_PARTICIPACION_ERROR = marker('pii.invencion-inventor.error.participacion');
+const MSG_DELETE = marker('msg.delete.entity');
 
 @Component({
   selector: 'sgi-invencion-inventor',
@@ -33,12 +32,12 @@ export class InvencionInventorComponent extends FragmentComponent implements OnI
 
   msgParamEntity = {};
   msgErrorParticipacion: string;
-  msgConfirmDeactivate: string;
-  msgConfirmReactivate: string;
+  msgConfirmDelete: string;
 
   columnas = ['nombre', 'apellidos', 'numeroDocumento', 'entidad', 'participacion', 'esReparto', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
   dataSource = new MatTableDataSource<StatusWrapper<IInvencionInventor>>();
+  isInvecionInvtoresEmpty: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -64,6 +63,9 @@ export class InvencionInventorComponent extends FragmentComponent implements OnI
 
     this.subscriptions.push(
       this.formPart.invencionInventores$
+        .pipe(
+          tap(elements => this.isInvecionInvtoresEmpty = elements.length === 0)
+        )
         .subscribe(elements => {
           this.dataSource.data = elements;
         })
@@ -96,23 +98,11 @@ export class InvencionInventorComponent extends FragmentComponent implements OnI
     ).pipe(
       switchMap((value) => {
         return this.translate.get(
-          MSG_DEACTIVATE,
+          MSG_DELETE,
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
-    ).subscribe((value) => this.msgConfirmDeactivate = value);
-
-    this.translate.get(
-      INVENCION_INVENTOR_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).pipe(
-      switchMap((value) => {
-        return this.translate.get(
-          MSG_REACTIVATE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.msgConfirmReactivate = value);
+    ).subscribe((value) => this.msgConfirmDelete = value);
 
   }
 
@@ -162,7 +152,7 @@ export class InvencionInventorComponent extends FragmentComponent implements OnI
 
   deleteInventor = (invencionInventor: StatusWrapper<IInvencionInventor>) =>
     this.subscriptions.push(
-      this.dialogService.showConfirmation(this.msgConfirmDeactivate).subscribe(
+      this.dialogService.showConfirmation(this.msgConfirmDelete).subscribe(
         (accepted) => {
           if (accepted) {
             this.formPart.deleteInvencionInventor(invencionInventor);
