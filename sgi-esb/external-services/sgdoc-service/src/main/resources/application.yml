@@ -26,7 +26,7 @@ spring:
     # Make sure database schema is created (schema.sql is executed)
     initialization-mode: always
     # We use a H2 in file database with PostgreSQL compatibility mode
-    url: "jdbc:h2:./target/db/sgdoc;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
+    url: "jdbc:h2:./target/db/sgdoc;DB_CLOSE_ON_EXIT=FALSE"
     driver-class-name: org.h2.Driver
     username: sa
     password:
