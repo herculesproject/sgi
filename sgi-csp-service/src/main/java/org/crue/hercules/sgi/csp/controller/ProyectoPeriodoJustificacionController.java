@@ -71,9 +71,14 @@ public class ProyectoPeriodoJustificacionController {
           Default.class }) @RequestBody List<ProyectoPeriodoJustificacionInput> proyectoPeriodoJustificaciones,
       @PathVariable Long proyectoId) {
     log.debug("update(List ProyectoPeriodoJustificacion proyectoPeriodoJustificacion, Long id) - start");
+
+    proyectoPeriodoJustificaciones.stream().filter(periodo -> periodo.getProyectoId() == null)
+        .forEach(periodo -> periodo.setProyectoId(proyectoId));
     List<ProyectoPeriodoJustificacion> returnValue = service.update(proyectoId,
         convert(proyectoPeriodoJustificaciones));
+
     log.debug("update(List ProyectoPeriodoJustificacion proyectoPeriodoJustificacion, Long id) - end");
+
     return convertToOutput(returnValue);
   }
 
