@@ -76,12 +76,17 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-documento.visible' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="visible" required></sgi-select-boolean>
+          <mat-error *ngIf="formGroup.get('visible').errors?.required">
+            {{'error.required.entity' | translate:msgParamVisibleEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.comentarios' | translate}}</mat-label>
           <textarea matInput type="text" placeholder="{{'csp.documento.comentarios' | translate}}"
             formControlName="comentarios"></textarea>
         </mat-form-field>
-        <mat-checkbox color="primary" formControlName="visible" id="visible">
-          {{'csp.proyecto-documento.visible' | translate}}</mat-checkbox>
 
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">

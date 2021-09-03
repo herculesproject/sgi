@@ -52,6 +52,16 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-socio-periodo-justificacion.documento.fichero' | translate}}</mat-label>
+          <sgi-file-upload #uploader
+            placeholder="{{'csp.proyecto-socio-periodo-justificacion.documento.fichero' | translate}}"
+            formControlName="fichero" required autoUpload="false" (uploadEventChange)="onUploadProgress($event)">
+          </sgi-file-upload>
+          <mat-error *ngIf="formGroup.get('fichero').errors?.required">
+            {{'error.required.entity' | translate:msgParamFicheroEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.tipo' | translate}}
           </mat-label>
           <mat-select placeholder="{{'csp.documento.tipo' | translate}}" formControlName="tipoDocumento"
@@ -61,13 +71,10 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="input-form">
-          <mat-label>{{'csp.proyecto-socio-periodo-justificacion.documento.fichero' | translate}}</mat-label>
-          <sgi-file-upload #uploader
-            placeholder="{{'csp.proyecto-socio-periodo-justificacion.documento.fichero' | translate}}"
-            formControlName="fichero" required autoUpload="false" (uploadEventChange)="onUploadProgress($event)">
-          </sgi-file-upload>
-          <mat-error *ngIf="formGroup.get('fichero').errors?.required">
-            {{'error.required.entity' | translate:msgParamFicheroEntity}}
+          <mat-label>{{'csp.proyecto-socio-periodo-justificacion.documento.visible' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="visible" required></sgi-select-boolean>
+          <mat-error *ngIf="formGroup.get('visible').errors?.required">
+            {{'error.required.entity' | translate:msgParamVisibleEntity}}
           </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
@@ -79,13 +86,10 @@
             {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
           </mat-error>
         </mat-form-field>
-        <mat-checkbox class="checkbox" color="primary" formControlName="visible">
-          {{'csp.proyecto-socio-periodo-justificacion.documento.visible' | translate}}
-        </mat-checkbox>
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">
         <button *ngIf="viewMode === VIEW_MODE.VIEW" mat-button mat-raised-button color="primary" class="rounded"
-          [disabled]="!viewingNode.fichero || this.readonly" (click)="downloadFile(viewingNode)">
+          [disabled]="!viewingNode?.fichero || this.readonly" (click)="downloadFile(viewingNode)">
           <mat-icon>arrow_downward</mat-icon>
           {{'btn.download.file' | translate}}
         </button>
