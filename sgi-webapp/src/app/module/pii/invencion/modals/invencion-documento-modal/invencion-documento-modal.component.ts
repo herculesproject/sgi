@@ -5,15 +5,12 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
-import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
-import { DateTime } from 'luxon';
 import { map, switchMap } from 'rxjs/operators';
-
 
 const INVENCION_DOCUMENTO_KEY = marker('pii.invencion-documento');
 const INVENCION_DOCUMENTO_NOMBRE_KEY = marker('pii.invencion-documento.nombre');
@@ -23,6 +20,8 @@ const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
 const MSG_UPLOAD_ERROR = marker('error.file.upload');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+
 @Component({
   selector: 'sgi-invencion-documento-modal',
   templateUrl: './invencion-documento-modal.component.html',
@@ -91,12 +90,25 @@ export class InvencionDocumentoModalComponent extends
       documento: this.formGroup.controls.fichero.value
     };
   }
+
   protected getFormGroup(): FormGroup {
 
     return new FormGroup({
       nombre: new FormControl(this.invencionDocumento?.nombre, [Validators.maxLength(250), Validators.required]),
       fichero: new FormControl(this.invencionDocumento?.documento, [Validators.required]),
     });
+  }
+
+  saveOrUpdate(): void {
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.valid) {
+      this.uploader.uploadSelection().subscribe(
+        () => {
+          this.matDialogRef.close(this.getDatosForm());
+        });
+    } else {
+      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
+    }
   }
 
   private setupI18N(): void {

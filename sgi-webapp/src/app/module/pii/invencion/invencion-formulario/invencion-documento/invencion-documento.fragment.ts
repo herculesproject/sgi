@@ -71,13 +71,21 @@ export class InvencionDocumentoFragment extends Fragment {
     if (index >= 0) {
       if (!wrapper.created) {
         this.deletedInvencionDocumentos.push(current[index]);
+        this.removeDeletedInvencionDocumentoFromArray(index, current);
+        this.checkIfNeededSaveChanges(wrapper, row);
+      } else {
+        this.documentoService.eliminarFichero(wrapper.value.documento.documentoRef).subscribe(() => {
+          this.removeDeletedInvencionDocumentoFromArray(index, current);
+          this.checkIfNeededSaveChanges(wrapper, row);
+        });
       }
-      current.splice(index, 1);
-      this.invencionDocumentos$.next(current);
-
-      this.setChanges(true);
     }
-    this.checkIfNeededSaveChanges(wrapper, row);
+  }
+
+  private removeDeletedInvencionDocumentoFromArray(index: number, currentInvencionDocumentos: StatusWrapper<IInvencionDocumento>[]): void {
+    currentInvencionDocumentos.splice(index, 1);
+    this.invencionDocumentos$.next(currentInvencionDocumentos);
+    this.setChanges(true);
   }
 
   private checkIfNeededSaveChanges(enclosingDocument: StatusWrapper<IInvencionDocumento>, row: number): void {
