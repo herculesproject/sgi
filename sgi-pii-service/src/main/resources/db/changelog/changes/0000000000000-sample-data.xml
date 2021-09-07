@@ -165,6 +165,15 @@
       <column name="tipo_proteccion_id" value="4" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <insert tableName="invencion">
+      <column name="id" valueSequenceNext="invencion_seq" />
+      <column name="titulo" value="Invencion con propiedad intelectual" />
+      <column name="fecha_comunicacion" valueDate="2021-08-04T20:00:00" />
+      <column name="descripcion" value="Invención con comentarios especiales" />
+      <column name="comentarios" value="Este es un comentario especial" />
+      <column name="tipo_proteccion_id" value="5" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-invencion_inventor">
@@ -319,7 +328,7 @@
       <column name="id" valueSequenceNext="via_proteccion_seq" />
       <column name="nombre" value="Acta notarial" />
       <column name="descripcion" value="Tipo de vía de protección para las actas notariales" />
-      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
       <column name="meses_prioridad" value="1" />
       <column name="pais_especifico" valueBoolean="false" />
       <column name="extension_internacional" valueBoolean="false" />
@@ -329,7 +338,7 @@
       <column name="id" valueSequenceNext="via_proteccion_seq" />
       <column name="nombre" value="Registro interno" />
       <column name="descripcion" value="Vía de protección para un registro interno" />
-      <column name="tipo_propiedad" value="INDUSTRIAL" />
+      <column name="tipo_propiedad" value="INTELECTUAL" />
       <column name="meses_prioridad" value="1" />
       <column name="pais_especifico" valueBoolean="false" />
       <column name="extension_internacional" valueBoolean="false" />

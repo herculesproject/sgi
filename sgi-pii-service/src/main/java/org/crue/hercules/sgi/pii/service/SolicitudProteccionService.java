@@ -20,14 +20,30 @@ import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Validated
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SolicitudProteccionService {
 
   private final SolicitudProteccionRepository solicitudProteccionRepository;
   private final Validator validator;
+
+  /**
+   * Obtiene una {@link SolicitudProteccion} por su id.
+   *
+   * @param id el id de la entidad {@link SolicitudProteccion}.
+   * @return la entidad {@link SolicitudProteccion}.
+   */
+  public SolicitudProteccion findById(Long id) throws SolicitudProteccionNotFoundException {
+    log.debug("findById(Long id)  - start");
+    final SolicitudProteccion returnValue = this.solicitudProteccionRepository.findById(id)
+        .orElseThrow(() -> new SolicitudProteccionNotFoundException(id));
+    log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
 
   /**
    * Crea un nuevo {@link SolicitudProteccion}.
@@ -35,7 +51,6 @@ public class SolicitudProteccionService {
    * @param solicitudProteccion la entidad {@link SolicitudProteccion} a guardar.
    * @return la entidad {@link SolicitudProteccion} persistida.
    */
-  @Validated({ SolicitudProteccion.OnCrear.class })
   public SolicitudProteccion create(@Valid SolicitudProteccion solicitudProteccion) {
 
     Assert.isNull(solicitudProteccion.getId(),

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.pii.dto;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -28,15 +28,16 @@ public class SolicitudProteccionInput {
   @Size(max = SolicitudProteccion.TITULO_MAX_LENGTH)
   private String titulo;
 
-  private LocalDate fechaPrioridadSolicitud;
+  @NotNull
+  private Instant fechaPrioridadSolicitud;
 
-  private LocalDate fechaFinPriorPresFasNacRec;
+  private Instant fechaFinPriorPresFasNacRec;
 
-  private LocalDate fechaPublicacion;
+  private Instant fechaPublicacion;
 
-  private LocalDate fechaConcesion;
+  private Instant fechaConcesion;
 
-  private LocalDate fechaCaducid;
+  private Instant fechaCaducid;
 
   @NotNull
   private Long viaProteccionId;
@@ -51,14 +52,12 @@ public class SolicitudProteccionInput {
 
   private String numeroRegistro;
 
-  @NotNull
   private SolicitudProteccion.EstadoSolicitudProteccion estado;
 
   private Long tipoCaducidadId;
 
   private String agentePropiedadRef;
 
-  @NotEmpty
   private String paisProteccionRef;
 
   private String comentarios;

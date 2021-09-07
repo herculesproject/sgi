@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,14 +19,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("solicitudesproteccion")
+@Slf4j
 public class SolicitudProteccionController {
 
   private final SolicitudProteccionService solicitudProteccionService;
   private final ModelMapper modelMapper;
+
+  /**
+   * Devuelve la {@link SolicitudProteccion} con el id indicado.
+   * 
+   * @param id Identificador de {@link SolicitudProteccion}.
+   * @return {@link SolicitudProteccion} correspondiente al id.
+   */
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R')")
+  ResponseEntity<SolicitudProteccionOutput> findById(@PathVariable Long id) {
+    log.debug("findById(Long id) - start");
+    SolicitudProteccion returnValue = this.solicitudProteccionService.findById(id);
+    log.debug("findById(Long id) - end");
+    return new ResponseEntity<>(convert(returnValue), HttpStatus.OK);
+  }
 
   /**
    * Crea un nuevo {@link SolicitudProteccion}.

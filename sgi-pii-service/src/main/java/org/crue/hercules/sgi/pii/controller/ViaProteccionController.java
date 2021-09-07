@@ -45,7 +45,7 @@ public class ViaProteccionController {
    * @return Lista de entidades {@link TipoProcedimiento}.
    */
   @GetMapping("/todos")
-  @PreAuthorize("hasAnyAuthority('PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E', 'PII-VPR-B', 'PII-VPR-R')")
+  @PreAuthorize("hasAnyAuthority('PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E', 'PII-VPR-B', 'PII-VPR-R', 'PII-INV-E')")
   ResponseEntity<Page<ViaProteccionOutput>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
 

@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.pii.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
@@ -26,11 +26,11 @@ public class SolicitudProteccionOutput implements Serializable {
   private Long id;
   private Invencion invencion;
   private String titulo;
-  private LocalDate fechaPrioridadSolicitud;
-  private LocalDate fechaFinPriorPresFasNacRec;
-  private LocalDate fechaPublicacion;
-  private LocalDate fechaConcesion;
-  private LocalDate fechaCaducid;
+  private Instant fechaPrioridadSolicitud;
+  private Instant fechaFinPriorPresFasNacRec;
+  private Instant fechaPublicacion;
+  private Instant fechaConcesion;
+  private Instant fechaCaducid;
   private ViaProteccion viaProteccion;
   private String numeroSolicitud;
   private String numeroPublicacion;

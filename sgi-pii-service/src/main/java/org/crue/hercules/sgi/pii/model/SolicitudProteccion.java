@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.pii.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnActualizar;
 import org.crue.hercules.sgi.pii.validation.EntidadActiva;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@EntidadActiva(entityClass = SolicitudProteccion.class, groups = { SolicitudProteccion.OnActualizar.class })
+@EntidadActiva(entityClass = SolicitudProteccion.class, groups = { OnActualizar.class })
 public class SolicitudProteccion extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "solicitud_proteccion";
@@ -59,19 +61,19 @@ public class SolicitudProteccion extends BaseActivableEntity {
   private String titulo;
 
   @Column(name = "fecha_prioridad_solicitud", nullable = false)
-  private LocalDate fechaPrioridadSolicitud;
+  private Instant fechaPrioridadSolicitud;
 
   @Column(name = "fecha_fin_prior_pres_fas_nac_rec", nullable = true)
-  private LocalDate fechaFinPriorPresFasNacRec;
+  private Instant fechaFinPriorPresFasNacRec;
 
   @Column(name = "fecha_publicacioin", nullable = true)
-  private LocalDate fechaPublicacion;
+  private Instant fechaPublicacion;
 
   @Column(name = "fecha_concesion", nullable = true)
-  private LocalDate fechaConcesion;
+  private Instant fechaConcesion;
 
   @Column(name = "fecha_caducidad", nullable = true)
-  private LocalDate fechaCaducid;
+  private Instant fechaCaducid;
 
   @ManyToOne
   @JoinColumn(name = "via_proteccion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROTECCION_VIAPROTECCION"))
@@ -138,6 +140,11 @@ public class SolicitudProteccion extends BaseActivableEntity {
    * la entidad.
    */
   public interface OnActualizarInvencion {
+  }
+
+  @PrePersist
+  public void setup() {
+    this.estado = EstadoSolicitudProteccion.SOLICITADA;
   }
 
   public static enum EstadoSolicitudProteccion {

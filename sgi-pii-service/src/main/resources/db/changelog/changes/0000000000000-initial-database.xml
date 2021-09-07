@@ -264,13 +264,13 @@
             <column name="estado" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="fecha_caducidad" type="date"/>
-            <column name="fecha_concesion" type="date"/>
-            <column name="fecha_fin_prior_pres_fas_nac_rec" type="date"/>
-            <column name="fecha_prioridad_solicitud" type="date">
+            <column name="fecha_caducidad" type="TIMESTAMP"/>
+            <column name="fecha_concesion" type="TIMESTAMP"/>
+            <column name="fecha_fin_prior_pres_fas_nac_rec" type="TIMESTAMP"/>
+            <column name="fecha_prioridad_solicitud" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="fecha_publicacioin" type="date"/>
+            <column name="fecha_publicacioin" type="TIMESTAMP"/>
             <column name="numero_concesion" type="VARCHAR(24)"/>
             <column name="numero_publicacion" type="VARCHAR(24)"/>
             <column name="numero_registro" type="VARCHAR(24)"/>
