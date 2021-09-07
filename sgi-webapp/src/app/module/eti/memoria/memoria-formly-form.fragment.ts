@@ -555,7 +555,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       }
       formlyFieldConfig.push(...question.apartado.esquema);
       if (question.childs.length) {
-        this.fillFormlyData(false, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs);
+        const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
+        this.fillFormlyData(isFirstLevel, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs);
       }
     });
   }
