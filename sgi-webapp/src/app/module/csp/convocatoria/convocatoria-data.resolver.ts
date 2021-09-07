@@ -43,7 +43,7 @@ export class ConvocatoriaDataResolver extends SgiResolverResolver<IConvocatoriaD
               return {
                 canEdit: this.authService.hasAnyAuthorityForAnyUO(['CSP-CON-E']),
                 readonly: !response,
-                estado: convocatoria.estado
+                estado: convocatoria?.estado
               } as IConvocatoriaData;
             }),
             switchMap(data => this.hasSolicitudesReferences(data, convocatoriaId)),
