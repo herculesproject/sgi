@@ -275,7 +275,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    * @return indicador de si el acta se encuentra finalizada.
    */
   isFinalizada(acta: IActaWithNumEvaluaciones): boolean {
-    return acta.estadoActa.id === 2;
+    return acta.estadoActa?.id === 2;
   }
 
   /**
