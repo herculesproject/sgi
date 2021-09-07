@@ -162,6 +162,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     });
 
     this.formPart.periodosJustificacion$.next(this.dataSource.data);
+    this.formPart.checkFirstPeriodoStartsAtOne();
   }
 
   get MSG_PARAMS() {

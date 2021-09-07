@@ -108,4 +108,13 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
     return !hasTouched && !hasNoDeleted;
   }
 
+
+  public checkFirstPeriodoStartsAtOne() {
+    if (this.periodosJustificacion$.value.length > 0
+      && this.periodosJustificacion$.value[0].value.mesInicial !== 1) {
+      this.setErrors(true);
+    } else {
+      this.setErrors(false);
+    }
+  }
 }

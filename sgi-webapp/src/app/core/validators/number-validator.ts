@@ -31,6 +31,36 @@ export class NumberValidator {
     };
   }
 
+  /**
+   * Comprueba que el segundo numero es posterior o igual al primero.
+   *
+   * @param firstNumberFieldName Nombre del campo contra el que se quiere hacer la validacion.
+   * @param secondNumberFieldName Nombre del campo que se quiere validar.
+   */
+  static isAfterOrEqual(firstNumberFieldName: string, secondNumberFieldName: string): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const numeroAnteriorControl = formGroup.controls[firstNumberFieldName];
+      const numeroPosteriorControl = formGroup.controls[secondNumberFieldName];
+
+      if (numeroPosteriorControl.errors && !numeroPosteriorControl.errors.after) {
+        return;
+      }
+
+      const numeroAnteriorNumber = numeroAnteriorControl.value;
+      const numeroPosteriorNumber = numeroPosteriorControl.value;
+      // if a 0 number (falsy value) is patched into the form !numeroAnteriorNumber is true
+      if (numeroPosteriorNumber && ((!numeroAnteriorNumber && numeroAnteriorNumber !== 0)
+        || numeroAnteriorNumber > numeroPosteriorNumber)) {
+        numeroPosteriorControl.setErrors({ afterOrEqual: true });
+        numeroPosteriorControl.markAsTouched({ onlySelf: true });
+      } else if (numeroPosteriorControl.errors) {
+        delete numeroPosteriorControl.errors.afterOrEqual;
+        numeroPosteriorControl.updateValueAndValidity({ onlySelf: true });
+      }
+    };
+  }
+
   static isAfterOptional(firstNumberFieldName: string, secondNumberFieldName: string): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 

@@ -172,6 +172,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     });
 
     this.formPart.seguimientosCientificos$.next(this.dataSource.data);
+    this.formPart.checkFirstPeriodoStartsAtOne();
   }
 
 }

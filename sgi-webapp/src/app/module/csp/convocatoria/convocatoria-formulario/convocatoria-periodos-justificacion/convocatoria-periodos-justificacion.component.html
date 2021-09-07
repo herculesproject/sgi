@@ -1,5 +1,9 @@
 <!-- Convocatoria enlace -->
 <sgi-fragment title="{{'csp.convocatoria-periodo-justificacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
+  <!-- Error primer periodo no empieza en el mes 1 -->
+  <div *ngIf="formPart.hasErrors()" class="info-message">
+    {{'error.csp.periodos-justificacion.primer-periodo' | translate}}
+  </div>
 
   <div class="mat-elevation-z4">
     <table mat-table [dataSource]="dataSource" matSort>

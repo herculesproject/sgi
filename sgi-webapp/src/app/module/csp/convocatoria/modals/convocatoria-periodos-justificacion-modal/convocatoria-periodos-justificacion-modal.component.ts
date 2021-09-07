@@ -164,20 +164,20 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       numPeriodo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.numPeriodo, Validators.required),
       tipo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.tipo, Validators.required),
       desdeMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesInicial, [Validators.required, Validators.min(1)]),
-      hastaMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesFinal, [Validators.required, Validators.min(2)]),
+      hastaMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesFinal, [Validators.required, Validators.min(1)]),
       fechaInicio: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion),
       fechaFin: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaFinPresentacion),
       observaciones: new FormControl(this.data.convocatoriaPeriodoJustificacion?.observaciones, Validators.maxLength(2000))
     }, {
       validators: [
         this.isFinalUltimoPeriodo(ultimoPeriodoJustificacionNoFinal?.value.mesFinal),
-        NumberValidator.isAfter('desdeMes', 'hastaMes'),
+        NumberValidator.isAfterOrEqual('desdeMes', 'hastaMes'),
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
 
     // Si ya existe un periodo final tiene que ser el ultimo y solo puede haber 1
-    if (periodoJustificacionFinal) {
+    if (periodoJustificacionFinal !== undefined) {
       formGroup.get('tipo').setValidators([
         StringValidator.notIn([TipoJustificacion.FINAL]),
         formGroup.get('tipo').validator
@@ -189,6 +189,45 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       ]);
     }
 
+    // Si es el primer periodo este ha de comenzar en el mes 1
+    // Si no es es el primero, deberá ser siempre consecutivo al anterior periodo de justificación
+    const desdeMesControl = formGroup.get('desdeMes');
+    const hastaMesControl = formGroup.get('hastaMes');
+    this.subscriptions.push(desdeMesControl.valueChanges.subscribe(value => {
+      if (this.data.convocatoriaPeriodoJustificacionList.length === 0
+        || this.data.convocatoriaPeriodoJustificacionList[0].value.mesInicial !== 1) {
+        if (value && value > 1) {
+          desdeMesControl.setErrors({ initial: true });
+          desdeMesControl.markAsTouched({ onlySelf: true });
+        } else if (desdeMesControl.errors) {
+          delete desdeMesControl.errors.initial;
+          desdeMesControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+        }
+      } else {
+        if (value && (
+          (this.data.convocatoriaPeriodoJustificacion.numPeriodo > 1
+            && value !== this.data.convocatoriaPeriodoJustificacionList[
+              this.data.convocatoriaPeriodoJustificacion.numPeriodo - 2].value.mesFinal + 1)
+          || ((this.data.convocatoriaPeriodoJustificacion.numPeriodo < 1
+            || this.data.convocatoriaPeriodoJustificacion.numPeriodo == null)
+            && value !== this.data.convocatoriaPeriodoJustificacionList[
+              this.data.convocatoriaPeriodoJustificacionList.length - 1].value.mesFinal + 1)
+        )) {
+          desdeMesControl.setErrors({ wrongOrder: true });
+          desdeMesControl.markAsTouched({ onlySelf: true });
+        } else if (desdeMesControl.errors) {
+          delete desdeMesControl.errors.wrongOrder;
+          desdeMesControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+        }
+      }
+      if (value && value > hastaMesControl.value) {
+        hastaMesControl.setErrors({ afterOrEqual: true });
+        hastaMesControl.markAsTouched({ onlySelf: true });
+      } else if (hastaMesControl.errors) {
+        delete hastaMesControl.errors.afterOrEqual;
+        hastaMesControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+      }
+    }));
     // Si la convocatoria tiene duracion el mesFinal no puede superarla
     if (this.data.duracion) {
       formGroup.get('hastaMes').setValidators([
