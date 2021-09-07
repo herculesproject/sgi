@@ -37,6 +37,7 @@ const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('msg.eti.memoria.envi
 const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('error.eti.memoria.enviar-secretaria.retrospectiva');
 const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('msg.eti.memoria.enviar-secretaria.retrospectiva');
 const MEMORIA_KEY = marker('eti.memoria');
+const MSG_ERROR_DATOS_ADJUNTOS = marker('error.eti.memoria.enviar-secretaria.documentos-adjuntos');
 
 @Component({
   selector: 'sgi-memorias-listado',
@@ -195,27 +196,53 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   }
 
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
-    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
-      .pipe(switchMap((aceptado) => {
-        if (aceptado) {
-          return this.memoriaService.enviarSecretaria(memoria.id);
+    this.subscriptions.push(this.memoriaService.checkDatosAdjuntosEnviarSecretariaExists(memoria.id).pipe(
+      map(respuesta => {
+        if (respuesta) {
+          this.subscriptions.push(this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
+            .pipe(switchMap((aceptado) => {
+              if (aceptado) {
+                return this.memoriaService.enviarSecretaria(memoria.id);
+              }
+            })).subscribe(
+              () => {
+                this.listadoFragment.loadMemorias(this.listadoFragment.getKey() as number);
+                this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
+              },
+              (error) => {
+                this.logger.error(error);
+                if (error instanceof HttpProblem) {
+                  this.snackBarService.showError(error);
+                }
+                else {
+                  this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+                }
+              }
+            ));
+        } else {
+          this.subscriptions.push(this.dialogService.showConfirmation(MSG_ERROR_DATOS_ADJUNTOS)
+            .pipe(switchMap((consentimiento) => {
+              if (consentimiento) {
+                return this.memoriaService.enviarSecretaria(memoria.id);
+              }
+            })).subscribe(
+              () => {
+                this.listadoFragment.loadMemorias(this.listadoFragment.getKey() as number);
+                this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
+              },
+              (error) => {
+                this.logger.error(error);
+                if (error instanceof HttpProblem) {
+                  this.snackBarService.showError(error);
+                }
+                else {
+                  this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+                }
+              }
+            ));
+          return of();
         }
-        return of();
-      })).subscribe(
-        () => {
-          this.listadoFragment.loadMemorias(this.listadoFragment.getKey() as number);
-          this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
-        },
-        (error) => {
-          this.logger.error(error);
-          if (error instanceof HttpProblem) {
-            this.snackBarService.showError(error);
-          }
-          else {
-            this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
-          }
-        }
-      );
+      })).subscribe());
   }
 
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria): boolean {
