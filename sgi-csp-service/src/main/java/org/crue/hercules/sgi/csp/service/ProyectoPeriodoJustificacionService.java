@@ -16,7 +16,7 @@ import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionOverlappedFechasException;
-import org.crue.hercules.sgi.csp.exceptions.TipoFinalDuplicatedException;
+import org.crue.hercules.sgi.csp.exceptions.TipoFinalException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
@@ -107,7 +107,7 @@ public class ProyectoPeriodoJustificacionService {
       if ((periodoFinal != null && (periodoFinal.getId() != periodoJustificacion.getId()))
           && periodoJustificacion.getTipoJustificacion().equals(TipoJustificacion.FINAL)
           || (index > proyectoPeriodoJustificaciones.size() - 1)) {
-        throw new TipoFinalDuplicatedException();
+        throw new TipoFinalException();
       }
 
       Set<ConstraintViolation<ProyectoPeriodoJustificacion>> result = validator.validate(periodoJustificacion,

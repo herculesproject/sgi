@@ -7,13 +7,13 @@ import org.crue.hercules.sgi.framework.problem.exception.ProblemException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.springframework.http.HttpStatus;
 
-public class TipoFinalDuplicatedException extends ProblemException {
+public class PeriodoLongerThanSolicitudProyectoException extends ProblemException {
   public static final URI CUSTOM_PROBLEM_TYPE = URI.create("urn:problem-type:validation");
 
-  public TipoFinalDuplicatedException() {
+  public PeriodoLongerThanSolicitudProyectoException() {
     super(Problem.builder().type(CUSTOM_PROBLEM_TYPE)
         .title(ProblemMessage.builder().key(HttpStatus.class, "BAD_REQUEST").build())
-        .detail(ProblemMessage.builder().key(TipoFinalDuplicatedException.class).build())
+        .detail(ProblemMessage.builder().key(PeriodoLongerThanSolicitudProyectoException.class).build())
         .status(HttpStatus.BAD_REQUEST.value()).build());
   }
 }

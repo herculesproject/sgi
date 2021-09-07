@@ -16,7 +16,7 @@ public class NoRelatedEntitiesException extends ProblemException {
         .title(ProblemMessage.builder().key(HttpStatus.class, "BAD_REQUEST").build())
         .detail(ProblemMessage.builder().key(NoRelatedEntitiesException.class)
             .parameter("entity", ApplicationContextSupport.getMessage(entity))
-            .parameter("related", ApplicationContextSupport.getMessage(entity)).build())
+            .parameter("related", ApplicationContextSupport.getMessage(related)).build())
 
         .status(HttpStatus.BAD_REQUEST.value()).build());
   }
