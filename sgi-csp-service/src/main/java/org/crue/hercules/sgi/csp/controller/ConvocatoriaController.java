@@ -1,7 +1,12 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
+import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -17,6 +22,9 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.RequisitoIP;
+import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
+import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
@@ -32,7 +40,10 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -58,6 +69,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/convocatorias")
 @Slf4j
 public class ConvocatoriaController {
+
+  public static final String PATH_CATEGORIAS_PROFESIONALES = "/{id}/categoriasprofesionales";
+  public static final String PATH_NIVELES = "/{id}/niveles";
+
+  private ModelMapper modelMapper;
 
   /** ConvocatoriaService service */
   private final ConvocatoriaService service;
@@ -100,6 +116,11 @@ public class ConvocatoriaController {
 
   /** ConvocatoriaConceptoGastoCodigoEcService */
   private final ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService;
+  /** RequisitoIPNivelAcademicoService */
+  private final RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService;
+
+  /** RequisitoIPCategoriaProfesionalService */
+  private final RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService;
 
   /**
    * Instancia un nuevo ConvocatoriaController.
@@ -118,6 +139,9 @@ public class ConvocatoriaController {
    * @param convocatoriaPeriodoSeguimientoCientificoService {@link ConvocatoriaPeriodoSeguimientoCientificoService}
    * @param convocatoriaConceptoGastoService                {@link ConvocatoriaConceptoGastoService}
    * @param convocatoriaConceptoGastoCodigoEcService        {@link ConvocatoriaConceptoGastoCodigoEcService}
+   * @param requisitoIPNivelAcademicoService                {@link RequisitoIPNivelAcademicoService}.
+   * @param requisitoIPCategoriaProfesionalService          {@link RequisitoIPCategoriaProfesionalService}.
+   * @param modelMapper                                     {@link ModelMapper}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
@@ -130,7 +154,9 @@ public class ConvocatoriaController {
       ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService,
       ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService,
       ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService,
-      ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService) {
+      ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService,
+      RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
+      RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService, ModelMapper modelMapper) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaDocumentoService = convocatoriaDocumentoService;
@@ -145,6 +171,9 @@ public class ConvocatoriaController {
     this.convocatoriaPeriodoSeguimientoCientificoService = convocatoriaPeriodoSeguimientoCientificoService;
     this.convocatoriaConceptoGastoService = convocatoriaConceptoGastoService;
     this.convocatoriaConceptoGastoCodigoEcService = convocatoriaConceptoGastoCodigoEcService;
+    this.requisitoIPNivelAcademicoService = requisitoIPNivelAcademicoService;
+    this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
+    this.modelMapper = modelMapper;
   }
 
   /**
@@ -950,6 +979,61 @@ public class ConvocatoriaController {
   public ResponseEntity<Object> hasProyectosReferenced(@PathVariable Long id) {
 
     return this.service.hasAnyProyectoReferenced(id) ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
+  }
+
+  /**
+   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al*
+   * {@link RequisitoIP} con el id indicado**
+   * 
+   * @param id Identificador de {@link RequisitoIPNivelAcademico}*@return
+   *           RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}*
+   *           correspondiente al id
+   */
+
+  @GetMapping(PATH_NIVELES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
+  public List<RequisitoIPNivelAcademicoOutput> findNivelesAcademicos(@PathVariable Long id) {
+    log.debug("findNivelesAcademicos(@PathVariable Long id) - start");
+    List<RequisitoIPNivelAcademicoOutput> returnValue = convertRequisitoIPNivelesAcademicos(
+        requisitoIPNivelAcademicoService.findByConvocatoria(id));
+    log.debug("findNivelesAcademicos(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al
+   * {@link RequisitoIP} con el id indicado
+   * 
+   * @param id Identificador de {@link RequisitoIPNivelAcademico}
+   * @return RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}
+   *         correspondiente al id
+   */
+  @GetMapping(PATH_CATEGORIAS_PROFESIONALES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
+  public List<RequisitoIPCategoriaProfesionalOutput> findCategoriasProfesionales(@PathVariable Long id) {
+    log.debug("findCategoriasProfesionales(@PathVariable Long id) - start");
+    List<RequisitoIPCategoriaProfesionalOutput> returnValue = convertRequisitoIPCategoriasProfesionales(
+        requisitoIPCategoriaProfesionalService.findByConvocatoria(id));
+    log.debug("findCategoriasProfesionales(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  private RequisitoIPNivelAcademicoOutput convert(RequisitoIPNivelAcademico entity) {
+    return modelMapper.map(entity, RequisitoIPNivelAcademicoOutput.class);
+  }
+
+  private List<RequisitoIPNivelAcademicoOutput> convertRequisitoIPNivelesAcademicos(
+      List<RequisitoIPNivelAcademico> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private List<RequisitoIPCategoriaProfesionalOutput> convertRequisitoIPCategoriasProfesionales(
+      List<RequisitoIPCategoriaProfesional> entities) {
+    return entities.stream().map((entity) -> convertCategoriaProfesional(entity)).collect(Collectors.toList());
+  }
+
+  private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
+    return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
   }
 
 }

@@ -46,7 +46,8 @@ public class ProyectoPeriodoJustificacionController {
 
   /**
    * Instancia un nuevo ProyectoPeriodoSeguimientoController.
-   * @param service {@link ProyectoPeriodoJustificacionService}
+   * 
+   * @param service     {@link ProyectoPeriodoJustificacionService}
    * @param modelMapper {@link ModelMapper}
    */
   public ProyectoPeriodoJustificacionController(ProyectoPeriodoJustificacionService service, ModelMapper modelMapper) {

@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.csp.model.AgrupacionGastoConcepto;
 import org.crue.hercules.sgi.csp.model.AgrupacionGastoConcepto_;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto_;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAgrupacionGasto_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -26,8 +27,10 @@ public class ConceptoGastoSpecifications {
   /**
    * Devuelve todos los {@link ConceptoGasto} que no esten asignados a la
    * {@link AgrupacionGastoConcepto}
-   * @param proyectoId Id del proyecto
-   * @return registros encontrados
+   * 
+   * @param proyectoId Identificador del proyecto.
+   * @return specification para obtener los {@link ConceptoGasto} de la
+   *         {@link Proyecto} con el id indicado.
    */
   public static Specification<ConceptoGasto> notInProyectoAgrupacionGasto(Long proyectoId) {
     return (root, query, cb) -> {

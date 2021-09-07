@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPNivelAcademicoRepository;
@@ -88,6 +89,24 @@ public class RequisitoIPNivelAcademicoService {
     }
 
     log.debug("updateNivelesAcademicos(Long requisitoIPId, List<RequisitoIPNivelAcademico> nivelesAcademicos) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link RequisitoIPNivelAcademico} para un {@link Convocatoria}.
+   *
+   * @param convocatoriaId el id de la {@link Convocatoria}.
+   * @return la lista de {@link RequisitoIPNivelAcademico} de la
+   *         {@link Convocatoria}.
+   */
+  public List<RequisitoIPNivelAcademico> findByConvocatoria(Long convocatoriaId) {
+    log.debug("findByConvocatoria(Long requisitoIPId) - start");
+
+    Specification<RequisitoIPNivelAcademico> specs = RequisitoIPNivelAcademicoSpecifications
+        .byConvocatoriaId(convocatoriaId);
+
+    List<RequisitoIPNivelAcademico> returnValue = repository.findAll(specs);
+    log.debug("findByConvocatoria(Long requisitoIPId) - end");
     return returnValue;
   }
 }

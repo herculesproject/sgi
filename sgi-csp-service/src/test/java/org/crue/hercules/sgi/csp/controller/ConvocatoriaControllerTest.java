@@ -53,6 +53,8 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -107,6 +109,10 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
   @MockBean
   private ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService;
+  @MockBean
+  private RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService;
+  @MockBean
+  private RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

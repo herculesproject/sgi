@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPCategoriaProfesionalRepository;
@@ -91,6 +92,25 @@ public class RequisitoIPCategoriaProfesionalService {
 
     log.debug(
         "updateCategoriasProfesionales(Long requisitoIPId, List<RequisitoIPCategoriaProfesional> categoriasProfesionales) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link RequisitoIPCategoriaProfesional} para un
+   * {@link Convocatoria}.
+   *
+   * @param convocatoriaId el id de la {@link Convocatoria}.
+   * @return la lista de {@link RequisitoIPCategoriaProfesional} de la
+   *         {@link Convocatoria}.
+   */
+  public List<RequisitoIPCategoriaProfesional> findByConvocatoria(Long convocatoriaId) {
+    log.debug("findByConvocatoria(Long requisitoIPId) - start");
+
+    Specification<RequisitoIPCategoriaProfesional> specs = RequisitoIPCategoriaProfesionalSpecifications
+        .byConvocatoriaId(convocatoriaId);
+
+    List<RequisitoIPCategoriaProfesional> returnValue = repository.findAll(specs);
+    log.debug("findByConvocatoria(Long requisitoIPId) - end");
     return returnValue;
   }
 }
