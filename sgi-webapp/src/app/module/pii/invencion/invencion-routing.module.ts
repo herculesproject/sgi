@@ -23,6 +23,7 @@ import { InvencionResolver, INVENCION_DATA_KEY } from './invencion.resolver';
 const MSG_LISTADO_TITLE = marker('menu.pii.invenciones');
 const MSG_NEW_TITLE = marker('title.new.entity');
 const INVENCION_KEY = marker('pii.invencion');
+const SOLICITUD_PROTECCION_KEY = marker('pii.solicitud-proteccion');
 
 const routes: SgiRoutes = [
   {
@@ -110,10 +111,31 @@ const routes: SgiRoutes = [
         path: INVENCION_ROUTE_NAMES.GASTOS,
         component: InvencionGastosComponent,
         canDeactivate: [FragmentGuard]
-      },
+      }
+    ]
+  },
+  {
+    path: `:${INVENCION_ROUTE_PARAMS.ID}`,
+    canActivate: [SgiAuthGuard],
+    data: {
+      title: INVENCION_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthorityForAnyUO: ['PII-INV-E', 'PII-INV-V']
+    },
+    resolve: {
+      [INVENCION_DATA_KEY]: InvencionResolver
+    },
+    children: [
       {
-        path: '**',
-        redirectTo: INVENCION_ROUTE_NAMES.DATOS_GENERALES
+        path: INVENCION_ROUTE_NAMES.SOLICITUDES_PROTECCION,
+        loadChildren: () =>
+          import('../solicitud-proteccion/solicitud-proteccion.module').then(
+            (m) => m.SolicitudProteccionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: SOLICITUD_PROTECCION_KEY
+        }
       }
     ]
   }

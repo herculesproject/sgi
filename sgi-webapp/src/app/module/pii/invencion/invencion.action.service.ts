@@ -21,10 +21,12 @@ import { InvencionInventorFragment } from './invencion-formulario/invencion-inve
 import { SolicitudProteccionFragment } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.fragment';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
 import { INVENCION_DATA_KEY } from './invencion.resolver';
+import { IInvencion } from '@core/models/pii/invencion';
 
 export interface IInvencionData {
   canEdit: boolean;
   tipoPropiedad: TipoPropiedad;
+  invencion: IInvencion;
 }
 
 @Injectable()

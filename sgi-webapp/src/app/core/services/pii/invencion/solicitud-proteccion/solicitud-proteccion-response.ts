@@ -24,4 +24,5 @@ export interface ISolicitudProteccionResponse {
   paisProteccionRef: string;
   comentarios: string;
   activo: boolean;
+
 }

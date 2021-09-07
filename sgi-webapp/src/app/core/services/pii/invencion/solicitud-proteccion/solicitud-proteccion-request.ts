@@ -19,4 +19,5 @@ export interface ISolicitudProteccionRequest {
   agentePropiedadRef: string;
   paisProteccionRef: string;
   comentarios: string;
+
 }

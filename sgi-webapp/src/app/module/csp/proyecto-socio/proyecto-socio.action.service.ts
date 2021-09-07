@@ -10,7 +10,6 @@ import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service'
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject } from 'rxjs';
 import { PROYECTO_SOCIO_DATA_KEY } from './proyecto-socio-data.resolver';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.fragment';

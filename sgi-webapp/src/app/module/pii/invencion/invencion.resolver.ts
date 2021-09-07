@@ -32,6 +32,7 @@ export class InvencionResolver extends SgiResolverResolver<IInvencionData> {
   }
 
   protected resolveEntity(route: ActivatedRouteSnapshot): Observable<IInvencionData> {
+
     const invencionId = Number(route.paramMap.get(INVENCION_ROUTE_PARAMS.ID));
 
     return this.service.findById(invencionId).pipe(
@@ -41,7 +42,8 @@ export class InvencionResolver extends SgiResolverResolver<IInvencionData> {
         }
         return {
           canEdit: this.authService.hasAuthority('PII-INV-E'),
-          tipoPropiedad: invencion.tipoProteccion.tipoPropiedad
+          tipoPropiedad: invencion.tipoProteccion.tipoPropiedad,
+          invencion
         };
       }));
   }

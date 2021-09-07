@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { TipoPropiedad } from '@core/enums/tipo-propiedad';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { environment } from '@env';
 import {
