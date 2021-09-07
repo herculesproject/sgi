@@ -619,8 +619,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('costeHora').setValidators([
         Validators.required]);
-      formgroup.get('iva').setValidators([
-        Validators.required, Validators.min(0), Validators.max(100)]);
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
     } else {
@@ -629,6 +627,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.abiertoRequired = false;
       this.comentarioEstadoCancelado = false;
     }
+    formgroup.updateValueAndValidity();
   }
 
   get requiredAbierto() {
