@@ -6,7 +6,10 @@ import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ISectorAplicacion } from '@core/models/pii/sector-aplicacion';
+import { ESTADO_MAP } from '@core/models/pii/solicitud-proteccion';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
+import { IViaProteccion } from '@core/models/pii/via-proteccion';
+import { IPais } from '@core/models/sgo/pais';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -14,13 +17,15 @@ import { DialogService } from '@core/services/dialog.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { SectorAplicacionService } from '@core/services/pii/sector-aplicacion/sector-aplicacion.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
+import { ViaProteccionService } from '@core/services/pii/via-proteccion/via-proteccion.service';
+import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 
 const MSG_ERROR = marker('error.load');
@@ -54,12 +59,24 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
   fxFlexProperties50: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   invencion$: Observable<IInvencion[]>;
+  private busquedaAvanzada = false;
 
   readonly sectoresAplicacion$: Observable<ISectorAplicacion[]>;
   readonly tiposProteccion$: Observable<ITipoProteccion[]>;
+  readonly viasProteccion$ = new BehaviorSubject<IViaProteccion[]>([]);
+  readonly paises$ = new BehaviorSubject<IPais[]>([]);
+  readonly showFiltroPais$ = new BehaviorSubject<boolean>(false);
+
+  get ESTADO_SOLICITUD_PROTECCION_MAP() {
+    return ESTADO_MAP;
+  }
 
   get TipoColectivo() {
     return TipoColectivo;
+  }
+
+  get isBusquedaAvanzada() {
+    return this.busquedaAvanzada;
   }
 
   constructor(
@@ -70,6 +87,9 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     private readonly translate: TranslateService,
     sectorAplicacionService: SectorAplicacionService,
     tipoProteccionService: TipoProteccionService,
+    private viaProteccionService: ViaProteccionService,
+    private paisService: PaisService
+
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -102,7 +122,29 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
       tipoProteccion: new FormControl(null),
       inventor: new FormControl(''),
       titulo: new FormControl(''),
+      solicitudNumero: new FormControl(''),
+      solicitudInicioFechaDesde: new FormControl(null),
+      solicitudInicioFechaHasta: new FormControl(null),
+      solicitudFinFechaDesde: new FormControl(null),
+      solicitudFinFechaHasta: new FormControl(null),
+      solicitudTitulo: new FormControl(''),
+      solicitudViaProteccion: new FormControl(null),
+      solicitudPais: new FormControl(null),
+      solicitudEstado: new FormControl(''),
     });
+    this.loadViasProteccion();
+    this.loadPaises();
+
+    this.suscripciones.push(this.formGroup.controls.solicitudViaProteccion.valueChanges.subscribe(
+      (viaProteccion: IViaProteccion) => {
+        if (viaProteccion.paisEspecifico) {
+          this.showFiltroPais$.next(true);
+        } else {
+          this.showFiltroPais$.next(false);
+          this.formGroup.controls.solicitudPais.setValue(null);
+        }
+      }
+    ));
   }
 
   protected createObservable(): Observable<SgiRestListResult<IInvencion>> {
@@ -123,12 +165,27 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     const filter = new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
       .and('fechaComunicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaComunicacionDesde.value))
       .and('fechaComunicacion', SgiRestFilterOperator.LOWER_OR_EQUAL,
-        LuxonUtils.toBackend(controls.fechaComunicacionHasta.value?.plus({ hour: 23, minutes: 59, seconds: 59 })))
+        LuxonUtils.toBackend(controls.fechaComunicacionHasta.value))
       // TODO incluir and anidado con or de tipoProteccion.id y tipoProteccion.padre.id
       .and('tipoProteccion.id', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString())
       .and('sectoresAplicacion.sectorAplicacion.id', SgiRestFilterOperator.EQUALS, controls.sectorAplicacion.value?.id?.toString())
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('inventores.inventorRef', SgiRestFilterOperator.LIKE_ICASE, controls.inventor.value?.id?.toString());
+    if (this.isBusquedaAvanzada) {
+      filter.and('solicitudesProteccion.numeroSolicitud', SgiRestFilterOperator.EQUALS, controls.solicitudNumero.value)
+        .and('solicitudesProteccion.fechaPrioridadSolicitud', SgiRestFilterOperator.GREATHER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.solicitudInicioFechaDesde?.value))
+        .and('solicitudesProteccion.fechaPrioridadSolicitud', SgiRestFilterOperator.LOWER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.solicitudInicioFechaHasta?.value))
+        .and('solicitudesProteccion.fechaFinPriorPresFasNacRec', SgiRestFilterOperator.GREATHER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.solicitudFinFechaDesde?.value))
+        .and('solicitudesProteccion.fechaFinPriorPresFasNacRec', SgiRestFilterOperator.LOWER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.solicitudFinFechaHasta?.value))
+        .and('solicitudesProteccion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.solicitudTitulo.value)
+        .and('solicitudesProteccion.viaProteccion.id', SgiRestFilterOperator.EQUALS, controls.solicitudViaProteccion.value?.id?.toString())
+        .and('solicitudesProteccion.paisProteccionRef', SgiRestFilterOperator.EQUALS, controls.solicitudPais.value?.id?.toString())
+        .and('solicitudesProteccion.estado', SgiRestFilterOperator.EQUALS, controls.solicitudEstado.value);
+    }
 
     return filter;
   }
@@ -137,6 +194,19 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     super.onClearFilters();
     this.formGroup.controls.fechaComunicacionDesde.setValue(null);
     this.formGroup.controls.fechaComunicacionHasta.setValue(null);
+    this.formGroup.controls.solicitudInicioFechaDesde.setValue(null);
+    this.formGroup.controls.solicitudInicioFechaHasta.setValue(null);
+    this.formGroup.controls.solicitudFinFechaDesde.setValue(null);
+    this.formGroup.controls.solicitudFinFechaHasta.setValue(null);
+
+    this.onSearch();
+  }
+
+  /**
+   * Mostrar busqueda avanzada
+   */
+  toggleBusquedaAvanzada(): void {
+    this.busquedaAvanzada = !this.busquedaAvanzada;
     this.onSearch();
   }
 
@@ -285,4 +355,30 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe((value) => this.textoErrorReactivar = value);
   }
+
+  private loadViasProteccion(): void {
+
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('activo', SgiRestFilterOperator.EQUALS, 'true')
+    };
+
+    this.viaProteccionService.findTodos(options).pipe(
+      map(response => response.items),
+      catchError(error => {
+        this.logger.error(error);
+        return of(void 0);
+      })
+    ).subscribe((vias: IViaProteccion[]) => this.viasProteccion$.next(vias));
+  }
+
+  private loadPaises(): void {
+    this.paisService.findAll().pipe(
+      map(response => response.items),
+      catchError(error => {
+        this.logger.error(error);
+        return of(void 0);
+      })
+    ).subscribe(paises => this.paises$.next(paises));
+  }
+
 }

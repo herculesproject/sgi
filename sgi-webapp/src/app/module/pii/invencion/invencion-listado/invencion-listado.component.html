@@ -29,7 +29,7 @@
       <!-- Fecha de Comunicacion Hasta -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field class="input-form">
+        <mat-form-field class="input-form" sgiEndDate>
           <mat-label>{{'pii.invencion.fecha-comunicacion-hasta' | translate}}</mat-label>
           <input matInput formControlName="fechaComunicacionHasta" [matDatepicker]="fechaComunicacionHasta">
           <mat-datepicker-toggle matSuffix [for]="fechaComunicacionHasta"></mat-datepicker-toggle>
@@ -82,11 +82,110 @@
       </div>
 
     </div>
+    <!-- Búsqueda Avanzada -->
+    <ng-container *ngIf="isBusquedaAvanzada">
+      <div fxFlex="100%">
+        <h3>{{'pii.invencion.busqueda.titulo-avanzada' | translate}}</h3>
+      </div>
+      <div id="column1" fxFlex fxFlex.sm="100%" fxFlex.lt-md="50%" fxLayout="column" fxLayoutGap="10px" fxGrow="0">
+        <!-- Nº de Solicitud-->
+        <div>
+          <mat-form-field>
+            <mat-label>{{'pii.solicitud-proteccion.numero-solicitud' | translate}}</mat-label>
+            <input matInput placeholder="{{'pii.solicitud-proteccion.numero-solicitud' | translate}}"
+              formControlName="solicitudNumero">
+          </mat-form-field>
+        </div>
+        <!-- Filtro Vía de Protección -->
+        <div>
+          <mat-form-field>
+            <mat-label>{{'pii.solicitud-proteccion.via-proteccion' | translate}}</mat-label>
+            <sgi-select-entity formControlName="solicitudViaProteccion" [options]="viasProteccion$ | async">
+            </sgi-select-entity>
+          </mat-form-field>
+        </div>
+      </div>
 
-    <div class="buttons-final">
+      <div id="column2" fxFlex fxFlex.sm="100%" fxFlex.lt-md="50%" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+          <!-- Fecha de Solicitud Desde -->
+          <div fxFlex>
+            <mat-form-field class="input-form">
+              <mat-label>{{'pii.solicitud-proteccion.fecha-solicitud-desde' | translate}}</mat-label>
+              <input matInput formControlName="solicitudInicioFechaDesde" [matDatepicker]="solicitudInicioFechaDesde">
+              <mat-datepicker-toggle matSuffix [for]="solicitudInicioFechaDesde"></mat-datepicker-toggle>
+              <mat-datepicker #solicitudInicioFechaDesde></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <!-- Fecha de Solicitud Hasta -->
+          <div fxFlex>
+            <mat-form-field class="input-form" sgiEndDate>
+              <mat-label>{{'pii.solicitud-proteccion.fecha-solicitud-hasta' | translate}}</mat-label>
+              <input matInput formControlName="solicitudInicioFechaHasta" [matDatepicker]="solicitudInicioFechaHasta">
+              <mat-datepicker-toggle matSuffix [for]="solicitudInicioFechaHasta"></mat-datepicker-toggle>
+              <mat-datepicker #solicitudInicioFechaHasta></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- Filtro Pais -->
+        <div fxFlex="100%" *ngIf="showFiltroPais$| async">
+          <mat-form-field fxFill>
+            <mat-label>{{'pii.solicitud-proteccion.pais' | translate}}</mat-label>
+            <sgi-select-entity formControlName="solicitudPais" [options]="paises$ | async">
+            </sgi-select-entity>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div id="column3" fxFlex fxFlex.sm="100%" fxFlex.lt-md="100%" fxLayout="column" fxLayoutGap="10px">
+        <!-- Filtro Título-->
+        <div fxFlex="100%">
+          <mat-form-field>
+            <mat-label>{{'pii.solicitud-proteccion.titulo' | translate}}</mat-label>
+            <input matInput placeholder="{{'pii.invencion.titulo' | translate}}" formControlName="solicitudTitulo">
+          </mat-form-field>
+        </div>
+        <div fxFLex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+          <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+            <!-- Fecha Fin de Prioridad Desde -->
+            <div fxFlex>
+              <mat-form-field class="input-form">
+                <mat-label>{{'pii.solicitud-proteccion.fecha-fin-prioridad-desde' | translate}}</mat-label>
+                <input matInput formControlName="solicitudFinFechaDesde" [matDatepicker]="solicitudFinFechaDesde">
+                <mat-datepicker-toggle matSuffix [for]="solicitudFinFechaDesde"></mat-datepicker-toggle>
+                <mat-datepicker #solicitudFinFechaDesde></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <!-- Fecha Fin de Prioridad  Hasta -->
+            <div fxFlex>
+              <mat-form-field class="input-form" sgiEndDate>
+                <mat-label>{{'pii.solicitud-proteccion.fecha-fin-prioridad-hasta' | translate}}</mat-label>
+                <input matInput formControlName="solicitudFinFechaHasta" [matDatepicker]="solicitudFinFechaHasta">
+                <mat-datepicker-toggle matSuffix [for]="solicitudFinFechaHasta"></mat-datepicker-toggle>
+                <mat-datepicker #solicitudFinFechaHasta></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Estado Solicitud Protección -->
+          <div fxFlex>
+            <mat-form-field>
+              <mat-label>{{'pii.solicitud-proteccion.estado' | translate}}</mat-label>
+              <sgi-select-enum formControlName="solicitudEstado" [enumMap]="ESTADO_SOLICITUD_PROTECCION_MAP">
+              </sgi-select-enum>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </ng-container>
+
+    <div fxFlex="100%" class="buttons-final">
       <div class="col filter-button">
         <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
           <mat-icon>search</mat-icon> {{'btn.search'| translate}}
+        </button>
+        <button class="link-busqueda underline" aria-label="Center Align" mat-button (click)="toggleBusquedaAvanzada()">
+          {{(isBusquedaAvanzada ? 'btn.search.simple' : 'btn.search.advanced')| translate}}
         </button>
         <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
           translate}}
