@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -140,5 +142,21 @@ public interface ConvocatoriaService {
    * @return true si puede ser tramitada / false si no puede ser tramitada
    */
   boolean tramitable(Long id);
+
+  /**
+   * Devuelve si tiene alguna {@link Solicitud} asociada
+   * 
+   * @param convocatoriaId id de la {@link Convocatoria}
+   * @return true o false
+   */
+  boolean hasAnySolicitudReferenced(Long convocatoriaId);
+
+  /**
+   * Devuelve si tiene algún {@link Proyecto} asociado
+   * 
+   * @param convocatoriaId id de la {@link Convocatoria}
+   * @return true o false
+   */
+  boolean hasAnyProyectoReferenced(Long convocatoriaId);
 
 }

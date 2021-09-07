@@ -12,6 +12,8 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
@@ -24,6 +26,8 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResolver;
@@ -57,6 +61,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
   private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+  private final SolicitudRepository solicitudRepository;
+  private final ProyectoRepository proyectoRepository;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
@@ -64,7 +70,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository,
       TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository,
       ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
-      ConfiguracionSolicitudRepository configuracionSolicitudRepository) {
+      ConfiguracionSolicitudRepository configuracionSolicitudRepository, final SolicitudRepository solicitudRepository,
+      final ProyectoRepository proyectoRepository) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -73,6 +80,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     this.tipoAmbitoGeograficoRepository = tipoAmbitoGeograficoRepository;
     this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
+    this.solicitudRepository = solicitudRepository;
+    this.proyectoRepository = proyectoRepository;
   }
 
   /**
@@ -717,5 +726,25 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
         "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
 
     log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
+  }
+
+  /**
+   * Devuelve si tiene alguna {@link Solicitud} asociada
+   * @param convocatoriaId id de la {@link Convocatoria}
+   * @return true o false
+   */
+  @Override
+  public boolean hasAnySolicitudReferenced(Long convocatoriaId) {
+    return this.solicitudRepository.existsByConvocatoriaId(convocatoriaId);
+  }
+
+  /**
+   * Devuelve si tiene algún {@link Proyecto} asociado
+   * @param convocatoriaId id de la {@link Convocatoria}
+   * @return true o false
+   */
+  @Override
+  public boolean hasAnyProyectoReferenced(Long convocatoriaId) {
+    return this.proyectoRepository.existsByConvocatoriaId(convocatoriaId);
   }
 }

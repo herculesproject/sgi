@@ -16,6 +16,8 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
@@ -101,7 +103,7 @@ public class ConvocatoriaController {
 
   /**
    * Instancia un nuevo ConvocatoriaController.
-   * 
+   *
    * @param convocatoriaService                             {@link ConvocatoriaService}.
    * @param convocatoriaAreaTematicaService                 {@link ConvocatoriaAreaTematicaService}.
    * @param convocatoriaDocumentoService                    {@link ConvocatoriaDocumentoService}.
@@ -147,7 +149,7 @@ public class ConvocatoriaController {
 
   /**
    * Crea nuevo {@link Convocatoria}
-   * 
+   *
    * @param convocatoria {@link Convocatoria}. que se quiere crear.
    * @return Nuevo {@link Convocatoria} creado.
    */
@@ -164,7 +166,7 @@ public class ConvocatoriaController {
 
   /**
    * Actualiza {@link Convocatoria}.
-   * 
+   *
    * @param convocatoria {@link Convocatoria} a actualizar.
    * @param id           Identificador {@link Convocatoria} a actualizar.
    * @return Convocatoria {@link Convocatoria} actualizado
@@ -183,7 +185,7 @@ public class ConvocatoriaController {
 
   /**
    * Registra la {@link Convocatoria} con id indicado.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return {@link Convocatoria} actualizado.
    */
@@ -198,7 +200,7 @@ public class ConvocatoriaController {
 
   /**
    * Reactiva el {@link Convocatoria} con id indicado.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return {@link Convocatoria} actualizado.
    */
@@ -213,7 +215,7 @@ public class ConvocatoriaController {
 
   /**
    * Desactiva {@link Convocatoria} con id indicado.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return {@link Convocatoria} actualizado.
    */
@@ -229,7 +231,7 @@ public class ConvocatoriaController {
   /**
    * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
    * puede ser modificada.
-   * 
+   *
    * @param id Id del {@link Convocatoria}.
    * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
    *         modificación
@@ -263,7 +265,7 @@ public class ConvocatoriaController {
 
   /**
    * Comprueba la existencia del {@link Convocatoria} con el id indicado.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
@@ -281,7 +283,7 @@ public class ConvocatoriaController {
 
   /**
    * Devuelve el {@link Convocatoria} con el id indicado.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return Convocatoria {@link Convocatoria} correspondiente al id
    */
@@ -296,7 +298,7 @@ public class ConvocatoriaController {
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
-   * 
+   *
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
@@ -319,7 +321,7 @@ public class ConvocatoriaController {
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
-   * 
+   *
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
@@ -343,7 +345,7 @@ public class ConvocatoriaController {
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas
    * registradas restringidas a las del usuario.
-   * 
+   *
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
@@ -366,7 +368,7 @@ public class ConvocatoriaController {
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria}.
-   * 
+   *
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
@@ -388,15 +390,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA HITO
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaHito} de la
    * {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -420,7 +422,7 @@ public class ConvocatoriaController {
   /**
    * Comprueba la existencia de {@link ConvocatoriaHito} relacionados con el id de
    * Convocatoria recibido.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
    */
@@ -437,15 +439,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA PARTIDA PRESUPUESTARIA
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaPartidaPresupuestaria} de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -467,15 +469,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA ENTIDAD FINANCIADORA
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaEntidadFinanciadora} de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -499,15 +501,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA ENTIDAD GESTORA
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaEntidadGestora}
    * de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -529,15 +531,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA FASE
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaFase} de la
    * {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -561,7 +563,7 @@ public class ConvocatoriaController {
   /**
    * Comprueba la existencia de {@link ConvocatoriaFase} relacionados con el id de
    * Convocatoria recibido.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
    */
@@ -578,15 +580,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA AREA TEMATICA
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaAreaTematica} de
    * la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -608,15 +610,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA DOCUMENTO
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaDocumento} de la
    * {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -640,7 +642,7 @@ public class ConvocatoriaController {
   /**
    * Comprueba la existencia de {@link ConvocatoriaDocumento} relacionados con el
    * id de Convocatoria recibido.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
    */
@@ -657,15 +659,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA ENLACE
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaEnlace} de la
    * {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -689,7 +691,7 @@ public class ConvocatoriaController {
   /**
    * Comprueba la existencia de {@link ConvocatoriaEnlace} relacionados con el id
    * de Convocatoria recibido.
-   * 
+   *
    * @param id Identificador de {@link Convocatoria}.
    * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
    */
@@ -706,15 +708,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA ENTIDAD CONVOCANTE
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -737,15 +739,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA PERIODO JUSTIFICACION
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaPeriodoJustificacion} de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -768,15 +770,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link convocatoriaPeriodoSeguimientoCientifico} de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
@@ -800,15 +802,15 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA GASTOS
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ConvocatoriaConceptoGasto}
    * permitidos de la {@link Convocatoria}.
-   * 
+   *
    * @param id     Identificador de {@link Convocatoria}.
    * @param paging pageable.
    */
@@ -853,16 +855,16 @@ public class ConvocatoriaController {
   }
 
   /**
-   * 
+   *
    * CONVOCATORIA GASTOS CÓDIGO ECONÓMICO
-   * 
+   *
    */
 
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaConceptoGastoCodigoEc} permitidos de la
    * {@link ConvocatoriaConceptoGasto}.
-   * 
+   *
    * @param id     Identificador de {@link ConvocatoriaConceptoGasto}.
    * @param paging pageable.
    */
@@ -921,6 +923,33 @@ public class ConvocatoriaController {
     boolean returnValue = service.tramitable(id);
     log.debug("registrable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Verifica si la convocatoria tiene asociada alguna solicitud
+   * 
+   * @param id Id de la {@link Convocatoria}
+   * @return HTTP-200 si tinene alguna {@link Solicitud} asociada
+   */
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
+  @RequestMapping(path = "/{id}/solicitudesreferenced", method = RequestMethod.HEAD)
+  public ResponseEntity<Object> hasSolicitudesReferenced(@PathVariable Long id) {
+
+    return this.service.hasAnySolicitudReferenced(id) ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
+  }
+
+  /**
+   * verifica si la convocatoria tiene asociada algún {@link Proyecto}
+   * 
+   * @param id Id de la {@link Convocatoria}
+   * @return HTTP-200 si tinene algún {@link Proyecto} asociado
+   */
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
+  @RequestMapping(path = "/{id}/proyectosreferenced", method = RequestMethod.HEAD)
+  public ResponseEntity<Object> hasProyectosReferenced(@PathVariable Long id) {
+
+    return this.service.hasAnyProyectoReferenced(id) ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
   }
 
 }
