@@ -2496,11 +2496,11 @@
       </whereParams>
     </update>
 
-    <!-- 3.2 Objetivos científicos del proyecto -->
+    <!-- 3.2 Diseño metodológico del proyecto -->
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '3' and formulario_id = (select id from formulario where nombre = 'M30'))" />
-      <column name="nombre" value="Objetivos científicos del proyecto" />
+      <column name="nombre" value="Diseño metodológico del proyecto" />
       <column name="padre_id" />
       <column name="orden" value="2" />
       <column name="esquema" value="{}" />
@@ -2841,7 +2841,7 @@
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
-      <column name="nombre" value="Nivel de riesgo" />
+      <column name="nombre" value="Características del riesgo de los OMG" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Evaluación del riesgo')" />
       <column name="orden" value="3" />
       <column name="esquema" value="{}" />
@@ -2927,7 +2927,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Laboratorio de la Universidad" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="1" />
       <column name="esquema" value="{}" />
     </insert>
@@ -2939,12 +2939,80 @@
       </whereParams>
     </update>
 
+    <!-- 4.2.1.1.1 Medidas de contención -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Medidas de contención" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Laboratorio de la Universidad')" />
+      <column name="orden" value="1" />
+      <column name="esquema" value="{}" />
+    </insert>
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1_1.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueComputed="(select max(id) from apartado)" />
+      </whereParams>
+    </update>
+
+    <!-- 4.2.1.1.2 Equipos de seguridad -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Equipos de seguridad" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Laboratorio de la Universidad')" />
+      <column name="orden" value="2" />
+      <column name="esquema" value="{}" />
+    </insert>
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1_2.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueComputed="(select max(id) from apartado)" />
+      </whereParams>
+    </update>
+
+    <!-- 4.2.1.1.3 Buenas prácticas de laboratorio -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Buenas prácticas de laboratorio" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Laboratorio de la Universidad')" />
+      <column name="orden" value="3" />
+      <column name="esquema" value="{}" />
+    </insert>
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1_3.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueComputed="(select max(id) from apartado)" />
+      </whereParams>
+    </update>
+
+    <!-- 4.2.1.1.4 Instalaciones -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Instalaciones" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Laboratorio de la Universidad')" />
+      <column name="orden" value="4" />
+      <column name="esquema" value="{}" />
+    </insert>
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1_4.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueComputed="(select max(id) from apartado)" />
+      </whereParams>
+    </update>
+
     <!-- 4.2.1.2 Otro centro o lugar ajeno a la Universidad  -->
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Otro centro o lugar ajeno a la Universidad" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
       <column name="orden" value="2" />
       <column name="esquema" value="{}" />
     </insert>
@@ -2995,7 +3063,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Control de la exposición" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción de riesgos')" />
       <column name="orden" value="1" />
       <column name="esquema" value="{}" />
     </insert>
@@ -3012,7 +3080,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Medidas de reducción de la exposición" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción de riesgos')" />
       <column name="orden" value="2" />
       <column name="esquema" value="{}" />
     </insert>
@@ -3029,7 +3097,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Medidas de protección" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción de riesgos')" />
       <column name="orden" value="3" />
       <column name="esquema" value="{}" />
     </insert>
@@ -3046,7 +3114,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Métodos de descontaminación/desinfección" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción de riesgos')" />
       <column name="orden" value="4" />
       <column name="esquema" value="{}" />
     </insert>
@@ -3063,7 +3131,7 @@
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '4' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Gestión de residuos" />
-      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Reducción de riesgos')" />
       <column name="orden" value="5" />
       <column name="esquema" value="{}" />
     </insert>
