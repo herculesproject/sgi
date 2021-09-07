@@ -194,8 +194,8 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
         .as("getFuenteFinanciacion().getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoEntidadFinanciadora.getTipoFinanciacion().getId()).as("getTipoFinanciacion().getId()")
         .isEqualTo(1L);
-    Assertions.assertThat(proyectoEntidadFinanciadora.getPorcentajeFinanciacion()).as("getPorcentajeFinanciacion()")
-        .isEqualTo(20);
+    Assertions.assertThat(proyectoEntidadFinanciadora.getPorcentajeFinanciacion().floatValue())
+        .as("getPorcentajeFinanciacion()").isEqualTo(20F);
     Assertions.assertThat(proyectoEntidadFinanciadora.getAjena()).as("getAjena()").isEqualTo(false);
   }
 

@@ -136,8 +136,8 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
         .as("getFuenteFinanciacion().getId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaEntidadFinanciadora.getTipoFinanciacion().getId())
         .as("getTipoFinanciacion().getId()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion()).as("getPorcentajeFinanciacion()")
-        .isEqualTo(20);
+    Assertions.assertThat(convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion().floatValue())
+        .as("getPorcentajeFinanciacion()").isEqualTo(20F);
   }
 
   /**
