@@ -308,7 +308,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
         // Campos requeridos a nivel de convocatoria
         if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
-            && convocatoria.get().getFechaPublicacion() != null && convocatoria.get().getTitulo() != null
             && convocatoria.get().getFinalidad() != null && convocatoria.get().getAmbitoGeografico() != null) {
 
           Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
@@ -664,8 +663,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getModeloEjecucion(), "ModeloEjecucion no puede ser null en la Convocatoria");
     // Codigo
     Assert.notNull(datosConvocatoria.getCodigo(), "Codigo no puede ser null en la Convocatoria");
-    // FechaPublicacion
-    Assert.notNull(datosConvocatoria.getFechaPublicacion(), "Fecha publicación no puede ser null en la Convocatoria");
     // Titulo
     Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
     // TipoFinalidad
@@ -692,8 +689,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getUnidadGestionRef(), "UnidadGestionRef no puede ser null en la Convocatoria");
     // Codigo
     Assert.notNull(datosConvocatoria.getCodigo(), "Codigo no puede ser null en la Convocatoria");
-    // FechaPublicacion
-    Assert.notNull(datosConvocatoria.getFechaPublicacion(), "Fecha publicación no puede ser null en la Convocatoria");
     // Titulo
     Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
 
@@ -730,6 +725,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
   /**
    * Devuelve si tiene alguna {@link Solicitud} asociada
+   * 
    * @param convocatoriaId id de la {@link Convocatoria}
    * @return true o false
    */
@@ -740,6 +736,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
   /**
    * Devuelve si tiene algún {@link Proyecto} asociado
+   * 
    * @param convocatoriaId id de la {@link Convocatoria}
    * @return true o false
    */

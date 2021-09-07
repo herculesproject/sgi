@@ -81,8 +81,7 @@ public class Convocatoria extends BaseEntity {
   private String codigo;
 
   /** Fecha Publicación */
-  @Column(name = "fecha_publicacion", nullable = false)
-  @NotNull
+  @Column(name = "fecha_publicacion")
   private Instant fechaPublicacion;
 
   /** Fecha Provisional */

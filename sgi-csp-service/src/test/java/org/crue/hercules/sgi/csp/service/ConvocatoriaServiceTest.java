@@ -301,22 +301,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
-  public void create_BorradorWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador without FechaPublicacion
-    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setFechaPublicacion(null);
-
-    Assertions.assertThatThrownBy(
-        // when: create Convocatoria
-        () -> service.create(convocatoria))
-        // then: throw exception as Fecha Publicacion is not present
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_BorradorWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without Titulo
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -950,46 +934,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as updated ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void update_RegistradaWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Registrada without FechaPubliacion
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setFechaPublicacion(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria))
-        // then: throw exception as Fecha Publicacion is not present
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void update_BorradorWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador without Fecha Publicacion
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.setEstado(Convocatoria.Estado.BORRADOR);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setFechaPublicacion(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria))
-        // then: throw exception as Fecha Publicación is not present
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
   }
 
   @Test

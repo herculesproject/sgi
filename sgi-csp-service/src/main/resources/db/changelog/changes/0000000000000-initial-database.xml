@@ -453,9 +453,7 @@
             </column>
             <column name="fecha_concesion" type="TIMESTAMP"/>
             <column name="fecha_provisional" type="TIMESTAMP"/>
-            <column name="fecha_publicacion" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
+            <column name="fecha_publicacion" type="TIMESTAMP"/>
             <column name="objeto" type="VARCHAR(2000)"/>
             <column name="observaciones" type="VARCHAR(2000)"/>
             <column name="titulo" type="VARCHAR(250)">
