@@ -879,4 +879,29 @@ public class MemoriaServiceImpl implements MemoriaService {
     return sbNumReferencia.toString();
   }
 
+  /**
+   * Comprobación de si están o no los documentos obligatorios aportados para
+   * pasar la memoria al estado en secretaría
+   * 
+   * @param idMemoria Id de {@link Memoria}
+   * @param paging    pageable
+   * @return true si existen documentos adjuntos obligatorios / false Si no se
+   *         existen documentos adjuntos obligatorios
+   */
+  public Boolean checkDatosAdjuntosExists(Long idMemoria, Pageable paging) {
+    Page<Respuesta> returnValue = respuestaRepository.findByMemoriaIdAndTipoDocumentoIsNotNull(idMemoria, paging);
+    Boolean[] arr = { true };
+    if (returnValue.hasContent()) {
+      List<Respuesta> respuestas = returnValue.getContent();
+      Long idFormulario = respuestas.get(0).getApartado().getBloque().getFormulario().getId();
+      respuestas.stream().map(resp -> resp.getTipoDocumento()).forEach(tipoDocumento -> {
+        if (!documentacionMemoriaRepository.existsByMemoriaIdAndTipoDocumentoIdAndTipoDocumentoFormularioId(idMemoria,
+            tipoDocumento.getId(), idFormulario)) {
+          arr[0] = false;
+        }
+      });
+    }
+    return arr[0];
+  }
+
 }

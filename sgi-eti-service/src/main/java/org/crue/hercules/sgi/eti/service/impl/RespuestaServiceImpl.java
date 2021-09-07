@@ -211,12 +211,12 @@ public class RespuestaServiceImpl implements RespuestaService {
       Respuesta respuestaUltimoBloqueApartado = null;
       if (formulario.getId().toString().equals(ID_FORMULARIO_SEG_FINAL) && lastBloque != null) {
         respuestaUltimoBloqueApartado = respuestaRepository
-            .findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(lastBloque.getOrden(),
-                1, formulario.getId(), memoria.getId());
+            .findByApartadoBloqueOrdenAndApartadoPadreIsNullAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(
+                lastBloque.getOrden(), 1, formulario.getId(), memoria.getId());
       } else if (lastBloque != null && lastApartado != null) {
         respuestaUltimoBloqueApartado = respuestaRepository
-            .findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(lastBloque.getOrden(),
-                lastApartado.getOrden(), formulario.getId(), memoria.getId());
+            .findByApartadoBloqueOrdenAndApartadoPadreIsNullAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(
+                lastBloque.getOrden(), lastApartado.getOrden(), formulario.getId(), memoria.getId());
       }
 
       if (respuestaUltimoBloqueApartado != null && respuestaUltimoBloqueApartado.getValor() != null
@@ -279,8 +279,8 @@ public class RespuestaServiceImpl implements RespuestaService {
       // Bloque 5 apartado 3 - Evaluación retrospectiva
       if (respuestaRepository.existsByIdAndApartadoBloqueOrden(idRespuesta, 5)) {
         Respuesta respuesta = respuestaRepository
-            .findByApartadoBloqueOrdenAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(5, 3,
-                formulario.getId(), memoria.getId());
+            .findByApartadoBloqueOrdenAndApartadoPadreIsNullAndApartadoOrdenAndApartadoBloqueFormularioIdAndMemoriaId(5,
+                3, formulario.getId(), memoria.getId());
         if (respuesta != null) {
           ObjectMapper mapper = new ObjectMapper();
           try {
