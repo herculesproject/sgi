@@ -31,6 +31,7 @@ export class SolicitudCrearComponent extends ActionComponent implements OnInit {
   textoCrear: string;
   textoCrearSuccess: string;
   textoCrearError: string;
+  textoMensajeRequisitosInvestigador: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -38,10 +39,10 @@ export class SolicitudCrearComponent extends ActionComponent implements OnInit {
     router: Router,
     route: ActivatedRoute,
     public readonly actionService: SolicitudActionService,
-    dialogService: DialogService,
-    private readonly translate: TranslateService
+    private confirmDialogService: DialogService,
+    private readonly translate: TranslateService,
   ) {
-    super(router, route, actionService, dialogService);
+    super(router, route, actionService, confirmDialogService);
   }
 
   ngOnInit(): void {
@@ -86,6 +87,18 @@ export class SolicitudCrearComponent extends ActionComponent implements OnInit {
         );
       })
     ).subscribe((value) => this.textoCrearError = value);
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrearError = value);
   }
 
 
@@ -110,5 +123,4 @@ export class SolicitudCrearComponent extends ActionComponent implements OnInit {
       }
     );
   }
-
 }

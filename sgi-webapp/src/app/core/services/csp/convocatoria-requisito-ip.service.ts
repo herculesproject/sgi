@@ -6,13 +6,13 @@ import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisit
 import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { REQUISITOIP_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-request.converter';
 import { IRequisitoIPCategoriaProfesionalResponse } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response';
 import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response.converter';
-import { REQUISITOIP_NIVELACADEMICO_REQUEST_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-request.converter';
+import { REQUISITOIP_NIVELACADEMICO_REQUEST_CONVERTER }  from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-request.converter';
 import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
 import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
 
