@@ -4,6 +4,8 @@ import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
+import org.crue.hercules.sgi.csp.model.AnualidadGasto;
+import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.springframework.http.HttpStatus;
@@ -138,6 +140,23 @@ public class ProyectoPartidaController {
     boolean returnValue = service.modificable(id, "CSP-PRO-E");
     log.debug("modificable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si algún objeto de tipo {@link AnualidadIngreso} o de tipo
+   * {@link AnualidadGasto} está asociado a la partida con el id indicado.
+   * 
+   * @param id Identificador de {@link ProyectoPartida}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/anualidades", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  public ResponseEntity<Object> existsAnyAnualidad(@PathVariable Long id) {
+
+    if (service.existsAnyAnualidad(id)) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

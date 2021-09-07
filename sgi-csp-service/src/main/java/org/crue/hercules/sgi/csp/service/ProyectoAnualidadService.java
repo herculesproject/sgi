@@ -88,7 +88,7 @@ public class ProyectoAnualidadService {
     // En caso de que el proyecto tenga anualidad genérica no se guardarán la fecha
     // de inicio y fecha fin ya que se tendrán en cuenta las del proyecto.
     proyectoRepository.findById(proyectoAnualidad.getProyectoId()).map(proyecto -> {
-      if (!proyecto.getAnualidades()) {
+      if (proyecto.getAnualidades() == null || !proyecto.getAnualidades()) {
         proyectoAnualidad.setFechaInicio(null);
         proyectoAnualidad.setFechaFin(null);
       } else {

@@ -26,6 +26,8 @@ public class ConceptoGastoSpecifications {
   /**
    * Devuelve todos los {@link ConceptoGasto} que no esten asignados a la
    * {@link AgrupacionGastoConcepto}
+   * @param proyectoId Id del proyecto
+   * @return registros encontrados
    */
   public static Specification<ConceptoGasto> notInProyectoAgrupacionGasto(Long proyectoId) {
     return (root, query, cb) -> {

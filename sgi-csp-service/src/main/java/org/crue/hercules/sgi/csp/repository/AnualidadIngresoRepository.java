@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +25,6 @@ public interface AnualidadIngresoRepository
   void deleteByProyectoAnualidadId(Long id);
 
   boolean existsByProyectoPartidaIdAndProyectoAnualidadEnviadoSgeIsTrue(Long proyectoPartidaId);
+
+  Optional<List<AnualidadIngreso>> findByProyectoPartidaId(Long proyectoPartidaId);
 }

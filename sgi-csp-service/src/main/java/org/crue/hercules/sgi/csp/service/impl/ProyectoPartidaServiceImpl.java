@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPartidaNotFoundException;
+import org.crue.hercules.sgi.csp.model.AnualidadGasto;
+import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.repository.AnualidadGastoRepository;
@@ -214,6 +216,25 @@ public class ProyectoPartidaServiceImpl implements ProyectoPartidaService {
 
     log.debug("modificable(Long id, String unidadConvocatoria) - end");
     return false;
+  }
+
+  /**
+   * Devuelve un boolean indicando si la paritda indicada por el parámetro
+   * proyectoPartidaId, tiene asociada alguna {@link AnualidadIngreso} o alguna
+   * {@link AnualidadGasto}
+   * 
+   * @param proyectoPartidaId Id de la {@link ProyectoPartida}
+   * @return boolean respuesta en función de si hay o no objetos de tipo
+   *         {@link AnualidadIngreso} o alguna {@link AnualidadGasto} asociadas
+   */
+  @Override
+  public boolean existsAnyAnualidad(Long proyectoPartidaId) {
+
+    return this.anualidadIngresoRepository.findByProyectoPartidaId(proyectoPartidaId)
+        .map(anualidades -> !anualidades.isEmpty()).orElse(false)
+        || this.anualidadGastoRepository.findByProyectoPartidaId(proyectoPartidaId)
+            .map(anualidades -> !anualidades.isEmpty()).orElse(false);
+
   }
 
 }

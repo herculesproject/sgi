@@ -94,16 +94,16 @@ public interface ProyectoSocioService {
    * Comprueba si hay algún objeto ProyectoSocio con la propiedad coordinador a
    * true en las especificaciones de su rol
    * 
-   * @param proyectoId
-   * @return
+   * @param proyectoId id del proyecto
+   * @return devuelve true o false
    */
   boolean hasAnyProyectoSocioWithRolCoordinador(Long proyectoId);
 
   /**
    * Comprueba si hay algún socio asignado al proyecto
    * 
-   * @param proyectoId
-   * @return
+   * @param proyectoId id del proyecto
+   * @return devuelve true o false
    */
   boolean hasAnyProyectoSocioWithProyectoId(Long proyectoId);
 

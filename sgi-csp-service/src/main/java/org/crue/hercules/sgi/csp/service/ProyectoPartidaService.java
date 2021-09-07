@@ -74,4 +74,6 @@ public interface ProyectoPartidaService {
    */
   boolean modificable(Long id, String authority);
 
+  boolean existsAnyAnualidad(Long proyectoPartidaId);
+
 }
