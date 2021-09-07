@@ -27,6 +27,7 @@ const CONVOCATORIA_REQUISITOS_EQUIPO_MODALIDAD_CONTRATO_KEY = marker('csp.convoc
 const CONVOCATORIA_REQUISITOS_EQUIPO_NIVEL_ACADEMICO_KEY = marker('csp.convocatoria-requisito-equipo.nivel-academico');
 const CONVOCATORIA_CATEGORIA_PROFESIONAL_KEY = marker('csp.convocatoria.categoria-profesional');
 const CONVOCATORIA_NIVEL_ACADEMICO_KEY = marker('csp.convocatoria.nivel-academico');
+const CONVOCATORIA_REQUISITO_EQUIPO_SEXO_RATIO_MINIMO_EXIGIDO_KEY = marker('csp.convocatoria-requisito-equipo.sexo-ratio');
 
 @Component({
   selector: 'sgi-convocatoria-requisitos-equipo',
@@ -44,6 +45,7 @@ export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent
   msgParamModalidadContratoEntity = {};
   msgParamNivelAcademicoEntity = {};
   msgParamCategoriaProfesionalEntity: {};
+  msgParamSexoRatioEntity = {};
   textoDeleteCategoriaProfesional: string;
   textoDeleteNivelAcademico: string;
 
@@ -175,6 +177,13 @@ export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent
         ).subscribe((valueDelete) => this.textoDeleteCategoriaProfesional = valueDelete);
       }
     );
+
+    this.translate.get(
+      CONVOCATORIA_REQUISITO_EQUIPO_SEXO_RATIO_MINIMO_EXIGIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => {
+      this.msgParamSexoRatioEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR, ...MSG_PARAMS.GENDER.MALE };
+    });
   }
 
   deleteNivelAcademico(wrapper: StatusWrapper<IRequisitoEquipoNivelAcademico>) {

@@ -126,6 +126,22 @@ export class NumberValidator {
   }
 
   /**
+   * Comprueba que la parte decimal introducida no se pase de los caracteres indicados.
+   * @param max Máximo de caracteres decimales
+   */
+  static maxDecimalDigits(max: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && max) {
+        const arrayDecimal = control.value.toString().split('.');
+        if (arrayDecimal.length > 1) {
+          return !isNaN(control.value) && arrayDecimal[1].length > max ? { maxDecimals: { max, actual: control.value } } : null;
+        }
+      }
+      return null;
+    };
+  }
+
+  /**
    * Comprueba que el sumatorio de los campos pasados como parámetros es igual al valor inicial
    * (Sólo hace la comprobación cuando todos los inputs indicados no tienen otros errores)
    *

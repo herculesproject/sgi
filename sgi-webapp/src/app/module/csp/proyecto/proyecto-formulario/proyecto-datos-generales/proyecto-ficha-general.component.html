@@ -450,6 +450,9 @@
           <mat-error *ngIf="formGroup.controls.iva.errors?.ivaProyectosSge">
             {{'error.csp.proyecto-ficha-general.iva.proyectos-sge' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.iva.hasError('pattern')">
+            {{'error.number.format.integer.entity' | translate:msgParamIvaEntity}}
+          </mat-error>
         </mat-form-field>
       </div>
 

@@ -42,6 +42,9 @@
         <mat-error *ngIf="formGroup.controls.ratioSexo.hasError('min')">
           {{'error.min.digit' | translate}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.ratioSexo.hasError('pattern')">
+          {{'error.number.format.integer.entity' | translate:msgParamSexoRatioEntity}}
+        </mat-error>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexPropertiesInline.md"

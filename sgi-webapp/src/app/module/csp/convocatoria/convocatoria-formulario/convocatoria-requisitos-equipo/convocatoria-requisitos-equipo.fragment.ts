@@ -108,7 +108,7 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
         [Validators.min(0), Validators.max(99)])],
       sexo: [null],
       ratioSexo: ['', Validators.compose(
-        [Validators.min(0), Validators.max(9999)])],
+        [Validators.min(0), Validators.max(9999), Validators.pattern('^[0-9]*$')])],
       vinculacionUniversidad: [null],
       fechaMaximaCategoriaProfesional: [null],
       fechaMinimaCategoriaProfesional: [null],

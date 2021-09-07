@@ -210,6 +210,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       iva: new FormControl(null, [
         Validators.min(0),
         Validators.max(100),
+        Validators.pattern('^[0-9]*$'),
         this.buildValidatorIva()
       ]),
       tipoHorasAnuales: new FormControl(''),
