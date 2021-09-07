@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -227,7 +228,7 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
       .entidadRef("entidad-" + String.format("%03d", id == null ? 0 : id))
       .fuenteFinanciacion(fuenteFinanciacion)
       .tipoFinanciacion(tipoFinanciacion)
-      .porcentajeFinanciacion(50)
+      .porcentajeFinanciacion(BigDecimal.valueOf(50))
       .ajena(false)
       .build();
     //@formatter:on

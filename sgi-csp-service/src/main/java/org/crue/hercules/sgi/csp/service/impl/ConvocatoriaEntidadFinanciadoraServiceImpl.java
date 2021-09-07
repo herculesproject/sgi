@@ -70,7 +70,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     Assert.isTrue(
         convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion() == null
-            || convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion() >= 0,
+            || convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion().floatValue() >= 0,
         "PorcentajeFinanciacion no puede ser negativo");
 
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEntidadFinanciadora.getConvocatoriaId())
@@ -133,7 +133,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     Assert.isTrue(
         convocatoriaEntidadFinanciadoraActualizar.getPorcentajeFinanciacion() == null
-            || convocatoriaEntidadFinanciadoraActualizar.getPorcentajeFinanciacion() >= 0,
+            || convocatoriaEntidadFinanciadoraActualizar.getPorcentajeFinanciacion().floatValue() >= 0,
         "PorcentajeFinanciacion no puede ser negativo");
 
     if (convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion() != null) {

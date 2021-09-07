@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -118,7 +119,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     Long convocatoriaId = 1L;
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
         convocatoriaId);
-    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(-10);
+    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(BigDecimal.valueOf(-10));
 
     // when: Creamos el ConvocatoriaEntidadFinanciadora
     // then: Lanza una excepcion porque el PorcentajeFinanciacion es negativo
@@ -274,7 +275,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
         convocatoriaId);
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraPorcentajeActualizado = generarMockConvocatoriaEntidadFinanciadora(
         1L, convocatoriaId);
-    convocatoriaEntidadFinanciadoraPorcentajeActualizado.setPorcentajeFinanciacion(1);
+    convocatoriaEntidadFinanciadoraPorcentajeActualizado.setPorcentajeFinanciacion(BigDecimal.valueOf(1));
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
@@ -317,7 +318,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     Long convocatoriaId = 1L;
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
         convocatoriaId);
-    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(-10);
+    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(BigDecimal.valueOf(-10));
 
     // when: Actualizamos el ConvocatoriaEntidadFinanciadora
     // then: Lanza una excepcion porque el PorcentajeFinanciacion es negativo
@@ -612,7 +613,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);
-    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(50);
+    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(BigDecimal.valueOf(50));
 
     return convocatoriaEntidadFinanciadora;
   }

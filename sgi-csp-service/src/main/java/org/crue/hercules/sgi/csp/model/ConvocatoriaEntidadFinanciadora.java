@@ -67,9 +67,9 @@ public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
   private TipoFinanciacion tipoFinanciacion;
 
   /** PorcentajeFinanciacion */
-  @Column(name = "porcentaje_financiacion", nullable = true)
+  @Column(name = "porcentaje_financiacion", nullable = true, precision = 5, scale = 2)
   @Min(0)
-  private Integer porcentajeFinanciacion;
+  private BigDecimal porcentajeFinanciacion;
 
   /** Importe financiacion */
   @Column(name = "importe_financiacion", nullable = true)

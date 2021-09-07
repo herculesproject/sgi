@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
@@ -2123,7 +2124,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);
-    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(50);
+    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(BigDecimal.valueOf(50));
 
     return convocatoriaEntidadFinanciadora;
   }

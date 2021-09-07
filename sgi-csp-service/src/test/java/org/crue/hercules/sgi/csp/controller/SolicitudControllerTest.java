@@ -1346,7 +1346,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
         .fuenteFinanciacion(fuenteFinanciacion)
         .tipoFinanciacion(tipoFinanciacion)
-        .porcentajeFinanciacion(50)
+        .porcentajeFinanciacion(BigDecimal.valueOf(50))
         .build();
     // @formatter:on
 
