@@ -71,4 +71,8 @@
     </div>
   </ng-container>
 
+  <mat-error *ngIf="showDocumentosErrorMsg">
+    {{'error.required.element' | translate:msgParamDocumentoComunicacionEntity}}
+  </mat-error>
+
 </sgi-fragment>

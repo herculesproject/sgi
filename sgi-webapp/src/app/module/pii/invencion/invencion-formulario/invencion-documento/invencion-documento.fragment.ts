@@ -67,15 +67,16 @@ export class InvencionDocumentoFragment extends Fragment {
 
     const current = this.invencionDocumentos$.value;
     const index = current.findIndex((value) => value === wrapper);
+
     if (index >= 0) {
       if (!wrapper.created) {
         this.deletedInvencionDocumentos.push(current[index]);
       }
       current.splice(index, 1);
       this.invencionDocumentos$.next(current);
+
       this.setChanges(true);
     }
-
     this.checkIfNeededSaveChanges(wrapper, row);
   }
 
@@ -96,6 +97,7 @@ export class InvencionDocumentoFragment extends Fragment {
     if (this.deletedInvencionDocumentos.length === 0) {
       return of(void 0);
     }
+
     return from(this.deletedInvencionDocumentos).pipe(
       mergeMap((wrapped) => {
         return this.invencionDocumentoService.deleteById(wrapped.value.id)

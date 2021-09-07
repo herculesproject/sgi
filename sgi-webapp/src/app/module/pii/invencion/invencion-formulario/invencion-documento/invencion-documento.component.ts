@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
 import { InvencionDocumentoModalComponent } from '../../modals/invencion-documento-modal/invencion-documento-modal.component';
 import { InvencionDocumentoFragment } from './invencion-documento.fragment';
@@ -34,6 +34,7 @@ const MSG_SAVE_ERROR = marker('error.save.entity');
 const MSG_UPDATE_ERROR = marker('error.update.entity');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
+const DOCUMENTO_COMUNICACION_KEY = marker('pii.invencion.documentacion-comunicacion');
 
 @Component({
   selector: 'sgi-invencion-documento',
@@ -67,6 +68,9 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  showDocumentosErrorMsg: boolean;
+  msgParamDocumentoComunicacionEntity = {};
+
   constructor(
     public actionService: InvencionActionService,
     private snackBarService: SnackBarService,
@@ -87,12 +91,7 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
     super.ngOnInit();
     this.setupI18N();
 
-    const subscription = this.formPart.invencionDocumentos$.subscribe(
-      (invencionDocumentos) => {
-        this.dataSource.data = invencionDocumentos;
-      }
-    );
-    this.subscriptions.push(subscription);
+    this.subscriptions.push(this.subscribeToInvencionDocumentosChanges());
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -179,6 +178,14 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
         );
       })
     ).subscribe((value) => this.txtUpdateError = value);
+
+    this.translate.get(
+      DOCUMENTO_COMUNICACION_KEY
+    ).subscribe((value) => {
+      this.msgParamDocumentoComunicacionEntity = {
+        entity: value, ...MSG_PARAMS.GENDER.FEMALE
+      };
+    });
   }
 
   public deleteInvencionDocumento(wrapper: StatusWrapper<IInvencionDocumento>, rowIndex?: number): void {
@@ -237,6 +244,19 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
         this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
       }
     ));
+  }
+
+  private subscribeToInvencionDocumentosChanges(): Subscription {
+    return this.formPart.invencionDocumentos$.subscribe(
+      (invencionDocumentos) => {
+        this.dataSource.data = invencionDocumentos;
+        this.showDocumentosErrorMsg = invencionDocumentos.length === 0;
+        if (this.showDocumentosErrorMsg) {
+          setTimeout(() =>
+            this.formPart.setChanges(false));
+        }
+      }
+    );
   }
 
 }
