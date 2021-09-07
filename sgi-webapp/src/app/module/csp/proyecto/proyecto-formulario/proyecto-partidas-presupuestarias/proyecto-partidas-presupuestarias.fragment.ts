@@ -33,6 +33,7 @@ export interface IPartidaPresupuestariaListado {
   codigo: string;
   descripcion: string;
   tipoPartida: TipoPartida;
+  canEdit: boolean;
 }
 
 export class ProyectoPartidasPresupuestariasFragment extends Fragment {
@@ -121,6 +122,9 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
           })
         ).subscribe((response) => {
           response.forEach(element => this.fillListadoFields(element));
+          response.map(partida => {
+            this.checkCanEditPartida(partida);
+          });
           this.partidasPresupuestarias$.next(response);
         }));
     }
@@ -339,6 +343,13 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
         tooltip: PARTIDA_PRESUPUESTARIA_NO_PROYECTO_KEY
       };
     }
+  }
+
+  private checkCanEditPartida(partida: IPartidaPresupuestariaListado): void {
+    this.subscriptions.push(
+      this.proyectoPartidaService.hasAnyAnualidadAssociated(partida.partidaPresupuestaria?.value.id)
+        .subscribe((hasAnualidades: boolean) => partida.canEdit = !hasAnualidades)
+    );
   }
 
 }

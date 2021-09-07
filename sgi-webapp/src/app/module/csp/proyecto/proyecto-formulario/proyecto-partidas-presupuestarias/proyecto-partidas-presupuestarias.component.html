@@ -57,12 +57,12 @@
               <mat-icon color="primary">visibility</mat-icon>
             </button>
             <button mat-button matTooltip="{{'btn.edit' | translate}}"
-              *ngIf="!element.partidaPresupuestaria?.value.id || formPart.mapModificable.get(element.partidaPresupuestaria.value.id)"
+              *ngIf="!element.partidaPresupuestaria?.value.id || formPart.mapModificable.get(element.partidaPresupuestaria.value.id) && element.canEdit"
               (click)="openModal(element.partidaPresupuestaria, element.convocatoriaPartidaPresupuestaria, i, true)">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
             <button mat-button matTooltip="{{'btn.delete' | translate}}"
-              *ngIf="element.partidaPresupuestaria && (!element.partidaPresupuestaria?.value.id || formPart.mapModificable.get(element.partidaPresupuestaria.value.id))"
+              *ngIf="element.partidaPresupuestaria && (!element.partidaPresupuestaria?.value.id || formPart.mapModificable.get(element.partidaPresupuestaria.value.id)) && element.canEdit"
               (click)="deletePartidaPresupuestaria(element.partidaPresupuestaria)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>

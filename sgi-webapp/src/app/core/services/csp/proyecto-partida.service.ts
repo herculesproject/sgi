@@ -32,4 +32,11 @@ export class ProyectoPartidaService extends SgiRestService<number, IProyectoPart
     );
   }
 
+  public hasAnyAnualidadAssociated(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/anualidades`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }
