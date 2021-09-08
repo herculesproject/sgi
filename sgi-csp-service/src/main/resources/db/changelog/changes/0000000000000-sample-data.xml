@@ -1859,6 +1859,20 @@ industries" />
       <column name="modelo_tipo_fase_id" value="5" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <insert tableName="modelo_tipo_documento">
+      <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
+      <column name="tipo_documento_id" value="13" />
+      <column name="modelo_ejecucion_id" value="1" />
+      <column name="modelo_tipo_fase_id" value="2" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+    <insert tableName="modelo_tipo_documento">
+      <column name="id" valueSequenceNext="modelo_tipo_documento_seq" />
+      <column name="tipo_documento_id" value="2" />
+      <column name="modelo_ejecucion_id" value="1" />
+      <column name="modelo_tipo_fase_id" value="2" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-tipo_finalidad">
@@ -3277,18 +3291,6 @@ industries" />
       <column name="solicitud_id" value="4" />
       <column name="entidad_ref" value="G0021150" />
       <column name="programa_id" value="43" />
-    </insert>
-  </changeSet>
-
-
-  <changeSet context="dev" author="master" id="0000000000000-solicitud_documento">
-    <insert tableName="solicitud_documento">
-      <column name="id" valueSequenceNext="solicitud_documento_seq" />
-      <column name="solicitud_id" value="5" />
-      <column name="comentario" value="null" />
-      <column name="documento_ref" value="ffbc8f21-9b60-4b45-abda-c302262b9026" />
-      <column name="nombre" value="form_cumplimentado" />
-      <column name="tipo_documento_id" value="2" />
     </insert>
   </changeSet>
 
