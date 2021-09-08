@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,6 +32,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
 
   /**

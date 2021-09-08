@@ -1036,4 +1036,17 @@ public class ConvocatoriaController {
     return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
   }
 
+  /**
+   * Clona la convocatoria cuya fuente es la correspondiente al id pasado por el
+   * path
+   * 
+   * @param id id de la {@link Convocatoria}
+   * @return Convocatoria devuelve una {@link Convocatoria}
+   */
+  @PostMapping("/{id}/clone")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-C')")
+  public ResponseEntity<Long> clone(@PathVariable Long id) {
+    return new ResponseEntity<>(service.clone(id).getId(), HttpStatus.CREATED);
+  }
+
 }

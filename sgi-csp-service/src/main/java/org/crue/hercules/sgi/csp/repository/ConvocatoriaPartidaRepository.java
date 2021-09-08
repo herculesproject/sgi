@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.repository.custom.CustomConvocatoriaPartidaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +26,12 @@ public interface ConvocatoriaPartidaRepository extends JpaRepository<Convocatori
    */
   boolean existsByConvocatoriaId(Long convocatoriaId);
 
+  /**
+   * Busca todos los objetos de tipo {@link ConvocatoriaPartida} que tengan
+   * asociada la {@link Convocatoria} cuyo id es pasado por parámetro
+   *
+   * @param convocatoriaId id de la {@link Convocatoria}
+   * @return lista de objetos de tipo {@link ConvocatoriaPartida}
+   */
+  List<ConvocatoriaPartida> findByConvocatoriaId(Long convocatoriaId);
 }

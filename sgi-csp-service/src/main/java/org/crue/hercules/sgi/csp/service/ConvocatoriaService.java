@@ -159,4 +159,13 @@ public interface ConvocatoriaService {
    */
   boolean hasAnyProyectoReferenced(Long convocatoriaId);
 
+  /**
+   * Clona una {@link Convocatoria} cuya fuente es la que corresponde con el id
+   * pasado por parámetro
+   * 
+   * @param convocatoriaId Id de la convocatoria a clonar
+   * @return un objeto de tipo {@link Convocatoria}
+   */
+  Convocatoria clone(Long convocatoriaId);
+
 }

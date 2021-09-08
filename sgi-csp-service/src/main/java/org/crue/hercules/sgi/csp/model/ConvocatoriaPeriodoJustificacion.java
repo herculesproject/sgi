@@ -22,6 +22,7 @@ import org.hibernate.validator.constraints.ScriptAssert;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,6 +35,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ScriptAssert.List({
     // Validacion de meses
     @ScriptAssert(lang = "spel", alias = "_this", script = "#_this.getMesInicial() == null || #_this.getMesFinal() == null || #_this.getMesFinal().compareTo(#_this.getMesInicial()) >= 0", reportOn = "mesFinal", message = "{org.crue.hercules.sgi.csp.validation.MesInicialMayorMesFinal.message}"),

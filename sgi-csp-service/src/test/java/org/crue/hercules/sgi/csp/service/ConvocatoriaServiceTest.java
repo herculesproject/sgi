@@ -72,6 +72,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   private SolicitudRepository solicitudReposiotry;
   @Mock
   private ProyectoRepository proyectoReposiotry;
+  @Mock
+  private ConvocatoriaClonerService convocatoriaClonerService;
 
   private ConvocatoriaService service;
 
@@ -80,7 +82,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     service = new ConvocatoriaServiceImpl(repository, convocatoriaPeriodoJustificacionRepository,
         modeloUnidadRepository, modeloTipoFinalidadRepository, tipoRegimenConcurrenciaRepository,
         tipoAmbitoGeograficoRepository, convocatoriaPeriodoSeguimientoCientificoRepository,
-        configuracionSolicitudRepository, this.solicitudReposiotry, this.proyectoReposiotry);
+        configuracionSolicitudRepository, this.solicitudReposiotry, this.proyectoReposiotry, convocatoriaClonerService);
   }
 
   @Test

@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaClonerService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -63,6 +64,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
   private final SolicitudRepository solicitudRepository;
   private final ProyectoRepository proyectoRepository;
+  private final ConvocatoriaClonerService convocatoriaClonerService;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
@@ -71,7 +73,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository,
       ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository, final SolicitudRepository solicitudRepository,
-      final ProyectoRepository proyectoRepository) {
+      final ProyectoRepository proyectoRepository, final ConvocatoriaClonerService convocatoriaClonerService) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -82,6 +84,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
     this.solicitudRepository = solicitudRepository;
     this.proyectoRepository = proyectoRepository;
+    this.convocatoriaClonerService = convocatoriaClonerService;
   }
 
   /**
@@ -744,4 +747,45 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   public boolean hasAnyProyectoReferenced(Long convocatoriaId) {
     return this.proyectoRepository.existsByConvocatoriaId(convocatoriaId);
   }
+
+  /**
+   * Clona una {@link Convocatoria} cuya fuente es la que corresponde con el id
+   * pasado por parámetro
+   * 
+   * @param convocatoriaId Id de la convocatoria a clonar
+   * @return un objeto de tipo {@link Convocatoria}
+   */
+  @Transactional
+  @Override
+  public Convocatoria clone(Long convocatoriaId) {
+
+    Convocatoria toClone = repository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
+
+    Convocatoria cloned = this.repository.save(this.convocatoriaClonerService.cloneBasicConvocatoriaData(toClone));
+
+    this.convocatoriaClonerService.cloneEntidadesGestoras(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneConvocatoriaAreasTematicas(convocatoriaId, cloned);
+
+    this.convocatoriaClonerService.cloneConvocatoriasEntidadesConvocantes(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneConvocatoriasEntidadesFinanciadoras(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.clonePeriodosJustificacion(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneConvocatoriaPeriodosSeguimientoCientifico(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneRequisitoIP(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneRequisitosEquipo(convocatoriaId, cloned.getId());
+
+    this.convocatoriaClonerService.cloneConvocatoriaConceptosGastosAndConvocatoriaConceptoCodigosEc(convocatoriaId,
+        cloned.getId());
+
+    this.convocatoriaClonerService.clonePartidasPresupuestarias(convocatoriaId, cloned.getId());
+
+    return cloned;
+  }
+
 }
