@@ -506,7 +506,6 @@
             <column name="mes_inicial" type="INT"/>
             <column name="observaciones" type="VARCHAR(250)"/>
             <column name="permitido" type="BOOLEAN"/>
-            <column name="porcentaje_coste_indirecto" type="INT"/>
             <column name="concepto_gasto_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>

@@ -2931,7 +2931,6 @@ industries" />
       <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="3" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2942,7 +2941,6 @@ industries" />
       <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="2" />
       <column name="mes_final" value="5" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2953,7 +2951,6 @@ industries" />
       <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="7" />
       <column name="mes_final" value="10" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2964,7 +2961,6 @@ industries" />
       <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="null" />
       <column name="mes_final" value="null" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2975,7 +2971,6 @@ industries" />
       <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="1" />
       <column name="mes_final" value="12" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2986,7 +2981,6 @@ industries" />
       <column name="permitido" valueBoolean="true" />
       <column name="mes_inicial" value="13" />
       <column name="mes_final" value="24" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -2997,7 +2991,6 @@ industries" />
       <column name="permitido" valueBoolean="false" />
       <column name="mes_inicial" value="null" />
       <column name="mes_final" value="null" />
-      <column name="porcentaje_coste_indirecto" value="null" />
     </insert>
   </changeSet>
 

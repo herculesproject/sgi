@@ -2176,7 +2176,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaConceptoGasto.setMesFinal(4);
     convocatoriaConceptoGasto.setObservaciones("Obs-" + id);
     convocatoriaConceptoGasto.setPermitido(permitido);
-    convocatoriaConceptoGasto.setPorcentajeCosteIndirecto(2);
 
     return convocatoriaConceptoGasto;
   }
