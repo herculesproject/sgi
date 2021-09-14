@@ -73,8 +73,12 @@ export interface IProyecto {
   tipoSeguimiento: TipoSeguimiento;
   /** Importe presupuesto */
   importePresupuesto: number;
+  /** Importe presupuesto Costes Indirectos */
+  importePresupuestoCostesIndirectos: number;
   /** Importe concedido */
   importeConcedido: number;
+  /** Importe concedido Costes Indirectos */
+  importeConcedidoCostesIndirectos: number;
   /** Importe presupuesto socios */
   importePresupuestoSocios: number;
   /** Importe concedido socios */

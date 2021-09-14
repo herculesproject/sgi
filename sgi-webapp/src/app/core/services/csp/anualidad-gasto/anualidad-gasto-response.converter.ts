@@ -16,7 +16,8 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
       proyectoAnualidad: { id: value.proyectoAnualidadId } as IProyectoAnualidad,
       conceptoGasto: {
         id: value.conceptoGasto?.id,
-        nombre: value.conceptoGasto?.nombre
+        nombre: value.conceptoGasto?.nombre,
+        costesIndirectos: value.conceptoGasto?.costesIndirectos
       } as IConceptoGasto,
       codigoEconomico: value.codigoEconomicoRef ? { id: value.codigoEconomicoRef } as ICodigoEconomicoGasto : null,
       importePresupuesto: value.importePresupuesto,
@@ -37,7 +38,8 @@ class AnualidadGastoResponseConverter extends SgiBaseConverter<IAnualidadGastoRe
       proyectoAnualidadId: value.proyectoAnualidad?.id,
       conceptoGasto: {
         id: value.conceptoGasto?.id,
-        nombre: value.conceptoGasto?.nombre
+        nombre: value.conceptoGasto?.nombre,
+        costesIndirectos: value.conceptoGasto?.costesIndirectos
       } as IConceptoGasto,
       codigoEconomicoRef: value.codigoEconomico?.id,
       importePresupuesto: value.importePresupuesto,

@@ -4,6 +4,7 @@ export interface IAnualidadGastoResponse {
   conceptoGasto: {
     id: number;
     nombre: string;
+    costesIndirectos: boolean;
   };
   codigoEconomicoRef: string;
   proyectoPartida: {

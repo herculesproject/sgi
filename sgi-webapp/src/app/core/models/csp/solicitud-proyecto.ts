@@ -19,6 +19,8 @@ export interface ISolicitudProyecto {
   tipoPresupuesto: TipoPresupuesto;
   importeSolicitado: number;
   importePresupuestado: number;
+  importePresupuestadoCostesIndirectos: number;
+  importeSolicitadoCostesIndirectos: number;
   importeSolicitadoSocios: number;
   importePresupuestadoSocios: number;
   totalImporteSolicitado: number;

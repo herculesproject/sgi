@@ -38,7 +38,7 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
       map((proyecto) => {
 
         if (proyecto.solicitudId) {
-          this.checkSolicitudProyectoPresupuesto(proyecto.solicitudId);
+          this.checkProyectoPresupuesto(proyecto.solicitudId);
         }
         return proyecto;
       }),
@@ -50,17 +50,41 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     );
   }
 
-  buildPatch(proyecto: IProyecto): { [key: string]: any } {
-    this.proyecto = proyecto;
+  buildPatch(value: IProyecto): { [key: string]: any } {
+    this.proyecto = value;
     const result = {
-      anualidades: proyecto.anualidades,
-      importePresupuesto: proyecto.importePresupuesto,
-      importeConcedido: proyecto.importeConcedido,
-      importePresupuestoSocios: proyecto.importePresupuestoSocios,
-      importeConcedidoSocios: proyecto.importeConcedidoSocios,
-      totalImportePresupuesto: proyecto.totalImportePresupuesto,
-      totalImporteConcedido: proyecto.totalImporteConcedido
+      anualidades: value.anualidades,
+      importePresupuesto: value.importePresupuesto,
+      importePresupuestoCostesIndirectos: value.importePresupuestoCostesIndirectos,
+      importePresupuestoSocios: value.importePresupuestoSocios,
+      importeConcedidoCostesIndirectos: value.importeConcedidoCostesIndirectos,
+      importeConcedido: value.importeConcedido,
+      importeConcedidoSocios: value.importeConcedidoSocios,
+      totalImportePresupuesto: value.totalImportePresupuesto,
+      totalImporteConcedido: value.totalImporteConcedido
     };
+
+    const form = this.getFormGroup();
+    form.controls.importePresupuestoUniversidad
+      .setValue(value.importePresupuesto);
+    form.controls.importePresupuestoUniversidadCostesIndirectos
+      .setValue(value.importePresupuestoCostesIndirectos);
+    form.controls.totalImportePresupuestoUniversidad
+      .setValue((value.importePresupuesto + value.importePresupuestoCostesIndirectos) !== 0 ?
+        (value.importePresupuesto + value.importePresupuestoCostesIndirectos) : null);
+
+    form.controls.importeConcedidoUniversidad
+      .setValue(value.importeConcedido);
+    form.controls.importeConcedidoUniversidadCostesIndirectos
+      .setValue(value.importeConcedidoCostesIndirectos);
+    form.controls.totalImporteConcedidoUniversidad
+      .setValue((value.importeConcedido + value.importeConcedidoCostesIndirectos) !== 0 ?
+        (value.importeConcedido + value.importeConcedidoCostesIndirectos) : null);
+
+    form.controls.totalImportePresupuesto
+      .setValue(value.totalImportePresupuesto);
+    form.controls.totalImporteConcedido
+      .setValue(value.totalImporteConcedido);
 
     return result;
   }
@@ -71,9 +95,11 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     }
     const form = this.getFormGroup().getRawValue();
     this.proyecto.anualidades = form.anualidades;
-    this.proyecto.importePresupuesto = form.importePresupuesto;
+    this.proyecto.importePresupuesto = form.importePresupuestoUniversidad;
+    this.proyecto.importePresupuestoCostesIndirectos = form.importePresupuestoUniversidadCostesIndirectos;
+    this.proyecto.importeConcedidoCostesIndirectos = form.importeConcedidoUniversidadCostesIndirectos;
     this.proyecto.importePresupuestoSocios = form.importePresupuestoSocios;
-    this.proyecto.importeConcedido = form.importeConcedido;
+    this.proyecto.importeConcedido = form.importeConcedidoUniversidad;
     this.proyecto.importeConcedidoSocios = form.importeConcedidoSocios;
     this.proyecto.totalImportePresupuesto = form.totalImportePresupuesto;
     this.proyecto.totalImporteConcedido = form.totalImporteConcedido;
@@ -82,27 +108,43 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       anualidades: new FormControl(null, Validators.required),
-      importePresupuesto: new FormControl('', [
+      importePresupuestoUniversidad: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importeConcedido: new FormControl('', [
+      importePresupuestoUniversidadCostesIndirectos: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importePresupuestoSocios: new FormControl('', [
+      totalImportePresupuestoUniversidad: new FormControl({ value: null, disabled: true }, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      importeConcedidoSocios: new FormControl('', [
+      importeConcedidoUniversidad: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      totalImportePresupuesto: new FormControl('', [
+      importeConcedidoUniversidadCostesIndirectos: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ]),
-      totalImporteConcedido: new FormControl('', [
+      totalImporteConcedidoUniversidad: new FormControl({ value: null, disabled: true }, [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      importePresupuestoSocios: new FormControl(null, [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      importeConcedidoSocios: new FormControl(null, [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      totalImportePresupuesto: new FormControl(null, [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      totalImporteConcedido: new FormControl(null, [
         Validators.min(0),
         Validators.max(2_147_483_647)
       ])
@@ -110,6 +152,33 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     if (this.readonly || this.isVisor) {
       form.disable();
     }
+
+    this.subscriptions.push(
+      form.controls.importePresupuestoUniversidad.valueChanges.subscribe(
+        (value) => {
+          form.controls.importePresupuestoUniversidad
+            .patchValue((value + form.controls.importePresupuestoUniversidadCostesIndirectos.value) !== 0 ?
+              (value + form.controls.importePresupuestoUniversidadCostesIndirectos.value) : null, { emitEvent: false });
+        }),
+      form.controls.importePresupuestoUniversidadCostesIndirectos.valueChanges.subscribe(
+        (value) => {
+          form.controls.totalImportePresupuestoUniversidad
+            .patchValue((form.controls.importePresupuestoUniversidad.value + value) !== 0 ?
+              (form.controls.importePresupuestoUniversidad.value + value) : null, { emitEvent: false });
+        }),
+      form.controls.importeConcedidoUniversidad.valueChanges.subscribe(
+        (value) => {
+          form.controls.totalImporteConcedidoUniversidad
+            .patchValue((value + form.controls.importeConcedidoUniversidadCostesIndirectos.value) !== 0 ?
+              (value + form.controls.importeConcedidoUniversidadCostesIndirectos.value) : null, { emitEvent: false });
+        }),
+      form.controls.importeConcedidoUniversidadCostesIndirectos.valueChanges.subscribe(
+        (value) => {
+          form.controls.totalImporteConcedidoUniversidad
+            .patchValue((form.controls.importeConcedidoUniversidad.value + value) !== 0 ?
+              (form.controls.importeConcedidoUniversidad.value + value) : null, { emitEvent: false });
+        })
+    );
     return form;
   }
 
@@ -190,7 +259,7 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
 
   }
 
-  private checkSolicitudProyectoPresupuesto(solicitudId: number) {
+  private checkProyectoPresupuesto(solicitudId: number) {
     this.subscriptions.push(this.solicitudService.existsSolictudProyectoPresupuesto(solicitudId).pipe().subscribe(value => {
       this.showPresupuestoSolicitud$.next(value);
     }));

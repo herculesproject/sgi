@@ -19,6 +19,7 @@ import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorr
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
+import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto-backend';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
@@ -76,6 +77,8 @@ import {
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IAnualidadGastoResponse } from './anualidad-gasto/anualidad-gasto-response';
+import { ANUALIDAD_GASTO_RESPONSE_CONVERTER } from './anualidad-gasto/anualidad-gasto-response.converter';
 import { IProyectoAgrupacionGastoResponse } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response';
 import { PROYECTO_AGRUPACION_GASTO_RESPONSE_CONVERTER } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response.converter';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
@@ -578,6 +581,15 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       `${this.endpointUrl}/${proyectoId}/anualidades`,
       options,
       PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER
+    );
+  }
+
+  findAllProyectoAnualidadesGasto(proyectoId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IAnualidadGasto>> {
+    return this.find<IAnualidadGastoResponse, IAnualidadGasto>(
+      `${this.endpointUrl}/${proyectoId}/anualidadesgasto`,
+      options,
+      ANUALIDAD_GASTO_RESPONSE_CONVERTER
     );
   }
 
