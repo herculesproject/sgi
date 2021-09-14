@@ -465,10 +465,22 @@ public class SolicitudController {
   }
 
   /**
-   * Devuelve una lista paginada de
-   * {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   * Devuelve true si el solicitante existe en la SolicitudProyectoEquipo
    * 
-   * @param id     Identificador de {@link Solicitud}.
+   * @param id Identificador de {@link SolicitudProyecto}.
+   */
+  @RequestMapping(path = "/{id}/existssolicitante", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  ResponseEntity<?> existSolicitanteInSolicitudProyectoEquipo(@PathVariable Long id) {
+    log.debug("existSolicitanteInSolicitudProyectoEquipo(Long id) - start");
+    boolean returnValue = this.solicitudProyectoEquipoService.existsSolicitanteInSolicitudProyectoEquipo(id);
+    log.debug("existSolicitanteInSolicitudProyectoEquipo(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada de
+   * 
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
