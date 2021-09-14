@@ -24,7 +24,7 @@ const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.proyecto-concepto-gasto.listado.codigo-economico.delete');
 const PROYECTO_CONCEPTO_GASTO_PERMITIDO_KEY = marker('csp.proyecto-concepto-gasto-permitido');
 const PROYECTO_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.proyecto-concepto-gasto-no-permitido');
-const PORCENTAJE_COSTES_INDIRECTOS_KEY = marker('csp.convocatoria-concepto-gasto.costes-indirectos.porcentaje');
+const PORCENTAJE_COSTES_INDIRECTOS_KEY = marker('csp.convocatoria-elegibilidad-concepto-gasto.costes-indirectos.porcentaje');
 
 @Component({
   selector: 'sgi-proyecto-concepto-gasto',

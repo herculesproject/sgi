@@ -17,6 +17,4 @@ export interface IConvocatoriaConceptoGastoBackend {
   mesInicial: number;
   /** Mes final */
   mesFinal: number;
-  /** Porcentaje coste indirecto */
-  porcentajeCosteIndirecto: number;
 }

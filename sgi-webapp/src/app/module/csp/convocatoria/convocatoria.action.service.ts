@@ -197,7 +197,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.partidasPresupuestarias = new ConvocatoriaPartidaPresupuestariaFragment(
       this.id, convocatoriaService, convocatoriaPartidaPresupuestariaService,
       this.readonly, this.canEdit, this.data?.estado);
-    this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, this.id, convocatoriaService,
+    this.elegibilidad = new ConvocatoriaConceptoGastoFragment(this.id, convocatoriaService,
       convocatoriaConceptoGastoService, this.readonly, this.canEdit);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
