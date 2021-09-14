@@ -59,6 +59,19 @@
         </mat-form-field>
       </div>
 
+      <!-- Identificadores Sge -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field *ngIf="this.formPart.isEdit()">
+          <mat-label>{{'csp.proyecto.codigos-sge' | translate}}</mat-label>
+          <mat-select matNativeControl formControlName="codigosSge" multiple>
+            <mat-option *ngFor="let proyecto of this.proyectosSge" [value]="proyecto">
+              {{proyecto.value.proyectoSge.id}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"

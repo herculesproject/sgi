@@ -4,6 +4,7 @@ import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -23,7 +24,8 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, elementAt, map, switchMap } from 'rxjs/operators';
+import { ProyectoActionService } from '../../proyecto.action.service';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -49,6 +51,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   ambitoGeograficoConvocatoria: ITipoAmbitoGeografico;
   unidadGestionConvocatoria: IUnidadGestion;
   modeloEjecucionConvocatoria: IModeloEjecucion;
+
+  identificadoresProyectoSge: string;
 
   proyectoIva$ = new BehaviorSubject<StatusWrapper<IProyectoIVA>[]>([]);
 
@@ -179,6 +183,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({
+        value: '',
+        disabled: true
+      }),
+      codigosSge: new FormControl({
         value: '',
         disabled: true
       }),

@@ -5,6 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
@@ -148,7 +149,7 @@ export class ProyectoActionService extends ActionService {
   private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
   readonly showAlertNotSocioCoordinadorExist$ = new BehaviorSubject<boolean>(false);
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
-  private readonly hasProyectosSge$ = new BehaviorSubject<boolean>(false);
+  public readonly proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
 
   get proyecto(): IProyecto {
     return this.fichaGeneral.getValue();
@@ -330,9 +331,6 @@ export class ProyectoActionService extends ActionService {
           proyectoService.hasProyectoDocumentos(id).subscribe(value => this.hasDocumentos$.next(value))
         );
         this.subscriptions.push(
-          proyectoService.hasProyectosSGE(id).subscribe(value => this.hasProyectosSge$.next(value))
-        );
-        this.subscriptions.push(
           this.prorrogas.ultimaProrroga$.subscribe(
             (value) => this.fichaGeneral.ultimaProrroga$.next(value)
           )
@@ -355,13 +353,13 @@ export class ProyectoActionService extends ActionService {
           )
         );
 
-        this.subscriptions.push(this.hasProyectosSge$.subscribe(value => this.fichaGeneral.vinculacionesProyectosSge$.next(value)));
+        this.subscriptions.push(this.proyectosSge$.subscribe(value =>
+          this.fichaGeneral.vinculacionesProyectosSge$.next(value.length > 0)));
 
         // Syncronize changes
         this.subscriptions.push(this.plazos.plazos$.subscribe(value => this.hasFases$.next(!!value.length)));
         this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
         this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
-        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => this.hasProyectosSge$.next(!!value.length)));
         this.subscriptions.push(this.fichaGeneral.coordinado$.subscribe(
           (value: boolean) => {
             this.showSocios$.next(value);
@@ -369,12 +367,19 @@ export class ProyectoActionService extends ActionService {
         ));
       }
 
+
       this.subscriptions.push(
         this.socios.proyectoSocios$.subscribe(proyectoSocios => this.onProyectoSocioListChangeHandle(proyectoSocios))
       );
 
       // Inicializamos la ficha general de forma predeterminada
       this.fichaGeneral.initialize();
+      if (this.isEdit()) {
+        this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(() => this.proyectosSge.initialize()));
+        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
+          this.proyectosSge$.next(value);
+        }));
+      }
     }
   }
 

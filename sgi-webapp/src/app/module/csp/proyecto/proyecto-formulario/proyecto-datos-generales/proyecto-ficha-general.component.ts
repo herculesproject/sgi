@@ -9,11 +9,12 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP, IProyecto, TIPO_HORAS_ANUALES_MAP } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
+import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { merge, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
@@ -55,6 +56,8 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
+
+  proyectosSge: StatusWrapper<IProyectoProyectoSge>[];
 
   displayedColumns = ['iva', 'fechaInicio', 'fechaFin'];
   elementosPagina = [5, 10, 25, 100];
@@ -222,6 +225,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
           }
         }
       ));
+    this.subscriptions.push(this.actionService.proyectosSge$.subscribe(elements => {
+      this.proyectosSge = elements;
+      this.formPart.getFormGroup().controls.codigosSge.patchValue(elements, { onlySelf: true, emitEvent: false });
+    }));
   }
 
   private setupI18N(): void {
