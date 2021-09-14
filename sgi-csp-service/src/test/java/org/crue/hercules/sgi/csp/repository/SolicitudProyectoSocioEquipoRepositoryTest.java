@@ -38,7 +38,7 @@ public class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTe
     // @formatter:on
     SolicitudProyecto solicitudProyecto = entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(),
         "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, null, null, null, null, null, null,
-        TipoPresupuesto.GLOBAL, null, null, null, null, null, null));
+        TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()

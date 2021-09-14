@@ -206,9 +206,17 @@ public class Proyecto extends BaseEntity {
   @Column(name = "importe_presupuesto", nullable = true)
   private BigDecimal importePresupuesto;
 
+  /** Importe presupuesto Costes Indirectos */
+  @Column(name = "importe_presupuesto_costes_indirectos", nullable = true)
+  private BigDecimal importePresupuestoCostesIndirectos;
+
   /** Importe concedido */
   @Column(name = "importe_concedido", nullable = true)
   private BigDecimal importeConcedido;
+
+  /** Importe concedido Costes Indirectos */
+  @Column(name = "importe_concedido_costes_indirectos", nullable = true)
+  private BigDecimal importeConcedidoCostesIndirectos;
 
   /** Importe presupuesta socios */
   @Column(name = "importe_presupuesto_socios", nullable = true)

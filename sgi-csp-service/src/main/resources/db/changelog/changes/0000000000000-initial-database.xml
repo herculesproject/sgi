@@ -1135,8 +1135,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="importe_concedido" type="DECIMAL(19, 2)"/>
+            <column name="importe_concedido_costes_indirectos" type="DECIMAL(19, 2)"/>
             <column name="importe_concedido_socios" type="DECIMAL(19, 2)"/>
             <column name="importe_presupuesto" type="DECIMAL(19, 2)"/>
+            <column name="importe_presupuesto_costes_indirectos" type="DECIMAL(19, 2)"/>
             <column name="importe_presupuesto_socios" type="DECIMAL(19, 2)"/>
             <column name="observaciones" type="VARCHAR(2000)"/>
             <column name="paquetes_trabajo" type="BOOLEAN"/>
@@ -2043,8 +2045,10 @@
             <column name="coordinador_externo" type="BOOLEAN"/>
             <column name="duracion" type="INT"/>
             <column name="importe_presupuestado" type="DECIMAL(19, 2)"/>
+            <column name="importe_presupuestado_costes_indirectos" type="DECIMAL(19, 2)"/>
             <column name="importe_presupuestado_socios" type="DECIMAL(19, 2)"/>
             <column name="importe_solicitado" type="DECIMAL(19, 2)"/>
+            <column name="importe_solicitado_costes_indirectos" type="DECIMAL(19, 2)"/>
             <column name="importe_solicitado_socios" type="DECIMAL(19, 2)"/>
             <column name="intereses" type="VARCHAR(2000)"/>
             <column name="objetivos" type="VARCHAR(2000)"/>

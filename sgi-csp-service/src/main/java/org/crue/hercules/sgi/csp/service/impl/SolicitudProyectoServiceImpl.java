@@ -103,6 +103,8 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
     target.setImportePresupuestadoSocios(source.getImportePresupuestadoSocios());
     target.setTotalImporteSolicitado(source.getTotalImporteSolicitado());
     target.setTotalImportePresupuestado(source.getTotalImportePresupuestado());
+    target.setImportePresupuestadoCostesIndirectos(source.getImportePresupuestadoCostesIndirectos());
+    target.setImporteSolicitadoCostesIndirectos(source.getImporteSolicitadoCostesIndirectos());
 
     log.debug("update(SolicitudProyecto solicitudProyecto) - end");
 

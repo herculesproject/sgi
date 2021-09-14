@@ -350,6 +350,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setFechaFin(proyectoActualizar.getFechaFin());
       data.setFechaInicio(proyectoActualizar.getFechaInicio());
       data.setFinalidad(proyectoActualizar.getFinalidad());
+      data.setImportePresupuestoCostesIndirectos(proyectoActualizar.getImportePresupuestoCostesIndirectos());
+      data.setImporteConcedidoCostesIndirectos(proyectoActualizar.getImporteConcedidoCostesIndirectos());
 
       // Crea o actualiza el proyecto iva del proyecto si el porcentaje de IVA es cero
       // o superior

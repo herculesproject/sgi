@@ -132,9 +132,17 @@ public class SolicitudProyecto extends BaseEntity {
   @Column(name = "importe_solicitado", nullable = true)
   private BigDecimal importeSolicitado;
 
+  /** Importe solicitado Costes Indirectos */
+  @Column(name = "importe_solicitado_costes_indirectos", nullable = true)
+  private BigDecimal importeSolicitadoCostesIndirectos;
+
   /** Importe presupuestado */
   @Column(name = "importe_presupuestado", nullable = true)
   private BigDecimal importePresupuestado;
+
+  /** Importe presupuestado Costes Indirectos */
+  @Column(name = "importe_presupuestado_costes_indirectos", nullable = true)
+  private BigDecimal importePresupuestadoCostesIndirectos;
 
   /** Importe Solicitado socios */
   @Column(name = "importe_solicitado_socios", nullable = true)
