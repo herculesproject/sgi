@@ -19,6 +19,7 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
@@ -181,7 +182,8 @@ export class SolicitudActionService extends ActionService {
     private vinculacionService: VinculacionService,
     private convocatoriaRequisitoIpService: ConvocatoriaRequisitoIPService,
     private convocatoriaRquisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    rolProyectoService: RolProyectoService
   ) {
     super();
 
@@ -226,7 +228,7 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId,
       this.hasAnySolicitudProyectoSocioWithRolCoordinador$, this.data?.hasPopulatedPeriodosSocios);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoEquipoService, this.readonly);
+      solicitudProyectoEquipoService, this, rolProyectoService, this.readonly);
     this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaService, this.readonly);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.data?.solicitud?.id, solicitudService,
@@ -269,7 +271,6 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
       }
 
-
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
         this.subscriptions.push(
           solicitudService.hasConvocatoriaSGI(this.data.solicitud.id).subscribe((hasConvocatoriaSgi) => {
@@ -311,6 +312,7 @@ export class SolicitudActionService extends ActionService {
               }
               else if (status.changes && !status.errors) {
                 this.datosProyectoComplete$.next(true);
+                this.equipoProyecto.initialize();
               }
             }
           }

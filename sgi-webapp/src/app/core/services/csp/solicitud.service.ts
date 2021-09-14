@@ -256,6 +256,21 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }
 
   /**
+   * Recupera los ISolicitudProyectoSocio de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoSocio de la solicitud
+   */
+  existSolicitanteInSolicitudProyectoEquipo(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/existssolicitante`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
+
+  /**
    * Devuelve las entidades financiadoras de una solicitud
    *
    * @param solicitudId Id de la solicitud
