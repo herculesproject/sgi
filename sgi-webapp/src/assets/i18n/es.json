@@ -345,6 +345,7 @@
   "csp.partida-gasto.codigo-economico.permitido-hasta": "Permitido hasta mes",
   "csp.partida-gasto.codigos-economicos-no-permitidos": "Códigos económicos no permitidos",
   "csp.partida-gasto.codigos-economicos-permitidos": "Códigos económicos permitidos",
+  "csp.partida-presupuestaria.codigo-tooltip": "El formato de la partida presupuestaria es {mask} ",
   "csp.plan-investigacion": "Plan{count, plural, =0{} one{} other{es}} de Investigación",
   "csp.plan-investigacion-programa": "Programa",
   "csp.plan-investigacion-programa.descripcion": "Descripcion",
