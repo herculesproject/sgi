@@ -194,6 +194,8 @@ public class SolicitudService {
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
 
+    Assert.notNull(solicitud.getTitulo(), "Titulo no puede ser null para actualizar Solicitud");
+
     Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
 
     Assert.isTrue(
@@ -214,6 +216,7 @@ public class SolicitudService {
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
       data.setCodigoExterno(solicitud.getCodigoExterno());
       data.setObservaciones(solicitud.getObservaciones());
+      data.setTitulo(solicitud.getTitulo());
 
       if (null == data.getConvocatoriaId()) {
         data.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
@@ -472,7 +475,7 @@ public class SolicitudService {
               // Se creará un registro en la tabla "PeticionEvaluacion" del módulo de ética
               PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
                   .solicitudConvocatoriaRef(solicitud.getId().toString()).checklistId(checklistOutput.getId())
-                  .personaRef(solicitud.getSolicitanteRef()).titulo(solicitudProyecto.getTitulo())
+                  .personaRef(solicitud.getSolicitanteRef()).titulo(solicitud.getTitulo())
                   // Si hay entidades financiadoras (registros en la tabla "Convocatoria
                   // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
                   // en otro caso valor "No"

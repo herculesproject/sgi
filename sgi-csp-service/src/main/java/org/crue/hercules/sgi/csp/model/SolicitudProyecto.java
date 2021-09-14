@@ -59,12 +59,6 @@ public class SolicitudProyecto extends BaseEntity {
   @Column(name = "id", nullable = false)
   private Long id;
 
-  /** Titulo */
-  @Column(name = "titulo", length = 250, nullable = false)
-  @Size(max = 250)
-  @NotNull
-  private String titulo;
-
   /** Acrónimo */
   @Column(name = "acronimo", length = 50, nullable = true)
   @Size(max = 50)

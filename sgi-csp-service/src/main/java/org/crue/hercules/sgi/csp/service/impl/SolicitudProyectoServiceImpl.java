@@ -83,7 +83,6 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
 
   private SolicitudProyecto updateExistingSolicitudProyecto(SolicitudProyecto source, SolicitudProyecto target) {
 
-    target.setTitulo(source.getTitulo());
     target.setAcronimo(source.getAcronimo());
     target.setCodExterno(source.getCodExterno());
     target.setDuracion(source.getDuracion());
@@ -206,9 +205,6 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
 
     Assert.notNull(solicitudProyecto.getId(),
         "El id no puede ser null para realizar la acción sobre SolicitudProyecto");
-
-    Assert.notNull(solicitudProyecto.getTitulo(),
-        "El título no puede ser null para realizar la acción sobre SolicitudProyecto");
 
     Assert.notNull(solicitudProyecto.getColaborativo(),
         "Colaborativo no puede ser null para realizar la acción sobre SolicitudProyecto");

@@ -1951,6 +1951,9 @@
             <column name="solicitante_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="titulo" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
             <column name="unidad_gestion_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
@@ -2054,9 +2057,6 @@
             <column name="peticion_evaluacion_ref" type="VARCHAR(255)"/>
             <column name="resultados_previstos" type="VARCHAR(2000)"/>
             <column name="tipo_presupuesto" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>
             <column name="total_importe_presupuestado" type="DECIMAL(19, 2)"/>

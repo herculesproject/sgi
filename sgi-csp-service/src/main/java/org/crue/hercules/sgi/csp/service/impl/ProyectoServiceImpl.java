@@ -961,7 +961,6 @@ public class ProyectoServiceImpl implements ProyectoService {
         "copyDatosGenerales(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
     proyecto.setSolicitudId(solicitud.getId());
     proyecto.setConvocatoriaId(solicitud.getConvocatoriaId());
-    proyecto.setTitulo(solicitudProyecto.getTitulo());
     proyecto.setAcronimo(solicitudProyecto.getAcronimo());
     proyecto.setUnidadGestionRef(solicitud.getUnidadGestionRef());
     proyecto.setCodigoExterno(solicitudProyecto.getCodExterno());

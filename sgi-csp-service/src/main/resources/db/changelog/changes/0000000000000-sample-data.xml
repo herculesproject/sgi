@@ -3091,6 +3091,7 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-solicitud">
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 1" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC1202102011617" />
       <column name="estado_solicitud_id" value="null" />
@@ -3105,6 +3106,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 2" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC2202102011656" />
       <column name="estado_solicitud_id" value="null" />
@@ -3119,6 +3121,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 3" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC3202102011729" />
       <column name="estado_solicitud_id" value="null" />
@@ -3133,6 +3136,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 4" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC4202102011741" />
       <column name="estado_solicitud_id" value="null" />
@@ -3147,6 +3151,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 5" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC5202102020943" />
       <column name="estado_solicitud_id" value="null" />
@@ -3161,6 +3166,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 6" />
       <column name="codigo_externo" value="llll" />
       <column name="codigo_registro_interno" value="SGI_SLC6202102031256" />
       <column name="estado_solicitud_id" value="null" />
@@ -3175,6 +3181,7 @@ industries" />
     </insert>
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="titulo" value="Solicitud 7" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC7202102031828" />
       <column name="estado_solicitud_id" value="null" />
@@ -3773,7 +3780,6 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto">
     <insert tableName="solicitud_proyecto">
       <column name="id" value="1" />
-      <column name="titulo" value="Proyecto solicitud 1" />
       <column name="acronimo" value="PS1" />
       <column name="duracion" value="24" />
       <column name="coordinado" valueBoolean="false" />
@@ -3789,7 +3795,6 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="2" />
-      <column name="titulo" value="Proyecto solicitud 2" />
       <column name="acronimo" value="PS2" />
       <column name="duracion" value="24" />
       <column name="coordinado" valueBoolean="true" />
@@ -3805,7 +3810,6 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="3" />
-      <column name="titulo" value="Proyecto Solicitud 1 conv CGF/OPE-01" />
       <column name="acronimo" value="PS1OPE1" />
       <column name="duracion" value="36" />
       <column name="coordinado" valueBoolean="true" />
@@ -3821,7 +3825,6 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="4" />
-      <column name="titulo" value="Proyecto Solicitud 2 conv CGF/OPE-01" />
       <column name="acronimo" value="PS2OPE1" />
       <column name="duracion" value="24" />
       <column name="coordinado" valueBoolean="false" />
@@ -3837,7 +3840,6 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="6" />
-      <column name="titulo" value="Life solicitud de proyecto" />
       <column name="acronimo" value="PRopuesta life" />
       <column name="duracion" value="48" />
       <column name="coordinado" valueBoolean="false" />

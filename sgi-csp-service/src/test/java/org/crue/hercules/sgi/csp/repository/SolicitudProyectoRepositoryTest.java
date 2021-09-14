@@ -33,28 +33,30 @@ public class SolicitudProyectoRepositoryTest {
     // @formatter:off
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
+        .titulo("titulo")
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    SolicitudProyecto solicitudProyecto1 = entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(),
-        "solicitud1", null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, null,
-        TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
+    SolicitudProyecto solicitudProyecto1 = entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud1.getId(), null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
 
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
+        .titulo("titulo")
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, null, TipoPresupuesto.GLOBAL, null,
-        null, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud2.getId(), null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
 
     Long convocatoriaIdBuscada = solicitud1.getId();
 
@@ -63,8 +65,6 @@ public class SolicitudProyectoRepositoryTest {
 
     // then: Se recupera el SolicitudProyecto con el idSolicitud buscado
     Assertions.assertThat(solicitudProyectoEncontrado.getId()).as("getId").isNotNull();
-    Assertions.assertThat(solicitudProyectoEncontrado.getTitulo()).as("getTitulo")
-        .isEqualTo(solicitudProyecto1.getTitulo());
 
   }
 
@@ -77,27 +77,29 @@ public class SolicitudProyectoRepositoryTest {
     // @formatter:off
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
+        .titulo("titulo")
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, null, TipoPresupuesto.GLOBAL, null,
-        null, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud1.getId(), null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
+        .titulo("titulo")
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, null, TipoPresupuesto.GLOBAL, null,
-        null, null, null, null, null, null, null));
+    entityManager.persistAndFlush(
+        new SolicitudProyecto(solicitud2.getId(), null, null, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, null,
+            null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
 
     Long solicitudIdBuscada = 99999L;
 

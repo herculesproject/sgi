@@ -306,6 +306,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // then: El Solicitud se actualiza correctamente.
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(solicitud.getId());
+    Assertions.assertThat(solicitudActualizada.getTitulo()).as("getTitulo()").isEqualTo(solicitud.getTitulo());
     Assertions.assertThat(solicitudActualizada.getCodigoExterno()).as("getCodigoExterno()")
         .isEqualTo(solicitud.getCodigoExterno());
     Assertions.assertThat(solicitudActualizada.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
@@ -566,6 +567,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
+    solicitud.setTitulo("titulo");
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");
