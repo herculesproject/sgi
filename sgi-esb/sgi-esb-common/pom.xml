@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.crue.hercules.sgi.esb</groupId>
-  <artifactId>sgi-esb</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>sgi-esb-common</artifactId>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
-  <name>sgi-esb</name>
-  <description>sgi-esb</description>
+  <name>sgi-esb-common</name>
+  <description>sgi-esb-common</description>
   <modules>
     <module>sgi-auth-mediator</module>
     <module>esb-configs</module>
