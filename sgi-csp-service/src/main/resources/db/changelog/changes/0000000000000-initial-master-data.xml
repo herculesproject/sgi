@@ -64,6 +64,7 @@
     <insert tableName="configuracion">
       <column name="id" valueSequenceNext="configuracion_seq" />
       <column name="formato_partida_presupuestaria" value="^[A-Z0-9]{2}&#92;.[A-Z0-9]{4}&#92;.[A-Z0-9]{4}(&#92;.[A-Z0-9]{5,})$" />
+      <column name="plantilla_formato_partida_presupuestaria" value="xx.xxxx.xxxx.xxxxx" />
     </insert>
   </changeSet>
 

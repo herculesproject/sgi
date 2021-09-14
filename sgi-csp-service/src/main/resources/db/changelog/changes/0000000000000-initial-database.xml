@@ -393,6 +393,9 @@
             <column name="formato_partida_presupuestaria" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="plantilla_formato_partida_presupuestaria" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-101">
@@ -2432,510 +2435,513 @@
         <addUniqueConstraint columnNames="formato_partida_presupuestaria" constraintName="UC_CONFIGURACIONFORMATO_PARTIDA_PRESUPUESTARIA_COL" tableName="configuracion"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-195">
-        <addUniqueConstraint columnNames="convocatoria_id" constraintName="UK_CONFIGURACIONSOLICITUD_CONVOCATORIA" tableName="configuracion_solicitud"/>
+        <addUniqueConstraint columnNames="plantilla_formato_partida_presupuestaria" constraintName="UC_CONFIGURACIONPLANTILLA_FORMATO_PARTIDA_PRESUPUESTARIA_COL" tableName="configuracion"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-196">
-        <addUniqueConstraint columnNames="proyecto_id" constraintName="UK_CONTEXTOPROYECTO_PROYECTO" tableName="contexto_proyecto"/>
+        <addUniqueConstraint columnNames="convocatoria_id" constraintName="UK_CONFIGURACIONSOLICITUD_CONVOCATORIA" tableName="configuracion_solicitud"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-197">
-        <addUniqueConstraint columnNames="convocatoria_id, area_tematica_id" constraintName="UK_CONVOCATORIAAREATEMATICA_CONVOCATORIA_AREATEMATICA" tableName="convocatoria_area_tematica"/>
+        <addUniqueConstraint columnNames="proyecto_id" constraintName="UK_CONTEXTOPROYECTO_PROYECTO" tableName="contexto_proyecto"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-198">
-        <addUniqueConstraint columnNames="convocatoria_id, entidad_ref" constraintName="UK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA_ENTIDAD" tableName="convocatoria_entidad_gestora"/>
+        <addUniqueConstraint columnNames="convocatoria_id, area_tematica_id" constraintName="UK_CONVOCATORIAAREATEMATICA_CONVOCATORIA_AREATEMATICA" tableName="convocatoria_area_tematica"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-199">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_documento_id, modelo_tipo_fase_id" constraintName="UK_MODELOTIPODOCUMENTO_MODELO_TIPODOCUMENTO_MODELOTIPOFASE" tableName="modelo_tipo_documento"/>
+        <addUniqueConstraint columnNames="convocatoria_id, entidad_ref" constraintName="UK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA_ENTIDAD" tableName="convocatoria_entidad_gestora"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-200">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_enlace_id" constraintName="UK_MODELOTIPOENLACE_MODELO_TIPOENLACE" tableName="modelo_tipo_enlace"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_documento_id, modelo_tipo_fase_id" constraintName="UK_MODELOTIPODOCUMENTO_MODELO_TIPODOCUMENTO_MODELOTIPOFASE" tableName="modelo_tipo_documento"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-201">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_fase_id" constraintName="UK_MODELOTIPOFASE_MODELO_TIPOFASE" tableName="modelo_tipo_fase"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_enlace_id" constraintName="UK_MODELOTIPOENLACE_MODELO_TIPOENLACE" tableName="modelo_tipo_enlace"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-202">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_finalidad_id" constraintName="UK_MODELOTIPOFINALIDAD_MODELO_TIPOFINALIDAD" tableName="modelo_tipo_finalidad"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_fase_id" constraintName="UK_MODELOTIPOFASE_MODELO_TIPOFASE" tableName="modelo_tipo_fase"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-203">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_hito_id" constraintName="UK_MODELOTIPOHITO_MODELO_TIPOHITO" tableName="modelo_tipo_hito"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_finalidad_id" constraintName="UK_MODELOTIPOFINALIDAD_MODELO_TIPOFINALIDAD" tableName="modelo_tipo_finalidad"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-204">
-        <addUniqueConstraint columnNames="modelo_ejecucion_id, unidad_gestion_ref" constraintName="UK_MODELOUNIDAD_MODELO_UNIDAD" tableName="modelo_unidad"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_hito_id" constraintName="UK_MODELOTIPOHITO_MODELO_TIPOHITO" tableName="modelo_tipo_hito"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-205">
-        <addUniqueConstraint columnNames="nombre, proyecto_id" constraintName="UK_PROYECTOAGRUPACIONGASTO_NOMBRE" tableName="proyecto_agrupacion_gasto"/>
+        <addUniqueConstraint columnNames="modelo_ejecucion_id, unidad_gestion_ref" constraintName="UK_MODELOUNIDAD_MODELO_UNIDAD" tableName="modelo_unidad"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-206">
-        <addUniqueConstraint columnNames="proyecto_id, anio" constraintName="UK_PROYECTOANUALIDAD_PROYECTO_ANIO" tableName="proyecto_anualidad"/>
+        <addUniqueConstraint columnNames="nombre, proyecto_id" constraintName="UK_PROYECTOAGRUPACIONGASTO_NOMBRE" tableName="proyecto_agrupacion_gasto"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-207">
-        <addUniqueConstraint columnNames="proyecto_id, area_conocimiento_ref" constraintName="UK_PROYECTOAREACONOCIMIENTO_PROYECTO_AREA" tableName="proyecto_area"/>
+        <addUniqueConstraint columnNames="proyecto_id, anio" constraintName="UK_PROYECTOANUALIDAD_PROYECTO_ANIO" tableName="proyecto_anualidad"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-208">
-        <addUniqueConstraint columnNames="proyecto_id, clasificacion_ref" constraintName="UK_PROYECTOCLASIFICACION_PROYECTO_CLASIFICACION" tableName="proyecto_clasificacion"/>
+        <addUniqueConstraint columnNames="proyecto_id, area_conocimiento_ref" constraintName="UK_PROYECTOAREACONOCIMIENTO_PROYECTO_AREA" tableName="proyecto_area"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-209">
-        <addUniqueConstraint columnNames="proyecto_id, entidad_ref" constraintName="UK_PROYECTOENTIDADCONVOCANTE_PROYECTO_ENTIDAD" tableName="proyecto_entidad_convocante"/>
+        <addUniqueConstraint columnNames="proyecto_id, clasificacion_ref" constraintName="UK_PROYECTOCLASIFICACION_PROYECTO_CLASIFICACION" tableName="proyecto_clasificacion"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-210">
-        <addUniqueConstraint columnNames="proyecto_id, entidad_ref, ajena" constraintName="UK_PROYECTOENTIDADFINANCIADORA_PROYECTO_ENTIDAD_AJENA" tableName="proyecto_entidad_financiadora"/>
+        <addUniqueConstraint columnNames="proyecto_id, entidad_ref" constraintName="UK_PROYECTOENTIDADCONVOCANTE_PROYECTO_ENTIDAD" tableName="proyecto_entidad_convocante"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-211">
-        <addUniqueConstraint columnNames="proyecto_id, entidad_ref" constraintName="UK_PROYECTOENTIDADGESTORA_PROYECTO_ENTIDAD" tableName="proyecto_entidad_gestora"/>
+        <addUniqueConstraint columnNames="proyecto_id, entidad_ref, ajena" constraintName="UK_PROYECTOENTIDADFINANCIADORA_PROYECTO_ENTIDAD_AJENA" tableName="proyecto_entidad_financiadora"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-212">
-        <addUniqueConstraint columnNames="proyecto_id, nombre" constraintName="UK_PROYECTOPAQUETETRABAJO_PROYECTO_NOMBRE" tableName="proyecto_paquete_trabajo"/>
+        <addUniqueConstraint columnNames="proyecto_id, entidad_ref" constraintName="UK_PROYECTOENTIDADGESTORA_PROYECTO_ENTIDAD" tableName="proyecto_entidad_gestora"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-213">
-        <addUniqueConstraint columnNames="proyecto_id, codigo, tipo_partida" constraintName="UK_PROYECTOPARTIDA_PROYECTO_CODIGO_TIPO" tableName="proyecto_partida"/>
+        <addUniqueConstraint columnNames="proyecto_id, nombre" constraintName="UK_PROYECTOPAQUETETRABAJO_PROYECTO_NOMBRE" tableName="proyecto_paquete_trabajo"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-214">
-        <addUniqueConstraint columnNames="proyecto_id, proyecto_sge_ref" constraintName="UK_PROYECTOPROYECTOSGE_PROYECTO_PROYECTOSGE" tableName="proyecto_proyecto_sge"/>
+        <addUniqueConstraint columnNames="proyecto_id, codigo, tipo_partida" constraintName="UK_PROYECTOPARTIDA_PROYECTO_CODIGO_TIPO" tableName="proyecto_partida"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-215">
-        <addUniqueConstraint columnNames="solicitud_proyecto_id, area_conocimiento_ref" constraintName="UK_SOLICITUDPROYECTOAREACONOCIMIENTO_SOLICITUDPROYECTO_AREA" tableName="solicitud_proyecto_area"/>
+        <addUniqueConstraint columnNames="proyecto_id, proyecto_sge_ref" constraintName="UK_PROYECTOPROYECTOSGE_PROYECTO_PROYECTOSGE" tableName="proyecto_proyecto_sge"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-216">
-        <addUniqueConstraint columnNames="solicitud_proyecto_id, clasificacion_ref" constraintName="UK_SOLICITUDPROYECTOCLASIFICACION_SOLICITUDPROYECTO_CLASIFICACION" tableName="solicitud_proyecto_clasificacion"/>
+        <addUniqueConstraint columnNames="solicitud_proyecto_id, area_conocimiento_ref" constraintName="UK_SOLICITUDPROYECTOAREACONOCIMIENTO_SOLICITUDPROYECTO_AREA" tableName="solicitud_proyecto_area"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-217">
-        <addUniqueConstraint columnNames="solicitud_proyecto_id, entidad_ref" constraintName="UK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO_ENTIDAD" tableName="solicitud_proyecto_entidad_financiadora_ajena"/>
+        <addUniqueConstraint columnNames="solicitud_proyecto_id, clasificacion_ref" constraintName="UK_SOLICITUDPROYECTOCLASIFICACION_SOLICITUDPROYECTO_CLASIFICACION" tableName="solicitud_proyecto_clasificacion"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-218">
-        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOAMBITOGEOGRAFICO_NOMBRE" tableName="tipo_ambito_geografico"/>
+        <addUniqueConstraint columnNames="solicitud_proyecto_id, entidad_ref" constraintName="UK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO_ENTIDAD" tableName="solicitud_proyecto_entidad_financiadora_ajena"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-219">
-        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOORIGENFUENTEFINANCIACION_NOMBRE" tableName="tipo_origen_fuente_financiacion"/>
+        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOAMBITOGEOGRAFICO_NOMBRE" tableName="tipo_ambito_geografico"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-220">
-        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOREGIMENCONCURRENCIA_NOMBRE" tableName="tipo_regimen_concurrencia"/>
+        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOORIGENFUENTEFINANCIACION_NOMBRE" tableName="tipo_origen_fuente_financiacion"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-221">
-        <addForeignKeyConstraint baseColumnNames="estado" baseTableName="proyecto_periodo_justificacion" constraintName="FK22ygrpjpal114e6bs03879xd3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_proyecto_periodo_justificacion" validate="true"/>
+        <addUniqueConstraint columnNames="nombre" constraintName="UK_TIPOREGIMENCONCURRENCIA_NOMBRE" tableName="tipo_regimen_concurrencia"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-222">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="agrupacion_gasto_concepto" constraintName="FK_AGRUPACIONCONGASTOCONCEPTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="estado" baseTableName="proyecto_periodo_justificacion" constraintName="FK22ygrpjpal114e6bs03879xd3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_proyecto_periodo_justificacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-223">
-        <addForeignKeyConstraint baseColumnNames="agrupacion_gasto_id" baseTableName="agrupacion_gasto_concepto" constraintName="FK_AGRUPACIONGASTOCONCEPTO_AGRUPACIONGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_agrupacion_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="agrupacion_gasto_concepto" constraintName="FK_AGRUPACIONCONGASTOCONCEPTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-224">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_CONCEPTGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="agrupacion_gasto_id" baseTableName="agrupacion_gasto_concepto" constraintName="FK_AGRUPACIONGASTOCONCEPTO_AGRUPACIONGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_agrupacion_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-225">
-        <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_CONCEPTGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-226">
-        <addForeignKeyConstraint baseColumnNames="proyecto_partida_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_PROYECTOPARTIDA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_partida" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-227">
-        <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="anualidad_ingreso" constraintName="FK_ANUALIDADINGRESO_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_partida_id" baseTableName="anualidad_gasto" constraintName="FK_ANUALIDADGASTO_PROYECTOPARTIDA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_partida" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-228">
-        <addForeignKeyConstraint baseColumnNames="proyecto_partida_id" baseTableName="anualidad_ingreso" constraintName="FK_ANUALIDADINGRESO_PROYECTOPARTIDA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_partida" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="anualidad_ingreso" constraintName="FK_ANUALIDADINGRESO_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-229">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_area" constraintName="FK_AREASCONOCIMIENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_partida_id" baseTableName="anualidad_ingreso" constraintName="FK_ANUALIDADINGRESO_PROYECTOPARTIDA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_partida" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-230">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_area" constraintName="FK_AREASCONOCIMIENTO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_area" constraintName="FK_AREASCONOCIMIENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-231">
-        <addForeignKeyConstraint baseColumnNames="area_tematica_padre_id" baseTableName="area_tematica" constraintName="FK_AREATEMATICA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_area" constraintName="FK_AREASCONOCIMIENTO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-232">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="configuracion_solicitud" constraintName="FK_CONFIGURACIONSOLICITUD_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="area_tematica_padre_id" baseTableName="area_tematica" constraintName="FK_AREATEMATICA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-233">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_fase_id" baseTableName="configuracion_solicitud" constraintName="FK_CONFIGURACIONSOLICITUD_CONVOCATORIAFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="configuracion_solicitud" constraintName="FK_CONFIGURACIONSOLICITUD_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-234">
-        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_fase_id" baseTableName="configuracion_solicitud" constraintName="FK_CONFIGURACIONSOLICITUD_CONVOCATORIAFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-235">
-        <addForeignKeyConstraint baseColumnNames="area_tematica_convocatoria_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_AREATEMATICACONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-236">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="area_tematica_convocatoria_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_AREATEMATICACONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-237">
-        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="contexto_proyecto" constraintName="FK_CONTEXTOPROYECTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-238">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-239">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_concepto_gasto_id" baseTableName="convocatoria_concepto_gasto_codigo_ec" constraintName="FK_CONVOCATORIACONCEPTOGASTOCODIGOEC_CONVOCATORIACONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-240">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_concepto_gasto_id" baseTableName="convocatoria_concepto_gasto_codigo_ec" constraintName="FK_CONVOCATORIACONCEPTOGASTOCODIGOEC_CONVOCATORIACONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-241">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-242">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-243">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-244">
-        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-245">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_documento" constraintName="FK_CONVOCATORIADOCUMENTO_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-246">
-        <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_TIPOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-247">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_TIPOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-248">
-        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-249">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-250">
-        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-251">
-        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-252">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="FK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-253">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="FK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-254">
-        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-255">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-256">
-        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-257">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_partida" constraintName="FK_CONVOCATORIAPARTIDA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-258">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_justificacion" constraintName="FK_CONVOCATORIAPERIODOJUSTIFICACION_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_partida" constraintName="FK_CONVOCATORIAPARTIDA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-259">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_seguimiento_cientifico" constraintName="FK_CONVOCATORIAPERIODOSEGUIMIENTOCIENTIFICO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_justificacion" constraintName="FK_CONVOCATORIAPERIODOJUSTIFICACION_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-260">
-        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_seguimiento_cientifico" constraintName="FK_CONVOCATORIAPERIODOSEGUIMIENTOCIENTIFICO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-261">
-        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-262">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-263">
-        <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_REGIMENCONCURRENCIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-264">
-        <addForeignKeyConstraint baseColumnNames="configuracion_solicitud_id" baseTableName="documento_requerido_solicitud" constraintName="FK_DOCUMENTOREQUERIDOSOLICITUD_CONFIGURACIONSOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_REGIMENCONCURRENCIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-265">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="documento_requerido_solicitud" constraintName="FK_DOCUMENTOREQUERIDOSOLICITUD_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="configuracion_solicitud_id" baseTableName="documento_requerido_solicitud" constraintName="FK_DOCUMENTOREQUERIDOSOLICITUD_CONFIGURACIONSOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-266">
-        <addForeignKeyConstraint baseColumnNames="gasto_proyecto_id" baseTableName="estado_gasto_proyecto" constraintName="FK_ESTADOGASTOPROYECTO_GASTOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="gasto_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="documento_requerido_solicitud" constraintName="FK_DOCUMENTOREQUERIDOSOLICITUD_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-267">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="estado_proyecto" constraintName="FK_ESTADOPROYECTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="gasto_proyecto_id" baseTableName="estado_gasto_proyecto" constraintName="FK_ESTADOGASTOPROYECTO_GASTOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="gasto_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-268">
-        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="estado_solicitud" constraintName="FK_ESTADOSOLICITUD_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="estado_proyecto" constraintName="FK_ESTADOPROYECTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-269">
-        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOAMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="estado_solicitud" constraintName="FK_ESTADOSOLICITUD_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-270">
-        <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOORIGENFUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOAMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-271">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="gasto_proyecto" constraintName="FK_GASTOPROYECTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOORIGENFUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-272">
-        <addForeignKeyConstraint baseColumnNames="estado_gasto_proyecto_id" baseTableName="gasto_proyecto" constraintName="FK_GASTOPROYECTO_ESTADOGASTOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_gasto_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="gasto_proyecto" constraintName="FK_GASTOPROYECTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-273">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="estado_gasto_proyecto_id" baseTableName="gasto_proyecto" constraintName="FK_GASTOPROYECTO_ESTADOGASTOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_gasto_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-274">
-        <addForeignKeyConstraint baseColumnNames="modelo_tipo_fase_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOTIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-275">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_tipo_fase_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOTIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-276">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-277">
-        <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_TIPODOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-278">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_TIPODOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-279">
-        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-280">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-281">
-        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_TIPOFINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-282">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_TIPOFINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-283">
-        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-284">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="FK_MODELOUNIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-285">
-        <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="FK_PROGRAMA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="FK_MODELOUNIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-286">
-        <addForeignKeyConstraint baseColumnNames="proyecto_prorroga_id" baseTableName="prorroga_documento" constraintName="FK_PRORROGADOCUMENTO_PROYECTOPRORROGA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_prorroga" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="FK_PROGRAMA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-287">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="prorroga_documento" constraintName="FK_PRORROGADOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_prorroga_id" baseTableName="prorroga_documento" constraintName="FK_PRORROGADOCUMENTO_PROYECTOPRORROGA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_prorroga" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-288">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_agrupacion_gasto" constraintName="FK_PROYECTOAGRUPACIONGASTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="prorroga_documento" constraintName="FK_PRORROGADOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-289">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_anualidad" constraintName="FK_PROYECTOANUALIDAD_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_agrupacion_gasto" constraintName="FK_PROYECTOAGRUPACIONGASTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-290">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_clasificacion" constraintName="FK_PROYECTOCLASIFICACION_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_anualidad" constraintName="FK_PROYECTOANUALIDAD_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-291">
-        <addForeignKeyConstraint baseColumnNames="proyecto_concepto_gasto_id" baseTableName="proyecto_concepto_gasto_codigo_ec" constraintName="FK_PROYECTOCONCEPTOGASTOCODIGOEC_PROYECTOCONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_clasificacion" constraintName="FK_PROYECTOCLASIFICACION_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-292">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="proyecto_concepto_gasto" constraintName="FK_PROYECTOCONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_concepto_gasto_id" baseTableName="proyecto_concepto_gasto_codigo_ec" constraintName="FK_PROYECTOCONCEPTOGASTOCODIGOEC_PROYECTOCONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-293">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_concepto_gasto" constraintName="FK_PROYECTOCONCEPTOGASTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="proyecto_concepto_gasto" constraintName="FK_PROYECTOCONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-294">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_concepto_gasto" constraintName="FK_PROYECTOCONCEPTOGASTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-295">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-296">
-        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-297">
-        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="proyecto_documento" constraintName="FK_PROYECTODOCUMENTO_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-298">
-        <addForeignKeyConstraint baseColumnNames="programa_convocatoria_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROGRAMACONV" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-299">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="programa_convocatoria_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROGRAMACONV" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-300">
-        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_convocante" constraintName="FK_PROYECTOENTIDADCONVOCANTE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-301">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-302">
-        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-303">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_gestora" constraintName="FK_PROYECTOENTIDADGESTORA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="proyecto_entidad_financiadora" constraintName="FK_PROYECTOENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-304">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_equipo" constraintName="FK_PROYECTOEQUIPO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_entidad_gestora" constraintName="FK_PROYECTOENTIDADGESTORA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-305">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_equipo" constraintName="FK_PROYECTOEQUIPO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-306">
-        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-307">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_hito" constraintName="FK_PROYECTOHITO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-308">
-        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="proyecto_hito" constraintName="FK_PROYECTOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_hito" constraintName="FK_PROYECTOHITO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-309">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_iva" constraintName="FK_PROYECTOIVA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="proyecto_hito" constraintName="FK_PROYECTOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-310">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_paquete_trabajo" constraintName="FK_PROYECTOPAQUETETRABAJO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_iva" constraintName="FK_PROYECTOIVA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-311">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_partida" constraintName="FK_PROYECTOPARTIDA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_paquete_trabajo" constraintName="FK_PROYECTOPAQUETETRABAJO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-312">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_periodo_justificacion" constraintName="FK_PROYECTOPERIODOJUSTIFICACION_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_partida" constraintName="FK_PROYECTOPARTIDA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-313">
-        <addForeignKeyConstraint baseColumnNames="proyecto_periodo_seguimiento_id" baseTableName="proyecto_periodo_seguimiento_documento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTODOCUMENTO_PROYECTOPERIODOSEGUIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_periodo_seguimiento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_periodo_justificacion" constraintName="FK_PROYECTOPERIODOJUSTIFICACION_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-314">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_periodo_seguimiento_documento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_periodo_seguimiento_id" baseTableName="proyecto_periodo_seguimiento_documento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTODOCUMENTO_PROYECTOPERIODOSEGUIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_periodo_seguimiento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-315">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_periodo_seguimiento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_periodo_seguimiento_documento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-316">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_prorroga" constraintName="FK_PROYECTOPRORROGA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_periodo_seguimiento" constraintName="FK_PROYECTOPERIODOSEGUIMIENTO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-317">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_proyecto_sge" constraintName="FK_PROYECTOPROYECTOSGE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_prorroga" constraintName="FK_PROYECTOPRORROGA_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-318">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_responsable_economico" constraintName="FK_PROYECTORESPONSABLEECONOMICO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_proyecto_sge" constraintName="FK_PROYECTOPROYECTOSGE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-319">
-        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_equipo" constraintName="FK_PROYECTOSOCIOEQUIPO_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_responsable_economico" constraintName="FK_PROYECTORESPONSABLEECONOMICO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-320">
-        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="proyecto_socio_equipo" constraintName="FK_PROYECTOSOCIOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_equipo" constraintName="FK_PROYECTOSOCIOEQUIPO_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-321">
-        <addForeignKeyConstraint baseColumnNames="proyecto_socio_periodo_justificacion_id" baseTableName="proyecto_socio_periodo_justificacion_documento" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACIONDOCUMENTO_PROYECTOSOCIOPERIODOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio_periodo_justificacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="proyecto_socio_equipo" constraintName="FK_PROYECTOSOCIOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-322">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_socio_periodo_justificacion_documento" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACIONDOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_socio_periodo_justificacion_id" baseTableName="proyecto_socio_periodo_justificacion_documento" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACIONDOCUMENTO_PROYECTOSOCIOPERIODOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio_periodo_justificacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-323">
-        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_periodo_justificacion" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACION_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="proyecto_socio_periodo_justificacion_documento" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACIONDOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-324">
-        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_periodo_pago" constraintName="FK_PROYECTOSOCIOPERIODOPAGO_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_periodo_justificacion" constraintName="FK_PROYECTOSOCIOPERIODOJUSTIFICACION_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-325">
-        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_socio" constraintName="FK_PROYECTOSOCIO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_socio_id" baseTableName="proyecto_socio_periodo_pago" constraintName="FK_PROYECTOSOCIOPERIODOPAGO_PROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-326">
-        <addForeignKeyConstraint baseColumnNames="rol_socio_id" baseTableName="proyecto_socio" constraintName="FK_PROYECTOSOCIO_ROLSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_socio" constraintName="FK_PROYECTOSOCIO_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-327">
-        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="proyecto" constraintName="FK_PROYECTO_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_socio_id" baseTableName="proyecto_socio" constraintName="FK_PROYECTOSOCIO_ROLSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-328">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="proyecto" constraintName="FK_PROYECTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="proyecto" constraintName="FK_PROYECTO_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-329">
-        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="proyecto_equipo" constraintName="FK_PROYECTO_EQUIPO_ROL_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="proyecto" constraintName="FK_PROYECTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-330">
-        <addForeignKeyConstraint baseColumnNames="estado_proyecto_id" baseTableName="proyecto" constraintName="FK_PROYECTO_ESTADOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="proyecto_equipo" constraintName="FK_PROYECTO_EQUIPO_ROL_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-331">
-        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="proyecto" constraintName="FK_PROYECTO_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="estado_proyecto_id" baseTableName="proyecto" constraintName="FK_PROYECTO_ESTADOPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-332">
-        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="proyecto" constraintName="FK_PROYECTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="proyecto" constraintName="FK_PROYECTO_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-333">
-        <addForeignKeyConstraint baseColumnNames="proyecto_iva_id" baseTableName="proyecto" constraintName="FK_PROYECTO_PROYECTOIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_iva" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="proyecto" constraintName="FK_PROYECTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-334">
-        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="proyecto" constraintName="FK_PROYECTO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="proyecto_iva_id" baseTableName="proyecto" constraintName="FK_PROYECTO_PROYECTOIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_iva" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-335">
-        <addForeignKeyConstraint baseColumnNames="requisitoequipo_id" baseTableName="requisitoequipo_categoriaprofesional" constraintName="FK_REQUISITOEQUIPO_CATEGORIAPROFESIONAL_REQUISITOEQUIPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_equipo" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="proyecto" constraintName="FK_PROYECTO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-336">
-        <addForeignKeyConstraint baseColumnNames="requisitoequipo_id" baseTableName="requisitoequipo_nivelacademico" constraintName="FK_REQUISITOEQUIPO_NIVELACADEMICO_REQUISITOEQUIPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_equipo" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="requisitoequipo_id" baseTableName="requisitoequipo_categoriaprofesional" constraintName="FK_REQUISITOEQUIPO_CATEGORIAPROFESIONAL_REQUISITOEQUIPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_equipo" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-337">
-        <addForeignKeyConstraint baseColumnNames="requisitoip_id" baseTableName="requisitoip_categoriaprofesional" constraintName="FK_REQUISITOIP_CATEGORIAPROFESIONAL_REQUISITOIP" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_ip" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="requisitoequipo_id" baseTableName="requisitoequipo_nivelacademico" constraintName="FK_REQUISITOEQUIPO_NIVELACADEMICO_REQUISITOEQUIPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_equipo" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-338">
-        <addForeignKeyConstraint baseColumnNames="requisitoip_id" baseTableName="requisitoip_nivelacademico" constraintName="FK_REQUISITOIP_NIVELACADEMICO_REQUISITOIP" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_ip" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="requisitoip_id" baseTableName="requisitoip_categoriaprofesional" constraintName="FK_REQUISITOIP_CATEGORIAPROFESIONAL_REQUISITOIP" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_ip" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-339">
-        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="rol_proyecto_colectivo" constraintName="FK_ROLPROYECTOCOLECTIVO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="requisitoip_id" baseTableName="requisitoip_nivelacademico" constraintName="FK_REQUISITOIP_NIVELACADEMICO_REQUISITOIP" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisito_ip" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-340">
-        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_documento" constraintName="FK_SOLICITUDDOCUMENTO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="rol_proyecto_colectivo" constraintName="FK_ROLPROYECTOCOLECTIVO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-341">
-        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="solicitud_documento" constraintName="FK_SOLICITUDDOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_documento" constraintName="FK_SOLICITUDDOCUMENTO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-342">
-        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_hito" constraintName="FK_SOLICITUDHITO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="solicitud_documento" constraintName="FK_SOLICITUDDOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-343">
-        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="solicitud_hito" constraintName="FK_SOLICITUDHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_hito" constraintName="FK_SOLICITUDHITO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-344">
-        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="solicitud_modalidad" constraintName="FK_SOLICITUDMODALIDAD_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="solicitud_hito" constraintName="FK_SOLICITUDHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-345">
-        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_modalidad" constraintName="FK_SOLICITUDMODALIDAD_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="solicitud_modalidad" constraintName="FK_SOLICITUDMODALIDAD_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-346">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_clasificacion" constraintName="FK_SOLICITUDPROYECTOCLASIFICACION_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_modalidad" constraintName="FK_SOLICITUDMODALIDAD_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-347">
-        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_clasificacion" constraintName="FK_SOLICITUDPROYECTOCLASIFICACION_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-348">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-349">
-        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-350">
-        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="solicitud_proyecto_equipo" constraintName="FK_SOLICITUDPROYECTOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="solicitud_proyecto_entidad_financiadora_ajena" constraintName="FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-351">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_equipo" constraintName="FK_SOLICITUDPROYECTOEQUIPO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="solicitud_proyecto_equipo" constraintName="FK_SOLICITUDPROYECTOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-352">
-        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="solicitud_proyecto_presupuesto" constraintName="FK_SOLICITUDPROYECTOPRESUPUESTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_equipo" constraintName="FK_SOLICITUDPROYECTOEQUIPO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-353">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_presupuesto" constraintName="FK_SOLICITUDPROYECTOPRESUPUESTO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="solicitud_proyecto_presupuesto" constraintName="FK_SOLICITUDPROYECTOPRESUPUESTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-354">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_responsable_economico" constraintName="FK_SOLICITUDPROYECTORESPONSABLEECONOMICO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_presupuesto" constraintName="FK_SOLICITUDPROYECTOPRESUPUESTO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-355">
-        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="solicitud_proyecto_socio_equipo" constraintName="FK_SOLICITUDPROYECTOSOCIOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_responsable_economico" constraintName="FK_SOLICITUDPROYECTORESPONSABLEECONOMICO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-356">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_equipo" constraintName="FK_SOLICITUDPROYECTOSOCIOEQUIPO_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="solicitud_proyecto_socio_equipo" constraintName="FK_SOLICITUDPROYECTOSOCIOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-357">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_periodo_justificacion" constraintName="FK_SOLICITUDPROYECTOSOCIOPERIODOJUSTIFICACION_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_equipo" constraintName="FK_SOLICITUDPROYECTOSOCIOEQUIPO_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-358">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_periodo_pago" constraintName="FK_SOLICITUDPROYECTOSOCIOPERIODOPAGO_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_periodo_justificacion" constraintName="FK_SOLICITUDPROYECTOSOCIOPERIODOJUSTIFICACION_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-359">
-        <addForeignKeyConstraint baseColumnNames="rol_socio_id" baseTableName="solicitud_proyecto_socio" constraintName="FK_SOLICITUDPROYECTOSOCIO_ROLSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_socio" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_socio_id" baseTableName="solicitud_proyecto_socio_periodo_pago" constraintName="FK_SOLICITUDPROYECTOSOCIOPERIODOPAGO_SOLICITUDPROYECTOSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-360">
-        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_socio" constraintName="FK_SOLICITUDPROYECTOSOCIO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="rol_socio_id" baseTableName="solicitud_proyecto_socio" constraintName="FK_SOLICITUDPROYECTOSOCIO_ROLSOCIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_socio" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-361">
-        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="solicitud_proyecto" constraintName="FK_SOLICITUDPROYECTO_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_id" baseTableName="solicitud_proyecto_socio" constraintName="FK_SOLICITUDPROYECTOSOCIO_SOLICITUDPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proyecto" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-362">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="solicitud" constraintName="FK_SOLICITUD_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="solicitud_proyecto" constraintName="FK_SOLICITUDPROYECTO_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-363">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="solicitud" constraintName="FK_SOLICITUD_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-364">
         <addForeignKeyConstraint baseColumnNames="estado_solicitud_id" baseTableName="solicitud" constraintName="FK_SOLICITUD_ESTADO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_solicitud" validate="true"/>
     </changeSet>
 </databaseChangeLog>
