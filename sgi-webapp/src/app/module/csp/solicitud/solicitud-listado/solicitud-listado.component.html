@@ -28,6 +28,15 @@
             </mat-select>
           </mat-form-field>
         </div>
+
+        <!-- Título Solicitud -->
+        <div class="col">
+          <mat-form-field class="input-form">
+            <mat-label>{{'csp.solicitud.titulo-listado' | translate}}</mat-label>
+            <input matInput formControlName="tituloSolicitud" type="text" id="tituloSolicitud"
+              placeholder="{{'csp.solicitud.titulo-listado' | translate}}">
+          </mat-form-field>
+        </div>
       </div>
 
       <!-- Acciones -->
@@ -180,17 +189,6 @@
             </mat-datepicker>
           </mat-form-field>
         </div>
-
-        <!-- tituloConvocatoria -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
-          <mat-form-field class="input-form">
-            <mat-label>{{'csp.solicitud.titulo-convocatoria' | translate}}</mat-label>
-            <input matInput formControlName="tituloConvocatoria" type="text" id="tituloConvocatoria"
-              placeholder="{{'csp.solicitud.titulo-convocatoria' | translate}}">
-          </mat-form-field>
-        </div>
-
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -298,16 +296,6 @@
         </td>
       </ng-container>
 
-      <!-- Titulo convocatoria Column -->
-      <ng-container matColumnDef="convocatoria.titulo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'csp.solicitud.titulo-convocatoria' | translate}}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.convocatoria?.titulo}}
-        </td>
-      </ng-container>
-
       <!-- Referencia convocatoria Column -->
       <ng-container matColumnDef="referencia">
         <th mat-header-cell *matHeaderCellDef>
@@ -335,6 +323,16 @@
         </th>
         <td mat-cell *matCellDef="let element">
           {{ESTADO_MAP.get(element.estado?.estado) | translate}}
+        </td>
+      </ng-container>
+
+      <!-- Titulo Solicitud Column -->
+      <ng-container matColumnDef="titulo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.solicitud.titulo-listado' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.titulo}}
         </td>
       </ng-container>
 

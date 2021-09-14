@@ -74,7 +74,7 @@ export class SolicitudCrearProyectoModalComponent
     if (this.data.solicitud.convocatoriaId) {
       this.subscriptions.push(this.convocatoriaService.findById(this.data.solicitud.convocatoriaId).subscribe(
         (convocatoria => {
-          this.formGroup.controls.modeloEjecucion.setValue(convocatoria.modeloEjecucion)
+          this.formGroup.controls.modeloEjecucion.setValue(convocatoria.modeloEjecucion);
           this.formGroup.controls.modeloEjecucion.disable();
         })
       ));
@@ -132,6 +132,8 @@ export class SolicitudCrearProyectoModalComponent
       fechaInicio: this.formGroup.controls.fechaInicio.value,
       fechaFin: this.formGroup.controls.fechaFin.value,
       modeloEjecucion: this.formGroup.controls.modeloEjecucion.value,
+      titulo: this.data.solicitud.titulo,
+      solicitudId: this.data.solicitud.id
     } as IProyecto;
   }
 

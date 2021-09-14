@@ -10,7 +10,6 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
     }
     return {
       id: value.id,
-      titulo: value.titulo,
       acronimo: value.acronimo,
       codExterno: value.codExterno,
       duracion: value.duracion,
@@ -41,7 +40,6 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
     }
     return {
       id: value.id,
-      titulo: value.titulo,
       acronimo: value.acronimo,
       codExterno: value.codExterno,
       duracion: value.duracion,

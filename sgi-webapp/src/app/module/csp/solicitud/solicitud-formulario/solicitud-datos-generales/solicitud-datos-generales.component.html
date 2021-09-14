@@ -131,6 +131,22 @@
       </mat-form-field>
     </div>
 
+    <!-- Título -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field class="input-form">
+        <mat-label>{{'csp.solicitud.titulo' | translate}}</mat-label>
+        <input matInput formControlName="titulo" type="text" id="titulo"
+          placeholder="{{'csp.solicitud.titulo' | translate}}" required>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
+          {{'error.required.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <!-- Tabla entidades convocantes de la convocatoria -->
     <div [fxFlex.sm]="100" [fxFlex.md]="100" [fxFlex.gt-md]="100" [fxFlexOrder]="fxFlexProperties.order">
       <ng-container>

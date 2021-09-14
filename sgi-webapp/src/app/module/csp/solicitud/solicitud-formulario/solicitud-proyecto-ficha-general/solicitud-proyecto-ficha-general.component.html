@@ -5,22 +5,6 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Título -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field class="input-form">
-          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.titulo' | translate}}</mat-label>
-          <input matInput formControlName="titulo" type="text" id="titulo"
-            placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.titulo' | translate}}" required>
-          <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
-            {{'error.required.entity' | translate:msgParamTituloEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
-            {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
       <!-- Acronimo -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">

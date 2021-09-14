@@ -3,7 +3,6 @@ import { TipoPresupuesto } from '../solicitud-proyecto';
 
 export interface ISolicitudProyectoBackend {
   id: number;
-  titulo: string;
   acronimo: string;
   codExterno: string;
   duracion: number;

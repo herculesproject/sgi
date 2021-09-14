@@ -3,7 +3,6 @@ import { IAreaTematica } from './area-tematica';
 
 export interface ISolicitudProyecto {
   id: number;
-  titulo: string;
   acronimo: string;
   codExterno: string;
   duracion: number;

@@ -90,7 +90,8 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
 
     this.formGroup = new FormGroup({
       convocatoria: new FormControl(undefined),
-      estadoSolicitud: new FormControl('')
+      estadoSolicitud: new FormControl(''),
+      tituloSolicitud: new FormControl(undefined),
     });
   }
 
@@ -148,9 +149,9 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     this.columnas = [
       'codigoRegistroInterno',
       'codigoExterno',
-      'convocatoria.titulo',
       'referencia',
       'estado.estado',
+      'titulo',
       'estado.fechaEstado',
       'acciones'
     ];
@@ -163,7 +164,8 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
-      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value);
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value)
+      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
 
     return filter;
   }

@@ -4,7 +4,7 @@ import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
-import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
+import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -24,8 +24,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, elementAt, map, switchMap } from 'rxjs/operators';
-import { ProyectoActionService } from '../../proyecto.action.service';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -37,6 +36,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private proyecto: IProyecto;
 
   selectedConvocatoria: IConvocatoria;
+  solicitud: ISolicitud;
 
   readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
 
@@ -108,6 +108,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return this.service.findById(key).pipe(
       map(proyecto => {
         this.proyecto = proyecto;
+        this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
+          this.solicitud = solicitud;
+          this.getFormGroup().controls.solicitudProyecto.setValue(solicitud.titulo);
+        }));
         return proyecto as IProyectoDatosGenerales;
       }),
       switchMap((proyecto) => {
@@ -446,7 +450,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
-      solicitudProyecto: proyecto.solicitudProyecto?.titulo ?? ''
+      solicitudProyecto: this.solicitud?.titulo,
     };
 
     this.checkEstado(this.getFormGroup(), proyecto);

@@ -167,7 +167,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       activo: new FormControl('true'),
       fechaPublicacionConvocatoriaDesde: new FormControl(null),
       fechaPublicacionConvocatoriaHasta: new FormControl(null),
-      tituloConvocatoria: new FormControl(undefined),
+      tituloSolicitud: new FormControl(undefined),
       entidadConvocante: new FormControl(undefined),
       planInvestigacion: new FormControl(undefined),
       entidadFinanciadora: new FormControl(undefined),
@@ -335,10 +335,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       this.columnas = [
         'codigoRegistroInterno',
         'codigoExterno',
-        'convocatoria.titulo',
         'referencia',
         'solicitante',
         'estado.estado',
+        'titulo',
         'estado.fechaEstado',
         'activo',
         'acciones'
@@ -347,10 +347,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       this.columnas = [
         'codigoRegistroInterno',
         'codigoExterno',
-        'convocatoria.titulo',
         'referencia',
         'solicitante',
         'estado.estado',
+        'titulo',
         'estado.fechaEstado',
         'acciones'
       ];
@@ -364,7 +364,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
-      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value);
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value)
+      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
     if (this.busquedaAvanzada) {
       if (controls.plazoAbierto.value) {
         filter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
@@ -383,7 +384,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
           LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
         .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL,
           LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaHasta.value))
-        .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)
         .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id)
         .and('convocatoria.entidadesConvocantes.programa.id',
           SgiRestFilterOperator.EQUALS, controls.planInvestigacion.value?.id?.toString())

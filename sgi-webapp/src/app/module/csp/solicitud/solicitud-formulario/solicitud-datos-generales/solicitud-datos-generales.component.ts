@@ -29,6 +29,7 @@ const SOLICITUD_CONVOCATORIA_EXTERNA_KEY = marker('csp.solicitud.convocatoria-ex
 const SOLICITUD_OBSERVACIONES_KEY = marker('csp.solicitud.observaciones');
 const SOLICITUD_UNIDAD_GESTION_KEY = marker('csp.solicitud.unidad-gestion');
 const SOLICITUD_ENTIDAD_CONVOCANTE_KEY = marker('csp.solicitud-entidad-convocante');
+const SOLICITUD_TITULO_KEY = marker('csp.solicitud.titulo');
 
 @Component({
   selector: 'sgi-solicitud-datos-generales',
@@ -57,6 +58,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   msgParamEntidadConvocanteEntity = {};
   msgParamObservacionesEntity = {};
   msgParamUnidadGestionEntity = {};
+  msgParamTituloEntity = {};
 
   dataSourceEntidadesConvocantes: MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -189,6 +191,11 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       SOLICITUD_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamEntidadConvocanteEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      SOLICITUD_TITULO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   ngOnDestroy(): void {
