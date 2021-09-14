@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.crue.hercules.sgi.esb.sgp</groupId>
     <artifactId>sgi-esb-sgp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>sgp-integration-project</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
   <name>sgp-integration-project</name>
   <description>sgp-integration-project</description>
