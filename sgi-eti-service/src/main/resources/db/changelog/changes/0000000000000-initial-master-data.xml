@@ -888,11 +888,11 @@
       </whereParams>
     </update>
 
-    <!-- 3.4.2 Reclutamiento realizado por personal ajeno al equipo investigado -->
+    <!-- 3.4.2 Reclutamiento realizado por personal ajeno al equipo investigador -->
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '3' and formulario_id = (select id from formulario where nombre = 'M10'))" />
-      <column name="nombre" value="Reclutamiento realizado por personal ajeno al equipo investigado" />
+      <column name="nombre" value="Reclutamiento realizado por personal ajeno al equipo investigador" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
       <column name="orden" value="2" />
       <column name="esquema" value="{}" />
@@ -1485,11 +1485,11 @@
       </whereParams>
     </update>
 
-    <!-- 5.7  Documento de registro de tratamiento de datos -->
+    <!-- 5.7  Documentación adicional -->
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M10'))" />
-      <column name="nombre" value="Documento de registro de tratamiento de datos" />
+      <column name="nombre" value="Documentación adicional" />
       <column name="padre_id" />
       <column name="orden" value="7" />
       <column name="esquema" value="{}" />
@@ -1502,34 +1502,17 @@
       </whereParams>
     </update>
 
-    <!-- 5.8  Documentación adicional -->
+    <!-- 5.8  Aclaraciones al comité -->
     <insert tableName="apartado">
       <column name="id" valueSequenceNext="apartado_seq" />
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M10'))" />
-      <column name="nombre" value="Documentación adicional" />
+      <column name="nombre" value="Aclaraciones al comité" />
       <column name="padre_id" />
       <column name="orden" value="8" />
       <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_8.json" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="id" valueComputed="(select max(id) from apartado)" />
-      </whereParams>
-    </update>
-
-    <!-- 5.9  Aclaraciones al comité -->
-    <insert tableName="apartado">
-      <column name="id" valueSequenceNext="apartado_seq" />
-      <column name="bloque_id" valueComputed="(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M10'))" />
-      <column name="nombre" value="Aclaraciones al comité" />
-      <column name="padre_id" />
-      <column name="orden" value="9" />
-      <column name="esquema" value="{}" />
-    </insert>
-    <update tableName="apartado">
-      <column name="esquema" valueClobFile="clob/m10_apartado_5_9.json" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueComputed="(select max(id) from apartado)" />

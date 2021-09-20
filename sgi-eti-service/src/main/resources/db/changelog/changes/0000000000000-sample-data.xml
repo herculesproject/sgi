@@ -925,7 +925,7 @@
     </insert>
     <insert tableName="comentario">
       <column name="id" valueSequenceNext="comentario_seq" />
-      <column name="apartado_id" valueComputed="(select id from apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigado')" />
+      <column name="apartado_id" valueComputed="(select id from apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigador')" />
       <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M10/2019/001')" />
       <column name="evaluacion_id" valueComputed="(select e.id from evaluacion e join memoria m on e.memoria_id=m.id where m.num_referencia='M10/2019/001' and e.version=1)" />
       <column name="tipo_comentario_id" valueComputed="(select id from tipo_comentario where nombre='GESTOR')" />
@@ -1006,7 +1006,7 @@
 
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
-      <column name="apartado_id" valueComputed="(select id from apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigado' and bloque_id=(select id from bloque where orden = '3' and formulario_id = (select id from formulario where nombre = 'M10')))" />
+      <column name="apartado_id" valueComputed="(select id from apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigador' and bloque_id=(select id from bloque where orden = '3' and formulario_id = (select id from formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M10/2019/001')" />
       <column name="valor" value="{}" />
     </insert>
@@ -1474,28 +1474,13 @@
 
     <insert tableName="respuesta">
       <column name="id" valueSequenceNext="respuesta_seq" />
-      <column name="apartado_id" valueComputed="(select id from apartado where nombre='Documento de registro de tratamiento de datos' and bloque_id=(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M10/2019/001')" />
-      <column name="tipo_documento_id" value="10" />
-      <column name="valor" value="{}" />
-    </insert>
-    <update tableName="respuesta">
-      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_39.json" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="id" valueComputed="(select max(id) from respuesta)" />
-      </whereParams>
-    </update>
-
-    <insert tableName="respuesta">
-      <column name="id" valueSequenceNext="respuesta_seq" />
       <column name="apartado_id" valueComputed="(select id from apartado where nombre='Documentación adicional' and bloque_id=(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M10')))" />
       <column name="memoria_id" valueComputed="(select id from memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_documento_id" value="11" />
       <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
-      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_40.json" />
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_39.json" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueComputed="(select max(id) from respuesta)" />
@@ -1509,7 +1494,7 @@
       <column name="valor" value="{}" />
     </insert>
     <update tableName="respuesta">
-      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_41.json" />
+      <column name="valor" valueClobFile="sample-clob/M10-2019-001_respuesta_40.json" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueComputed="(select max(id) from respuesta)" />
