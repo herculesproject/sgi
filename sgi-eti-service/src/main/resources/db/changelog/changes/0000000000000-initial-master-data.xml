@@ -425,7 +425,7 @@
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_documento">
-      <column name="id" value="22" />
+      <column name="id" valueNumeric="22" />
       <column name="nombre" value="Autorización utilización confinada OMG" />
       <column name="formulario_id" valueComputed="(select id from formulario where nombre='M30')" />
       <column name="activo" valueBoolean="true" />
@@ -3225,7 +3225,7 @@
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanopartículas" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanopartículas y autorización para llevar a cabo utilización confinada de OMG')" />
-      <column name="orden" value="1" />
+      <column name="orden" valueNumeric="1" />
       <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
@@ -3242,7 +3242,7 @@
       <column name="bloque_id" valueComputed="(select id from bloque where orden = '5' and formulario_id = (select id from formulario where nombre = 'M30'))" />
       <column name="nombre" value="Autorización para llevar a cabo utilización confinada de OMG" />
       <column name="padre_id" valueComputed="(select id from apartado where nombre = 'Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanopartículas y autorización para llevar a cabo utilización confinada de OMG')" />
-      <column name="orden" value="2" />
+      <column name="orden" valueNumeric="2" />
       <column name="esquema" value="{}" />
     </insert>
     <update tableName="apartado">
