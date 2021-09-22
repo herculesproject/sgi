@@ -1881,169 +1881,169 @@ industries" />
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para acciones especiales / Complementarias" />
       <column name="descripcion" value="Ayudas para acciones especiales / Complementarias" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas en general (Otros tipos)" />
       <column name="descripcion" value="Ayudas en general (Otros tipos)" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para acciones especiales de investigación preferente" />
       <column name="descripcion" value="Ayudas para acciones especiales de investigación preferente" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para acciones integradas" />
       <column name="descripcion" value="Ayudas para acciones integradas" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para estancias de extranjeros en España" />
       <column name="descripcion" value="Ayudas para estancias de extranjeros en España" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para estancias en centros nacionales o extranjeros" />
       <column name="descripcion" value="Ayudas para estancias en centros nacionales o extranjeros" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para infraestructura" />
       <column name="descripcion" value="Ayudas para infraestructura" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Ayudas para organización de congresos" />
       <column name="descripcion" value="Ayudas para organización de congresos" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Becas incorporación a la investigación" />
       <column name="descripcion" value="Becas incorporación a la investigación" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Becas postdoctorales normales" />
       <column name="descripcion" value="Becas postdoctorales normales" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Becas predoctorales normales" />
       <column name="descripcion" value="Becas predoctorales normales" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Becas Unión Europea" />
       <column name="descripcion" value="Becas Unión Europea" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Contratos art. 83" />
       <column name="descripcion" value="Contratos art. 83" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Contratos de licencia de explotación de patentes" />
       <column name="descripcion" value="Contratos de licencia de explotación de patentes" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Convenios" />
       <column name="descripcion" value="Convenios" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Financiaciones de la OTRI" />
       <column name="descripcion" value="Financiaciones de la OTRI" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Grupo de investigación o proyecto de fondos propios" />
       <column name="descripcion" value="Grupo de investigación o proyecto de fondos propios" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Juan de la Cierva" />
       <column name="descripcion" value="Juan de la Cierva" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Otras ayudas internacionales" />
       <column name="descripcion" value="Otras ayudas internacionales" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos (ayudas a la investigación)" />
       <column name="descripcion" value="Proyectos (ayudas a la investigación)" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos Consolider" />
       <column name="descripcion" value="Proyectos Consolider" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos Unión  Europea" />
       <column name="descripcion" value="Proyectos Unión  Europea" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos P4" />
       <column name="descripcion" value="Proyectos P4" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos PETRI" />
       <column name="descripcion" value="Proyectos PETRI" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Proyectos/Ayudas de Transferencia" />
       <column name="descripcion" value="Proyectos/Ayudas de Transferencia" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="RRHH investigadores (ayuda directa para un investigador)" />
       <column name="descripcion" value="RRHH investigadores (ayuda directa para un investigador)" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="RRHH Movilidad" />
       <column name="descripcion" value="RRHH Movilidad" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="tipo_finalidad">
       <column name="id" valueSequenceNext="tipo_finalidad_seq" />
       <column name="nombre" value="Técnicos de apoyo a Grupos de investigación" />
       <column name="descripcion" value="Técnicos de apoyo a Grupos de investigación" />
-      <column name="activo" value="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
