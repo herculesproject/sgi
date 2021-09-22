@@ -23,6 +23,9 @@ import { SolicitudProteccionFragment } from './invencion-formulario/solicitud-pr
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
 import { INVENCION_DATA_KEY } from './invencion.resolver';
 import { IInvencion } from '@core/models/pii/invencion';
+import { InvencionIngresosFragment } from './invencion-formulario/invencion-ingresos/invencion-ingresos.fragment';
+import { InvencionIngresoService } from '@core/services/pii/invencion/invencion-ingreso/invencion-ingreso.service';
+import { IngresosInvencionService } from '@core/services/sgepii/ingresos-invencion.service';
 
 export interface IInvencionData {
   canEdit: boolean;
@@ -41,7 +44,8 @@ export class InvencionActionService extends ActionService {
     INFORME_PATENTABILIDAD: 'informe-patentabilidad',
     INVENCION_INVENTOR: 'invencion-inventor',
     SOLICITUDES_PROTECCION: 'solicitudes-proteccion',
-    GASTOS: 'gastos'
+    GASTOS: 'gastos',
+    INGRESOS: 'ingresos'
   };
 
   private datosGenerales: InvencionDatosGeneralesFragment;
@@ -50,6 +54,7 @@ export class InvencionActionService extends ActionService {
   private invencionInventoresFragment: InvencionInventorFragment;
   private solicitudesProteccion: SolicitudProteccionFragment;
   private invencionGastos: InvencionGastosFragment;
+  private invencionIngresos: InvencionIngresosFragment;
 
   get canEdit(): boolean {
     return this.data?.canEdit ?? true;
@@ -68,9 +73,8 @@ export class InvencionActionService extends ActionService {
     readonly logger: NGXLogger,
     solicitudProteccionService: SolicitudProteccionService,
     gastosInvencionService: GastosInvencionService,
-    invencionGastosService: InvencionGastoService
-
-  ) {
+    invencionGastosService: InvencionGastoService,
+    ingresosInvencionService: IngresosInvencionService) {
     super();
 
     this.id = Number(route.snapshot.paramMap.get(INVENCION_ROUTE_PARAMS.ID));
@@ -104,6 +108,9 @@ export class InvencionActionService extends ActionService {
 
       this.invencionGastos = new InvencionGastosFragment(this.id, gastosInvencionService, invencionGastosService, invencionService, solicitudProteccionService);
       this.addFragment(this.FRAGMENT.GASTOS, this.invencionGastos);
+
+      this.invencionIngresos = new InvencionIngresosFragment(this.data.invencion, ingresosInvencionService, invencionService);
+      this.addFragment(this.FRAGMENT.INGRESOS, this.invencionIngresos);
     }
 
   }

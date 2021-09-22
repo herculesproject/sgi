@@ -44,6 +44,9 @@ import { ISolicitudProteccionResponse } from './solicitud-proteccion/solicitud-p
 import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
 import { IInvencionGastoResponse } from './invencion-gasto/invencion-gasto-response';
 import { INVENCION_GASTO_RESPONSE_CONVERTER } from './invencion-gasto/invencion-gasto-response.converter';
+import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
+import { IInvencionIngresoResponse } from './invencion-ingreso/invencion-ingreso-response';
+import { INVENCION_INGRESO_RESPONSE_CONVERTER } from './invencion-ingreso/invencion-ingreso-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
@@ -253,16 +256,31 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
- * Recupera los Gastos asociados a la Invencion con el id indicado.
- *
- * @param id Id de la Invencion
- */
+   * Recupera los Gastos asociados a la Invencion con el id indicado.
+   *
+   * @param id Id de la Invencion
+   */
   findGastos(id: number): Observable<IInvencionGasto[]> {
     const endpointUrl = `${this.endpointUrl}/${id}/gastos`;
     return this.http.get<IInvencionGastoResponse[]>(endpointUrl)
       .pipe(
         map(response => {
           return INVENCION_GASTO_RESPONSE_CONVERTER.toTargetArray(response);
+        })
+      );
+  }
+
+  /**
+   * Recupera los Ingresos asociados a la Invencion con el id indicado.
+   *
+   * @param id Id de la Invencion
+   */
+  findIngresos(id: number): Observable<IInvencionIngreso[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/ingresos`;
+    return this.http.get<IInvencionIngresoResponse[]>(endpointUrl)
+      .pipe(
+        map(response => {
+          return INVENCION_INGRESO_RESPONSE_CONVERTER.toTargetArray(response);
         })
       );
   }
