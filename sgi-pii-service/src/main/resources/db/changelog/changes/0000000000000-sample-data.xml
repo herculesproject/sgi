@@ -138,14 +138,14 @@
       <column name="invencion_id" value="112" />
       <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100.00" />
-      <column name="reparto_universidad" value="true" />
+      <column name="reparto_universidad" valueBoolean="true" />
     </insert>
     <insert tableName="invencion_inventor">
       <column name="id" valueSequenceNext="invencion_inventor_seq" />
       <column name="invencion_id" value="113" />
       <column name="inventor_ref" value="01889311" />
       <column name="participacion" value="100.00" />
-      <column name="reparto_universidad" value="true" />
+      <column name="reparto_universidad" valueBoolean="true" />
     </insert>
   </changeSet>
 
