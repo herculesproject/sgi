@@ -589,6 +589,8 @@ export class SolicitudActionService extends ActionService {
           return of(erroresNivelesAcademicos);
         })
       );
+    } else {
+      return of(false);
     }
   }
 
