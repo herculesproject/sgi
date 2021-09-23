@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.crue.hercules.sgi.esb</groupId>
   <artifactId>sgi-esb-common</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
   <name>sgi-esb-common</name>
   <description>sgi-esb-common</description>
@@ -14,7 +13,7 @@
     <module>esb-composite-application</module>
   </modules>
 
-   <!-- ********************************************** -->
+  <!-- ********************************************** -->
   <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
   <!-- ********************************************** -->
 
@@ -30,7 +29,7 @@
   </distributionManagement>
 
   <properties>
-  <!-- Distribution Management URL's -->
+    <!-- Distribution Management URL's -->
     <dist.repo.rel.url>file:///maven-repositories/releases/</dist.repo.rel.url>
     <dist.repo.snap.url>file:///maven-repositories/snapshots/</dist.repo.snap.url>
 
