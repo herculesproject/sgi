@@ -23,22 +23,25 @@ function mediate(mc) {
     var colectivosId = '';
     switch (tipoColectivoId) {
       case 'SOLICITANTE_ETICA':
-        colectivosId = '1,2,3,4';
+        colectivosId = '1,3,4';
         break;
       case 'EVALUADOR_ETICA':
-        colectivosId = '1,2,3,4';
+        colectivosId = '2,3,4';
         break;
       case 'EQUIPO_TRABAJO_ETICA':
-        colectivosId = '1,2,3,4';
+        colectivosId = '2,3,4';
         break;
       case 'SOLICITANTE_CSP':
         colectivosId = '1,2,3,4';
         break;
       case 'RESPONSABLE_ECONOMICO_CSP':
+        colectivosId = '2,3';
+        break;
+      case 'AUTOR_INVENCION':
         colectivosId = '1,2,3,4';
         break;
       default:
-        colectivosId = '1,2,3,4';
+        colectivosId = '0';
         break;
     }
     filterColectivos = filterColectivos.replace('#ids#', colectivosId);
