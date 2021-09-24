@@ -108,7 +108,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
               form.controls.unidadGestion.disable();
               form.controls.modeloEjecucion.disable();
             }
-            else {
+            else if (this.hasEditPerm) {
               form.controls.unidadGestion.enable();
               form.controls.modeloEjecucion.enable();
             }
@@ -123,7 +123,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
           if (value && this.isConvocatoriaVinculada) {
             form.controls.regimenConcurrencia.disable();
             form.controls.clasificacionCVN.disable();
-          } else {
+          } else if (this.hasEditPerm) {
             form.controls.regimenConcurrencia.enable();
             form.controls.clasificacionCVN.enable();
           }
