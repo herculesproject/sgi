@@ -18,7 +18,7 @@ function mediate(mc) {
     }
 
     // Remplaza el tipoColectivo por los colectivos correspondientes
-    var tipoColectivoId = tipoColectivoQuery.split("==")[1].replace('\"', '');
+    var tipoColectivoId = tipoColectivoQuery.split("==")[1].replace(/"/g, '');
     var filterColectivos = 'colectivoId=in=(#ids#)';
     var colectivosId = '';
     switch (tipoColectivoId) {
