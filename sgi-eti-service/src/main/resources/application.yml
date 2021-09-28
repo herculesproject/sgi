@@ -98,6 +98,11 @@ spring:
 
 logging:
   level:
+    liquibase:
+      executor:
+        jvm:
+          # Log the Liquibase JDBC executor
+          JdbcExecutor: DEBUG
     org:
       hibernate:
         # Log the SQL statements
