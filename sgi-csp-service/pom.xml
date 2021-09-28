@@ -501,6 +501,9 @@
             <exclude>**/scratch/**</exclude>
             <exclude>**/config/**</exclude>
             <exclude>**/model/**</exclude>
+            <exclude>**/specification/**</exclude>
+            <exclude>**/dto/**</exclude>
+            <exclude>**/exceptions/**</exclude>
           </excludes>
         </configuration>
         <executions>
