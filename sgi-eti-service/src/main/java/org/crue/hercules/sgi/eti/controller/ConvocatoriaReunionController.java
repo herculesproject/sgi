@@ -210,7 +210,7 @@ public class ConvocatoriaReunionController {
    * @return la lista de entidades {@link Asistentes} paginadas.
    */
   @GetMapping("/{id}/asistentes")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C','ETI-ACT-E','ETI-ACT-INV-ER','ETI-ACT-ER')")
   ResponseEntity<Page<Asistentes>> findAsistentes(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("findAsistentes(Long id, Pageable pageable) - start");
@@ -233,7 +233,7 @@ public class ConvocatoriaReunionController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{id}/evaluaciones-activas")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C','ETI-ACT-E','ETI-ACT-INV-ER','ETI-ACT-ER')")
   ResponseEntity<Page<Evaluacion>> findEvaluacionesActivas(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - start");
@@ -291,7 +291,7 @@ public class ConvocatoriaReunionController {
    * @return la lista de {@link ConvocatoriaReunion}
    */
   @GetMapping("/acta-no-asignada")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C','ETI-ACT-E','ETI-ACT-INV-ER','ETI-ACT-ER')")
   ResponseEntity<List<ConvocatoriaReunion>> findConvocatoriasSinActa() {
     log.debug("findConvocatoriasSinActa() - start");
     List<ConvocatoriaReunion> result = convocatoriaReunionService.findConvocatoriasSinActa();
