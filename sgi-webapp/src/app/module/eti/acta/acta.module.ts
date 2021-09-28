@@ -14,6 +14,7 @@ import {
 import {
   ActaAsistentesListadoComponent,
 } from './acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
+import { ActaComentariosComponent } from './acta-formulario/acta-comentarios/acta-comentarios.component';
 import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
 import { ActaListadoComponent } from './acta-listado/acta-listado.component';
@@ -28,7 +29,8 @@ import { ActaResolver } from './acta.resolver';
     ActaListadoComponent,
     ActaAsistentesListadoComponent,
     ActaEditarComponent,
-    ActaAsistentesEditarModalComponent
+    ActaAsistentesEditarModalComponent,
+    ActaComentariosComponent
   ],
   imports: [
     SharedModule,

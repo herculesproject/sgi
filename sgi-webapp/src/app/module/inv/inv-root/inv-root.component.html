@@ -17,6 +17,9 @@
         title="{{'menu.principal.inv.seguimientos' | translate}}">
       </sgi-menu-subitem>
     </ng-container>
+    <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['ETI-ACT-INV-ER', 'ETI-ACT-ER']" [route]="[INV_ROUTE_NAMES.ACTAS]"
+      title="{{'menu.principal.inv.actas' | translate}}">
+    </sgi-menu-subitem>
   </sgi-menu-group>
 
   <!-- CSP -->
