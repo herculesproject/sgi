@@ -175,9 +175,6 @@
     <skip.unit.tests>false</skip.unit.tests>
     <skip.startlocalpostgres>true</skip.startlocalpostgres>
 
-    <!-- Sonar properties-->
-    <sonar.exclusions>src/test/java/org/crue/hercules/sgi/eti/**/*.java</sonar.exclusions>
-
     <!-- Define "argLine" as a Maven property rather than as part of the configuration of maven-surefire-plugin -->
     <argLine>-Xmx1024m</argLine>
   </properties>
