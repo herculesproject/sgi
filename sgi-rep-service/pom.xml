@@ -131,13 +131,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- guava lib -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
-    </dependency>
-
     <!-- Pentaho lib -->
     <dependency>
       <groupId>org.pentaho.reporting.engine</groupId>
@@ -149,77 +142,6 @@
           <artifactId>xml-apis-ext</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.engine</groupId>
-      <artifactId>classic-extensions</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.engine</groupId>
-      <artifactId>wizard-core</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libbase</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libdocbundle</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libfonts</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libformat</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libformula</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libloader</artifactId>
-      <version>${pentaho.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis-ext</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>librepository</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libserializer</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.reporting.library</groupId>
-      <artifactId>libxml</artifactId>
-      <version>${pentaho.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext</artifactId>
-      <version>${itext.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext-rtf</artifactId>
-      <version>${itext.version}</version>
     </dependency>
   </dependencies>
 
