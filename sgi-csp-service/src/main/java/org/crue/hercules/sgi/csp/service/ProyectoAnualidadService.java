@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +25,6 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -50,17 +48,16 @@ public class ProyectoAnualidadService {
   private final ProyectoRepository proyectoRepository;
   private final AnualidadGastoRepository anualidadGastoRepository;
   private final AnualidadIngresoRepository anualidadIngresoRepository;
-  private final ProyectoAnualidadRepository proyectoAnualidadRepository;
 
   public ProyectoAnualidadService(Validator validator, ProyectoAnualidadRepository proyectoAnualidadepository,
       ProyectoRepository proyectoRepository, AnualidadGastoRepository anualidadGastoRepository,
-      AnualidadIngresoRepository anualidadIngresoRepository, ProyectoAnualidadRepository proyectoAnualidadRepository) {
+      AnualidadIngresoRepository anualidadIngresoRepository) {
+
     this.validator = validator;
     this.repository = proyectoAnualidadepository;
     this.proyectoRepository = proyectoRepository;
     this.anualidadGastoRepository = anualidadGastoRepository;
     this.anualidadIngresoRepository = anualidadIngresoRepository;
-    this.proyectoAnualidadRepository = proyectoAnualidadRepository;
   }
 
   /**
@@ -184,6 +181,10 @@ public class ProyectoAnualidadService {
     Page<ProyectoAnualidad> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  public List<ProyectoAnualidad> findByProyectoId(Long proyectoId) {
+    return this.repository.findByProyectoId(proyectoId);
   }
 
 }
