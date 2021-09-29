@@ -239,7 +239,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
-          DateValidator.isAfter('fechaFin', 'fechaFinDefinitiva')]
+        ]
       });
 
     if (this.isVisor) {
@@ -633,9 +633,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('costeHora').setValidators([
         Validators.required]);
+      formgroup.setValidators([
+        DateValidator.isAfter('fechaFin', 'fechaFinDefinitiva')]);
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
-    } else {
+    } else if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
+      formgroup.get('fechaFinDefinitiva').setErrors(null);
+      formgroup.get('fechaFinDefinitiva').clearValidators();
+      formgroup.get('fechaFinDefinitiva').updateValueAndValidity({ onlySelf: true, emitEvent: false });
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
       this.abiertoRequired = false;
