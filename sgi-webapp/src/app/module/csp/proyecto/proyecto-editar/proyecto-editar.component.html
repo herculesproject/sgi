@@ -120,6 +120,11 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.AGRUPACIONES_GASTO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.CONSULTA_PRESUPUESTO]"
+        [title]="'csp.proyectos.configuracion-economica.consulta-presupuesto' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.CONSULTA_PRESUPUESTO)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
         [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_JUSTIFICACION]"
         [title]="'csp.proyectos.configuracion-economica.calendario_justificacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_JUSTIFICACION)">

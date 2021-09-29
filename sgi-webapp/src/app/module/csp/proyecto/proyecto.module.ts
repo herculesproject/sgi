@@ -46,6 +46,7 @@ import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.co
 import { ProyectoRoutingModule } from './proyecto-routing.module';
 import { ProyectoCalendarioJustificacionComponent } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.component';
 import { ProyectoPeriodoJustificacionModalComponent } from './modals/proyecto-periodo-justificacion-modal/proyecto-periodo-justificacion-modal/proyecto-periodo-justificacion-modal.component';
+import { ProyectoConsultaPresupuestoComponent } from './proyecto-formulario/proyecto-consulta-presupuesto/proyecto-consulta-presupuesto.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { ProyectoPeriodoJustificacionModalComponent } from './modals/proyecto-pe
     ProyectoResponsableEconomicoModalComponent,
     ProyectoAgrupacionesGastoComponent,
     ProyectoCalendarioJustificacionComponent,
-    ProyectoPeriodoJustificacionModalComponent
+    ProyectoPeriodoJustificacionModalComponent,
+    ProyectoConsultaPresupuestoComponent
   ],
   imports: [
     SharedModule,

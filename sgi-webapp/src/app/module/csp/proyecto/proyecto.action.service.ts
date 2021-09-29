@@ -56,6 +56,7 @@ import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto
 import { ProyectoCalendarioJustificacionFragment } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.fragment';
 import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
 import { ProyectoConceptosGastoFragment } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.fragment';
+import { ProyectoConsultaPresupuestoFragment } from './proyecto-formulario/proyecto-consulta-presupuesto/proyecto-consulta-presupuesto.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
 import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
@@ -113,7 +114,8 @@ export class ProyectoActionService extends ActionService {
     PRESUPUESTO: 'presupuesto',
     REPONSABLE_ECONOMICO: 'responsable-economico',
     AGRUPACIONES_GASTO: 'agrupaciones-gasto',
-    CALENDARIO_JUSTIFICACION: 'calendario-justificacion'
+    CALENDARIO_JUSTIFICACION: 'calendario-justificacion',
+    CONSULTA_PRESUPUESTO: 'consulta-presupuesto'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -139,6 +141,7 @@ export class ProyectoActionService extends ActionService {
   private responsableEconomico: ProyectoResponsableEconomicoFragment;
   private proyectoAgrupacionGasto: ProyectoAgrupacionGastoFragment;
   private proyectoCalendarioJustificacion: ProyectoCalendarioJustificacionFragment;
+  private consultaPresupuesto: ProyectoConsultaPresupuestoFragment;
 
   private readonly data: IProyectoData;
 
@@ -282,6 +285,8 @@ export class ProyectoActionService extends ActionService {
         proyectoAgrupacionGastoService, this.readonly, this.data?.isVisor);
       this.proyectoCalendarioJustificacion = new ProyectoCalendarioJustificacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
         proyectoService, proyectoPeriodoJustificacionService, convocatoriaService);
+      this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService,
+        proyectoAnualidadService, proyectoAgrupacionGastoService);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -305,6 +310,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.REPONSABLE_ECONOMICO, this.responsableEconomico);
       this.addFragment(this.FRAGMENT.AGRUPACIONES_GASTO, this.proyectoAgrupacionGasto);
       this.addFragment(this.FRAGMENT.CALENDARIO_JUSTIFICACION, this.proyectoCalendarioJustificacion);
+      this.addFragment(this.FRAGMENT.CONSULTA_PRESUPUESTO, this.consultaPresupuesto);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {
