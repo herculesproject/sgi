@@ -144,7 +144,7 @@ spring:
     # Make sure database schema is created (schema.sql is executed)
     initialization-mode: always
     # We use PostgreSQL database
-    url: "jdbc:postgresql://postgres:5432/tp"
+    url: "jdbc:postgresql://postgres:5432/rep"
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin
@@ -152,9 +152,9 @@ spring:
     # Enable Liquibase
     enabled: true
     # Default database schema
-    default-schema: tp
+    default-schema: rep
     # Schema to use for Liquibase objects
-    liquibase-schema: tp
+    liquibase-schema: rep
   jpa:
     hibernate:
       # Hibernate will use the entities to validate the database
@@ -165,7 +165,7 @@ spring:
         # We use a PostgreSQL database
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         # Set default Hibernate Schema
-        '[default_schema]': tp
+        '[default_schema]': rep
   security:
     oauth2:
       resourceserver:
