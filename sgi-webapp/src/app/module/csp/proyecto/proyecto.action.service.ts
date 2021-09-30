@@ -9,6 +9,8 @@ import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
+import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
@@ -42,7 +44,10 @@ import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
+import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
+import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -221,7 +226,12 @@ export class ProyectoActionService extends ActionService {
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
     translate: TranslateService,
     proyectoAnualidadService: ProyectoAnualidadService,
-    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService
+    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
+    datosAcademicosService: DatosAcademicosService,
+    convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
+    viculacionService: VinculacionService,
+    convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    datosPersonalesService: DatosPersonalesService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -259,7 +269,9 @@ export class ProyectoActionService extends ActionService {
       this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService, this.readonly, this.data?.isVisor);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
         id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
-      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
+      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService,
+        convocatoriaService, datosAcademicosService, convocatoriaRequisitoIPService, viculacionService,
+        convocatoriaRequisitoEquipoService, datosPersonalesService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(
         fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly, this.data?.isVisor);
       this.areaConocimiento = new ProyectoAreaConocimientoFragment(this.data?.proyecto?.id,

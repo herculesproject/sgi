@@ -108,10 +108,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return this.service.findById(key).pipe(
       map(proyecto => {
         this.proyecto = proyecto;
-        this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
-          this.solicitud = solicitud;
-          this.getFormGroup().controls.solicitudProyecto.setValue(solicitud.titulo);
-        }));
+        if (this.proyecto.solicitudId) {
+          this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
+            this.solicitud = solicitud;
+            this.getFormGroup().controls.solicitudProyecto.setValue(solicitud.titulo);
+          }));
+        }
         return proyecto as IProyectoDatosGenerales;
       }),
       switchMap((proyecto) => {

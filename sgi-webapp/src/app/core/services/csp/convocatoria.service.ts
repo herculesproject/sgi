@@ -441,13 +441,27 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       );
   }
 
-
   /**
    * Recupera las categorías asociadas a la Convocatoria con el id indicado
    * @param id Identificador de la Convocatoria
    */
   findCategoriasProfesionales(id: number): Observable<IRequisitoEquipoCategoriaProfesional[]> {
     const endpointUrl = `${this.endpointUrl}/${id}/categoriasprofesionales`;
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<IRequisitoEquipoCategoriaProfesionalResponse[]>(endpointUrl, { params })
+      .pipe(
+        map(r => {
+          return REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+  /**
+   * Recupera las categorías asociadas a la Convocatoria con el id indicado
+   * @param id Identificador de la Convocatoria
+   */
+  findCategoriasProfesionalesEquipo(id: number): Observable<IRequisitoEquipoCategoriaProfesional[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/categoriasprofesionalesrequisitosequipo`;
     const params = new HttpParams().set('id', id.toString());
     return this.http.get<IRequisitoEquipoCategoriaProfesionalResponse[]>(endpointUrl, { params })
       .pipe(
