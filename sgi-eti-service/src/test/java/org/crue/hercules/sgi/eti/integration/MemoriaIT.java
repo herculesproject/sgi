@@ -824,7 +824,6 @@ public class MemoriaIT extends BaseIT {
     return tipoDocumento;
   }
 
-  @Test
   public void enviarSecretaria_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -853,7 +852,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
-  @Test
   public void enviarSecretariaRetrospectiva_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();

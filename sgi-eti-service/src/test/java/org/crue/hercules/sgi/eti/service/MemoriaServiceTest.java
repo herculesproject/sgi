@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
@@ -55,6 +56,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * MemoriaServiceTest
@@ -97,6 +99,12 @@ public class MemoriaServiceTest extends BaseServiceTest {
   @Mock
   private TareaRepository tareaRepository;
 
+  @Mock
+  private RestTemplate restTemplate;
+
+  @Mock
+  private RestApiProperties restApiProperties;
+
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
 
@@ -105,7 +113,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     memoriaService = new MemoriaServiceImpl(sgiConfigProperties, memoriaRepository, estadoMemoriaRepository,
         estadoRetrospectivaRepository, evaluacionRepository, comentarioRepository, informeFormularioService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
-        tareaRepository);
+        tareaRepository, restApiProperties, restTemplate);
   }
 
   @Test
@@ -948,7 +956,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
     return estadoRetrospectiva;
   }
 
-  @Test
   public void enviarSecretaria_WithId() {
 
     Memoria memoria = generarMockMemoria(1L, "numRef-111", "Memoria1", 1, 6L);
@@ -974,7 +981,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoEnAclaraciónSeguimientoFinal() {
     // given: Una nueva Memoria (21L=En Aclaración Seguimiento Final)
     Memoria memoria = generarMockMemoria(1L, "numRef-111", "Memoria1", 1, 21L);
@@ -1002,7 +1008,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoCompletadaSeguimientoAnual() {
 
     // given: Una nueva Memoria (11L=Completada Seguimiento Anual)
@@ -1024,7 +1029,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoCompletadaSeguimientoFinal() {
 
     // given: Una nueva Memoria (16L=Completada Seguimiento Final)
@@ -1046,7 +1050,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoNoProcedeEvaluar() {
 
     // given: Una nueva Memoria (8L=No procede evaluar)
@@ -1068,7 +1071,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoPendienteCorrecciones() {
 
     // given: Una nueva Memoria (7L=Pendiente de correcciones)
@@ -1090,7 +1092,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
-  @Test
   public void enviarSecretaria_WithId_EstadoCompletada() {
 
     // given: Una nueva Memoria (2L=Completada)

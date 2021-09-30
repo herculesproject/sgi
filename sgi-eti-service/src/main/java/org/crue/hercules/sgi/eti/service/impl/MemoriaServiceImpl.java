@@ -1,20 +1,32 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.multi.MultiFileChooserUI;
+
 import org.apache.commons.lang3.StringUtils;
+import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
+import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.rep.GetDataReportMxxException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
@@ -43,14 +55,31 @@ import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,6 +124,9 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Informe service */
   private final InformeService informeService;
 
+  private final RestApiProperties restApiProperties;
+  private final RestTemplate restTemplate;
+
   /** Tarea repository */
   private final TareaRepository tareaRepository;
 
@@ -103,7 +135,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       EvaluacionRepository evaluacionRepository, ComentarioRepository comentarioRepository,
       InformeService informeService, PeticionEvaluacionRepository peticionEvaluacionRepository,
       ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
-      RespuestaRepository respuestaRepository, TareaRepository tareaRepository) {
+      RespuestaRepository respuestaRepository, TareaRepository tareaRepository, RestApiProperties restApiProperties,
+      RestTemplate restTemplate) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -116,6 +149,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.documentacionMemoriaRepository = documentacionMemoriaRepository;
     this.respuestaRepository = respuestaRepository;
     this.tareaRepository = tareaRepository;
+    this.restApiProperties = restApiProperties;
+    this.restTemplate = restTemplate;
   }
 
   /**
@@ -674,6 +709,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       }
 
       memoria.setFechaEnvioSecretaria(Instant.now());
+
       memoriaRepository.save(memoria);
 
       this.crearInforme(memoria, tipoEvaluacion);
@@ -681,14 +717,13 @@ public class MemoriaServiceImpl implements MemoriaService {
       return memoria;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
-    // TODO crear un fichero en formato pdf con los datos del proyecto y con
-    // los datos del formulario y subirlo al gestor documental y que el sistema
-    // guarde en informes el identificador del documento.
-
     log.debug("enviarSecretaria(Long id) - end");
   }
 
   private void crearInforme(Memoria memoria, Long tipoEvaluacion) {
+    // Se crea un fichero en formato pdf con los datos del proyecto y con
+    // los datos del formulario y subirlo al gestor documental y que el sistema
+    // guarde en informes el identificador del documento.
     Informe informe = new Informe();
     Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
         .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion);
@@ -706,10 +741,92 @@ public class MemoriaServiceImpl implements MemoriaService {
     informe.setTipoEvaluacion(new TipoEvaluacion());
     informe.getTipoEvaluacion().setId(tipoEvaluacion);
 
-    // TODO cambiar documentoRef
-    informe.setDocumentoRef("documentoRef-informe");
-    informeService.create(informe);
+    // Se obtiene el informe en formato pdf creado mediante el servicio de reporting
+    Resource informePdf = getMXX(memoria.getId());
 
+    ResponseEntity<DocumentoOutput> documento = null;
+    try {
+      DataInputStream dis = new DataInputStream(informePdf.getInputStream());
+      byte[] bytesData = new byte[(int) informePdf.contentLength()];
+      dis.readFully(bytesData);
+
+      MultipartFile multipartFile = new MockMultipartFile("file", "informePdf" + LocalDate.now(), "application/pdf",
+          bytesData);
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+      Optional<HttpServletRequest> req = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+          .filter(ServletRequestAttributes.class::isInstance).map(ServletRequestAttributes.class::cast)
+          .map(ServletRequestAttributes::getRequest);
+      HttpServletRequest httpServletRequest = req.get();
+      String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+      headers.set(HttpHeaders.AUTHORIZATION, authorization);
+
+      MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+      bodyMap.add("archivo", new FileSystemResource(convert(multipartFile)));
+
+      HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+
+      // Llamada SGDOC para crear el documento y obtener el documentoRef
+      documento = restTemplate.exchange(restApiProperties.getSgdocUrl() + "/api/sgdoc/documentos", HttpMethod.POST,
+          requestEntity, DocumentoOutput.class);
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+    }
+
+    // Se crea el informe con el documentoRef obtenido del sgdoc
+    if (documento != null && documento.hasBody()) {
+      informe.setDocumentoRef(documento.getBody().getDocumentoRef());
+      informeService.create(informe);
+    }
+  }
+
+  public static File convert(MultipartFile file) {
+    File convFile = new File("informePdf" + LocalDate.now(), file.getOriginalFilename());
+    if (!convFile.getParentFile().exists()) {
+      System.out.println("mkdir:" + convFile.getParentFile().mkdirs());
+    }
+    try {
+      convFile.createNewFile();
+      FileOutputStream fos = new FileOutputStream(convFile);
+      fos.write(file.getBytes());
+      fos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return convFile;
+  }
+
+  /**
+   * Devuelve un informe pdf del formulario M10, M20 o M30
+   *
+   * @param idMemoria Id de la memoria
+   * @return EtiMXXReportOutput Datos a presentar en el informe
+   */
+  private Resource getMXX(Long idMemoria) {
+    log.debug("getMXX(idMemoria)- start");
+    Assert.notNull(idMemoria, "idMemoria no puede ser nulo");
+
+    Resource informe = null;
+    try {
+
+      final ResponseEntity<Resource> response = restTemplate.exchange(
+          restApiProperties.getRepUrl() + "/reports/mxx/" + idMemoria, HttpMethod.GET,
+          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
+
+      informe = (Resource) response.getBody();
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+    }
+
+    if (null == informe) {
+      throw new GetDataReportMxxException();
+    }
+
+    log.debug("getMXX(idMemoria) - end");
+    return informe;
   }
 
   /**
@@ -738,7 +855,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       estadoRetrospectivaRepository.findById(3L).map(estadoRetrospectiva -> {
 
         memoria.getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva);
-        memoriaRepository.save(memoria);
+        // TODO quitar despues de pruebas
+        // memoriaRepository.save(memoria);
         return estadoRetrospectiva;
 
       }).orElseThrow(() -> new EstadoRetrospectivaNotFoundException(3L));
