@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -22,6 +23,8 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipoCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
@@ -40,6 +43,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
+import org.crue.hercules.sgi.csp.service.RequisitoEquipoCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -72,6 +76,7 @@ public class ConvocatoriaController {
 
   public static final String PATH_CATEGORIAS_PROFESIONALES = "/{id}/categoriasprofesionales";
   public static final String PATH_NIVELES = "/{id}/niveles";
+  public static final String PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_EQUIPO = "/{id}/categoriasprofesionalesrequisitosequipo";
 
   private ModelMapper modelMapper;
 
@@ -122,6 +127,9 @@ public class ConvocatoriaController {
   /** RequisitoIPCategoriaProfesionalService */
   private final RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService;
 
+  /** RequisitoEquipoCategoriaProfesionalService */
+  private final RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    *
@@ -156,7 +164,8 @@ public class ConvocatoriaController {
       ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService,
       ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService,
       RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
-      RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService, ModelMapper modelMapper) {
+      RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService,
+      RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService, ModelMapper modelMapper) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaDocumentoService = convocatoriaDocumentoService;
@@ -173,6 +182,7 @@ public class ConvocatoriaController {
     this.convocatoriaConceptoGastoCodigoEcService = convocatoriaConceptoGastoCodigoEcService;
     this.requisitoIPNivelAcademicoService = requisitoIPNivelAcademicoService;
     this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
+    this.requisitoEquipoCategoriaProfesionalService = requisitoEquipoCategoriaProfesionalService;
     this.modelMapper = modelMapper;
   }
 
@@ -1034,6 +1044,33 @@ public class ConvocatoriaController {
 
   private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
     return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
+  }
+
+  /**
+   * Devuelve las {@link RequisitoEquipoCategoriaProfesional} asociadas al
+   * {@link RequisitoEquipo} con el id indicado
+   * 
+   * @param id Identificador de {@link RequisitoEquipoCategoriaProfesional}
+   * @return RequisitoEquipoCategoriaProfesional
+   *         {@link RequisitoEquipoCategoriaProfesional} correspondiente al id
+   */
+  @GetMapping(PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_EQUIPO)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
+  public List<RequisitoEquipoCategoriaProfesionalOutput> findCategoriasProfesionalesEquipo(@PathVariable Long id) {
+    log.debug("findCategoriasProfesionalesEquipo(@PathVariable Long id) - start");
+    List<RequisitoEquipoCategoriaProfesionalOutput> returnValue = convertRequisitoEquipoCategoriaProfesionales(
+        requisitoEquipoCategoriaProfesionalService.findByRequisitoEquipo(id));
+    log.debug("findCategoriasProfesionalesEquipo(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  private List<RequisitoEquipoCategoriaProfesionalOutput> convertRequisitoEquipoCategoriaProfesionales(
+      List<RequisitoEquipoCategoriaProfesional> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private RequisitoEquipoCategoriaProfesionalOutput convert(RequisitoEquipoCategoriaProfesional entity) {
+    return modelMapper.map(entity, RequisitoEquipoCategoriaProfesionalOutput.class);
   }
 
   /**
