@@ -151,7 +151,7 @@ export class ProyectoEquipoFragment extends Fragment {
   addProyectoEquipo(element: IProyectoEquipoListado) {
     const wrapper = new StatusWrapper<IProyectoEquipoListado>({
       proyectoEquipo: element.proyectoEquipo,
-      help: { class: HelpIconClass.DANGER } as HelpIcon
+      help: null
     } as IProyectoEquipoListado);
     this.validateRequisitosConvocatoria(wrapper.value.proyectoEquipo).subscribe(
       (response => {
@@ -329,6 +329,7 @@ export class ProyectoEquipoFragment extends Fragment {
                     !convocatoriaRequisitoIp?.fechaMinimaCategoriaProfesional &&
                     convocatoriaRequisitoIp?.vinculacionUniversidad == null) {
                     response.msgError = null;
+                    response.isValid = true;
                   }
                   if ((convocatoriaRequisitoIp?.fechaMaximaNivelAcademico ||
                     convocatoriaRequisitoIp?.fechaMinimaNivelAcademico ||
@@ -398,13 +399,14 @@ export class ProyectoEquipoFragment extends Fragment {
                     } else if (vinculacion.fechaObtencionCategoria == null) {
                       response.msgError = ErroresRequisitos.NO_FECHAS_VINCUALCION;
                     }
-                  } else if (convocatoriaRequisitoIp.vinculacionUniversidad === true) {
+                  } else if (convocatoriaRequisitoIp?.vinculacionUniversidad === true) {
                     response.msgError = ErroresRequisitos.NO_VINCULACION;
                   } else if (response.msgError === null) {
                     response.isValid = true;
                   }
                 } else {
                   response.msgError = null;
+                  response.isValid = true;
                 }
                 return response;
               })
