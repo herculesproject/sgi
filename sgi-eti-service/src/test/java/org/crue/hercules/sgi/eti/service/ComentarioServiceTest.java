@@ -384,7 +384,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long evaluacionId = 12L;
     final Long tipoEvaluacionId = 2L; // Memoria
     final Long estadoMemoriaId = 18L; // En Secretaria Seg Final Aclaraciones
-    final String nombreComite = "CEIAB";
+    final String nombreComite = "CBE";
     final Long estadoRetrospectivaId = 2L; // Completada
     final Long formularioId = 3L;
 
@@ -804,7 +804,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long evaluacionId = 12L;
     final Long tipoEvaluacionId = 2L; // Memoria
     final Long estadoMemoriaId = 18L; // En Secretaria Seg Final Aclaraciones
-    final String nombreComite = "CEIAB";
+    final String nombreComite = "CBE";
     final Long estadoRetrospectivaId = 2L; // Completada
     final Long formularioId = 3L;
 
@@ -1482,7 +1482,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     memoria.setEstadoActual(estadoMemoria);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "CEI", formulario, Boolean.TRUE);
     memoria.setComite(comite);
 
     final Evaluacion evaluacion = new Evaluacion();

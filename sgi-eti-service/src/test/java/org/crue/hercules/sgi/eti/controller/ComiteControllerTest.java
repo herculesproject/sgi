@@ -472,7 +472,7 @@ public class ComiteControllerTest extends BaseControllerTest {
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(1L);
 
-    return new Memoria(id, numReferencia, peticionEvaluacion, new Comite(1L, "CEISH", new Formulario(), Boolean.TRUE),
+    return new Memoria(id, numReferencia, peticionEvaluacion, new Comite(1L, "CEI", new Formulario(), Boolean.TRUE),
         titulo, "user-00" + id, generarMockTipoMemoria(1L, "TipoMemoria1", true), new TipoEstadoMemoria(),
         Instant.now(), Boolean.TRUE, null, version, "CodOrganoCompetente", Boolean.TRUE, null);
   }

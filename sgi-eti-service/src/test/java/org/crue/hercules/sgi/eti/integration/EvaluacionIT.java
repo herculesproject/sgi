@@ -815,7 +815,7 @@ public class EvaluacionIT extends BaseIT {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "CEI", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);

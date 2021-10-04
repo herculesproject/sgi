@@ -490,10 +490,10 @@ public class ComentarioServiceImpl implements ComentarioService {
       case 2: {
         // Tipo Evaluación Memoria
 
-        // El id formulario debe ser del tipo 1 - > M10 si el comité es CEISH
+        // El id formulario debe ser del tipo 1 - > M10 si el comité es CEI
         Assert.isTrue(
-            (idFormulario.equals(1L) && comite.equals("CEISH")) || (idFormulario.equals(2L) && comite.equals("CEEA"))
-                || (idFormulario.equals(3L) && comite.equals("CEIAB")),
+            (idFormulario.equals(1L) && comite.equals("CEI")) || (idFormulario.equals(2L) && comite.equals("CEEA"))
+                || (idFormulario.equals(3L) && comite.equals("CBE")),
             "El bloque seleccionado no es correcto para el tipo de evaluación.");
 
         break;

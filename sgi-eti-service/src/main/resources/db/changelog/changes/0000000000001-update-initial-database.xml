@@ -10,4 +10,11 @@
       <column name="minuto_inicio_segunda" type="integer" />
     </addColumn>
   </changeSet>
+
+  <changeSet author="master" id="0000000000001-3">
+    <renameColumn tableName="configuracion" newColumnName="meses_aviso_proyecto_cbe" oldColumnName="meses_aviso_proyecto_ceiab" />
+  </changeSet>
+  <changeSet author="master" id="0000000000001-4">
+    <renameColumn tableName="configuracion" newColumnName="meses_aviso_proyecto_cei" oldColumnName="meses_aviso_proyecto_ceish" />
+  </changeSet>
 </databaseChangeLog>
