@@ -134,7 +134,7 @@ public class InvencionController {
    * @return la lista de entidades {@link Invencion} paginadas y/o filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R')")
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R', 'PII-INV-MOD-V')")
   ResponseEntity<Page<InvencionOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -179,7 +179,7 @@ public class InvencionController {
    * @return {@link Invencion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R')")
+  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R', 'PII-INV-MOD-V')")
   InvencionOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     Invencion returnValue = service.findById(id);
