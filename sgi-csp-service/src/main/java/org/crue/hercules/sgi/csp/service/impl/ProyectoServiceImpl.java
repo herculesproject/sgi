@@ -427,20 +427,15 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ProyectoEquipo> equipos = new ArrayList<ProyectoEquipo>();
     List<ProyectoEquipo> equiposFechaFinIgualAFechaFinActual = proyectoEquipoService
         .findAllByProyectoIdAndFechaFin(proyectoId, fechaBusqueda);
-    List<ProyectoEquipo> equiposFechaFinMayorAFechaFinNueva = proyectoEquipoService
-        .findAllByProyectoIdAndFechaFinGreaterThan(proyectoId, fechaFinNew);
     if (!CollectionUtils.isEmpty(equiposFechaFinIgualAFechaFinActual)) {
       equipos.addAll(
           equiposFechaFinIgualAFechaFinActual.stream().filter(e -> !equipos.contains(e)).collect(Collectors.toList()));
     }
-    if (!CollectionUtils.isEmpty(equiposFechaFinMayorAFechaFinNueva)) {
-      equipos.addAll(
-          equiposFechaFinMayorAFechaFinNueva.stream().filter(e -> !equipos.contains(e)).collect(Collectors.toList()));
-    }
+
     if (!CollectionUtils.isEmpty(equipos)) {
       equipos.stream().map(equipo -> {
         equipo.setFechaFin(fechaFinNew);
-        if (equipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
+        if (equipo.getFechaInicio() != null && equipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
           // La fecha de inicio nunca puede ser superior a la de fin
           equipo.setFechaInicio(fechaFinNew);
         }
