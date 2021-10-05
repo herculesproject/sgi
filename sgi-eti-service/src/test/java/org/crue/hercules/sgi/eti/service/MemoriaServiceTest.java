@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -937,6 +938,57 @@ public class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoriaEstadoActualizado = memoriaService.updateEstadoAnteriorMemoria(1L);
 
     Assertions.assertThat(memoriaEstadoActualizado).isNull();
+  }
+
+  @Test
+  public void updateEstadoAnteriorMemoriaEnEvaluacion_returnsMemoriaNull() {
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION);
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1, 3L);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(memoria));
+
+    Memoria memoriaEstadoActualizado = memoriaService.updateEstadoAnteriorMemoria(1L);
+
+    Assertions.assertThat(memoriaEstadoActualizado).isNull();
+  }
+
+  @Test
+  public void updateEstadoAnteriorMemoriaEnSecretaria_returnsMemoriaNull() {
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1, 3L);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(memoria));
+
+    Memoria memoriaEstadoActualizado = memoriaService.updateEstadoAnteriorMemoria(1L);
+
+    Assertions.assertThat(memoriaEstadoActualizado).isNull();
+  }
+
+  @Test
+  public void updateEstadoAnteriorMemoriaEnSecretariaRevisionMinima_returnsMemoriaNull() {
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA);
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1, 3L);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(memoria));
+
+    Memoria memoriaEstadoActualizado = memoriaService.updateEstadoAnteriorMemoria(1L);
+
+    Assertions.assertThat(memoriaEstadoActualizado).isNull();
+  }
+
+  @Test
+  public void updateEstadoAnterior_MemoriaNotPresent_ThrowsMemoriaNotFoundException() {
+    Assertions.assertThatThrownBy(() -> memoriaService.updateEstadoAnteriorMemoria(1L))
+        .isInstanceOf(MemoriaNotFoundException.class);
   }
 
   public List<EstadoMemoria> generarEstadosMemoria(Long id) {
