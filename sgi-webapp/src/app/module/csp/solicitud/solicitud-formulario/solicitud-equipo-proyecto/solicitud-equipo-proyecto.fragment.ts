@@ -4,8 +4,8 @@ import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { filter, map, share, switchMap, tap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 
 export class SolicitudEquipoProyectoFragment extends Fragment {
@@ -26,29 +26,34 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   protected onInitialize(): void {
     const id = this.getKey() as number;
     if (id) {
-      this.solicitudService.existSolicitanteInSolicitudProyectoEquipo(id).subscribe(result => {
-        if (!result) {
-          this.rolProyectoService.findPrincipal().subscribe(rol => {
-            const solictudProyectoEquipo = {
-              solicitudProyectoId: id,
-              rolProyecto: rol,
-              persona: this.actionService.solicitante
-            } as ISolicitudProyectoEquipo;
-            this.addProyectoEquipo(solictudProyectoEquipo);
-          });
-        }
-      });
+      const existsSolicitudProyecto$ = this.solicitudService.existsSolictudProyecto(id).pipe(share());
 
-      const subscription = this.solicitudService.findAllSolicitudProyectoEquipo(id).pipe(
-        map(result => result.items.map(solicitudProyectoEquipo =>
-          new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo)
-        )),
-      ).subscribe(
-        (result) => {
-          this.proyectoEquipos$.next(result);
-        }
-      );
-      this.subscriptions.push(subscription);
+      this.subscriptions.push(existsSolicitudProyecto$.pipe(
+        filter(exist => !exist),
+        switchMap(() => {
+          return this.rolProyectoService.findPrincipal();
+        }),
+      ).subscribe((rol) => {
+        const solictudProyectoEquipo = {
+          solicitudProyectoId: id,
+          rolProyecto: rol,
+          persona: this.actionService.solicitante
+        } as ISolicitudProyectoEquipo;
+        this.addProyectoEquipo(solictudProyectoEquipo);
+        return of(solictudProyectoEquipo);
+      }));
+
+      this.subscriptions.push(existsSolicitudProyecto$.pipe(
+        filter(exist => exist),
+        switchMap(() => {
+          return this.solicitudService.findAllSolicitudProyectoEquipo(id).pipe(
+            map(result => result.items.map(solicitudProyectoEquipo =>
+              new StatusWrapper<ISolicitudProyectoEquipo>(solicitudProyectoEquipo))));
+        })).subscribe(
+          (result) => {
+            this.proyectoEquipos$.next(result);
+          }
+        ));
     }
   }
 
