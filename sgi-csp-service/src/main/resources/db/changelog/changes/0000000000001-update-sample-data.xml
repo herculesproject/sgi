@@ -12,4 +12,22 @@
     </update>
   </changeSet>
 
+  <!-- HERCULES-4968 -->
+  <changeSet context="dev" author="master" id="0000000000001-concepto_gasto">
+    <update tableName="concepto_gasto">
+      <column name="costes_indirectos" valueBoolean="false" />
+      <where>:name!=:value</where>
+      <whereParams>
+        <param name="nombre" value="Costes indirectos" />
+      </whereParams>
+    </update>
+    <update tableName="concepto_gasto">
+      <column name="costes_indirectos" valueBoolean="true" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Costes indirectos" />
+      </whereParams>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
