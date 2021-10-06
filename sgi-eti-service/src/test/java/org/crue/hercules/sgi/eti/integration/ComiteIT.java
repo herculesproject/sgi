@@ -249,8 +249,8 @@ public class ComiteIT extends BaseIT {
     Assertions.assertThat(comites.get(3).getComite()).isEqualTo("Comite5");
     Assertions.assertThat(comites.get(4).getComite()).isEqualTo("Comite4");
     Assertions.assertThat(comites.get(5).getComite()).isEqualTo("CEI");
-    Assertions.assertThat(comites.get(6).getComite()).isEqualTo("CBE");
-    Assertions.assertThat(comites.get(7).getComite()).isEqualTo("CEEA");
+    Assertions.assertThat(comites.get(6).getComite()).isEqualTo("CEEA");
+    Assertions.assertThat(comites.get(7).getComite()).isEqualTo("CBE");
 
   }
 
