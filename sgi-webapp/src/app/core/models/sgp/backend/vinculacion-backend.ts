@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { ICategoriaProfesional } from '../categoria-profesional';
 
 export interface IVinculacionBackend {

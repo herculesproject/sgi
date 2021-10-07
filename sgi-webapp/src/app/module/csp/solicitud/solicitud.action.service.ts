@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
@@ -9,9 +8,12 @@ import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requ
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito-equipo-categoria-profesional';
+import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { IDatosAcademicos } from '@core/models/sgp/datos-academicos';
+import { IDatosPersonales } from '@core/models/sgp/datos-personales';
 import { IPersona } from '@core/models/sgp/persona';
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { ActionService } from '@core/services/action-service';
@@ -40,11 +42,13 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
+import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -69,6 +73,21 @@ import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
 
+const REQUISITOS_CONVOCATORIA_KEY = marker('csp.proyecto-equipo.tooltip');
+const REQUISITOS_CONVOCATORIA_FECHA_OBTENCION_KEY = marker('csp.proyecto-equipo.tooltip-fechaObtencion');
+const REQUISITOS_CONVOCATORIA_FEHCA_MAX_KEY = marker('csp.proyecto-equipo.tooltip-fechaMax');
+const REQUISITOS_CONVOCATORIA_FECHA_MIN_KEY = marker('csp.proyecto-equipo.tooltip-fechaMin');
+const REQUISITOS_CONVOCATORIA_NIVEL_ACADEMICO_KEY = marker('csp.proyecto-equipo.tooltip-nivelAcademico');
+const REQUISITOS_CONVOCATORIA_SEXO_KEY = marker('csp.proyecto-equipo.tooltip-sexo');
+const REQUISITOS_CONVOCATORIA_DATOS_ACADEMICOS_KEY = marker('csp.proyecto-equipo.tooltip-datosAcademicos');
+const REQUISITOS_CONVOCATORIA_CATEGORIAS_PROFESIONALES_KEY = marker('csp.proyecto-equipo.tooltip-categoriasProfesionales');
+const REQUISITOS_CONVOCATORIA_VINCULACION_KEY = marker('csp.proyecto-equipo.tooltip-vinculacion');
+const REQUISITOS_CONVOCATORIA_NO_VINCULACION_KEY = marker('csp.proyecto-equipo.tooltip-noVinculacion');
+const REQUISITOS_CONVOCATORIA_FECHA_VINCULACION_MAYOR_MAX_KEY = marker('csp.proyecto-equipo.tooltip-fechaVinculacionMayorMax');
+const REQUISITOS_CONVOCATORIA_FECHA_VINCULACION_MENOR_MIN_KEY = marker('csp.proyecto-equipo.tooltip-fechaVinculacionMenorMin');
+const REQUISITOS_CONVOCATORIA_NO_FECHAS_KEY = marker('csp.proyecto-equipo.tooltip-noFechas');
+const REQUISITOS_CONVOCATORIA_EDAD_MAX_KEY = marker('csp.proyecto-equipo.tooltip-edadMax');
+
 export interface ISolicitudData {
   readonly: boolean;
   solicitud: ISolicitud;
@@ -77,6 +96,30 @@ export interface ISolicitudData {
   solicitudProyecto: ISolicitudProyecto;
   hasAnySolicitudProyectoSocioWithRolCoordinador: boolean;
 }
+
+interface ErrorResponse {
+  isValid: boolean;
+  msgError: ErroresRequisitos;
+}
+
+enum ErroresRequisitos {
+  FECHA_OBTENCION = 'fechaObtencion',
+  FECHA_MAYOR = 'fechaMayorMax',
+  FECHA_MENOR = 'fechaMenorMin',
+  NIVEL_ACADEMICO = 'nivelAcademico',
+  SEXO = 'sexo',
+  DATOS_ACADEMICOS = 'datosAcademicos',
+  CATEGORIAS_PROFESIONALES = 'categoriasProfesionales',
+  VINCULACION = 'vinculacion',
+  NO_VINCULACION = 'noViculacion',
+  FECHA_VINCULACION_MAYOR = 'fechaVinculacionMayorMax',
+  FECHA_VINCULACION_MENOR = 'fechaVinculacionMenorMin',
+  NO_FECHAS_VINCUALCION = 'noFechasVinculacion',
+  FECHA_OBTENCION_MAYOR = 'fechaObtencionMayorMax',
+  FECHA_OBTENCION_MENOR = 'fechaObtencionMenorMin',
+  EDAD = 'edadMax'
+}
+
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -181,9 +224,12 @@ export class SolicitudActionService extends ActionService {
     private datosAcademicosService: DatosAcademicosService,
     private vinculacionService: VinculacionService,
     private convocatoriaRequisitoIpService: ConvocatoriaRequisitoIPService,
-    private convocatoriaRquisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     private dialogService: DialogService,
-    rolProyectoService: RolProyectoService
+    rolProyectoService: RolProyectoService,
+    private translate: TranslateService,
+    private datosPersonalesService: DatosPersonalesService
+
   ) {
     super();
 
@@ -367,22 +413,31 @@ export class SolicitudActionService extends ActionService {
     this.performChecks(true);
     if (this.hasErrors()) {
       return throwError('Errores');
+    } else {
+      return this.validateRequisitosConvocatoria().pipe(
+        switchMap((response) => {
+          if (!response.isValid) {
+            return this.translate.get(this.getTooltipMessage(response)).pipe(
+              switchMap((value) => {
+                return this.translate.get(
+                  MSG_SAVE_REQUISITOS_INVESTIGADOR,
+                  { mask: value }
+                );
+              }),
+              switchMap((value) => {
+                return this.dialogService.showConfirmation(value);
+              }),
+              switchMap((aceptado) => {
+                if (aceptado) {
+                  return this.saveOrUpdateSolicitud();
+                }
+              })
+            );
+          }
+          return this.saveOrUpdateSolicitud();
+        })
+      );
     }
-
-    return this.validateRequisitosConvocatoria().pipe(
-      switchMap((errors) => {
-        if (errors) {
-          return this.dialogService.showConfirmation(MSG_SAVE_REQUISITOS_INVESTIGADOR).pipe(
-            switchMap((aceptado) => {
-              if (aceptado) {
-                return this.saveOrUpdateSolicitud();
-              }
-            }));
-        }
-        return this.saveOrUpdateSolicitud();
-      })
-    );
-
   }
 
   /**
@@ -489,108 +544,244 @@ export class SolicitudActionService extends ActionService {
     }
   }
 
-  private validateRequisitosConvocatoria(): Observable<boolean> {
-    if (this.convocatoriaId) {
-      let fechaObtencion: DateTime;
-      let vinculacion: IVinculacion;
-      let categoriasProfesionalesConvocatoria: IRequisitoEquipoCategoriaProfesional[];
-      return this.convocatoriaService.findNivelesAcademicos(this.convocatoriaId).pipe(
-        switchMap((nivelesAcademicos) => {
-          if (nivelesAcademicos.length > 0) {
-            return this.datosAcademicosService.findByPersonaId(this.solicitante.id).pipe(
-              switchMap((datosAcademicos) => {
-                if (datosAcademicos) {
-                  fechaObtencion = datosAcademicos.fechaObtencion;
-                  const nivelAcademicoSolicitante =
-                    nivelesAcademicos.filter(nivelAcademico => nivelAcademico?.nivelAcademico?.id === datosAcademicos.nivelAcademico.id);
-                  if (nivelAcademicoSolicitante.length > 0) {
-                    return this.convocatoriaRequisitoIpService.getRequisitoIPConvocatoria
-                      (this.convocatoriaId);
-                  }
-                } else {
-                  return of(null);
+  private validateRequisitosConvocatoria(): Observable<ErrorResponse> {
+    let datosAcademicos: IDatosAcademicos;
+    let edad: Duration;
+    let datosPersonales: IDatosPersonales;
+    let vinculacion: IVinculacion;
+    let categoriasProfesionalesConvocatoria: IRequisitoEquipoCategoriaProfesional[];
+    let nivelAcademicoSolicitante: IRequisitoEquipoNivelAcademico[];
+    let categoriaProfesionalSolicitante: IRequisitoEquipoCategoriaProfesional[];
+    const response = {
+      isValid: false,
+      msgError: null,
+    } as ErrorResponse;
+
+    return this.convocatoriaService.findNivelesAcademicos(this.convocatoriaId).pipe(
+      switchMap((nivelesAcademicos) => {
+        return this.datosAcademicosService.findByPersonaId(this.solicitante.id).pipe(
+          switchMap((datoAcademico) => {
+            if (datoAcademico) {
+              datosAcademicos = datoAcademico;
+              if (nivelesAcademicos.length > 0) {
+                nivelAcademicoSolicitante =
+                  nivelesAcademicos.filter(nivelAcademico => nivelAcademico?.nivelAcademico?.id === datosAcademicos.nivelAcademico.id);
+              }
+            }
+            return this.datosPersonalesService.findByPersonaId(this.solicitante.id).pipe(
+              switchMap((datoPersonal) => {
+                if (datoPersonal) {
+                  datosPersonales = datoPersonal;
+                  edad = DateTime.local().diff(datoPersonal?.fechaNacimiento, ['years', 'months', 'days', 'hours']);
                 }
+                return this.convocatoriaService.findCategoriasProfesionales(this.convocatoriaId);
               }),
-              map((convocatoriaRequisitoIp: IConvocatoriaRequisitoIP) => {
-                if
-                  (convocatoriaRequisitoIp?.fechaMaximaNivelAcademico ||
-                  convocatoriaRequisitoIp?.fechaMinimaNivelAcademico) {
-                  if (!fechaObtencion) {
-                    return false;
-                  } else if (fechaObtencion.startOf('day') >
-                    convocatoriaRequisitoIp.fechaMaximaNivelAcademico?.startOf('day')) {
-                    return false;
-                  } else if (fechaObtencion.startOf('day') <
-                    convocatoriaRequisitoIp.fechaMinimaNivelAcademico?.startOf('day')) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                } else {
-                  return false;
-                }
-              })
-            );
-          }
-          return of(false);
-        }),
-        switchMap((erroresNivelesAcademicos: boolean) => {
-          if (!erroresNivelesAcademicos) {
-            return this.convocatoriaService.findCategoriasProfesionales(this.convocatoriaId).pipe(
-              switchMap((categoriasProfesionales) => {
-                if (categoriasProfesionales.length > 0) {
+              switchMap((categoriasProfesionales: IRequisitoEquipoCategoriaProfesional[]) => {
+                if (categoriasProfesionales?.length > 0) {
                   categoriasProfesionalesConvocatoria = categoriasProfesionales;
-                  return this.vinculacionService.findByPersonaId(this.solicitante.id);
-                } else {
-                  return of(null);
                 }
+                return this.vinculacionService.findByPersonaId(this.solicitante.id);
               }),
               switchMap((vinculacionSolicitante: IVinculacion) => {
-                const categoriaProfesionalSolicitante =
-                  categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.categoriaProfesional.id ===
-                    vinculacionSolicitante?.categoriaProfesional.id);
+                if (categoriasProfesionalesConvocatoria?.length > 0 && vinculacionSolicitante != null) {
+                  categoriaProfesionalSolicitante =
+                    categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.categoriaProfesional.id ===
+                      vinculacionSolicitante?.categoriaProfesional.id);
+                }
                 vinculacion = vinculacionSolicitante;
-                if (categoriaProfesionalSolicitante?.length > 0) {
-                  return this.convocatoriaRquisitoEquipoService.findById(this.convocatoriaId);
+                return this.convocatoriaRequisitoIpService.getRequisitoIPConvocatoria(this.convocatoriaId);
+              }));
+          }),
+          map((convocatoriaRequisitoIp: IConvocatoriaRequisitoIP) => {
+            if (!convocatoriaRequisitoIp?.fechaMaximaNivelAcademico &&
+              !convocatoriaRequisitoIp?.fechaMinimaNivelAcademico &&
+              !convocatoriaRequisitoIp?.sexo.id &&
+              !convocatoriaRequisitoIp?.edadMaxima &&
+              !convocatoriaRequisitoIp?.fechaMaximaCategoriaProfesional &&
+              !convocatoriaRequisitoIp?.fechaMinimaCategoriaProfesional &&
+              !convocatoriaRequisitoIp?.vinculacionUniversidad) {
+              response.msgError = null;
+            }
+            if ((convocatoriaRequisitoIp?.fechaMaximaNivelAcademico ||
+              convocatoriaRequisitoIp?.fechaMinimaNivelAcademico ||
+              convocatoriaRequisitoIp?.sexo ||
+              convocatoriaRequisitoIp?.edadMaxima) && datosAcademicos != null) {
 
-                } else {
-                  return of(null);
+              if (!datosAcademicos.fechaObtencion &&
+                (convocatoriaRequisitoIp.fechaMaximaCategoriaProfesional && convocatoriaRequisitoIp.fechaMinimaCategoriaProfesional)) {
+                response.msgError = ErroresRequisitos.FECHA_OBTENCION;
+              } else if (datosAcademicos.fechaObtencion?.startOf('day') >
+                convocatoriaRequisitoIp.fechaMaximaNivelAcademico?.startOf('day')) {
+                response.msgError = ErroresRequisitos.FECHA_MAYOR;
+              } else if (datosAcademicos.fechaObtencion?.startOf('day') <
+                convocatoriaRequisitoIp.fechaMinimaNivelAcademico?.startOf('day')) {
+                response.msgError = ErroresRequisitos.FECHA_MENOR;
+              } else if (nivelAcademicoSolicitante !== null && nivelAcademicoSolicitante?.length < 1) {
+                response.msgError = ErroresRequisitos.NIVEL_ACADEMICO;
+              } else if (convocatoriaRequisitoIp != null && (convocatoriaRequisitoIp?.sexo?.id != null &&
+                (this.solicitante.sexo?.id !== convocatoriaRequisitoIp?.sexo?.id))) {
+                response.msgError = ErroresRequisitos.SEXO;
+              } else if (convocatoriaRequisitoIp != null && (convocatoriaRequisitoIp?.edadMaxima != null &&
+                (edad.years > convocatoriaRequisitoIp?.edadMaxima))) {
+                response.msgError = ErroresRequisitos.EDAD;
+              }
+
+            } else if (convocatoriaRequisitoIp != null && (convocatoriaRequisitoIp?.sexo?.id != null &&
+              (this.solicitante.sexo?.id !== convocatoriaRequisitoIp?.sexo?.id))) {
+              response.msgError = ErroresRequisitos.SEXO;
+            } else if (convocatoriaRequisitoIp != null && (convocatoriaRequisitoIp?.edadMaxima != null &&
+              (edad.years > convocatoriaRequisitoIp?.edadMaxima))) {
+              response.msgError = ErroresRequisitos.EDAD;
+            } else if (convocatoriaRequisitoIp != null && datosAcademicos == null) {
+              response.msgError = ErroresRequisitos.DATOS_ACADEMICOS;
+            }
+
+            if (categoriasProfesionalesConvocatoria != null && convocatoriaRequisitoIp != null
+              && categoriasProfesionalesConvocatoria?.length !== 0 && convocatoriaRequisitoIp?.vinculacionUniversidad === true
+              && categoriaProfesionalSolicitante?.length === 0) {
+              response.msgError = ErroresRequisitos.CATEGORIAS_PROFESIONALES;
+            }
+            if (vinculacion !== null) {
+              if (convocatoriaRequisitoIp != null) {
+                if (convocatoriaRequisitoIp.vinculacionUniversidad === false && vinculacion) {
+                  response.msgError = ErroresRequisitos.NO_VINCULACION;
+                } else if (convocatoriaRequisitoIp.vinculacionUniversidad === true && !vinculacion) {
+                  response.msgError = ErroresRequisitos.VINCULACION;
+                } else if (convocatoriaRequisitoIp.fechaMaximaNivelAcademico != null &&
+                  vinculacion.fechaObtencionCategoria >
+                  convocatoriaRequisitoIp.fechaMaximaNivelAcademico) {
+                  response.msgError = ErroresRequisitos.FECHA_VINCULACION_MAYOR;
+                } else if (convocatoriaRequisitoIp.fechaMinimaNivelAcademico != null &&
+                  vinculacion.fechaObtencionCategoria <
+                  convocatoriaRequisitoIp.fechaMinimaNivelAcademico) {
+                  response.msgError = ErroresRequisitos.FECHA_VINCULACION_MENOR;
+                } else if (convocatoriaRequisitoIp.fechaMaximaCategoriaProfesional != null &&
+                  vinculacion.fechaObtencionCategoria >
+                  convocatoriaRequisitoIp.fechaMaximaCategoriaProfesional) {
+                  response.msgError = ErroresRequisitos.FECHA_OBTENCION_MAYOR;
+                } else if (convocatoriaRequisitoIp.fechaMinimaCategoriaProfesional != null &&
+                  vinculacion.fechaObtencionCategoria <
+                  convocatoriaRequisitoIp.fechaMinimaCategoriaProfesional) {
+                  response.msgError = ErroresRequisitos.FECHA_OBTENCION_MENOR;
+                } else if (response.msgError === null) {
+                  response.isValid = true;
                 }
-              }),
-              map((convocatoriaRequisitoEquipo: IConvocatoriaRequisitoEquipo) => {
+              } else if (vinculacion.fechaObtencionCategoria == null) {
+                response.msgError = ErroresRequisitos.NO_FECHAS_VINCUALCION;
+              }
+            } else if (convocatoriaRequisitoIp.vinculacionUniversidad === true) {
+              response.msgError = ErroresRequisitos.NO_VINCULACION;
+            } else if (response.msgError === null) {
+              response.isValid = true;
+            }
+            return response;
+          })
+        );
 
-                if (convocatoriaRequisitoEquipo?.sexo.id && this.solicitante?.sexo.nombre !== convocatoriaRequisitoEquipo?.sexo.nombre) {
-                  return true;
-                }
+      }),
+      switchMap((erroresNivelesAcademicos: ErrorResponse) => {
+        if (erroresNivelesAcademicos.msgError === null) {
+          return this.convocatoriaService.findCategoriasProfesionalesEquipo(this.convocatoriaId).pipe(
+            switchMap((categoriasProfesionales) => {
+              if (categoriasProfesionales?.length > 0) {
+                categoriasProfesionalesConvocatoria = categoriasProfesionales;
+              }
+              return this.vinculacionService.findByPersonaId(this.solicitante.id);
+            }),
+            switchMap((vinculacionSolicitante: IVinculacion) => {
+              categoriaProfesionalSolicitante =
+                categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.categoriaProfesional.id ===
+                  vinculacionSolicitante?.categoriaProfesional.id);
+              vinculacion = vinculacionSolicitante;
+              return this.convocatoriaRequisitoEquipoService.findByConvocatoriaId(this.convocatoriaId);
+            }),
+            map((convocatoriaRequisitoEquipo: IConvocatoriaRequisitoEquipo) => {
 
-                if (categoriasProfesionalesConvocatoria?.length !== 0 && !convocatoriaRequisitoEquipo?.vinculacionUniversidad) {
-                  return true;
-                }
+              if (convocatoriaRequisitoEquipo?.sexo.id &&
+                this.solicitante.sexo.id !== convocatoriaRequisitoEquipo?.sexo.id) {
+                response.msgError = ErroresRequisitos.SEXO;
+              }
 
-                if (convocatoriaRequisitoEquipo?.fechaMaximaCategoriaProfesional ||
-                  convocatoriaRequisitoEquipo?.fechaMinimaCategoriaProfesional) {
-                  if (!vinculacion.id) {
-                    return false;
-                  } else if (vinculacion.fechaObtencionCategoria >
+              if (categoriasProfesionalesConvocatoria != null && convocatoriaRequisitoEquipo != null
+                && categoriasProfesionalesConvocatoria?.length !== 0 && convocatoriaRequisitoEquipo?.vinculacionUniversidad
+                && categoriaProfesionalSolicitante?.length === 0) {
+                response.msgError = ErroresRequisitos.CATEGORIAS_PROFESIONALES;
+              }
+
+              if (vinculacion !== null) {
+                if (convocatoriaRequisitoEquipo != null) {
+                  if (convocatoriaRequisitoEquipo.vinculacionUniversidad === false && vinculacion) {
+                    response.msgError = ErroresRequisitos.NO_VINCULACION;
+                  } else if (convocatoriaRequisitoEquipo.vinculacionUniversidad === true && !vinculacion) {
+                    response.msgError = ErroresRequisitos.VINCULACION;
+                  } else if (convocatoriaRequisitoEquipo.fechaMaximaNivelAcademico != null &&
+                    vinculacion.fechaObtencionCategoria >
+                    convocatoriaRequisitoEquipo.fechaMaximaNivelAcademico) {
+                    response.msgError = ErroresRequisitos.FECHA_VINCULACION_MAYOR;
+                  } else if (convocatoriaRequisitoEquipo.fechaMinimaNivelAcademico != null &&
+                    vinculacion.fechaObtencionCategoria <
+                    convocatoriaRequisitoEquipo.fechaMinimaNivelAcademico) {
+                    response.msgError = ErroresRequisitos.FECHA_VINCULACION_MENOR;
+                  } else if (convocatoriaRequisitoEquipo.fechaMaximaCategoriaProfesional != null &&
+                    vinculacion.fechaObtencionCategoria >
                     convocatoriaRequisitoEquipo.fechaMaximaCategoriaProfesional) {
-                    return false;
-                  } else if (vinculacion.fechaObtencionCategoria <
+                    response.msgError = ErroresRequisitos.FECHA_OBTENCION_MAYOR;
+                  } else if (convocatoriaRequisitoEquipo.fechaMinimaCategoriaProfesional != null &&
+                    vinculacion.fechaObtencionCategoria <
                     convocatoriaRequisitoEquipo.fechaMinimaCategoriaProfesional) {
-                    return false;
-                  } else {
-                    return true;
+                    response.msgError = ErroresRequisitos.FECHA_OBTENCION_MENOR;
+                  } else if (response.msgError === null) {
+                    response.isValid = true;
                   }
-                } else {
-                  return false;
+                } else if (vinculacion.fechaObtencionCategoria == null) {
+                  response.msgError = ErroresRequisitos.NO_FECHAS_VINCUALCION;
                 }
-              })
-            );
-          }
-          return of(erroresNivelesAcademicos);
-        })
-      );
-    } else {
-      return of(false);
+              } else if (convocatoriaRequisitoEquipo?.vinculacionUniversidad != null &&
+                convocatoriaRequisitoEquipo.vinculacionUniversidad === true) {
+                response.msgError = ErroresRequisitos.NO_VINCULACION;
+              } else if (response.msgError === null) {
+                response.isValid = true;
+              }
+              return response;
+            })
+          );
+        }
+
+        return of(response);
+      })
+    );
+  }
+
+  private getTooltipMessage(error: ErrorResponse): string {
+    switch (error.msgError) {
+      case ErroresRequisitos.FECHA_OBTENCION:
+        return REQUISITOS_CONVOCATORIA_FECHA_OBTENCION_KEY;
+      case ErroresRequisitos.FECHA_MAYOR:
+        return REQUISITOS_CONVOCATORIA_FEHCA_MAX_KEY;
+      case ErroresRequisitos.FECHA_MENOR:
+        return REQUISITOS_CONVOCATORIA_FECHA_MIN_KEY;
+      case ErroresRequisitos.NIVEL_ACADEMICO:
+        return REQUISITOS_CONVOCATORIA_NIVEL_ACADEMICO_KEY;
+      case ErroresRequisitos.SEXO:
+        return REQUISITOS_CONVOCATORIA_SEXO_KEY;
+      case ErroresRequisitos.DATOS_ACADEMICOS:
+        return REQUISITOS_CONVOCATORIA_DATOS_ACADEMICOS_KEY;
+      case ErroresRequisitos.EDAD:
+        return REQUISITOS_CONVOCATORIA_EDAD_MAX_KEY;
+      case ErroresRequisitos.NO_FECHAS_VINCUALCION:
+        return REQUISITOS_CONVOCATORIA_NO_FECHAS_KEY;
+      case ErroresRequisitos.FECHA_VINCULACION_MAYOR:
+        return REQUISITOS_CONVOCATORIA_FECHA_VINCULACION_MAYOR_MAX_KEY;
+      case ErroresRequisitos.FECHA_VINCULACION_MENOR:
+        return REQUISITOS_CONVOCATORIA_FECHA_VINCULACION_MENOR_MIN_KEY;
+      case ErroresRequisitos.CATEGORIAS_PROFESIONALES:
+        return REQUISITOS_CONVOCATORIA_CATEGORIAS_PROFESIONALES_KEY;
+      case ErroresRequisitos.NO_VINCULACION:
+        return REQUISITOS_CONVOCATORIA_NO_VINCULACION_KEY;
+      case ErroresRequisitos.VINCULACION:
+        return REQUISITOS_CONVOCATORIA_VINCULACION_KEY;
+      default:
+        return ' ';
     }
   }
 

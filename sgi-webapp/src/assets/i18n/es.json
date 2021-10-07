@@ -1426,7 +1426,7 @@
   "msg.reactivate.entity.success": "{entity} reactivad{gender,select,male{o} female{a} other{o/a}} correctamente",
   "msg.save.entity.success": "{gender,select,male{El} female{La} other{El/La}} {entity} se ha creado correctamente",
   "msg.save.request.entity.success": "La solicitud de creación {gender,select,male{del} female{de la} other{del/de la}} {entity} se ha realizado correctamente",
-  "msg.save.solicitud.requisitos-investigador": "No se cumplen los requisitos establecidos por la convocatoria para el rol investigador/a principal, ¿desea continuar registrando la solicitud?",
+  "msg.save.solicitud.requisitos-investigador": "No se cumplen los requisitos establecidos por la convocatoria para el rol investigador/a principal, {mask} ¿desea continuar registrando la solicitud?",
   "msg.unsaved": "Atención: Hay datos no guardados en la página actual, si sales de esta página, perderás esta información",
   "msg.update.entity.success": "Se ha editado correctamente {gender,select,male{el} female{la} other{el/La}} {entity}",
   "msg.update.request.entity.success": "La solicitud de edición {gender,select,male{del} female{de la} other{del/de la}} {entity} se ha realizado correctamente",
