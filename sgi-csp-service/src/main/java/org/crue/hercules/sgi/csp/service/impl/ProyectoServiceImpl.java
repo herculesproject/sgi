@@ -1513,8 +1513,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       throw new IllegalArgumentException(
           "La solicitud no se encuentra en un estado correcto para la creación del proyecto.");
     }
-    Assert.isTrue(!repository.existsBySolicitudId(solicitud.getId()),
-        "La solicitud con id: " + solicitud.getId() + " ya está asociada a un proyecto");
 
     Assert.isTrue(solicitud.getFormularioSolicitud() == FormularioSolicitud.PROYECTO,
         "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.PROYECTO);
