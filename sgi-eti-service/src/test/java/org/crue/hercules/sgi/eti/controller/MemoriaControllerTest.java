@@ -50,6 +50,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
@@ -909,8 +910,10 @@ public class MemoriaControllerTest extends BaseControllerTest {
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
         generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
 
-    BDDMockito.given(documentacionMemoriaService.createDocumentacionInicial(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+    BDDMockito
+        .given(documentacionMemoriaService.createDocumentacionInicial(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<DocumentacionMemoria>any(), ArgumentMatchers.<Authentication>any()))
+        .willReturn(documentacionMemoria);
 
     // when: Creamos una memoria
     mockMvc

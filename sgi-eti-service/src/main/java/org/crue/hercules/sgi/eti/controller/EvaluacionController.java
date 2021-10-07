@@ -318,8 +318,7 @@ public class EvaluacionController {
    */
   @PostMapping("/{id}/comentario-acta")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
-  ResponseEntity<Comentario> createComentarioActa(@PathVariable Long id, @Valid @RequestBody Comentario comentario,
-      Authentication authorization) {
+  ResponseEntity<Comentario> createComentarioActa(@PathVariable Long id, @Valid @RequestBody Comentario comentario) {
     log.debug("createComentarioActa(Comentario comentario) - start");
     Comentario returnValue = comentarioService.createComentarioActa(id, comentario);
     log.debug("createComentarioActa(comentario) - end");
