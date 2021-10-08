@@ -75,8 +75,8 @@ public class ConvocatoriaClonerService {
    * "objeto") Observaciones (campo "observaciones") Estado ( se pone el estado
    * "Borrador") Activo (se pone a true)
    * 
-   * @param toClone
-   * @return
+   * @param toClone la convocatoria de la que hacer el clon
+   * @return la convocatoria clonada
    */
   public Convocatoria cloneBasicConvocatoriaData(Convocatoria toClone) {
 

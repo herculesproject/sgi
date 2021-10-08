@@ -992,14 +992,13 @@ public class ConvocatoriaController {
   }
 
   /**
-   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al*
-   * {@link RequisitoIP} con el id indicado**
+   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al
+   * {@link RequisitoIP} con el id indicado
    * 
-   * @param id Identificador de {@link RequisitoIPNivelAcademico}*@return
-   *           RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}*
-   *           correspondiente al id
+   * @param id Identificador de {@link RequisitoIPNivelAcademico}
+   * @return RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}*
+   *         correspondiente al id
    */
-
   @GetMapping(PATH_NIVELES)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
   public List<RequisitoIPNivelAcademicoOutput> findNivelesAcademicos(@PathVariable Long id) {

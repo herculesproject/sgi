@@ -5,7 +5,12 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.csp.dto.*;
+import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
+import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
