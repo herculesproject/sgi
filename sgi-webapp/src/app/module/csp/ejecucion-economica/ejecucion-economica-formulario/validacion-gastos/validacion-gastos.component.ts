@@ -96,7 +96,6 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
   showDetail(element: ValidacionGasto): void {
     this.subscriptions.push(this.gastoService.findById(element.id).subscribe(
       (detalle) => {
-        console.error(detalle);
         const gastoDetalle = detalle as GastoDetalleModalData;
         gastoDetalle.estado = ESTADO_TIPO_MAP.get(this.formGroup.controls.estado.value);
         const config: MatDialogConfig<GastoDetalleModalData> = {

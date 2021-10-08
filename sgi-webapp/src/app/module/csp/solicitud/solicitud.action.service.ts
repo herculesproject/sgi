@@ -278,11 +278,12 @@ export class SolicitudActionService extends ActionService {
     this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaService, this.readonly);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudEntidadFinanciadoraService, empresaService, this.readonly);
+      solicitudEntidadFinanciadoraService, empresaService, solicitudEntidadFinanciadoraService, this.readonly);
     this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoPresupuestoService, empresaService, solicitudProyectoService, this.readonly);
     this.desglosePresupuestoEntidades = new SolicitudProyectoPresupuestoEntidadesFragment(this.data?.solicitud?.id,
-      this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, solicitudProyectoService, this.readonly);
+      this.data?.solicitud?.convocatoriaId, solicitudService, empresaService, solicitudProyectoService, solicitudEntidadFinanciadoraService,
+      this.readonly);
     this.clasificaciones = new SolicitudProyectoClasificacionesFragment(this.data?.solicitud?.id, solicitudProyectoClasificacionService,
       solicitudService, clasificacionService, this.readonly);
     this.responsableEconomico = new SolicitudProyectoResponsableEconomicoFragment(this.data?.solicitud?.id, solicitudService,
@@ -380,6 +381,16 @@ export class SolicitudActionService extends ActionService {
             this.onSolicitudProyectoSocioListChangeHandle(proyectoSocios);
           }
         ));
+
+        this.subscriptions.push(this.entidadesFinanciadoras.initialized$.subscribe(value => {
+          if (value) {
+            this.desglosePresupuestoEntidades.initialize();
+          }
+        }));
+        this.subscriptions.push(this.entidadesFinanciadoras.entidadesFinanciadoras$.subscribe(entidadesFinanciadoras => {
+          this.desglosePresupuestoEntidades.setEntidadesFinanciadorasEdited(entidadesFinanciadoras.map(entidad => entidad.value));
+        }));
+
       }
 
       // Forzamos la inicialización de los datos principales
