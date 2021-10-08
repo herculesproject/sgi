@@ -4,8 +4,12 @@ import { IInformePatentabilidad } from '@core/models/pii/informe-patentabilidad'
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionAreaConocimiento } from '@core/models/pii/invencion-area-conocimiento';
 import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
+import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
+import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
+import { IPeriodoTitularidad } from '@core/models/pii/periodo-titularidad';
+import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { environment } from '@env';
 import {
   CreateCtor,
@@ -29,6 +33,10 @@ import {
 } from './invencion-area-conocimiento/invencion-area-conocimiento-response.converter';
 import { IInvencionDocumentoResponse } from './invencion-documento/invencion-documento-response';
 import { INVENCION_DOCUMENTO_RESPONSE_CONVERTER } from './invencion-documento/invencion-documento-response.converter';
+import { IInvencionGastoResponse } from './invencion-gasto/invencion-gasto-response';
+import { INVENCION_GASTO_RESPONSE_CONVERTER } from './invencion-gasto/invencion-gasto-response.converter';
+import { IInvencionIngresoResponse } from './invencion-ingreso/invencion-ingreso-response';
+import { INVENCION_INGRESO_RESPONSE_CONVERTER } from './invencion-ingreso/invencion-ingreso-response.converter';
 import { IInvencionRequest } from './invencion-request';
 import { INVENCION_REQUEST_CONVERTER } from './invencion-request.converter';
 import { IInvencionResponse } from './invencion-response';
@@ -38,15 +46,10 @@ import { IInvencionSectorAplicacionResponse } from './invencion-sector-aplicacio
 import {
   INVENCION_SECTORAPLICACION_RESPONSE_CONVERTER
 } from './invencion-sector-aplicacion/invencion-sector-aplicacion-response.converter';
-import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from './solicitud-proteccion/solicitud-proteccion-response.converter';
-import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
+import { IPeriodoTitularidadResponse } from './periodo-titularidad/periodo-titularidad-response';
+import { PERIODO_TITULARIDAD_RESPONSE_CONVERTER } from './periodo-titularidad/periodo-titularidad-response.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion/solicitud-proteccion-response';
-import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
-import { IInvencionGastoResponse } from './invencion-gasto/invencion-gasto-response';
-import { INVENCION_GASTO_RESPONSE_CONVERTER } from './invencion-gasto/invencion-gasto-response.converter';
-import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
-import { IInvencionIngresoResponse } from './invencion-ingreso/invencion-ingreso-response';
-import { INVENCION_INGRESO_RESPONSE_CONVERTER } from './invencion-ingreso/invencion-ingreso-response.converter';
+import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from './solicitud-proteccion/solicitud-proteccion-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:
@@ -284,4 +287,19 @@ export class InvencionService extends _InvencionServiceMixinBase {
         })
       );
   }
+
+  /*
+   * Devuelve todos los {@link IPeriodoTitularidad} asociados a la {@link IInvencion} pasada por parametros
+   * @param invencionId Id de la {@link IInvencion}
+   * @returns Listado de {@link IPeriodoTitularidad}
+   */
+  findPeriodosTitularidadByInvencionId(invencionId: number): Observable<SgiRestListResult<IPeriodoTitularidad>> {
+
+    return this.find<IPeriodoTitularidadResponse, IPeriodoTitularidad>(
+      `${this.endpointUrl}/${invencionId}/periodostitularidad`,
+      {},
+      PERIODO_TITULARIDAD_RESPONSE_CONVERTER
+    );
+  }
+
 }

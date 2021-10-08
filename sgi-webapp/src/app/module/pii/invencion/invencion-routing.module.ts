@@ -15,6 +15,7 @@ import { InvencionGastosComponent } from './invencion-formulario/invencion-gasto
 import { InvencionInformesPatentabilidadComponent } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.component';
 import { InvencionIngresosComponent } from './invencion-formulario/invencion-ingresos/invencion-ingresos.component';
 import { InvencionInventorComponent } from './invencion-formulario/invencion-inventor/invencion-inventor.component';
+import { PeriodoTitularidadComponent } from './invencion-formulario/periodo-titularidad/periodo-titularidad.component';
 import { SolicitudProteccionComponent } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.component';
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 import { INVENCION_ROUTE_NAMES } from './invencion-route-names';
@@ -116,6 +117,11 @@ const routes: SgiRoutes = [
       {
         path: INVENCION_ROUTE_NAMES.INGRESOS,
         component: InvencionIngresosComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: INVENCION_ROUTE_NAMES.TITULARIDAD,
+        component: PeriodoTitularidadComponent,
         canDeactivate: [FragmentGuard]
       }
     ]
@@ -141,7 +147,12 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: SOLICITUD_PROTECCION_KEY
-        }
+        },
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: '**',
+        redirectTo: INVENCION_ROUTE_NAMES.DATOS_GENERALES
       }
     ]
   }
