@@ -17,4 +17,25 @@
   <changeSet author="master" id="0000000000001-4">
     <renameColumn tableName="configuracion" newColumnName="meses_aviso_proyecto_cei" oldColumnName="meses_aviso_proyecto_ceish" />
   </changeSet>
+
+  <changeSet author="master" id="0000000000001-5">
+    <addColumn tableName="comite">
+      <column name="nombre_secretario" type="VARCHAR(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000001-6">
+    <addColumn tableName="comite">
+      <column name="nombre_investigacion" type="VARCHAR(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000001-7">
+    <addColumn tableName="comite">
+      <column name="nombre_decreto" type="VARCHAR(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000001-8">
+    <addColumn tableName="comite">
+      <column name="articulo" type="VARCHAR(255)" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
