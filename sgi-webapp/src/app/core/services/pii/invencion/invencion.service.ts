@@ -26,6 +26,8 @@ import { INFORME_PATENTABILIDAD_RESPONSE_CONVERTER } from '../informe-patentabil
 import { INVENCION_INVENTOR_REQUEST_CONVERTER } from '../invencion-inventor/invencion-inventor-request.converter';
 import { IInvencionInventorResponse } from '../invencion-inventor/invencion-inventor-response';
 import { INVENCION_INVENTOR_RESPONSE_CONVERTER } from '../invencion-inventor/invencion-inventor-response.converter';
+import { ISolicitudProteccionResponse } from '../solicitud-proteccion/solicitud-proteccion-response';
+import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from '../solicitud-proteccion/solicitud-proteccion-response.converter';
 import { INVENCION_AREACONOCIMIENTO_REQUEST_CONVERTER } from './invencion-area-conocimiento/invencion-area-conocimiento-request.converter';
 import { IInvencionAreaConocimientoResponse } from './invencion-area-conocimiento/invencion-area-conocimiento-response';
 import {
@@ -48,8 +50,6 @@ import {
 } from './invencion-sector-aplicacion/invencion-sector-aplicacion-response.converter';
 import { IPeriodoTitularidadResponse } from './periodo-titularidad/periodo-titularidad-response';
 import { PERIODO_TITULARIDAD_RESPONSE_CONVERTER } from './periodo-titularidad/periodo-titularidad-response.converter';
-import { ISolicitudProteccionResponse } from './solicitud-proteccion/solicitud-proteccion-response';
-import { SOLICITUD_PROTECCION_RESPONSE_CONVERTER } from './solicitud-proteccion/solicitud-proteccion-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _InvencionServiceMixinBase:

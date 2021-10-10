@@ -147,8 +147,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: SOLICITUD_PROTECCION_KEY
-        },
-        canDeactivate: [FragmentGuard]
+        }
       },
       {
         path: '**',
