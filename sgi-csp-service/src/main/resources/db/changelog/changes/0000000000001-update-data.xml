@@ -109,7 +109,7 @@
       WHERE spp.financiacion_ajena = true 
     </sql>
     <sql>
-      UPDATE ${schemaPrefix}solicitud_proyecto_presupuesto spp SET spp.solicitud_proyecto_entidad_id=(
+      UPDATE ${schemaPrefix}solicitud_proyecto_presupuesto spp SET solicitud_proyecto_entidad_id=(
         SELECT
           spe.id
         FROM ${schemaPrefix}solicitud_proyecto_entidad spe
@@ -125,7 +125,7 @@
       WHERE spp.financiacion_ajena = false
     </sql>
     <sql>
-      UPDATE ${schemaPrefix}solicitud_proyecto_presupuesto spp SET spp.solicitud_proyecto_entidad_id=(
+      UPDATE ${schemaPrefix}solicitud_proyecto_presupuesto spp SET solicitud_proyecto_entidad_id=(
         SELECT
           spe.id
         FROM ${schemaPrefix}solicitud_proyecto_entidad spe
