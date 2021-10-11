@@ -21,7 +21,7 @@
     </sql>
     <sql dbms="postgresql">INSERT INTO ${schemaPrefix}solicitud_proyecto_entidad(id, created_by, creation_date, last_modified_by, last_modified_date, solicitud_proyecto_id, convocatoria_entidad_financiadora_id, convocatoria_entidad_gestora_id, solicitud_proyecto_entidad_financiadora_ajena_id) 
       SELECT 
-        nextval(solicitud_proyecto_entidad_seq) AS id,
+        nextval(${schemaPrefix}solicitud_proyecto_entidad_seq) AS id,
         s.created_by,
         s.creation_date,
         s.last_modified_by,
@@ -52,7 +52,7 @@
     </sql>
     <sql dbms="postgresql">INSERT INTO ${schemaPrefix}solicitud_proyecto_entidad(id, created_by, creation_date, last_modified_by, last_modified_date, solicitud_proyecto_id, convocatoria_entidad_financiadora_id, convocatoria_entidad_gestora_id, solicitud_proyecto_entidad_financiadora_ajena_id) 
       SELECT 
-        nextval(solicitud_proyecto_entidad_seq) AS id,
+        nextval(${schemaPrefix}solicitud_proyecto_entidad_seq) AS id,
         s.created_by,
         s.creation_date,
         s.last_modified_by,
@@ -81,7 +81,7 @@
     </sql>
     <sql dbms="postgresql">INSERT INTO ${schemaPrefix}solicitud_proyecto_entidad(id, created_by, creation_date, last_modified_by, last_modified_date, solicitud_proyecto_id, convocatoria_entidad_financiadora_id, convocatoria_entidad_gestora_id, solicitud_proyecto_entidad_financiadora_ajena_id) 
       SELECT 
-        nextval(solicitud_proyecto_entidad_seq) AS id,
+        nextval(${schemaPrefix}solicitud_proyecto_entidad_seq) AS id,
         spefa.created_by,
         spefa.creation_date,
         spefa.last_modified_by,
