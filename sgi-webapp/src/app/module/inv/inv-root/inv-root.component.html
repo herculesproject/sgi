@@ -7,6 +7,9 @@
     <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'ETI-PEV-INV-VR'" [route]="[INV_ROUTE_NAMES.MEMORIAS]"
       title="{{'menu.principal.inv.memorias' | translate}}">
     </sgi-menu-subitem>
+    <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'ETI-CHK-E'" [route]="[INV_ROUTE_NAMES.CHECKLIST]"
+      title="{{'menu.principal.inv.checklist' | translate}}">
+    </sgi-menu-subitem>
     <ng-container *ngIf="showEvaluaciones">
       <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'ETI-EVC-INV-VR'" [route]="[INV_ROUTE_NAMES.EVALUACIONES]"
         title="{{'menu.principal.inv.evaluaciones' | translate}}">

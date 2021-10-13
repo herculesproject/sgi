@@ -14,6 +14,7 @@ const MSG_EVALUACIONES_TITLE = marker('menu.principal.inv.evaluaciones');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.inv.seguimientos');
 const MSG_PETICIONES_EVALUACION_TITLE = marker('menu.principal.inv.peticionesEvaluacion');
 const MSG_MEMORIAS_TITLE = marker('menu.principal.inv.memorias');
+const MSG_CHECKLIST_TITLE = marker('menu.principal.inv.checklist');
 const MSG_ACTAS_TITLE = marker('eti.acta');
 const MSG_CONVOCATORIAS_TITLE = marker('menu.principal.inv.convocatorias');
 const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
@@ -80,6 +81,18 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_MEMORIAS_TITLE,
           hasAuthorityForAnyUO: 'ETI-PEV-INV-VR'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.CHECKLIST,
+        loadChildren: () =>
+          import('../eti/checklist/checklist.module').then(
+            (m) => m.ChecklistModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CHECKLIST_TITLE,
+          hasAuthorityForAnyUO: 'ETI-CHK-E'
         }
       },
       {
