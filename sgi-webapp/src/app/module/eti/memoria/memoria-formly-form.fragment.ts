@@ -68,7 +68,6 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   // Almacena el formState de todos los bloques para poder hacer referencia entre ellos
   private formStateGlobal: any = {};
-  private respuestasSave: IRespuesta[] = [];
 
   isReadonly(): boolean {
     return this.readonly;
@@ -231,19 +230,12 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       respuesta = Object.assign(respuesta, field.model);
     });
     question.apartado.respuesta.valor = respuesta;
+    respuestas.push(question.apartado.respuesta);
 
     if (!question.apartado.respuesta.id) {
-      const idMemoria = this.getKey() as number;
-      const idApartado = question.apartado.id;
-      question.apartado.respuesta.memoria = { id: idMemoria } as IMemoria;
-      question.apartado.respuesta.apartado = { id: idApartado } as IApartado;
-
-      const respuestaSaveBefore = this.respuestasSave.find(r => r.memoria?.id === idMemoria && r.apartado?.id === idApartado);
-      if (respuestaSaveBefore) {
-        question.apartado.respuesta.id = respuestaSaveBefore.id;
-      }
+      question.apartado.respuesta.memoria = { id: this.getKey() as number } as IMemoria;
+      question.apartado.respuesta.apartado = { id: question.apartado.id } as IApartado;
     }
-    respuestas.push(question.apartado.respuesta);
 
     const fieldDocumentacion = this.fieldsDocumentacion.get(question.apartado.id);
     if (fieldDocumentacion) {
@@ -269,8 +261,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       mergeMap((respuesta) => {
         return this.respuestaService.create(respuesta).pipe(
           map((updated) => {
-            this.respuestasSave.push(updated);
-            respuesta = updated;
+            Object.assign(respuesta, updated);
           })
         );
       }),
@@ -283,7 +274,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       mergeMap((respuesta) => {
         return this.respuestaService.update(respuesta.id, respuesta).pipe(
           map((updated) => {
-            respuesta = updated;
+            Object.assign(respuesta, updated);
           })
         );
       }),
