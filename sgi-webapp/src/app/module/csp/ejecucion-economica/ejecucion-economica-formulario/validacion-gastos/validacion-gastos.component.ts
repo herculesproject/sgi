@@ -66,15 +66,14 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.gastos$.subscribe(
       (data) => {
-        const fechaColumn = this.formPart.columns.find(column => column.name === 'Fecha');
         data.sort((a, b) => {
           return b.anualidad.localeCompare(a.anualidad)
             || a.proyecto?.titulo.localeCompare(b.proyecto?.titulo)
             || a.agrupacionGasto?.nombre.localeCompare(b.agrupacionGasto?.nombre)
+            || a.conceptoGasto?.nombre.localeCompare(b.conceptoGasto?.nombre)
             || a.partidaPresupuestaria.localeCompare(b.partidaPresupuestaria)
             || `${a.codigoEconomico?.id} ${a.codigoEconomico?.nombre ? '-' : ''} ${a.codigoEconomico?.nombre}`
-              .localeCompare(`${b.codigoEconomico?.id} ${b.codigoEconomico?.nombre ? '-' : ''} ${b.codigoEconomico?.nombre}`)
-            || b.columnas[fechaColumn.id]?.toString().localeCompare(a.columnas[fechaColumn.id]?.toString());
+              .localeCompare(`${b.codigoEconomico?.id} ${b.codigoEconomico?.nombre ? '-' : ''} ${b.codigoEconomico?.nombre}`);
         });
 
         this.dataSource.data = data;
