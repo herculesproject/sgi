@@ -29,112 +29,112 @@
   <changeSet context="dev" author="master" id="0000000000001-periodo_titularidad">
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
-      <column name="invencion_id" value="111" />
-      <column name="fecha_inicio" valueDate="'2021-06-1'" />
-      <column name="fecha_fin" valueDate="'2021-06-6'" />
+      <column name="invencion_id" valueNumeric="111" />
+      <column name="fecha_inicio" valueDate="2021-05-31T22:00:00" />
+      <column name="fecha_fin" valueDate="2021-06-06T21:59:59" />
     </insert>
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
       <column name="invencion_id" value="111" />
-      <column name="fecha_inicio" valueDate="'2021-06-9'" />
+      <column name="fecha_inicio" valueDate="2021-06-08T22:00:00" />
     </insert>
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
-      <column name="invencion_id" value="112" />
-      <column name="fecha_inicio" valueDate="'2021-06-1'" />
-      <column name="fecha_fin" valueDate="'2021-06-4'" />
+      <column name="invencion_id" valueNumeric="112" />
+      <column name="fecha_inicio" valueDate="2021-05-31T22:00:00" />
+      <column name="fecha_fin" valueDate="2021-06-04T21:59:59" />
     </insert>
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
-      <column name="invencion_id" value="112" />
-      <column name="fecha_inicio" valueDate="'2021-06-5'" />
-      <column name="fecha_fin" valueDate="'2021-06-8'" />
+      <column name="invencion_id" valueNumeric="112" />
+      <column name="fecha_inicio" valueDate="2021-06-04T22:00:00" />
+      <column name="fecha_fin" valueDate="2021-06-08T21:59:59" />
     </insert>
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
-      <column name="invencion_id" value="112" />
-      <column name="fecha_inicio" valueDate="'2021-06-9'" />
-      <column name="fecha_fin" valueDate="'2021-06-12'" />
+      <column name="invencion_id" valueNumeric="112" />
+      <column name="fecha_inicio" valueDate="2021-06-08T22:00:00" />
+      <column name="fecha_fin" valueDate="2021-06-12T21:59:59" />
     </insert>
     <insert tableName="periodo_titularidad">
       <column name="id" valueSequenceNext="periodo_titularidad_seq" />
-      <column name="invencion_id" value="112" />
-      <column name="fecha_inicio" valueDate="'2021-06-13'" />
+      <column name="invencion_id" valueNumeric="112" />
+      <column name="fecha_inicio" valueDate="2021-06-12T22:00:00" />
     </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-periodotitularidad_titular">
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="1" />
+      <column name="periodotitularidad_id" valueNumeric="1" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="50.50" />
+      <column name="participacion" valueNumeric="50.50" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="1" />
+      <column name="periodotitularidad_id" valueNumeric="1" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="49.50" />
+      <column name="participacion" valueNumeric="49.50" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="2" />
+      <column name="periodotitularidad_id" valueNumeric="2" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="51" />
+      <column name="participacion" valueNumeric="51" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="2" />
+      <column name="periodotitularidad_id" valueNumeric="2" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="49" />
+      <column name="participacion" valueNumeric="49" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="3" />
+      <column name="periodotitularidad_id" valueNumeric="3" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="51.5" />
+      <column name="participacion" valueNumeric="51.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="3" />
+      <column name="periodotitularidad_id" valueNumeric="3" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="48.5" />
+      <column name="participacion" valueNumeric="48.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="4" />
+      <column name="periodotitularidad_id" valueNumeric="4" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="51.5" />
+      <column name="participacion" valueNumeric="51.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="4" />
+      <column name="periodotitularidad_id" valueNumeric="4" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="48.5" />
+      <column name="participacion" valueNumeric="48.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="5" />
+      <column name="periodotitularidad_id" valueNumeric="5" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="51.5" />
+      <column name="participacion" valueNumeric="51.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="5" />
+      <column name="periodotitularidad_id" valueNumeric="5" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="48.5" />
+      <column name="participacion" valueNumeric="48.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="6" />
+      <column name="periodotitularidad_id" valueNumeric="6" />
       <column name="titular_ref" value="G3052828" />
-      <column name="participacion" value="51.5" />
+      <column name="participacion" valueNumeric="51.5" />
     </insert>
     <insert tableName="periodotitularidad_titular">
       <column name="id" valueSequenceNext="periodotitularidad_titular_seq" />
-      <column name="periodotitularidad_id" value="6" />
+      <column name="periodotitularidad_id" valueNumeric="6" />
       <column name="titular_ref" value="00051494" />
-      <column name="participacion" value="48.5" />
+      <column name="participacion" valueNumeric="48.5" />
     </insert>
   </changeSet>
 

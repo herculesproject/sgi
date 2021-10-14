@@ -62,7 +62,7 @@ public class PeriodoTitularidadService {
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("invencionId"))
             .parameter("entity", ApplicationContextSupport.getMessage(PeriodoTitularidad.class)).build());
-    Assert.isTrue(periodoTitularidad.getFechaInicio().compareTo(fechaFinPrevious) >= 0,
+    Assert.isTrue(fechaFinPrevious == null || periodoTitularidad.getFechaInicio().compareTo(fechaFinPrevious) >= 0,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key("org.crue.hercules.sgi.pii.model.PeriodoTitularidad.fechaInicio.posterior")
             .parameter("entity", ApplicationContextSupport.getMessage(PeriodoTitularidad.class)).build());
