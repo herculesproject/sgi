@@ -24,5 +24,6 @@ export const PROYECTO_ROUTE_NAMES = {
   RESPONSABLE_ECONOMICO: 'responsable-economico',
   AGRUPACIONES_GASTO: 'agrupaciones-gasto',
   CALENDARIO_JUSTIFICACION: 'calendario-justificacion',
-  CONSULTA_PRESUPUESTO: 'consulta-presupuesto'
+  CONSULTA_PRESUPUESTO: 'consulta-presupuesto',
+  RELACIONES: 'relaciones',
 };

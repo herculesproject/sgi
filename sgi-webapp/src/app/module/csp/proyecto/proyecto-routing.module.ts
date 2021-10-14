@@ -31,6 +31,7 @@ import { ProyectoPlazosComponent } from './proyecto-formulario/proyecto-plazos/p
 import { ProyectoPresupuestoComponent } from './proyecto-formulario/proyecto-presupuesto/proyecto-presupuesto.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 import { ProyectoProyectosSgeComponent } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.component';
+import { ProyectoRelacionesComponent } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.component';
 import { ProyectoResponsableEconomicoComponent } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
@@ -270,7 +271,12 @@ const routes: SgiAuthRoutes = [
         path: PROYECTO_ROUTE_NAMES.CONSULTA_PRESUPUESTO,
         component: ProyectoConsultaPresupuestoComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.RELACIONES,
+        component: ProyectoRelacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {

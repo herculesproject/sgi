@@ -39,6 +39,8 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { InvencionService } from '@core/services/pii/invencion/invencion.service';
+import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -50,6 +52,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -77,6 +80,7 @@ import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/pr
 import { ProyectoPresupuestoFragment } from './proyecto-formulario/proyecto-presupuesto/proyecto-presupuesto.fragment';
 import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
 import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.fragment';
+import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
@@ -119,7 +123,8 @@ export class ProyectoActionService extends ActionService {
     REPONSABLE_ECONOMICO: 'responsable-economico',
     AGRUPACIONES_GASTO: 'agrupaciones-gasto',
     CALENDARIO_JUSTIFICACION: 'calendario-justificacion',
-    CONSULTA_PRESUPUESTO: 'consulta-presupuesto'
+    CONSULTA_PRESUPUESTO: 'consulta-presupuesto',
+    RELACIONES: 'relaciones',
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -146,6 +151,7 @@ export class ProyectoActionService extends ActionService {
   private proyectoAgrupacionGasto: ProyectoAgrupacionGastoFragment;
   private proyectoCalendarioJustificacion: ProyectoCalendarioJustificacionFragment;
   private consultaPresupuesto: ProyectoConsultaPresupuestoFragment;
+  private relaciones: ProyectoRelacionFragment;
 
   private readonly data: IProyectoData;
 
@@ -230,7 +236,10 @@ export class ProyectoActionService extends ActionService {
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
     viculacionService: VinculacionService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    datosPersonalesService: DatosPersonalesService
+    datosPersonalesService: DatosPersonalesService,
+    relacionService: RelacionService,
+    invencionService: InvencionService,
+    sgiAuthService: SgiAuthService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -298,6 +307,8 @@ export class ProyectoActionService extends ActionService {
         proyectoService, proyectoPeriodoJustificacionService, convocatoriaService);
       this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService,
         proyectoAnualidadService, proyectoAgrupacionGastoService);
+      this.relaciones = new ProyectoRelacionFragment(
+        id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, sgiAuthService);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -322,6 +333,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.AGRUPACIONES_GASTO, this.proyectoAgrupacionGasto);
       this.addFragment(this.FRAGMENT.CALENDARIO_JUSTIFICACION, this.proyectoCalendarioJustificacion);
       this.addFragment(this.FRAGMENT.CONSULTA_PRESUPUESTO, this.consultaPresupuesto);
+      this.addFragment(this.FRAGMENT.RELACIONES, this.relaciones);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {
