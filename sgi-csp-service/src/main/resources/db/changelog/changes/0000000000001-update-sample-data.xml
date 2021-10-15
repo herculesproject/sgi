@@ -16,9 +16,16 @@
   <changeSet context="dev" author="master" id="0000000000001-concepto_gasto">
     <update tableName="concepto_gasto">
       <column name="costes_indirectos" valueBoolean="false" />
-      <where>:name!=:value</where>
+      <where>:name=:value</where>
       <whereParams>
-        <param name="nombre" value="Costes indirectos" />
+        <param name="nombre" value="Gastos de personal" />
+      </whereParams>
+    </update>
+    <update tableName="concepto_gasto">
+      <column name="costes_indirectos" valueBoolean="false" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Contratación" />
       </whereParams>
     </update>
     <update tableName="concepto_gasto">
