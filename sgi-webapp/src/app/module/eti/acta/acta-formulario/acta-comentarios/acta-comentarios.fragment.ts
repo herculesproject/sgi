@@ -4,7 +4,9 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { endWith, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
@@ -22,7 +24,9 @@ export class ActaComentariosFragment extends Fragment {
   constructor(
     key: number,
     private service: EvaluacionService,
-    private convocatoriaReunionService: ConvocatoriaReunionService) {
+    private convocatoriaReunionService: ConvocatoriaReunionService,
+    private readonly personaService: PersonaService,
+    private readonly authService: SgiAuthService) {
     super(key);
     this.selectedIdConvocatoria = key;
   }
@@ -47,27 +51,34 @@ export class ActaComentariosFragment extends Fragment {
                 this.idsEvaluacion.push(evaluacion.id);
                 return this.service.getComentariosActa(evaluacion.id).pipe(
                   map((comentarios) => {
-                    const current = this.comentarios$.value;
-                    this.comentarios$.value.map(comentario => {
-                      if (!evaluacionesComentario.some(ev => ev.id === comentario.value.evaluacion.id)) {
-                        evaluacionesComentario.push(comentario.value.evaluacion);
-                        this.idsEvaluacion.push(comentario.value.evaluacion.id);
-                      }
-                    });
-                    comentarios.items.forEach(comentario => {
-                      current.push(new StatusWrapper<IComentario>(comentario));
-                      if (!evaluacionesComentario.some(ev => ev.id === comentario.evaluacion.id)) {
-                        evaluacionesComentario.push(comentario.evaluacion);
-                        this.idsEvaluacion.push(comentario.evaluacion.id);
-                      }
-                    });
-                    this.comentarios$.next([...current]);
-                    this.evaluaciones$.next([...evaluacionesComentario]);
+                    if (comentarios.items.length > 0) {
+                      const current = this.comentarios$.value;
+                      this.comentarios$.value.map(comentario => {
+                        if (!evaluacionesComentario.some(ev => ev.id === comentario.value.evaluacion.id)) {
+                          evaluacionesComentario.push(comentario.value.evaluacion);
+                          this.idsEvaluacion.push(comentario.value.evaluacion.id);
+                        }
+                      });
+                      comentarios.items.forEach(comentario => {
+                        this.personaService.findById(comentario.evaluador.id).subscribe(persona => {
+                          current.push(new StatusWrapper<IComentario>(comentario));
+                          if (!evaluacionesComentario.some(ev => ev.id === comentario.evaluacion.id)) {
+                            evaluacionesComentario.push(comentario.evaluacion);
+                            this.idsEvaluacion.push(comentario.evaluacion.id);
+                          }
+                          comentario.evaluador = persona;
+                          this.comentarios$.next([...current]);
+                          this.evaluaciones$.next([...evaluacionesComentario]);
+                          this.showAddComentarios = true;
+                        });
+                      });
+                    } else {
+                      this.evaluaciones$.next([...evaluacionesComentario]);
+                    }
                   }));
-              }
-
-              if (evaluacionesComentario.length === 0) {
+              } else {
                 this.showAddComentarios = false;
+                return of(null);
               }
             })
           );
@@ -89,23 +100,26 @@ export class ActaComentariosFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
+    this.setChanges(false);
     return merge(
       this.deleteComentarioActa(),
       this.createComentarioActa()
     ).pipe(
-      takeLast(1),
-      tap(() => this.setChanges(false))
+      takeLast(1)
     );
   }
 
   public addComentario(comentario: IComentario) {
-    const wrapped = new StatusWrapper<IComentario>(comentario);
-    wrapped.setCreated();
-    const current = this.comentarios$.value;
-    current.push(wrapped);
-    this.comentarios$.next(current);
-    this.setChanges(true);
-    this.setErrors(false);
+    this.personaService.findById(this.authService.authStatus$.value.userRefId).subscribe(persona => {
+      comentario.evaluador = persona;
+      const wrapped = new StatusWrapper<IComentario>(comentario);
+      wrapped.setCreated();
+      const current = this.comentarios$.value;
+      current.push(wrapped);
+      this.comentarios$.next(current);
+      this.setChanges(true);
+      this.setErrors(false);
+    });
   }
 
   public deleteComentario(comentario: StatusWrapper<IComentario>) {
@@ -133,12 +147,12 @@ export class ActaComentariosFragment extends Fragment {
     }
     return from(this.comentariosEliminados).pipe(
       mergeMap((wrappedComentario) => {
-        return from(this.idsEvaluacion).pipe(
-          mergeMap((id) => {
-            return this.service.deleteComentarioActa(id, wrappedComentario.value.id);
-          }),
-          endWith()
-        );
+        const evaluacion = this.evaluaciones$.value.filter(ev => ev.memoria.id === wrappedComentario.value.memoria.id)[0];
+        return this.service.deleteComentarioActa(evaluacion.id, wrappedComentario.value.id).pipe(
+          map(() => {
+            this.comentariosEliminados = this.comentariosEliminados.filter(
+              comentario => comentario.value.id !== wrappedComentario.value.id);
+          }));
       }),
       endWith()
     );
@@ -151,16 +165,18 @@ export class ActaComentariosFragment extends Fragment {
     }
     return from(comentariosCreados).pipe(
       mergeMap((wrappedComentario) => {
-        return from(this.idsEvaluacion).pipe(
-          mergeMap((id) => {
-            return this.service.createComentarioActa(id, wrappedComentario.value).pipe(
-              map((savedComentario) => {
-                const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
-                this.comentarios$[index] = new StatusWrapper<IComentario>(savedComentario);
-              })
-            );
-          }),
-          endWith()
+        const evaluacion = this.evaluaciones$.value.filter(ev => ev.memoria.id === wrappedComentario.value.memoria.id)[0];
+        return this.service.createComentarioActa(evaluacion.id, wrappedComentario.value).pipe(
+          map((savedComentario) => {
+            const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
+            this.comentarios$[index] = new StatusWrapper<IComentario>(savedComentario);
+            this.comentarios$.value.map((currentComentario) => {
+              if (currentComentario === wrappedComentario) {
+                currentComentario.setEdited();
+                currentComentario.value.id = savedComentario.id;
+              }
+            });
+          })
         );
       }),
       endWith()

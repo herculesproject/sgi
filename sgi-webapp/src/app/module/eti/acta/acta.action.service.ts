@@ -63,7 +63,7 @@ export class ActaActionService extends ActionService {
     this.memorias = new ActaMemoriasFragment(this.acta?.convocatoriaReunion?.id, convocatoriaReunionService);
     this.asistentes = new ActaAsistentesFragment(
       this.acta?.convocatoriaReunion?.id, convocatoriaReunionService, personaService, asistenteService);
-    this.comentarios = new ActaComentariosFragment(this.acta?.id, evaluacionService, convocatoriaReunionService);
+    this.comentarios = new ActaComentariosFragment(this.acta?.id, evaluacionService, convocatoriaReunionService, personaService, authService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.MEMORIAS, this.memorias);

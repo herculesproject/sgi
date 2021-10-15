@@ -10,12 +10,11 @@ import { IComentario } from '@core/models/eti/comentario';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ComentarioModalComponent, ComentarioModalData } from '../../../comentario/comentario-modal/comentario-modal.component';
 import { ActaActionService, Rol } from '../../acta.action.service';
 import { ActaComentariosFragment } from './acta-comentarios.fragment';
@@ -66,7 +65,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.formPart = this.fragment as ActaComentariosFragment;
     this.elementosPagina = [5, 10, 25, 100];
-    this.columnas = ['apartado.bloque', 'apartado.padre',
+    this.columnas = ['evaluador.nombre', 'memoria.numReferencia', 'apartado.bloque', 'apartado.padre',
       'apartado', 'texto', 'acciones'];
   }
 
@@ -134,7 +133,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
   openCreateModal(): void {
     this.subscriptions.push(this.formPart.evaluaciones$.subscribe(evaluaciones => {
       const actaData: ComentarioModalData = {
-        evaluacion: evaluaciones[0],
+        evaluaciones,
         comentario: undefined
       };
 
@@ -163,7 +162,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
       const wrapperRef = comentario;
 
       const actaData: ComentarioModalData = {
-        evaluacion: evaluaciones[0],
+        evaluaciones,
         comentario: wrapperRef.value
       };
 
