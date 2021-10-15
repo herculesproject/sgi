@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
+import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
@@ -2154,7 +2155,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
-    convocatoriaPeriodoJustificacion.setTipo(ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO);
+    convocatoriaPeriodoJustificacion.setTipo(TipoJustificacion.PERIODICO);
 
     return convocatoriaPeriodoJustificacion;
   }
