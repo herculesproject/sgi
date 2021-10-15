@@ -149,6 +149,7 @@ public class ConvocatoriaController {
    * @param convocatoriaConceptoGastoCodigoEcService        {@link ConvocatoriaConceptoGastoCodigoEcService}
    * @param requisitoIPNivelAcademicoService                {@link RequisitoIPNivelAcademicoService}.
    * @param requisitoIPCategoriaProfesionalService          {@link RequisitoIPCategoriaProfesionalService}.
+   * @param requisitoEquipoCategoriaProfesionalService      {@link requisitoEquipoCategoriaProfesionalService}.
    * @param modelMapper                                     {@link ModelMapper}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,

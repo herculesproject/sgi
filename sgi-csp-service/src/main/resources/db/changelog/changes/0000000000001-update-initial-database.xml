@@ -56,4 +56,11 @@
     <dropUniqueConstraint constraintName="UK_PROYECTOENTIDADFINANCIADORA_PROYECTO_ENTIDAD_AJENA" tableName="proyecto_entidad_financiadora" />
   </changeSet>
 
+  <!-- valores por defecto boolean de proyecto_anualidad -->
+  <changeSet author="user (generated)" id="0000000000001-11">
+    <addDefaultValue columnDataType="boolean" columnName="enviado_sge" defaultValueBoolean="false" tableName="proyecto_anualidad" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000001-12">
+    <addDefaultValue columnDataType="boolean" columnName="presupuestar" defaultValueBoolean="false" tableName="proyecto_anualidad" />
+  </changeSet>
 </databaseChangeLog>
