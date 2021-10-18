@@ -44,7 +44,7 @@
       <where>:name=:value AND :name=:value</where>
       <whereParams>
         <param name="rol_proyecto_id" valueNumeric="1" />
-        <param name="colectivo_ref" valueNumeric="1" />
+        <param name="colectivo_ref" value="1" />
       </whereParams>
     </update>
 
@@ -53,7 +53,7 @@
       <where>:name=:value AND :name=:value</where>
       <whereParams>
         <param name="rol_proyecto_id" valueNumeric="1" />
-        <param name="colectivo_ref" valueNumeric="2" />
+        <param name="colectivo_ref" value="2" />
       </whereParams>
     </update>
     <!-- Rol Proyecto 2-->
@@ -62,7 +62,7 @@
       <where>:name=:value AND :name=:value</where>
       <whereParams>
         <param name="rol_proyecto_id" valueNumeric="2" />
-        <param name="colectivo_ref" valueNumeric="1" />
+        <param name="colectivo_ref" value="1" />
       </whereParams>
     </update>
 
