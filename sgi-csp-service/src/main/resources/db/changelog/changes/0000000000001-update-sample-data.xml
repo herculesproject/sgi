@@ -69,122 +69,122 @@
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="2" />
+      <column name="rol_proyecto_id" valueNumeric="2" />
     </insert>
     <!-- Rol Proyecto 3-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="3" />
+      <column name="rol_proyecto_id" valueNumeric="3" />
     </insert>
     <!-- Rol Proyecto 4-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="4" />
-      <column name="rol_proyecto_id" valueComputed="4" />
+      <column name="rol_proyecto_id" valueNumeric="4" />
     </insert>
     <!-- Rol Proyecto 5-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="2" />
-      <column name="rol_proyecto_id" valueComputed="5" />
+      <column name="rol_proyecto_id" valueNumeric="5" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="5" />
+      <column name="rol_proyecto_id" valueNumeric="5" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="4" />
-      <column name="rol_proyecto_id" valueComputed="5" />
+      <column name="rol_proyecto_id" valueNumeric="5" />
     </insert>
 
     <!-- Rol Proyecto 6-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="2" />
-      <column name="rol_proyecto_id" valueComputed="6" />
+      <column name="rol_proyecto_id" valueNumeric="6" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="4" />
-      <column name="rol_proyecto_id" valueComputed="6" />
+      <column name="rol_proyecto_id" valueNumeric="6" />
     </insert>
     <!-- Rol Proyecto 7-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="1" />
-      <column name="rol_proyecto_id" valueComputed="7" />
+      <column name="rol_proyecto_id" valueNumeric="7" />
     </insert>
     <!-- Rol Proyecto 8-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="8" />
+      <column name="rol_proyecto_id" valueNumeric="8" />
     </insert>
     <!-- Rol Proyecto 9-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="2" />
-      <column name="rol_proyecto_id" valueComputed="9" />
+      <column name="rol_proyecto_id" valueNumeric="9" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="9" />
+      <column name="rol_proyecto_id" valueNumeric="9" />
     </insert>
     <!-- Rol Proyecto 10-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="1" />
-      <column name="rol_proyecto_id" valueComputed="10" />
+      <column name="rol_proyecto_id" valueNumeric="10" />
     </insert>
     <!-- Rol Proyecto 11-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="1" />
-      <column name="rol_proyecto_id" valueComputed="11" />
+      <column name="rol_proyecto_id" valueNumeric="11" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="2" />
-      <column name="rol_proyecto_id" valueComputed="11" />
+      <column name="rol_proyecto_id" valueNumeric="11" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="11" />
+      <column name="rol_proyecto_id" valueNumeric="11" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="4" />
-      <column name="rol_proyecto_id" valueComputed="11" />
+      <column name="rol_proyecto_id" valueNumeric="11" />
     </insert>
     <!-- Rol Proyecto 12-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="12" />
+      <column name="rol_proyecto_id" valueNumeric="12" />
     </insert>
 
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="4" />
-      <column name="rol_proyecto_id" valueComputed="12" />
+      <column name="rol_proyecto_id" valueNumeric="12" />
     </insert>
     <!-- Rol Proyecto 13-->
     <insert tableName="rol_proyecto_colectivo">
       <column name="id" valueSequenceNext="rol_proyecto_colectivo_seq" />
       <column name="colectivo_ref" value="3" />
-      <column name="rol_proyecto_id" valueComputed="13" />
+      <column name="rol_proyecto_id" valueNumeric="13" />
     </insert>
   </changeSet>
 
