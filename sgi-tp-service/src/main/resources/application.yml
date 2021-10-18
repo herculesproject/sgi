@@ -33,7 +33,13 @@ spring:
 sgi:
   rest:
     api:
-      eti-url: "http://sgi-eti-service:4280"
+      eti-url: "http://sgi-eti-service:4280"    
+      csp-url: "http://sgi-csp-service:4281"    
+      usr-url: "http://sgi-usr-service:4282"    
+      pii-url: "http://sgi-pii-service:4283"          
+      rel-url: "http://sgi-rel-service:4284"          
+      com-url: "http://sgi-com-service:4286"          
+      rep-url: "http://sgi-rep-service:4287"          
 
 spring:
   profiles: dev
@@ -54,6 +60,9 @@ spring:
     liquibase-schema: tp
     # Set Liquibase contexts same as spring profiles
     contexts: dev
+    # Set Liquibase changeLog parameters
+    parameters:
+      schemaPrefix: "tp."
   jpa:
     hibernate:
       # Make sure Hibernate will not use the entities to create, update or validate the database
@@ -76,15 +85,24 @@ spring:
         registration:
           # "sgi" is the id used inside the redirect-uri-template, must be the same as your realm
           sgi:
-            client-id: front
+            authorization-grant-type: authorization_code
             provider: keycloak
             scope: "openid,profile"
+            client-name: SGI (user login)
+            client-id: front
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
+          tp-service:
+            authorization-grant-type: client_credentials
+            provider: keycloak
+            scope: sgi-eti
+            client-name: SGI (service login)
+            client-id: tp-service
+            client-secret: a397c654-5899-469d-8ab4-ccbb4898a104
         provider:
           keycloak:
             issuer-uri: http://sgi-auth:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
+            token-uri: http://sgi-auth:8080/auth/realms/sgi/protocol/openid-connect/token
       # Enable login page if JWT not provided (enable only for development)
       #enable-login: true
     # Disable CSRF (disable only for development)
@@ -122,7 +140,14 @@ logging:
 sgi:
   rest:
     api:
-      eti-url: "http://sgi-eti:8080"
+      eti-url: "http://sgi-eti-service:8080"
+      csp-url: "http://sgi-csp-service:8080"
+      usr-url: "http://sgi-eti-service:8080"
+      pii-url: "http://sgi-pii-service:8080"
+      rel-url: "http://sgi-rel-service:8080"
+      com-url: "http://sgi-com-service:8080"
+      rep-url: "http://sgi-rep-service:8080"
+
 spring:
   profiles: prod
   datasource:
@@ -140,6 +165,9 @@ spring:
     default-schema: tp
     # Schema to use for Liquibase objects
     liquibase-schema: tp
+    # Set Liquibase changeLog parameters
+    parameters:
+      schemaPrefix: "tp."
   jpa:
     hibernate:
       # Hibernate will use the entities to validate the database
@@ -162,12 +190,21 @@ spring:
         registration:
           # "sgi" is the id used inside the redirect-uri-template, must be the same as your realm
           sgi:
-            client-id: front
+            authorization-grant-type: authorization_code
             provider: keycloak
             scope: "openid,profile"
+            client-name: SGI (user login)
+            client-id: front
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
+          tp-service:
+            authorization-grant-type: client_credentials
+            provider: keycloak
+            scope: sgi-eti
+            client-name: SGI (service login)
+            client-id: tp-service
+            client-secret: a397c654-5899-469d-8ab4-ccbb4898a104
         provider:
           keycloak:
             issuer-uri: http://sgi-auth:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
+            token-uri: http://sgi-auth:8080/auth/realms/sgi/protocol/openid-connect/token
