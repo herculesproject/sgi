@@ -680,7 +680,7 @@ export class SolicitudActionService extends ActionService {
               } else if (vinculacion.fechaObtencionCategoria == null) {
                 response.msgError = ErroresRequisitos.NO_FECHAS_VINCUALCION;
               }
-            } else if (convocatoriaRequisitoIp.vinculacionUniversidad === true) {
+            } else if (convocatoriaRequisitoIp?.vinculacionUniversidad === true) {
               response.msgError = ErroresRequisitos.NO_VINCULACION;
             } else if (response.msgError === null) {
               response.isValid = true;

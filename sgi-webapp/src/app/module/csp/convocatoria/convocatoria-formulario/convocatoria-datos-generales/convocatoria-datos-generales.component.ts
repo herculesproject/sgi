@@ -8,24 +8,21 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
-import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
 import { DialogService } from '@core/services/dialog.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import { AreaTematicaModalData, ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
 import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 
 const MSG_DELETE_AREA_TEMATICA = marker('msg.delete.entity');
 const AREA_KEY = marker('csp.area');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
-const CONVOCATORIA_FECHA_PUBLICACION_KEY = marker('csp.convocatoria.fecha-publicacion');
 const CONVOCATORIA_FECHA_PROVISIONAL_KEY = marker('csp.convocatoria.fecha-provisional');
 const CONVOCATORIA_FECHA_CONCESION_KEY = marker('csp.convocatoria.fecha-concesion');
 const CONVOCATORIA_AMBITO_GEOGRAFICO_KEY = marker('csp.convocatoria.ambito-geografico');
@@ -37,6 +34,11 @@ const CONVOCATORIA_MODELO_EJECUCION_KEY = marker('csp.convocatoria.modelo-ejecuc
 const CONVOCATORIA_OBSERVACIONES_KEY = marker('csp.convocatoria.observaciones');
 const CONVOCATORIA_TITULO_KEY = marker('csp.convocatoria.titulo');
 const CONVOCATORIA_UNIDAD_GESTION_KEY = marker('csp.convocatoria.unidad-gestion');
+
+export interface AreaTematicaListado {
+  padre: string;
+  areasTematicas: string;
+}
 
 @Component({
   selector: 'sgi-convocatoria-datos-generales',
@@ -73,10 +75,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   msgParamUnidadGestionEntity = {};
   textoDeleteAreaTematica: string;
 
-  convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaData>();
+  convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaListado>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  columns = ['padre', 'nombre', 'observaciones', 'acciones'];
+  columns = ['padre', 'nombre', 'acciones'];
 
   get CLASIFICACION_CVN_MAP() {
     return CLASIFICACION_CVN_MAP;
@@ -135,8 +137,17 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.setupI18N();
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
-    this.subscriptions.push(this.formPart.areasTematicas$.subscribe(
-      data => this.convocatoriaAreaTematicas.data = data
+    this.subscriptions.push(this.formPart.areasTematicas$.subscribe((data) => {
+      if (!data || data.length === 0) {
+        this.convocatoriaAreaTematicas.data = [];
+      } else {
+        const listadoAreas: AreaTematicaListado = {
+          padre: data[0]?.padre.nombre,
+          areasTematicas: data.map(area => area.convocatoriaAreaTematica.value.areaTematica.nombre).join(', ')
+        };
+        this.convocatoriaAreaTematicas.data = [listadoAreas];
+      }
+    }
     ));
   }
 
@@ -243,36 +254,32 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     ).subscribe((value) => this.textoDeleteAreaTematica = value);
   }
 
-  openModal(data?: AreaTematicaData): void {
-    const newData: AreaTematicaData = {
+  openModal(): void {
+    const selected = this.formPart.areasTematicas$.value.map(element => element.convocatoriaAreaTematica.value.areaTematica);
+    const newData: AreaTematicaModalData = {
       padre: undefined,
-      observaciones: '',
-      convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>({} as IConvocatoriaAreaTematica)
+      areasTematicas: selected,
     };
     const config = {
       panelClass: 'sgi-dialog-container',
-      data: data ? data : newData
+      data: newData
     };
     const dialogRef = this.matDialog.open(ConvocatoriaAreaTematicaModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (result: AreaTematicaData) => {
+      (result) => {
         if (result) {
-          if (data) {
-            this.formPart.updateConvocatoriaAreaTematica(result);
-          } else {
-            this.formPart.addConvocatoriaAreaTematica(result);
-          }
+          this.formPart.updateListaAreasTematicas(result.areasTematicas, result.padre);
         }
       }
     );
   }
 
-  deleteAreaTematica(data: AreaTematicaData): void {
+  deleteAreasTematicas(): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDeleteAreaTematica).subscribe(
         (aceptado) => {
           if (aceptado) {
-            this.formPart.deleteConvocatoriaAreaTematica(data);
+            this.formPart.updateListaAreasTematicas([], this.formPart.areasTematicas$.value[0].padre);
           }
         }
       )

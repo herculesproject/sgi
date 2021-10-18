@@ -22,12 +22,11 @@ import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operat
 export interface AreaTematicaData {
   padre: IAreaTematica;
   convocatoriaAreaTematica: StatusWrapper<IConvocatoriaAreaTematica>;
-  observaciones: string;
 }
 
 export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocatoria> {
   readonly areasTematicas$ = new BehaviorSubject<AreaTematicaData[]>([]);
-  private convocatoriaAreaTematicaEliminadas: StatusWrapper<IConvocatoriaAreaTematica>[] = [];
+  private convocatoriaAreaTematicaEliminadas: IConvocatoriaAreaTematica[] = [];
 
   private convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
@@ -256,7 +255,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
             const element: AreaTematicaData = {
               padre: undefined,
               convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>(convocatoriaAreaTematica),
-              observaciones: convocatoriaAreaTematica.observaciones
             };
             list.push(this.loadAreaData(element));
           }
@@ -283,7 +281,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       const padre = result.padre ? result.padre : areaTematica;
       const element: AreaTematicaData = {
         padre,
-        observaciones: data.convocatoriaAreaTematica.value.observaciones,
         convocatoriaAreaTematica: data.convocatoriaAreaTematica,
       };
       return element;
@@ -390,30 +387,30 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       );
   }
 
-  deleteConvocatoriaAreaTematica(data: AreaTematicaData) {
-    const current = this.areasTematicas$.value;
-    const index = current.findIndex(element =>
-      element.convocatoriaAreaTematica.value === data.convocatoriaAreaTematica.value);
-    if (index >= 0) {
-      this.convocatoriaAreaTematicaEliminadas.push(current[index].convocatoriaAreaTematica);
-      current.splice(index, 1);
-      this.areasTematicas$.next(current);
-      this.setChanges(true);
+  updateListaAreasTematicas(data: IAreaTematica[], padre: IAreaTematica) {
+    if (this.convocatoriaAreaTematicaEliminadas != null) {
+      this.convocatoriaAreaTematicaEliminadas = this.convocatoriaAreaTematicaEliminadas.concat(
+        this.areasTematicas$.value.filter(item => data.indexOf(item.convocatoriaAreaTematica.value.areaTematica) < 0
+          && item.convocatoriaAreaTematica.value.id)
+          .map(result => result.convocatoriaAreaTematica.value));
     }
-  }
+    const current = this.areasTematicas$.value.filter(item => data.indexOf(
+      item.convocatoriaAreaTematica.value.areaTematica) >= 0);
+    const currentAreasTematicas = current.map(element => element.convocatoriaAreaTematica.value.areaTematica);
+    if (currentAreasTematicas.length === 0) {
+      this.areasTematicas$.next(current.concat(data.map(element => {
+        const areaTematicaData: AreaTematicaData = {
+          padre,
+          convocatoriaAreaTematica:
+            new StatusWrapper<IConvocatoriaAreaTematica>({ areaTematica: element } as IConvocatoriaAreaTematica)
+        };
+        return areaTematicaData;
+      })));
+    } else {
+      this.areasTematicas$.next(current);
+    }
+    this.setChanges(true);
 
-  updateConvocatoriaAreaTematica(data: AreaTematicaData) {
-    const element = this.loadAreaData(data);
-    const wrapper = new StatusWrapper<AreaTematicaData>(element);
-    const current = this.areasTematicas$.value;
-    const index = current.findIndex(value =>
-      value.convocatoriaAreaTematica.value === data.convocatoriaAreaTematica.value);
-    if (index >= 0) {
-      wrapper.setEdited();
-      this.areasTematicas$.value[index] = wrapper.value;
-      this.areasTematicas$.next(current);
-      this.setChanges(true);
-    }
   }
 
   addConvocatoriaAreaTematica(data: AreaTematicaData) {
@@ -430,7 +427,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   saveOrUpdateAreasTematicas(result: IConvocatoria): Observable<IConvocatoria> {
     return merge(
       this.deleteConvocatoriaAreaTematicas(),
-      this.updateConvocatoriaAreaTematicas(),
       this.createConvocatoriaAreaTematicas()
     ).pipe(
       takeLast(1),
@@ -439,43 +435,18 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private deleteConvocatoriaAreaTematicas(): Observable<void> {
-    const deleteEntidades = this.convocatoriaAreaTematicaEliminadas.filter((value) => value.value.id);
-    if (deleteEntidades.length === 0) {
+    const deleteEntidades = this.convocatoriaAreaTematicaEliminadas?.filter((value) => value.id);
+    if (deleteEntidades?.length === 0 || deleteEntidades == null) {
       return of(void 0);
     }
     return from(deleteEntidades).pipe(
       mergeMap((wrapped) => {
-        return this.convocatoriaAreaTematicaService.deleteById(wrapped.value.id)
+        return this.convocatoriaAreaTematicaService.deleteById(wrapped.id)
           .pipe(
             tap(() => {
               this.convocatoriaAreaTematicaEliminadas =
-                this.convocatoriaAreaTematicaEliminadas.filter(deletedModelo =>
-                  deletedModelo.value.id !== wrapped.value.id);
-            })
-          );
-      })
-    );
-  }
-
-  private updateConvocatoriaAreaTematicas(): Observable<void> {
-    const editedAreas = this.areasTematicas$.value.filter(
-      (wrapper) => wrapper.convocatoriaAreaTematica.value.id);
-    if (editedAreas.length === 0) {
-      return of(void 0);
-    }
-    return from(editedAreas).pipe(
-      mergeMap((data) => {
-        return this.convocatoriaAreaTematicaService.update(
-          data.convocatoriaAreaTematica.value.id, data.convocatoriaAreaTematica.value).pipe(
-            map((updated) => {
-              const index = this.areasTematicas$.value.findIndex(
-                (current) => current === data);
-              const element: AreaTematicaData = {
-                padre: undefined,
-                convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>(updated),
-                observaciones: updated.observaciones
-              };
-              this.areasTematicas$.value[index] = this.loadAreaData(element);
+                this.convocatoriaAreaTematicaEliminadas?.filter(deletedModelo =>
+                  deletedModelo.id !== wrapped.id);
             })
           );
       })
@@ -494,10 +465,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       mergeMap((data) => {
         return this.convocatoriaAreaTematicaService.create(data.convocatoriaAreaTematica.value).pipe(
           map((createdEntidad) => {
-            const index = this.areasTematicas$.value.findIndex(
-              (currentEntidad) => currentEntidad === data);
-            this.areasTematicas$[index] =
-              new StatusWrapper<IConvocatoriaAreaTematica>(createdEntidad);
+            const index = this.areasTematicas$.value.findIndex(currentEntidad =>
+              currentEntidad.convocatoriaAreaTematica.value.areaTematica.id === createdEntidad.areaTematica.id);
+            this.areasTematicas$.value[index].convocatoriaAreaTematica = new StatusWrapper<IConvocatoriaAreaTematica>(createdEntidad);
           })
         );
       })

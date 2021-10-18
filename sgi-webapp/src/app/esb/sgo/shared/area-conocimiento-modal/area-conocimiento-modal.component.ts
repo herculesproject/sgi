@@ -153,14 +153,15 @@ export class AreaConocimientoModalComponent
   }
 
   protected getDatosForm(): AreaConocimientoListado[] {
-    const selectedAreasConocimientoListado = this.selectedAreasConocimiento.map(areaConocimiento => {
-      const areasConocimientoListado: AreaConocimientoListado = {
-        niveles: [areaConocimiento],
-        nivelesTexto: undefined,
-        nivelSeleccionado: areaConocimiento
-      };
-      return this.fillAreaConocimientoListado(areasConocimientoListado);
-    });
+    const selectedAreasConocimientoListado = this.selectedAreasConocimiento
+      .map(areaConocimiento => {
+        const areasConocimientoListado: AreaConocimientoListado = {
+          niveles: [areaConocimiento],
+          nivelesTexto: undefined,
+          nivelSeleccionado: areaConocimiento
+        };
+        return this.fillAreaConocimientoListado(areasConocimientoListado);
+      });
     return selectedAreasConocimientoListado;
   }
 
