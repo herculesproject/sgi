@@ -250,7 +250,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
     log.debug("createSolicitudProyectoEntidades() - start");
     solicitudRepository.findById(solicitudProyectoId).ifPresent(solicitud -> {
       if (solicitud.getConvocatoriaId() != null
-          && solicitud.getFormularioSolicitud().equals(FormularioSolicitud.ESTANDAR)) {
+          && solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)) {
         // un registro por cada una de las entidades financiadoras de la convocatoria
         List<SolicitudProyectoEntidad> solicitudProyectoEntidadesFinanciadoras = convocatoriaEntidadFinanciadoraRepository
             .findByConvocatoriaId(solicitud.getConvocatoriaId()).stream().map(convocatoriaEntidadFinanciadora -> {

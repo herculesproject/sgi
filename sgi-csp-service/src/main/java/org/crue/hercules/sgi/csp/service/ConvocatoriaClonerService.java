@@ -85,9 +85,9 @@ public class ConvocatoriaClonerService {
         .finalidad(toClone.getFinalidad()).codigo(toClone.getCodigo()).fechaConcesion(toClone.getFechaConcesion())
         .fechaProvisional(toClone.getFechaProvisional()).fechaPublicacion(toClone.getFechaPublicacion())
         .duracion(toClone.getDuracion()).ambitoGeografico(toClone.getAmbitoGeografico())
-        .regimenConcurrencia(toClone.getRegimenConcurrencia()).clasificacionCVN(toClone.getClasificacionCVN())
-        .objeto(toClone.getObjeto()).observaciones(toClone.getObservaciones()).estado(Convocatoria.Estado.BORRADOR)
-        .build();
+        .formularioSolicitud(toClone.getFormularioSolicitud()).regimenConcurrencia(toClone.getRegimenConcurrencia())
+        .clasificacionCVN(toClone.getClasificacionCVN()).objeto(toClone.getObjeto())
+        .observaciones(toClone.getObservaciones()).estado(Convocatoria.Estado.BORRADOR).build();
   }
 
   /**

@@ -7,4 +7,9 @@
     <dropColumn columnName="financiacion_ajena" tableName="solicitud_proyecto_presupuesto" />
   </changeSet>
 
+  <!-- Eliminación de columna de configuracion_solicitud que ya no es necesaria -->
+  <changeSet author="user (generated)" id="0000000000001-cleanup-configuracion_solicitud">
+    <dropColumn columnName="formulario_solicitud" tableName="configuracion_solicitud" />
+  </changeSet>
+
 </databaseChangeLog>

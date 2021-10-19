@@ -1207,7 +1207,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
     solicitud.setConvocatoriaExterna(null);
     solicitud.setUnidadGestionRef("2");
-    solicitud.setFormularioSolicitud(FormularioSolicitud.RRHH);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.GRUPO);
     solicitud.setActivo(true);
 
     if (id != null) {

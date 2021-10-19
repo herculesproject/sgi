@@ -60,7 +60,15 @@
   <changeSet author="user (generated)" id="0000000000001-11">
     <addDefaultValue columnDataType="boolean" columnName="enviado_sge" defaultValueBoolean="false" tableName="proyecto_anualidad" />
   </changeSet>
+
   <changeSet author="user (generated)" id="0000000000001-12">
     <addDefaultValue columnDataType="boolean" columnName="presupuestar" defaultValueBoolean="false" tableName="proyecto_anualidad" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000001-13">
+    <addColumn tableName="convocatoria">
+      <column name="formulario_solicitud" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

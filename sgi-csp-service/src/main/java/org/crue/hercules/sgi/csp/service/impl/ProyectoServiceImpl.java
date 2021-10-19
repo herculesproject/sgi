@@ -1516,8 +1516,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.isTrue(!repository.existsBySolicitudId(solicitud.getId()),
         "La solicitud con id: " + solicitud.getId() + " ya está asociada a un proyecto");
 
-    Assert.isTrue(solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR,
-        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.ESTANDAR);
+    Assert.isTrue(solicitud.getFormularioSolicitud() == FormularioSolicitud.PROYECTO,
+        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.PROYECTO);
   }
 
   /**
