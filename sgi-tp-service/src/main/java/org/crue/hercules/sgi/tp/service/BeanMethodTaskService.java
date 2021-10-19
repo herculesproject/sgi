@@ -219,7 +219,7 @@ public class BeanMethodTaskService {
       ids.add(task.getId());
     }
     log.info("Disabled {} BeanMethodTasks. Ids: {}", ids.size(), Arrays.toString(ids.toArray()));
-    log.debug("disablePast() - start");
+    log.debug("disablePast() - end");
   }
 
 }
