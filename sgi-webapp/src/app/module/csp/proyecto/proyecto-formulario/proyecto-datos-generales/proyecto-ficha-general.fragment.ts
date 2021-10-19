@@ -92,7 +92,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
     this.proyecto = { activo: true } as IProyecto;
-
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
@@ -189,6 +188,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({
+        value: '',
+        disabled: true
+      }),
+      id: new FormControl({
         value: '',
         disabled: true
       }),
@@ -427,6 +430,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   buildPatch(proyecto: IProyectoDatosGenerales): { [key: string]: any } {
     const result = {
       estado: proyecto.estado?.estado,
+      id: proyecto.id,
       titulo: proyecto.titulo,
       acronimo: proyecto.acronimo,
       codigoExterno: proyecto.codigoExterno,

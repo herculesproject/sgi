@@ -17,7 +17,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
@@ -32,8 +31,9 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOpt
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
+
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -47,6 +47,7 @@ const PROYECTO_KEY = marker('csp.proyecto');
 
 interface IProyectoData extends IProyecto {
   prorrogado: boolean;
+  proyectosSGE: string
 }
 
 @Component({
@@ -153,6 +154,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   private loadForm() {
     this.formGroup = new FormGroup({
       titulo: new FormControl(''),
+      id: new FormControl(''),
       acronimo: new FormControl(''),
       estado: new FormControl(''),
       activo: new FormControl('true'),
@@ -278,78 +280,58 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   protected createObservable(): Observable<SgiRestListResult<IProyectoData>> {
-    let observable$ = null;
+    let observable$: Observable<SgiRestListResult<IProyecto>> = null;
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      observable$ = this.proyectoService.findTodos(this.getFindOptions()).pipe(
-        map((response) => {
-          return response as SgiRestListResult<IProyecto>;
-        }),
-        switchMap((response) => {
-          const requestsProyecto: Observable<IProyectoData>[] = [];
-          response.items.forEach(proyecto => {
-            const proyectoData = proyecto as IProyectoData;
-            if (proyecto.id) {
-              requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
-                map(value => {
-                  proyectoData.prorrogado = value;
-                  return proyectoData;
-                })
-              ));
-            } else {
-              requestsProyecto.push(of(proyectoData));
-            }
-
-            if (this.authService.hasAnyAuthorityForAnyUO(['CSP-PRO-E', 'CSP-PRO-V'])) {
-              this.suscripciones.push(this.proyectoService.modificable(proyecto.id).subscribe((value) => {
-                this.mapModificable.set(proyecto.id, value);
-              }));
-            }
-          });
-          return of(response).pipe(
-            tap(() => merge(...requestsProyecto).subscribe())
-          );
-        })
-      );
+      observable$ = this.proyectoService.findTodos(this.getFindOptions());
     } else {
-      observable$ = this.proyectoService.findAll(this.getFindOptions()).pipe(
-        map((response) => {
-          return response as SgiRestListResult<IProyecto>;
-        }),
-        switchMap((response) => {
-          const requestsProyecto: Observable<IProyectoData>[] = [];
-          response.items.forEach(proyecto => {
-            const proyectoData = proyecto as IProyectoData;
-            if (proyecto.id) {
-              requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
-                map(value => {
-                  proyectoData.prorrogado = value;
-                  return proyectoData;
-                })
-              ));
-            } else {
-              requestsProyecto.push(of(proyectoData));
-            }
-
-            if (this.authService.hasAnyAuthorityForAnyUO(['CSP-PRO-E', 'CSP-PRO-V'])) {
-              this.suscripciones.push(this.proyectoService.modificable(proyecto.id).subscribe((value) => {
-                this.mapModificable.set(proyecto.id, value);
-              }));
-            }
-          });
-          return of(response).pipe(
-            tap(() => merge(...requestsProyecto).subscribe())
-          );
-        })
-      );
+      observable$ = this.proyectoService.findAll(this.getFindOptions());
     }
-    return observable$;
+    return observable$.pipe(
+      map((response) => {
+        return response as SgiRestListResult<IProyectoData>;
+      }),
+      switchMap((response) => {
+        const requestsProyecto: Observable<IProyectoData>[] = [];
+        response.items.forEach(proyecto => {
+          const proyectoData = proyecto as IProyectoData;
+          if (proyecto.id) {
+            requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
+              map(value => {
+                proyectoData.prorrogado = value;
+                return proyectoData;
+              }),
+              switchMap(() =>
+                this.proyectoService.findAllProyectosSgeProyecto(proyecto.id).pipe(
+                  map(value => {
+                    proyectoData.proyectosSGE = value.items.map(element => element.proyectoSge.id).join(', ');
+                    return proyectoData;
+                  }))
+              )
+
+            ));
+          } else {
+            requestsProyecto.push(of(proyectoData));
+          }
+
+          if (this.authService.hasAnyAuthorityForAnyUO(['CSP-PRO-E', 'CSP-PRO-V'])) {
+            this.suscripciones.push(this.proyectoService.modificable(proyecto.id).subscribe((value) => {
+              this.mapModificable.set(proyecto.id, value);
+            }));
+          }
+        });
+        return of(response).pipe(
+          tap(() => merge(...requestsProyecto).subscribe())
+        );
+      })
+    );
+
   }
 
   protected initColumns(): void {
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      this.columnas = ['titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'activo', 'acciones'];
+      this.columnas = ['id', 'codigoSGE', 'titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'activo', 'acciones'];
     } else {
-      this.columnas = ['titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'acciones'];
+      this.columnas = ['id', 'codigoSGE', 'titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'acciones'];
     }
   }
 
@@ -359,7 +341,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
+
+    const filter = new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
       .and('codigoExterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoExterno.value);
@@ -367,7 +350,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
     filter
-      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
+      .and('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
+      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
       .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
       .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
       .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))

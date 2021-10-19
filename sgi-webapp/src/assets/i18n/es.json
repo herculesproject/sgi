@@ -707,6 +707,8 @@
   "csp.proyecto.tipo-horas-anuales.FIJO": "Valor fijo",
   "csp.proyecto.tipo-horas-anuales.REAL": "Reales (TS)",
   "csp.proyecto.titulo": "Título",
+  "csp.proyecto.id": "Identificador interno",
+  "csp.proyecto.codigo-sge": "Código SGE",
   "csp.proyecto.unidad-gestion": "Unidad de Gestión",
   "csp.proyectos": "Proyectos",
   "csp.proyectos.configuracion-economica.calendario_justificacion": "Calendario Justificación",
