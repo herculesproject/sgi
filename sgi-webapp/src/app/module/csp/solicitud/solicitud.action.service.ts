@@ -305,7 +305,7 @@ export class SolicitudActionService extends ActionService {
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
 
-      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
+      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
         this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
         this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
         this.addFragment(this.FRAGMENT.SOCIOS, this.socio);
@@ -318,7 +318,7 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
       }
 
-      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
+      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
         this.subscriptions.push(
           solicitudService.hasConvocatoriaSGI(this.data.solicitud.id).subscribe((hasConvocatoriaSgi) => {
             if (hasConvocatoriaSgi) {
@@ -396,7 +396,7 @@ export class SolicitudActionService extends ActionService {
       // Forzamos la inicialización de los datos principales
       this.datosGenerales.initialize();
 
-      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
+      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
         this.proyectoDatos.initialize();
       }
     } else if (this.isEdit() && this.isInvestigador) {

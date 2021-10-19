@@ -3,10 +3,8 @@
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
     <!-- Titulo -->
-    <div [fxFlex.sm]="formPart.isEdit() ? fxFlexProperties2.sm : fxFlexPropertiesInline.sm"
-      [fxFlex.md]="formPart.isEdit() ? fxFlexProperties2.md : fxFlexPropertiesInline.md"
-      [fxFlex.gt-md]="formPart.isEdit() ? fxFlexProperties2.gtMd : fxFlexPropertiesInline.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div [fxFlex.sm]="fxFlexProperties2.gtMd" [fxFlex.md]="fxFlexProperties2.gtMd"
+      [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.titulo' | translate}}</mat-label>
         <input matInput formControlName="titulo" type="text" id="titulo"
@@ -18,6 +16,27 @@
           {{ 'error.maxlength.entity' | translate:msgParamTituloEntity }}
         </mat-error>
       </mat-form-field>
+    </div>
+
+    <!-- Tipo forumlario-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field class="input-form" fxFill>
+        <mat-label>{{'csp.convocatoria.tipo-formulario' | translate}}</mat-label>
+        <mat-select matNativeControl formControlName="formularioSolicitud" required>
+          <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
+            [value]="formularioSolicitud.key">
+            {{ formularioSolicitud.value | translate}}
+          </mat-option>
+        </mat-select>
+        <sgi-field-info matSuffix [visible]="this.formPart.isConvocatoriaVinculada"
+          message="{{'csp.convocatoria.campo.vinculada' | translate:msgTooltip}}">
+        </sgi-field-info>
+        <mat-error *ngIf="formGroup.controls.formularioSolicitud.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamFormularioSolicitud }}
+        </mat-error>
+      </mat-form-field>
+
     </div>
 
     <!-- Estado -->

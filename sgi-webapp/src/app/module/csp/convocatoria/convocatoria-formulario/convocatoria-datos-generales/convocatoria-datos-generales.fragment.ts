@@ -73,6 +73,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       finalidad: new FormControl(null),
       duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),
       ambitoGeografico: new FormControl(null),
+      formularioSolicitud: new FormControl(null),
       clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(null),
       entidadGestora: new FormControl(null),
@@ -91,6 +92,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       form.controls.modeloEjecucion.disable();
       form.controls.entidadGestora.disable();
       form.controls.duracion.disable();
+      form.controls.formularioSolicitud.disable();
     }
 
     this.subscriptions.push(
@@ -148,6 +150,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       observaciones: convocatoria.observaciones,
       finalidad: convocatoria.finalidad,
       regimenConcurrencia: convocatoria.regimenConcurrencia,
+      formularioSolicitud: convocatoria.formularioSolicitud,
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
@@ -303,6 +306,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
     this.convocatoria.duracion = form.duracion.value;
     this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
+    this.convocatoria.formularioSolicitud = form.formularioSolicitud.value;
     this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;
 
     return this.convocatoria;

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
+import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
@@ -34,6 +35,8 @@ const CONVOCATORIA_MODELO_EJECUCION_KEY = marker('csp.convocatoria.modelo-ejecuc
 const CONVOCATORIA_OBSERVACIONES_KEY = marker('csp.convocatoria.observaciones');
 const CONVOCATORIA_TITULO_KEY = marker('csp.convocatoria.titulo');
 const CONVOCATORIA_UNIDAD_GESTION_KEY = marker('csp.convocatoria.unidad-gestion');
+const CONVOCATORIA_FORMULARIO_SOLICITUD_KEY = marker('csp.convocatoria.tipo-formulario');
+const CONVOCATORIA_VINCULADA_TOOLTIP_KEY = marker('csp.convocatoria.campo.vinculada');
 
 export interface AreaTematicaListado {
   padre: string;
@@ -73,6 +76,8 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   msgParamFechaProvisionalEntity = {};
   msgParamTituloEntity = {};
   msgParamUnidadGestionEntity = {};
+  msgParamFormularioSolicitud = {};
+  msgTooltip = {};
   textoDeleteAreaTematica: string;
 
   convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaListado>();
@@ -82,6 +87,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   get CLASIFICACION_CVN_MAP() {
     return CLASIFICACION_CVN_MAP;
+  }
+
+  get FORMULARIO_SOLICITUD_MAP() {
+    return FORMULARIO_SOLICITUD_MAP;
   }
 
   get ESTADO_MAP() {
@@ -168,6 +177,14 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     ).subscribe((value) => this.msgParamAreaTematicaEntities = { entity: value });
 
     this.translate.get(
+      CONVOCATORIA_FORMULARIO_SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe(
+      (value) => this.msgParamFormularioSolicitud = {
+        entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
+    );
+    this.translate.get(
       CONVOCATORIA_CODIGO_REFERENCIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe(
@@ -240,6 +257,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
       ...MSG_PARAMS.GENDER.FEMALE,
       ...MSG_PARAMS.CARDINALIRY.PLURAL
     });
+
+    this.translate.get(
+      CONVOCATORIA_VINCULADA_TOOLTIP_KEY
+    ).subscribe((value) => this.msgTooltip = { entity: value });
 
     this.translate.get(
       AREA_TEMATICA_KEY,
