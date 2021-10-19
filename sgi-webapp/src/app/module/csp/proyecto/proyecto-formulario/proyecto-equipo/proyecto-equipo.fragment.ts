@@ -1,8 +1,9 @@
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
-import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito-equipo-categoria-profesional';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
+import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
+import { ICategoriaProfesional } from '@core/models/sgp/categoria-profesional';
 import { IDatosAcademicos } from '@core/models/sgp/datos-academicos';
 import { IDatosPersonales } from '@core/models/sgp/datos-personales';
 import { IVinculacion } from '@core/models/sgp/vinculacion';
@@ -274,9 +275,9 @@ export class ProyectoEquipoFragment extends Fragment {
     let edad: Duration;
     let datosPersonales: IDatosPersonales;
     let vinculacion: IVinculacion;
-    let categoriasProfesionalesConvocatoria: IRequisitoEquipoCategoriaProfesional[];
+    let categoriasProfesionalesConvocatoria: ICategoriaProfesional[];
     let nivelAcademicoSolicitante: IRequisitoEquipoNivelAcademico[];
-    let categoriaProfesionalSolicitante: IRequisitoEquipoCategoriaProfesional[];
+    let categoriaProfesionalSolicitante: ICategoriaProfesional[];
     const response = {
       isValid: false,
       msgError: null,
@@ -284,7 +285,7 @@ export class ProyectoEquipoFragment extends Fragment {
 
     return this.proyectoService.findById(this.getKey() as number).pipe(
       switchMap((proyecto) => {
-        return this.convocatoriaService.findNivelesAcademicos(proyecto.convocatoriaId).pipe(
+        return this.convocatoriaService.findRequisitosEquipoNivelesAcademicos(proyecto.convocatoriaId).pipe(
           switchMap((nivelesAcademicos) => {
             return this.datosAcademicosService.findByPersonaId(proyectoEquipo.persona.id).pipe(
               switchMap((datoAcademico) => {
@@ -301,18 +302,18 @@ export class ProyectoEquipoFragment extends Fragment {
                       datosPersonales = datoPersonal;
                       edad = DateTime.local().diff(datoPersonal?.fechaNacimiento, ['years', 'months', 'days', 'hours']);
                     }
-                    return this.convocatoriaService.findCategoriasProfesionales(proyecto.convocatoriaId);
+                    return this.convocatoriaService.findRequisitosIpCategoriasProfesionales(proyecto.convocatoriaId);
                   }),
-                  switchMap((categoriasProfesionales: IRequisitoEquipoCategoriaProfesional[]) => {
+                  switchMap((categoriasProfesionales: IRequisitoIPCategoriaProfesional[]) => {
                     if (categoriasProfesionales?.length > 0) {
-                      categoriasProfesionalesConvocatoria = categoriasProfesionales;
+                      categoriasProfesionalesConvocatoria = categoriasProfesionales.map(element => element.categoriaProfesional);
                     }
                     return this.vinculacionService.findByPersonaId(proyectoEquipo.persona.id);
                   }),
                   switchMap((vinculacionSolicitante: IVinculacion) => {
                     if (categoriasProfesionalesConvocatoria?.length > 0 && vinculacionSolicitante != null) {
                       categoriaProfesionalSolicitante =
-                        categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.categoriaProfesional.id ===
+                        categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.id ===
                           vinculacionSolicitante?.categoriaProfesional.id);
                     }
                     vinculacion = vinculacionSolicitante;
@@ -415,16 +416,16 @@ export class ProyectoEquipoFragment extends Fragment {
           }),
           switchMap((erroresNivelesAcademicos: ErrorResponse) => {
             if (erroresNivelesAcademicos.msgError === null) {
-              return this.convocatoriaService.findCategoriasProfesionalesEquipo(proyecto.convocatoriaId).pipe(
+              return this.convocatoriaService.findRequisitosEquipoCategoriasProfesionales(proyecto.convocatoriaId).pipe(
                 switchMap((categoriasProfesionales) => {
                   if (categoriasProfesionales?.length > 0) {
-                    categoriasProfesionalesConvocatoria = categoriasProfesionales;
+                    categoriasProfesionalesConvocatoria = categoriasProfesionales.map(element => element.categoriaProfesional);
                   }
                   return this.vinculacionService.findByPersonaId(proyectoEquipo.persona.id);
                 }),
                 switchMap((vinculacionSolicitante: IVinculacion) => {
                   categoriaProfesionalSolicitante =
-                    categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.categoriaProfesional.id ===
+                    categoriasProfesionalesConvocatoria?.filter(categoriaProfesional => categoriaProfesional.id ===
                       vinculacionSolicitante?.categoriaProfesional.id);
                   vinculacion = vinculacionSolicitante;
                   return this.convocatoriaRequisitoEquipoService.findByConvocatoriaId(proyecto.convocatoriaId);

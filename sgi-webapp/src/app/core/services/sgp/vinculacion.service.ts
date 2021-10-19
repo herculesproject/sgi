@@ -4,8 +4,8 @@ import { IVinculacionBackend } from '@core/models/sgp/backend/vinculacion-backen
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { VINCULACION_CONVERTER } from './vinculacion-converter';
 
 @Injectable({
@@ -30,8 +30,6 @@ export class VinculacionService extends SgiRestService<string, IVinculacion>{
    */
   findByPersonaId(personaId: string): Observable<IVinculacion> {
     return this.http.get<IVinculacionBackend>(`${this.endpointUrl}/persona/${personaId}`).pipe(
-      // TODO Quitar catch cuando se solucione el error de 404 not found
-      catchError(err => of(null)),
       map(response => VINCULACION_CONVERTER.toTarget(response))
     );
   }

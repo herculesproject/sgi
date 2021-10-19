@@ -70,8 +70,6 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.search(true);
-
     merge(
       this.paginator.page,
       this.sort.sortChange
@@ -141,7 +139,6 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
    */
   onClearFilters(): void {
     this.formGroup.reset();
-    this.search(true);
   }
 
   get MSG_PARAMS() {
