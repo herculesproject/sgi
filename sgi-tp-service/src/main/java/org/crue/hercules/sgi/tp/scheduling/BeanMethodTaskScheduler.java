@@ -105,8 +105,7 @@ public class BeanMethodTaskScheduler {
       long timeElapsed = Duration.between(task.getInstant(), now).toMinutes();
       // Allow scheduling recently dued active tasks
       if (task.getInstant().compareTo(now) > 0 || timeElapsed < GRACE_TIME) {
-        cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod,
-            ((BeanMethodInstantTask) task).getInstant());
+        cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod, task.getInstant());
         return true;
       } else {
         log.info(String.format(
