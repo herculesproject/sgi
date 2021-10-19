@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.tp.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
@@ -208,12 +210,15 @@ public class BeanMethodTaskService {
   @Transactional
   public void disablePast() {
     log.debug("disablePast() - start");
+    log.info("Disabling Past BeanMethodTasks...");
+    List<Long> ids = new ArrayList<>();
     List<BeanMethodTask> pastInstantTasks = repository.findAll(BeanMehtodTaskSpecifications.pastInstantTasks());
     for (BeanMethodTask task : pastInstantTasks) {
       task.setDisabled(Boolean.TRUE);
-      log.info("Disabling BeanMethodTask {}", task.getId());
       update(task);
+      ids.add(task.getId());
     }
+    log.info("Disabled {} BeanMethodTasks. Ids: {}", ids.size(), Arrays.toString(ids.toArray()));
     log.debug("disablePast() - start");
   }
 
