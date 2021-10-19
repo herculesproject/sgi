@@ -4,17 +4,16 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.plaf.multi.MultiFileChooserUI;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
@@ -28,6 +27,7 @@ import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.rep.GetDataReportMxxException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
@@ -52,13 +52,13 @@ import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
+import org.crue.hercules.sgi.eti.service.ConfiguracionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -69,11 +69,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -130,13 +130,16 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Tarea repository */
   private final TareaRepository tareaRepository;
 
+  /** Configuracion service */
+  private final ConfiguracionService configuracionService;
+
   public MemoriaServiceImpl(SgiConfigProperties sgiConfigProperties, MemoriaRepository memoriaRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, EstadoRetrospectivaRepository estadoRetrospectivaRepository,
       EvaluacionRepository evaluacionRepository, ComentarioRepository comentarioRepository,
       InformeService informeService, PeticionEvaluacionRepository peticionEvaluacionRepository,
       ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
-      RespuestaRepository respuestaRepository, TareaRepository tareaRepository, RestApiProperties restApiProperties,
-      RestTemplate restTemplate) {
+      RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
+      ConfiguracionService configuracionService, RestApiProperties restApiProperties, RestTemplate restTemplate) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -149,6 +152,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.documentacionMemoriaRepository = documentacionMemoriaRepository;
     this.respuestaRepository = respuestaRepository;
     this.tareaRepository = tareaRepository;
+    this.configuracionService = configuracionService;
     this.restApiProperties = restApiProperties;
     this.restTemplate = restTemplate;
   }
@@ -1022,4 +1026,76 @@ public class MemoriaServiceImpl implements MemoriaService {
     return arr[0];
   }
 
+  /**
+   * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
+   * pasado "diasArchivadaPendienteCorrecciones" días desde la fecha de estado de
+   * una memoria cuyo estado es "Pendiente Correcciones"
+   * 
+   * @return Los ids de memorias que pasan al estado "Archivado"
+   */
+  public List<Long> archivarNoPresentados() {
+    log.debug("archivarNoPresentados() - start");
+    Configuracion configuracion = configuracionService.findConfiguracion();
+    // Devuelve un listado de {@link Memoria} que han
+    // pasado "diasArchivadaPendienteCorrecciones" días desde la fecha de estado de
+    // una memoria cuyo estado es "Pendiente Correcciones"
+    Specification<Memoria> specsMemoriasByDiasArchivadaPendienteCorrecciones = MemoriaSpecifications.activos()
+        .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES)))
+        .and(MemoriaSpecifications
+            .byFechaActualMayorFechaEstadoByDiasDiff(configuracion.getDiasArchivadaPendienteCorrecciones()));
+
+    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaPendienteCorrecciones);
+
+    List<Long> memoriasArchivadas = new ArrayList<Long>();
+    if (!CollectionUtils.isEmpty(memorias)) {
+      memorias.forEach(memoria -> {
+        try {
+          this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+          memoriasArchivadas.add(memoria.getId());
+        } catch (Exception e) {
+          log.debug("Error archivarNoPresentados() - ", e);
+        }
+      });
+    }
+    log.debug("archivarNoPresentados() - end");
+    return memoriasArchivadas;
+  }
+
+  /**
+   * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
+   * pasado "mesesArchivadaInactivo" meses desde la fecha de estado de una memoria
+   * cuyo estados son "Favorable Pendiente de Modificaciones Mínimas" o "No
+   * procede evaluar" o "Solicitud modificación"
+   * 
+   * @return Los ids de memorias que pasan al estado "Archivado"
+   */
+  public List<Long> archivarInactivos() {
+    log.debug("archivarInactivos() - start");
+    Configuracion configuracion = configuracionService.findConfiguracion();
+    // Devuelve un listado de {@link Memoria} que han pasado
+    // "mesesArchivadaInactivo" meses desde la fecha de estado de una memoria cuyo
+    // estados son "Favorable Pendiente de Modificaciones Mínimas" o "No procede
+    // evaluar" o "Solicitud modificación"
+    Specification<Memoria> specsMemoriasByMesesArchivadaInactivo = MemoriaSpecifications.activos()
+        .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(
+            Constantes.TIPO_ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS,
+            Constantes.TIPO_ESTADO_MEMORIA_NO_PROCEDE_EVALUAR, Constantes.TIPO_ESTADO_MEMORIA_SOLICITUD_MODIFICACION)))
+        .and(MemoriaSpecifications.byFechaActualMayorFechaEstadoByMesesDiff(configuracion.getMesesArchivadaInactivo()));
+
+    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByMesesArchivadaInactivo);
+
+    List<Long> memoriasArchivadas = new ArrayList<Long>();
+    if (!CollectionUtils.isEmpty(memorias)) {
+      memorias.forEach(memoria -> {
+        try {
+          this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+          memoriasArchivadas.add(memoria.getId());
+        } catch (Exception e) {
+          log.debug("Error archivarInactivos() - ", e);
+        }
+      });
+    }
+    log.debug("archivarInactivos() - end");
+    return memoriasArchivadas;
+  }
 }

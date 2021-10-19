@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,7 +71,7 @@ public class MemoriaController {
   /** ConvocatoriaReunion repository */
   private final CustomConvocatoriaReunionRepository convocatoriaReunionRepository;
 
-  /** Respuesta repository */
+  /** Respuesta service */
   private final RespuestaService respuestaService;
 
   /**
@@ -762,5 +764,40 @@ public class MemoriaController {
     Boolean returnValue = service.checkDatosAdjuntosExists(id, pageable);
     log.debug("checkDatosAdjuntosExists(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
+   * pasado "diasArchivadaPendienteCorrecciones" días desde la fecha de estado de
+   * una memoria cuyo estado es "Pendiente Correcciones"
+   * 
+   * @return Los ids de memorias que pasan al estado "Archivado"
+   */
+  @PatchMapping("/no-presentado/archivar")
+  @PreAuthorize("isClient() and hasAuthority('SCOPE_sgi-eti')")
+  public ResponseEntity<String> archivarNoPresentados() {
+    log.debug("archivarNoPresentados() - start");
+    List<Long> archivadas = service.archivarNoPresentados();
+    log.debug("archivarNoPresentados() - end");
+    return new ResponseEntity<>(String.format("archivarNoPresentados() - Archivadas %d memorias. Ids: %s",
+        archivadas.size(), Arrays.toString(archivadas.toArray())), HttpStatus.OK);
+  }
+
+  /**
+   * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
+   * pasado "mesesArchivadaInactivo" meses desde la fecha de estado de una memoria
+   * cuyo estados son "Favorable Pendiente de Modificaciones Mínimas" o "No
+   * procede evaluar" o "Solicitud modificación"
+   * 
+   * @return Los ids de memorias que pasan al estado "Archivado"
+   */
+  @PatchMapping("/inactivo/archivar")
+  @PreAuthorize("isClient() and hasAuthority('SCOPE_sgi-eti')")
+  public ResponseEntity<String> archivarInactivos() {
+    log.debug("archivarInactivos() - start");
+    List<Long> archivadas = service.archivarInactivos();
+    log.debug("archivarInactivos() - end");
+    return new ResponseEntity<>(String.format("archivarInactivos() - Archivadas %d memorias. Ids: %s",
+        archivadas.size(), Arrays.toString(archivadas.toArray())), HttpStatus.OK);
   }
 }

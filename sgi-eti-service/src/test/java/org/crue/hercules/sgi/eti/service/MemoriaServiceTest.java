@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
@@ -101,6 +102,9 @@ public class MemoriaServiceTest extends BaseServiceTest {
   private TareaRepository tareaRepository;
 
   @Mock
+  private ConfiguracionService configuracionService;
+
+  @Mock
   private RestTemplate restTemplate;
 
   @Mock
@@ -114,7 +118,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     memoriaService = new MemoriaServiceImpl(sgiConfigProperties, memoriaRepository, estadoMemoriaRepository,
         estadoRetrospectivaRepository, evaluacionRepository, comentarioRepository, informeFormularioService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
-        tareaRepository, restApiProperties, restTemplate);
+        tareaRepository, configuracionService, restApiProperties, restTemplate);
   }
 
   @Test
@@ -1165,6 +1169,35 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
+  public void update_archivarNoPresentados() {
+    // given: Memorias a archivar
+    Memoria memoria = generarMockMemoria(1L, "numRef-99", "Memoria", 1, 1L);
+    Memoria memoriaServicioActualizado = generarMockMemoria(1L, "numRef-99", "MemoriaAct", 1, 1L);
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn(generarMockConfiguracion());
+
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1, 1L));
+    }
+
+    BDDMockito.given(memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any())).willReturn(memorias);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now());
+    BDDMockito.given(estadoMemoriaRepository.save(ArgumentMatchers.<EstadoMemoria>any())).willReturn(estadoMemoria);
+    memoriaServicioActualizado.setEstadoActual(tipoEstadoMemoria);
+    BDDMockito.given(memoriaRepository.save(ArgumentMatchers.<Memoria>any())).willReturn(memoriaServicioActualizado);
+
+    // when: Actualizamos la Memoria con el estado archivado
+    memoriaService.archivarNoPresentados();
+
+    Assertions.assertThat(memoriaServicioActualizado.getEstadoActual().getId())
+        .isEqualTo(Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -1419,5 +1452,26 @@ public class MemoriaServiceTest extends BaseServiceTest {
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Configuracion
+   * 
+   * @return el objeto Configuracion
+   */
+
+  public Configuracion generarMockConfiguracion() {
+
+    Configuracion configuracion = new Configuracion();
+
+    configuracion.setId(1L);
+    configuracion.setDiasArchivadaPendienteCorrecciones(20);
+    configuracion.setDiasLimiteEvaluador(3);
+    configuracion.setMesesArchivadaInactivo(2);
+    configuracion.setMesesAvisoProyectoCEEA(1);
+    configuracion.setMesesAvisoProyectoCEI(1);
+    configuracion.setMesesAvisoProyectoCBE(1);
+
+    return configuracion;
   }
 }
