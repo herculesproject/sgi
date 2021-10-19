@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
+import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -25,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipoCategoriaProfesional;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipoNivelAcademico;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
@@ -44,6 +46,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoCategoriaProfesionalService;
+import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -74,9 +77,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConvocatoriaController {
 
-  public static final String PATH_CATEGORIAS_PROFESIONALES = "/{id}/categoriasprofesionales";
-  public static final String PATH_NIVELES = "/{id}/niveles";
+  public static final String PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_IP = "/{id}/categoriasprofesionalesrequisitosip";
   public static final String PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_EQUIPO = "/{id}/categoriasprofesionalesrequisitosequipo";
+  public static final String PATH_NIVELES_REQUISITOS_EQUIPO = "/{id}/nivelesrequisitosequipo";
+  public static final String PATH_NIVELES_REQUISITOS_IP = "/{id}/nivelesrequisitosip";
 
   private ModelMapper modelMapper;
 
@@ -130,6 +134,9 @@ public class ConvocatoriaController {
   /** RequisitoEquipoCategoriaProfesionalService */
   private final RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService;
 
+  /** RequisitoEquipoNivelAcademicoService */
+  private final RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    *
@@ -150,6 +157,7 @@ public class ConvocatoriaController {
    * @param requisitoIPNivelAcademicoService                {@link RequisitoIPNivelAcademicoService}.
    * @param requisitoIPCategoriaProfesionalService          {@link RequisitoIPCategoriaProfesionalService}.
    * @param requisitoEquipoCategoriaProfesionalService      {@link requisitoEquipoCategoriaProfesionalService}.
+   * @param requisitoEquipoNivelAcademicoService            {@link requisitoEquipoNivelAcademicoService}.
    * @param modelMapper                                     {@link ModelMapper}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
@@ -166,7 +174,8 @@ public class ConvocatoriaController {
       ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService,
       RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
       RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService,
-      RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService, ModelMapper modelMapper) {
+      RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService,
+      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService, ModelMapper modelMapper) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaDocumentoService = convocatoriaDocumentoService;
@@ -184,6 +193,7 @@ public class ConvocatoriaController {
     this.requisitoIPNivelAcademicoService = requisitoIPNivelAcademicoService;
     this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
     this.requisitoEquipoCategoriaProfesionalService = requisitoEquipoCategoriaProfesionalService;
+    this.requisitoEquipoNivelAcademicoService = requisitoEquipoNivelAcademicoService;
     this.modelMapper = modelMapper;
   }
 
@@ -993,57 +1003,57 @@ public class ConvocatoriaController {
   }
 
   /**
-   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al
+   * Devuelve los {@link RequisitoIPNivelAcademicoOutput} asociados al
    * {@link RequisitoIP} con el id indicado
    * 
-   * @param id Identificador de {@link RequisitoIPNivelAcademico}
-   * @return RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}*
-   *         correspondiente al id
+   * @param id Identificador de la {@link Convocatoria}
+   * @return los {@link RequisitoIPNivelAcademicoOutput} correspondiente a la
+   *         {@link Convocatoria}
    */
-  @GetMapping(PATH_NIVELES)
+  @GetMapping(PATH_NIVELES_REQUISITOS_IP)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
-  public List<RequisitoIPNivelAcademicoOutput> findNivelesAcademicos(@PathVariable Long id) {
-    log.debug("findNivelesAcademicos(@PathVariable Long id) - start");
+  public List<RequisitoIPNivelAcademicoOutput> findRequisitoIPNivelesAcademicos(@PathVariable Long id) {
+    log.debug("findRequisitoIPNivelesAcademicos(Long id) - start");
     List<RequisitoIPNivelAcademicoOutput> returnValue = convertRequisitoIPNivelesAcademicos(
         requisitoIPNivelAcademicoService.findByConvocatoria(id));
-    log.debug("findNivelesAcademicos(@PathVariable Long id) - end");
+    log.debug("findRequisitoIPNivelesAcademicos(Long id) - end");
     return returnValue;
   }
 
   /**
-   * Devuelve los {@link RequisitoIPNivelAcademico} asociados al
+   * Devuelve los {@link RequisitoEquipoNivelAcademicoOutput} asociados al
    * {@link RequisitoIP} con el id indicado
    * 
-   * @param id Identificador de {@link RequisitoIPNivelAcademico}
-   * @return RequisitoIPNivelAcademico {@link RequisitoIPNivelAcademico}
-   *         correspondiente al id
+   * @param id Identificador de la {@link Convocatoria}
+   * @return los {@link RequisitoEquipoNivelAcademicoOutput} correspondiente a la
+   *         {@link Convocatoria}
    */
-  @GetMapping(PATH_CATEGORIAS_PROFESIONALES)
+  @GetMapping(PATH_NIVELES_REQUISITOS_EQUIPO)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
-  public List<RequisitoIPCategoriaProfesionalOutput> findCategoriasProfesionales(@PathVariable Long id) {
-    log.debug("findCategoriasProfesionales(@PathVariable Long id) - start");
-    List<RequisitoIPCategoriaProfesionalOutput> returnValue = convertRequisitoIPCategoriasProfesionales(
-        requisitoIPCategoriaProfesionalService.findByConvocatoria(id));
-    log.debug("findCategoriasProfesionales(@PathVariable Long id) - end");
+  public List<RequisitoEquipoNivelAcademicoOutput> findRequisitosEquipoNivelesAcademicos(@PathVariable Long id) {
+    log.debug("findRequisitosEquipoNivelesAcademicos(Long id) - start");
+    List<RequisitoEquipoNivelAcademicoOutput> returnValue = convertRequisitosEquipoNivelesAcademicos(
+        requisitoEquipoNivelAcademicoService.findByConvocatoria(id));
+    log.debug("findRequisitosEquipoNivelesAcademicos(Long id) - end");
     return returnValue;
   }
 
-  private RequisitoIPNivelAcademicoOutput convert(RequisitoIPNivelAcademico entity) {
-    return modelMapper.map(entity, RequisitoIPNivelAcademicoOutput.class);
-  }
-
-  private List<RequisitoIPNivelAcademicoOutput> convertRequisitoIPNivelesAcademicos(
-      List<RequisitoIPNivelAcademico> entities) {
-    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
-  }
-
-  private List<RequisitoIPCategoriaProfesionalOutput> convertRequisitoIPCategoriasProfesionales(
-      List<RequisitoIPCategoriaProfesional> entities) {
-    return entities.stream().map((entity) -> convertCategoriaProfesional(entity)).collect(Collectors.toList());
-  }
-
-  private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
-    return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
+  /**
+   * Devuelve los {@link RequisitoIPCategoriaProfesionalOutput} asociados a la
+   * {@link Convocatoria} con el id indicado
+   * 
+   * @param id Identificador de {@link Convocatoria}
+   * @return el {@link RequisitoIPCategoriaProfesionalOutput} correspondiente al
+   *         id
+   */
+  @GetMapping(PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_IP)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-INV-C')")
+  public List<RequisitoIPCategoriaProfesionalOutput> findRequisitosIpCategoriasProfesionales(@PathVariable Long id) {
+    log.debug("findRequisitosIpCategoriasProfesionales(@PathVariable Long id) - start");
+    List<RequisitoIPCategoriaProfesionalOutput> returnValue = convertRequisitoIPCategoriasProfesionales(
+        requisitoIPCategoriaProfesionalService.findByConvocatoria(id));
+    log.debug("findRequisitosIpCategoriasProfesionales(@PathVariable Long id) - end");
+    return returnValue;
   }
 
   /**
@@ -1064,15 +1074,6 @@ public class ConvocatoriaController {
     return returnValue;
   }
 
-  private List<RequisitoEquipoCategoriaProfesionalOutput> convertRequisitoEquipoCategoriaProfesionales(
-      List<RequisitoEquipoCategoriaProfesional> entities) {
-    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
-  }
-
-  private RequisitoEquipoCategoriaProfesionalOutput convert(RequisitoEquipoCategoriaProfesional entity) {
-    return modelMapper.map(entity, RequisitoEquipoCategoriaProfesionalOutput.class);
-  }
-
   /**
    * Clona la convocatoria cuya fuente es la correspondiente al id pasado por el
    * path
@@ -1084,6 +1085,42 @@ public class ConvocatoriaController {
   @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-C')")
   public ResponseEntity<Long> clone(@PathVariable Long id) {
     return new ResponseEntity<>(service.clone(id).getId(), HttpStatus.CREATED);
+  }
+
+  private List<RequisitoEquipoCategoriaProfesionalOutput> convertRequisitoEquipoCategoriaProfesionales(
+      List<RequisitoEquipoCategoriaProfesional> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private RequisitoEquipoCategoriaProfesionalOutput convert(RequisitoEquipoCategoriaProfesional entity) {
+    return modelMapper.map(entity, RequisitoEquipoCategoriaProfesionalOutput.class);
+  }
+
+  private RequisitoEquipoNivelAcademicoOutput convert(RequisitoEquipoNivelAcademico entity) {
+    return modelMapper.map(entity, RequisitoEquipoNivelAcademicoOutput.class);
+  }
+
+  private List<RequisitoEquipoNivelAcademicoOutput> convertRequisitosEquipoNivelesAcademicos(
+      List<RequisitoEquipoNivelAcademico> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private RequisitoIPNivelAcademicoOutput convert(RequisitoIPNivelAcademico entity) {
+    return modelMapper.map(entity, RequisitoIPNivelAcademicoOutput.class);
+  }
+
+  private List<RequisitoIPNivelAcademicoOutput> convertRequisitoIPNivelesAcademicos(
+      List<RequisitoIPNivelAcademico> entities) {
+    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+  }
+
+  private List<RequisitoIPCategoriaProfesionalOutput> convertRequisitoIPCategoriasProfesionales(
+      List<RequisitoIPCategoriaProfesional> entities) {
+    return entities.stream().map((entity) -> convertCategoriaProfesional(entity)).collect(Collectors.toList());
+  }
+
+  private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
+    return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
   }
 
 }
