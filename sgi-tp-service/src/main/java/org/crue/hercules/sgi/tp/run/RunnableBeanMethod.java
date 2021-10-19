@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.tp.exceptions.RunnableBeanMethodException;
 import org.springframework.util.ReflectionUtils;
 
 import lombok.EqualsAndHashCode;
@@ -33,7 +34,7 @@ public class RunnableBeanMethod implements Runnable {
   public RunnableBeanMethod(Class<?> beanClass, Method method, Object... params) {
     String[] beanNames = ApplicationContextSupport.getApplicationContext().getBeanNamesForType(beanClass);
     if (beanNames.length != 1) {
-      throw new RuntimeException(
+      throw new RunnableBeanMethodException(
           String.format("RunnableBeanMethod required a single bean of type %s, but %d were found", beanClass.getName(),
               beanNames.length));
     }
@@ -45,7 +46,7 @@ public class RunnableBeanMethod implements Runnable {
   public RunnableBeanMethod(Class<?> beanClass, String methodName, Object... params) {
     String[] beanNames = ApplicationContextSupport.getApplicationContext().getBeanNamesForType(beanClass);
     if (beanNames.length != 1) {
-      throw new RuntimeException(
+      throw new RunnableBeanMethodException(
           String.format("RunnableBeanMethod required a single bean of type %s, but %d were found", beanClass.getName(),
               beanNames.length));
     }

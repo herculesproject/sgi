@@ -41,6 +41,12 @@ public class BeanMethodTaskService {
   public static final String ENABLED_TASKS_CACHE_KEY = "enabled-tasks";
   public static final String ENABLED_FUTURE_TASKS_CACHE_KEY = "enabled-future-tasks";
 
+  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
+  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
+  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
+  private static final String PROBLEM_MESSAGE_ISNULL = "notNull";
+  private static final String MESSAGE_KEY_ID = "id";
+
   private final BeanMethodTaskRepository repository;
   private final BeanMethodTaskScheduler scheduler;
 
@@ -64,9 +70,10 @@ public class BeanMethodTaskService {
     log.debug("create(BeanMethodTask beanMethodTask) - start");
     Assert.isNull(beanMethodTask.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "isNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(BeanMethodTask.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(BeanMethodTask.class))
+            .build());
 
     BeanMethodTask returnValue = repository.save(beanMethodTask);
     scheduler.scheduleTask(returnValue);
@@ -89,9 +96,10 @@ public class BeanMethodTaskService {
     log.debug("update(BeanMethodTask beanMethodTask) - start");
     Assert.notNull(beanMethodTask.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(BeanMethodTask.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(BeanMethodTask.class))
+            .build());
 
     BeanMethodTask returnValue = repository.save(beanMethodTask);
     scheduler.scheduleTask(returnValue);
@@ -113,9 +121,10 @@ public class BeanMethodTaskService {
     log.debug("delete(Long id) - start");
     Assert.notNull(id,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(BeanMethodTask.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(BeanMethodTask.class))
+            .build());
     repository.deleteById(id);
     scheduler.unScheduleTask(id);
     log.debug("delete(Long id) - end");
@@ -132,14 +141,15 @@ public class BeanMethodTaskService {
     log.debug("get(Long id) - start");
     Assert.notNull(id,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(BeanMethodTask.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(BeanMethodTask.class))
+            .build());
     repository.deleteById(id);
     BeanMethodTask returnValue = repository.findById(id)
         .orElseThrow(() -> new NotFoundException(ProblemMessage.builder().key(NotFoundException.class)
-            .parameter("entity", ApplicationContextSupport.getMessage(BeanMethodTask.class)).parameter("id", id)
-            .build()));
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(BeanMethodTask.class))
+            .parameter("id", id).build()));
     log.debug("get(Long id) - end");
     return returnValue;
   }

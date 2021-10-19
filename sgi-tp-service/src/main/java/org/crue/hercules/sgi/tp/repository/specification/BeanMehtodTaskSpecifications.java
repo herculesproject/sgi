@@ -17,14 +17,18 @@ import org.springframework.data.jpa.domain.Specification;
 public class BeanMehtodTaskSpecifications {
 
   /**
+   * A private constructor to hide the implicit public one.
+   */
+  private BeanMehtodTaskSpecifications() {
+  }
+
+  /**
    * Enabled (not disabled) {@link BeanMethodTask}.
    * 
    * @return specification to get enabled {@link BeanMethodTask}.
    */
   public static Specification<BeanMethodTask> enabled() {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(BeanMethodTask_.disabled), Boolean.FALSE);
-    };
+    return (root, query, cb) -> cb.equal(root.get(BeanMethodTask_.disabled), Boolean.FALSE);
   }
 
   /**
@@ -38,7 +42,7 @@ public class BeanMehtodTaskSpecifications {
       Root<BeanMethodInstantTask> beanMethodInstantTaskRoot = beanMethodInstantTaskQuery
           .from(BeanMethodInstantTask.class);
 
-      beanMethodInstantTaskQuery.select(beanMethodInstantTaskRoot.get(BeanMethodInstantTask_.id));
+      beanMethodInstantTaskQuery.select(beanMethodInstantTaskRoot.get(BeanMethodTask_.id));
       beanMethodInstantTaskQuery
           .where(cb.greaterThan(beanMethodInstantTaskRoot.get(BeanMethodInstantTask_.instant), Instant.now()));
 
@@ -48,15 +52,11 @@ public class BeanMehtodTaskSpecifications {
   }
 
   public static Specification<BeanMethodTask> isCronTasks() {
-    return (root, query, cb) -> {
-      return cb.equal(root.type(), BeanMethodCronTask.class);
-    };
+    return (root, query, cb) -> cb.equal(root.type(), BeanMethodCronTask.class);
   }
 
   public static Specification<BeanMethodTask> isInstantTasks() {
-    return (root, query, cb) -> {
-      return cb.equal(root.type(), BeanMethodInstantTask.class);
-    };
+    return (root, query, cb) -> cb.equal(root.type(), BeanMethodInstantTask.class);
   }
 
   public static Specification<BeanMethodTask> pastInstantTasks() {

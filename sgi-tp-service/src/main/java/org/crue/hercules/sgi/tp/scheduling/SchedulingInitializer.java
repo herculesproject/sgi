@@ -73,39 +73,16 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
     log.info("{} enabled tasks not scheduled", notScheduledCount);
   }
 
-  private void cancelScheduling() {
-    scheduler.setEnabled(false);
-    scheduler.unScheduleAll();
-  }
-
   private boolean isMaster() {
     // True if we are not in a cluster or
     // we are the first member of the cluster
-    if (!hazelcast.isPresent() || hazelcast.get().getCluster().getMembers().iterator().next().localMember()) {
-      return true;
-    } else {
-      return false;
-    }
+    return (!hazelcast.isPresent() || hazelcast.get().getCluster().getMembers().iterator().next().localMember());
   }
 
   class HazelcastMembershipListener implements MembershipListener {
     @Override
     public void memberAdded(MembershipEvent arg0) {
-      if (isMaster()) {
-        if (!scheduler.isEnabled()) {
-          log.info("New scheduler found (I am now the Master tasks scheduler)");
-          initScheduling();
-        } else {
-          log.info("New scheduler found (nothing changed as I am still the Master tasks scheduler)");
-        }
-      } else {
-        if (scheduler.isEnabled()) {
-          log.info("New scheduler found (I am now a Slave tasks scheduler");
-          cancelScheduling();
-        } else {
-          log.info("New scheduler found (nothing changed as I am still a Slave tasks scheduler)");
-        }
-      }
+      updateScheduling();
     }
 
     @Override
@@ -115,6 +92,10 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
 
     @Override
     public void memberRemoved(MembershipEvent arg0) {
+      updateScheduling();
+    }
+
+    private void updateScheduling() {
       if (isMaster()) {
         if (!scheduler.isEnabled()) {
           log.info("Scheduler removed (I am now the Master tasks scheduler");
@@ -131,6 +112,12 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
         }
       }
     }
+
+    private void cancelScheduling() {
+      scheduler.setEnabled(false);
+      scheduler.unScheduleAll();
+    }
+
   }
 
   class HazelcastCacheEntryListener
@@ -140,7 +127,7 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
     public void entryAdded(EntryEvent<Long, BeanMethodTask> event) {
       log.debug("Entry Added: {}", event);
       BeanMethodTask task = event.getValue();
-      if (!task.getDisabled()) {
+      if (!Boolean.TRUE.equals(task.getDisabled())) {
         scheduler.scheduleTask(task);
       }
     }
@@ -156,7 +143,7 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
     public void entryUpdated(EntryEvent<Long, BeanMethodTask> event) {
       log.debug("Entry Updated: {}", event);
       BeanMethodTask task = event.getValue();
-      if (task.getDisabled()) {
+      if (Boolean.TRUE.equals(task.getDisabled())) {
         scheduler.unScheduleTask(task);
       } else {
         scheduler.scheduleTask(task);
@@ -165,13 +152,13 @@ public class SchedulingInitializer implements ApplicationListener<ApplicationRea
 
     @Override
     public void entryEvicted(EntryEvent<Long, BeanMethodTask> event) {
-      System.out.println("Entry Evicted:" + event);
+      log.debug("Entry Evicted:" + event);
       scheduler.unScheduleTask(event.getValue());
     }
 
     @Override
     public void mapEvicted(MapEvent event) {
-      System.out.println("Map Evicted:" + event);
+      log.debug("Map Evicted:" + event);
       initScheduling();
     }
   }

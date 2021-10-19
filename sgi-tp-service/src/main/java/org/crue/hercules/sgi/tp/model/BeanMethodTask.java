@@ -68,7 +68,7 @@ public abstract class BeanMethodTask extends BaseEntity {
   @ElementCollection(fetch = FetchType.EAGER, targetClass = java.lang.String.class)
   @CollectionTable(name = "bean_method_task_params", joinColumns = @JoinColumn(name = "bean_method_tasks_id"))
   @Column(name = "param")
-  private List<String> params = new ArrayList<String>();
+  private List<String> params = new ArrayList<>();
 
   /** Disabled */
   @Column(name = "disabled", columnDefinition = "boolean default false", nullable = false)

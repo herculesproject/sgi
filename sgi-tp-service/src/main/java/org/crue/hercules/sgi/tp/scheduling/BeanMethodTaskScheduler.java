@@ -34,45 +34,20 @@ public class BeanMethodTaskScheduler {
    *         other case
    */
   public boolean scheduleTask(BeanMethodTask task) {
-    boolean scheduled = false;
     if (enabled) {
-      if (task.getDisabled()) {
+      if (Boolean.TRUE.equals(task.getDisabled())) {
         unScheduleTask(task);
       } else {
-        RunnableBeanMethod runnableBeanMethod;
-        try {
-          runnableBeanMethod = new RunnableBeanMethod(task.getBean(), task.getMethod(), task.getParams().toArray());
-
-          if (task instanceof BeanMethodCronTask) {
-            cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod,
-                ((BeanMethodCronTask) task).getCronExpression());
-            scheduled = true;
-          } else if (task instanceof BeanMethodInstantTask) {
-            BeanMethodInstantTask beanMethodInstantTask = (BeanMethodInstantTask) task;
-            Instant now = Instant.now();
-            long timeElapsed = Duration.between(beanMethodInstantTask.getInstant(), now).toMinutes();
-            // Allow scheduling recently dued active tasks
-            if (beanMethodInstantTask.getInstant().compareTo(now) > 0 || timeElapsed < GRACE_TIME) {
-              cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod,
-                  ((BeanMethodInstantTask) task).getInstant());
-              scheduled = true;
-            } else {
-              log.info(String.format(
-                  "BeanMethodTask not scheduled as it's timmer is over - bean: %s， Method: %s， Parameters: %s, Instant: %s",
-                  beanMethodInstantTask.getBean(), beanMethodInstantTask.getMethod(),
-                  Arrays.toString(beanMethodInstantTask.getParams().toArray()),
-                  DateTimeFormatter.ISO_INSTANT.format(beanMethodInstantTask.getInstant())));
-            }
-          }
-        } catch (RuntimeException ex) {
-          log.error(String.format("RunnableBeanMethod creation exception - bean: %s， Method: %s， Parameters: %s ",
-              task.getBean(), task.getMethod(), task.getParams().toArray()), ex);
+        if (task instanceof BeanMethodCronTask) {
+          return scheduleBeanMethodCronTask((BeanMethodCronTask) task);
+        } else if (task instanceof BeanMethodInstantTask) {
+          return scheduleBeanMethodInstantTask((BeanMethodInstantTask) task);
         }
       }
     } else {
       log.warn("Scheduler disabled.  Task {} not scheduled.", task.getId());
     }
-    return scheduled;
+    return false;
   }
 
   /**
@@ -108,6 +83,42 @@ public class BeanMethodTaskScheduler {
         cronTaskRegistrar.removeTask(id);
       }
     }
+  }
+
+  private boolean scheduleBeanMethodCronTask(BeanMethodCronTask task) {
+    try {
+      RunnableBeanMethod runnableBeanMethod = new RunnableBeanMethod(task.getBean(), task.getMethod(),
+          task.getParams().toArray());
+      cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod, (task).getCronExpression());
+    } catch (RuntimeException ex) {
+      log.error(String.format("RunnableBeanMethod creation exception - bean: %s， Method: %s， Parameters: %s ",
+          task.getBean(), task.getMethod(), task.getParams().toArray()), ex);
+    }
+    return true;
+  }
+
+  private boolean scheduleBeanMethodInstantTask(BeanMethodInstantTask task) {
+    try {
+      RunnableBeanMethod runnableBeanMethod = new RunnableBeanMethod(task.getBean(), task.getMethod(),
+          task.getParams().toArray());
+      Instant now = Instant.now();
+      long timeElapsed = Duration.between(task.getInstant(), now).toMinutes();
+      // Allow scheduling recently dued active tasks
+      if (task.getInstant().compareTo(now) > 0 || timeElapsed < GRACE_TIME) {
+        cronTaskRegistrar.addTask(getBeanMethodTaskId(task.getId()), runnableBeanMethod,
+            ((BeanMethodInstantTask) task).getInstant());
+        return true;
+      } else {
+        log.info(String.format(
+            "BeanMethodTask not scheduled as it's timmer is over - bean: %s， Method: %s， Parameters: %s, Instant: %s",
+            task.getBean(), task.getMethod(), Arrays.toString(task.getParams().toArray()),
+            DateTimeFormatter.ISO_INSTANT.format(task.getInstant())));
+      }
+    } catch (RuntimeException ex) {
+      log.error(String.format("RunnableBeanMethod creation exception - bean: %s， Method: %s， Parameters: %s ",
+          task.getBean(), task.getMethod(), task.getParams().toArray()), ex);
+    }
+    return false;
   }
 
   private String getBeanMethodTaskId(Long id) {
