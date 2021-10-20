@@ -139,7 +139,7 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
 
   private boolean hasAnyAuthorityNameForAnyUO(String prefix, String... roles) {
     log.debug("hasAnyAuthorityNameForAnyUO(String prefix, String... roles) - start");
-    Set<String> roleSet = getAuthoritySet();
+    Set<String> roleSet = getAuthorities();
 
     for (String role : roles) {
       String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
@@ -208,8 +208,8 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     return returnValue;
   }
 
-  private Set<String> getAuthoritySet() {
-    log.debug("getAuthoritySet() - start");
+  private Set<String> getAuthorities() {
+    log.debug("getAuthorities() - start");
     if (roles == null) {
       Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();
 
@@ -220,7 +220,7 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
       roles = authorityListToSetWithoutUO(userAuthorities);
     }
 
-    log.debug("getAuthoritySet() - end");
+    log.debug("getAuthorities() - end");
     return roles;
   }
 

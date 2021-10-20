@@ -20,13 +20,14 @@ public class Problem implements Serializable {
   private final int status;
   private final String detail;
   private final URI instance;
-  private final Map<String, Object> extensions;
+  private final Map<String, Serializable> extensions;
 
   public static ProblemBuilder builder() {
     return new ProblemBuilder();
   }
 
-  public Problem(URI type, String title, int status, String detail, URI instance, Map<String, Object> extensions) {
+  public Problem(URI type, String title, int status, String detail, URI instance,
+      Map<String, Serializable> extensions) {
     this.type = type;
     this.title = title;
     this.status = status;
@@ -43,14 +44,14 @@ public class Problem implements Serializable {
     this(type, title, status, detail, instance, buildMapFromExtensions(extensions));
   }
 
-  private static Map<String, Object> buildMapFromExtensions(Set<Extension> extensions) {
-    Map<String, Object> map = new HashMap<>(extensions.size());
+  private static Map<String, Serializable> buildMapFromExtensions(Set<Extension> extensions) {
+    Map<String, Serializable> map = new HashMap<>(extensions.size());
     extensions.forEach(e -> map.put(e.getKey(), e.getValue()));
     return map;
   }
 
-  private static Map<String, Object> buildMapFromExtensions(Extension[] extensions) {
-    Map<String, Object> map = new HashMap<>(extensions.length);
+  private static Map<String, Serializable> buildMapFromExtensions(Extension[] extensions) {
+    Map<String, Serializable> map = new HashMap<>(extensions.length);
     for (Problem.Extension e : extensions) {
       map.put(e.getKey(), e.getValue());
     }
@@ -89,12 +90,12 @@ public class Problem implements Serializable {
     return extensions.containsKey(extension);
   }
 
-  public static final class Extension implements Map.Entry<String, Object> {
+  public static final class Extension implements Map.Entry<String, Serializable> {
 
     private final String key;
-    private Object value;
+    private Serializable value;
 
-    private Extension(String key, Object value) {
+    public Extension(String key, Serializable value) {
       this.key = key;
       this.value = value;
     }
@@ -105,12 +106,12 @@ public class Problem implements Serializable {
     }
 
     @Override
-    public Object getValue() {
+    public Serializable getValue() {
       return value;
     }
 
     @Override
-    public Object setValue(Object value) {
+    public Serializable setValue(Serializable value) {
       this.value = value;
       return value;
     }
@@ -122,10 +123,7 @@ public class Problem implements Serializable {
     private int status = INTERAL_SERVER_ERROR_STATUS;
     private String detail;
     private URI instance = URI.create("urn:uuid:" + UUID.randomUUID());
-    private Map<String, Object> extensions = new LinkedHashMap<>();
-
-    public ProblemBuilder() {
-    }
+    private Map<String, Serializable> extensions = new LinkedHashMap<>();
 
     public ProblemBuilder type(URI type) {
       this.type = type;
@@ -152,7 +150,7 @@ public class Problem implements Serializable {
       return this;
     }
 
-    public ProblemBuilder extension(String name, Object value) {
+    public ProblemBuilder extension(String name, Serializable value) {
       extensions.put(name, value);
       return this;
     }

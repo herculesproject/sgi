@@ -55,15 +55,13 @@ public class SgiRSQLJPAPredicateConverter extends RSQLJPAPredicateConverter {
     return returnValue;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @Override
+  @SuppressWarnings({ "rawtypes" })
   protected Object convert(String source, Class targetType) {
     log.debug("convert(String source, Class targetType) - start");
 
-    Object object = null;
     try {
-      if (defaultConversionService.canConvert(String.class, targetType)) {
-        object = defaultConversionService.convert(source, targetType);
-      }
+      Object object = null;
       if (targetType.equals(Instant.class)) {
         object = Instant.parse(source);
       } else {

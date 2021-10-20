@@ -45,7 +45,10 @@ public class KeycloakOidcUserService extends OidcUserService {
     Jwt jwt = parseJwt(accessToken.getTokenValue());
     // 2) Map the authority information to one or more GrantedAuthority's and add it
     // to mappedAuthorities
-    mappedAuthorities.addAll(convert(jwt).getAuthorities());
+    AbstractAuthenticationToken token = convert(jwt);
+    if (token != null) {
+      mappedAuthorities.addAll(token.getAuthorities());
+    }
 
     // 3) Create a copy of oidcUser but use the mappedAuthorities instead
     String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()

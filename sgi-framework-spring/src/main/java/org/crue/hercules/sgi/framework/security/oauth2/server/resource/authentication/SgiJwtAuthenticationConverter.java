@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 
 public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
   private Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+  private static final String MESSAGE_NOT_EMPTY = "{} cannot be empty";
 
   private String userNameClaim;
   public static final String CLIENT_ID = "clientId";
@@ -20,18 +21,18 @@ public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAut
   public final AbstractAuthenticationToken convert(Jwt jwt) {
     Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
     if (userNameClaim != null) {
-      if (jwt.containsClaim(userNameClaim)) {
+      if (Boolean.TRUE.equals(jwt.containsClaim(userNameClaim))) {
         // OAuth 2 Authorization Code Flow (C2B)
         String userName = jwt.getClaimAsString(userNameClaim);
-        Assert.hasText(userName, userNameClaim + " cannot be empty");
+        Assert.hasText(userName, String.format(MESSAGE_NOT_EMPTY, userNameClaim));
         return new JwtAuthenticationToken(jwt, authorities, userName);
-      } else if (jwt.containsClaim(CLIENT_ID)) {
+      } else if (Boolean.TRUE.equals(jwt.containsClaim(CLIENT_ID))) {
         // OAuth 2 Client Credentials Grant (B2B)
         String userName = jwt.getClaimAsString(CLIENT_ID);
-        Assert.hasText(userName, CLIENT_ID + " cannot be empty");
+        Assert.hasText(userName, String.format(MESSAGE_NOT_EMPTY, CLIENT_ID));
         return new JwtAuthenticationToken(jwt, authorities, userName);
       } else {
-        throw new IllegalArgumentException(userNameClaim + " cannot be empty");
+        throw new IllegalArgumentException(String.format(MESSAGE_NOT_EMPTY, userNameClaim));
       }
     }
     return new JwtAuthenticationToken(jwt, authorities);
@@ -43,11 +44,9 @@ public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAut
    *
    * @param jwt The token
    * @return The collection of {@link GrantedAuthority}s found on the token
-   * @deprecated Since 5.2. Use your own custom converter instead
    * @see JwtGrantedAuthoritiesConverter
    * @see #setJwtGrantedAuthoritiesConverter(Converter)
    */
-  @Deprecated
   protected Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
     return this.jwtGrantedAuthoritiesConverter.convert(jwt);
   }

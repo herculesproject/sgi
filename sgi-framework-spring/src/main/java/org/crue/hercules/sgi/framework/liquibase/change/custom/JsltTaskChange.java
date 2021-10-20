@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.schibsted.spt.data.jslt.Expression;
@@ -63,9 +61,7 @@ public class JsltTaskChange implements CustomTaskChange {
 
   @Override
   public void execute(Database database) throws CustomChangeException {
-    // Connection con = ((JdbcConnection)
-    // database.getConnection()).getUnderlyingConnection();
-    JdbcConnection db_connection = (JdbcConnection) database.getConnection();
+    JdbcConnection dbConnection = (JdbcConnection) database.getConnection();
     PreparedStatement selectStatement = null;
     PreparedStatement updateStatement = null;
     ResultSet results;
@@ -83,7 +79,7 @@ public class JsltTaskChange implements CustomTaskChange {
         select.append(where);
       }
       log.info(select.toString());
-      selectStatement = db_connection.prepareStatement(select.toString());
+      selectStatement = dbConnection.prepareStatement(select.toString());
       results = selectStatement.executeQuery();
 
       while (results.next()) {
@@ -106,7 +102,7 @@ public class JsltTaskChange implements CustomTaskChange {
           update.append(jsonColumnName + " = ? ");
           update.append("WHERE " + idColumnName + " = ?");
           log.info(update.toString());
-          updateStatement = db_connection.prepareStatement(update.toString());
+          updateStatement = dbConnection.prepareStatement(update.toString());
           log.debug("Applaying column parameter = 1 for column {}", jsonColumnName);
           log.debug("value is string = " + newJson);
           updateStatement.setString(1, newJson);
@@ -161,8 +157,7 @@ public class JsltTaskChange implements CustomTaskChange {
     }
   }
 
-  private JsonNode applyJslt(JsonNode jsonNode)
-      throws CustomChangeException, JsonMappingException, JsonProcessingException {
+  private JsonNode applyJslt(JsonNode jsonNode) throws CustomChangeException {
     Expression expression = getJsltExpression();
     if (expression != null) {
       return expression.apply(jsonNode);
@@ -181,7 +176,7 @@ public class JsltTaskChange implements CustomTaskChange {
         }
 
         for (InputStream stream : streams) {
-          if (includeEmpty) {
+          if (Boolean.TRUE.equals(includeEmpty)) {
             this.jsltExpression = new Parser(new InputStreamReader(stream)).withObjectFilter("true").compile();
           } else {
             this.jsltExpression = new Parser(new InputStreamReader(stream)).compile();

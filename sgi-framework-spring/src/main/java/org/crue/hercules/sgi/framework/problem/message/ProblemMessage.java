@@ -4,6 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProblemMessage {
+
+  private ProblemMessage() {
+  }
+
   public static ProblemMessageBuilder builder() {
     return new ProblemMessageBuilder();
   }
@@ -12,9 +16,6 @@ public class ProblemMessage {
     private String message;
 
     private final Map<String, Object> parameters = new LinkedHashMap<>();
-
-    public ProblemMessageBuilder() {
-    }
 
     public ProblemMessageBuilder key(final String key) {
       this.message = "{" + key + "}";

@@ -39,7 +39,7 @@ public class SortCriteriaConverter implements Converter<String, List<SortCriteri
     List<SortCriteria> sortCriterias = new ArrayList<>();
     if (source != null) {
       sortCriterias = Arrays.stream(source.split(MULTIPLE_SORT_SEPARATOR)).map(item -> item.split(SORT_SEPARATOR))
-          .map(parts -> toSortCriteria(parts)).filter(Objects::nonNull).collect(Collectors.toList());
+          .map(this::toSortCriteria).filter(Objects::nonNull).collect(Collectors.toList());
     }
     log.debug("convert(String source) - end");
     return sortCriterias;

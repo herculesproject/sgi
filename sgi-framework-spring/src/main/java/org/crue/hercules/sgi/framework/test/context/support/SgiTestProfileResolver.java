@@ -11,6 +11,8 @@ public class SgiTestProfileResolver extends DefaultActiveProfilesResolver {
   public static final String SPRING_PROFILES_ACTIVE_ENV_VAR = "SPRING_PROFILES_ACTIVE";
   public static final String SPRING_PROFILES_ACTIVE_KEY = "spring.profiles.active";
 
+  private static final String MESSAGE_FOUND = "Found {}={}!";
+
   @Override
   public String[] resolve(Class<?> testClass) {
     log.debug("resolve(Class<?> testClass) - start");
@@ -21,11 +23,11 @@ public class SgiTestProfileResolver extends DefaultActiveProfilesResolver {
       String profile;
       if (env.containsKey(SPRING_PROFILES_ACTIVE_ENV_VAR)) {
         profile = env.get(SPRING_PROFILES_ACTIVE_KEY);
-        log.info("Found {}={}!", SPRING_PROFILES_ACTIVE_ENV_VAR, profile);
+        log.info(MESSAGE_FOUND, SPRING_PROFILES_ACTIVE_ENV_VAR, profile);
       } else {
         if (env.containsKey(SPRING_PROFILES_ACTIVE_KEY)) {
           profile = env.get(SPRING_PROFILES_ACTIVE_KEY);
-          log.info("Found {}={}!", SPRING_PROFILES_ACTIVE_KEY, profile);
+          log.info(MESSAGE_FOUND, SPRING_PROFILES_ACTIVE_KEY, profile);
         } else {
           log.info("Looking up active spring profiles in system...");
           profile = System.getProperty(SPRING_PROFILES_ACTIVE_KEY);
@@ -33,7 +35,7 @@ public class SgiTestProfileResolver extends DefaultActiveProfilesResolver {
             profile = "test";
             log.info("Not found.  Setting default active profile to test");
           } else {
-            log.info("Found {}={}!", SPRING_PROFILES_ACTIVE_KEY, profile);
+            log.info(MESSAGE_FOUND, SPRING_PROFILES_ACTIVE_KEY, profile);
           }
         }
       }

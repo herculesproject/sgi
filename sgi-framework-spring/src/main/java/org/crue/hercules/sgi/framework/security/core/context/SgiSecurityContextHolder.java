@@ -13,6 +13,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class SgiSecurityContextHolder {
 
+  private SgiSecurityContextHolder() {
+
+  }
+
   /**
    * Obtain the list of authorities of the currently authenticated user
    * 

@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface SgiRepository<T, ID> extends JpaRepository<T, ID> {
+public interface SgiRepository<T, I> extends JpaRepository<T, I> {
   /**
    * Bring EntityManager.refresh to all of Spring Data repositories.
    * <p>
