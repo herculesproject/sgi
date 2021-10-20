@@ -146,7 +146,7 @@ public class ActaIT extends BaseIT {
   public void removeActa_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-B")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-DES")));
 
     // when: Delete con id existente
     long id = 2L;
@@ -161,7 +161,7 @@ public class ActaIT extends BaseIT {
   public void removeActa_DoNotGetActa() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-B")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-DES")));
 
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(headers, null), Acta.class, 1L);

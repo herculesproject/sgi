@@ -128,6 +128,7 @@ public class ActaController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V','ETI-ACT-INV-ER','ETI-ACT-ER')")
   public ResponseEntity<?> exists(@PathVariable Long id) {
     log.debug("Acta exists(Long id) - start");
     if (service.existsById(id)) {
@@ -144,7 +145,7 @@ public class ActaController {
    * @param id Identificador de {@link Acta}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-DES')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Acta acta = this.one(id);

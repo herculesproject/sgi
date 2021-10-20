@@ -120,7 +120,7 @@ public class MemoriaIT extends BaseIT {
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-VR", "ETI-MEM-V")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(headers, null), Memoria.class, 2L);
@@ -140,8 +140,7 @@ public class MemoriaIT extends BaseIT {
     Memoria nuevaMemoria = generarMockMemoria(1L, "ref-5588", "Memoria1", 1);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(headers, nuevaMemoria),
         Memoria.class);
@@ -154,8 +153,7 @@ public class MemoriaIT extends BaseIT {
     long id = 3L;
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-BR")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(headers, null), Memoria.class, id);
@@ -169,8 +167,7 @@ public class MemoriaIT extends BaseIT {
   public void removeMemoria_DoNotGetMemoria() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-BR")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(headers, null), Memoria.class, 20L);
@@ -185,7 +182,7 @@ public class MemoriaIT extends BaseIT {
     Memoria replaceMemoria = generarMockMemoria(2L, "ref-5588", "Memoria1", 1);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(headers, replaceMemoria), Memoria.class, 2L);
@@ -204,7 +201,7 @@ public class MemoriaIT extends BaseIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-VR", "ETI-MEM-V")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
@@ -236,7 +233,7 @@ public class MemoriaIT extends BaseIT {
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-VR", "ETI-MEM-V")));
 
     final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequestMemoriaPeticionEvaluacion(headers, null),
@@ -262,7 +259,7 @@ public class MemoriaIT extends BaseIT {
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-VR", "ETI-MEM-V")));
 
     final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequestMemoriaPeticionEvaluacion(headers, null),
@@ -286,7 +283,7 @@ public class MemoriaIT extends BaseIT {
     // when: Obtiene page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-VR", "ETI-MEM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
@@ -509,7 +506,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
@@ -533,7 +530,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
@@ -551,7 +548,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
@@ -572,7 +569,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
@@ -590,7 +587,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
@@ -611,7 +608,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
@@ -629,7 +626,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
@@ -651,7 +648,7 @@ public class MemoriaIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
@@ -671,7 +668,7 @@ public class MemoriaIT extends BaseIT {
         generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-anual", HttpMethod.POST,
         buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
@@ -684,7 +681,7 @@ public class MemoriaIT extends BaseIT {
         generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva",
         HttpMethod.POST, buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
@@ -697,7 +694,7 @@ public class MemoriaIT extends BaseIT {
     Long idMemoria = 2L;
     // when: Busca las evaluaciones de la memoria 2L
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
@@ -722,7 +719,7 @@ public class MemoriaIT extends BaseIT {
   @Test
   public void deleteDocumentacionSeguimientoAnual_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual/{idDocumentacionMemoria}",
@@ -736,7 +733,7 @@ public class MemoriaIT extends BaseIT {
   public void deleteDocumentacionSeguimientoFinal_ReturnsMemoria() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final/{idDocumentacionMemoria}",
@@ -750,7 +747,7 @@ public class MemoriaIT extends BaseIT {
   public void getEvaluacionesMemoria_ReturnsEmptyList() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
@@ -764,7 +761,7 @@ public class MemoriaIT extends BaseIT {
   @Test
   public void deleteDocumentacionRetrospectiva_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva/{idDocumentacionMemoria}",
@@ -777,7 +774,7 @@ public class MemoriaIT extends BaseIT {
   @Test
   public void deleteDocumentacionInicial_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
@@ -827,7 +824,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretaria_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ER")));
 
     // when: Enviar secretaria con id existente
     long id = 9L;
@@ -843,7 +840,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretaria_DoNotGetMemoria() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ESCR")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
@@ -855,7 +852,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretariaRetrospectiva_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ERTR")));
 
     // when: Enviar secretaria con id existente
     long id = 16L;
@@ -871,7 +868,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretariaRetrospectiva_DoNotGetMemoria() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEM-INV-ERTR")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,

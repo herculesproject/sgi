@@ -195,7 +195,7 @@ public class ActaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-B" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-DES" })
   public void removeActa_ReturnsOk() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockActa(1L, 123));
 
