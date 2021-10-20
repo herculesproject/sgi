@@ -512,7 +512,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoentidadfinanciadoras")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
   ResponseEntity<Page<ProyectoEntidadFinanciadora>> findAllProyectoEntidadFinanciadora(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEntidadFinanciadora(Long id, String query, Pageable paging) - start");
@@ -632,7 +632,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoequipos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
   ResponseEntity<Page<ProyectoEquipo>> findAllProyectoEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEquipo(Long id, String query, Pageable paging) - start");
