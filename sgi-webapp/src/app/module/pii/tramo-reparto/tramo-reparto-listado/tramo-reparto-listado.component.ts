@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { HttpProblem } from '@core/errors/http-problem';
@@ -17,8 +17,6 @@ import { TramoRepartoModalComponent } from '../tramo-reparto-modal/tramo-reparto
 
 const MSG_ERROR = marker('error.load');
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
-const MSG_SAVE_ERROR = marker('error.save.entity');
-const MSG_UPDATE_ERROR = marker('error.update.entity');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
 const MSG_REACTIVE = marker('msg.reactivate.entity');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
@@ -40,9 +38,7 @@ export class TramoRepartoListadoComponent extends AbstractTablePaginationCompone
   msgParamEntity = {};
 
   textoCrearSuccess: string;
-  textoCrearError: string;
   textoUpdateSuccess: string;
-  textoUpdateError: string;
   textoDesactivar: string;
   textoReactivar: string;
   textoErrorDesactivar: string;
@@ -93,32 +89,15 @@ export class TramoRepartoListadoComponent extends AbstractTablePaginationCompone
    * @param tramoReparto Tramo de Reparto
    */
   openModal(tramoReparto?: ITramoReparto): void {
-    const config = {
-      panelClass: 'sgi-dialog-container',
+    const config: MatDialogConfig<ITramoReparto> = {
       data: tramoReparto
     };
     const dialogRef = this.matDialog.open(TramoRepartoModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (result: ITramoReparto) => {
         if (result) {
-          const subscription = tramoReparto ? this.tramoRepartoService.update(tramoReparto.id, result) :
-            this.tramoRepartoService.create(result);
-
-          subscription.subscribe(
-            () => {
-              this.snackBarService.showSuccess(tramoReparto ? this.textoUpdateSuccess : this.textoCrearSuccess);
-              this.loadTable();
-            },
-            (error) => {
-              this.logger.error(error);
-              if (error instanceof HttpProblem) {
-                this.snackBarService.showError(error);
-              }
-              else {
-                this.snackBarService.showError(tramoReparto ? this.textoUpdateError : this.textoCrearError);
-              }
-            }
-          );
+          this.snackBarService.showSuccess(tramoReparto ? this.textoUpdateSuccess : this.textoCrearSuccess);
+          this.loadTable();
         }
       });
   }
@@ -208,35 +187,11 @@ export class TramoRepartoListadoComponent extends AbstractTablePaginationCompone
     ).pipe(
       switchMap((value) => {
         return this.translate.get(
-          MSG_SAVE_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.textoCrearError = value);
-
-    this.translate.get(
-      TRAMO_REPARTO_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).pipe(
-      switchMap((value) => {
-        return this.translate.get(
           MSG_UPDATE_SUCCESS,
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoUpdateSuccess = value);
-
-    this.translate.get(
-      TRAMO_REPARTO_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).pipe(
-      switchMap((value) => {
-        return this.translate.get(
-          MSG_UPDATE_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.textoUpdateError = value);
 
     this.translate.get(
       TRAMO_REPARTO_KEY,

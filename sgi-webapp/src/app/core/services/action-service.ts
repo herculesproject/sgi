@@ -77,7 +77,7 @@ export interface ActionStatus {
   edit: boolean;
 }
 
-interface IGroup {
+export interface IGroup {
   /**
    * Asociated form group
    */
@@ -806,7 +806,7 @@ export class Group implements IGroup {
       this.form.markAllAsTouched();
     }
     this.forcingUpdate = true;
-    this.form.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+    this.form.updateValueAndValidity();
   }
 
   destroy(): void {
@@ -829,6 +829,8 @@ export class Group implements IGroup {
       return true; // if both x and y are null or undefined and exactly the same
     } else if (!(x instanceof Object) || !(y instanceof Object)) {
       return false; // if they are not strictly equal, they both need to be Objects
+    } else if (x.hasOwnProperty('id') && y.hasOwnProperty('id')) {
+      return x.id === y.id;
     } else if (x.constructor !== y.constructor) {
       // they must have the exact same prototype chain, the closest we can do is
       // test their constructor.

@@ -1,6 +1,9 @@
+import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Data, ParamMap } from '@angular/router';
+import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateTestingModule } from 'ngx-translate-testing';
+import { Subject } from 'rxjs';
 
 /**
  * A Utility Class for testing.
@@ -91,5 +94,15 @@ export default class TestUtils {
       }
     } as ActivatedRoute;
     return routeMock;
+  }
+
+  static buildDialogActionMatDialogRef(): MatDialogRef<DialogActionComponent<any, any>, any> {
+    return {
+      close: jasmine.createSpy('close'),
+      addPanelClass: jasmine.createSpy('addPanelClass'),
+      componentInstance: {
+        problems$: new Subject<any>()
+      } as DialogActionComponent<any, any>
+    } as unknown as MatDialogRef<DialogActionComponent<any, any>, any>;
   }
 }
