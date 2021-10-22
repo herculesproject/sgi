@@ -35,7 +35,7 @@
     "secure": false,
     "logLevel": "debug"
   },
-    "/api/rel": {
+  "/api/rel": {
     "target": "http://sgi-rel-service:4284",
     "pathRewrite": {
       "^/api/rel": ""

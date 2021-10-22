@@ -172,7 +172,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined);
   }
 
-  private findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions):
+  findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
     return this.find<IProyectoEntidadFinanciadoraBackend, IProyectoEntidadFinanciadora>(
       `${this.endpointUrl}/${id}/proyectoentidadfinanciadoras`,

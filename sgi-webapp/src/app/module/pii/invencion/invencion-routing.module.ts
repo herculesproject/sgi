@@ -9,6 +9,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
 import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
+import { InvencionContratosComponent } from './invencion-formulario/invencion-contratos/invencion-contratos.component';
 import { InvencionDatosGeneralesComponent } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.component';
 import { InvencionDocumentoComponent } from './invencion-formulario/invencion-documento/invencion-documento.component';
 import { InvencionGastosComponent } from './invencion-formulario/invencion-gastos/invencion-gastos.component';
@@ -123,6 +124,11 @@ const routes: SgiRoutes = [
         path: INVENCION_ROUTE_NAMES.TITULARIDAD,
         component: PeriodoTitularidadComponent,
         canDeactivate: [FragmentGuard]
+      },
+      {
+        path: INVENCION_ROUTE_NAMES.CONTRATOS,
+        component: InvencionContratosComponent,
+        canDeactivate: [FragmentGuard],
       }
     ]
   },
