@@ -45,7 +45,7 @@ export class IngresosInvencionService extends SgiRestBaseService {
    * @param proyectoId Id del proyecto asociado a la Invención.
    * @returns Lista de las columnas.
    */
-  getColumnas(proyectoId: string): Observable<IColumna[]> {
+  getColumnas(proyectoId?: string): Observable<IColumna[]> {
     const filter = new RSQLSgiRestFilter('proyectoId', SgiRestFilterOperator.EQUALS, proyectoId);
     const options: SgiRestFindOptions = {
       filter
