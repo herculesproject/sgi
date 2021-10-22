@@ -80,18 +80,42 @@ export class DateValidator {
         return;
       }
 
-      const fechaAnteriorDate: DateTime = fechaAnteriorControl.value;
-      const fechaPosteriorDate: DateTime = fechaPosteriorControl.value;
-
-
-      if (fechaAnteriorDate && (fechaPosteriorDate < fechaAnteriorDate)) {
-        fechaAnteriorControl.setErrors({ before: true });
-        fechaAnteriorControl.markAsTouched({ onlySelf: true });
-      } else if (fechaAnteriorControl.errors) {
-        delete fechaAnteriorControl.errors.before;
-        fechaAnteriorControl.updateValueAndValidity({ onlySelf: true });
-      }
+      DateValidator.validateBeforeOrEqualInRange(fechaAnteriorControl, fechaPosteriorControl);
     };
+  }
+
+  /**
+   * Comprueba que la segunda fecha sea anterior o igual a la primera cuando los dos campos están informados.
+   *
+   * @param firstDateFieldName Nombre del campo contra el que se quiere hacer la validacion.
+   * @param secondDateFieldName Nombre del campo que se quiere validar.
+   */
+  static isBeforeOrEqualNotFireWhenfirstDateNameEmpty(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
+
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const fechaAnteriorControl = formGroup.controls[secondDateFieldName];
+      const fechaPosteriorControl = formGroup.controls[firstDateFieldName];
+
+      if (fechaAnteriorControl.errors && !fechaAnteriorControl.errors.before
+         || (!fechaAnteriorControl.value || !fechaPosteriorControl.value)) {
+        return;
+      }
+
+      DateValidator.validateBeforeOrEqualInRange(fechaAnteriorControl, fechaPosteriorControl);
+    };
+  }
+
+  private static validateBeforeOrEqualInRange(fechaAnteriorControl: AbstractControl, fechaPosteriorControl: AbstractControl): void {
+    const fechaAnteriorDate: DateTime = fechaAnteriorControl.value;
+    const fechaPosteriorDate: DateTime = fechaPosteriorControl.value;
+
+    if (fechaAnteriorDate && (fechaPosteriorDate < fechaAnteriorDate)) {
+      fechaAnteriorControl.setErrors({ before: true });
+      fechaAnteriorControl.markAsTouched({ onlySelf: true });
+    } else if (fechaAnteriorControl.errors) {
+      delete fechaAnteriorControl.errors.before;
+      fechaAnteriorControl.updateValueAndValidity({ onlySelf: true });
+    }
   }
 
   /**

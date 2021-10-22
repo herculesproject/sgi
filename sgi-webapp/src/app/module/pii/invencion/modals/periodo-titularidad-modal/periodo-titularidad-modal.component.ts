@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -94,24 +94,16 @@ export class PeriodoTitularidadModalComponent
   }
 
   protected getFormGroup(): FormGroup {
-    const formGroup = new FormGroup(
-      {
-        fechaInicio: new FormControl(this.entity?.periodoTitularidad.value.fechaInicio, [
-          DateValidator.minDate(this.entity.fechaInicioMinima),
-        ]),
-        fechaFin: new FormControl(this.entity?.periodoTitularidad.value.fechaFin, [
-          DateValidator.minDate(this.entity.fechaInicioMinima),
-        ]),
+    const fechaFinValidators: Array<ValidatorFn> = [DateValidator.minDate(this.entity.fechaInicioMinima)];
 
-      },
-      {
-        validators: [
-          DateValidator.isBeforeOrEqual('fechaInicio', 'fechaFin')
-        ]
-      }
-    );
+    if(this.showFechaFin()) {
+      fechaFinValidators.push(Validators.required);
+    }
+    return new FormGroup({
+        fechaInicio: new FormControl(this.entity?.periodoTitularidad.value.fechaInicio, [ DateValidator.minDate(this.entity.fechaInicioMinima), Validators.required]),
+        fechaFin: new FormControl(this.entity?.periodoTitularidad.value.fechaFin, fechaFinValidators)
+      }, { validators: [ DateValidator.isBeforeOrEqualNotFireWhenfirstDateNameEmpty('fechaInicio', 'fechaFin')]});
 
-    return formGroup;
   }
 
   public showFechaFin(): boolean {

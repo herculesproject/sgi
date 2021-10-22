@@ -1,6 +1,6 @@
 <div class="sgi-dialog-header" fxLayout="row" fxLayoutGap="20px">
   <span fxFlexAlign="center" mat-mat-dialog-title role="heading" aria-level="3" fxFlex>
-    <div *ngIf="isEditionMode()">{{'pii.invencion-titularidad.periodo-titularidad' | translate}}</div>
+    <div *ngIf="isEditionMode()">{{'pii.invencion-titularidad.periodo-titularidad' | translate:msgParamTitle}}</div>
     <div *ngIf="!isEditionMode()">{{'pii.invencion-titularidad.periodo-titularidad.nuevo' | translate:msgParamTitle}}
     </div>
   </span>
