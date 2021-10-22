@@ -395,6 +395,10 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <jvmArguments>
+            -Xmx256m
+            -Xss256k
+          </jvmArguments>
           <!--
           Create 2 artifacts: one as dependency and another as executable fat JAR
           See https://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-create-an-additional-executable-jar
