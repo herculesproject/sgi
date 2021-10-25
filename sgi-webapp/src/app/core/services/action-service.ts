@@ -824,12 +824,12 @@ export class Group implements IGroup {
     this.status$.next({ errors: false, changes: false, complete: false });
   }
 
-  private deepEquals(x: any, y: any): boolean {
+  private deepEquals(x: any, y: any, root = true): boolean {
     if (x === y) {
       return true; // if both x and y are null or undefined and exactly the same
     } else if (!(x instanceof Object) || !(y instanceof Object)) {
       return false; // if they are not strictly equal, they both need to be Objects
-    } else if (x.hasOwnProperty('id') && y.hasOwnProperty('id')) {
+    } else if (!root && x.hasOwnProperty('id') && y.hasOwnProperty('id')) {
       return x.id === y.id;
     } else if (x.constructor !== y.constructor) {
       // they must have the exact same prototype chain, the closest we can do is
@@ -855,7 +855,7 @@ export class Group implements IGroup {
         if (typeof (x[p]) !== 'object') {
           return false; // Numbers, Strings, Functions, Booleans must be strictly equal
         }
-        if (!this.deepEquals(x[p], y[p])) {
+        if (!this.deepEquals(x[p], y[p], false)) {
           return false;
         }
       }
