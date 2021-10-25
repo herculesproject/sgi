@@ -6,12 +6,13 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { AreaTematicaModalData } from '../../modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
 
 export interface AreaTematicaSolicitudData {
   rootTree: IAreaTematica;
-  areaTematicaConvocatoria: IAreaTematica;
+  areaTematicaConvocatoria: IAreaTematica[];
   areaTematicaSolicitud: IAreaTematica;
   readonly: boolean;
 }
@@ -178,9 +179,6 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   protected initializer(key: number): Observable<ISolicitudProyecto> {
 
     return this.solicitudService.findSolicitudProyecto(key).pipe(
-      switchMap((solicitudProyectoDatos) => {
-        return this.loadSolicitudProyecto(solicitudProyectoDatos);
-      }),
       switchMap(solicitudProyecto => {
         if (solicitudProyecto?.id) {
           return this.solicitudProyectoService.hasSolicitudPresupuesto(solicitudProyecto.id).pipe(
@@ -205,6 +203,40 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         return of(solicitudProyecto);
       }),
       switchMap(solicitudProyecto => {
+        if (this.convocatoriaId) {
+          this.hasConvocatoria = true;
+          return this.convocatoriaService.findAreaTematicas(this.convocatoriaId).pipe(
+            map((results) => {
+              let nodes;
+              if (results.total > 0) {
+                nodes = results.items.map(convocatoriaAreaTematica => {
+                  const area: AreaTematicaSolicitudData = {
+                    rootTree: this.getFirstLevelAreaTematica(convocatoriaAreaTematica.areaTematica),
+                    areaTematicaConvocatoria: results.items.map(areaConvocatoria => areaConvocatoria.areaTematica),
+                    areaTematicaSolicitud: solicitudProyecto.areaTematica,
+                    readonly: this.readonly
+                  };
+                  return area;
+                });
+              } else if (solicitudProyecto.areaTematica) {
+                nodes = [{
+                  rootTree: this.getFirstLevelAreaTematica(solicitudProyecto.areaTematica),
+                  areaTematicaConvocatoria: null,
+                  areaTematicaSolicitud: solicitudProyecto.areaTematica,
+                  readonly: this.readonly
+                }];
+              }
+
+              this.areasTematicas$.next(nodes);
+              return results;
+            }),
+            switchMap(() => of(solicitudProyecto))
+          );
+        } else {
+          return of(solicitudProyecto);
+        }
+      }),
+      switchMap(solicitudProyecto => {
         this.hasPopulatedPeriodosSocios$.next(this.hasPopulatedPeriodosSocios);
         return of(solicitudProyecto);
       }),
@@ -225,42 +257,46 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     );
   }
 
-  private loadSolicitudProyecto(solicitudProyecto: ISolicitudProyecto): Observable<ISolicitudProyecto> {
-    if (solicitudProyecto?.id) {
-      return this.solicitudService.findById(solicitudProyecto.id).pipe(
-        switchMap(solicitud => {
-          if (solicitud?.convocatoriaId) {
-            this.hasConvocatoria = true;
-            return this.convocatoriaService.findAreaTematicas(solicitud.convocatoriaId).pipe(
-              map((results) => {
-                const nodes = results.items.map(convocatoriaAreaTematica => {
-                  const area: AreaTematicaSolicitudData = {
-                    rootTree: this.getFirstLevelAreaTematica(convocatoriaAreaTematica.areaTematica),
-                    areaTematicaConvocatoria: convocatoriaAreaTematica.areaTematica,
-                    areaTematicaSolicitud: solicitudProyecto.areaTematica,
-                    readonly: this.readonly
-                  };
-                  return area;
-                });
-                this.areasTematicas$.next(nodes);
-                return results;
-              }),
-              switchMap(() => of(solicitudProyecto))
-            );
-          }
-          return of(solicitudProyecto);
-        })
-      );
-    }
-    return of(solicitudProyecto);
-  }
-
   getFirstLevelAreaTematica(areaTematica: IAreaTematica): IAreaTematica {
-    if (areaTematica.padre) {
+    if (areaTematica?.padre) {
       return this.getFirstLevelAreaTematica(areaTematica.padre);
     }
     return areaTematica;
   }
+
+
+  deleteAreaTematica(): void {
+    this.solicitudProyecto.areaTematica = null;
+    if (this.areasTematicas$.value[0].areaTematicaConvocatoria) {
+      this.areasTematicas$.value[0].areaTematicaSolicitud = null;
+      this.areasTematicas$.next(this.areasTematicas$.value);
+    } else {
+      this.areasTematicas$.next([]);
+    }
+    this.setChanges(true);
+  }
+
+  updateAreaTematica(result: AreaTematicaModalData): void {
+    this.solicitudProyecto.areaTematica = result.areaTematicaSolicitud;
+
+    if (this.areasTematicas$.value?.length > 0) {
+      this.areasTematicas$.value[0].areaTematicaSolicitud = result.areaTematicaSolicitud;
+      this.areasTematicas$.next(this.areasTematicas$.value);
+    } else {
+      this.areasTematicas$.next(
+        [{
+          rootTree: result.padre,
+          areaTematicaSolicitud: result.areaTematicaSolicitud,
+          areaTematicaConvocatoria: result.areasTematicasConvocatoria,
+          readonly: this.readonly
+        } as AreaTematicaSolicitudData]
+      );
+    }
+
+    this.setChanges(true);
+  }
+
+
 
   getValue(): ISolicitudProyecto {
     const form = this.getFormGroup().controls;
