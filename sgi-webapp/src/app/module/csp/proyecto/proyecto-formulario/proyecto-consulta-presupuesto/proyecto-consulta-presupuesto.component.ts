@@ -267,12 +267,20 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
 
   private sortCollectionByProperty<T>(collection: T[], direction: number, property: string, nestedProperty?: string): void {
     collection.sort((a: T, b: T) => {
-      const aProp = nestedProperty ? a[property][nestedProperty] : a[property];
-      const bProp = nestedProperty ? b[property][nestedProperty] : b[property];
-      if (aProp === bProp) {
-        return 0;
+      if (a[property] && b[property]) {
+        const aProp = nestedProperty ? a[property][nestedProperty] : a[property];
+        const bProp = nestedProperty ? b[property][nestedProperty] : b[property];
+        if (aProp === bProp) {
+          return 0;
+        }
+        return aProp > bProp ? direction : -direction;
+      } else {
+        if (b[property]) {
+          return -direction;
+        } else {
+          return direction;
+        }
       }
-      return aProp > bProp ? direction : -direction;
     });
   }
 
