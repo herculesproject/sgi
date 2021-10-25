@@ -27,6 +27,7 @@ import { InvencionGastosFragment } from './invencion-formulario/invencion-gastos
 import { InvencionInformesPatentabilidadFragment } from './invencion-formulario/invencion-informes-patentabilidad/invencion-informes-patentabilidad.fragment';
 import { InvencionIngresosFragment } from './invencion-formulario/invencion-ingresos/invencion-ingresos.fragment';
 import { InvencionInventorFragment } from './invencion-formulario/invencion-inventor/invencion-inventor.fragment';
+import { InvencionRepartosFragment } from './invencion-formulario/invencion-repartos/invencion-repartos.fragment';
 import { PeriodoTitularidadFragment } from './invencion-formulario/periodo-titularidad/periodo-titularidad.fragment';
 import { SolicitudProteccionFragment } from './invencion-formulario/solicitud-proteccion/solicitud-proteccion.fragment';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
@@ -53,6 +54,7 @@ export class InvencionActionService extends ActionService {
     INGRESOS: 'ingresos',
     PERIODOS_TITULARIDAD: 'periodos-titularidad',
     CONTRATOS: 'contratos',
+    REPARTOS: 'repartos',
   };
 
   private datosGenerales: InvencionDatosGeneralesFragment;
@@ -64,6 +66,7 @@ export class InvencionActionService extends ActionService {
   private invencionIngresos: InvencionIngresosFragment;
   private periodosTitularidad: PeriodoTitularidadFragment;
   private contratos: InvencionContratosFragment;
+  private repartos: InvencionRepartosFragment;
 
   get canEdit(): boolean {
     return this.data?.canEdit ?? true;
@@ -135,6 +138,10 @@ export class InvencionActionService extends ActionService {
       this.contratos = new InvencionContratosFragment(
         this.id, this.canEdit, sectorLicenciadoService, relacionService, proyectoService, empresaService, personaService, paisService);
       this.addFragment(this.FRAGMENT.CONTRATOS, this.contratos);
+
+      this.repartos = new InvencionRepartosFragment(
+        this.id, this.canEdit, invencionService);
+      this.addFragment(this.FRAGMENT.REPARTOS, this.repartos);
     }
 
   }

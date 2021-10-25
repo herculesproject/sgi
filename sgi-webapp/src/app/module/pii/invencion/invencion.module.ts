@@ -33,6 +33,7 @@ import { SectorAplicacionModalComponent } from './modals/sector-aplicacion-modal
 import { PeriodoTitularidadTitularModalComponent } from './modals/periodo-titularidad-titular-modal/periodo-titularidad-titular-modal.component';
 import { InvencionContratosComponent } from './invencion-formulario/invencion-contratos/invencion-contratos.component';
 import { SectorLicenciadoModalComponent } from './modals/sector-licenciado-modal/sector-licenciado-modal.component';
+import { InvencionRepartosComponent } from './invencion-formulario/invencion-repartos/invencion-repartos.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { SectorLicenciadoModalComponent } from './modals/sector-licenciado-modal
     PeriodoTitularidadModalComponent,
     PeriodoTitularidadTitularModalComponent,
     InvencionContratosComponent,
-    SectorLicenciadoModalComponent
+    SectorLicenciadoModalComponent,
+    InvencionRepartosComponent,
   ],
   imports: [
     CommonModule,
