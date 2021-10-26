@@ -10,11 +10,11 @@ import javax.validation.Payload;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DesdeLowerThanHastaTramoRepartoValidator.class)
-public @interface DesdeLowerThanHastaTramoReparto {
-  String message() default "{org.crue.hercules.sgi.pii.validation.DesdeLowerThanHastaTramoReparto.message}";
+@Constraint(validatedBy = NotAllowedGapBetweenTramoRepartoValidator.class)
+public @interface NotAllowedGapBetweenTramoReparto {
+  String message() default "{org.crue.hercules.sgi.pii.validation.NotAllowedGapBetweenTramoReparto.message}";
 
-  String field() default "org.crue.hercules.sgi.pii.model.DesdeLowerThanHastaTramoReparto.stretch";
+  String field() default "org.crue.hercules.sgi.pii.model.NotAllowedGapBetweenTramoReparto.stretch";
 
   Class<?>[] groups() default {};
 

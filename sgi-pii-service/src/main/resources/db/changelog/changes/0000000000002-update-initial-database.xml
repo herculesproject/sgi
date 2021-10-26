@@ -71,5 +71,16 @@
   <changeSet author="master" id="0000000000002-7">
     <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="reparto" constraintName="FK_REPARTO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true" />
   </changeSet>
+  <changeSet author="master" id="0000000000002-8">
+    <addColumn tableName="tramo_reparto">
+      <column name="tipo" type="varchar(25)"></column>
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-9">
+    <dropNotNullConstraint columnDataType="int" columnName="hasta" tableName="tramo_reparto" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-10">
+    <dropColumn columnName="ACTIVO" tableName="TRAMO_REPARTO" />
+  </changeSet>
 
 </databaseChangeLog>

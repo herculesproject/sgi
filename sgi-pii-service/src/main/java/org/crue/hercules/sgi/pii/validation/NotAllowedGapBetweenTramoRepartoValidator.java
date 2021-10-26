@@ -1,28 +1,30 @@
 package org.crue.hercules.sgi.pii.validation;
 
 import java.util.List;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.model.TramoReparto;
+import org.crue.hercules.sgi.pii.model.TramoReparto.Tipo;
 import org.crue.hercules.sgi.pii.repository.TramoRepartoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.TramoRepartoSpecifications;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-public class NoOverlappedTramoRepartoActivoValidator
-    implements ConstraintValidator<NoOverlappedTramoRepartoActivo, TramoReparto> {
+public class NotAllowedGapBetweenTramoRepartoValidator
+    implements ConstraintValidator<NotAllowedGapBetweenTramoReparto, TramoReparto> {
   private TramoRepartoRepository repository;
   private String field;
 
-  public NoOverlappedTramoRepartoActivoValidator(TramoRepartoRepository repository) {
+  public NotAllowedGapBetweenTramoRepartoValidator(TramoRepartoRepository repository) {
     this.repository = repository;
   }
 
   @Override
-  public void initialize(NoOverlappedTramoRepartoActivo constraintAnnotation) {
+  public void initialize(NotAllowedGapBetweenTramoReparto constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
     field = constraintAnnotation.field();
   }
@@ -30,17 +32,27 @@ public class NoOverlappedTramoRepartoActivoValidator
   @Override
   @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
   public boolean isValid(TramoReparto value, ConstraintValidatorContext context) {
-    if (value == null || value.getDesde() == null || value.getHasta() == null) {
+    if (value == null || value.getDesde() == null) {
       return false;
     }
-    List<TramoReparto> tramosReparto = repository
-        .findAll(TramoRepartoSpecifications.overlappedActiveTramoReparto(value.getDesde(), value.getHasta()));
+    if (value.getTipo() == Tipo.INICIAL) {
+      return true;
+    }
+    if (value.getTipo() == Tipo.FINAL && repository.count() == 0L) {
+      return true;
+    }
+    List<TramoReparto> tramosReparto = repository.findAll(TramoRepartoSpecifications
+        .noGapBetweenTramoReparto(this.getPreviousTramoRepartoExpectedHasta(value.getDesde())));
     boolean returnValue = tramosReparto.stream().filter(tramoReparto -> !tramoReparto.getId().equals(value.getId()))
-        .count() == 0L;
+        .count() > 0L;
     if (!returnValue) {
       addEntityMessageParameter(context);
     }
     return returnValue;
+  }
+
+  private Integer getPreviousTramoRepartoExpectedHasta(Integer desde) {
+    return desde.intValue() - 1;
   }
 
   private void addEntityMessageParameter(ConstraintValidatorContext context) {

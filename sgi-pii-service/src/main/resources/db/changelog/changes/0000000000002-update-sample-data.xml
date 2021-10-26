@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-  <changeSet context="dev" author="master" id="0000000000001-reparto">
+  <changeSet context="dev" author="master" id="0000000000002-reparto">
     <insert tableName="reparto">
       <column name="id" valueSequenceNext="reparto_seq" />
       <column name="invencion_id" valueNumeric="113" />
@@ -45,5 +45,63 @@
       <column name="estado" value="PENDIENTE_EJECUTAR" />
     </insert>
   </changeSet>
-
+  <changeSet context="dev" author=" master" id=" 0000000000002-delete-tramo_reparto">
+    <delete tableName="tramo_reparto"></delete>
+  </changeSet>
+  <changeSet context="dev" author=" master" id=" 0000000000002-tramo_reparto">
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" valueNumeric="1" />
+      <column name="hasta" valueNumeric="500" />
+      <column name="porcentaje_universidad" valueNumeric="40.00" />
+      <column name="porcentaje_inventores" valueNumeric="60.00" />
+      <column name="tipo" value="INICIAL" />
+    </insert>
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" valueNumeric="501" />
+      <column name="hasta" valueNumeric="1000" />
+      <column name="porcentaje_universidad" valueNumeric="45.00" />
+      <column name="porcentaje_inventores" valueNumeric="55.00" />
+      <column name="tipo" value="INTERMEDIO" />
+    </insert>
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" valueNumeric="1001" />
+      <column name="hasta" valueNumeric="10000" />
+      <column name="porcentaje_universidad" valueNumeric="49.50" />
+      <column name="porcentaje_inventores" valueNumeric="50.50" />
+      <column name="tipo" value="INTERMEDIO" />
+    </insert>
+    <insert tableName="tramo_reparto">
+      <column name="id" valueSequenceNext="tramo_reparto_seq" />
+      <column name="desde" valueNumeric="10001" />
+      <column name="porcentaje_universidad" valueNumeric="55.00" />
+      <column name="porcentaje_inventores" valueNumeric="45.00" />
+      <column name="tipo" value="FINAL" />
+    </insert>
+  </changeSet>
+  <changeSet context="dev" author=" master" id=" 0000000000002-set-null-invencion-proyecto_ref">
+    <update tableName="invencion">
+      <column name="proyecto_ref" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="111" />
+      </whereParams>
+    </update>
+    <update tableName="invencion">
+      <column name="proyecto_ref" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="112" />
+      </whereParams>
+    </update>
+    <update tableName="invencion">
+      <column name="proyecto_ref" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="113" />
+      </whereParams>
+    </update>
+  </changeSet>
 </databaseChangeLog>

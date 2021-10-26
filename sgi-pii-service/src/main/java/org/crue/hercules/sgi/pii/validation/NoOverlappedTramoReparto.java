@@ -10,11 +10,11 @@ import javax.validation.Payload;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DesdeLowerThanHastaTramoRepartoValidator.class)
-public @interface DesdeLowerThanHastaTramoReparto {
-  String message() default "{org.crue.hercules.sgi.pii.validation.DesdeLowerThanHastaTramoReparto.message}";
+@Constraint(validatedBy = NoOverlappedTramoRepartoValidator.class)
+public @interface NoOverlappedTramoReparto {
+  String message() default "{org.crue.hercules.sgi.pii.validation.NoOverlappedTramoReparto.message}";
 
-  String field() default "org.crue.hercules.sgi.pii.model.DesdeLowerThanHastaTramoReparto.stretch";
+  String field() default "org.crue.hercules.sgi.pii.model.NoOverlappedTramoReparto.stretch";
 
   Class<?>[] groups() default {};
 

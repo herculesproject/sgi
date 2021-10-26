@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.pii.validation;
 
-import java.util.Optional;
+import java.util.List;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -8,31 +8,37 @@ import javax.validation.ConstraintValidatorContext;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.model.TramoReparto;
 import org.crue.hercules.sgi.pii.model.TramoReparto.Tipo;
+import org.crue.hercules.sgi.pii.repository.TramoRepartoRepository;
+import org.crue.hercules.sgi.pii.repository.specification.TramoRepartoSpecifications;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-public class DesdeLowerThanHastaTramoRepartoValidator
-    implements ConstraintValidator<DesdeLowerThanHastaTramoReparto, TramoReparto> {
+public class UniqueTipoTramoRepartoValidator implements ConstraintValidator<UniqueTipoTramoReparto, TramoReparto> {
+  private TramoRepartoRepository repository;
   private String field;
 
+  public UniqueTipoTramoRepartoValidator(TramoRepartoRepository repository) {
+    this.repository = repository;
+  }
+
   @Override
-  public void initialize(DesdeLowerThanHastaTramoReparto constraintAnnotation) {
+  public void initialize(UniqueTipoTramoReparto constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
     field = constraintAnnotation.field();
   }
 
   @Override
-  @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
   public boolean isValid(TramoReparto value, ConstraintValidatorContext context) {
-    if (value.getTipo() == Tipo.FINAL) {
-      return true;
-    }
-    if (value == null || value.getDesde() == null || value.getHasta() == null) {
+    if (value == null) {
       return false;
     }
 
-    boolean returnValue = value.getDesde() < value.getHasta();
+    if (value.getTipo() == Tipo.INTERMEDIO) {
+      return true;
+    }
+
+    List<TramoReparto> tramosReparto = repository.findAll(TramoRepartoSpecifications.withTipo(value.getTipo()));
+    boolean returnValue = tramosReparto.stream().filter(tramoReparto -> !tramoReparto.getId().equals(value.getId()))
+        .count() == 0L;
     if (!returnValue) {
       addEntityMessageParameter(context);
     }
