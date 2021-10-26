@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet context="dev" author="master" id="0000000000001-reparto">
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-05-31T14:00:00" />
+      <column name="importe_universidad" valueNumeric="300.40" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-06-31T14:00:00" />
+      <column name="importe_universidad" valueNumeric="190.30" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-07-31T14:00:00" />
+      <column name="importe_universidad" valueNumeric="0.00" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-08-11T14:00:00" />
+      <column name="importe_universidad" valueNumeric="554.38" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-09-21T14:00:00" />
+      <column name="importe_universidad" valueNumeric="9453.38" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+    <insert tableName="reparto">
+      <column name="id" valueSequenceNext="reparto_seq" />
+      <column name="invencion_id" valueNumeric="113" />
+      <column name="fecha" valueDate="2021-10-11T14:00:00" />
+      <column name="importe_universidad" valueNumeric="15.10" />
+      <column name="estado" value="PENDIENTE_EJECUTAR" />
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

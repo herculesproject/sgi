@@ -14,3 +14,5 @@ databaseChangeLog:
   # HERCULES_0.0.3
   - include:
       file: classpath*:db/changelog/changes/0000000000002-update-initial-database.xml
+  - include:
+      file: classpath*:db/changelog/changes/0000000000002-update-sample-data.xml
