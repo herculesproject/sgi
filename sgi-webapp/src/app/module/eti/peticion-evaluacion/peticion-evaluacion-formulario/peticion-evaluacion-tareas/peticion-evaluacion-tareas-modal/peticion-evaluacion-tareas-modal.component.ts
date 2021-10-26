@@ -295,7 +295,7 @@ export class PeticionEvaluacionTareasModalComponent extends
   private loadDatosUsuario(equiposTrabajo: IEquipoTrabajo[]) {
     const personaIds = new Set<string>();
 
-    if (equiposTrabajo) {
+    if (equiposTrabajo && equiposTrabajo.length > 0) {
       equiposTrabajo.forEach((equipoTrabajo: IEquipoTrabajo) => {
         personaIds.add(equipoTrabajo?.persona?.id);
       });
