@@ -98,6 +98,11 @@ public class SgiDynamicReportService extends SgiReportService {
   }
 
   protected void setReportConfiguration(SgiDynamicReportDto sgiReport) {
+
+    if (null == sgiReport.getFieldOrientationType()) {
+      sgiReport.setFieldOrientationType(FieldOrientationType.HORIZONTAL);
+    }
+
     if (null == sgiReport.getCustomWidth()) {
       sgiReport.setCustomWidth(WIDTH_PORTRAIT);
     }

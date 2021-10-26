@@ -2,19 +2,16 @@ package org.crue.hercules.sgi.rep.integration.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
 import org.crue.hercules.sgi.rep.dto.OutputReportType;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto;
 import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
+import org.crue.hercules.sgi.rep.integration.BaseIT;
 import org.crue.hercules.sgi.rep.service.eti.MXXReportService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.crue.hercules.sgi.rep.integration.BaseIT;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,9 +48,6 @@ class MXXReportServiceIT extends BaseIT {
 
     // given: report generated
     assertNotNull(report);
-
-    File file = File.createTempFile(reportName, ".pdf");
-    FileUtils.writeByteArrayToFile(file, report.getContent());
   }
 
   @Test
@@ -83,9 +77,6 @@ class MXXReportServiceIT extends BaseIT {
 
       // given: report generated
       assertNotNull(report);
-
-      File file = File.createTempFile(reportName, ".pdf");
-      FileUtils.writeByteArrayToFile(file, report.getContent());
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -116,9 +107,6 @@ class MXXReportServiceIT extends BaseIT {
       service.getReportMXXFromJson(report, outputJson, memoriaDto);
       // given: report generated
       assertNotNull(report);
-
-      File file = File.createTempFile(reportName, ".pdf");
-      FileUtils.writeByteArrayToFile(file, report.getContent());
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
