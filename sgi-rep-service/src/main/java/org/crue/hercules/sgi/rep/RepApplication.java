@@ -19,7 +19,6 @@ public class RepApplication {
     log.info("Setting UTC as the default JVM TimeZone");
     TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
     SpringApplication.run(RepApplication.class, args);
-    log.debug("main(String[] args) - end");
   }
 
 }

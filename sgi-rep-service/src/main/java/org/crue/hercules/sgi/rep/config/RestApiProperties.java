@@ -49,4 +49,9 @@ public class RestApiProperties {
    * URL base de los end-points de SGP.
    */
   private String sgpUrl;
+
+  /**
+   * URL base de los end-points de SGEMP.
+   */
+  private String sgempUrl;
 }

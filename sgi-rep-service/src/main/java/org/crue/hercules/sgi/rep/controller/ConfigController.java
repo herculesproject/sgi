@@ -40,8 +40,6 @@ public class ConfigController {
   @PreAuthorize("isAuthenticated()")
   public String timeZone() {
     log.debug("timeZone() - start");
-    String returnValue = sgiConfigProperties.getTimeZone().getID();
-    log.debug("timeZone() - end");
-    return returnValue;
+    return sgiConfigProperties.getTimeZone().getID();
   }
 }
