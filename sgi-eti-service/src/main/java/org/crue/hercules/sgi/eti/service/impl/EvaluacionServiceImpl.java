@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
+import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
@@ -14,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
@@ -26,9 +29,13 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.ReportService;
+import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +53,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluacionServiceImpl implements EvaluacionService {
+
+  private static final String TITULO_INFORME_EVALUACION = "informeEvaluacionPdf";
+  private static final String TITULO_INFORME_EVALUACION_RETROSPECTIVA = "informeEvaluacionRetrospectivaPdf";
+  private static final String TITULO_INFORME_FAVORABLE = "informeFavorablePdf";
+  private static final String TITULO_INFORME_FICHA_EVALUADOR = "informeFichaEvaluadorPdf";
 
   /** Estado Memoria repository */
   private final EstadoMemoriaRepository estadoMemoriaRepository;
@@ -71,6 +83,15 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** Evaluacion converter */
   private final EvaluacionConverter evaluacionConverter;
 
+  /** Report service */
+  private final ReportService reportService;
+
+  /** SGDOC service */
+  private final SgdocService sgdocService;
+
+  /** Informe service */
+  private final InformeService informeService;
+
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
@@ -83,12 +104,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param convocatoriaReunionRepository repository para
    *                                      {@link ConvocatoriaReunion}
    * @param evaluacionConverter           converter para {@link Evaluacion}
+   * @param reportService                 servicio para informes
+   *                                      {@link ReportService}
+   * @param sgdocService                  servicio gestor documental
+   *                                      {@link SgdocService}
+   * @param informeService                service para {@link Informe}
    */
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
-      EvaluacionConverter evaluacionConverter) {
+      EvaluacionConverter evaluacionConverter, ReportService reportService, SgdocService sgdocService,
+      InformeService informeService) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -98,6 +125,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.comentarioRepository = comentarioRepository;
     this.memoriaRepository = memoriaRepository;
     this.evaluacionConverter = evaluacionConverter;
+    this.reportService = reportService;
+    this.sgdocService = sgdocService;
+    this.informeService = informeService;
   }
 
   /**
@@ -482,6 +512,122 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionActualizar.getId()));
   }
 
+  @Transactional
+  public void generarInforme(Evaluacion evaluacion) {
+    switch (evaluacion.getTipoEvaluacion().getId().intValue()) {
+    case Constantes.TIPO_EVALUACION_MEMORIA_INT:
+      if (evaluacion.getDictamen() != null
+          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
+              || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
+              || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
+        this.crearInforme(evaluacion, false);
+      } else if (evaluacion.getDictamen() != null
+          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
+        this.crearInforme(evaluacion, true);
+      }
+      break;
+    case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
+      if (evaluacion.getDictamen() != null
+          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES)) {
+        this.crearInforme(evaluacion, false);
+      }
+      break;
+    case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
+      if (evaluacion.getDictamen() != null && (evaluacion.getDictamen().getId()
+          .intValue() == Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL)) {
+        this.crearInforme(evaluacion, false);
+      }
+      break;
+    case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
+      if (evaluacion.getDictamen() != null
+          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
+        this.crearInforme(evaluacion, true);
+      }
+      break;
+    default:
+      break;
+    }
+  }
+
+  @Transactional
+  private void crearInforme(Evaluacion evaluacion, Boolean favorable) {
+    log.debug("crearInforme(Evaluacion evaluacion, Boolean favorable)- start");
+
+    Resource informePdf = null;
+    String tituloInforme = "";
+    if (favorable) {
+      // Se obtiene el informe favorable en formato pdf creado mediante el
+      // servicio de reporting
+      if (evaluacion.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
+        informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
+        tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
+      } else {
+        switch (evaluacion.getMemoria().getTipoMemoria().getId().intValue()) {
+        case Constantes.TIPO_MEMORIA_NUEVA:
+          informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId(), Instant.now());
+          break;
+        case Constantes.TIPO_MEMORIA_MODIFICACION:
+          informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId(), Instant.now());
+          break;
+        case Constantes.TIPO_MEMORIA_RATIFICACION:
+          informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId(), Instant.now());
+          break;
+        default:
+          break;
+        }
+        tituloInforme = TITULO_INFORME_FAVORABLE;
+      }
+    } else {
+      // Se obtiene el informe de evaluación en formato pdf creado mediante el
+      // servicio de reporting
+      informePdf = reportService.getInformeEvaluacion(evaluacion.getId());
+      tituloInforme = TITULO_INFORME_EVALUACION;
+    }
+
+    // Se sube el informe a sgdoc
+    String fileName = tituloInforme + "_" + evaluacion.getId() + LocalDate.now() + ".pdf";
+    DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
+
+    Optional<Informe> informeBuscado = informeService.findByMemoriaAndVersionAndTipoEvaluacion(
+        evaluacion.getMemoria().getId(), evaluacion.getVersion(), evaluacion.getTipoEvaluacion().getId());
+
+    // Se crea un fichero en formato pdf con los datos del proyecto y con
+    // los datos del formulario y subirlo al gestor documental y que el sistema
+    // guarde en informes el identificador del documento.
+    if (informeBuscado.isPresent()) {
+      Informe informe = informeBuscado.get();
+      // Se adjunta referencia del documento a sgdoc y se actualiza el informe
+      informe.setDocumentoRef(documento.getDocumentoRef());
+      informeService.update(informe);
+    } else {
+      Informe informe = new Informe();
+      informe.setVersion(evaluacion.getVersion());
+      informe.setMemoria(evaluacion.getMemoria());
+      informe.setTipoEvaluacion(new TipoEvaluacion());
+      informe.getTipoEvaluacion().setId(evaluacion.getTipoEvaluacion().getId());
+
+      // Se adjunta referencia del documento a sgdoc y se crea el informe
+      informe.setDocumentoRef(documento.getDocumentoRef());
+      informeService.create(informe);
+    }
+
+    log.debug("crearInforme(Evaluacion evaluacion, Boolean favorable)- end");
+  }
+
+  /**
+   * Obtiene el documento de la ficha del Evaluador
+   * 
+   * @param idEvaluacion id {@link Evaluacion}
+   * @return El documento del informe de la ficha del Evaluador
+   */
+  @Override
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion) {
+    Resource informePdf = reportService.getInformeEvaluador(idEvaluacion);
+    // Se sube el informe a sgdoc
+    String fileName = TITULO_INFORME_FICHA_EVALUADOR + "_" + idEvaluacion + LocalDate.now() + ".pdf";
+    return sgdocService.uploadInforme(fileName, informePdf);
+  }
+
   /**
    * Obtiene la última versión de las memorias en estado "En evaluación
    * seguimiento anual" o "En evaluación seguimiento final" o "En secretaría
@@ -592,5 +738,29 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) {
     log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
     return evaluacionRepository.hasAssignedEvaluacionesSeguimientoByEvaluador(personaRef);
+  }
+
+  /**
+   * Retorna el identificador de la usuarioRef del presidente
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return id del presidente
+   */
+  @Override
+  public String findIdPresidenteByIdEvaluacion(Long idEvaluacion) {
+    log.debug("findIdPresidenteByIdEvaluacion(String idEvaluacion) - end");
+    return evaluacionRepository.findIdPresidenteByIdEvaluacion(idEvaluacion);
+  }
+
+  /**
+   * Retorna la primera fecha de envío a secretaría (histórico estado)
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return fecha de envío a secretaría
+   */
+  @Override
+  public Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion) {
+    log.debug("findFirstFechaEnvioSecretariaByIdEvaluacion(String idEvaluacion) - end");
+    return evaluacionRepository.findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion);
   }
 }

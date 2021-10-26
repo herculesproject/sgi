@@ -77,11 +77,20 @@ public class EvaluacionServiceTest extends BaseServiceTest {
   @Mock
   private EvaluacionConverter evaluacionConverter;
 
+  @Mock
+  private ReportService reportService;
+
+  @Mock
+  private SgdocService sgdocService;
+
+  @Mock
+  private InformeService informeService;
+
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
         retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository, memoriaRepository,
-        evaluacionConverter);
+        evaluacionConverter, reportService, sgdocService, informeService);
   }
 
   @Test

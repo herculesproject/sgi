@@ -174,7 +174,6 @@ public class EvaluacionIT extends BaseIT {
 
   }
 
-  @Test
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
 
     Evaluacion replaceEvaluacion = generarMockEvaluacion(1L, null);

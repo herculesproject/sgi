@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -23,8 +24,12 @@ import org.crue.hercules.sgi.eti.model.Acta_;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.Dictamen_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa_;
 import org.crue.hercules.sgi.eti.util.Constantes;
@@ -272,6 +277,73 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
     log.debug("getConvocatoriasActa : {} - end");
 
     return queryActasConvocatoria;
+  }
+
+  /**
+   * Retorna la fecha convocatoria y acta (codigo convocatoria) de la evaluación
+   * de tipo memoria de la memoria original con dictamen Favorable
+   * 
+   * @param idEvaluacion Id de la {@link Evaluacion}
+   * @param idDictamen   Id del {@link Dictamen}
+   * 
+   * @return ConvocatoriaReunion
+   */
+  @Override
+  public ConvocatoriaReunion findConvocatoriaUltimaEvaluacionTipoMemoria(Long idEvaluacion, Long idDictamen) {
+    log.debug("findConvocatoriaUltimaEvaluacionTipoMemoria(idEvaluacion, idDictamen) - start");
+    ConvocatoriaReunion result = null;
+
+    try {
+      // Crete query
+      CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+      CriteriaQuery<ConvocatoriaReunion> cq = cb.createQuery(ConvocatoriaReunion.class);
+
+      // Define FROM clause
+      Root<Evaluacion> root = cq.from(Evaluacion.class);
+      Join<Evaluacion, ConvocatoriaReunion> joinConvocatoriaReunion = root.join(Evaluacion_.convocatoriaReunion);
+
+      cq.multiselect(joinConvocatoriaReunion.get(ConvocatoriaReunion_.id),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.anio),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.numeroActa));
+
+      Subquery<Long> sqMemoriaOriginal = cq.subquery(Long.class);
+      Root<Evaluacion> subqRoot = sqMemoriaOriginal.from(Evaluacion.class);
+      Join<Evaluacion, Memoria> joinMemoria = subqRoot.join(Evaluacion_.memoria);
+
+      List<Predicate> sqPredicates = new ArrayList<>();
+      Predicate pSqIdEvaluacionEq = cb.equal(subqRoot.get(Evaluacion_.id), idEvaluacion);
+      Predicate pSqIdDictamenEq = cb.equal(subqRoot.get(Evaluacion_.dictamen).get(Dictamen_.id), idDictamen);
+      sqPredicates.add(pSqIdEvaluacionEq);
+      sqPredicates.add(pSqIdDictamenEq);
+
+      sqMemoriaOriginal.select(joinMemoria.get(Memoria_.memoriaOriginal).get(Memoria_.id));
+      sqMemoriaOriginal.where(sqPredicates.toArray(new Predicate[] {}));
+
+      List<Predicate> predicates = new ArrayList<>();
+      Predicate pIdEvaluacionEq = cb.equal(root.get(Evaluacion_.id), idEvaluacion);
+      Predicate pIdDictamenEq = cb.equal(root.get(Evaluacion_.dictamen).get(Dictamen_.id), idDictamen);
+
+      predicates.add(pIdEvaluacionEq);
+      predicates.add(pIdDictamenEq);
+
+      Predicate pMemoriaOriginal = cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), sqMemoriaOriginal);
+      predicates.add(pMemoriaOriginal);
+
+      // Where
+      cq.where(predicates.toArray(new Predicate[] {}));
+
+      TypedQuery<ConvocatoriaReunion> typedQuery = entityManager.createQuery(cq);
+      typedQuery.setMaxResults(1);
+
+      result = typedQuery.getSingleResult();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+
+    return result;
   }
 
 }

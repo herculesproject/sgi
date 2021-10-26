@@ -10,18 +10,25 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.model.CargoComite_;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario_;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres_;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo_;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
@@ -36,6 +43,7 @@ import org.crue.hercules.sgi.eti.model.Tarea_;
 import org.crue.hercules.sgi.eti.model.TipoComentario_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
+import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -54,6 +62,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepository {
 
+  private static final String COMITE_CEEA = "CEEA";
   /**
    * The entity manager.
    */
@@ -774,5 +783,130 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
     return count > 0;
+  }
+
+  /**
+   * Retorna el identificador de la usuarioRef del presidente
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return id del presidente
+   */
+  @Override
+  public String findIdPresidenteByIdEvaluacion(Long idEvaluacion) {
+    log.debug("findIdPresidenteByIdEvaluacion(idEvaluacion) - start");
+    String idPresidente = null;
+    try {
+      // Crete query
+      CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+      CriteriaQuery<String> cq = cb.createQuery(String.class);
+
+      // Define FROM clause
+      Root<Evaluacion> root = cq.from(Evaluacion.class);
+      Join<Evaluacion, ConvocatoriaReunion> joinConvocatoriaReunion = root.join(Evaluacion_.convocatoriaReunion);
+      Join<ConvocatoriaReunion, Comite> joinComite = joinConvocatoriaReunion.join(ConvocatoriaReunion_.comite);
+
+      Root<Evaluador> rootEvaluador = cq.from(Evaluador.class);
+
+      cq.multiselect(rootEvaluador.get(Evaluador_.personaRef));
+
+      List<Predicate> predicates = new ArrayList<Predicate>();
+      Predicate pJoinComite = cb.equal(rootEvaluador.get(Evaluador_.comite).get(Comite_.id),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.comite).get(Comite_.id));
+      Predicate pJoinCargoComite = cb.equal(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.id),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.comite).get(Comite_.id));
+      Predicate pIdEvaluacionEq = cb.equal(root.get(Evaluacion_.id), idEvaluacion);
+      Predicate pComiteCEEA = cb.equal(cb.upper(joinComite.get(Comite_.comite)), COMITE_CEEA);
+      Predicate pComiteActivo = cb.equal(joinComite.get(Comite_.activo), true);
+      Predicate pCargoComitePresidente = cb.equal(
+          cb.lower(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.nombre)),
+          EvaluadorSpecifications.PRESIDENTE);
+      Predicate pCargoComiteActivo = cb.equal(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.activo), true);
+      Predicate pEvaluadorActivo = cb.equal(rootEvaluador.get(Evaluador_.activo), true);
+
+      Predicate pFechaBajaIsNull = cb.isNull(rootEvaluador.get(Evaluador_.fechaBaja));
+      Predicate pFechaAltaGTFechaEvaluacion = cb.greaterThanOrEqualTo(rootEvaluador.get(Evaluador_.fechaAlta),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion));
+      Predicate pAndFechaBajaIsNullAndFechaAlta = cb.and(pFechaBajaIsNull, pFechaAltaGTFechaEvaluacion);
+
+      Predicate pFechaBajaLTFechaEvaluacion = cb.lessThanOrEqualTo(rootEvaluador.get(Evaluador_.fechaBaja),
+          joinConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion));
+      Predicate pAndFechaBajaFechaAlta = cb.and(pFechaBajaLTFechaEvaluacion, pFechaAltaGTFechaEvaluacion);
+
+      Predicate pOrFechaBajaFechaAlta = cb.or(pAndFechaBajaIsNullAndFechaAlta, pAndFechaBajaFechaAlta);
+
+      predicates.add(pJoinComite);
+      predicates.add(pJoinCargoComite);
+      predicates.add(pIdEvaluacionEq);
+      predicates.add(pComiteCEEA);
+      predicates.add(pComiteActivo);
+      predicates.add(pCargoComitePresidente);
+      predicates.add(pCargoComiteActivo);
+      predicates.add(pEvaluadorActivo);
+      predicates.add(pEvaluadorActivo);
+      predicates.add(pOrFechaBajaFechaAlta);
+
+      // Where
+      cq.where(predicates.toArray(new Predicate[] {}));
+
+      TypedQuery<String> typedQuery = entityManager.createQuery(cq);
+
+      idPresidente = typedQuery.getSingleResult();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("findIdPresidenteByIdEvaluacion(idEvaluacion) - end");
+    return idPresidente;
+  }
+
+  /**
+   * Retorna la primera fecha de envío a secretaría (histórico estado)
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return fecha de envío a secretaría
+   */
+  @Override
+  public Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion) {
+    log.debug("findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion) - start");
+    Instant fechaEnvioSecretaria = null;
+    try {
+      // Crete query
+      CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+      CriteriaQuery<Object> cq = cb.createQuery(Object.class);
+
+      // Define FROM clause
+      Root<Evaluacion> rootEvaluacion = cq.from(Evaluacion.class);
+      Root<EstadoMemoria> rootEstadoMemoria = cq.from(EstadoMemoria.class);
+
+      cq.select(rootEstadoMemoria.get(EstadoMemoria_.fechaEstado));
+
+      Join<Evaluacion, Memoria> joinMemoria = rootEvaluacion.join(Evaluacion_.memoria);
+
+      List<Predicate> predicates = new ArrayList<>();
+      Predicate pJoinEstadoMemoria = cb.equal(rootEstadoMemoria.get(EstadoMemoria_.memoria).get(Memoria_.id),
+          joinMemoria.get(Memoria_.id));
+      Predicate pIdEvaluacionEq = cb.equal(rootEvaluacion.get(Evaluacion_.id), idEvaluacion);
+      Predicate pTipoEstadoMemoriaEq3 = cb
+          .equal(rootEstadoMemoria.get(EstadoMemoria_.tipoEstadoMemoria).get(TipoEstadoMemoria_.id), 3L);
+      predicates.add(pJoinEstadoMemoria);
+      predicates.add(pIdEvaluacionEq);
+      predicates.add(pTipoEstadoMemoriaEq3);
+
+      // Where
+      cq.where(predicates.toArray(new Predicate[] {}));
+      cq.orderBy(cb.asc(rootEstadoMemoria.get(EstadoMemoria_.fechaEstado)));
+
+      TypedQuery<Object> typedQuery = entityManager.createQuery(cq);
+      typedQuery.setMaxResults(1);
+
+      fechaEnvioSecretaria = (Instant) typedQuery.getSingleResult();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion) - end");
+    return fechaEnvioSecretaria;
   }
 }

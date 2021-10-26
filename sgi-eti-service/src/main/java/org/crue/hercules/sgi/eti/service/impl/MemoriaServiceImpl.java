@@ -1,9 +1,5 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
@@ -13,10 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
-import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
@@ -25,7 +18,6 @@ import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
-import org.crue.hercules.sgi.eti.exceptions.rep.GetDataReportMxxException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -55,31 +47,19 @@ import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.ReportService;
+import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,6 +70,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
+
+  private static final String TITULO_INFORME_MXX = "informeMemoriaPdf";
 
   /** Propiedades de configuración de la aplicación */
   private final SgiConfigProperties sgiConfigProperties;
@@ -124,8 +106,8 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Informe service */
   private final InformeService informeService;
 
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
+  private final ReportService reportService;
+  private final SgdocService sgdocService;
 
   /** Tarea repository */
   private final TareaRepository tareaRepository;
@@ -139,7 +121,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       InformeService informeService, PeticionEvaluacionRepository peticionEvaluacionRepository,
       ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
       RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
-      ConfiguracionService configuracionService, RestApiProperties restApiProperties, RestTemplate restTemplate) {
+      ConfiguracionService configuracionService, ReportService reportService, SgdocService sgdocService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -153,8 +135,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.respuestaRepository = respuestaRepository;
     this.tareaRepository = tareaRepository;
     this.configuracionService = configuracionService;
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+    this.reportService = reportService;
+    this.sgdocService = sgdocService;
   }
 
   /**
@@ -725,6 +707,8 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   private void crearInforme(Memoria memoria, Long tipoEvaluacion) {
+    log.debug("crearInforme(memoria, tipoEvaluacion)- start");
+
     // Se crea un fichero en formato pdf con los datos del proyecto y con
     // los datos del formulario y subirlo al gestor documental y que el sistema
     // guarde en informes el identificador del documento.
@@ -745,99 +729,42 @@ public class MemoriaServiceImpl implements MemoriaService {
     informe.setTipoEvaluacion(new TipoEvaluacion());
     informe.getTipoEvaluacion().setId(tipoEvaluacion);
 
+    Long idFormulario = null;
+    switch (tipoEvaluacion.intValue()) {
+    case Constantes.TIPO_EVALUACION_MEMORIA_INT:
+      idFormulario = memoria.getComite().getFormulario().getId();
+      break;
+    case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
+      idFormulario = Constantes.FORMULARIO_ANUAL;
+      break;
+    case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
+      idFormulario = Constantes.FORMULARIO_FINAL;
+      break;
+    case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
+      idFormulario = Constantes.FORMULARIO_RETROSPECTIVA;
+      break;
+    }
+
     // Se obtiene el informe en formato pdf creado mediante el servicio de reporting
-    Resource informePdf = getMXX(memoria.getId());
+    Resource informePdf = reportService.getMXX(memoria.getId(), idFormulario);
 
-    ResponseEntity<DocumentoOutput> documento = null;
-    try {
-      DataInputStream dis = new DataInputStream(informePdf.getInputStream());
-      byte[] bytesData = new byte[(int) informePdf.contentLength()];
-      dis.readFully(bytesData);
+    // Se sube el informe a sgdoc
+    String fileName = TITULO_INFORME_MXX + "_" + memoria.getId() + LocalDate.now() + ".pdf";
+    DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
 
-      MultipartFile multipartFile = new MockMultipartFile("file", "informePdf" + LocalDate.now(), "application/pdf",
-          bytesData);
+    // Se adjunta referencia del documento a sgdoc y se crea el informe
+    informe.setDocumentoRef(documento.getDocumentoRef());
+    informeService.create(informe);
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-      Optional<HttpServletRequest> req = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
-          .filter(ServletRequestAttributes.class::isInstance).map(ServletRequestAttributes.class::cast)
-          .map(ServletRequestAttributes::getRequest);
-      HttpServletRequest httpServletRequest = req.get();
-      String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-      headers.set(HttpHeaders.AUTHORIZATION, authorization);
-
-      MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-      bodyMap.add("archivo", new FileSystemResource(convert(multipartFile)));
-
-      HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
-
-      // Llamada SGDOC para crear el documento y obtener el documentoRef
-      documento = restTemplate.exchange(restApiProperties.getSgdocUrl() + "/api/sgdoc/documentos", HttpMethod.POST,
-          requestEntity, DocumentoOutput.class);
-
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-    }
-
-    // Se crea el informe con el documentoRef obtenido del sgdoc
-    if (documento != null && documento.hasBody()) {
-      informe.setDocumentoRef(documento.getBody().getDocumentoRef());
-      informeService.create(informe);
-    }
-  }
-
-  public static File convert(MultipartFile file) {
-    File convFile = new File("informePdf" + LocalDate.now(), file.getOriginalFilename());
-    if (!convFile.getParentFile().exists()) {
-      System.out.println("mkdir:" + convFile.getParentFile().mkdirs());
-    }
-    try {
-      convFile.createNewFile();
-      FileOutputStream fos = new FileOutputStream(convFile);
-      fos.write(file.getBytes());
-      fos.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return convFile;
-  }
-
-  /**
-   * Devuelve un informe pdf del formulario M10, M20 o M30
-   *
-   * @param idMemoria Id de la memoria
-   * @return EtiMXXReportOutput Datos a presentar en el informe
-   */
-  private Resource getMXX(Long idMemoria) {
-    log.debug("getMXX(idMemoria)- start");
-    Assert.notNull(idMemoria, "idMemoria no puede ser nulo");
-
-    Resource informe = null;
-    try {
-
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + "/reports/mxx/" + idMemoria, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = (Resource) response.getBody();
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-    }
-
-    if (null == informe) {
-      throw new GetDataReportMxxException();
-    }
-
-    log.debug("getMXX(idMemoria) - end");
-    return informe;
+    log.debug("crearInforme(memoria, tipoEvaluacion)- end");
   }
 
   /**
    * 
    * Actualiza el estado de la Retrospectiva de {@link Memoria} a 'En Secretaria'
    * 
-   * @param idMemoria de la memoria.
+   * @param idMemoria  de la memoria.
+   * @param personaRef id de la persona
    */
   @Transactional
   @Override
@@ -859,8 +786,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       estadoRetrospectivaRepository.findById(3L).map(estadoRetrospectiva -> {
 
         memoria.getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva);
-        // TODO quitar despues de pruebas
-        // memoriaRepository.save(memoria);
+        memoriaRepository.save(memoria);
         return estadoRetrospectiva;
 
       }).orElseThrow(() -> new EstadoRetrospectivaNotFoundException(3L));
@@ -933,65 +859,65 @@ public class MemoriaServiceImpl implements MemoriaService {
     String numMemoria = "001";
 
     switch (idTipoMemoria.intValue()) {
-      case 1: {
-        // NUEVA
-        // Se recupera la última memoria para el comité seleccionado
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-                String.valueOf(anioActual), 2L, comite.getId());
+    case 1: {
+      // NUEVA
+      // Se recupera la última memoria para el comité seleccionado
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+              String.valueOf(anioActual), 2L, comite.getId());
 
-        // Se incrementa el número de la memoria para el comité
-        if (ultimaMemoriaComite != null) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-          numeroUltimaMemoria++;
-          numMemoria = String.format("%03d", numeroUltimaMemoria);
-        }
-
-        break;
+      // Se incrementa el número de la memoria para el comité
+      if (ultimaMemoriaComite != null) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+        numeroUltimaMemoria++;
+        numMemoria = String.format("%03d", numeroUltimaMemoria);
       }
-      case 2: {
-        // MODIFICACIÓN
 
-        // Se recupera la última memoria modificada de la memoria de la que se realiza
-        // la copia y del comité de la memoria.
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+      break;
+    }
+    case 2: {
+      // MODIFICACIÓN
+
+      // Se recupera la última memoria modificada de la memoria de la que se realiza
+      // la copia y del comité de la memoria.
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+
+      StringBuffer sbReferencia = new StringBuffer();
+      sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
+          .append("MR");
+      if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
+        numeroUltimaMemoria++;
+        sbReferencia.append(numeroUltimaMemoria);
+
+      } else {
+        sbReferencia.append("1");
+      }
+
+      numMemoria = sbReferencia.toString();
+
+      break;
+    }
+    case 3: {
+      // RATIFICACIÓN
+      // Se recupera la última memoria para el comité seleccionado
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+              String.valueOf(anioActual), 2L, comite.getId());
+
+      // Se incrementa el número de la memoria para el comité
+      if (ultimaMemoriaComite != null) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+        numeroUltimaMemoria++;
 
         StringBuffer sbReferencia = new StringBuffer();
-        sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
-            .append("MR");
-        if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
-          numeroUltimaMemoria++;
-          sbReferencia.append(numeroUltimaMemoria);
-
-        } else {
-          sbReferencia.append("1");
-        }
-
+        sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
         numMemoria = sbReferencia.toString();
-
-        break;
       }
-      case 3: {
-        // RATIFICACIÓN
-        // Se recupera la última memoria para el comité seleccionado
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-                String.valueOf(anioActual), 2L, comite.getId());
 
-        // Se incrementa el número de la memoria para el comité
-        if (ultimaMemoriaComite != null) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-          numeroUltimaMemoria++;
-
-          StringBuffer sbReferencia = new StringBuffer();
-          sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
-          numMemoria = sbReferencia.toString();
-        }
-
-        break;
-      }
+      break;
+    }
     }
     ;
 

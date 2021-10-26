@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.time.Instant;
+
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -90,4 +92,20 @@ public interface CustomEvaluacionRepository {
    * @return true/false
    */
   Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef);
+
+  /**
+   * Retorna el identificador de la usuarioRef del presidente
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return id del presidente
+   */
+  String findIdPresidenteByIdEvaluacion(Long idEvaluacion);
+
+  /**
+   * Retorna la primera fecha de envío a secretaría (histórico estado)
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return fecha de envío a secretaría
+   */
+  Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion);
 }

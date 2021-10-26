@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
@@ -58,7 +57,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * MemoriaServiceTest
@@ -102,13 +100,16 @@ public class MemoriaServiceTest extends BaseServiceTest {
   private TareaRepository tareaRepository;
 
   @Mock
+  private InformeService informeService;
+
+  @Mock
+  private ReportService reportService;
+
+  @Mock
+  private SgdocService sgdocService;
+
+  @Mock
   private ConfiguracionService configuracionService;
-
-  @Mock
-  private RestTemplate restTemplate;
-
-  @Mock
-  private RestApiProperties restApiProperties;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
@@ -116,9 +117,9 @@ public class MemoriaServiceTest extends BaseServiceTest {
   @BeforeEach
   public void setUp() throws Exception {
     memoriaService = new MemoriaServiceImpl(sgiConfigProperties, memoriaRepository, estadoMemoriaRepository,
-        estadoRetrospectivaRepository, evaluacionRepository, comentarioRepository, informeFormularioService,
+        estadoRetrospectivaRepository, evaluacionRepository, comentarioRepository, informeService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
-        tareaRepository, configuracionService, restApiProperties, restTemplate);
+        tareaRepository, configuracionService, reportService, sgdocService);
   }
 
   @Test

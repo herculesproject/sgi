@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.eti.dto;
 
-import java.util.List;
+import java.io.Serializable;
+import java.time.Instant;
+
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EtiMXXReportOutput {
-  private String titulo;
-  private List<BloqueOutput> bloques;
+public class InformeActaReportInput implements Serializable {
+
+  @NotNull
+  private Long idActa;
+
+  @NotNull
+  private Instant fecha;
 }

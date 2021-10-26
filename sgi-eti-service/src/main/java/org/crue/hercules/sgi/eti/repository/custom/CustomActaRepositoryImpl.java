@@ -9,22 +9,28 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
+import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Acta_;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.Dictamen_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Evaluador_;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -200,4 +206,103 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     return queryNumEvaluaciones;
   }
 
+  /**
+   * Devuelve el número de evaluaciones nuevas asociadas a un {@link Acta}
+   *
+   * @param idActa Id de {@link Acta}.
+   * @return número de evaluaciones nuevas
+   */
+  @Override
+  public Long countEvaluacionesNuevas(Long idActa) {
+
+    log.debug("countEvaluacionesNuevas(Long idActa) - start");
+    Long returnValue = null;
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    Root<Acta> rootActa = countQuery.from(Acta.class);
+    countQuery.select(cb.countDistinct(rootCount.get(Evaluacion_.id)))
+        .where(cb.and(
+            cb.equal(rootCount.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
+                rootActa.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
+            cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(rootCount.get(Evaluacion_.dictamen)),
+            cb.equal(rootCount.get(Evaluacion_.version), 1)));
+      
+    returnValue = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("countEvaluacionesNuevas(Long idActa) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve el número de evaluaciones de revisión sin las de revisión mínima
+   *
+   * @param idActa Id de {@link Acta}.
+   * @return número de evaluaciones
+   */
+  @Override
+  public Long countEvaluacionesRevisionSinMinima(Long idActa) {
+
+    log.debug("countEvaluacionesRevisionSinMinima(Long idActa) - start");
+    Long returnValue = null;
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    Root<Acta> rootActa = countQuery.from(Acta.class);
+    countQuery.select(cb.countDistinct(rootCount.get(Evaluacion_.id)))
+        .where(cb.and(
+            cb.equal(rootCount.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
+                rootActa.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
+            cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(rootCount.get(Evaluacion_.dictamen)),
+            cb.greaterThan(rootCount.get(Evaluacion_.version), 1),
+            cb.equal(rootCount.get(Evaluacion_.esRevMinima), false)));
+    
+    returnValue = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("countEvaluacionesRevisionSinMinima(Long idActa) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista de {@link MemoriaEvaluada} sin las de revisión mínima para
+   * una determinada {@link Acta}
+   * 
+   * @param idActa Id de {@link Acta}.
+   * @return lista de memorias evaluadas
+   */
+  @Override
+  public List<MemoriaEvaluada> findAllMemoriasEvaluadasSinRevMinimaByActaId(Long idActa) {
+    log.debug("findAllMemoriasEvaluadasSinRevMinimaByActaId : {} - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    CriteriaQuery<MemoriaEvaluada> cq = cb.createQuery(MemoriaEvaluada.class);
+
+    // Define FROM clause
+    Root<Evaluacion> root = cq.from(Evaluacion.class);
+    Root<Acta> rootActa = cq.from(Acta.class);
+
+    Join<Evaluacion, Memoria> joinMemoria = root.join(Evaluacion_.memoria, JoinType.LEFT);
+
+    cq.multiselect(joinMemoria.get(Memoria_.numReferencia), joinMemoria.get(Memoria_.personaRef),
+        root.get(Evaluacion_.dictamen).get(Dictamen_.nombre), joinMemoria.get(Memoria_.version),
+        root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.nombre));
+
+    // Where
+    cq.where(
+        cb.equal(root.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
+            rootActa.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
+        cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(root.get(Evaluacion_.dictamen)),
+        cb.equal(root.get(Evaluacion_.esRevMinima), false));
+
+    TypedQuery<MemoriaEvaluada> typedQuery = entityManager.createQuery(cq);
+
+    List<MemoriaEvaluada> result = typedQuery.getResultList();
+
+    log.debug("findAllMemoriasEvaluadasSinRevMinimaByActaId : {} - end");
+    return result;
+  }
 }

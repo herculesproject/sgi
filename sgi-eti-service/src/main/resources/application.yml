@@ -105,11 +105,23 @@ spring:
 logging:
   level:
     liquibase:
+      statement:
+        # Log the Liquibase executable prepared statements
+        ExecutablePreparedStatementBase: DEBUG
       executor:
         jvm:
           # Log the Liquibase JDBC executor
           JdbcExecutor: DEBUG
     org:
+      crue:
+        hercules:
+          sgi:
+            framework:
+              liquibase:
+                change:
+                  custom:
+                    # Log the Liquibase JSLT Task Change
+                    JsltTaskChange: DEBUG
       hibernate:
         # Log the SQL statements
         SQL: DEBUG

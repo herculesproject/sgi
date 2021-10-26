@@ -801,4 +801,30 @@ public class MemoriaController {
     return new ResponseEntity<>(String.format("archivarInactivos() - Archivadas %d memorias. Ids: %s",
         archivadas.size(), Arrays.toString(archivadas.toArray())), HttpStatus.OK);
   }
+
+  /**
+   * * Devuelve el informe con la última versión
+   * 
+   * @param id             identificador de la {@link Memoria}
+   * @param version        identificador de la versión
+   * @param tipoEvaluacion identificador del tipo de evaluación
+   * @return el {@link Informe}
+   */
+  @GetMapping("/{id}/informe/version/{version}/tipo/{tipoEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-INV-ER', 'ETI-PEV-V', 'ETI-EVC-EVALR')")
+  public ResponseEntity<Informe> getInformeFormularioVersion(@PathVariable Long id, @PathVariable Integer version,
+      @PathVariable Long tipoEvaluacion) {
+    log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - start");
+    Optional<Informe> returnValue = informeService.findByMemoriaAndVersionAndTipoEvaluacion(id, version,
+        tipoEvaluacion);
+
+    if (!returnValue.isPresent()) {
+      log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - end");
+    return new ResponseEntity<>(returnValue.get(), HttpStatus.OK);
+
+  }
 }

@@ -58,6 +58,10 @@ public class ActaServiceTest extends BaseServiceTest {
   private RetrospectivaRepository retrospectivaRepository;
   @Mock
   private RetrospectivaService retrospectivaService;
+  @Mock
+  private ReportService reportService;
+  @Mock
+  private SgdocService sgdocService;
 
   private ActaService actaService;
   private MemoriaService memoriaService;
@@ -65,7 +69,8 @@ public class ActaServiceTest extends BaseServiceTest {
   @BeforeEach
   public void setUp() throws Exception {
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
-        evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService);
+        evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService, reportService,
+        sgdocService);
   }
 
   @Test
