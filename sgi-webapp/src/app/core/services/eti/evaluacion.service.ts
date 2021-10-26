@@ -3,16 +3,19 @@ import { Injectable } from '@angular/core';
 import { COMENTARIO_CONVERTER } from '@core/converters/eti/comentario.converter';
 import { EVALUACION_WITH_IS_ELIMINABLE_CONVERTER } from '@core/converters/eti/evaluacion-with-is-eliminable.converter';
 import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter';
+import { DOCUMENTO_CONVERTER } from '@core/converters/sgdoc/documento.converter';
 import { IComentarioBackend } from '@core/models/eti/backend/comentario-backend';
 import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
 import { IEvaluacionWithIsEliminableBackend } from '@core/models/eti/backend/evaluacion-with-is-eliminable-backend';
 import { IComentario } from '@core/models/eti/comentario';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
+import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { from, Observable } from 'rxjs';
-import { endWith, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -236,6 +239,18 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
       `${environment.serviceServers.eti}${EvaluacionService.MAPPING}/memorias-seguimiento-final`,
       options,
       EVALUACION_CONVERTER
+    );
+  }
+
+  /**
+   * Obtiene el documento del evaluador
+   * @param idEvaluacion identificador de la evaluación
+   */
+  getDocumentoEvaluador(idEvaluacion: number): Observable<IDocumento> {
+    return this.http.get<IDocumentoBackend>(
+      `${this.endpointUrl}/${idEvaluacion}/documento-evaluador`
+    ).pipe(
+      map(response => DOCUMENTO_CONVERTER.toTarget(response))
     );
   }
 

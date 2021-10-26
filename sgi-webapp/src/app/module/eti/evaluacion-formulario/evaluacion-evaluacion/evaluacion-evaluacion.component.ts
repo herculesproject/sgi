@@ -4,10 +4,13 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { IMemoria } from '@core/models/eti/memoria';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -48,7 +51,9 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
   constructor(
     public actionService: EvaluacionFormularioActionService,
     protected tipoEvaluacionService: TipoEvaluacionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly memoriaService: MemoriaService,
+    private readonly documentoService: DocumentoService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -118,6 +123,25 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     else if (idTipoMemoria === 3) {
       openInformeFavorableTipoRatificacion(this.actionService.getEvaluacion()?.id);
     }
+  }
+
+  /**
+   * Visualiza el informe de evaluación seleccionado.
+   * @param idMemoria id de la memoria del informe
+   */
+  visualizarInforme(idMemoria: number): void {
+    const documento: IDocumento = {} as IDocumento;
+    this.memoriaService.findInformeUltimaVersion(idMemoria).pipe(
+      switchMap(response => {
+        return this.documentoService.getInfoFichero(response.documentoRef);
+      }),
+      switchMap((documentoInfo: IDocumento) => {
+        documento.nombre = documentoInfo.nombre;
+        return this.documentoService.downloadFichero(documentoInfo.documentoRef);
+      })
+    ).subscribe(response => {
+      triggerDownloadToUser(response, documento.nombre);
+    });
   }
 
   ngOnDestroy(): void {

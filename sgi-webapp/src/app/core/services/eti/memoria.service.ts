@@ -388,6 +388,20 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
   }
 
   /**
+   * Obtiene el informe de la memoria por su versión
+   * @param idMemoria identificador de la memoria
+   * @param version el número de versión de la evaluación
+   * @param idTipoEvaluacion el identificador del tipo de evaluación
+   */
+  findInformeVersionTipo(idMemoria: number, version: number, idTipoEvaluacion: number): Observable<IInforme> {
+    return this.http.get<IInformeBackend>(
+      `${this.endpointUrl}/${idMemoria}/informe/version/${version}/tipo/${idTipoEvaluacion}`
+    ).pipe(
+      map(response => INFORME_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
    * Comprobación de si están o no los documentos obligatorios aportados para
    * pasar la memoria al estado en secretaría
    *

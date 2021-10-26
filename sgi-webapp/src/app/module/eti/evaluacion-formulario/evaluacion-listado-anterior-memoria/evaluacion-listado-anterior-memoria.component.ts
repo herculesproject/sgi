@@ -2,10 +2,13 @@ import { Component, Input } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTableWithoutPaginationComponent } from '@core/component/abstract-table-without-pagination.component';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentario';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { MemoriaService } from '@core/services/eti/memoria.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { Rol } from '../evaluacion-formulario.action.service';
 
 const MSG_ERROR = marker('error.load');
@@ -25,7 +28,8 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
 
   constructor(
     private readonly memoriaService: MemoriaService,
-    protected readonly snackBarService: SnackBarService
+    protected readonly snackBarService: SnackBarService,
+    private readonly documentoService: DocumentoService
   ) {
     super(snackBarService, MSG_ERROR);
   }
@@ -50,4 +54,26 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
   protected createFilters(): SgiRestFilter[] {
     return [];
   }
+
+  /**
+   * Visualiza el informe de evaluación seleccionado.
+   * @param idMemoria id de la memoria del informe
+   * @param version el número de versión de la evaluación
+   * @param idTipoEvaluacion el identificador del tipo de evaluación
+   */
+  visualizarInforme(idMemoria: number, version: number, idTipoEvaluacion: number): void {
+    const documento: IDocumento = {} as IDocumento;
+    this.memoriaService.findInformeVersionTipo(idMemoria, version, idTipoEvaluacion).pipe(
+      switchMap(response => {
+        return this.documentoService.getInfoFichero(response.documentoRef);
+      }),
+      switchMap((documentoInfo: IDocumento) => {
+        documento.nombre = documentoInfo.nombre;
+        return this.documentoService.downloadFichero(documentoInfo.documentoRef);
+      })
+    ).subscribe(response => {
+      triggerDownloadToUser(response, documento.nombre);
+    });
+  }
+
 }
