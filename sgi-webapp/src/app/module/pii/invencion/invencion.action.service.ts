@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TipoPropiedad } from '@core/enums/tipo-propiedad';
 import { IInvencion } from '@core/models/pii/invencion';
+import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { ActionService } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { InformePatentabilidadService } from '@core/services/pii/informe-patentabilidad/informe-patentabilidad.service';
@@ -19,7 +20,9 @@ import { IngresosInvencionService } from '@core/services/sgepii/ingresos-invenci
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
+import { map } from 'rxjs/operators';
 import { InvencionContratosFragment } from './invencion-formulario/invencion-contratos/invencion-contratos.fragment';
 import { InvencionDatosGeneralesFragment } from './invencion-formulario/invencion-datos-generales/invencion-datos-generales.fragment';
 import { InvencionDocumentoFragment } from './invencion-formulario/invencion-documento/invencion-documento.fragment';
@@ -101,7 +104,7 @@ export class InvencionActionService extends ActionService {
     }
 
     this.datosGenerales = new InvencionDatosGeneralesFragment(null, this.id, invencionService, proyectoService, areaConocimientoService,
-      invencionDocumentoService, this.canEdit);
+      invencionDocumentoService, this.canEdit, this.periodoTitularidadService);
     this.invencionInventoresFragment = new InvencionInventorFragment(this.id, logger, invencionService,
       personaService, empresaService, this.canEdit);
 
@@ -143,6 +146,13 @@ export class InvencionActionService extends ActionService {
         this.id, this.canEdit, invencionService);
       this.addFragment(this.FRAGMENT.REPARTOS, this.repartos);
     }
+    this.passInventoresFromInventoresFragmentToDatosGeneralesFragmentOnChangesSubscription();
+  }
 
+  private passInventoresFromInventoresFragmentToDatosGeneralesFragmentOnChangesSubscription(): void {
+    this.subscriptions.push(
+      this.invencionInventoresFragment?.invencionInventores$.pipe(
+        map((wrappers: StatusWrapper<IInvencionInventor>[]) => wrappers.map(wrapper => wrapper.value))
+      ).subscribe(inventores => this.datosGenerales.inventores = inventores));
   }
 }
