@@ -912,6 +912,7 @@ export abstract class ActionService implements IActionService, OnDestroy {
     }
     else {
       const part = this.fragments.get(this.masterFragmentName);
+      part.clearProblems();
       return part.saveOrUpdate().pipe(
         catchError(error => {
           if (error instanceof HttpProblem) {
