@@ -24,7 +24,6 @@
       </column>
     </createTable>
   </changeSet>
-
   <changeSet author="master" id="0000000000001-3">
     <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_ingreso" constraintName="FK_INVENCIONINGRESO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true" />
   </changeSet>

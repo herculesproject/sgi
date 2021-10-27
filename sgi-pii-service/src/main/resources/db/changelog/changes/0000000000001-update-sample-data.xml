@@ -137,4 +137,5 @@
       <column name="participacion" valueNumeric="48.5" />
     </insert>
   </changeSet>
+
 </databaseChangeLog>
