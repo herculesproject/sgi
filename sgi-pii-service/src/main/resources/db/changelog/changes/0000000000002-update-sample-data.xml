@@ -104,4 +104,24 @@
       </whereParams>
     </update>
   </changeSet>
+  <changeSet context="dev" author="master" id="0000000000002-correct-data-tipo_caducidad">
+    <update tableName="tipo_caducidad">
+      <column name="descripcion" value="Abandono" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="1" />
+      </whereParams>
+    </update>
+    <update tableName="tipo_caducidad">
+      <column name="descripcion" value="Retirada" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="2" />
+      </whereParams>
+    </update>
+    <insert tableName="tipo_caducidad">
+      <column name="id" valueSequenceNext="tipo_caducidad_seq" />
+      <column name="descripcion" value="Denegación" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
