@@ -332,6 +332,9 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     for(let [key, value] of this.groupInventoresForEntities()) {
       titulares.push(this.buildPeriodoTitularidadTitular(value, key, periodoTitularidad))
     }
+    if(titulares.length === 0) {
+      return of(periodoTitularidad.invencion);
+    }
     return this.persistsPeriodosTitularidadTitulares(titulares, periodoTitularidad);
   }
 
