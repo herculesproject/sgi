@@ -71,6 +71,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
   }
 
   copyToProyecto(): void {
+    this.formPart.enableEditableControls();
     this.formPart.getFormGroup().controls.conceptoGasto.setValue(this.formPart.getFormGroup().controls.conceptoGastoConvocatoria.value);
 
     if (this.actionService.permitido) {
