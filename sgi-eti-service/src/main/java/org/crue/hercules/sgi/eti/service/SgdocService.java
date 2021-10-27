@@ -27,6 +27,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class SgdocService {
 
-  private static final String URL_API = "/api/sgdoc/documentos";
+  private static final String URL_API = "/documentos";
 
   private final RestApiProperties restApiProperties;
   private final RestTemplate restTemplate;
@@ -59,10 +61,9 @@ public class SgdocService {
       headers
           .setAcceptLanguage(Arrays.asList(new Locale.LanguageRange(LocaleContextHolder.getLocale().toLanguageTag())));
 
-      Optional<HttpServletRequest> req = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+      HttpServletRequest httpServletRequest = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
           .filter(ServletRequestAttributes.class::isInstance).map(ServletRequestAttributes.class::cast)
-          .map(ServletRequestAttributes::getRequest);
-      HttpServletRequest httpServletRequest = req.get();
+          .map(ServletRequestAttributes::getRequest).orElseThrow(MicroserviceCallException::new);
       String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
       headers.set(HttpHeaders.AUTHORIZATION, authorization);
 
@@ -87,6 +88,8 @@ public class SgdocService {
     return documento;
   }
 
+  @Data
+  @EqualsAndHashCode(callSuper = false)
   class MultipartInputStreamResource extends InputStreamResource {
 
     private final String filename;
@@ -96,10 +99,7 @@ public class SgdocService {
       this.filename = filename;
     }
 
-    public String getFilename() {
-      return this.filename;
-    }
-
+    @Override
     public long contentLength() {
       return -1;
     }

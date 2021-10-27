@@ -34,7 +34,7 @@ sgi:
   rest:
     api:
       rep-url: "http://sgi-rep-service:4287"
-      sgdoc-url: "http://sgi.ic.corp.treelogic.com"
+      sgdoc-url: "http://sgi-esb:8080/api/sgdoc"
       
 spring:
   profiles: dev

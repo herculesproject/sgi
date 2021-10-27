@@ -76,8 +76,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     Root<Acta> rootCount = countQuery.from(Acta.class);
     countQuery.select(cb.count(rootCount));
 
-    List<Predicate> listPredicates = new ArrayList<Predicate>();
-    List<Predicate> listPredicatesCount = new ArrayList<Predicate>();
+    List<Predicate> listPredicates = new ArrayList<>();
+    List<Predicate> listPredicatesCount = new ArrayList<>();
 
     if (personaRef != null) {
       Subquery<Long> queryComites = cq.subquery(Long.class);
@@ -127,13 +127,13 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     TypedQuery<ActaWithNumEvaluaciones> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
+    if (pageable.isPaged()) {
       typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
       typedQuery.setMaxResults(pageable.getPageSize());
     }
 
     List<ActaWithNumEvaluaciones> result = typedQuery.getResultList();
-    Page<ActaWithNumEvaluaciones> returnValue = new PageImpl<ActaWithNumEvaluaciones>(result, pageable, count);
+    Page<ActaWithNumEvaluaciones> returnValue = new PageImpl<>(result, pageable, count);
 
     log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
 
@@ -222,13 +222,15 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
     Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
     Root<Acta> rootActa = countQuery.from(Acta.class);
+    rootCount.join(Evaluacion_.memoria);
+
     countQuery.select(cb.countDistinct(rootCount.get(Evaluacion_.id)))
         .where(cb.and(
             cb.equal(rootCount.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
                 rootActa.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
             cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(rootCount.get(Evaluacion_.dictamen)),
             cb.equal(rootCount.get(Evaluacion_.version), 1)));
-      
+
     returnValue = entityManager.createQuery(countQuery).getSingleResult();
 
     log.debug("countEvaluacionesNuevas(Long idActa) - end");
@@ -250,6 +252,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
     Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    rootCount.join(Evaluacion_.memoria);
+
     Root<Acta> rootActa = countQuery.from(Acta.class);
     countQuery.select(cb.countDistinct(rootCount.get(Evaluacion_.id)))
         .where(cb.and(
@@ -258,7 +262,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
             cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(rootCount.get(Evaluacion_.dictamen)),
             cb.greaterThan(rootCount.get(Evaluacion_.version), 1),
             cb.equal(rootCount.get(Evaluacion_.esRevMinima), false)));
-    
+
     returnValue = entityManager.createQuery(countQuery).getSingleResult();
 
     log.debug("countEvaluacionesRevisionSinMinima(Long idActa) - end");
@@ -288,7 +292,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     Join<Evaluacion, Memoria> joinMemoria = root.join(Evaluacion_.memoria, JoinType.LEFT);
 
     cq.multiselect(joinMemoria.get(Memoria_.numReferencia), joinMemoria.get(Memoria_.personaRef),
-        root.get(Evaluacion_.dictamen).get(Dictamen_.nombre), joinMemoria.get(Memoria_.version),
+        root.get(Evaluacion_.dictamen).get(Dictamen_.nombre), root.get(Evaluacion_.version),
         root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.nombre));
 
     // Where

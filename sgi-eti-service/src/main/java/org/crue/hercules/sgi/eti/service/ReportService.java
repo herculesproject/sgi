@@ -34,6 +34,11 @@ public class ReportService {
 
   private static final String URL_API = "/report/eti";
 
+  private static final String ID = "id";
+  private static final String ENTITY = "entity";
+  private static final String FIELD = "field";
+  private static final String NOT_NULL = "notNull";
+
   private final RestApiProperties restApiProperties;
   private final RestTemplate restTemplate;
 
@@ -53,9 +58,9 @@ public class ReportService {
     log.debug("getMXX(Long idMemoria, Long idFormulario)- start");
     Assert.notNull(idMemoria,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Memoria.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Memoria.class)).build());
 
     Resource informe = null;
     try {
@@ -87,9 +92,9 @@ public class ReportService {
 
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     Resource informe = null;
     try {
@@ -117,9 +122,9 @@ public class ReportService {
     log.debug("getInformeEvaluador(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     Resource informe = null;
     try {
@@ -148,9 +153,9 @@ public class ReportService {
     log.debug("getInformeFavorableMemoria(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
         .build();
@@ -183,9 +188,9 @@ public class ReportService {
     log.debug("getInformeFavorableRatificacion(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
         .build();
@@ -218,9 +223,9 @@ public class ReportService {
     log.debug("getInformeFavorableModificacion(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
         .build();
@@ -253,9 +258,9 @@ public class ReportService {
     log.debug("getInformeActa(idActa, fecha)- start");
     Assert.notNull(idActa,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Acta.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Acta.class)).build());
 
     InformeActaReportInput input = InformeActaReportInput.builder().idActa(idActa).fecha(fecha).build();
     Resource informe = null;
@@ -287,9 +292,9 @@ public class ReportService {
     log.debug("getInformeEvaluacionRetrospectiva(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Evaluacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
+            .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
     InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
         .build();
