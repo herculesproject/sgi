@@ -21,6 +21,5 @@ public class ProyectoIvaDto extends BaseRestDto {
   private Integer iva;
   private Instant fechaInicio;
   private Instant fechaFin;
-
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 }

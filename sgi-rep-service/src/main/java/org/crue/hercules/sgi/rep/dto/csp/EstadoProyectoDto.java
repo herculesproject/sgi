@@ -36,5 +36,5 @@ public class EstadoProyectoDto extends BaseRestDto {
   private Estado estado;
   private Instant fechaEstado;
   private String comentario;
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 }

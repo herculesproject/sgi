@@ -90,23 +90,23 @@ public class ProyectoDto extends BaseRestDto {
   private BigDecimal totalImporteConcedido;
   private Boolean activo;
   private ContextoProyectoDto contexto;
-  // private final ConvocatoriaDto convocatoria = null;
-  // private final SolicitudDto solicitud = null;
-  // private final List<ProyectoDocumentoDto> documentos = null;
+  // private ConvocatoriaDto convocatoria ;
+  // private SolicitudDto solicitud ;
+  // private List<ProyectoDocumentoDto> documentos ;
   private List<ProyectoEntidadConvocanteDto> entidadesConvocantes;
   private List<ProyectoEntidadFinanciadoraDto> entidadesFinanciadoras;
-  // private final List<ProyectoEntidadGestoraDto> entidadesGestoras = null;
+  // private List<ProyectoEntidadGestoraDto> entidadesGestoras;
   private List<EstadoProyectoDto> estados;
   private List<ProyectoEquipoDto> equipo;
-  // private final List<ProyectoFaseDto> fases = null;
-  // private final List<ProyectoHitoDto> hitos = null;
-  // private final List<ProyectoPaqueteTrabajoDto> paquetesTrabajo = null;
-  // private final List<ProyectoPeriodoSeguimientoDto> periodosSeguimiento = null;
-  // private final List<ProyectoProrrogaDto> prorrogas = null;
-  // private final List<ProyectoSocioDto> socios = null;
-  // private final List<ProyectoIvaDto> ivas = null;
-  // private final List<ProyectoProyectoSgeDto> identificadoresSge = null;
-  // private final List<ProyectoAnualidadDto> proyectosAnualidad = null;
+  // private List<ProyectoFaseDto> fases;
+  // private List<ProyectoHitoDto> hitos;
+  // private List<ProyectoPaqueteTrabajoDto> paquetesTrabajo;
+  // private List<ProyectoPeriodoSeguimientoDto> periodosSeguimiento;
+  // private List<ProyectoProrrogaDto> prorrogas;
+  // private List<ProyectoSocioDto> socios;
+  // private List<ProyectoIvaDto> ivas;
+  // private List<ProyectoProyectoSgeDto> identificadoresSge;
+  // private List<ProyectoAnualidadDto> proyectosAnualidad;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class PersonaService {
-  private static final String URL_API = "/api/sgp/personas";
+  private static final String URL_API = "/personas";
 
   private final RestApiProperties restApiProperties;
   private final RestTemplate restTemplate;
@@ -68,7 +68,7 @@ public class PersonaService {
 
       StringBuilder url = new StringBuilder();
       url.append(restApiProperties.getSgpUrl());
-      url.append("/api/sgp/datos-contacto/persona/");
+      url.append("/datos-contacto/persona/");
       url.append(personaRef);
 
       final ResponseEntity<DatosContactoDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
@@ -97,7 +97,7 @@ public class PersonaService {
 
       StringBuilder url = new StringBuilder();
       url.append(restApiProperties.getSgpUrl());
-      url.append("/api/sgp/datos-academicos/persona/");
+      url.append("/datos-academicos/persona/");
       url.append(personaRef);
 
       final ResponseEntity<DatosAcademicosDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
@@ -126,7 +126,7 @@ public class PersonaService {
 
       StringBuilder url = new StringBuilder();
       url.append(restApiProperties.getSgpUrl());
-      url.append("/api/sgp/vinculaciones/persona/");
+      url.append("/vinculaciones/persona/");
       url.append(personaRef);
 
       final ResponseEntity<VinculacionDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,

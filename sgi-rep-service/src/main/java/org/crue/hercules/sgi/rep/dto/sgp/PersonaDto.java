@@ -24,7 +24,7 @@ public class PersonaDto extends BaseRestDto {
   private String apellidos;
   private TipoDocumentoDto tipoDocumento;
   private SexoDto sexo;
-  private DatosContactoDto datosContacto;
+  private transient DatosContactoDto datosContacto;
   private VinculacionDto vinculacion;
   private DatosAcademicosDto datosAcademicos;
   private EmpresaDto entidad;

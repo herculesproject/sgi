@@ -28,7 +28,7 @@ public class ProyectoEntidadFinanciadoraDto extends BaseRestDto {
   private BigDecimal porcentajeFinanciacion;
   private BigDecimal importeFinanciacion;
   private Boolean ajena;
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

@@ -40,8 +40,8 @@ sgi:
       rel-url: "http://sgi-rel-service:4284"          
       tp-url: "http://sgi-tp-service:4285"    
       com-url: "http://sgi-com-service:4286"      
-      sgp-url: "http://sgi.ic.corp.treelogic.com"   
-      sgemp-url: "http://sgi.ic.corp.treelogic.com"   
+      sgp-url: "http://sgi-esb:8080/api/sgp"   
+      sgemp-url: "http://sgi-esb:8080/api/sgemp"   
 
 spring:
   profiles: dev

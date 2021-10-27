@@ -33,5 +33,5 @@ public class ContextoProyectoDto extends BaseRestDto {
   private PropiedadResultados propiedadResultados;
   private AreaTematicaDto areaTematicaConvocatoria;
   private AreaTematicaDto areaTematica;
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 }

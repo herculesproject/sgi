@@ -29,34 +29,21 @@ public class EvaluacionService extends BaseRestTemplateService<EvaluacionDto> {
   }
 
   public List<ComentarioDto> findByEvaluacionIdGestor(Long idEvaluacion) {
-    List<ComentarioDto> resultados = null;
-    try {
-
-      String sort = "apartado.id,asc";
-      URI uri = UriComponentsBuilder
-          .fromUriString(getUrlBase() + getUrlApi() + "/" + idEvaluacion + "/comentarios-gestor").queryParam("s", sort)
-          .build(false).toUri();
-
-      final ResponseEntity<List<ComentarioDto>> response = getRestTemplate().exchange(uri, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(),
-          new ParameterizedTypeReference<List<ComentarioDto>>() {
-          });
-
-      resultados = response.getBody();
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      throw new GetDataReportException();
-    }
-    return resultados;
+    String endPoint = "/comentarios-gestor";
+    return findComentarios(idEvaluacion, endPoint);
   }
 
   public List<ComentarioDto> findByEvaluacionIdEvaluador(Long idEvaluacion) {
+    String endPoint = "/comentarios-evaluador";
+    return findComentarios(idEvaluacion, endPoint);
+  }
+
+  private List<ComentarioDto> findComentarios(Long idEvaluacion, String endPoint) {
     List<ComentarioDto> resultados = null;
     try {
 
       String sort = "apartado.id,asc";
-      URI uri = UriComponentsBuilder
-          .fromUriString(getUrlBase() + getUrlApi() + "/" + idEvaluacion + "/comentarios-evaluador")
+      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + getUrlApi() + "/" + idEvaluacion + endPoint)
           .queryParam("s", sort).build(false).toUri();
 
       final ResponseEntity<List<ComentarioDto>> response = getRestTemplate().exchange(uri, HttpMethod.GET,

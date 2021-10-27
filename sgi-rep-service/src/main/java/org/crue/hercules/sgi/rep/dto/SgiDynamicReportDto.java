@@ -67,7 +67,7 @@ public class SgiDynamicReportDto extends SgiReportDto {
 
     @NotNull
     @NotEmpty
-    private List<Object> elements;
+    private transient List<Object> elements;
   }
 
   @Data

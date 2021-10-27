@@ -29,7 +29,7 @@ public class SgiReportDto {
   @NotNull(groups = { Create.class })
   private String path;
 
-  // Tamaño máximo de ancho (solo aplica a pdf), Máximos PORTRAIT=450,
+  // Tamaño máximo de ancho (solo aplica a pdf), Máximos PORTRAIT=470,
   // LANDSCAPE=630
   private Float customWidth;
 

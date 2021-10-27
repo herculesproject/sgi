@@ -1,10 +1,8 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
@@ -160,10 +158,6 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
       informeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
 
       List<ComentarioDto> comentarios = evaluacionService.findByEvaluacionIdGestor(idEvaluacion);
-      final Set<Long> apartados = new HashSet<>();
-      if (null != comentarios && !comentarios.isEmpty()) {
-        comentarios.forEach(c -> getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
-      }
 
       // @formatter:off
       BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
@@ -172,7 +166,6 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
         .mostrarRespuestas(false)
         .mostrarContenidoApartado(false)
         .comentarios(comentarios)
-        .apartados(apartados)
         .build();
       // @formatter:on
 

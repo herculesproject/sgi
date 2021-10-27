@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DatosContactoDto {
+public class DatosContactoDto implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private PaisDto paisContacto;
   private ComunidadAutonomaDto comAutonomaContacto;
   private ProvinciaDto provinciaContacto;

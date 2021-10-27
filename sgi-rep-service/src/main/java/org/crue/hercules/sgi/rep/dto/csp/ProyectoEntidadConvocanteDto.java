@@ -21,5 +21,5 @@ public class ProyectoEntidadConvocanteDto extends BaseRestDto {
   private Long proyectoId;
   private ProgramaDto programaConvocatoria;
   private ProgramaDto programa;
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 }

@@ -41,7 +41,7 @@ public class TipoEvaluacionDto extends BaseRestDto {
 
     public static Tipo fromId(Long id) {
       for (Tipo tipo : Tipo.values()) {
-        if (tipo.id == id) {
+        if (tipo.id.compareTo(id) == 0) {
           return tipo;
         }
       }

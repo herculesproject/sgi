@@ -123,7 +123,7 @@ public class InformeActaReportService extends SgiReportService {
     elementsRow.add(null != numeroEvaluacionesNuevas ? numeroEvaluacionesNuevas : 0);
 
     columnsData.add("numeroEvaluacionesRevisiones");
-    Long numeroEvaluacionesRevisiones = actaService.countEvaluacionesNuevas(acta.getId());
+    Long numeroEvaluacionesRevisiones = actaService.countEvaluacionesRevisionSinMinima(acta.getId());
     elementsRow.add(null != numeroEvaluacionesRevisiones ? numeroEvaluacionesRevisiones : 0);
 
     rowsData.add(elementsRow);

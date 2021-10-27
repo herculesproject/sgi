@@ -25,5 +25,5 @@ public class ProyectoEquipoDto extends BaseRestDto {
   private Instant fechaInicio;
   private Instant fechaFin;
   private Double horasDedicacion;
-  private final ProyectoDto proyecto = null;
+  private ProyectoDto proyecto;
 }

@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -95,7 +95,7 @@ public class SgiFormlyService {
       } else {
         log.debug(String.format("%d [%s] no mostrarContenidoApartado ", apartadoOutput.getId(), apartadoTitle));
       }
-      apartadoOutput.setTitulo(apartadoTitle.toString());
+      apartadoOutput.setTitulo(apartadoTitle);
     } catch (Exception e) {
       log.error(String.format("Error en apartado %d. %s", apartadoOutput.getId(), e.getMessage()));
       throw e;
@@ -199,8 +199,7 @@ public class SgiFormlyService {
           .get(TEMPLATE_OPTIONS_PROPERTY);
       String apartadoTextPdf = evaluateNotTableCrudKeyFieldLabelProperty(respuestaEvaluateDto, templateOptions);
 
-      elementOutput = ElementOutput.builder().content(apartadoTextPdf.toString()).tipo(fieldType).nombre(fieldKey)
-          .build();
+      elementOutput = ElementOutput.builder().content(apartadoTextPdf).tipo(fieldType).nombre(fieldKey).build();
     }
     return elementOutput;
   }
@@ -220,7 +219,7 @@ public class SgiFormlyService {
       String respuestaFieldConfig = getRespuestaFromFormlyFieldType(respuestaEvaluateDto);
 
       if (null != respuestaFieldConfig) {
-        apartadoTextPdf.append(I_HTML + respuestaFieldConfig.toString() + I_CLOSE_HTML);
+        apartadoTextPdf.append(I_HTML + respuestaFieldConfig + I_CLOSE_HTML);
       }
       apartadoTextPdf.append(P_CLOSE_HTML + BR_HTML + "\n");
     }
@@ -293,7 +292,7 @@ public class SgiFormlyService {
       // @formatter:off
       ElementOutput elementOutputTableCrud = ElementOutput.builder()
         .nombre(labelFieldTableCrud)
-        .content(null != respuestaFieldConfig ? respuestaFieldConfig.toString() : "")
+        .content(null != respuestaFieldConfig ? respuestaFieldConfig : "")
         .build();
       // @formatter:on
       rowElementsTableCrud.add(elementOutputTableCrud);
@@ -320,38 +319,39 @@ public class SgiFormlyService {
     String respuestaFieldConfig = getRespuestaStringByKey(respuestaEvaluateDto.getRespuestaKeyField(),
         respuestaEvaluateDto.getRespuestaJson(), respuestaEvaluateDto.getRespuestaIndex());
     switch (respuestaEvaluateDto.getFieldTypeTableCrud()) {
-      case VALOR_SOCIAL_TYPE:
-        if (StringUtils.hasText(respuestaFieldConfig)) {
-          respuestaFieldConfig = TipoValorSocialI18n.getI18nMessageFromValorSocialEnum(respuestaFieldConfig);
-        }
-        break;
-      case DATEPICKER_TYPE:
-        String dtFormatDatePickerOut = "dd/MM/yyyy";
-        respuestaFieldConfig = formatDatePicker(dtFormatDatePickerOut, respuestaFieldConfig);
-        break;
-      case DATETIMEPICKER_TYPE:
-        String dtFormatDateTimePickerOut = "dd/MM/yyyy HH:mm:ss";
-        respuestaFieldConfig = formatDatePicker(dtFormatDateTimePickerOut, respuestaFieldConfig);
-        break;
-      case MULTICHECKBOX_TYPE:
-        List<String> respuestasFieldConfig = getRespuestaListByKey(respuestaEvaluateDto.getFieldKey(),
-            respuestaEvaluateDto.getRespuestaJson(), respuestaEvaluateDto.getRespuestaIndex());
-        respuestaFieldConfig = evaluateOptionListField(respuestaEvaluateDto.getJsonFieldItem(), respuestasFieldConfig);
-        break;
-      case SELECT_TYPE:
-      case RADIO_TYPE:
-      case DOCUMENTO_TYPE:
-        if (null != respuestaFieldConfig) {
-          respuestaFieldConfig = evaluateOptionListField(respuestaEvaluateDto.getJsonFieldItem(),
-              Arrays.asList(respuestaFieldConfig));
-        }
-        break;
-      case CHECKBOX_TYPE:
-        if (null != respuestaFieldConfig) {
-          respuestaFieldConfig = respuestaFieldConfig.equals("true") ? ANSWER_YES : ANSWER_NO;
-        }
-      default:
-        log.debug("respuestaFieldConfig generic");
+    case VALOR_SOCIAL_TYPE:
+      if (StringUtils.hasText(respuestaFieldConfig)) {
+        respuestaFieldConfig = TipoValorSocialI18n.getI18nMessageFromValorSocialEnum(respuestaFieldConfig);
+      }
+      break;
+    case DATEPICKER_TYPE:
+      String dtFormatDatePickerOut = "dd/MM/yyyy";
+      respuestaFieldConfig = formatDatePicker(dtFormatDatePickerOut, respuestaFieldConfig);
+      break;
+    case DATETIMEPICKER_TYPE:
+      String dtFormatDateTimePickerOut = "dd/MM/yyyy HH:mm:ss";
+      respuestaFieldConfig = formatDatePicker(dtFormatDateTimePickerOut, respuestaFieldConfig);
+      break;
+    case MULTICHECKBOX_TYPE:
+      List<String> respuestasFieldConfig = getRespuestaListByKey(respuestaEvaluateDto.getFieldKey(),
+          respuestaEvaluateDto.getRespuestaJson(), respuestaEvaluateDto.getRespuestaIndex());
+      respuestaFieldConfig = evaluateOptionListField(respuestaEvaluateDto.getJsonFieldItem(), respuestasFieldConfig);
+      break;
+    case SELECT_TYPE:
+    case RADIO_TYPE:
+    case DOCUMENTO_TYPE:
+      if (null != respuestaFieldConfig) {
+        respuestaFieldConfig = evaluateOptionListField(respuestaEvaluateDto.getJsonFieldItem(),
+            Arrays.asList(respuestaFieldConfig));
+      }
+      break;
+    case CHECKBOX_TYPE:
+      if (null != respuestaFieldConfig) {
+        respuestaFieldConfig = respuestaFieldConfig.equals("true") ? ANSWER_YES : ANSWER_NO;
+      }
+      break;
+    default:
+      log.debug("respuestaFieldConfig generic");
     }
 
     return respuestaFieldConfig;
@@ -414,7 +414,7 @@ public class SgiFormlyService {
     String respuestaValue = null;
     try {
       respuestaIndex = null != respuestaIndex && respuestaIndex.compareTo(0) >= 0 ? respuestaIndex : 0;
-      JSONArray respuestaJsonArray = (JSONArray) JsonPath.parse(respuestaJson.toString()).read("$.." + fieldKey);
+      JSONArray respuestaJsonArray = (JSONArray) JsonPath.parse(respuestaJson).read("$.." + fieldKey);
       respuestaValue = respuestaJsonArray.get(respuestaIndex).toString();
 
     } catch (Exception e) {
@@ -425,10 +425,10 @@ public class SgiFormlyService {
   }
 
   private List<String> getRespuestaListByKey(String fieldKey, String respuestaJson, Integer respuestaIndex) {
-    List<String> respuestasFieldConfig = new ArrayList<String>();
+    List<String> respuestasFieldConfig = new ArrayList<>();
     try {
       respuestaIndex = null != respuestaIndex && respuestaIndex.compareTo(0) >= 0 ? respuestaIndex : 0;
-      JSONArray respuestaJsonArray = (JSONArray) JsonPath.parse(respuestaJson.toString()).read("$.." + fieldKey);
+      JSONArray respuestaJsonArray = (JSONArray) JsonPath.parse(respuestaJson).read("$.." + fieldKey);
       JSONArray respuestasJsonArray = (JSONArray) respuestaJsonArray.get(respuestaIndex);
       for (int i = 0; i < respuestasJsonArray.size(); i++) {
         respuestasFieldConfig.add((String) respuestasJsonArray.get(i));
@@ -448,7 +448,7 @@ public class SgiFormlyService {
   public static class RespuestaEvaluateDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private LinkedHashMap<String, Object> jsonFieldItem;
+    private transient LinkedHashMap<String, Object> jsonFieldItem;
     private String fieldTypeTableCrud;
     private String respuestaKeyField;
     private String fieldKey;

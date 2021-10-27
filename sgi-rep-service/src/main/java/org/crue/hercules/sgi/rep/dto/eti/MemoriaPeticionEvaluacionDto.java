@@ -1,23 +1,21 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
-import java.io.Serializable;
 import java.time.Instant;
+
+import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemoriaPeticionEvaluacionDto implements Serializable {
-
-  /**
-   * Serial version
-   */
-  private static final long serialVersionUID = 1L;
-
-  private Long id;
+@SuperBuilder
+public class MemoriaPeticionEvaluacionDto extends BaseRestDto {
 
   private String numReferencia;
 
@@ -38,22 +36,5 @@ public class MemoriaPeticionEvaluacionDto implements Serializable {
   private boolean isResponsable;
 
   private boolean activo;
-
-  public MemoriaPeticionEvaluacionDto(Long id, String numReferencia, String titulo, ComiteDto comite,
-      TipoEstadoMemoriaDto estadoActual, Instant fechaEvaluacion, Instant fechaLimite, boolean isResponsable,
-      boolean activo, boolean requiereRetrospectiva, RetrospectivaDto retrospectiva) {
-
-    this.id = id;
-    this.numReferencia = numReferencia;
-    this.titulo = titulo;
-    this.comite = comite;
-    this.estadoActual = estadoActual;
-    this.fechaEvaluacion = fechaEvaluacion;
-    this.fechaLimite = fechaLimite;
-    this.isResponsable = isResponsable;
-    this.activo = activo;
-    this.requiereRetrospectiva = requiereRetrospectiva;
-    this.retrospectiva = retrospectiva;
-  }
 
 }

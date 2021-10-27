@@ -34,20 +34,8 @@ public class ActaService extends BaseRestTemplateService<ActaDto> {
    * @return número de evaluaciones nuevas
    */
   public Long countEvaluacionesNuevas(Long idActa) {
-    Long numEvaluaciones = null;
-    try {
-      final ResponseEntity<Long> responseFormulario = getRestTemplate().exchange(
-          getUrlBase() + URL_API + "/" + idActa + "/numero-evaluaciones-nuevas", HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Long.class);
-
-      numEvaluaciones = responseFormulario.getBody();
-
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      throw new GetDataReportException();
-    }
-
-    return numEvaluaciones;
+    String endPoint = "/numero-evaluaciones-nuevas";
+    return countEvaluaciones(idActa, endPoint);
   }
 
   /**
@@ -57,10 +45,16 @@ public class ActaService extends BaseRestTemplateService<ActaDto> {
    * @return número de evaluaciones
    */
   public Long countEvaluacionesRevisionSinMinima(Long idActa) {
+
+    String endPoint = "/numero-evaluaciones-revision-sin-minima";
+    return countEvaluaciones(idActa, endPoint);
+  }
+
+  private Long countEvaluaciones(Long idActa, String endPoint) {
     Long numEvaluaciones = null;
     try {
       final ResponseEntity<Long> responseFormulario = getRestTemplate().exchange(
-          getUrlBase() + URL_API + "/" + idActa + "/numero-evaluaciones-revision-sin-minima", HttpMethod.GET,
+          getUrlBase() + URL_API + "/" + idActa + endPoint, HttpMethod.GET,
           new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Long.class);
 
       numEvaluaciones = responseFormulario.getBody();

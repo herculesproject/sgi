@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SgiDynamicReportServiceIT extends BaseIT {
+class SgiDynamicReportServiceIT extends BaseIT {
 
   @Autowired
   InformeProyectoReportService service;
 
   @Test
-  public void testInformeDinamico() throws Exception {
+  void testInformeDinamico() throws Exception {
     // given: data for report
 
     // @formatter:off

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class EmpresaService {
-  private static final String URL_API = "/api/sgemp/empresas";
+  private static final String URL_API = "/empresas";
 
   private final RestApiProperties restApiProperties;
   private final RestTemplate restTemplate;
