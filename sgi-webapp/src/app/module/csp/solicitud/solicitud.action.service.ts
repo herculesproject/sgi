@@ -380,29 +380,34 @@ export class SolicitudActionService extends ActionService {
     if (this.hasErrors()) {
       return throwError('Errores');
     } else {
-      return this.equipoProyecto.validateRequisitosConvocatoriaSolicitante(this.solicitante, this.convocatoriaId).pipe(
-        switchMap((response) => {
-          if (response) {
-            return this.translate.get(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(response)).pipe(
-              switchMap((value) => {
-                return this.translate.get(
-                  MSG_SAVE_REQUISITOS_INVESTIGADOR,
-                  { mask: value }
-                );
-              }),
-              switchMap((value) => {
-                return this.dialogService.showConfirmation(value);
-              }),
-              switchMap((aceptado) => {
-                if (aceptado) {
-                  return this.saveOrUpdateSolicitud();
-                }
-              })
-            );
-          }
-          return this.saveOrUpdateSolicitud();
-        })
-      );
+      if (!!this.convocatoriaId) {
+        return this.equipoProyecto.validateRequisitosConvocatoriaSolicitante(this.solicitante, this.convocatoriaId).pipe(
+          switchMap((response) => {
+            if (response) {
+              return this.translate.get(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(response)).pipe(
+                switchMap((value) => {
+                  return this.translate.get(
+                    MSG_SAVE_REQUISITOS_INVESTIGADOR,
+                    { mask: value }
+                  );
+                }),
+                switchMap((value) => {
+                  return this.dialogService.showConfirmation(value);
+                }),
+                switchMap((aceptado) => {
+                  if (aceptado) {
+                    return this.saveOrUpdateSolicitud();
+                  }
+                })
+              );
+            }
+            return this.saveOrUpdateSolicitud();
+          })
+        );
+      }
+      else {
+        return this.saveOrUpdateSolicitud();
+      }
     }
   }
 
