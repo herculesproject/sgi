@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class TipoEstadoMemoriaDto extends BaseRestDto {
 
-  public enum Tipo {
+  public enum TipoEstadoMemoria {
     /** En elaboración <code>1L</code> */
     EN_ELABORACION(1L),
     /** Completada <code>2L</code> */
@@ -65,7 +65,7 @@ public class TipoEstadoMemoriaDto extends BaseRestDto {
 
     private final Long id;
 
-    private Tipo(Long id) {
+    private TipoEstadoMemoria(Long id) {
       this.id = id;
     }
 
@@ -73,8 +73,8 @@ public class TipoEstadoMemoriaDto extends BaseRestDto {
       return this.id;
     }
 
-    public static Tipo fromId(Long id) {
-      for (Tipo tipo : Tipo.values()) {
+    public static TipoEstadoMemoria fromId(Long id) {
+      for (TipoEstadoMemoria tipo : TipoEstadoMemoria.values()) {
         if (tipo.id.compareTo(id) == 0) {
           return tipo;
         }
@@ -89,7 +89,7 @@ public class TipoEstadoMemoriaDto extends BaseRestDto {
 
   @JsonIgnore
   @Transient()
-  public Tipo getTipo() {
-    return Tipo.fromId(this.id);
+  public TipoEstadoMemoria getTipo() {
+    return TipoEstadoMemoria.fromId(this.id);
   }
 }

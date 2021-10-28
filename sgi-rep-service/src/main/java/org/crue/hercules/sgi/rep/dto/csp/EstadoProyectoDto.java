@@ -20,7 +20,7 @@ public class EstadoProyectoDto extends BaseRestDto {
   /**
    * Estados del proyecto
    */
-  public enum Estado {
+  public enum TipoEstadoProyecto {
     /** Borrador */
     BORRADOR,
     /** Concedido */
@@ -33,7 +33,7 @@ public class EstadoProyectoDto extends BaseRestDto {
 
   private Long id;
   private Long proyectoId;
-  private Estado estado;
+  private TipoEstadoProyecto estado;
   private Instant fechaEstado;
   private String comentario;
   private ProyectoDto proyecto;

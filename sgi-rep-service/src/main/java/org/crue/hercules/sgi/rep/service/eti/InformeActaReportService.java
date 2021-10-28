@@ -70,8 +70,9 @@ public class InformeActaReportService extends SgiReportService {
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
     elementsRow.add(formatInstantToString(fechaEvaluacion, pattern));
 
+    String fechaFirmantePattern = "EEEE dd '%s' MMMM '%s' yyyy";
     columnsData.add("fechaFirmante");
-    pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
+    pattern = String.format(fechaFirmantePattern, i18nDe, i18nDe);
     elementsRow.add(formatInstantToString(fechaInforme, pattern));
 
     columnsData.add("lugar");

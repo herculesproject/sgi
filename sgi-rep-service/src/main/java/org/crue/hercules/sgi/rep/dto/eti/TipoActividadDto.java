@@ -1,17 +1,20 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
+import org.crue.hercules.sgi.rep.dto.BaseRestDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoActividadDto {
+@SuperBuilder
+public class TipoActividadDto extends BaseRestDto {
 
-  private Long id;
   private String nombre;
   private Boolean activo;
 

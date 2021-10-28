@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class TipoEvaluacionDto extends BaseRestDto {
 
-  public enum Tipo {
+  public enum TipoEvaluacion {
     /** Retrospectiva <code>1L</code> */
     RETROSPECTIVA(1L),
     /** Memoria <code>2L</code> */
@@ -31,7 +31,7 @@ public class TipoEvaluacionDto extends BaseRestDto {
 
     private final Long id;
 
-    private Tipo(Long id) {
+    private TipoEvaluacion(Long id) {
       this.id = id;
     }
 
@@ -39,8 +39,8 @@ public class TipoEvaluacionDto extends BaseRestDto {
       return this.id;
     }
 
-    public static Tipo fromId(Long id) {
-      for (Tipo tipo : Tipo.values()) {
+    public static TipoEvaluacion fromId(Long id) {
+      for (TipoEvaluacion tipo : TipoEvaluacion.values()) {
         if (tipo.id.compareTo(id) == 0) {
           return tipo;
         }
@@ -54,8 +54,8 @@ public class TipoEvaluacionDto extends BaseRestDto {
 
   @JsonIgnore
   @Transient()
-  public Tipo getTipo() {
-    return Tipo.fromId(this.getId());
+  public TipoEvaluacion getTipo() {
+    return TipoEvaluacion.fromId(this.getId());
   }
 
 }

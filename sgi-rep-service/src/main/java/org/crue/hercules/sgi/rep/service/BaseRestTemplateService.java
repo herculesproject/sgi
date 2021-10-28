@@ -82,13 +82,8 @@ public abstract class BaseRestTemplateService<T extends BaseRestDto> {
     return dto;
   }
 
-  public List<T> exchangeAsList(String uri, HttpEntity<T> httpEntity,
-      ParameterizedTypeReference<List<T>> responseType) {
-    return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, responseType).getBody();
-  }
-
   public List<T> findAll(String query, Pageable paging, ParameterizedTypeReference<List<T>> responseType) {
-    List<T> resultados = null;
+    List<T> result = null;
     try {
 
       Integer size = getPageSize(paging);
@@ -102,17 +97,31 @@ public abstract class BaseRestTemplateService<T extends BaseRestDto> {
       httpHeaders.add("X-Page", index.toString());
       httpHeaders.add("X-Page-Size", size.toString());
 
-      URI uri = UriComponentsBuilder.fromUriString(urlBase + getUrlApi()).queryParam("s", sort).queryParam("q", query)
-          .build(false).toUri();
+      String endPoint = urlBase + getUrlApi();
 
-      HttpEntity<T> httpEntity = new HttpEntityBuilder<T>().withHeaders(httpHeaders).withCurrentUserAuthorization()
-          .build();
-      resultados = exchangeAsList(uri.toString(), httpEntity, responseType);
+      URI uri = UriComponentsBuilder.fromUriString(endPoint).queryParam("s", sort).queryParam("q", query).build(false)
+          .toUri();
+      result = findAllFromURI(uri, httpHeaders, responseType);
+
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
     }
-    return resultados;
+    return result;
+  }
+
+  protected List<T> findAllFromURI(URI uri, HttpHeaders httpHeaders, ParameterizedTypeReference<List<T>> responseType) {
+
+    HttpEntity<T> httpEntity = new HttpEntityBuilder<T>().withHeaders(httpHeaders).withCurrentUserAuthorization()
+        .build();
+
+    return exchangeAsList(uri.toString(), httpEntity, responseType);
+
+  }
+
+  protected List<T> exchangeAsList(String uri, HttpEntity<T> httpEntity,
+      ParameterizedTypeReference<List<T>> responseType) {
+    return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, responseType).getBody();
   }
 
   private Integer getPageNumber(Pageable paging) {

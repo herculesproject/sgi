@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class EstadoRetrospectivaDto extends BaseRestDto {
 
-  public enum Tipo {
+  public enum TipoEstadoRetrospectiva {
     /** Pendiente <code>1L</code> */
     PENDIENTE(1L),
     /** Completada <code>2L</code> */
@@ -33,7 +33,7 @@ public class EstadoRetrospectivaDto extends BaseRestDto {
 
     private final Long id;
 
-    private Tipo(Long id) {
+    private TipoEstadoRetrospectiva(Long id) {
       this.id = id;
     }
 
@@ -41,8 +41,8 @@ public class EstadoRetrospectivaDto extends BaseRestDto {
       return this.id;
     }
 
-    public static Tipo fromId(Long id) {
-      for (Tipo tipo : Tipo.values()) {
+    public static TipoEstadoRetrospectiva fromId(Long id) {
+      for (TipoEstadoRetrospectiva tipo : TipoEstadoRetrospectiva.values()) {
         if (tipo.id.compareTo(id) == 0) {
           return tipo;
         }
@@ -57,7 +57,7 @@ public class EstadoRetrospectivaDto extends BaseRestDto {
 
   @JsonIgnore
   @Transient()
-  public Tipo getTipo() {
-    return Tipo.fromId(this.id);
+  public TipoEstadoRetrospectiva getTipo() {
+    return TipoEstadoRetrospectiva.fromId(this.id);
   }
 }

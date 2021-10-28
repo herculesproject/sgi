@@ -34,8 +34,7 @@ public class ActaService extends BaseRestTemplateService<ActaDto> {
    * @return número de evaluaciones nuevas
    */
   public Long countEvaluacionesNuevas(Long idActa) {
-    String endPoint = "/numero-evaluaciones-nuevas";
-    return countEvaluaciones(idActa, endPoint);
+    return countEvaluaciones(idActa, "/numero-evaluaciones-nuevas");
   }
 
   /**
@@ -45,9 +44,7 @@ public class ActaService extends BaseRestTemplateService<ActaDto> {
    * @return número de evaluaciones
    */
   public Long countEvaluacionesRevisionSinMinima(Long idActa) {
-
-    String endPoint = "/numero-evaluaciones-revision-sin-minima";
-    return countEvaluaciones(idActa, endPoint);
+    return countEvaluaciones(idActa, "/numero-evaluaciones-revision-sin-minima");
   }
 
   private Long countEvaluaciones(Long idActa, String endPoint) {

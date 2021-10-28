@@ -55,8 +55,8 @@ public class PeticionEvaluacionDto extends BaseRestDto {
   private String solicitudConvocatoriaRef;
   private String codigo;
   private String titulo;
-  private TipoActividadDto tipoActividad;
-  private TipoInvestigacionTuteladaDto tipoInvestigacionTutelada;
+  private transient TipoActividadDto tipoActividad;
+  private transient TipoInvestigacionTuteladaDto tipoInvestigacionTutelada;
   private Boolean existeFinanciacion;
   private String fuenteFinanciacion;
   private EstadoFinanciacion estadoFinanciacion;

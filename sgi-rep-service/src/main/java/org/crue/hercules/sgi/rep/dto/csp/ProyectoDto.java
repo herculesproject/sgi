@@ -90,23 +90,10 @@ public class ProyectoDto extends BaseRestDto {
   private BigDecimal totalImporteConcedido;
   private Boolean activo;
   private ContextoProyectoDto contexto;
-  // private ConvocatoriaDto convocatoria ;
-  // private SolicitudDto solicitud ;
-  // private List<ProyectoDocumentoDto> documentos ;
   private List<ProyectoEntidadConvocanteDto> entidadesConvocantes;
   private List<ProyectoEntidadFinanciadoraDto> entidadesFinanciadoras;
-  // private List<ProyectoEntidadGestoraDto> entidadesGestoras;
   private List<EstadoProyectoDto> estados;
   private List<ProyectoEquipoDto> equipo;
-  // private List<ProyectoFaseDto> fases;
-  // private List<ProyectoHitoDto> hitos;
-  // private List<ProyectoPaqueteTrabajoDto> paquetesTrabajo;
-  // private List<ProyectoPeriodoSeguimientoDto> periodosSeguimiento;
-  // private List<ProyectoProrrogaDto> prorrogas;
-  // private List<ProyectoSocioDto> socios;
-  // private List<ProyectoIvaDto> ivas;
-  // private List<ProyectoProyectoSgeDto> identificadoresSge;
-  // private List<ProyectoAnualidadDto> proyectosAnualidad;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

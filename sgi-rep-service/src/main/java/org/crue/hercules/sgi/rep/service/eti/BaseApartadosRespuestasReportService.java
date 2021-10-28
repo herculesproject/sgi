@@ -125,7 +125,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
       .apartados(new ArrayList<>())
       .build();
     // @formatter:on
-    List<ApartadoDto> apartados = bloqueService.findByBloqueId(bloque.getId());
+    List<ApartadoDto> apartados = apartadoService.findByBloqueId(bloque.getId());
 
     for (ApartadoDto apartado : apartados) {
       boolean parseApartado = true;

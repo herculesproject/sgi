@@ -389,6 +389,7 @@ public class SgiReportService {
    * @return message encoded in html
    */
   protected String getErrorMessageToReport(Exception e) {
+    log.error(e.getMessage());
     return "<b>" + e.getMessage() + "</b>";
   }
 }

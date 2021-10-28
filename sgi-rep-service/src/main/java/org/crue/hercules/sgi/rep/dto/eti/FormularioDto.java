@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class FormularioDto extends BaseRestDto {
 
-  public enum Tipo {
+  public enum TipoFormulario {
     /** M10 <code>1L</code> */
     M10(1L),
     /** M20 <code>2L</code> */
@@ -35,7 +35,7 @@ public class FormularioDto extends BaseRestDto {
 
     private final Long id;
 
-    private Tipo(Long id) {
+    private TipoFormulario(Long id) {
       this.id = id;
     }
 
@@ -43,8 +43,8 @@ public class FormularioDto extends BaseRestDto {
       return this.id;
     }
 
-    public static Tipo fromId(Long id) {
-      for (Tipo tipo : Tipo.values()) {
+    public static TipoFormulario fromId(Long id) {
+      for (TipoFormulario tipo : TipoFormulario.values()) {
         if (tipo.id.compareTo(id) == 0) {
           return tipo;
         }
@@ -58,7 +58,7 @@ public class FormularioDto extends BaseRestDto {
 
   @JsonIgnore
   @Transient()
-  public Tipo getTipo() {
-    return Tipo.fromId(this.getId());
+  public TipoFormulario getTipo() {
+    return TipoFormulario.fromId(this.getId());
   }
 }

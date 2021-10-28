@@ -1,10 +1,8 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
@@ -14,11 +12,11 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
-import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
-import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
+import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
+import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
@@ -134,10 +132,6 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
       iInformeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
 
       List<ComentarioDto> comentarios = evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion);
-      final Set<Long> apartados = new HashSet<>();
-      if (null != comentarios && !comentarios.isEmpty()) {
-        comentarios.forEach(c -> getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
-      }
 
       // @formatter:off
       BloquesReportInput bloquesReportInput = BloquesReportInput.builder()
@@ -146,7 +140,6 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
         .mostrarRespuestas(false)
         .mostrarContenidoApartado(false)
         .comentarios(comentarios)
-        .apartados(apartados)
         .build();
       // @formatter:on
 
