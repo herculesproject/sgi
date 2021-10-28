@@ -63,6 +63,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
+      estado: new FormControl({ value: null, disabled: true }),
       codigo: new FormControl('', Validators.maxLength(50)),
       unidadGestion: new FormControl(null, Validators.required),
       fechaPublicacion: new FormControl(null),
@@ -80,10 +81,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       objeto: new FormControl('', Validators.maxLength(2000)),
       observaciones: new FormControl('', Validators.maxLength(2000))
     });
-
-    if (this.isEdit()) {
-      form.addControl('estado', new FormControl({ value: null, disabled: true }));
-    }
 
     if (!this.hasEditPerm) {
       form.disable();

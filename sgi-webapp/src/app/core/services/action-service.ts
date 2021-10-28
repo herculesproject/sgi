@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/for
 import { HttpProblem, Problem } from '@core/errors/http-problem';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of, Subject, Subscription, throwError } from 'rxjs';
-import { catchError, filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface IActionService {
   /**
@@ -907,7 +907,8 @@ export abstract class ActionService implements IActionService, OnDestroy {
           }),
           tap(() => part.refreshInitialState(true)))
         ),
-        takeLast(1)
+        takeLast(1),
+        defaultIfEmpty(void 0)
       );
     }
     else {
