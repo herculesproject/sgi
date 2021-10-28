@@ -1292,7 +1292,7 @@
   "info.csp.proyecto-socio.rol": "Rol",
   "info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado": "No se ha indicado el socio que actuará como coordinador del proyecto.",
   "info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip": "No se ha indicado el socio que actuará como coordinador del proyecto.Verifique los datos en el apartado Socios.",
-  "info.csp.solicitud-proyecto.new": "Para crear el proyecto a partir de los datos de la solicitud debe de introducir los siguientes datos:",
+  "info.csp.solicitud-proyecto.new": "Se creará un nuevo proyecto vinculado a la solicitud. Introduzca los siguientes datos:",
   "inv": "INV - Investigador",
   "inv.convocatoria.listado.titulo": "Búsqueda de convocatorias",
   "inv.convocatoria.ver.titulo": "Detalles de la convocatoria",

@@ -19,6 +19,7 @@ describe('SolicitudCrearProyectoModalComponent', () => {
 
   const data: ISolicitudCrearProyectoModalData = {
     solicitud: {
+      id: 3,
       convocatoriaId: 1
     }
   } as ISolicitudCrearProyectoModalData;

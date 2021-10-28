@@ -1,10 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
@@ -12,14 +15,15 @@ import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { merge, Observable, of } from 'rxjs';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
 const MSG_ACEPTAR = marker('btn.ok');
 const MSG_ERROR_INIT = marker('error.load');
@@ -32,14 +36,31 @@ export interface ISolicitudCrearProyectoModalData {
   solicitudProyecto: ISolicitudProyecto;
 }
 
+interface IProyectoData extends IProyecto {
+  prorrogado: boolean;
+  proyectosSGE: string
+}
+
 @Component({
   templateUrl: './solicitud-crear-proyecto-modal.component.html',
   styleUrls: ['./solicitud-crear-proyecto-modal.component.scss']
 })
+
 export class SolicitudCrearProyectoModalComponent
   extends BaseModalComponent<IProyecto, SolicitudCrearProyectoModalComponent> implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
+
+  displayedColumns = ['id', 'codigoSGE', 'titulo', 'fechaInicio', 'fechaFin', 'estado'];
+  elementosPagina = [5, 10, 25, 100];
+  totalElements = 0;
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   private modelosEjecucionFiltered = [] as IModeloEjecucion[];
   modelosEjecucion$: Observable<IModeloEjecucion[]>;
@@ -49,12 +70,14 @@ export class SolicitudCrearProyectoModalComponent
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamModeloEjecucionEntity = {};
+  proyectos$: Observable<IProyectoData[]>;
 
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudCrearProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: ISolicitudCrearProyectoModalData,
+    private readonly proyectoService: ProyectoService,
     private unidadModeloService: ModeloUnidadService,
     private logger: NGXLogger,
     private readonly translate: TranslateService,
@@ -71,6 +94,7 @@ export class SolicitudCrearProyectoModalComponent
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+
     if (this.data.solicitud.convocatoriaId) {
       this.subscriptions.push(this.convocatoriaService.findById(this.data.solicitud.convocatoriaId).subscribe(
         (convocatoria => {
@@ -79,6 +103,8 @@ export class SolicitudCrearProyectoModalComponent
         })
       ));
     }
+
+    this.proyectos$ = this.getProyectos();
   }
 
   private setupI18N(): void {
@@ -135,6 +161,46 @@ export class SolicitudCrearProyectoModalComponent
       titulo: this.data.solicitud.titulo,
       solicitudId: this.data.solicitud.id
     } as IProyecto;
+  }
+
+  protected getProyectos(): Observable<IProyectoData[]> {
+    const filters = new RSQLSgiRestFilter('solicitudId', SgiRestFilterOperator.EQUALS, this.data.solicitud.id.toString())
+    const filter: SgiRestFindOptions = {
+      filter: filters
+    }
+
+    return this.proyectoService.findTodos(filter).pipe(
+      map((response) => {
+        this.totalElements = response.items.length;
+        return response.items as IProyectoData[];
+      }),
+      switchMap((response) => {
+        const requestsProyecto: Observable<IProyectoData>[] = [];
+        response.forEach(proyecto => {
+          const proyectoData = proyecto as IProyectoData;
+          if (proyecto.id) {
+            requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
+              map(value => {
+                proyectoData.prorrogado = value;
+                return proyectoData;
+              }),
+              switchMap(() =>
+                this.proyectoService.findAllProyectosSgeProyecto(proyecto.id).pipe(
+                  map(value => {
+                    proyectoData.proyectosSGE = value.items.map(element => element.proyectoSge.id).join(', ');
+                    return proyectoData;
+                  }))
+              )
+            ));
+          } else {
+            requestsProyecto.push(of(proyectoData));
+          }
+        });
+        return of(response).pipe(
+          tap(() => merge(...requestsProyecto).subscribe())
+        );
+      })
+    );
   }
 
   /**
