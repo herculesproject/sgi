@@ -513,45 +513,47 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   @Transactional
-  public void generarInforme(Evaluacion evaluacion) {
+  @Override
+  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion) {
+    Evaluacion evaluacion = this.findById(idEvaluacion);
+    DocumentoOutput documento = null;
     switch (evaluacion.getTipoEvaluacion().getId().intValue()) {
     case Constantes.TIPO_EVALUACION_MEMORIA_INT:
       if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
               || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
               || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
-        this.crearInforme(evaluacion, false);
+       documento = this.generarDocumento(evaluacion, false);
       } else if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
-        this.crearInforme(evaluacion, true);
+        documento = this.generarDocumento(evaluacion, true);
       }
       break;
     case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
       if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES)) {
-        this.crearInforme(evaluacion, false);
+        documento = this.generarDocumento(evaluacion, false);
       }
       break;
     case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
       if (evaluacion.getDictamen() != null && (evaluacion.getDictamen().getId()
           .intValue() == Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL)) {
-        this.crearInforme(evaluacion, false);
+        documento = this.generarDocumento(evaluacion, false);
       }
       break;
     case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
       if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
-        this.crearInforme(evaluacion, true);
+        documento = this.generarDocumento(evaluacion, true);
       }
       break;
-    default:
-      break;
     }
+    return documento;
   }
 
   @Transactional
-  private void crearInforme(Evaluacion evaluacion, Boolean favorable) {
-    log.debug("crearInforme(Evaluacion evaluacion, Boolean favorable)- start");
+  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable) {
+    log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- start");
 
     Resource informePdf = null;
     String tituloInforme = "";
@@ -587,31 +589,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     // Se sube el informe a sgdoc
     String fileName = tituloInforme + "_" + evaluacion.getId() + LocalDate.now() + ".pdf";
     DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
-
-    Optional<Informe> informeBuscado = informeService.findByMemoriaAndVersionAndTipoEvaluacion(
-        evaluacion.getMemoria().getId(), evaluacion.getVersion(), evaluacion.getTipoEvaluacion().getId());
-
-    // Se crea un fichero en formato pdf con los datos del proyecto y con
-    // los datos del formulario y subirlo al gestor documental y que el sistema
-    // guarde en informes el identificador del documento.
-    if (informeBuscado.isPresent()) {
-      Informe informe = informeBuscado.get();
-      // Se adjunta referencia del documento a sgdoc y se actualiza el informe
-      informe.setDocumentoRef(documento.getDocumentoRef());
-      informeService.update(informe);
-    } else {
-      Informe informe = new Informe();
-      informe.setVersion(evaluacion.getVersion());
-      informe.setMemoria(evaluacion.getMemoria());
-      informe.setTipoEvaluacion(new TipoEvaluacion());
-      informe.getTipoEvaluacion().setId(evaluacion.getTipoEvaluacion().getId());
-
-      // Se adjunta referencia del documento a sgdoc y se crea el informe
-      informe.setDocumentoRef(documento.getDocumentoRef());
-      informeService.create(informe);
-    }
-
-    log.debug("crearInforme(Evaluacion evaluacion, Boolean favorable)- end");
+    log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- end");
+    return documento;
   }
 
   /**

@@ -204,7 +204,7 @@ public interface EvaluacionService {
    */
   Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion);
 
-  void generarInforme(Evaluacion evaluacion);
+  DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion);
 
   /**
    * Obtiene el documento de la ficha del Evaluador

@@ -182,7 +182,6 @@ public class EvaluacionController {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
     Evaluacion returnValue = service.update(updatedEvaluacion);
-    service.generarInforme(returnValue);
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - end");
     return returnValue;
   }
@@ -522,6 +521,21 @@ public class EvaluacionController {
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - start");
     DocumentoOutput documento = service.generarDocumentoEvaluador(idEvaluacion);
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - end");
+    return new ResponseEntity<>(documento, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene el documento de evaluación o favorable
+   * 
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @return el documento del evaluador
+   */
+  @GetMapping("/{idEvaluacion}/documento-evaluacion")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  public ResponseEntity<DocumentoOutput> documentoEvaluacion(@PathVariable Long idEvaluacion) {
+    log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - start");
+    DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion);
+    log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }
 

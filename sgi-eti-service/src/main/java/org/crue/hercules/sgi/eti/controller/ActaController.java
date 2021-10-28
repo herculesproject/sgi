@@ -177,7 +177,7 @@ public class ActaController {
    * @return Número de evaluaciones nuevas
    */
   @GetMapping("/{idActa}/numero-evaluaciones-nuevas")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-ACT-DES', 'ETI-ACT-DESR', 'ETI-ACT-INV-DESR')")
   public ResponseEntity<Long> countEvaluacionesNuevas(@PathVariable Long idActa) {
     log.debug("countEvaluacionesNuevas(@PathVariable Long idActa) - start");
     Long countNumEvaluaciones = service.countEvaluacionesNuevas(idActa);
@@ -193,7 +193,7 @@ public class ActaController {
    * @return Número de evaluaciones
    */
   @GetMapping("/{idActa}/numero-evaluaciones-revision-sin-minima")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-ACT-DES', 'ETI-ACT-DESR', 'ETI-ACT-INV-DESR')")
   public ResponseEntity<Long> countEvaluacionesRevisionSinMinima(@PathVariable Long idActa) {
     log.debug("countEvaluacionesRevisionSinMinima(@PathVariable Long idActa) - start");
     Long countNumEvaluaciones = service.countEvaluacionesRevisionSinMinima(idActa);
@@ -209,6 +209,7 @@ public class ActaController {
    * @return lista de memorias evaluadas
    */
   @GetMapping("/{idActa}/memorias-evaluadas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-ACT-DES', 'ETI-ACT-DESR', 'ETI-ACT-INV-DESR')")
   public List<MemoriaEvaluada> findAllMemoriasEvaluadasSinRevMinimaByActaId(@PathVariable Long idActa) {
     return service.findAllMemoriasEvaluadasSinRevMinimaByActaId(idActa);
   }
