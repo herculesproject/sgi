@@ -49,7 +49,7 @@ export class SolicitudProteccionActionService extends ActionService {
       this.enableEdit();
     }
 
-    const solicitudesPrevias = (this.data.solicitudesProteccion ?? []).some(elem => elem.activo === true);
+
 
     this.datosGenerales = new SolicitudProteccionDatosGeneralesFragment(
       logger,
@@ -57,13 +57,13 @@ export class SolicitudProteccionActionService extends ActionService {
       this.data.invencion.id,
       this.data.invencion.tipoProteccion.tipoPropiedad,
       this.data.invencion.titulo,
-      solicitudesPrevias,
       this.solicitudProteccionService,
       this.data.readonly,
       this.viaProteccionService,
       this.paisService,
       this.empresaService,
-      this.tipoCaducidadService
+      this.tipoCaducidadService,
+      this.data.solicitudesProteccion
     );
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
