@@ -254,4 +254,16 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
     );
   }
 
+  /**
+   * Obtiene el documento de evaluación o favorable
+   * @param idEvaluacion identificador de la evaluación
+   */
+  getDocumentoEvaluacion(idEvaluacion: number): Observable<IDocumento> {
+    return this.http.get<IDocumentoBackend>(
+      `${this.endpointUrl}/${idEvaluacion}/documento-evaluacion`
+    ).pipe(
+      map(response => DOCUMENTO_CONVERTER.toTarget(response))
+    );
+  }
+
 }

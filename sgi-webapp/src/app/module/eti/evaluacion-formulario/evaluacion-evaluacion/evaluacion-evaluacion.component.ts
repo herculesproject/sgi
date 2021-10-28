@@ -7,7 +7,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { MemoriaService } from '@core/services/eti/memoria.service';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
@@ -52,7 +52,7 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     public actionService: EvaluacionFormularioActionService,
     protected tipoEvaluacionService: TipoEvaluacionService,
     private readonly translate: TranslateService,
-    private readonly memoriaService: MemoriaService,
+    private readonly evaluacionService: EvaluacionService,
     private readonly documentoService: DocumentoService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
@@ -127,14 +127,11 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   /**
    * Visualiza el informe de evaluación seleccionado.
-   * @param idMemoria id de la memoria del informe
+   * @param idEvaluacion id de la evaluacion del informe
    */
-  visualizarInforme(idMemoria: number): void {
+  visualizarInforme(idEvaluacion: number): void {
     const documento: IDocumento = {} as IDocumento;
-    this.memoriaService.findInformeUltimaVersion(idMemoria).pipe(
-      switchMap(response => {
-        return this.documentoService.getInfoFichero(response.documentoRef);
-      }),
+    this.evaluacionService.getDocumentoEvaluacion(idEvaluacion).pipe(
       switchMap((documentoInfo: IDocumento) => {
         documento.nombre = documentoInfo.nombre;
         return this.documentoService.downloadFichero(documentoInfo.documentoRef);

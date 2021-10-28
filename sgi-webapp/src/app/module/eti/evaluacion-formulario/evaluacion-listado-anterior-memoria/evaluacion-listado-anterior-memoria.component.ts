@@ -3,6 +3,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTableWithoutPaginationComponent } from '@core/component/abstract-table-without-pagination.component';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentario';
 import { IDocumento } from '@core/models/sgdoc/documento';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -29,7 +30,8 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
   constructor(
     private readonly memoriaService: MemoriaService,
     protected readonly snackBarService: SnackBarService,
-    private readonly documentoService: DocumentoService
+    private readonly documentoService: DocumentoService,
+    private readonly evaluacionService: EvaluacionService,
   ) {
     super(snackBarService, MSG_ERROR);
   }
@@ -57,16 +59,11 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
 
   /**
    * Visualiza el informe de evaluación seleccionado.
-   * @param idMemoria id de la memoria del informe
-   * @param version el número de versión de la evaluación
-   * @param idTipoEvaluacion el identificador del tipo de evaluación
+   * @param idEvaluacion id de la memoria del informe
    */
-  visualizarInforme(idMemoria: number, version: number, idTipoEvaluacion: number): void {
+  visualizarInforme(idEvaluacion: number): void {
     const documento: IDocumento = {} as IDocumento;
-    this.memoriaService.findInformeVersionTipo(idMemoria, version, idTipoEvaluacion).pipe(
-      switchMap(response => {
-        return this.documentoService.getInfoFichero(response.documentoRef);
-      }),
+    this.evaluacionService.getDocumentoEvaluacion(idEvaluacion).pipe(
       switchMap((documentoInfo: IDocumento) => {
         documento.nombre = documentoInfo.nombre;
         return this.documentoService.downloadFichero(documentoInfo.documentoRef);

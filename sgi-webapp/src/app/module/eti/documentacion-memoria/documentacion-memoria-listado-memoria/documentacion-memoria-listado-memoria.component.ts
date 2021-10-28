@@ -121,8 +121,6 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends
     this.evaluacionService.getDocumentoEvaluador(this.evaluacionId).pipe(
       switchMap((documentoInfo: IDocumento) => {
         documento.nombre = documentoInfo.nombre;
-        documento.tipo = documentoInfo.tipo;
-
         return this.documentoService.downloadFichero(documentoInfo.documentoRef);
       })
     ).subscribe(response => {

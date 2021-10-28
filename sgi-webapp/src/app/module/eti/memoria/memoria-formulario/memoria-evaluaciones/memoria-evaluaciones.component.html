@@ -33,7 +33,7 @@
         <td mat-cell *matCellDef="let wrapper">
           <ng-container *ngIf="hasInformeEvaluacion(wrapper) && isActaFinalizada(wrapper)">
             <button mat-button matTooltip="{{'btn.show.file' | translate}}"
-              (click)="visualizarInforme(wrapper.value?.memoria?.id)">
+              (click)="visualizarInforme(wrapper.value?.id)">
               <mat-icon color="primary">picture_as_pdf</mat-icon>
             </button>
           </ng-container>
@@ -47,7 +47,7 @@
         </th>
         <td mat-cell *matCellDef="let wrapper">
           <ng-container *ngIf="hasInformeFavorable(wrapper)">
-            <button mat-icon-button (click)="visualizarInforme(wrapper.value?.memoria?.id)"
+            <button mat-icon-button (click)="visualizarInforme(wrapper.value?.id)"
               [disabled]="(wrapper.value?.memoria?.tipoMemoria?.id === 1 || wrapper.value?.memoria?.tipoMemoria?.id === 3) && wrapper.value?.dictamen?.id !== 1">
               <mat-icon color="primary">picture_as_pdf</mat-icon>
             </button>
