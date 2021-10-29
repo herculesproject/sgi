@@ -224,7 +224,7 @@ public class PeticionEvaluacionController {
    * @return la lista de entidades {@link Tarea} paginadas.
    */
   @GetMapping("/{id}/tareas-equipo-trabajo")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
   public Page<Tarea> findTareasEquipoTrabajo(@PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findTareasEquipoTrabajo(Long id, Pageable paging) - start");
     Page<Tarea> result = tareaService.findAllByEquipoTrabajoPeticionEvaluacionId(id, paging);

@@ -470,7 +470,7 @@ public class EvaluacionController {
    * @return Número de comentarios
    */
   @GetMapping("/{idEvaluacion}/{idTipoComentario}/numero-comentarios")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
   public ResponseEntity<Integer> countByEvaluacionIdAndTipoComentarioId(@PathVariable Long idEvaluacion,
       @PathVariable Long idTipoComentario) {
     log.debug("countByEvaluacionIdAndTipoComentarioId(@PathVariable Long idEvaluacion, idTipoComentario) - start");
@@ -531,7 +531,7 @@ public class EvaluacionController {
    * @return el documento del evaluador
    */
   @GetMapping("/{idEvaluacion}/documento-evaluacion")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-EVC-INV-EVALR')")
   public ResponseEntity<DocumentoOutput> documentoEvaluacion(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - start");
     DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion);
