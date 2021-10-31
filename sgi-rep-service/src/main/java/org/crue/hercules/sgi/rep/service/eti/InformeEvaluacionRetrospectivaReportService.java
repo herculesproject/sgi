@@ -10,10 +10,8 @@ import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
-import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -23,14 +21,12 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluacionBaseReportService {
 
-  private final PersonaService personaService;
   private final EvaluacionService evaluacionService;
 
   public InformeEvaluacionRetrospectivaReportService(SgiConfigProperties sgiConfigProperties,
       PersonaService personaService, EvaluacionService evaluacionService) {
 
     super(sgiConfigProperties, personaService, evaluacionService);
-    this.personaService = personaService;
     this.evaluacionService = evaluacionService;
   }
 

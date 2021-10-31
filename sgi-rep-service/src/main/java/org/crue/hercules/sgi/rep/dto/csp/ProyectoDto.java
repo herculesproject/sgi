@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.rep.dto.csp;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -95,44 +93,4 @@ public class ProyectoDto extends BaseRestDto {
   private List<EstadoProyectoDto> estados;
   private List<ProyectoEquipoDto> equipo;
 
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Builder
-  public static class ModeloEjecucionDto implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private Long id;
-    private String nombre;
-    private String descripcion;
-    private Boolean activo;
-  }
-
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Builder
-  public static class TipoFinalidadDto implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private Long id;
-    private String nombre;
-    private String descripcion;
-    private Boolean activo;
-  }
-
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Builder
-  public static class TipoAmbitoGeograficoDto implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private Long id;
-    private String nombre;
-    private Boolean activo;
-  }
 }

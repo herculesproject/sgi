@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
 import java.time.Instant;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -30,7 +30,7 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
   private final EvaluacionService evaluacionService;
   private final PersonaService personaService;
 
-  public InformeEvaluacionBaseReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
+  protected InformeEvaluacionBaseReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
       EvaluacionService evaluacionService) {
 
     super(sgiConfigProperties);
@@ -62,13 +62,13 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     }
   }
 
-  protected void addColumnAndRowtDataInvestigador(String personaRef, Vector<Object> columnsData,
-      Vector<Object> elementsRow) {
+  protected void addColumnAndRowtDataInvestigador(String personaRef, List<Object> columnsData,
+      List<Object> elementsRow) {
     columnsData.add("nombreInvestigador");
     addRowDataInvestigador(personaRef, elementsRow);
   }
 
-  protected void addRowDataInvestigador(String personaRef, Vector<Object> elementsRow) {
+  protected void addRowDataInvestigador(String personaRef, List<Object> elementsRow) {
     try {
       PersonaDto persona = personaService.findById(personaRef);
       elementsRow.add(persona.getNombre() + " " + persona.getApellidos());

@@ -5,8 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -53,6 +56,7 @@ import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +79,7 @@ public class SgiReportService {
   protected static final String SUBREPORT_TYPE = "subreport";
   protected static final String SEPARATOR_KEY = "_";
   protected static final String NAME_GENERAL_TABLE_MODEL = "general";
+  private static final String ISO_LOCAL_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
   public static final Float WIDTH_PORTRAIT = 460f;
   public static final Float WIDTH_LANDSCAPE = 630f;
   public static final Float WIDTH_FIELD_EXCEL_DEFAULT = 150f;
@@ -325,6 +330,7 @@ public class SgiReportService {
   protected String formatInstantToString(Instant instantDate, String pattern) {
     String result = "";
 
+    pattern = StringUtils.hasText(pattern) ? pattern : DATE_PATTERN_DEFAULT;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
         .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
 
@@ -335,6 +341,19 @@ public class SgiReportService {
 
   protected String formatInstantToString(Instant instantDate) {
     return formatInstantToString(instantDate, DATE_PATTERN_DEFAULT);
+  }
+
+  protected Date formatInstantToDate(Instant instantDate) {
+    Date result = null;
+    try {
+      String strFechaWithTimeZone = formatInstantToString(instantDate, ISO_LOCAL_DATE_PATTERN);
+      SimpleDateFormat formatter = new SimpleDateFormat(ISO_LOCAL_DATE_PATTERN);
+      result = formatter.parse(strFechaWithTimeZone);
+    } catch (ParseException e) {
+      log.error(e.getMessage());
+    }
+
+    return result;
   }
 
   protected void setCustomWidthSubReport(SgiReportDto reportDto, Integer numColumns) {

@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.rep.dto.csp;
 import java.io.Serializable;
 
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
-import org.crue.hercules.sgi.rep.dto.csp.ProyectoDto.TipoAmbitoGeograficoDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -92,9 +92,7 @@ public class InformeProyectoReportService extends SgiDynamicReportService {
     List<SgiRowReportDto> rows = getRowsDynamicReportDto(proyectos, exportAsSubReport);
     sgiDynamicReportDto.setRows(rows);
 
-    // TODO Solo para pruebas desde postman
     toJsonFile(sgiDynamicReportDto);
-
   }
 
   private List<SgiRowReportDto> getRowsDynamicReportDto(List<ProyectoDto> proyectos, boolean exportAsSubReport) {

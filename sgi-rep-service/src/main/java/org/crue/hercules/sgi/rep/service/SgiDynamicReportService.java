@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -286,14 +286,13 @@ public class SgiDynamicReportService extends SgiReportService {
       switch (sgiColumReportDto.getType()) {
 
       case DATE:
+        Instant fechaInstant = Instant.parse((String) row.getElements().get(columnIndex));
         if ((reportDto.getOutputReportType().equals(OutputReportType.XLS)
             || reportDto.getOutputReportType().equals(OutputReportType.XLSX))
             && (reportDto.getFieldOrientationType().equals(FieldOrientationType.HORIZONTAL))) {
-          String strFecha = row.getElements().get(columnIndex).toString();
-          Date fecha = getDateFromTableModelElement(strFecha, sgiColumReportDto);
-          elementsRow.add(fecha);
+          elementsRow.add(formatInstantToDate(fechaInstant));
         } else {
-          elementsRow.add(row.getElements().get(columnIndex));
+          elementsRow.add(formatInstantToString(fechaInstant, sgiColumReportDto.getFormat()));
         }
         break;
       case SUBREPORT:
@@ -359,22 +358,6 @@ public class SgiDynamicReportService extends SgiReportService {
       elementsRow.addAll(getRowsTableModelDynamic(rowSgiDynamicReportDto));
       rows.add(elementsRow);
     }
-  }
-
-  private Date getDateFromTableModelElement(String strFecha, SgiColumReportDto sgiColumReportDto) {
-    Date fecha = null;
-    if (StringUtils.hasText(strFecha)) {
-      String pattern = DATE_PATTERN_DEFAULT;
-      if (StringUtils.hasText(sgiColumReportDto.getFormat())) {
-        pattern = sgiColumReportDto.getFormat();
-      }
-      try {
-        fecha = new SimpleDateFormat(pattern).parse(strFecha);
-      } catch (Exception e) {
-        log.debug(e.getMessage());
-      }
-    }
-    return fecha;
   }
 
   /**

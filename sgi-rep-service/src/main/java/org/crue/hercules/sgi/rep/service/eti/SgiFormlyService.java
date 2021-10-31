@@ -2,8 +2,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -361,11 +360,11 @@ public class SgiFormlyService {
     String result = "";
     if (StringUtils.hasText(datePicker)) {
       try {
-        DateFormat dfDateTimeIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        dfDateTimeIn.setTimeZone(sgiConfigProperties.getTimeZone());
+        DateTimeFormatter dfDateTimeIn = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        dfDateTimeIn.withZone(sgiConfigProperties.getTimeZone().toZoneId());
 
-        DateFormat dfDateTimeOut = new SimpleDateFormat(dtFormatOut);
-        dfDateTimeOut.setTimeZone(sgiConfigProperties.getTimeZone());
+        DateTimeFormatter dfDateTimeOut = DateTimeFormatter.ofPattern(dtFormatOut);
+        dfDateTimeOut.withZone(sgiConfigProperties.getTimeZone().toZoneId());
 
         result = dfDateTimeOut.format(dfDateTimeIn.parse(datePicker));
       } catch (Exception e) {
