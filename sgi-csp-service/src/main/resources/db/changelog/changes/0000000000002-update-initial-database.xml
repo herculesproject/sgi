@@ -4,5 +4,9 @@
   <changeSet author="user (generated)" id="0000000000002-1">
     <dropNotNullConstraint columnDataType="varchar(250)" columnName="titulo" tableName="solicitud" />
   </changeSet>
+  <!-- Eliminación de columna de contexto_proyecto que ya no es necesaria -->
+  <changeSet author="user (generated)" id="0000000000002-2">
+    <dropColumn columnName="area_tematica_convocatoria_id" tableName="contexto_proyecto" />
+  </changeSet>
 
 </databaseChangeLog>

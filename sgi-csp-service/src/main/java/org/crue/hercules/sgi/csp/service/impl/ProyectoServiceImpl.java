@@ -844,26 +844,13 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   private void copyAreaTematica(Proyecto proyecto) {
 
-    // si en la convocatoria se ha rellenado "ConvocatoriaAreaTematica" se rellenará
-    // el campo "areaTematicaConvocatoria" de la tabla "ContextoProyecto" con el
-    // campo "areaTematica" de la tabla "ConvocatoriaAreaTematica" de la
-    // convocatoria, dejando vacío el campo "areaTematica" de la tabla
-    // "ContextoProyecto" para que lo pueda seleccionar el usuario.
-    Optional<ConvocatoriaAreaTematica> convocatoriaAreaTematica = convocatoriaAreaTematicaRepository
-        .findByConvocatoriaId(proyecto.getConvocatoriaId());
-
-    if (convocatoriaAreaTematica.isPresent()) {
-      if (!contextoProyectoService.existsByProyecto(proyecto.getId())) {
-        ContextoProyecto contextoProyectoNew = new ContextoProyecto();
-        contextoProyectoNew.setProyectoId(proyecto.getId());
-        contextoProyectoNew.setAreaTematicaConvocatoria(convocatoriaAreaTematica.get().getAreaTematica());
-        contextoProyectoService.create(contextoProyectoNew);
-      } else {
-        ContextoProyecto contextoProyectoUpdate = contextoProyectoService.findByProyecto(proyecto.getId());
-        contextoProyectoUpdate.setAreaTematicaConvocatoria(convocatoriaAreaTematica.get().getAreaTematica());
-        contextoProyectoService.update(contextoProyectoUpdate, proyecto.getId());
-      }
-
+    if (!contextoProyectoService.existsByProyecto(proyecto.getId())) {
+      ContextoProyecto contextoProyectoNew = new ContextoProyecto();
+      contextoProyectoNew.setProyectoId(proyecto.getId());
+      contextoProyectoService.create(contextoProyectoNew);
+    } else {
+      ContextoProyecto contextoProyectoUpdate = contextoProyectoService.findByProyecto(proyecto.getId());
+      contextoProyectoService.update(contextoProyectoUpdate, proyecto.getId());
     }
   }
 
@@ -1029,15 +1016,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     contextoProyectoNew.setResultadosPrevistos(solicitudProyecto.getResultadosPrevistos());
     contextoProyectoNew.setIntereses(solicitudProyecto.getIntereses());
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
-
-    if (solicitud.getConvocatoriaId() != null) {
-      Optional<ConvocatoriaAreaTematica> convocatoriaAreaTematica = convocatoriaAreaTematicaRepository
-          .findByConvocatoriaId(solicitud.getConvocatoriaId());
-
-      if (convocatoriaAreaTematica.isPresent()) {
-        contextoProyectoNew.setAreaTematicaConvocatoria(convocatoriaAreaTematica.get().getAreaTematica());
-      }
-    }
 
     contextoProyectoService.create(contextoProyectoNew);
     log.debug("copyContexto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
