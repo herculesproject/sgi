@@ -330,11 +330,13 @@ public class SgiReportService {
   protected String formatInstantToString(Instant instantDate, String pattern) {
     String result = "";
 
-    pattern = StringUtils.hasText(pattern) ? pattern : DATE_PATTERN_DEFAULT;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
-        .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
+    if (null != instantDate) {
+      pattern = StringUtils.hasText(pattern) ? pattern : DATE_PATTERN_DEFAULT;
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
+          .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
 
-    result = formatter.format(instantDate);
+      result = formatter.format(instantDate);
+    }
 
     return result;
   }
