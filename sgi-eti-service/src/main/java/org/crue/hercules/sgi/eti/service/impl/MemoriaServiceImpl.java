@@ -907,14 +907,15 @@ public class MemoriaServiceImpl implements MemoriaService {
               String.valueOf(anioActual), 2L, comite.getId());
 
       // Se incrementa el número de la memoria para el comité
+      Long numeroUltimaMemoria = 1L;
       if (ultimaMemoriaComite != null) {
-        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+        numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
         numeroUltimaMemoria++;
-
-        StringBuffer sbReferencia = new StringBuffer();
-        sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
-        numMemoria = sbReferencia.toString();
       }
+
+      StringBuffer sbReferencia = new StringBuffer();
+      sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
+      numMemoria = sbReferencia.toString();
 
       break;
     }
