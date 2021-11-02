@@ -10,12 +10,9 @@
       <div>
         <mat-form-field class="input-form">
           <mat-label>{{'list.entity' | translate:msgParamEntity}}</mat-label>
-          <sgi-select-entity [options]="areasTematicas$ | async" formControlName="padre" required></sgi-select-entity>
+          <sgi-select-area-tematica formControlName="padre" required></sgi-select-area-tematica>
           <mat-error *ngIf="formGroup.controls.padre.errors?.required">
-            {{'error.required.entity' | translate:msgParamListadoEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.padre.errors?.invalid">
-            {{'error.invalid.entity' | translate:msgParamListadoEntity}}
+            {{ 'error.required.entity' | translate:msgParamEntity }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -27,8 +24,8 @@
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
               <li class="mat-tree-node">
                 <button mat-icon-button disabled></button>
-                <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
-                  (change)="onCheckNode(node, $event)">
+                <mat-checkbox class="checkbox" color="primary" [disabled]="node.disabled"
+                  [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
                   {{node.areaTematica.value.nombre}}
                 </mat-checkbox>
               </li>
@@ -48,7 +45,7 @@
                   </mat-label>
 
                   <mat-checkbox *ngIf="node !== rootNodeConvocatoria" class="checkbox" color="primary"
-                    [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                    [disabled]="node.disabled" [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
                     {{node.areaTematica.value.nombre}}
                   </mat-checkbox>
                 </div>
