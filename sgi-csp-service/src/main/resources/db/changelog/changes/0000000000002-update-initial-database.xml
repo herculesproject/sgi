@@ -9,4 +9,11 @@
     <dropColumn columnName="area_tematica_convocatoria_id" tableName="contexto_proyecto" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000002-3">
+    <customChange class="org.crue.hercules.sgi.framework.liquibase.change.custom.ComputedValueCreateSequenceChange">
+      <param name="incrementBy" value="1" />
+      <param name="sequenceName" value="proyecto_partida_seq" />
+      <param name="computedStartValue" value="SELECT COALESCE(MAX(id)+1, 1) FROM ${schemaPrefix}proyecto_partida" />
+    </customChange>
+  </changeSet>
 </databaseChangeLog>

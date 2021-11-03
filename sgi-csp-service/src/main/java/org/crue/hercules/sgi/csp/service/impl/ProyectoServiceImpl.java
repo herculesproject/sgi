@@ -406,7 +406,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         equipos = getEquiposUpdateFechaFinProyectoEquipo(data.getId(), data.getFechaFin(),
             proyectoActualizar.getFechaFinDefinitiva());
       } else if (data.getFechaFinDefinitiva() != null && proyectoActualizar.getFechaFinDefinitiva() != null
-          && data.getFechaFinDefinitiva() != proyectoActualizar.getFechaFinDefinitiva()) {
+          && !data.getFechaFinDefinitiva().equals(proyectoActualizar.getFechaFinDefinitiva())) {
         // Si la fecha de fin definitiva del proyecto cambia de valor, se actualizan
         // todos los equipos cuya fecha de fin sea igual a la fecha definitiva del
         // proyecto
