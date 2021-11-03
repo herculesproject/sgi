@@ -50,6 +50,9 @@ import { ProyectoConsultaPresupuestoComponent } from './proyecto-formulario/proy
 import { ProyectoRelacionesComponent } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.component';
 import { ProyectoRelacionModalComponent } from './modals/proyecto-relacion-modal/proyecto-relacion-modal.component';
 import { PiiSharedModule } from '../../pii/shared/pii-shared.module';
+import { ProyectoCalendarioFacturacionComponent } from './proyecto-formulario/proyecto-calendario-facturacion/proyecto-calendario-facturacion.component';
+import { ProyectoCalendarioFacturacionModalComponent } from './modals/proyecto-calendario-facturacion-modal/proyecto-calendario-facturacion-modal.component';
+import { HistoricoIpModalComponent } from './modals/historico-ip-modal/historico-ip-modal.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +94,9 @@ import { PiiSharedModule } from '../../pii/shared/pii-shared.module';
     ProyectoConsultaPresupuestoComponent,
     ProyectoRelacionesComponent,
     ProyectoRelacionModalComponent,
+    ProyectoCalendarioFacturacionComponent,
+    ProyectoCalendarioFacturacionModalComponent,
+    HistoricoIpModalComponent
   ],
   imports: [
     SharedModule,
