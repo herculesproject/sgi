@@ -81,7 +81,7 @@ export class SolicitiudPresupuestoModalComponent {
 
   readonly columnas: string[];
   private readonly columnasGlobal = ['anualidad', 'conceptoGasto', 'observaciones', 'importePresupuestado', 'importeSolicitado'];
-  private readonly columnasEntidad = ['anualidad', 'nombre', 'ajena', 'conceptoGasto', 'observaciones', 'importePresupuestado', 'importeSolicitado'];
+  private readonly columnasEntidad = ['anualidad', 'nombre', 'fuenteFinanciacion', 'ajena', 'conceptoGasto', 'observaciones', 'importePresupuestado', 'importeSolicitado'];
 
   dataSource = new MatTableDataSource<RowTreePresupuesto>();
   readonly title: string;
