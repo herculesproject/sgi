@@ -51,7 +51,7 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends
           return response;
         }),
         switchMap(response => {
-          return this.memoriaService.findInformeUltimaVersion(this.memoriaId).pipe(
+          return this.memoriaService.findInformeUltimaVersionTipoEvaluacion(this.memoriaId, this.tipoEvaluacion).pipe(
             switchMap(res => {
               const documentacionMemoria: IDocumentacionMemoriaWithInformeAndFichaEvaluador[] = [];
               const documentoInforme = {
