@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
+import org.crue.hercules.sgi.csp.dto.ProyectoFacturacionOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
@@ -25,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
@@ -1245,6 +1247,35 @@ public class ProyectoController {
     return anualidadesGasto.stream().map((anualidadGasto) -> {
       return modelMapper.map(anualidadGasto, AnualidadGastoOutput.class);
     }).collect(Collectors.toList());
+  }
+
+  /*
+   * Devuelve una lista paginada y filtrada de {@link ProyectoFacturacion} del
+   * {@link Proyecto}.
+   *
+   * @param query filtro de búsqueda.
+   * 
+   * @param id Identificador del {@link Proyecto}.
+   */
+  @GetMapping("/{id}/proyectosfacturacion")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  public ResponseEntity<Page<ProyectoFacturacionOutput>> findAllProyectoFacturacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+
+    Page<ProyectoFacturacion> page = this.service.findAllProyectoFacturacionByProyectoId(id, query, paging);
+    return page.isEmpty() ? ResponseEntity.noContent().build()
+        : ResponseEntity.ok(convertToProyectoFacturacionOutputPage(page));
+  }
+
+  ProyectoFacturacionOutput convert(ProyectoFacturacion entity) {
+    return this.modelMapper.map(entity, ProyectoFacturacionOutput.class);
+  }
+
+  private Page<ProyectoFacturacionOutput> convertToProyectoFacturacionOutputPage(Page<ProyectoFacturacion> page) {
+
+    return new PageImpl<ProyectoFacturacionOutput>(page.getContent().stream()
+      .map((entity) -> this.convert(entity))
+      .collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
 
   }
 

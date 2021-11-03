@@ -20,7 +20,6 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -41,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
@@ -101,6 +101,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.ProyectoFacturacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
@@ -185,6 +186,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+  private final ProyectoFacturacionService proyectoFacturacionService;
 
   public ProyectoServiceImpl(SgiConfigProperties sgiConfigProperties, ProyectoRepository repository,
       EstadoProyectoRepository estadoProyectoRepository, ModeloUnidadRepository modeloUnidadRepository,
@@ -226,7 +228,9 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoResponsableEconomicoService proyectoResponsableEconomicoService, Validator validator,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
-      EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository) {
+      EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository,
+      ProyectoFacturacionService proyectoFacturacionService) {
+
     this.sgiConfigProperties = sgiConfigProperties;
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
@@ -276,6 +280,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
     this.estadoProyectoPeriodoJustificacionRepository = estadoProyectoPeriodoJustificacionRepository;
+    this.proyectoFacturacionService = proyectoFacturacionService;
   }
 
   /**
@@ -1752,4 +1757,15 @@ public class ProyectoServiceImpl implements ProyectoService {
       && (fechaInicio.isBefore(proyecto.getFechaFin()));
   }
 
+  /**
+   *
+   * @param proyectoId id del {@link Proyecto} del que cuelgan la lista de objetos {@link ProyectoFacturacion} a buscar
+   * @param query información del filtro.
+   * @param paging información de paginación
+   * @return objeto {@link Page} con el listado de objetos de tipo {@link ProyectoFacturacion}
+   */
+  @Override
+  public Page<ProyectoFacturacion> findAllProyectoFacturacionByProyectoId(Long proyectoId, String query, Pageable paging){
+    return this.proyectoFacturacionService.findByProyectoId(proyectoId, paging);
+  }
 }

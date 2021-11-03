@@ -318,7 +318,111 @@
       <column name="concepto_gasto_id" valueNumeric="1" />
       <column name="proyecto_partida_id" valueNumeric="2" />
     </insert>
+  </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-tipo_facturacion">
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Pago En Efectivo" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Única" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Pago A Plazos" />
+    </insert>
+  </changeSet>
+  <!-- Populate table proyecto_facturacion -->
+  <changeSet id="0000000000002-proyecto_facturacion" author="master" context="dev">
+    <insert tableName="proyecto_facturacion">
+      <column name="id" valueSequenceNext="proyecto_facturacion_seq" />
+      <column name="comentario" value="Proyecto Facuración 1" />
+      <column name="fecha_emision" valueDate="2021-09-25T11:11:00" />
+      <column name="importe_base" valueNumeric="230" />
+      <column name="numero_prevision" valueNumeric="1" />
+      <column name="porcentaje_iva" valueNumeric="21" />
+      <column name="proyecto_id" valueNumeric="1" />
+      <column name="tipo_facturacion_id" valueNumeric="1" />
+      <column name="fecha_conformidad" valueDate="2021-09-08T11:11:00" />
+    </insert>
+    <insert tableName="proyecto_facturacion">
+      <column name="id" valueSequenceNext="proyecto_facturacion_seq" />
+      <column name="comentario" value="Proyecto Facuración 2" />
+      <column name="fecha_emision" valueDate="2021-10-25T11:11:00" />
+      <column name="importe_base" valueNumeric="240" />
+      <column name="numero_prevision" valueNumeric="2" />
+      <column name="porcentaje_iva" valueNumeric="21" />
+      <column name="proyecto_id" valueNumeric="1" />
+      <column name="tipo_facturacion_id" valueNumeric="2" />
+      <column name="fecha_conformidad" valueDate="2021-09-18T11:11:00" />
+    </insert>
+    <insert tableName="proyecto_facturacion">
+      <column name="id" valueSequenceNext="proyecto_facturacion_seq" />
+      <column name="comentario" value="Proyecto Facuración 3" />
+      <column name="fecha_emision" valueDate="2021-11-11T11:11:00" />
+      <column name="importe_base" valueNumeric="540" />
+      <column name="numero_prevision" valueNumeric="3" />
+      <column name="porcentaje_iva" valueNumeric="17" />
+      <column name="proyecto_id" valueNumeric="1" />
+      <column name="tipo_facturacion_id" valueNumeric="3" />
+      <column name="fecha_conformidad" valueDate="2021-09-21T11:11:00" />
+    </insert>
+  </changeSet>
+  <!-- Populate table estado_validacion_ip -->
+  <changeSet context="dev" author="master" id="0000000000002-estado_validacion_ip">
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="PENDIENTE" />
+      <column name="fecha" valueDate="2021-09-07T11:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="1" />
+    </insert>
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="NOTIFICADA" />
+      <column name="fecha" valueDate="2021-09-08T11:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="1" />
+    </insert>
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="VALIDADA" />
+      <column name="fecha" valueDate="2021-09-09T12:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="1" />
+    </insert>
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="PENDIENTE" />
+      <column name="fecha" valueDate="2021-09-07T11:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="2" />
+    </insert>
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="NOTIFICADA" />
+      <column name="fecha" valueDate="2021-09-07T11:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="2" />
+    </insert>
+    <insert tableName="estado_validacion_ip">
+      <column name="id" valueSequenceNext="estado_validacion_ip_seq" />
+      <column name="estado" value="VALIDADA" />
+      <column name="fecha" valueDate="2021-09-07T11:11:00" />
+      <column name="proyecto_facturacion_id" valueNumeric="3" />
+    </insert>
+  </changeSet>
+  <!-- Update table proyecto_facturacion_ip -->
+  <changeSet context="dev" author="master" id="0000000000002-proyecto_facturacion_update">
+    <update tableName="proyecto_facturacion">
+      <column name="estado_validacion_ip_id" valueNumeric="3" />
+      <where>id=1</where>
+    </update>
+    <update tableName="proyecto_facturacion">
+      <column name="estado_validacion_ip_id" valueNumeric="5" />
+      <where>id=2</where>
+    </update>
+    <update tableName="proyecto_facturacion">
+      <column name="estado_validacion_ip_id" valueNumeric="6" />
+      <where>id=3</where>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
