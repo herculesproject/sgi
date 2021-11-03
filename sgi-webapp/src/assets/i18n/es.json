@@ -727,6 +727,7 @@
   "csp.solicitud-datos-proyecto-ficha-general.codigo-externo": "Referencia en entidad convocante",
   "csp.solicitud-datos-proyecto-ficha-general.coordinador-externo": "Coordinador Externo",
   "csp.solicitud-datos-proyecto-ficha-general.duracion": "Duración (meses)",
+  "csp.solicitud-datos-proyecto-ficha-general.importeSolicitado": "Importe Solicitado",
   "csp.solicitud-datos-proyecto-ficha-general.justificacion-interes": "Justificación e Interés",
   "csp.solicitud-datos-proyecto-ficha-general.objetivos": "Objetivos del Proyecto",
   "csp.solicitud-datos-proyecto-ficha-general.proyecto-colaborativo": "Proyecto Colaborativo",

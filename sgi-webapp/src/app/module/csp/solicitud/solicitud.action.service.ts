@@ -223,7 +223,8 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoAreaConocimiento, solicitudService, areaConocimientoService, this.readonly);
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.data?.solicitud?.id, solicitudService, this.readonly);
-    this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id, solicitudService,
+    this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id,
+      this.isInvestigador, this.data?.solicitud.estado, solicitudService,
       solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId,
       this.hasAnySolicitudProyectoSocioWithRolCoordinador$, this.data?.hasPopulatedPeriodosSocios);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
@@ -361,8 +362,20 @@ export class SolicitudActionService extends ActionService {
         }
       ));
 
+      if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
+        this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
+        this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
+        this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
+        this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
+        this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
+      }
       // Forzamos la inicialización de los datos principales
       this.datosGenerales.initialize();
+      // Inicializamos los datos del proyecto
+      if (this.data?.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
+        this.proyectoDatos.initialize();
+        this.datosProyectoComplete$.next(true);
+      }
     }
     this.hasAnySolicitudProyectoSocioWithRolCoordinador$.next(this.data?.hasAnySolicitudProyectoSocioWithRolCoordinador);
   }

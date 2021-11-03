@@ -12,6 +12,7 @@ import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
 import { SolicitudDataResolver, SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
+import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudListadoInvComponent } from './solicitud-listado-inv/solicitud-listado-inv.component';
 import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
 import { SOLICITUD_ROUTE_PARAMS } from './solicitud-route-params';
@@ -76,6 +77,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.DATOS_GENERALES,
         component: SolicitudDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS,
+        component: SolicitudProyectoFichaGeneralComponent,
         canDeactivate: [FragmentGuard]
       }
     ]
