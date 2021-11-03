@@ -1,8 +1,18 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-  <!-- Cambio de Fecha_Fin,total_importe_presupuesto & total_importe_concedido del Proyecto con id=3 -->
+
   <changeSet context="dev" author="master" id="0000000000002-proyecto">
+    <!-- Cambio de anualidades del Proyecto con id=2 -->
+    <update tableName="proyecto">
+      <column name="anualidades" valueBoolean="true" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <!-- Cambio de Fecha_Fin,total_importe_presupuesto & total_importe_concedido del Proyecto con id=3 -->
     <update tableName="proyecto">
       <column name="total_importe_presupuesto" valueNumeric="5000" />
       <column name="total_importe_concedido" valueNumeric="4800" />
@@ -13,7 +23,7 @@
     </update>
   </changeSet>
 
-  <!-- Cambio de persona_ref el Proyecto Equipo con id = 10 & id = 11-->
+  <!-- Cambio de persona_ref el Proyecto Equipo con id = 10 & id = 11 & id=13-->
   <changeSet context="dev" author="master" id="0000000000002-proyecto_equipo">
 
     <!--ID 10-->
