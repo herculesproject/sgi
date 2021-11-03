@@ -89,10 +89,9 @@ public interface InformeService {
    * tipo de evaluación
    * 
    * @param id               identificador de la {@link Memoria}
-   * @param version          número de la versión
    * @param idTipoEvaluacion identificador del {@link TipoEvaluacion}
    * @return el {@link Informe}
    */
-  Optional<Informe> findByMemoriaAndVersionAndTipoEvaluacion(Long id, Integer version, Long idTipoEvaluacion);
+  Optional<Informe> findByMemoriaAndTipoEvaluacion(Long id, Long idTipoEvaluacion);
 
 }

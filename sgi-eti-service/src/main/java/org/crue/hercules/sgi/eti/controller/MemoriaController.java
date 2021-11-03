@@ -806,24 +806,21 @@ public class MemoriaController {
    * * Devuelve el informe con la última versión
    * 
    * @param id             identificador de la {@link Memoria}
-   * @param version        identificador de la versión
    * @param tipoEvaluacion identificador del tipo de evaluación
    * @return el {@link Informe}
    */
-  @GetMapping("/{id}/informe/version/{version}/tipo/{tipoEvaluacion}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-INV-ER', 'ETI-PEV-V', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Informe> getInformeFormularioVersion(@PathVariable Long id, @PathVariable Integer version,
-      @PathVariable Long tipoEvaluacion) {
-    log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - start");
-    Optional<Informe> returnValue = informeService.findByMemoriaAndVersionAndTipoEvaluacion(id, version,
-        tipoEvaluacion);
+  @GetMapping("/{id}/informe/ultima-version/tipo/{tipoEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ER', 'ETI-MEM-V', 'ETI-EVC-EVALR')")
+  public ResponseEntity<Informe> getInformeFormularioUltimaVersionTipoEvaluacion(@PathVariable Long id, @PathVariable Long tipoEvaluacion) {
+    log.debug("getInformeFormularioUltimaVersionTipoEvaluacion(Long id, Long tipoEvaluacion) - start");
+    Optional<Informe> returnValue = informeService.findByMemoriaAndTipoEvaluacion(id, tipoEvaluacion);
 
     if (!returnValue.isPresent()) {
-      log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - end");
+      log.debug("getInformeFormularioUltimaVersionTipoEvaluacion(Long id, Long tipoEvaluacion) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("getInformeFormularioVersion(Long id, Integer version, Long tipoEvaluacion) - end");
+    log.debug("getInformeFormularioUltimaVersionTipoEvaluacion(Long id, Long tipoEvaluacion) - end");
     return new ResponseEntity<>(returnValue.get(), HttpStatus.OK);
 
   }

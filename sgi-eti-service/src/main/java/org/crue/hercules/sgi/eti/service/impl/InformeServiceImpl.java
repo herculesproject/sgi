@@ -180,17 +180,15 @@ public class InformeServiceImpl implements InformeService {
    * tipo de evaluación
    * 
    * @param id               identificador de la {@link Memoria}
-   * @param version          número de la versión
    * @param idTipoEvaluacion identificador del {@link TipoEvaluacion}
    * @return el {@link Informe}
    */
   @Override
-  public Optional<Informe> findByMemoriaAndVersionAndTipoEvaluacion(Long id, Integer version, Long idTipoEvaluacion) {
+  public Optional<Informe> findByMemoriaAndTipoEvaluacion(Long id, Long idTipoEvaluacion) {
     Assert.notNull(id, "Memoria id no puede ser null para buscar un informe");
-    Assert.notNull(version, "El número de versión no puede ser null para buscar un informe por su número de versión");
     Assert.notNull(idTipoEvaluacion,
         "El id TipoEvaluacion no puede ser null para buscar un informe por su tipo de evaluación");
-    return informeRepository.findByMemoriaIdAndVersionAndTipoEvaluacionId(id, version, idTipoEvaluacion);
+    return informeRepository.findFirstByMemoriaIdAndTipoEvaluacionIdOrderByVersionDesc(id, idTipoEvaluacion);
   }
 
 }

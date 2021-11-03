@@ -72,6 +72,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MemoriaServiceImpl implements MemoriaService {
 
   private static final String TITULO_INFORME_MXX = "informeMemoriaPdf";
+  private static final String TITULO_INFORME_RETROSPECTIVA = "informeRetrospectivaPdf";
+  private static final String TITULO_INFORME_SA = "informeSAPdf";
+  private static final String TITULO_INFORME_SF = "informeSFPdf";
 
   /** Propiedades de configuración de la aplicación */
   private final SgiConfigProperties sgiConfigProperties;
@@ -730,18 +733,22 @@ public class MemoriaServiceImpl implements MemoriaService {
     informe.getTipoEvaluacion().setId(tipoEvaluacion);
 
     Long idFormulario = null;
+    String tituloInforme = TITULO_INFORME_MXX;
     switch (tipoEvaluacion.intValue()) {
     case Constantes.TIPO_EVALUACION_MEMORIA_INT:
       idFormulario = memoria.getComite().getFormulario().getId();
       break;
     case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
       idFormulario = Constantes.FORMULARIO_ANUAL;
+      tituloInforme = TITULO_INFORME_SA;
       break;
     case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
       idFormulario = Constantes.FORMULARIO_FINAL;
+      tituloInforme = TITULO_INFORME_SF;
       break;
     case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
       idFormulario = Constantes.FORMULARIO_RETROSPECTIVA;
+      tituloInforme = TITULO_INFORME_RETROSPECTIVA;
       break;
     }
 
@@ -749,7 +756,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     Resource informePdf = reportService.getMXX(memoria.getId(), idFormulario);
 
     // Se sube el informe a sgdoc
-    String fileName = TITULO_INFORME_MXX + "_" + memoria.getId() + LocalDate.now() + ".pdf";
+    String fileName = tituloInforme + "_" + memoria.getId() + LocalDate.now() + ".pdf";
     DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
 
     // Se adjunta referencia del documento a sgdoc y se crea el informe

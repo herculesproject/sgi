@@ -28,13 +28,12 @@ public interface InformeRepository extends JpaRepository<Informe, Long>, JpaSpec
   Page<Informe> findByMemoriaId(Long idMemoria, Pageable pageable);
 
   /**
-   * Devuelve el {@link Informe} filtrado por la {@link Memoria} y su versión
+   * Devuelve el {@link Informe} filtrado por la {@link Memoria} y su tipo de
+   * evaluación
    * 
    * @param idMemoria        identificador de la {@link Memoria}
-   * @param version          número de la versión
    * @param idTipoEvaluacion identificador del {@link TipoEvaluacion}
    * @return el {@link Informe}
    */
-  Optional<Informe> findByMemoriaIdAndVersionAndTipoEvaluacionId(Long idMemoria, Integer version,
-      Long idTipoEvaluacion);
+  Optional<Informe> findFirstByMemoriaIdAndTipoEvaluacionIdOrderByVersionDesc(Long idMemoria, Long idTipoEvaluacion);
 }
