@@ -64,6 +64,7 @@ public class BeanMethodTaskService {
   /**
    * Creates and schedules a new {@link BeanMethodTask}
    *
+   * @param <T>            the {@link BeanMethodTask} sub-type
    * @param beanMethodTask the {@link BeanMethodTask} to create
    * @return the created {@link BeanMethodTask}
    */
@@ -92,6 +93,7 @@ public class BeanMethodTaskService {
   /**
    * Updates and re-schedules a new {@link BeanMethodTask}
    *
+   * @param <T>            the {@link BeanMethodTask} sub-type
    * @param beanMethodTask the {@link BeanMethodTask} to modify
    * @return the modified {@link BeanMethodTask}
    */
@@ -124,7 +126,7 @@ public class BeanMethodTaskService {
   /**
    * Enables and schedules an existing {@link BeanMethodTask}
    *
-   * @param beanMethodTask the {@link BeanMethodTask} to enable
+   * @param id the identifier of the {@link BeanMethodTask} to enable
    * @return the enabled {@link BeanMethodTask}
    */
 
@@ -164,7 +166,7 @@ public class BeanMethodTaskService {
   /**
    * Disables and un-schedules an existing {@link BeanMethodTask}
    *
-   * @param beanMethodTask the {@link BeanMethodTask} to disable
+   * @param id the identifier of the {@link BeanMethodTask} to disable
    * @return the disabled {@link BeanMethodTask}
    */
 
