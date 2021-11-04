@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -128,7 +129,12 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError(MSG_LISTADO_ERROR);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(MSG_LISTADO_ERROR);
+          }
           return of([]);
         })
       );
