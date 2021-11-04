@@ -19,6 +19,10 @@ import org.springframework.http.HttpMethod;
 public class SgiApiTaskConverter {
   public static final String BEAN_NAME_SGI_API_CALLER_TASK = "sgiApiCallerTask";
 
+  private SgiApiTaskConverter() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static BeanMethodCronTask convert(Long id, SgiApiCronTaskInput task) {
     BeanMethodCronTask returnValue = convert(task);
     returnValue.setId(id);
