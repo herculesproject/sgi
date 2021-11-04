@@ -169,9 +169,7 @@ export class ProyectoContextoModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      padre: new FormControl({
-        value: this.data?.padre
-      }, [Validators.required]),
+      padre: new FormControl(null, [Validators.required]),
     });
     return formGroup;
   }
@@ -179,9 +177,7 @@ export class ProyectoContextoModalComponent extends
   protected getDatosForm(): ProyectoContextoModalData {
     const padre = this.formGroup.controls.padre.value;
     const areasTematicasConvocatoria = this.data.areasTematicasConvocatoria;
-    if (!areasTematicasConvocatoria && !this.checkedNode) {
-      return {} as ProyectoContextoModalData;
-    } else {
+    if (this.checkedNode) {
       return {
         padre,
         areasTematicasConvocatoria,
