@@ -16,6 +16,20 @@
     </faultSequence>
   </resource>
 
+  <resource methods="GET" uri-template="/proyectos/{id}/anualidades">
+    <inSequence>
+      <send>
+        <endpoint key="sgicsp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
   <resource methods="GET" uri-template="/proyectos/{id}/contexto">
     <inSequence>
       <!-- Get URL from HTTP transport properties-->
