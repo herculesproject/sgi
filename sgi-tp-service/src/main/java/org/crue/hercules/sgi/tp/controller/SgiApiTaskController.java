@@ -67,7 +67,7 @@ public class SgiApiTaskController {
   /**
    * Creates a new SGI API instant task.
    * 
-   * @param cronTask the {@link SgiApiInstanTaskInput} to be created
+   * @param instantTask the {@link SgiApiInstantTaskInput} to be created
    * @return the newly created {@link SgiApiInstantTaskOutput}
    */
   @PostMapping(PATH_INSTANT)
@@ -111,6 +111,13 @@ public class SgiApiTaskController {
     return SgiApiTaskConverter.convert(returnValue);
   }
 
+  /**
+   * Returns a {@link SgiApiCronTaskOutput} or {@link SgiApiInstantTaskOutput}
+   * with the provides identifier.
+   * 
+   * @param id the identifier
+   * @return the element with the provided id
+   */
   @GetMapping(PATH_SINGLE)
   public Object get(@PathVariable Long id) {
     log.debug("get(Long id) - start");
@@ -132,6 +139,7 @@ public class SgiApiTaskController {
    * 
    * @param query  search filter
    * @param paging page information
+   * @return the paginated and filtered list
    */
   @GetMapping
   public ResponseEntity<Page<Object>> findEnabledSgiApiTasks(@RequestParam(name = "q", required = false) String query,
@@ -154,6 +162,7 @@ public class SgiApiTaskController {
    * 
    * @param query  search filter
    * @param paging page information
+   * @return the paginated and filtered list
    */
   @GetMapping(PATH_CRON)
   public ResponseEntity<Page<SgiApiCronTaskOutput>> findEnabledSgiApiCronTasks(
@@ -177,6 +186,7 @@ public class SgiApiTaskController {
    * 
    * @param query  search filter
    * @param paging page information
+   * @return the paginated and filtered list
    */
   @GetMapping(PATH_INSTANT)
   public ResponseEntity<Page<SgiApiInstantTaskOutput>> findEnabledSgiApiInstantTasks(
