@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * SgiWebConfig Fw
+ * WebConfig
  * 
  * Framework Web configuration.
  */

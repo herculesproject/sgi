@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.tp.dto;
 
 import java.time.Instant;
 
+import javax.validation.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,5 +16,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class SgiApiInstantTaskInput extends SgiApiTaskInput {
+  @NotEmpty
   private Instant instant;
 }
