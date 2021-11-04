@@ -6,22 +6,21 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "bean_method_instant_tasks")
 @DiscriminatorValue("INSTANT")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class BeanMethodInstantTask extends BeanMethodTask {
 
   /**
@@ -31,7 +30,6 @@ public class BeanMethodInstantTask extends BeanMethodTask {
 
   /** Instant */
   @Column(name = "instant", nullable = false)
-  @NotEmpty
   private Instant instant;
 
 }

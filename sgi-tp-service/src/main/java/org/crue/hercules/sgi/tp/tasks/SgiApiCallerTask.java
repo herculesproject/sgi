@@ -1,11 +1,13 @@
 package org.crue.hercules.sgi.tp.tasks;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.tp.config.RestApiProperties;
 import org.crue.hercules.sgi.tp.enums.ServiceType;
+import org.crue.hercules.sgi.tp.exceptions.UnknownServiceExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -26,39 +28,50 @@ public class SgiApiCallerTask {
     this.restApiProperties = restApiProperties;
   }
 
-  public String call(String serviceType, String relativePath) throws MalformedURLException {
-    log.info("Calling SGI API Service {} path: {}", serviceType, relativePath);
+  public String call(String serviceType, String relativeUrl, String httpMethod)
+      throws URISyntaxException, MalformedURLException {
+    log.info("Calling SGI API Service: {} {} {}", httpMethod, serviceType, relativeUrl);
+    HttpMethod method = HttpMethod.resolve(httpMethod);
+    if (method == null) {
+      method = HttpMethod.PATCH;
+    }
     String serviceURL = null;
     switch (ServiceType.valueOf(serviceType)) {
-      case COM:
-        serviceURL = restApiProperties.getComUrl();
-        break;
-      case CSP:
-        serviceURL = restApiProperties.getCspUrl();
-        break;
-      case ETI:
-        serviceURL = restApiProperties.getEtiUrl();
-        break;
-      case PII:
-        serviceURL = restApiProperties.getPiiUrl();
-        break;
-      case REL:
-        serviceURL = restApiProperties.getRelUrl();
-        break;
-      case REP:
-        serviceURL = restApiProperties.getRepUrl();
-        break;
-      case USR:
-        serviceURL = restApiProperties.getUsrUrl();
-        break;
+    case COM:
+      serviceURL = restApiProperties.getComUrl();
+      break;
+    case CSP:
+      serviceURL = restApiProperties.getCspUrl();
+      break;
+    case ETI:
+      serviceURL = restApiProperties.getEtiUrl();
+      break;
+    case PII:
+      serviceURL = restApiProperties.getPiiUrl();
+      break;
+    case REL:
+      serviceURL = restApiProperties.getRelUrl();
+      break;
+    case REP:
+      serviceURL = restApiProperties.getRepUrl();
+      break;
+    case USR:
+      serviceURL = restApiProperties.getUsrUrl();
+      break;
+    default:
+      throw new UnknownServiceExtension(serviceType);
     }
-    HttpEntity<?> request = new HttpEntityBuilder<>().withClientAuthorization(CLIENT_REGISTRATION_ID).build();
-
-    String endPoint = (new URL(new URL(serviceURL), relativePath)).toString();
-    ResponseEntity<String> response = restTemplate.exchange(endPoint, HttpMethod.PATCH, request, String.class);
-
-    String result = response.getBody();
+    URL mergedURL = new URL(new URL(serviceURL), relativeUrl);
+    String result = call(mergedURL, method);
     log.info("SGI API Service response: {}", result);
     return result;
+  }
+
+  private String call(URL url, HttpMethod httpMethod) {
+    HttpEntity<?> request = new HttpEntityBuilder<>().withClientAuthorization(CLIENT_REGISTRATION_ID).build();
+
+    ResponseEntity<String> response = restTemplate.exchange(url.toString(), httpMethod, request, String.class);
+
+    return response.getBody();
   }
 }

@@ -32,6 +32,15 @@ public class BeanMehtodTaskSpecifications {
   }
 
   /**
+   * Disabled {@link BeanMethodTask}.
+   * 
+   * @return specification to get disabled {@link BeanMethodTask}.
+   */
+  public static Specification<BeanMethodTask> disabled() {
+    return (root, query, cb) -> cb.equal(root.get(BeanMethodTask_.disabled), Boolean.TRUE);
+  }
+
+  /**
    * Future (instant greater than now) {@link BeanMethodInstantTask}.
    * 
    * @return specification to get only future {@link BeanMethodInstantTask}

@@ -162,11 +162,11 @@ public class TaskRegistrar implements DisposableBean {
   private String getRunnableLogMessage(Runnable runnable) {
     if (runnable instanceof RunnableBeanMethod) {
       RunnableBeanMethod runnableBeanMethod = (RunnableBeanMethod) runnable;
-      return String.format("runnable: %s， bean: %s， Method: %s， Parameters: %s",
+      return String.format("Runnable: %s， bean: %s， Method: %s， Parameters: %s",
           runnableBeanMethod.getClass().getSimpleName(), runnableBeanMethod.getBeanName(),
           runnableBeanMethod.getMethodName(), Arrays.toString(runnableBeanMethod.getParams()));
     } else {
-      return String.format("runnable: %s", runnable.getClass().getName());
+      return String.format("Runnable: %s", runnable.getClass().getName());
     }
   }
 

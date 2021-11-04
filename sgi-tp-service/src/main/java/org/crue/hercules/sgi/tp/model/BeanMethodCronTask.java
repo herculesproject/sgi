@@ -4,23 +4,21 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "bean_method_cron_tasks")
 @DiscriminatorValue("CRON")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class BeanMethodCronTask extends BeanMethodTask {
 
   /**
@@ -32,7 +30,5 @@ public class BeanMethodCronTask extends BeanMethodTask {
 
   /** Cron expression */
   @Column(name = "cron_expression", length = CRON_EXPRESSION_LENGTH, nullable = false)
-  @NotEmpty
-  @Size(max = CRON_EXPRESSION_LENGTH)
   private String cronExpression;
 }

@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.tp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -17,12 +16,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "bean_method_tasks")
@@ -30,7 +29,10 @@ import lombok.EqualsAndHashCode;
 @DiscriminatorColumn(name = "schedule_type")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public abstract class BeanMethodTask extends BaseEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+public class BeanMethodTask extends BaseEntity {
 
   /**
    * Serial version
@@ -54,25 +56,20 @@ public abstract class BeanMethodTask extends BaseEntity {
 
   /** Bean name */
   @Column(name = "bean", length = BEAN_LENGTH, nullable = false)
-  @NotEmpty
-  @Size(max = BEAN_LENGTH)
   private String bean;
 
   /** Method name */
   @Column(name = "method", length = METHOD_LENGHT, nullable = false)
-  @NotEmpty
-  @Size(max = METHOD_LENGHT)
   private String method;
 
   /** Method parameters */
   @ElementCollection(fetch = FetchType.EAGER, targetClass = java.lang.String.class)
   @CollectionTable(name = "bean_method_task_params", joinColumns = @JoinColumn(name = "bean_method_tasks_id"))
   @Column(name = "param")
-  private List<String> params = new ArrayList<>();
+  private List<String> params;
 
   /** Disabled */
-  @Column(name = "disabled", columnDefinition = "boolean default false", nullable = false)
-  @NotNull(groups = { Update.class })
+  @Column(name = "disabled", nullable = false)
   private Boolean disabled;
 
 }
