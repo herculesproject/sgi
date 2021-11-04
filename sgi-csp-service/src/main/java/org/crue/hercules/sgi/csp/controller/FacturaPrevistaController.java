@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,8 +36,8 @@ public class FacturaPrevistaController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<FacturaEmitidaOutput>> findAll(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+  public ResponseEntity<Page<FacturaEmitidaOutput>> findAll(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
 
     Page<ProyectoFacturacion> page = this.proyectoFacturacionService.findFacturasPrevistas(query, paging);
     return page.isEmpty() ? ResponseEntity.noContent().build()
