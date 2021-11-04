@@ -334,8 +334,9 @@
       <column name="nombre" value="Pago A Plazos" />
     </insert>
   </changeSet>
+
   <!-- Populate table proyecto_facturacion -->
-  <changeSet id="0000000000002-proyecto_facturacion" author="master" context="dev">
+  <changeSet context="dev" author="master" id="0000000000002-proyecto_facturacion">
     <insert tableName="proyecto_facturacion">
       <column name="id" valueSequenceNext="proyecto_facturacion_seq" />
       <column name="comentario" value="Proyecto Facuración 1" />
@@ -370,6 +371,7 @@
       <column name="fecha_conformidad" valueDate="2021-09-21T11:11:00" />
     </insert>
   </changeSet>
+
   <!-- Populate table estado_validacion_ip -->
   <changeSet context="dev" author="master" id="0000000000002-estado_validacion_ip">
     <insert tableName="estado_validacion_ip">
@@ -409,6 +411,7 @@
       <column name="proyecto_facturacion_id" valueNumeric="3" />
     </insert>
   </changeSet>
+
   <!-- Update table proyecto_facturacion_ip -->
   <changeSet context="dev" author="master" id="0000000000002-proyecto_facturacion_update">
     <update tableName="proyecto_facturacion">
