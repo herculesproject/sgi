@@ -44,6 +44,7 @@
     <manifest.name>org/crue/hercules/sgi/framework</manifest.name>
     <!-- Dependencies versions (not defined in parent pom) -->
     <jslt.version>0.1.11</jslt.version>
+    <lombok.version>1.18.20</lombok.version> <!-- Update Lombok to be JDK 16 compatible -->
     <modelmapper.version>2.3.5</modelmapper.version>
     <rsql-jpa-spring-boot-starter.version>5.0.9</rsql-jpa-spring-boot-starter.version>
     <wiremock-jre8.version>2.31.0</wiremock-jre8.version>
