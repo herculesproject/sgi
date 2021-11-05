@@ -39,7 +39,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @Slf4j
 public class SgiDataConfig {
-  private final static String HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM = "hibernate.default.schema";
+  private static final String HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM = "hibernate.default.schema";
+
+  private static final String DATABASE_STARTUP_VALIDATOR_BEAN_NAME = "databaseStartupValidator";
 
   @Bean
   public DatabaseDriver databaseDriver(@Value("${spring.datasource.driver-class-name}") String driverClassName) {
@@ -74,35 +76,33 @@ public class SgiDataConfig {
       // Let beans that need the database depend on the DatabaseStartupValidator
       // like the EntityManagerFactory, Liquibase or JdbcTemplate
       String[] jdbc = bf.getBeanNamesForType(JdbcTemplate.class);
-      Stream.of(jdbc).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
+      Stream.of(jdbc).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn(DATABASE_STARTUP_VALIDATOR_BEAN_NAME));
 
       String[] liquibase = bf.getBeanNamesForType(Liquibase.class);
-      Stream.of(liquibase).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
+      Stream.of(liquibase).map(bf::getBeanDefinition)
+          .forEach(it -> it.setDependsOn(DATABASE_STARTUP_VALIDATOR_BEAN_NAME));
 
       String[] jpa = bf.getBeanNamesForType(EntityManagerFactory.class);
-      Stream.of(jpa).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
+      Stream.of(jpa).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn(DATABASE_STARTUP_VALIDATOR_BEAN_NAME));
       log.debug("dependsOnPostProcessor() - end");
     };
   }
 
   @Bean
   public static HibernatePropertiesCustomizer hibernatePropertiesCustomizer(Validator validator) {
-    return new HibernatePropertiesCustomizer() {
-      @Override
-      public void customize(Map<String, Object> hibernateProperties) {
-        log.debug("customize(Map<String, Object> hibernateProperties) - start");
-        if (hibernateProperties.containsKey(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM)) {
-          Object propertyValue = hibernateProperties.get(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM);
-          log.info("{0}={1}", HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM, propertyValue);
-          hibernateProperties.put(AvailableSettings.DEFAULT_SCHEMA, propertyValue);
-        }
-        // Prevent Hibernate Validator from creating it's own ConstraintValidatorManager
-        // for entity level validation
-        // see:
-        // https://stackoverflow.com/questions/56542699/hibernate-validator-in-spring-boot-using-different-constraintvalidatormanager
-        hibernateProperties.put("javax.persistence.validation.factory", validator);
-        log.debug("customize(Map<String, Object> hibernateProperties) - end");
+    return (Map<String, Object> hibernateProperties) -> {
+      log.debug("customize(Map<String, Object> hibernateProperties) - start");
+      if (hibernateProperties.containsKey(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM)) {
+        Object propertyValue = hibernateProperties.get(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM);
+        log.info("{0}={1}", HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM, propertyValue);
+        hibernateProperties.put(AvailableSettings.DEFAULT_SCHEMA, propertyValue);
       }
+      // Prevent Hibernate Validator from creating it's own ConstraintValidatorManager
+      // for entity level validation
+      // see:
+      // https://stackoverflow.com/questions/56542699/hibernate-validator-in-spring-boot-using-different-constraintvalidatormanager
+      hibernateProperties.put("javax.persistence.validation.factory", validator);
+      log.debug("customize(Map<String, Object> hibernateProperties) - end");
     };
   }
 

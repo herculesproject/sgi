@@ -206,8 +206,8 @@ public class SgiJpaRepository<T, I> extends SimpleJpaRepository<T, I> implements
 
     private static final long serialVersionUID = 1L;
 
-    private final Example<T> example;
-    private final EscapeCharacter escapeCharacter;
+    private final transient Example<T> example;
+    private final transient EscapeCharacter escapeCharacter;
 
     /**
      * Creates new {@link ExampleSpecification}.

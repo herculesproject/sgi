@@ -88,7 +88,6 @@ public class ComputedValueCreateSequenceChange extends CreateSequenceChange impl
   public BigInteger computeValue(Database database, String sql) throws CustomChangeException {
     JdbcConnection dbConnection = (JdbcConnection) database.getConnection();
     PreparedStatement selectStatement = null;
-    PreparedStatement updateStatement = null;
     ResultSet results;
 
     try {
@@ -109,8 +108,6 @@ public class ComputedValueCreateSequenceChange extends CreateSequenceChange impl
       try {
         if (selectStatement != null)
           selectStatement.close();
-        if (updateStatement != null)
-          updateStatement.close();
       } catch (SQLException e) {
         log.warn("Database error: ", e);
       }

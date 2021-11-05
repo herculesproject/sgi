@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.framework.web.method.annotation;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,7 +95,7 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
       xPageSize = webRequest.getHeader(requestPageable.pageSizeHeader());
       sortParamName = requestPageable.sort();
     }
-    Sort sort = Sort.unsorted();
+    Sort sort = null;
 
     if (sortParamName != null && !"".equals(sortParamName)) {
       Object arg = resolveName(sortParamName, nestedParameter, webRequest);
@@ -106,7 +107,7 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     }
 
     if (xPageSize == null) {
-      Object returnValue = new UnpagedPageable(sort);
+      Object returnValue = new UnpagedPageable(sort != null ? sort : Sort.unsorted());
       log.debug(
           "resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) - end");
       return returnValue;
@@ -114,9 +115,9 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     if (xPage == null) {
       xPage = "0";
     }
-
     // Use provided page size and short info
-    Object returnValue = PageRequest.of(Integer.parseInt(xPage), Integer.parseInt(xPageSize), sort);
+    Object returnValue = PageRequest.of(Integer.parseInt(xPage), Integer.parseInt(xPageSize),
+        sort != null ? sort : Sort.unsorted());
     log.debug(
         "resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) - start");
     return returnValue;
@@ -164,7 +165,7 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
    */
   private List<Sort> generateSortList(List<SortCriteria> criteria) {
     log.debug("generateSortList(List<SortCriteria> criteria) - start");
-    List<Sort> returnValue = criteria.stream().map((criterion) -> {
+    List<Sort> returnValue = criteria.stream().map(criterion -> {
       switch (criterion.getOperation()) {
       case ASC:
         return Sort.by(Order.asc(criterion.getKey()));
@@ -173,7 +174,7 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
       default:
         return null;
       }
-    }).filter((sort) -> sort != null).collect(Collectors.toList());
+    }).filter(Objects::nonNull).collect(Collectors.toList());
     log.debug("generateSortList(List<SortCriteria> criteria) - end");
     return returnValue;
   }

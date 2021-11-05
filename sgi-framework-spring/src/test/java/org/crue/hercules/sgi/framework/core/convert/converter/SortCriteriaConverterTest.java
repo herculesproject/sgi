@@ -8,6 +8,8 @@ import org.crue.hercules.sgi.framework.data.sort.SortOperation;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -19,69 +21,17 @@ public class SortCriteriaConverterTest {
   /**
    * @throws Exception
    */
-  @Test
-  public void convertAscendingSortExpression_returnsAscendingSortCriteria() throws Exception {
+  @ParameterizedTest
+  @CsvSource(value = {// @formatter:off
+      "column; asc; column,asc",
+      "column.column; asc; column.column,asc",
+      "column; desc; column,desc",
+      "column.column; desc; column.column,desc" 
+      // @formatter:on
+  }, delimiter = ';')
+  public void convertAscendingSortExpression_returnsAscendingSortCriteria(String column, String operator, String query)
+      throws Exception {
     // given: an equals expression
-    String column = "column";
-    String operator = "asc";
-    String query = column + "," + operator;
-
-    // when: convert method invoqued with given expression
-    List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
-
-    // then: the right SortCriteria list is returned
-    Assertions.assertThat(sortCriterias.size()).isEqualTo(1);
-    Assertions.assertThat(sortCriterias.get(0).getKey()).isEqualTo(column);
-    Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
-  }
-
-  /**
-   * @throws Exception
-   */
-  @Test
-  public void convertAscendingSortExpressionNestedProperty_returnsAscendingSortCriteria() throws Exception {
-    // given: an equals expression
-    String column = "column.column";
-    String operator = "asc";
-    String query = column + "," + operator;
-
-    // when: convert method invoqued with given expression
-    List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
-
-    // then: the right SortCriteria list is returned
-    Assertions.assertThat(sortCriterias.size()).isEqualTo(1);
-    Assertions.assertThat(sortCriterias.get(0).getKey()).isEqualTo(column);
-    Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
-  }
-
-  /**
-   * @throws Exception
-   */
-  @Test
-  public void convertDescendingSortExpression_returnsDescendingSortCriteria() throws Exception {
-    // given: an equals expression
-    String column = "column";
-    String operator = "desc";
-    String query = column + "," + operator;
-
-    // when: convert method invoqued with given expression
-    List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
-
-    // then: the right SortCriteria list is returned
-    Assertions.assertThat(sortCriterias.size()).isEqualTo(1);
-    Assertions.assertThat(sortCriterias.get(0).getKey()).isEqualTo(column);
-    Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
-  }
-
-  /**
-   * @throws Exception
-   */
-  @Test
-  public void convertDescendingSortExpressionNestedProperty_returnsDescendingSortCriteria() throws Exception {
-    // given: an equals expression
-    String column = "column.column";
-    String operator = "desc";
-    String query = column + "," + operator;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -156,6 +106,6 @@ public class SortCriteriaConverterTest {
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
 
     // then: no QueryCriteria is returned
-    Assertions.assertThat(sortCriterias.size()).isEqualTo(0);
+    Assertions.assertThat(sortCriterias.size()).isZero();
   }
 }

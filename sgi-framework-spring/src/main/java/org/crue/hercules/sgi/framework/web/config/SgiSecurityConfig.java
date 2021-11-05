@@ -30,6 +30,7 @@ public class SgiSecurityConfig extends GlobalMethodSecurityConfiguration {
    *
    * @return the {@link MethodSecurityExpressionHandler} to use
    */
+  @Override
   protected MethodSecurityExpressionHandler createExpressionHandler() {
     log.debug("createExpressionHandler() - start");
     MethodSecurityExpressionHandler returnValue = defaultMethodExpressionHandler;
