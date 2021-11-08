@@ -14,8 +14,8 @@
 
     <!-- Cambio de Fecha_Fin,total_importe_presupuesto & total_importe_concedido del Proyecto con id=3 -->
     <update tableName="proyecto">
-      <column name="total_importe_presupuesto" valueNumeric="5000" />
-      <column name="total_importe_concedido" valueNumeric="4800" />
+      <column name="total_importe_presupuesto" valueNumeric="50000" />
+      <column name="total_importe_concedido" valueNumeric="48000" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueNumeric="3" />
@@ -180,7 +180,7 @@
       <column name="last_modified_date" valueDate="2021-10-07T09:00:20" />
       <column name="anio" valueNumeric="2022" />
       <column name="enviado_sge" valueBoolean="false" />
-      <column name="fecha_fin" valueDate="2020-12-31T22:59:59" />
+      <column name="fecha_fin" valueDate="2022-12-31T22:59:59" />
       <column name="fecha_inicio" valueDate="2021-12-31T23:00:00" />
       <column name="presupuestar" valueBoolean="true" />
     </insert>
@@ -319,7 +319,7 @@
       <column name="last_modified_by" value="00391433" />
       <column name="last_modified_date" valueDate="2021-10-07T09:00:20" />
 
-      <column name="codigo_economico_ref" value="LO" />
+      <column name="codigo_economico_ref" value="AR" />
       <column name="importe_concedido" valueNumeric="3600" />
       <column name="importe_presupuesto" valueNumeric="3500" />
 
