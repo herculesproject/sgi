@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class SortCriteriaConverterTest {
+class SortCriteriaConverterTest {
   @InjectMocks
   SortCriteriaConverter sortCriteriaConverter;
 
@@ -29,7 +29,7 @@ public class SortCriteriaConverterTest {
       "column.column; desc; column.column,desc" 
       // @formatter:on
   }, delimiter = ';')
-  public void convertAscendingSortExpression_returnsAscendingSortCriteria(String column, String operator, String query)
+  void convertAscendingSortExpression_returnsAscendingSortCriteria(String column, String operator, String query)
       throws Exception {
     // given: an equals expression
 
@@ -46,7 +46,7 @@ public class SortCriteriaConverterTest {
    * @throws Exception
    */
   @Test
-  public void convert_multipleExpresion_returnsSortCriteriaList() throws Exception {
+  void convert_multipleExpresion_returnsSortCriteriaList() throws Exception {
     // given: an equals expression
     String column = "column";
     String query = "";
@@ -72,7 +72,7 @@ public class SortCriteriaConverterTest {
    * @throws Exception
    */
   @Test
-  public void convert_multipleExpresionNestedProperty_returnsSortCriteriaList() throws Exception {
+  void convert_multipleExpresionNestedProperty_returnsSortCriteriaList() throws Exception {
     // given: an equals expression
     String column = "column.column";
     String query = "";
@@ -98,7 +98,7 @@ public class SortCriteriaConverterTest {
    * @throws Exception
    */
   @Test
-  public void convert_noExpresion_returnsEmptyList() throws Exception {
+  void convert_noExpresion_returnsEmptyList() throws Exception {
     // given: a no sort expression
     String query = "value not";
 

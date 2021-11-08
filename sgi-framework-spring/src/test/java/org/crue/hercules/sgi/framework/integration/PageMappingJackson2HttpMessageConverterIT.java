@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
-public class PageMappingJackson2HttpMessageConverterIT {
+class PageMappingJackson2HttpMessageConverterIT {
 
   @Autowired
   private ObjectMapper mapper;
@@ -39,14 +39,14 @@ public class PageMappingJackson2HttpMessageConverterIT {
   @Configuration // A nested @Configuration class wild be used instead of the
                  // application’s primary configuration.
   @Import(SgiWebConfig.class)
-  public static class TestWebConfig {
+  static class TestWebConfig {
   }
 
   @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
                      // application’s primary configuration, a nested @TestConfiguration class is
                      // used in addition to your application’s primary configuration.
   @RestController
-  public static class InnerWebConfigTestController {
+  static class InnerWebConfigTestController {
     @GetMapping("/test-response-page")
     Page<String> testPage(@RequestBody String[] data) {
       Page<String> page = new PageImpl<String>(Arrays.asList(data));
@@ -58,7 +58,7 @@ public class PageMappingJackson2HttpMessageConverterIT {
    * @throws Exception
    */
   @Test
-  public void responsePaginatedData_returnsDataAndPagingHeaders() throws Exception {
+  void responsePaginatedData_returnsDataAndPagingHeaders() throws Exception {
     // given: a data array
     String[] data = new String[] { "one", "two", "tree" };
 
