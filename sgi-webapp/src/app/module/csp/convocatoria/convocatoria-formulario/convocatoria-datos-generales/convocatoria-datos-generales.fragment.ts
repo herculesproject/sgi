@@ -1,4 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
@@ -74,7 +75,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       finalidad: new FormControl(null),
       duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),
       ambitoGeografico: new FormControl(null),
-      formularioSolicitud: new FormControl(null),
+      formularioSolicitud: new FormControl(FormularioSolicitud.PROYECTO),
       clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(null),
       entidadGestora: new FormControl(null),
