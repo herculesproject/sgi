@@ -27,7 +27,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   readonly coordinadorExterno$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly tipoDesglosePresupuesto$: Subject<TipoPresupuesto> = new Subject<TipoPresupuesto>();
   readonly hasSolicitudSocio$ = new BehaviorSubject<boolean>(false);
-  public readonly showForInvestigador: boolean;
+  public readonly userCanEdit: boolean;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -46,7 +46,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.setComplete(true);
     this.solicitudProyecto = {} as ISolicitudProyecto;
 
-    this.showForInvestigador = this.isInvestigador && this.estado.estado === Estado.BORRADOR;
+    this.userCanEdit = !this.isInvestigador || (this.isInvestigador && this.estado.estado === Estado.BORRADOR);
 
     // Hack edit mode
     this.initialized$.pipe(
@@ -61,14 +61,14 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       acronimo: new FormControl(
-        { value: null, disabled: (!this.showForInvestigador) },
+        { value: null, disabled: (!this.userCanEdit) },
         [Validators.maxLength(50)]),
-      importeSolicitado: new FormControl({ value: null, disabled: !this.showForInvestigador }),
+      importeSolicitado: new FormControl({ value: null, disabled: !this.userCanEdit }),
       codExterno: new FormControl(
-        { value: undefined, disabled: !this.showForInvestigador },
+        { value: undefined, disabled: !this.userCanEdit },
         [Validators.maxLength(250)]),
       duracion: new FormControl(
-        { value: null, disabled: !this.showForInvestigador },
+        { value: null, disabled: !this.userCanEdit },
         [Validators.min(1), Validators.max(9999)]),
 
       colaborativo: new FormControl(null, []),
@@ -77,13 +77,13 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       tipoDesglosePresupuesto: new FormControl(undefined, [Validators.required]),
 
       objetivos: new FormControl(
-        { value: null, disabled: !this.showForInvestigador },
+        { value: null, disabled: !this.userCanEdit },
         [Validators.maxLength(2000)]),
       intereses: new FormControl(
-        { value: null, disabled: !this.showForInvestigador },
+        { value: null, disabled: !this.userCanEdit },
         [Validators.maxLength(2000)]),
       resultadosPrevistos: new FormControl(
-        { value: null, disabled: !this.showForInvestigador },
+        { value: null, disabled: !this.userCanEdit },
         [Validators.maxLength(2000)]),
       peticionEvaluacionRef: new FormControl(null, [])
     });
