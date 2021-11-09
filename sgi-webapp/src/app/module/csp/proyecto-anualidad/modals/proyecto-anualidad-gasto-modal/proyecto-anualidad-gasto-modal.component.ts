@@ -28,7 +28,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, Observable, of, zip } from 'rxjs';
+import { BehaviorSubject, of, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
@@ -96,8 +96,8 @@ export class ProyectoAnualidadGastoModalComponent extends
   proyectosSge$ = new BehaviorSubject<IProyectoProyectoSge[]>([]);
   proyectosPartida$ = new BehaviorSubject<IProyectoPartida[]>([]);
 
-  conceptosGasto$: Observable<IConceptoGasto[] | IProyectoConceptoGasto[]>;
-  codigosEconomicos$: Observable<ICodigoEconomicoGasto[]>;
+  conceptosGasto$ = new BehaviorSubject<IConceptoGasto[] | IProyectoConceptoGasto[]>([]);
+  codigosEconomicos$ = new BehaviorSubject<ICodigoEconomicoGasto[]>([]);
 
   conceptosGastoCodigoEcPermitidos = new MatTableDataSource<IProyectoConceptoGastoCodigoEc>();
   conceptosGastoCodigoEcNoPermitidos = new MatTableDataSource<IProyectoConceptoGastoCodigoEc>();
@@ -256,7 +256,7 @@ export class ProyectoAnualidadGastoModalComponent extends
       {
         identificadorSge: new FormControl(identificadorSge, Validators.required),
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
-        conceptoGasto: new FormControl(conceptoGasto, Validators.required),
+        conceptoGasto: new FormControl(conceptoGasto),
         codigoEconomicoFiltro: new FormControl(codigoEconomicoFiltro),
         codigoEconomico: new FormControl(this.data.anualidadGasto?.codigoEconomico),
         partidaPresupuestaria: new FormControl(proyectoPartida, Validators.required),
@@ -298,6 +298,29 @@ export class ProyectoAnualidadGastoModalComponent extends
       formGroup.disable();
     }
 
+    formGroup.controls?.conceptoGastoFiltro.valueChanges.subscribe((filtro) => {
+      this.loadConceptoGasto(filtro);
+    });
+
+    this.conceptosGasto$.subscribe(conceptosGasto => {
+      if (conceptosGasto.length === 0) {
+        formGroup.controls.conceptoGasto.disable();
+      } else {
+        formGroup.controls.conceptoGasto.enable();
+      }
+      formGroup.controls.conceptoGasto.setValue(null);
+    });
+
+    this.codigosEconomicos$.subscribe(codigosEconomico => {
+      if (codigosEconomico.length === 0) {
+        formGroup.controls.codigoEconomico.disable();
+        formGroup.controls.codigoEconomico.setValue(null);
+      } else {
+        formGroup.controls.codigoEconomico.enable();
+        formGroup.controls.codigoEconomico.setValue(null);
+      }
+    });
+
     return formGroup;
   }
 
@@ -335,13 +358,13 @@ export class ProyectoAnualidadGastoModalComponent extends
           LuxonUtils.toBackend(this.data.fechaFinAnualidad))
         .and('proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
 
-      this.conceptosGasto$ = this.proyectoConceptoGastoService.findAll(queryOptionsConceptoGasto).pipe(
-        map(response => response.items)
-      );
+      this.subscriptions.push(this.proyectoConceptoGastoService.findAll(queryOptionsConceptoGasto).subscribe(response =>
+        this.conceptosGasto$.next(response.items)
+      ));
     } else {
-      this.conceptosGasto$ = this.conceptoGastoService.findAll().pipe(
-        map(response => response.items)
-      );
+      this.subscriptions.push(this.conceptoGastoService.findAll().subscribe(response =>
+        this.conceptosGasto$.next(response.items)
+      ));
     }
 
     this.loadCodigoEconomico(this.formGroup?.controls.codigoEconomicoFiltro.value
@@ -463,14 +486,13 @@ export class ProyectoAnualidadGastoModalComponent extends
     });
 
     if (codigoEconomicoTipo === CodigoEconomicoTipo.PERMITIDO) {
-      this.codigosEconomicos$ = of(this.conceptosGastoCodigoEcPermitidos.data).pipe(
-        map(proyectoConceptoGastoCodigoEcs =>
-          proyectoConceptoGastoCodigoEcs.map(proyectoConceptoGastoCodigoEc => proyectoConceptoGastoCodigoEc.codigoEconomico)
-        )
-      );
+      this.codigosEconomicos$.next(this.conceptosGastoCodigoEcPermitidos.data
+        .map(proyectoConceptoGastoCodigoEcs =>
+          proyectoConceptoGastoCodigoEcs.codigoEconomico
+        ));
     } else {
-      this.codigosEconomicos$ = this.codigoEconomicoGastoService.findAll().pipe(
-        map(response => response.items)
+      this.codigoEconomicoGastoService.findAll().subscribe(response =>
+        this.codigosEconomicos$.next(response.items)
       );
     }
   }
