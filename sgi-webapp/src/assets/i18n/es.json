@@ -587,6 +587,7 @@
   "csp.proyecto-periodo-seguimiento.documento.visible": "Visible",
   "csp.proyecto-presupuesto.anualidad": "Anualidad{count,plural,=0{} one{} other{es}}",
   "csp.proyecto-presupuesto.anualidad-generica": "Anualidad Genérica",
+  "csp.proyecto-presupuesto.generica": "Genérica",
   "csp.proyecto-presupuesto.desglosar-anualidades": "¿Desglosar en anualidades?",
   "csp.proyecto-presupuesto.importe-concedido-socios": "Importe Concedido Socios",
   "csp.proyecto-presupuesto.importe-concedido-universidad": "Importe Concedido Universidad",
