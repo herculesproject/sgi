@@ -51,6 +51,10 @@
     <!-- Plugin versions (not defined in parent pom) -->
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+    <!-- Test execution modifiers -->
+    <skipTests>false</skipTests>
+    <skipUnitTests>${skipTests}</skipUnitTests>
+    <skipIntegrationTests>${skipTests}</skipIntegrationTests>
   </properties>
 
   <distributionManagement>
@@ -101,7 +105,6 @@
         <groupId>com.github.tomakehurst</groupId>
         <artifactId>wiremock-jre8</artifactId>
         <version>${wiremock-jre8.version}</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -260,17 +263,16 @@
     </dependency>
     <!--
         Spring Boot Test - Provides a number of utilities and annotations to help when testing your application.
-        https://docs.spring.io/spring-boot/docs/2.6.0-SNAPSHOT/reference/htmlsingle/#features.testing
+        https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.testing
       -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>
       <scope>compile</scope>
     </dependency>
-
     <!--
         Spring Boot Test Starter - Imports both Spring Boot test modules as well as JUnit Jupiter, AssertJ, Hamcrest, and a number of other useful libraries.
-        https://docs.spring.io/spring-boot/docs/2.6.0-SNAPSHOT/reference/htmlsingle/#features.testing
+        https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.testing
       -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -283,6 +285,10 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!--
+        Spring Security Test - Spring Security’s Test support to test method based security.
+        https://docs.spring.io/spring-security/site/docs/current/reference/html5/#test
+      -->
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
@@ -416,6 +422,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>${skipUnitTests}</skipTests>
+        </configuration>
       </plugin>
       <!--
       Maven Failsafe Plugin - Runs integration tests.
@@ -424,6 +433,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <skipTests>${skipIntegrationTests}</skipTests>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -449,34 +461,91 @@
             <exclude>**/specification/**</exclude>
             <exclude>**/dto/**</exclude>
             <exclude>**/exceptions/**</exclude>
+            <!-- Exclude the JPA meta model classes from the report -->
+            <exclude>**/*_.class</exclude>
           </excludes>
         </configuration>
         <executions>
           <execution>
-            <id>default-prepare-agent</id>
+            <!-- Unit test analisys config -->
+            <id>ut-prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file where the execution data will be generated -->
+              <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>default-prepare-agent-integration</id>
+            <!-- Integration test analisys config -->
+            <id>it-prepare-agent</id>
             <goals>
               <goal>prepare-agent-integration</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file where the execution data will be generated -->
+              <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>default-report</id>
+            <!-- Unit test report generation config -->
+            <id>ut-report</id>
             <phase>prepare-package</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+              <!-- Sets the output directory for the unit tests code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+            </configuration>
           </execution>
           <execution>
-            <id>default-report-integration</id>
+            <!-- Integration test report generation config -->
+            <id>it-report</id>
             <phase>prepare-package</phase>
             <goals>
               <goal>report-integration</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+              <!-- Sets the output directory for the integration tests code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- Merge unit an integration tests execution data -->
+            <id>merge-results</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}/coverage-reports</directory>
+                  <include>*.exec</include>
+                </fileSet>
+              </fileSets>
+              <destFile>${project.build.directory}/coverage-reports/aggregate.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- Unit and integration test merged report generation config -->
+            <id>merge-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/aggregate.exec</dataFile>
+              <!-- Sets the output directory for the code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+            </configuration>
           </execution>
         </executions>
       </plugin>
