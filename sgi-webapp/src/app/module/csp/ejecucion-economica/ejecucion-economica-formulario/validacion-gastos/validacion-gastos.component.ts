@@ -5,10 +5,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
+import { ValidacionGastosEditarModalComponent } from '../../modals/validacion-gastos-editar-modal/validacion-gastos-editar-modal.component';
 import { GastoDetalleModalData, ValidacionGastosModalComponent } from '../../modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { EstadoTipo, ESTADO_TIPO_MAP, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
 
@@ -33,7 +36,8 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
   constructor(
     public actionService: EjecucionEconomicaActionService,
     private matDialog: MatDialog,
-    private gastoService: GastoService
+    private gastoService: GastoService,
+    private gastoProyectoService: GastoProyectoService,
   ) {
     super(actionService.FRAGMENT.VALIDACION_GASTOS, actionService);
     this.formPart = this.fragment as ValidacionGastosFragment;
@@ -104,6 +108,38 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
         this.matDialog.open(ValidacionGastosModalComponent, config);
       }
     ));
+  }
+
+  showEditModal(element: ValidacionGasto): void {
+    this.subscriptions.push(
+      this.gastoService.findById(element.id)
+        .pipe(
+          map((gasto) => gasto as GastoDetalleModalData),
+          switchMap((gastoDetalle) =>
+            this.gastoProyectoService.findByGastoRef(element.id)
+              .pipe(
+                map((gastoProyecto) => {
+                  gastoDetalle.gastoProyecto = gastoProyecto;
+                  return gastoDetalle;
+                })
+              )
+          )
+        ).subscribe(
+          (detalle) => {
+            detalle.estado = ESTADO_TIPO_MAP.get(this.formGroup.controls.estado.value);
+            const config: MatDialogConfig<GastoDetalleModalData> = {
+              panelClass: 'sgi-dialog-container',
+              data: detalle
+            };
+            const dialogRef = this.matDialog.open(ValidacionGastosEditarModalComponent, config);
+            dialogRef.afterClosed().subscribe((modalData: ValidacionGastosEditarModalComponent) => {
+              if (modalData) {
+                this.onSearch();
+              }
+            });
+          }
+        )
+    );
   }
 
   private loadForm() {

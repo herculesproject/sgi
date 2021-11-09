@@ -31,6 +31,7 @@ import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.m
 import { FacturasEmitidasModalComponent } from './modals/facturas-emitidas-modal/facturas-emitidas-modal.component';
 import { FacturasGastosModalComponent } from './modals/facturas-gastos-modal/facturas-gastos-modal.component';
 import { PersonalContratadoModalComponent } from './modals/personal-contratado-modal/personal-contratado-modal.component';
+import { ValidacionGastosEditarModalComponent } from './modals/validacion-gastos-editar-modal/validacion-gastos-editar-modal.component';
 import { ValidacionGastosModalComponent } from './modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-dietas-modal.component';
 
@@ -57,7 +58,8 @@ import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-
     ValidacionGastosComponent,
     ValidacionGastosModalComponent,
     FacturasEmitidasComponent,
-    FacturasEmitidasModalComponent
+    FacturasEmitidasModalComponent,
+    ValidacionGastosEditarModalComponent
   ],
   imports: [
     CommonModule,

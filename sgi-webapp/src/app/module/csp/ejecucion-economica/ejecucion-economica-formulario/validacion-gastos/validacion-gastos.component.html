@@ -145,9 +145,16 @@
             {{ 'label.actions' | translate }}
           </mat-header-cell>
           <mat-cell mat-cell *matCellDef="let element">
-            <button mat-button (click)="showDetail(element)">
-              <mat-icon color="primary">visibility</mat-icon>
-            </button>
+            <ng-container>
+              <button mat-button matTooltip="{{'btn.view' | translate}}" (click)="showDetail(element)">
+                <mat-icon color="primary">visibility</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container>
+              <button mat-button matTooltip="{{'btn.edit' | translate}}" (click)="showEditModal(element)">
+                <mat-icon color="primary">border_color</mat-icon>
+              </button>
+            </ng-container>
           </mat-cell>
         </ng-container>
 
