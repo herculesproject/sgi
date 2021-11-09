@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.GastoProyectoInput;
 import org.crue.hercules.sgi.csp.dto.GastoProyectoOutput;
+import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.service.GastoProyectoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -85,7 +86,9 @@ public class GastoProyectoController {
   @PreAuthorize("hasAuthorityForAnyUO('CSP-EJEC-E')")
   ResponseEntity<GastoProyectoOutput> create(@Valid @RequestBody GastoProyectoInput gastoProyecto) {
     log.debug("create(GastoProyecto gastoProyecto) - start");
+
     GastoProyecto returnValue = service.create(convert(gastoProyecto));
+
     log.debug("create(GastoProyecto gastoProyecto) - end");
     return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
   }
@@ -101,7 +104,9 @@ public class GastoProyectoController {
   @PreAuthorize("hasAuthorityForAnyUO('CSP-EJEC-E')")
   GastoProyectoOutput update(@Valid @RequestBody GastoProyectoInput gastoProyecto, @PathVariable Long id) {
     log.debug("update(GastoProyecto gastoProyecto, Long id) - start");
+
     GastoProyecto returnValue = service.update(convert(id, gastoProyecto));
+
     log.debug("update(GastoProyecto gastoProyecto, Long id) - end");
     return convert(returnValue);
   }
