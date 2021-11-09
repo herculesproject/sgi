@@ -123,7 +123,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     if (this.isInvestigador) {
       const form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-        titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+        titulo: new FormControl('', [Validators.maxLength(250)]),
         convocatoria: new FormControl({ value: '', disabled: true }),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
         observaciones: new FormControl('', Validators.maxLength(2000))

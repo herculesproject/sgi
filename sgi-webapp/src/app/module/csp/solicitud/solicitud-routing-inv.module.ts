@@ -11,7 +11,12 @@ import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.compo
 import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
 import { SolicitudDataResolver, SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
+import { SolicitudAutoevaluacionComponent } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
+import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
+import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
+import { SolicitudProyectoAreaConocimientoComponent } from './solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.component';
+import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudListadoInvComponent } from './solicitud-listado-inv/solicitud-listado-inv.component';
 import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
@@ -80,10 +85,35 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard]
       },
       {
+        path: SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO,
+        component: SolicitudProyectoAreaConocimientoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.CLASIFICACIONES,
+        component: SolicitudProyectoClasificacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
         path: SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS,
         component: SolicitudProyectoFichaGeneralComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.AUTOEVALUACION,
+        component: SolicitudAutoevaluacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.DOCUMENTOS,
+        component: SolicitudDocumentosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.HISTORICO_ESTADOS,
+        component: SolicitudHistoricoEstadosComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   }
 ];

@@ -194,6 +194,10 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
     };
 
+    if (!this.userCanEdit) {
+      this.getFormGroup()?.disable();
+    }
+
     return controls;
   }
 
