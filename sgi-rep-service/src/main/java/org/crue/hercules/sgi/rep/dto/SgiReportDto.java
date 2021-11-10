@@ -33,10 +33,10 @@ public class SgiReportDto {
   // LANDSCAPE=630
   private Float customWidth;
 
-  // Ancho mínimo de un campo, sino lo informamos cogerá el tamaño por
+  // Ancho mínimo de columna, sino lo informamos cogerá el tamaño por
   // defecto o la proporción entre el ancho máximo de la página y el nº de
   // elementos (si es PDF)
-  private Float minWidth;
+  private Float columnMinWidth;
 
   // Disposición de los campos en el informe: horizontal o vertical
   private FieldOrientationType fieldOrientationType;

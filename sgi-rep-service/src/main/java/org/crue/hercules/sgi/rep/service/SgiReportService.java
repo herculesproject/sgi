@@ -367,7 +367,8 @@ public class SgiReportService {
         && numColumns.compareTo(0) > 0) {
 
       float customFieldWidth = reportDto.getCustomWidth() / numColumns;
-      reportDto.setMinWidth(customFieldWidth > reportDto.getMinWidth() ? customFieldWidth : reportDto.getMinWidth());
+      reportDto.setColumnMinWidth(
+          customFieldWidth > reportDto.getColumnMinWidth() ? customFieldWidth : reportDto.getColumnMinWidth());
     }
   }
 
@@ -381,13 +382,13 @@ public class SgiReportService {
       reportDto.setFieldOrientationType(FieldOrientationType.HORIZONTAL);
     }
 
-    if (null == reportDto.getMinWidth()) {
+    if (null == reportDto.getColumnMinWidth()) {
       if (reportDto.getOutputReportType().equals(OutputReportType.XLS)
           || reportDto.getOutputReportType().equals(OutputReportType.XLSX)) {
 
-        reportDto.setMinWidth(WIDTH_FIELD_EXCEL_DEFAULT);
+        reportDto.setColumnMinWidth(WIDTH_FIELD_EXCEL_DEFAULT);
       } else {
-        reportDto.setMinWidth(WIDTH_FIELD_DEFAULT);
+        reportDto.setColumnMinWidth(WIDTH_FIELD_DEFAULT);
 
       }
     }
@@ -398,7 +399,7 @@ public class SgiReportService {
         reportDto.setCustomWidth(WIDTH_PORTRAIT);
       }
       if (null == reportDto.getCustomWidth()) {
-        reportDto.setMinWidth(WIDTH_PORTRAIT);
+        reportDto.setColumnMinWidth(WIDTH_PORTRAIT);
       }
     }
   }

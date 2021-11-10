@@ -286,13 +286,17 @@ public class SgiDynamicReportService extends SgiReportService {
       switch (sgiColumReportDto.getType()) {
 
       case DATE:
-        Instant fechaInstant = Instant.parse((String) row.getElements().get(columnIndex));
-        if ((reportDto.getOutputReportType().equals(OutputReportType.XLS)
-            || reportDto.getOutputReportType().equals(OutputReportType.XLSX))
-            && (reportDto.getFieldOrientationType().equals(FieldOrientationType.HORIZONTAL))) {
-          elementsRow.add(formatInstantToDate(fechaInstant));
+        if (StringUtils.hasText((String) row.getElements().get(columnIndex))) {
+          Instant fechaInstant = Instant.parse((String) row.getElements().get(columnIndex));
+          if ((reportDto.getOutputReportType().equals(OutputReportType.XLS)
+              || reportDto.getOutputReportType().equals(OutputReportType.XLSX))
+              && (reportDto.getFieldOrientationType().equals(FieldOrientationType.HORIZONTAL))) {
+            elementsRow.add(formatInstantToDate(fechaInstant));
+          } else {
+            elementsRow.add(formatInstantToString(fechaInstant, sgiColumReportDto.getFormat()));
+          }
         } else {
-          elementsRow.add(formatInstantToString(fechaInstant, sgiColumReportDto.getFormat()));
+          elementsRow.add("");
         }
         break;
       case SUBREPORT:
@@ -387,7 +391,7 @@ public class SgiDynamicReportService extends SgiReportService {
       TableModel tableModel) {
     float posX = 0f;
     float posY = 0f;
-    float minimumWidth = reportDto.getMinWidth();
+    float minimumWidth = reportDto.getColumnMinWidth();
 
     for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++) {
       LabelElementFactory labelFactory = new LabelElementFactory();
@@ -657,7 +661,7 @@ public class SgiDynamicReportService extends SgiReportService {
   }
 
   private SubReport getInnerSubReportFromTableModel(SgiDynamicReportDto reportDto, TableModel tableModelInner) {
-    float minimumWidth = reportDto.getMinWidth();
+    float minimumWidth = reportDto.getColumnMinWidth();
 
     final SubReport subreportInner = new SubReport();
     TextFieldElementFactory labelElement = new TextFieldElementFactory();
@@ -721,7 +725,7 @@ public class SgiDynamicReportService extends SgiReportService {
 
           SgiDynamicReportDto horizontalReportDto = SgiDynamicReportDto.builder()
               .customWidth(reportDto.getCustomWidth()).fieldOrientationType(columnSubReport.getFieldOrientationType())
-              .minWidth(reportDto.getMinWidth()).outputReportType(reportDto.getOutputReportType())
+              .columnMinWidth(reportDto.getColumnMinWidth()).outputReportType(reportDto.getOutputReportType())
               .columns(columnSubReport.getColumns()).build();
 
           Integer numColumns = columnSubReport.getColumns().size();

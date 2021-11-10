@@ -43,6 +43,7 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
 
   private static final Long TIPO_COMENTARIO_GESTOR = 1L;
   private static final Long DICTAMEN_PENDIENTE_CORRECCIONES = 3L;
+  private static final Long DICTAMEN_NO_PROCEDE_EVALUAR = 4L;
 
   @Autowired
   public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
@@ -109,6 +110,9 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
 
     columnsDataTitulo.add("idDictamenPendienteCorrecciones");
     elementsRow.add(DICTAMEN_PENDIENTE_CORRECCIONES);
+
+    columnsDataTitulo.add("idDictamenNoProcedeEvaluar");
+    elementsRow.add(DICTAMEN_NO_PROCEDE_EVALUAR);
 
     columnsDataTitulo.add("idDictamen");
     elementsRow.add(evaluacion.getDictamen().getId());

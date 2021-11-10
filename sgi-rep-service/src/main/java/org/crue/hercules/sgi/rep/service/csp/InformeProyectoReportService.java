@@ -69,7 +69,7 @@ public class InformeProyectoReportService extends SgiDynamicReportService {
 
       sgiDynamicReportDto.setFieldOrientationType(FieldOrientationType.VERTICAL);
       sgiDynamicReportDto.setCustomWidth(WIDTH_PORTRAIT);
-      sgiDynamicReportDto.setMinWidth(120f);
+      sgiDynamicReportDto.setColumnMinWidth(120f);
       sgiDynamicReportDto.setGroupBy(SgiGroupReportDto.builder().name("titulo").visible(Boolean.TRUE).build());
 
       generateDynamicReport(sgiDynamicReportDto);
