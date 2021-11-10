@@ -1625,9 +1625,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
 
     returnValue.setImporteTotalPresupuesto(
-        returnValue.getImporteTotalPresupuestoUniversidad().add(returnValue.getImporteTotalPresupuestoSocios()));
+        returnValue.getImporteTotalPresupuestoUniversidadSinCosteIndirecto().add(returnValue.getImporteTotalPresupuestoSocios()));
     returnValue.setImporteTotalConcedido(
-        returnValue.getImporteTotalConcedidoUniversidad().add(returnValue.getImporteTotalConcedidoSocios()));
+        returnValue.getImporteTotalConcedidoUniversidadSinCosteIndirecto().add(returnValue.getImporteTotalConcedidoSocios()));
     log.debug("getTotales(Long proyectoId) - end");
     return returnValue;
   }
