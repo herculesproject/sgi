@@ -136,7 +136,6 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
         this.valoresCalculadosData = response;
       }));
 
-    this.updateImportesTotales();
   }
 
   private setupI18N(): void {
@@ -224,42 +223,6 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
     }
   }
 
-  private updateImportesTotales() {
-    this.subscriptions.push(this.proyectoService.findAllProyectoAnualidadesGasto(this.formPart.getKey() as number)
-      .subscribe(proyectoAnualidades => {
-
-        /* Presupuesto por Universidad Sin Costes Indirectos */
-        const importePresupuestoUniversidad = proyectoAnualidades.items
-          .filter(anualidadGasto => !anualidadGasto.conceptoGasto.costesIndirectos)
-          .reduce((total, anualidadGasto) => total + anualidadGasto.importePresupuesto, 0);
-        this.valoresCalculadosData.importePresupuestoUniversidad = importePresupuestoUniversidad;
-        /* Presupuesto por Universidad Con Costes Indirectos */
-        const importePresupuestoUniversidadCostesIndirectos = proyectoAnualidades.items
-          .filter(anualidadGasto => anualidadGasto.conceptoGasto.costesIndirectos)
-          .reduce((total, anualidadGasto) => total + anualidadGasto.importePresupuesto, 0);
-        this.valoresCalculadosData.importePresupuestoUniversidadCostesIndirectos = importePresupuestoUniversidadCostesIndirectos;
-        /* Total Presupuesto por Universidad */
-        const totalImportePresupuestoUniversidad = proyectoAnualidades.items.reduce(
-          (total, anualidadGasto) => total + anualidadGasto.importePresupuesto, 0);
-        this.valoresCalculadosData.totalImportePresupuestoUniversidad = totalImportePresupuestoUniversidad;
-
-        /* Concedido por Universidad Sin Costes Indirectos */
-        const importeConcedidoUniversidad = proyectoAnualidades.items
-          .filter(anualidadGasto => !anualidadGasto.conceptoGasto.costesIndirectos)
-          .reduce((total, anualidadGasto) => total + anualidadGasto.importeConcedido, 0);
-        this.valoresCalculadosData.importeConcedidoUniversidad = importeConcedidoUniversidad;
-        /* Concedido por Universidad Con Costes Indirectos */
-        const importeConcedidoUniversidadCostesIndirectos = proyectoAnualidades.items
-          .filter(anualidadGasto => anualidadGasto.conceptoGasto.costesIndirectos)
-          .reduce((total, anualidadGasto) => total + anualidadGasto.importeConcedido, 0);
-        this.valoresCalculadosData.importeConcedidoUniversidadCostesIndirectos = importeConcedidoUniversidadCostesIndirectos;
-        /* Total Concedido por Universidad*/
-        const totalImporteConcedidoUniversidad = proyectoAnualidades.items.reduce(
-          (total, anualidadGasto) => total + anualidadGasto.importeConcedido, 0);
-        this.valoresCalculadosData.totalImporteConcedidoUniversidad = totalImporteConcedidoUniversidad;
-      })
-    );
-  }
 }
 
 
