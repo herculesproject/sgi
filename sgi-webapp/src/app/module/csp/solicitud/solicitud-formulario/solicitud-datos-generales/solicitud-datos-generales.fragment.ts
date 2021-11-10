@@ -140,7 +140,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         comentariosEstado: new FormControl({ value: '', disabled: true }),
         convocatoriaExterna: new FormControl(''),
         formularioSolicitud: new FormControl({ value: FormularioSolicitud.PROYECTO, disabled: this.isEdit() }),
-        unidadGestion: new FormControl({ value: '' }),
+        unidadGestion: new FormControl(null, Validators.required),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
         codigoRegistro: new FormControl({ value: '', disabled: true }),
         observaciones: new FormControl('', Validators.maxLength(2000))

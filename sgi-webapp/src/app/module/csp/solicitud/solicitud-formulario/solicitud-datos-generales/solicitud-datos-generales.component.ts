@@ -46,9 +46,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  private unidadesGestion = [] as IUnidadGestion[];
-  unidadesGestionFiltered$: Observable<IUnidadGestion[]>;
-
   totalElementos: number;
   displayedColumns: string[];
   elementosPagina: number[];
@@ -86,7 +83,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     private readonly logger: NGXLogger,
     protected actionService: SolicitudActionService,
     private snackBarService: SnackBarService,
-    private unidadGestionService: UnidadGestionService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
@@ -128,9 +124,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   ngOnInit(): void {
     super.ngOnInit();
-    if (!this.formPart.isInvestigador) {
-      this.loadUnidadesGestion();
-    }
     this.setupI18N();
 
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>();
@@ -203,16 +196,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   }
 
   /**
-   * Devuelve el nombre de una gestión unidad.
-   *
-   * @param unidadGestion gestión unidad.
-   * @returns nombre de una gestión unidad.
-   */
-  getUnidadGestion(unidadGestion?: IUnidadGestion): string | undefined {
-    return typeof unidadGestion === 'string' ? unidadGestion : unidadGestion?.nombre;
-  }
-
-  /**
    * Apertura de modal de modadidad solicitud
    *
    * @param entidadConvocanteModalidad EntidadConvocanteModalidad que se carga en el modal para modificarlo.
@@ -249,43 +232,4 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       }
     );
   }
-
-  /**
-   * Carga la lista de unidades de gestion seleccionables por el usuario
-   */
-  private loadUnidadesGestion() {
-    this.subscriptions.push(
-      this.unidadGestionService.findAllRestringidos().subscribe(
-        res => {
-          this.unidadesGestion = res.items;
-          this.unidadesGestionFiltered$ = this.formGroup.controls.unidadGestion.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroUnidadGestion(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        }
-      )
-    );
-  }
-
-  /**
-   * Filtra la lista por el value
-   *
-   * @param value del input para autocompletar
-   * @returns Lista filtrada
-   */
-  private filtroUnidadGestion(value: string | IUnidadGestion): IUnidadGestion[] {
-    // Si no es un string no se filtra
-    if (typeof value !== 'string') {
-      return this.unidadesGestion;
-    }
-
-    const filterValue = value.toString().toLowerCase();
-    return this.unidadesGestion.filter(unidadGestion => unidadGestion.nombre.toLowerCase().includes(filterValue));
-  }
-
 }

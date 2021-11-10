@@ -62,9 +62,6 @@ export class SolicitudCrearProyectoModalComponent
     return ESTADO_MAP;
   }
 
-  private modelosEjecucionFiltered = [] as IModeloEjecucion[];
-  modelosEjecucion$: Observable<IModeloEjecucion[]>;
-
   private convocatoria: IConvocatoria;
 
   msgParamFechaFinEntity = {};
@@ -78,7 +75,6 @@ export class SolicitudCrearProyectoModalComponent
     @Inject(MAT_DIALOG_DATA)
     public data: ISolicitudCrearProyectoModalData,
     private readonly proyectoService: ProyectoService,
-    private unidadModeloService: ModeloUnidadService,
     private logger: NGXLogger,
     private readonly translate: TranslateService,
     private convocatoriaService: ConvocatoriaService
@@ -201,50 +197,6 @@ export class SolicitudCrearProyectoModalComponent
         );
       })
     );
-  }
-
-  /**
-   * Devuelve el nombre de un modelo de ejecución.
-   * @param modeloEjecucion modelo de ejecución.
-   * @returns nombre de un modelo de ejecución.
-   */
-  getModeloEjecucion(modeloEjecucion?: IModeloEjecucion): string | undefined {
-    return typeof modeloEjecucion === 'string' ? modeloEjecucion : modeloEjecucion?.nombre;
-  }
-
-  loadModelosEjecucion(): void {
-    const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter(
-        'unidadGestionRef',
-        SgiRestFilterOperator.EQUALS,
-        String(this.data?.solicitud?.unidadGestion?.id)
-      )
-    };
-    const subcription = this.unidadModeloService.findAll(options).subscribe(
-      res => {
-        this.modelosEjecucionFiltered = res.items.map(item => item.modeloEjecucion);
-        this.modelosEjecucion$ = this.formGroup.controls.modeloEjecucion.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filtroModeloEjecucion(value))
-          );
-      },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_INIT);
-      }
-    );
-    this.subscriptions.push(subcription);
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroModeloEjecucion(value: string): IModeloEjecucion[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.modelosEjecucionFiltered.filter(modeloEjecucion => modeloEjecucion.nombre.toLowerCase().includes(filterValue));
   }
 
   private getFechaFinProyecto(fecha: DateTime): void {
