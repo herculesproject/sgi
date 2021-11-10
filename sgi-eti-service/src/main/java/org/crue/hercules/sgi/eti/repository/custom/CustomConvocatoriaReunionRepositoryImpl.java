@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa_;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
@@ -313,20 +314,20 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
       Join<Evaluacion, Memoria> joinMemoria = subqRoot.join(Evaluacion_.memoria);
 
       List<Predicate> sqPredicates = new ArrayList<>();
+      Predicate pSqIdTipoEvaluacionEq = cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L);
       Predicate pSqIdEvaluacionEq = cb.equal(subqRoot.get(Evaluacion_.id), idEvaluacion);
-      Predicate pSqIdDictamenEq = cb.equal(subqRoot.get(Evaluacion_.dictamen).get(Dictamen_.id), idDictamen);
+      sqPredicates.add(pSqIdTipoEvaluacionEq);
       sqPredicates.add(pSqIdEvaluacionEq);
-      sqPredicates.add(pSqIdDictamenEq);
 
       sqMemoriaOriginal.select(joinMemoria.get(Memoria_.memoriaOriginal).get(Memoria_.id));
       sqMemoriaOriginal.where(sqPredicates.toArray(new Predicate[] {}));
 
       List<Predicate> predicates = new ArrayList<>();
-      Predicate pIdEvaluacionEq = cb.equal(root.get(Evaluacion_.id), idEvaluacion);
       Predicate pIdDictamenEq = cb.equal(root.get(Evaluacion_.dictamen).get(Dictamen_.id), idDictamen);
+      Predicate pIdTipoEvaluacionEq = cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L);
 
-      predicates.add(pIdEvaluacionEq);
       predicates.add(pIdDictamenEq);
+      predicates.add(pIdTipoEvaluacionEq);
 
       Predicate pMemoriaOriginal = cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), sqMemoriaOriginal);
       predicates.add(pMemoriaOriginal);
