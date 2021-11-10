@@ -40,10 +40,25 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class PageMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
+  /**
+   * Default Http Header for the page number.
+   */
   public static final String DEFAULT_PAGE_HEADER = "X-Page";
+  /**
+   * Default Http Header for the page size.
+   */
   public static final String DEFAULT_PAGE_SIZE_HEADER = "X-Page-Size";
+  /**
+   * Default Http Header for the number of pages.
+   */
   public static final String DEFAULT_PAGE_COUNT_HEADER = "X-Page-Count";
+  /**
+   * Default Http Header for the total number of elements in the page.
+   */
   public static final String DEFAULT_PAGE_TOTAL_COUNT_HEADER = "X-Page-Total-Count";
+  /**
+   * Default Http Header for the total number of elements.
+   */
   public static final String DEFAULT_TOTAL_COUNT_HEADER = "X-Total-Count";
 
   private String pageHeader;

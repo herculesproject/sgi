@@ -29,6 +29,10 @@ import org.springframework.http.MediaType;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Custom class that creates and cofigures a {@link WireMockServer} for testing
+ * purposes.
+ */
 @Slf4j
 public class Oauth2WireMockInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -91,17 +95,44 @@ public class Oauth2WireMockInitializer implements ApplicationContextInitializer<
     }
   }
 
+  /**
+   * Interface to be implemented for building a JWT token.
+   */
   public interface TokenBuilder {
+    /**
+     * Builds the JWT token usin the provided username and roles.
+     * 
+     * @param username the username
+     * @param roles    the roles
+     * @return the JWT token
+     * @throws BuildException in case of error
+     */
     String buildToken(String username, String... roles) throws BuildException;
   }
 
+  /**
+   * Exception thrown if there is an error initializing WireMock.
+   */
   public class Oauth2WireMockInitializationEsception extends RuntimeException {
+    /**
+     * Creates a new {@link Oauth2WireMockInitializationEsception}.
+     * 
+     * @param cause the original cause of the exception
+     */
     public Oauth2WireMockInitializationEsception(Throwable cause) {
       super(cause);
     }
   }
 
+  /**
+   * Exception thrown if there is an error building a JWT token.
+   */
   public class BuildException extends Exception {
+    /**
+     * Creates a new {@link BuildException}.
+     * 
+     * @param cause the original cause of the exception
+     */
     public BuildException(Throwable cause) {
       super(cause);
     }

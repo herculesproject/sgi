@@ -9,6 +9,11 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Allows access to Spring ApplicationContext in an static way.
+ * <p>
+ * This class is only usable in Spring Applications.
+ */
 @Component
 public class ApplicationContextSupport implements ApplicationContextAware {
   private static final String MESSAGE_NOT_IN_APPLICATION_CONTEXT = "ApplicationContextSupport does not run in an ApplicationContext";

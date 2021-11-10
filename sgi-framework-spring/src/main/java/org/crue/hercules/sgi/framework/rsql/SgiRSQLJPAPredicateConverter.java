@@ -19,8 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 public class SgiRSQLJPAPredicateConverter extends RSQLJPAPredicateConverter {
 
   private final SgiRSQLPredicateResolver<?> specificationResolver;
+
+  /**
+   * The {@link CriteriaBuilder} used in predicate generation
+   */
   protected CriteriaBuilder builder;
-  CriteriaQuery<?> query;
+  /**
+   * The {@link CriteriaQuery} used in predicate generation
+   */
+  protected CriteriaQuery<?> query;
 
   /**
    * @param builder           {@link CriteriaBuilder} to use in predicate

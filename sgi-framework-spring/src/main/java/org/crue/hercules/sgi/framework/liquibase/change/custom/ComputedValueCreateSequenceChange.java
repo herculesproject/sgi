@@ -19,6 +19,10 @@ import liquibase.resource.ResourceAccessor;
 import liquibase.statement.SqlStatement;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Liquibae {@link CustomTaskChange} that allows creation secuences based on
+ * computed (from database query) values.
+ */
 @Slf4j
 public class ComputedValueCreateSequenceChange extends CreateSequenceChange implements CustomTaskChange {
 
@@ -27,34 +31,74 @@ public class ComputedValueCreateSequenceChange extends CreateSequenceChange impl
   private String computedMaxValue;
   private String computedMinValue;
 
+  /**
+   * Gets the SQL to exec for setting the sequence start value.
+   * 
+   * @return the start value SQL or null if not set
+   */
   public String getComputedStartValue() {
     return computedStartValue;
   }
 
+  /**
+   * Sets the SQL to exec for setting the sequence start value.
+   * 
+   * @param computedStartValue the start value SQL
+   */
   public void setComputedStartValue(String computedStartValue) {
     this.computedStartValue = computedStartValue;
   }
 
+  /**
+   * Gets the SQL to exec for setting the sequence increment value.
+   * 
+   * @return the increment value SQL or null if not set
+   */
   public String getCoputedIncrementBy() {
     return coputedIncrementBy;
   }
 
+  /**
+   * Sets the SQL to exec for setting the sequence increment value.
+   * 
+   * @param coputedIncrementBy the increment value SQL
+   */
   public void setCoputedIncrementBy(String coputedIncrementBy) {
     this.coputedIncrementBy = coputedIncrementBy;
   }
 
+  /**
+   * Gets the SQL to exec for setting the sequence max value.
+   * 
+   * @return the max value SQL or null if not set
+   */
   public String getComputedMaxValue() {
     return computedMaxValue;
   }
 
+  /**
+   * Sets the SQL to exec for setting the sequence max value.
+   * 
+   * @param computedMaxValue the max value SQL
+   */
   public void setComputedMaxValue(String computedMaxValue) {
     this.computedMaxValue = computedMaxValue;
   }
 
+  /**
+   * Gets the SQL to exec for setting the sequence min value.
+   * 
+   * @return the min value SQL or null if not set
+   */
   public String getComputedMinValue() {
     return computedMinValue;
   }
 
+  /**
+   * Sets the SQL to exec for setting the sequence min value.
+   * 
+   * @param computedMinValue the min value SQL
+   */
   public void setComputedMinValue(String computedMinValue) {
     this.computedMinValue = computedMinValue;
   }
@@ -85,7 +129,7 @@ public class ComputedValueCreateSequenceChange extends CreateSequenceChange impl
 
   }
 
-  public BigInteger computeValue(Database database, String sql) throws CustomChangeException {
+  BigInteger computeValue(Database database, String sql) throws CustomChangeException {
     JdbcConnection dbConnection = (JdbcConnection) database.getConnection();
     PreparedStatement selectStatement = null;
     ResultSet results;

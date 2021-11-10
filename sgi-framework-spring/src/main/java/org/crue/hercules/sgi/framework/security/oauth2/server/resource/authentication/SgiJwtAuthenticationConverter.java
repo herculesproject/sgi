@@ -10,11 +10,16 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.util.Assert;
 
+/**
+ * Custom {@link Converter} from {@link Jwt} to
+ * {@link AbstractAuthenticationToken}.
+ */
 public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
   private Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
   private static final String MESSAGE_NOT_EMPTY = "{} cannot be empty";
 
   private String userNameClaim;
+  /** The default JWT claim containing the user name ("clientId") */
   public static final String CLIENT_ID = "clientId";
 
   @Override
@@ -57,7 +62,6 @@ public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAut
    * {@link JwtGrantedAuthoritiesConverter}.
    *
    * @param jwtGrantedAuthoritiesConverter The converter
-   * @since 5.2
    * @see JwtGrantedAuthoritiesConverter
    */
   public void setJwtGrantedAuthoritiesConverter(
@@ -66,6 +70,11 @@ public class SgiJwtAuthenticationConverter implements Converter<Jwt, AbstractAut
     this.jwtGrantedAuthoritiesConverter = jwtGrantedAuthoritiesConverter;
   }
 
+  /**
+   * Sets the JWT claim containing the user name.
+   * 
+   * @param userNameClaim the JWT claim
+   */
   public void setUserNameClaim(String userNameClaim) {
     this.userNameClaim = userNameClaim;
   }

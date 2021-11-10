@@ -49,20 +49,73 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * {@link ResponseEntityExceptionHandler} that handles and convers
+ * {@link Exception}s into {@link MediaType#APPLICATION_PROBLEM_JSON} responses.
+ */
 @RestControllerAdvice
 @Slf4j
 public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
+  /**
+   * {@link Problem} type {@link URI} for {@link AccessDeniedException}
+   * ("urn:problem-type:access-denied")
+   */
   public static final URI ACCESS_DENIED_PROBLEM_TYPE = URI.create("urn:problem-type:access-denied");
+  /**
+   * {@link Problem} type {@link URI} for {@link AuthenticationException}
+   * ("urn:problem-type:authentication")
+   */
   public static final URI AUTHENTICATION_PROBLEM_TYPE = URI.create("urn:problem-type:authentication");
+  /**
+   * {@link Problem} type {@link URI} for {@link ServletRequestBindingException}
+   * and {@link HttpMessageNotReadableException} ("urn:problem-type:bad-request")
+   */
   public static final URI BAD_REQUEST_PROBLEM_TYPE = URI.create("urn:problem-type:bad-request");
+  /**
+   * {@link Problem} type {@link URI} for {@link IllegalArgumentException}
+   * ("urn:problem-type:illegal-argument")
+   */
   public static final URI ILLEGAL_ARGUMENT_PROBLEM_TYPE = URI.create("urn:problem-type:illegal-argument");
+  /**
+   * {@link Problem} type {@link URI} for
+   * {@link HttpRequestMethodNotSupportedException}
+   * ("urn:problem-type:method-not-allowed")
+   */
   public static final URI METHOD_NOT_ALLOWED_PROBLEM_TYPE = URI.create("urn:problem-type:method-not-allowed");
+  /**
+   * {@link Problem} type {@link URI} for {@link MissingPathVariableException}
+   * ("urn:problem-type:missing-path-variable")
+   */
   public static final URI MISSING_PATH_VARIABLE_PROBLEM_TYPE = URI.create("urn:problem-type:missing-path-variable");
+  /**
+   * {@link Problem} type {@link URI} for
+   * {@link MissingServletRequestParameterException}
+   * ("urn:problem-type:missing-request-parameter")
+   */
   public static final URI MISSING_REQUEST_PARAMETER_PROBLEM_TYPE = URI
       .create("urn:problem-type:missing-request-parameter");
+  /**
+   * {@link Problem} type {@link URI} for
+   * {@link HttpMediaTypeNotAcceptableException}
+   * ("urn:problem-type:not-acceptable")
+   */
   public static final URI NOT_ACCEPTABLE_PROBLEM_TYPE = URI.create("urn:problem-type:not-acceptable");
+  /**
+   * {@link Problem} type {@link URI} for {@link TypeMismatchException}
+   * ("urn:problem-type:type-mismatch")
+   */
   public static final URI TYPE_MISMATCH_PROBLEM_TYPE = URI.create("urn:problem-type:type-mismatch");
+  /**
+   * {@link Problem} type {@link URI} for
+   * {@link HttpMediaTypeNotSupportedException}
+   * ("urn:problem-type:unsupported-media-type")
+   */
   public static final URI UNSUPPORTED_MEDIA_TYPE_PROBLEM_TYPE = URI.create("urn:problem-type:unsupported-media-type");
+  /**
+   * {@link Problem} type {@link URI} for {@link ConstraintViolationException}
+   * {@link BindingResult} and {@link ConstraintViolation}
+   * ("urn:problem-type:validation")
+   */
   public static final URI VALIDATION_PROBLEM_TYPE = URI.create("urn:problem-type:validation");
 
   private static final String PROPERTY_BAD_REQUEST = "BAD_REQUEST";
@@ -70,6 +123,13 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String EXTENSION_SUPPORTED = "supported";
 
+  /**
+   * Handles {@link ProblemException}s.
+   * 
+   * @param ex      the exception thrown
+   * @param request the current {@link WebRequest}
+   * @return the {@link ResponseEntity} holding the {@link Problem}
+   */
   @ExceptionHandler({ ProblemException.class })
   public ResponseEntity<Object> handleProblemException(ProblemException ex, WebRequest request) {
     log.debug("handleProblemException(ProblemException ex, WebRequest request) - start");
@@ -81,6 +141,13 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     return response;
   }
 
+  /**
+   * Handles {@link IllegalArgumentException}s.
+   * 
+   * @param ex      the exception thrown
+   * @param request the current {@link WebRequest}
+   * @return the {@link ResponseEntity} holding the {@link Problem}
+   */
   @ExceptionHandler({ IllegalArgumentException.class })
   public final ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
     log.debug("handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) - start");
@@ -109,7 +176,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
    * 
    * @param ex      the ConstraintViolationException
    * @param request the WebRequest
-   * @return the ResponseEntity
+   * @return the {@link ResponseEntity} holding the {@link Problem}
    */
   @ExceptionHandler({ ConstraintViolationException.class })
   public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
@@ -132,7 +199,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
    * 
    * @param ex      the AccessDeniedException
    * @param request the WebRequest
-   * @return the ResponseEntity
+   * @return the {@link ResponseEntity} holding the {@link Problem}
    */
   @ExceptionHandler({ AccessDeniedException.class })
   public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
@@ -153,7 +220,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
    * 
    * @param ex      the AuthenticationException
    * @param request the WebRequest
-   * @return the ResponseEntity
+   * @return the {@link ResponseEntity} holding the {@link Problem}
    */
   @ExceptionHandler({ AuthenticationException.class })
   public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
@@ -168,6 +235,13 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     return response;
   }
 
+  /**
+   * Handles {@link RestClientResponseException}s.
+   * 
+   * @param ex      the exception thrown
+   * @param request the current {@link WebRequest}
+   * @return the {@link ResponseEntity} holding the {@link Problem}
+   */
   @ExceptionHandler({ RestClientResponseException.class })
   public ResponseEntity<Object> handleRestClientResponseException(RestClientResponseException ex, WebRequest request) {
     log.debug("handleRestClientResponseException(RestClientResponseException ex, WebRequest request) - start");
@@ -180,6 +254,13 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     return response;
   }
 
+  /**
+   * Handles generic {@link Exception}s.
+   * 
+   * @param ex      the exception thrown
+   * @param request the current {@link WebRequest}
+   * @return the {@link ResponseEntity} holding the {@link Problem}
+   */
   @ExceptionHandler({ Exception.class })
   public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
     log.debug("handleOtherException(Exception ex, WebRequest request) - start");

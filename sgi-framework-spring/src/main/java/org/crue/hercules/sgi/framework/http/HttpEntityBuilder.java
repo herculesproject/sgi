@@ -41,33 +41,71 @@ public class HttpEntityBuilder<T> {
   private String clientRegistrationId;
   private boolean useCurrentUserAuthorization = false;
 
+  /**
+   * Creates a new {@link HttpEntityBuilder} for building an {@link HttpEntity}
+   * containing the provided Entity.
+   * 
+   * @param entity the entity
+   */
   public HttpEntityBuilder(T entity) {
     this.entity = entity;
   }
 
+  /**
+   * Creates a new {@link HttpEntityBuilder} for building an {@link HttpEntity}.
+   */
   public HttpEntityBuilder() {
   }
 
+  /**
+   * Sets the Entity to include in the {@link HttpEntity}.
+   * 
+   * @param entity the entity
+   * @return self reference
+   */
   public HttpEntityBuilder<T> withEntity(T entity) {
     this.entity = entity;
     return this;
   }
 
+  /**
+   * Sets the clientRegistrationId to include in the {@link HttpEntity}.
+   * 
+   * @param clientRegistrationId the Oauth2 client registration id
+   * @return self reference
+   */
   public HttpEntityBuilder<T> withClientAuthorization(String clientRegistrationId) {
     this.clientRegistrationId = clientRegistrationId;
     return this;
   }
 
+  /**
+   * Allow to re-use the current HTTP Request Authorization header in the
+   * {@link HttpEntity}.
+   * 
+   * @return self reference
+   */
   public HttpEntityBuilder<T> withCurrentUserAuthorization() {
     this.useCurrentUserAuthorization = true;
     return this;
   }
 
+  /**
+   * Sets extra {@link HttpHeaders} to include in the {@link HttpEntity}.
+   * 
+   * @param headers {@link HttpHeaders} to include
+   * @return self reference
+   */
   public HttpEntityBuilder<T> withHeaders(HttpHeaders headers) {
     this.headers = headers;
     return this;
   }
 
+  /**
+   * Builds the {@link HttpEntity} with the provided information.
+   * 
+   * @return the {@link HttpEntity}
+   */
   public HttpEntity<T> build() {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);

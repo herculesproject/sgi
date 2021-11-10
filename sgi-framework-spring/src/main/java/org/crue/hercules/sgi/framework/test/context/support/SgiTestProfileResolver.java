@@ -6,9 +6,21 @@ import org.springframework.test.context.support.DefaultActiveProfilesResolver;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * An {@link org.springframework.test.context.ActiveProfilesResolver} that looks
+ * up for SPRING_PROFILES_ACTIVE and spring.profiles.active environment variable
+ * or spring.profiles.active system property to set the active profile. If not
+ * found, the "test" profile is set.
+ */
 @Slf4j
 public class SgiTestProfileResolver extends DefaultActiveProfilesResolver {
+  /**
+   * SPRING_PROFILES_ACTIVE
+   */
   public static final String SPRING_PROFILES_ACTIVE_ENV_VAR = "SPRING_PROFILES_ACTIVE";
+  /**
+   * spring.profiles.active
+   */
   public static final String SPRING_PROFILES_ACTIVE_KEY = "spring.profiles.active";
 
   private static final String MESSAGE_FOUND = "Found {}={}!";
@@ -22,7 +34,7 @@ public class SgiTestProfileResolver extends DefaultActiveProfilesResolver {
       log.info("Looking up active spring profiles in environment...");
       String profile;
       if (env.containsKey(SPRING_PROFILES_ACTIVE_ENV_VAR)) {
-        profile = env.get(SPRING_PROFILES_ACTIVE_KEY);
+        profile = env.get(SPRING_PROFILES_ACTIVE_ENV_VAR);
         log.info(MESSAGE_FOUND, SPRING_PROFILES_ACTIVE_ENV_VAR, profile);
       } else {
         if (env.containsKey(SPRING_PROFILES_ACTIVE_KEY)) {

@@ -24,6 +24,11 @@ import liquibase.exception.ValidationErrors;
 import liquibase.resource.ResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Liquibae {@link CustomTaskChange} that allows applying a JSON query and
+ * transformation language (JSLT) to specified Database Table Column containing
+ * JSON content.
+ */
 @Slf4j
 public class JsltTaskChange implements CustomTaskChange {
 
@@ -137,6 +142,13 @@ public class JsltTaskChange implements CustomTaskChange {
     }
   }
 
+  /**
+   * Execute the provided {@link PreparedStatement}.
+   * 
+   * @param stmt the {@link PreparedStatement} to execute
+   * @throws SQLException if there is an error executing the
+   *                      {@link PreparedStatement}
+   */
   protected void executePreparedStatement(PreparedStatement stmt) throws SQLException {
     // if execute returns false, we can retrieve the affected rows count
     // (true used when resultset is returned)
@@ -189,50 +201,116 @@ public class JsltTaskChange implements CustomTaskChange {
     return jsltExpression;
   }
 
+  /**
+   * Get the table name for the columns content to be updated.
+   * 
+   * @return the table name
+   */
   public String getTableName() {
     return tableName;
   }
 
+  /**
+   * Set the table name for the columns content to be updated.
+   * 
+   * @param tableName the table name
+   */
   public void setTableName(String tableName) {
     this.tableName = tableName;
   }
 
+  /**
+   * Get the column name for the column content to be updated.
+   * 
+   * @return the column name
+   */
   public String getJsonColumnName() {
     return jsonColumnName;
   }
 
+  /**
+   * Set the column name for the column content to be updated.
+   * 
+   * @param jsonColumnName the column name
+   */
   public void setJsonColumnName(String jsonColumnName) {
     this.jsonColumnName = jsonColumnName;
   }
 
+  /**
+   * Get the jslt file path for the transformation rules.
+   * 
+   * @return the jslt file path
+   */
   public String getJsltFile() {
     return jsltFile;
   }
 
+  /**
+   * Set the jslt file path for the transformation rules.
+   * 
+   * @param jsltFile the jslt file path
+   */
   public void setJsltFile(String jsltFile) {
     this.jsltFile = jsltFile;
   }
 
+  /**
+   * Get the column name for the columns that uniquely identifies a single record
+   * in the table for the content to be updated.
+   * 
+   * @return the identifier column name
+   */
   public String getIdColumnName() {
     return idColumnName;
   }
 
+  /**
+   * Set the column name for the columns that uniquely identifies a single record
+   * in the table for the content to be updated.
+   * 
+   * @param idColumnName the identifier column name
+   */
   public void setIdColumnName(String idColumnName) {
     this.idColumnName = idColumnName;
   }
 
+  /**
+   * Get the where clause to be used for filtering the rows with content to be
+   * updated.
+   * 
+   * @return the where clause
+   */
   public String getWhere() {
     return where;
   }
 
+  /**
+   * Set the where clause to be used for filtering the rows with content to be
+   * updated.
+   * 
+   * @param where the where clause
+   */
   public void setWhere(String where) {
     this.where = where;
   }
 
+  /**
+   * Get if the JSLT transformation should include output object keys where the
+   * value is null or an empty object or array.
+   * 
+   * @return true if empty keys should be included
+   */
   public Boolean getIncludeEmpty() {
     return includeEmpty;
   }
 
+  /**
+   * Set if the JSLT transformation should include output object keys where the
+   * value is null or an empty object or array.
+   * 
+   * @param includeEmpty true if empty keys should be included
+   */
   public void setIncludeEmpty(Boolean includeEmpty) {
     this.includeEmpty = includeEmpty;
   }

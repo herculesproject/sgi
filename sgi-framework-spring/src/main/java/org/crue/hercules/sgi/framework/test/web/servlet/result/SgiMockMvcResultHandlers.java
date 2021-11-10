@@ -63,6 +63,11 @@ public interface SgiMockMvcResultHandlers {
   public static class PrintWriterPrintingErrorResultHandler implements ResultHandler {
     Writer writer;
 
+    /**
+     * Creates the {@link PrintWriterPrintingErrorResultHandler}
+     * 
+     * @param writer the {@link Writer} to write to
+     */
     public PrintWriterPrintingErrorResultHandler(Writer writer) {
       this.writer = writer;
     }

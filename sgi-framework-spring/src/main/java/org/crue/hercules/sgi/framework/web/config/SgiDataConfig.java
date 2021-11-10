@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * Enables {@link SgiAuditorAware}.
  * 
- * Enbles set hibernate.default_schema property via
+ * Enables set hibernate.default_schema property via
  * SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA environment variable.
  */
 @Component
@@ -43,6 +43,12 @@ public class SgiDataConfig {
 
   private static final String DATABASE_STARTUP_VALIDATOR_BEAN_NAME = "databaseStartupValidator";
 
+  /**
+   * Gets a {@link DatabaseDriver} of the provided driver class name.
+   * 
+   * @param driverClassName the driver class name
+   * @return the {@link DatabaseDriver}
+   */
   @Bean
   public DatabaseDriver databaseDriver(@Value("${spring.datasource.driver-class-name}") String driverClassName) {
     log.debug("databaseDriver(String driverClassName) - start");
@@ -59,6 +65,15 @@ public class SgiDataConfig {
     return DatabaseDriver.UNKNOWN;
   }
 
+  /**
+   * Creates a {@link DatabaseStartupValidator} using the provided
+   * {@link DataSource} and {@link DatabaseDriver} to defer application
+   * initialization until a database has started up.
+   * 
+   * @param dataSource     the {@link DataSource}
+   * @param databaseDriver the {@link DatabaseDriver}
+   * @return the {@link DatabaseStartupValidator}
+   */
   @Bean
   public DatabaseStartupValidator databaseStartupValidator(DataSource dataSource, DatabaseDriver databaseDriver) {
     log.debug("databaseStartupValidator(DataSource dataSource, DatabaseDriver databaseDriver) - start");
@@ -69,6 +84,13 @@ public class SgiDataConfig {
     return dsv;
   }
 
+  /**
+   * Creates a {@link BeanFactoryPostProcessor} that let beans like the
+   * {@link EntityManagerFactory}, {@link Liquibase} or {@link JdbcTemplate} that
+   * need the database depend on the {@link DatabaseStartupValidator}.
+   * 
+   * @return the {@link BeanFactoryPostProcessor}
+   */
   @Bean
   public static BeanFactoryPostProcessor dependsOnPostProcessor() {
     return bf -> {
@@ -88,6 +110,14 @@ public class SgiDataConfig {
     };
   }
 
+  /**
+   * Returns a {@link HibernatePropertiesCustomizer} that enables set
+   * hibernate.default_schema property via
+   * SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA environment variable.
+   * 
+   * @param validator the {@link Validator} to set to Hibernate
+   * @return the {@link HibernatePropertiesCustomizer}
+   */
   @Bean
   public static HibernatePropertiesCustomizer hibernatePropertiesCustomizer(Validator validator) {
     return (Map<String, Object> hibernateProperties) -> {
@@ -106,6 +136,11 @@ public class SgiDataConfig {
     };
   }
 
+  /**
+   * Registers the {@link SgiAuditorAware}.
+   * 
+   * @return the {@link SgiAuditorAware}
+   */
   @Bean
   public AuditorAware<String> auditorAware() {
     log.debug("auditorAware() - start");

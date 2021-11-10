@@ -22,6 +22,9 @@ import org.springframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * {@link OidcUserService} cutom implementation for Keycloak.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class KeycloakOidcUserService extends OidcUserService {

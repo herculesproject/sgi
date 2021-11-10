@@ -33,6 +33,10 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * A {@link WebSecurityConfigurerAdapter} that configures {@link HttpSecurity}
+ * based on configuration properties.
+ */
 @Configuration
 @Order(SecurityProperties.BASIC_AUTH_ORDER)
 @Slf4j
@@ -132,6 +136,11 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     log.debug("configure(HttpSecurity http) - end");
   }
 
+  /**
+   * Creates new {@link KeycloakOidcUserService}.
+   * 
+   * @return the {@link KeycloakOidcUserService}
+   */
   protected OAuth2UserService<OidcUserRequest, OidcUser> keycloakOidcUserService() {
     log.debug("keycloakOidcUserService() - start");
     OAuth2UserService<OidcUserRequest, OidcUser> returnValue = new KeycloakOidcUserService(jwtDecoder,
@@ -140,6 +149,11 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     return returnValue;
   }
 
+  /**
+   * Creates a new {@link SgiJwtAuthenticationConverter}
+   * 
+   * @return the {@link SgiJwtAuthenticationConverter}
+   */
   protected Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
     log.debug("jwtAuthenticationConverter() - start");
     SgiJwtAuthenticationConverter sgiJwtAuthenticationConverter = new SgiJwtAuthenticationConverter();
@@ -152,6 +166,12 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     return sgiJwtAuthenticationConverter;
   }
 
+  /**
+   * Creates a {@link Converter} to create a {@link GrantedAuthority} collection
+   * from a JSON Web Token.
+   * 
+   * @return the {@link Converter}
+   */
   protected Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
     log.debug("jwtGrantedAuthoritiesConverter() - start");
     Converter<Jwt, Collection<GrantedAuthority>> returnValue = new Converter<Jwt, Collection<GrantedAuthority>>() {
@@ -186,6 +206,12 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     return returnValue;
   }
 
+  /**
+   * Custom {@link KeycloakLogoutHandler} to propagete logout from application to
+   * Keycloak.
+   * 
+   * @return the {@link KeycloakLogoutHandler}
+   */
   protected KeycloakLogoutHandler keycloakLogoutHandler() {
     log.debug("keycloakLogoutHandler() - start");
     KeycloakLogoutHandler returnValue = new KeycloakLogoutHandler(new RestTemplate());

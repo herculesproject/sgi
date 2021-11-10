@@ -168,8 +168,19 @@ public class PrintingClientHttpRequestInterceptor implements ClientHttpRequestIn
    */
   protected interface ResultValuePrinter {
 
+    /**
+     * Prints a heading value.
+     * 
+     * @param heading the heading
+     */
     void printHeading(String heading);
 
+    /**
+     * Prints a content value.
+     * 
+     * @param label content label
+     * @param value content value
+     */
     void printValue(String label, @Nullable Object value);
   }
 

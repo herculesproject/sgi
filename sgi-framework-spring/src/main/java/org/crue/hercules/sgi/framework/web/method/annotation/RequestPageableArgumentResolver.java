@@ -39,8 +39,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RequestPageableArgumentResolver implements HandlerMethodArgumentResolver, Serializable {
 
+  /**
+   * The {@link SortCriteriaConverter} to convert the sorting information
+   */
   private SortCriteriaConverter converter;
 
+  /**
+   * Cretates a new {@link RequestPageableArgumentResolver} that uses the provided
+   * {@link SortCriteriaConverter} to convert the sorting information provided in
+   * the specified sort request parameter.
+   * 
+   * @param converter the {@link SortCriteriaConverter}
+   */
   public RequestPageableArgumentResolver(SortCriteriaConverter converter) {
     log.debug("RequestPageableArgumentResolver(SortCriteriaConverter converter) - start");
     this.converter = converter;
@@ -198,11 +208,22 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     return null;
   }
 
+  /**
+   * Custom {@link Pageable} for unpaged but sorted page info.
+   */
   public static class UnpagedPageable implements Pageable, Serializable {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UnpagedPageable.class);
 
+    /**
+     * The sort information
+     */
     private Sort sort;
 
+    /**
+     * Creates a new {@link UnpagedPageable} with the provided sort information.
+     * 
+     * @param sort the sorting
+     */
     public UnpagedPageable(Sort sort) {
       log.debug("UnpagedPageable(Sort sort) - start");
       this.sort = sort;
