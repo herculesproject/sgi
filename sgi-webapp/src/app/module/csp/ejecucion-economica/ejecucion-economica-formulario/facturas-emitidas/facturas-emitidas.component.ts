@@ -59,7 +59,7 @@ export class FacturasEmitidasComponent extends FragmentComponent implements OnIn
   }
 
   public clearDesglose(): void {
-    this.selectAnualidades.options.forEach((item: MatOption) => { item.deselect() });
+    this.formPart.formGroupFechas.reset();
     this.formPart.clearDesglose();
   }
 
