@@ -46,6 +46,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
+import { PROYECTO_ROUTE_NAMES } from '../proyecto/proyecto-route-names';
 import { CONVOCATORIA_ID_KEY } from './solicitud-crear/solicitud-crear.guard';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudAutoevaluacionFragment } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.fragment';
@@ -65,6 +66,9 @@ import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud
 
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
+const MSG_PROYECTOS = marker('csp.proyecto');
+
+export const SOLICITUD_ACTION_LINK_KEY = 'solicitud';
 
 export interface ISolicitudData {
   readonly: boolean;
@@ -73,6 +77,7 @@ export interface ISolicitudData {
   hasPopulatedPeriodosSocios: boolean;
   solicitudProyecto: ISolicitudProyecto;
   hasAnySolicitudProyectoSocioWithRolCoordinador: boolean;
+  proyectosIds: number[];
 }
 
 @Injectable()
@@ -194,6 +199,8 @@ export class SolicitudActionService extends ActionService {
         this.addConvocatoriaLink(this.data.solicitud.convocatoriaId);
       }
     }
+
+    this.addProyectoLink();
 
     this.isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
     const idConvocatoria = history.state[CONVOCATORIA_ID_KEY];
@@ -548,6 +555,29 @@ export class SolicitudActionService extends ActionService {
       needShow = false;
     }
     this.showAlertNotSocioCoordinadorExist$.next(needShow);
+  }
+
+  private addProyectoLink(): void {
+
+    if (!this.data?.proyectosIds || this.data?.proyectosIds.length === 0) {
+      return;
+    }
+
+    const proyectoId = this.data.proyectosIds.length > 1 ? null : this.data.proyectosIds[0];
+    const routerLink: string[] = proyectoId ?
+      ['../..', CSP_ROUTE_NAMES.PROYECTO, proyectoId.toString(), PROYECTO_ROUTE_NAMES.FICHA_GENERAL] :
+      ['../..', CSP_ROUTE_NAMES.PROYECTO];
+
+    const queryParams = !proyectoId ? { [SOLICITUD_ACTION_LINK_KEY]: this.data.solicitud.id } : {};
+
+    const actionLinkOptions = {
+      title: MSG_PROYECTOS,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      routerLink,
+      queryParams
+    };
+
+    this.addActionLink(actionLinkOptions);
   }
 
 }

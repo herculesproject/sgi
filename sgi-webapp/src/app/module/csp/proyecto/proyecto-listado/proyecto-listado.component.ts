@@ -33,6 +33,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
+import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
 
 
 const MSG_ERROR = marker('error.load');
@@ -85,6 +86,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   planInvestigacion$: BehaviorSubject<IPrograma[]> = new BehaviorSubject<IPrograma[]>([]);
 
   private convocatoriaId: number;
+  private solicitudId: number;
+
   mapModificable: Map<number, boolean> = new Map();
 
   get ESTADO_MAP() {
@@ -127,6 +130,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     if (route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY)) {
       this.convocatoriaId = Number(route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY));
     }
+    if (route.snapshot.queryParamMap.get(SOLICITUD_ACTION_LINK_KEY)) {
+      this.solicitudId = Number(route.snapshot.queryParamMap.get(SOLICITUD_ACTION_LINK_KEY));
+    }
   }
 
   ngOnInit(): void {
@@ -148,6 +154,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
           return of({} as IConvocatoria);
         })
       ).subscribe();
+    }
+    if (this.solicitudId) {
+      this.onSearch();
     }
   }
 
@@ -369,7 +378,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
       .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
       .and('finalizado', SgiRestFilterOperator.EQUALS, controls.finalizado.value?.toString())
-      .and('prorrogado', SgiRestFilterOperator.EQUALS, controls.prorrogado.value?.toString());
+      .and('prorrogado', SgiRestFilterOperator.EQUALS, controls.prorrogado.value?.toString())
+      .and('solicitudId', SgiRestFilterOperator.EQUALS, this.solicitudId?.toString());
 
     return filter;
   }
