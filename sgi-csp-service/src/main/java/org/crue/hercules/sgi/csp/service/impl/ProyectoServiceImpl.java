@@ -1768,4 +1768,16 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Page<ProyectoFacturacion> findAllProyectoFacturacionByProyectoId(Long proyectoId, String query, Pageable paging){
     return this.proyectoFacturacionService.findByProyectoId(proyectoId, paging);
   }
+
+  /**
+   * Devuelve una lista de ids de los objetos de tipo {@link Proyecto} que estñan asociados
+   * con un objeto de tipo {@link Solicitud}
+   * 
+   * @param solicitudId id de la {@link Solicitud}
+   * @return lista de ids de los objetos de tipo {@link Proyecto}
+   */
+  @Override
+  public List<Long> findIdsBySolicitudId(Long solicitudId) {
+    return this.repository.findIds(ProyectoSpecifications.bySolicitudId(solicitudId));
+  }
 }

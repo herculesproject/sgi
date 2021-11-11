@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
+import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
@@ -111,6 +112,9 @@ public class SolicitudController {
 
   /** SolicitudProyectoEntidadService */
   private final SolicitudProyectoEntidadService solicitudProyectoEntidadService;
+  
+  /** ProyectoService */
+  private final ProyectoService proyectoService;
 
   /**
    * Instancia un nuevo SolicitudController.
@@ -130,6 +134,7 @@ public class SolicitudController {
    * @param solicitudProyectoAreaConocimientoService         {@link SolicitudProyectoAreaConocimientoService}.
    * @param solicitudProyectoResponsableEconomicoService     {@link SolicitudProyectoResponsableEconomicoService}.
    * @param solicitudProyectoEntidadService                  {@link SolicitudProyectoEntidadService}.
+   * @param proyectoService                                  {@link ProyectoService}. 
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -141,7 +146,8 @@ public class SolicitudController {
       SolicitudProyectoClasificacionService solicitudProyectoClasificacionService,
       SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService,
       SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService,
-      SolicitudProyectoEntidadService solicitudProyectoEntidadService) {
+      SolicitudProyectoEntidadService solicitudProyectoEntidadService,
+      ProyectoService proyectoService) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -157,6 +163,7 @@ public class SolicitudController {
     this.solicitudProyectoAreaConocimientoService = solicitudProyectoAreaConocimientoService;
     this.solicitudProyectoResponsableEconomicoService = solicitudProyectoResponsableEconomicoService;
     this.solicitudProyectoEntidadService = solicitudProyectoEntidadService;
+    this.proyectoService = proyectoService;
   }
 
   /**
@@ -891,6 +898,21 @@ public class SolicitudController {
 
     log.debug("findSolicitudProyectoEntidadTipoPresupuestoPorEntidad(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista de identificadores de los objetos de tipo {@link Proyecto} que están que tienen relación 
+   * con el objeto de tipo {@link Solicitud} cuyo id se recibe por el path
+   * 
+   * @param id id del objeto {@link Solicitud}
+   * @return lista de identificadores de los objetos de tipo {@link Proyecto}
+   */
+  @GetMapping("/{id}/proyectosids")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<List<Long>> findProyectosIdsBySolicitudId(@PathVariable Long id) {
+
+    List<Long> proyectos = this.proyectoService.findIdsBySolicitudId(id);
+    return proyectos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(proyectos);
   }
 
 }
