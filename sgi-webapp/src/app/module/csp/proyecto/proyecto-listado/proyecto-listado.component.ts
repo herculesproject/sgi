@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
@@ -34,7 +35,8 @@ import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
-
+import { IProyectoListadoModalData, ProyectoListadoModalComponent }
+  from '../modals/proyecto-listado-modal/proyecto-listado-modal.component';
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -46,9 +48,9 @@ const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const PROYECTO_KEY = marker('csp.proyecto');
 
-interface IProyectoData extends IProyecto {
+export interface IProyectoListadoData extends IProyecto {
   prorrogado: boolean;
-  proyectosSGE: string
+  proyectosSGE: string;
 }
 
 @Component({
@@ -56,7 +58,7 @@ interface IProyectoData extends IProyecto {
   templateUrl: './proyecto-listado.component.html',
   styleUrls: ['./proyecto-listado.component.scss']
 })
-export class ProyectoListadoComponent extends AbstractTablePaginationComponent<IProyectoData> implements OnInit {
+export class ProyectoListadoComponent extends AbstractTablePaginationComponent<IProyectoListadoData> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = MSG_BUTTON_NEW;
   textoDesactivar: string;
@@ -68,7 +70,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  proyecto$: Observable<IProyectoData[]>;
+  proyecto$: Observable<IProyectoListadoData[]>;
 
   colectivosResponsableProyecto: string[];
   colectivosMiembroEquipo: string[];
@@ -113,6 +115,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     private rolProyectoService: RolProyectoService,
     private readonly translate: TranslateService,
     private convocatoriaService: ConvocatoriaService,
+    private matDialog: MatDialog,
     route: ActivatedRoute,
   ) {
     super(snackBarService, MSG_ERROR);
@@ -288,7 +291,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.onSearch();
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IProyectoData>> {
+  protected createObservable(): Observable<SgiRestListResult<IProyectoListadoData>> {
     let observable$: Observable<SgiRestListResult<IProyecto>> = null;
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
       observable$ = this.proyectoService.findTodos(this.getFindOptions());
@@ -297,12 +300,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     }
     return observable$.pipe(
       map((response) => {
-        return response as SgiRestListResult<IProyectoData>;
+        return response as SgiRestListResult<IProyectoListadoData>;
       }),
       switchMap((response) => {
-        const requestsProyecto: Observable<IProyectoData>[] = [];
+        const requestsProyecto: Observable<IProyectoListadoData>[] = [];
         response.items.forEach(proyecto => {
-          const proyectoData = proyecto as IProyectoData;
+          const proyectoData = proyecto as IProyectoListadoData;
           if (proyecto.id) {
             requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
               map(value => {
@@ -561,5 +564,16 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         this.snackBarService.showError(MSG_ERROR);
       }
     );
+  }
+
+  openExportModal(): void {
+    const data: IProyectoListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(ProyectoListadoModalComponent, config);
   }
 }

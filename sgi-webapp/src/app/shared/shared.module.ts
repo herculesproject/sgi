@@ -17,6 +17,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogContentComponent } from './dialog-content/dialog-content.component';
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
+import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
@@ -72,7 +73,8 @@ import { SelectComponent } from './select/select.component';
     DialogContentComponent,
     DialogHeaderComponent,
     DialogFooterComponent,
-    ActionDialogComponent
+    ActionDialogComponent,
+    ExportDialogComponent
   ],
   imports: [
     CommonModule,
@@ -111,7 +113,8 @@ import { SelectComponent } from './select/select.component';
     MenuItemComponent,
     MenuGroupComponent,
     MenuSubItemComponent,
-    ActionDialogComponent
+    ActionDialogComponent,
+    ExportDialogComponent
   ]
 })
 export class SharedModule { }
