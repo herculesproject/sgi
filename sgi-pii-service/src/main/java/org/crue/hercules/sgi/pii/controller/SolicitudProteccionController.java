@@ -1,12 +1,22 @@
 package org.crue.hercules.sgi.pii.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.pii.dto.PaisValidadoOutput;
 import org.crue.hercules.sgi.pii.dto.SolicitudProteccionInput;
 import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
+import org.crue.hercules.sgi.pii.model.PaisValidado;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
+import org.crue.hercules.sgi.pii.service.PaisValidadoService;
 import org.crue.hercules.sgi.pii.service.SolicitudProteccionService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +38,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SolicitudProteccionController {
 
+  public static final String PATH_PAISESVALIDADOS = "/{solicitudProteccionId}/paisesvalidados";
+
   private final SolicitudProteccionService solicitudProteccionService;
+  private final PaisValidadoService paisValidadoService;
   private final ModelMapper modelMapper;
 
   /**
@@ -103,9 +116,47 @@ public class SolicitudProteccionController {
     return convert(this.solicitudProteccionService.desactivar(id));
   }
 
+  /**
+   * Devuelve los {@link PaisValidado} asociados a la {@link SolicitudProteccion}
+   * con el id indicado.
+   * 
+   * @param solicitudProteccionId Identificador de {@link SolicitudProteccion}
+   * @return {@link PaisValidado} asociados a la {@link SolicitudProteccion}
+   */
+  @GetMapping(PATH_PAISESVALIDADOS)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V', 'PII-INV-B')")
+  public ResponseEntity<Page<PaisValidadoOutput>> findPaisesValidados(@PathVariable Long solicitudProteccionId,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findPaisesValidados(@PathVariable Long solicitudProteccionId, @RequestPageable(sort = 's') Pageable paging) - start");
+
+    Page<PaisValidado> page = paisValidadoService.findBySolicitudProteccionId(solicitudProteccionId, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findPaisesValidados(@PathVariable Long solicitudProteccionId, @RequestPageable(sort = 's') Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug(
+        "findPaisesValidados(@PathVariable Long solicitudProteccionId, @RequestPageable(sort = 's') Pageable paging) - end");
+    return ResponseEntity.ok().body(convertToPaisValidadoPage(page));
+  }
+
   /****************/
   /* CONVERTERS */
   /****************/
+
+  private Page<PaisValidadoOutput> convertToPaisValidadoPage(Page<PaisValidado> page) {
+    List<PaisValidadoOutput> content = page.getContent().stream().map((paisValidado) -> convert(paisValidado))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private PaisValidadoOutput convert(PaisValidado paisValidado) {
+    return this.modelMapper.map(paisValidado, PaisValidadoOutput.class);
+  }
 
   private SolicitudProteccionOutput convert(SolicitudProteccion solicitudProteccion) {
     return this.modelMapper.map(solicitudProteccion, SolicitudProteccionOutput.class);

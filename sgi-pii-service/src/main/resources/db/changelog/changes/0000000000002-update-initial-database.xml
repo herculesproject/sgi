@@ -82,5 +82,29 @@
   <changeSet author="master" id="0000000000002-10">
     <dropColumn columnName="ACTIVO" tableName="TRAMO_REPARTO" />
   </changeSet>
-
+  <changeSet author="master" id="0000000000002-11">
+    <createSequence incrementBy="1" sequenceName="pais_validado_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-12">
+    <createTable tableName="pais_validado">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pais_validadoPK" />
+      </column>
+      <column name="codigo_invencion" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_validacion" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="pais_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="solicitud_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-13">
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="pais_validado" constraintName="FK_PAISVALIDADO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+  </changeSet>
 </databaseChangeLog>
