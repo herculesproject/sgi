@@ -25,6 +25,7 @@
   "btn.process": "Tramitar",
   "btn.recover": "Recuperar",
   "btn.request.add": "Solicitar alta",
+  "btn.request.add.entity": "Solicitar alta de {entity}",
   "btn.request.edit": "Solicitar modificación",
   "btn.save": "Guardar",
   "btn.save.entity": "Guardar {entity}",

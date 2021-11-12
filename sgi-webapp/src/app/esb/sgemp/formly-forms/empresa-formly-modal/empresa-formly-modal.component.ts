@@ -5,6 +5,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormlyUtils } from '@core/utils/formly-utils';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -67,42 +68,46 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent implem
       case ACTION_MODAL_MODE.EDIT:
         load$ = this.empresaService.getFormlyUpdate().pipe(
           map(fields => {
-            return { fields, data: {}, model: {} } as IFormlyData;
+            return this.initFormlyData(fields);
           }),
-          switchMap((formlyData) => {
-            return this.empresaService.getFormlyModelById(id).pipe(
-              map((model) => {
-                formlyData.model = model;
-                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
-                return formlyData;
-              }));
+          switchMap((formlyData): Observable<IFormlyData> => {
+            return this.getFormlyModelById(id, formlyData);
           })
         );
         break;
       case ACTION_MODAL_MODE.NEW:
         load$ = this.empresaService.getFormlyCreate().pipe(
           map(fields => {
-            return { fields, data: {}, model: {} } as IFormlyData;
+            return this.initFormlyData(fields);
           })
         );
         break;
       case ACTION_MODAL_MODE.VIEW:
         load$ = this.empresaService.getFormlyView().pipe(
           map(fields => {
-            return { fields, data: {}, model: {} } as IFormlyData;
+            return this.initFormlyData(fields);
           }),
           switchMap((formlyData) => {
-            return this.empresaService.getFormlyModelById(id).pipe(
-              map((model) => {
-                formlyData.model = model;
-                FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
-                return formlyData;
-              }));
+            return this.getFormlyModelById(id, formlyData);
           })
         );
         break;
     }
     return load$;
+  }
+
+  private initFormlyData(fields: FormlyFieldConfig[]): IFormlyData {
+    return { fields, data: {}, model: {} } as IFormlyData;
+  }
+
+  private getFormlyModelById(id: string, formlyData: IFormlyData): Observable<IFormlyData> {
+    return this.empresaService.getFormlyModelById(id).pipe(
+      map((model) => {
+        formlyData.model = model;
+        formlyData.model.empresaId = id;
+        FormlyUtils.convertJSONToFormly(this.formlyData.model, this.formlyData.fields);
+        return formlyData;
+      }));
   }
 
   /**
