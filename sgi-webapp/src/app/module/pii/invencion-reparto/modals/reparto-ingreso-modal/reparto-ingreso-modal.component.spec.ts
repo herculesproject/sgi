@@ -5,25 +5,21 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
+import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { InvencionGastoModalComponent, InvencionGastoModalData } from './invencion-gasto-modal.component';
+import { RepartoIngresoModalComponent } from './reparto-ingreso-modal.component';
 
-describe('InvencionGastoModalComponent', () => {
-  let component: InvencionGastoModalComponent;
-  let fixture: ComponentFixture<InvencionGastoModalComponent>;
+describe('RepartoIngresoModalComponent', () => {
+  let component: RepartoIngresoModalComponent;
+  let fixture: ComponentFixture<RepartoIngresoModalComponent>;
 
   beforeEach(waitForAsync(() => {
-    const data = {
-      selectedInvencionId: 1,
-      selectedInvencionGasto: {},
-      columns: [],
-      gastoDetalle: {},
-    } as InvencionGastoModalData;
+    const data = {} as IRepartoIngreso;
 
 
     TestBed.configureTestingModule({
@@ -44,12 +40,12 @@ describe('InvencionGastoModalComponent', () => {
         { provide: MatDialogRef, useValue: data },
         { provide: MAT_DIALOG_DATA, useValue: data },
       ],
-      declarations: [InvencionGastoModalComponent, HeaderComponent],
+      declarations: [RepartoIngresoModalComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InvencionGastoModalComponent);
+    fixture = TestBed.createComponent(RepartoIngresoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

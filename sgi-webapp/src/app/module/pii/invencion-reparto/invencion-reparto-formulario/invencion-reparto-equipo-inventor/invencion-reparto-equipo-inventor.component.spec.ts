@@ -11,24 +11,37 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { IInvencionData, InvencionActionService } from '../../invencion.action.service';
-import { INVENCION_DATA_KEY } from '../../invencion.resolver';
+import { IInvencionData } from '../../../invencion/invencion.action.service';
+import { INVENCION_DATA_KEY } from '../../../invencion/invencion.resolver';
+import { INVENCION_REPARTO_DATA_KEY } from '../../invencion-reparto-data.resolver';
+import { IInvencionRepartoData, InvencionRepartoActionService } from '../../invencion-reparto.action.service';
 
-import { InvencionRepartosComponent } from './invencion-repartos.component';
+import { InvencionRepartoEquipoInventorComponent } from './invencion-reparto-equipo-inventor.component';
 
-describe('InvencionRepartosComponent', () => {
-  let component: InvencionRepartosComponent;
-  let fixture: ComponentFixture<InvencionRepartosComponent>;
+describe('InvencionRepartoEquipoInventorComponent', () => {
+  let component: InvencionRepartoEquipoInventorComponent;
+  let fixture: ComponentFixture<InvencionRepartoEquipoInventorComponent>;
 
   const routeData: Data = {
-    [INVENCION_DATA_KEY]: {} as IInvencionData
+    [INVENCION_REPARTO_DATA_KEY]: {
+      reparto: {
+        id: 1
+      },
+    } as IInvencionRepartoData
   };
-  const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
+  const parentRouteData: Data = {
+    [INVENCION_DATA_KEY]: {
+      invencion: {
+        id: 111
+      }
+    } as IInvencionData
+  };
+  const routeMock = TestUtils.buildActivatedRouteMock('1', routeData, parentRouteData);
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        InvencionRepartosComponent
+        InvencionRepartoEquipoInventorComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -41,12 +54,12 @@ describe('InvencionRepartosComponent', () => {
         RouterTestingModule,
         SgiAuthModule,
         LoggerTestingModule,
-        SharedModule,
+        SharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        InvencionActionService,
         { provide: ActivatedRoute, useValue: routeMock },
+        InvencionRepartoActionService,
         SgiAuthService
       ],
     })
@@ -54,7 +67,7 @@ describe('InvencionRepartosComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InvencionRepartosComponent);
+    fixture = TestBed.createComponent(InvencionRepartoEquipoInventorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

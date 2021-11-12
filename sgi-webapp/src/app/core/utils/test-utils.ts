@@ -84,13 +84,16 @@ export default class TestUtils {
     );
   }
 
-  static buildActivatedRouteMock(paramId: string, routeData: Data): ActivatedRoute {
+  static buildActivatedRouteMock(paramId: string, routeData: Data, parentData?: Data): ActivatedRoute {
     const paramMapSpy: jasmine.SpyObj<ParamMap> = jasmine.createSpyObj('paramMap', ['get']);
     paramMapSpy.get.and.returnValue(paramId);
     const routeMock: ActivatedRoute = {
       snapshot: {
         paramMap: paramMapSpy as ParamMap,
-        data: routeData
+        data: routeData,
+        parent: {
+          data: parentData
+        }
       }
     } as ActivatedRoute;
     return routeMock;

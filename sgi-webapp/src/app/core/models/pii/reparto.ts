@@ -1,6 +1,8 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DateTime } from 'luxon';
 import { IInvencion } from './invencion';
+import { IRepartoGasto } from './reparto-gasto';
+import { IRepartoIngreso } from './reparto-ingreso';
 
 export interface IReparto {
   id: number;
@@ -8,6 +10,12 @@ export interface IReparto {
   fecha: DateTime;
   importeUniversidad: number;
   estado: Estado;
+}
+
+export interface IRepartoCreate {
+  invencion: IInvencion;
+  gastos: IRepartoGasto[];
+  ingresos: IRepartoIngreso[];
 }
 
 export enum Estado {

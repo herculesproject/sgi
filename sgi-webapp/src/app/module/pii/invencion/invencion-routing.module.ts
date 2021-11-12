@@ -28,6 +28,7 @@ const MSG_LISTADO_TITLE = marker('menu.pii.invenciones');
 const MSG_NEW_TITLE = marker('title.new.entity');
 const INVENCION_KEY = marker('pii.invencion');
 const SOLICITUD_PROTECCION_KEY = marker('pii.solicitud-proteccion');
+const REPARTO_KEY = marker('pii.reparto');
 
 const routes: SgiRoutes = [
   {
@@ -159,6 +160,16 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: SOLICITUD_PROTECCION_KEY
+        }
+      },
+      {
+        path: INVENCION_ROUTE_NAMES.REPARTOS,
+        loadChildren: () =>
+          import('../invencion-reparto/invencion-reparto.module').then(
+            m => m.InvencionRepartoModule),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: REPARTO_KEY
         }
       },
       {

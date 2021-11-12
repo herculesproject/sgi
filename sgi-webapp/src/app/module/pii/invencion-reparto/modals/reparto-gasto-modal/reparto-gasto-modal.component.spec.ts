@@ -5,25 +5,21 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
+import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { InvencionGastoModalComponent, InvencionGastoModalData } from './invencion-gasto-modal.component';
+import { RepartoGastoModalComponent } from './reparto-gasto-modal.component';
 
-describe('InvencionGastoModalComponent', () => {
-  let component: InvencionGastoModalComponent;
-  let fixture: ComponentFixture<InvencionGastoModalComponent>;
+describe('RepartoGastoModalComponent', () => {
+  let component: RepartoGastoModalComponent;
+  let fixture: ComponentFixture<RepartoGastoModalComponent>;
 
   beforeEach(waitForAsync(() => {
-    const data = {
-      selectedInvencionId: 1,
-      selectedInvencionGasto: {},
-      columns: [],
-      gastoDetalle: {},
-    } as InvencionGastoModalData;
+    const data = {} as IRepartoGasto;
 
 
     TestBed.configureTestingModule({
@@ -44,12 +40,12 @@ describe('InvencionGastoModalComponent', () => {
         { provide: MatDialogRef, useValue: data },
         { provide: MAT_DIALOG_DATA, useValue: data },
       ],
-      declarations: [InvencionGastoModalComponent, HeaderComponent],
+      declarations: [RepartoGastoModalComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InvencionGastoModalComponent);
+    fixture = TestBed.createComponent(RepartoGastoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

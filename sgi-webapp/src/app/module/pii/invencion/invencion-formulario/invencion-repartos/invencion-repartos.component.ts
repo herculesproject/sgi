@@ -8,9 +8,11 @@ import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, IReparto } from '@core/models/pii/reparto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ROUTE_NAMES } from '@core/route.names';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter,
   SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection
@@ -21,6 +23,7 @@ import { InvencionActionService } from '../../invencion.action.service';
 import { InvencionRepartosFragment } from './invencion-repartos.fragment';
 
 const MSG_ERROR = marker('error.load');
+const REPARTO_KEY = marker('pii.reparto');
 
 @Component({
   selector: 'sgi-invencion-repartos',
@@ -28,6 +31,8 @@ const MSG_ERROR = marker('error.load');
   styleUrls: ['./invencion-repartos.component.scss']
 })
 export class InvencionRepartosComponent extends FragmentComponent implements OnInit, OnDestroy, AfterViewInit {
+  ROUTE_NAMES = ROUTE_NAMES;
+
   private subscriptions: Subscription[] = [];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -39,6 +44,7 @@ export class InvencionRepartosComponent extends FragmentComponent implements OnI
   totalElementos: number;
   filter: SgiRestFilter;
   formGroup: FormGroup;
+  msgParamEntity = {};
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -54,6 +60,7 @@ export class InvencionRepartosComponent extends FragmentComponent implements OnI
   constructor(
     public actionService: InvencionActionService,
     private readonly snackBarService: SnackBarService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.REPARTOS, actionService);
     this.formPart = this.fragment as InvencionRepartosFragment;
@@ -62,6 +69,7 @@ export class InvencionRepartosComponent extends FragmentComponent implements OnI
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.totalElementos = 0;
     this.formGroup = this.buildFormGroup();
     this.initColumns();
@@ -179,5 +187,12 @@ export class InvencionRepartosComponent extends FragmentComponent implements OnI
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      REPARTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
   }
 }

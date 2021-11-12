@@ -18,6 +18,7 @@ export interface IColumnDefinition {
   id: string;
   name: string;
   compute: boolean;
+  importeReparto?: boolean;
 }
 
 abstract class RowTree<T> {
