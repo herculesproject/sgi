@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { TipoEstadoValidacion, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
+import { IEstadoValidacionIP, TipoEstadoValidacion, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -226,6 +226,13 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
         }
       )
     );
+  }
+
+  public notificarIP(item: StatusWrapper<IProyectoFacturacionData>, rowIndex: number): void {
+    item.value.estadoValidacionIP = {
+      estado: TipoEstadoValidacion.NOTIFICADA,
+    } as IEstadoValidacionIP
+    this.formPart.updateProyectoFacturacion(item, rowIndex);
   }
 
 }

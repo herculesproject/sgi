@@ -99,14 +99,15 @@
               </button>
             </ng-container>
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-              <button *ngIf="canShowDelete(element.value.estadoValidacionIP?.estado)" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
-                (click)="deleteItemFacturacion(element)">
+              <button *ngIf="canShowDelete(element.value.estadoValidacionIP?.estado)" mat-icon-button
+                matTooltip="{{'btn.delete' | translate}}" (click)="deleteItemFacturacion(element)">
                 <mat-icon color="warn">highlight_off</mat-icon>
               </button>
             </ng-container>
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
               <button *ngIf="canShowNotificarIP(element.value.estadoValidacionIP?.estado)" mat-icon-button
-                matTooltip="{{'csp.proyecto-calendario-facturacion.notificar-ip' | translate}}">
+                matTooltip="{{'csp.proyecto-calendario-facturacion.notificar-ip' | translate}}"
+                (click)="notificarIP(element, i)">
                 <mat-icon color="primary">add_alert</mat-icon>
               </button>
             </ng-container>
@@ -119,7 +120,7 @@
             </ng-container>
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
               <button mat-icon-button matTooltip="{{'csp.proyecto-calendario-facturacion.historico-ip' | translate}}"
-              (click)="openHistoricoEstadoValidacionIP(element.value?.id)">
+                (click)="openHistoricoEstadoValidacionIP(element.value?.id)">
                 <mat-icon color="primary">history</mat-icon>
               </button>
             </ng-container>
