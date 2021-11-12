@@ -667,6 +667,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return obs.pipe(
       map((value) => {
         this.proyecto = value;
+        this.loadHistoricoProyectoIVA(this.proyecto.id);
         return this.proyecto.id;
       })
     );
