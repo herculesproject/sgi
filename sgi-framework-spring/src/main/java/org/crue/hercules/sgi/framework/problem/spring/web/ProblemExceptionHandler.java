@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -117,9 +118,11 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
    * ("urn:problem-type:validation")
    */
   public static final URI VALIDATION_PROBLEM_TYPE = URI.create("urn:problem-type:validation");
-
-  private static final String PROPERTY_BAD_REQUEST = "BAD_REQUEST";
-  private static final String PROPERTY_INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
+  /**
+   * {@link Problem} type {@link URI} for {@link DataAccessException}
+   * ("urn:problem-type:data-access")
+   */
+  public static final URI DATA_ACCESS_PROBLEM_TYPE = URI.create("urn:problem-type:data-access");
 
   private static final String EXTENSION_SUPPORTED = "supported";
 
@@ -154,8 +157,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     HttpHeaders headers = new HttpHeaders();
     HttpStatus status = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(ILLEGAL_ARGUMENT_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(status.value())
-        .detail(ex.getMessage()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value())
+        .detail(ex.getLocalizedMessage()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) - end");
     return response;
@@ -186,8 +189,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
 
     HttpStatus status = HttpStatus.BAD_REQUEST;
     Problem problem = from(ex.getConstraintViolations()).type(VALIDATION_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(status.value())
-        .build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) - end");
     return response;
@@ -207,7 +209,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     HttpHeaders headers = new HttpHeaders();
     HttpStatus status = HttpStatus.FORBIDDEN;
     Problem problem = Problem.builder().type(ACCESS_DENIED_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "FORBIDDEN").build()).status(status.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value())
         .detail(ProblemMessage.builder().key(AccessDeniedException.class).build()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleAccessDeniedException(Exception ex, WebRequest request) - end");
@@ -228,7 +230,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     HttpHeaders headers = new HttpHeaders();
     HttpStatus status = HttpStatus.UNAUTHORIZED;
     Problem problem = Problem.builder().type(AUTHENTICATION_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "UNAUTHORIZED").build()).status(status.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value())
         .detail(ProblemMessage.builder().key(AuthenticationException.class).build()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, status, request);
     log.debug("handleAuthenticationException(AuthenticationException ex, WebRequest request) - end");
@@ -254,6 +256,28 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     return response;
   }
 
+  // TODO Support other DataAccessException extended exceptions (like
+  // DuplicateKeyException)
+  /**
+   * Handles {@link DataAccessException}s.
+   * 
+   * @param ex      the exception thrown
+   * @param request the current {@link WebRequest}
+   * @return the {@link ResponseEntity} holding the {@link Problem}
+   */
+  @ExceptionHandler({ DataAccessException.class })
+  public ResponseEntity<Object> handleDataAccessException(DataAccessException ex, WebRequest request) {
+    log.debug("handleDataAccessException(DataAccessException ex, WebRequest request) - start");
+    HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    Problem problem = Problem.builder().type(DATA_ACCESS_PROBLEM_TYPE)
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).message(ex.getLocalizedMessage()).build())
+        .status(status.value()).build();
+    ResponseEntity<Object> response = handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    log.debug("handleDataAccessException(DataAccessException ex, WebRequest request) - end");
+    return response;
+  }
+
   /**
    * Handles generic {@link Exception}s.
    * 
@@ -266,8 +290,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     log.debug("handleOtherException(Exception ex, WebRequest request) - start");
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_INTERNAL_SERVER_ERROR).build())
-        .status(status.value()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, status.name()).build()).status(status.value()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     log.debug("handleOtherException(Exception ex, WebRequest request) - end");
     return response;
@@ -280,7 +303,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.METHOD_NOT_ALLOWED;
     ProblemBuilder builder = Problem.builder().type(METHOD_NOT_ALLOWED_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "METHOD_NOT_ALLOWED").build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(HttpRequestMethodNotSupportedException.class)
             .parameter("method", ex.getMethod()).build());
     if (ex.getSupportedMethods() != null) {
@@ -300,8 +323,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
     Problem problem = Problem.builder().type(UNSUPPORTED_MEDIA_TYPE_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "UNSUPPORTED_MEDIA_TYPE").build())
-        .status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(HttpMediaTypeNotSupportedException.class)
             .parameter("mediaType", ex.getContentType()).build())
         .extension(EXTENSION_SUPPORTED, new ArrayList<>(ex.getSupportedMediaTypes())).build();
@@ -318,7 +340,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.NOT_ACCEPTABLE;
     Problem problem = Problem.builder().type(NOT_ACCEPTABLE_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "NOT_ACCEPTABLE").build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(HttpMediaTypeNotAcceptableException.class)
             .parameter("mediaType",
                 headers.getAccept().stream().map(MimeType::toString).collect(Collectors.joining(", ")))
@@ -337,7 +359,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(MISSING_PATH_VARIABLE_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(MissingPathVariableException.class)
             .parameter("variableName", ex.getVariableName()).build())
         .extension("variableName", ex.getVariableName()).build();
@@ -354,7 +376,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(MISSING_REQUEST_PARAMETER_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(MissingServletRequestParameterException.class)
             .parameter("parameterName", ex.getParameterName()).parameter("parameterType", ex.getParameterType())
             .build())
@@ -374,8 +396,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(BAD_REQUEST_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
-        .detail(ex.getMessage()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
+        .detail(ex.getLocalizedMessage()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
         "handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
@@ -389,8 +411,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleConversionNotSupported(ConversionNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_INTERNAL_SERVER_ERROR).build())
-        .status(newStatus.value()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
+        .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
         "handleConversionNotSupported(ConversionNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
@@ -411,7 +433,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     }
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(TYPE_MISMATCH_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(TypeMismatchException.class)
             .parameter("propertyName", ex.getPropertyName()).parameter("propertyType", requiredType).build())
         .extension("propertyName", ex.getPropertyName()).extension("propertyType", requiredType).build();
@@ -428,7 +450,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = Problem.builder().type(BAD_REQUEST_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .detail(ProblemMessage.builder().key(HttpMessageNotReadableException.class).build()).build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
@@ -443,8 +465,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_INTERNAL_SERVER_ERROR).build())
-        .status(newStatus.value()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
+        .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
         "handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
@@ -458,7 +480,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = from(ex.getBindingResult())
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
@@ -472,8 +494,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
     log.debug(
         "handleMissingServletRequestPart(MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
-    Problem problem = Problem.builder()
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+    Problem problem = Problem.builder().title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build())
+        .status(newStatus.value())
         .detail(ProblemMessage.builder().key(MissingServletRequestPartException.class)
             .parameter("requestPartName", ex.getRequestPartName()).build())
         .extension("param", ex.getRequestPartName()).build();
@@ -490,7 +512,7 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.BAD_REQUEST;
     Problem problem = from(ex.getBindingResult())
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_BAD_REQUEST).build()).status(newStatus.value())
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
         .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
@@ -505,7 +527,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.NOT_FOUND;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, "NOT_FOUND").build()).status(newStatus.value()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
+        .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
         "handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
@@ -519,8 +542,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
         "handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     HttpStatus newStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     Problem problem = Problem.builder().type(Problem.UNKNOWN_PROBLEM_TYPE)
-        .title(ProblemMessage.builder().key(HttpStatus.class, PROPERTY_INTERNAL_SERVER_ERROR).build())
-        .status(newStatus.value()).build();
+        .title(ProblemMessage.builder().key(HttpStatus.class, newStatus.name()).build()).status(newStatus.value())
+        .build();
     ResponseEntity<Object> response = handleExceptionInternal(ex, problem, headers, newStatus, request);
     log.debug(
         "handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
