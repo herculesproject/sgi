@@ -542,6 +542,8 @@ public class InvencionController {
    * indicado.
    * 
    * @param invencionId Identificador de {@link Invencion}
+   * @param query       filtro de búsqueda.
+   * @param paging      pageable.
    * @return {@link Reparto} asociados a la {@link Invencion}
    */
   @GetMapping(PATH_REPARTO)

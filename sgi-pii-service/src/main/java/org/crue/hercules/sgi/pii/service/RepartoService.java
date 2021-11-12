@@ -1,17 +1,34 @@
 package org.crue.hercules.sgi.pii.service;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.pii.dto.RepartoCreateInput;
+import org.crue.hercules.sgi.pii.dto.RepartoCreateInput.InvencionGastoCreateInput;
+import org.crue.hercules.sgi.pii.dto.RepartoCreateInput.InvencionIngresoCreateInput;
+import org.crue.hercules.sgi.pii.dto.RepartoCreateInput.RepartoGastoCreateInput;
+import org.crue.hercules.sgi.pii.dto.RepartoCreateInput.RepartoIngresoCreateInput;
 import org.crue.hercules.sgi.pii.exceptions.RepartoNotFoundException;
 import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionGasto;
+import org.crue.hercules.sgi.pii.model.InvencionIngreso;
 import org.crue.hercules.sgi.pii.model.Reparto;
+import org.crue.hercules.sgi.pii.model.Reparto.Estado;
+import org.crue.hercules.sgi.pii.model.RepartoGasto;
+import org.crue.hercules.sgi.pii.model.RepartoIngreso;
 import org.crue.hercules.sgi.pii.repository.RepartoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.RepartoSpecifications;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,10 +40,22 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class RepartoService {
 
+  private ModelMapper modelMapper;
   private final RepartoRepository repository;
+  private final RepartoGastoService repartoGastoService;
+  private final RepartoIngresoService repartoIngresoService;
+  private final InvencionGastoService invencionGastoService;
+  private final InvencionIngresoService invencionIngresoService;
 
-  public RepartoService(RepartoRepository repartoRepository) {
+  public RepartoService(ModelMapper modelMapper, RepartoRepository repartoRepository,
+      RepartoGastoService repartoGastoService, RepartoIngresoService repartoIngresoService,
+      InvencionGastoService invencionGastoService, InvencionIngresoService invencionIngresoService) {
+    this.modelMapper = modelMapper;
     this.repository = repartoRepository;
+    this.repartoGastoService = repartoGastoService;
+    this.repartoIngresoService = repartoIngresoService;
+    this.invencionGastoService = invencionGastoService;
+    this.invencionIngresoService = invencionIngresoService;
   }
 
   /**
@@ -61,5 +90,95 @@ public class RepartoService {
     final Reparto returnValue = repository.findById(id).orElseThrow(() -> new RepartoNotFoundException(id));
     log.debug("findById(Long id)  - end");
     return returnValue;
+  }
+
+  /**
+   * Guardar un nuevo {@link Reparto} con sus {@link RepartoGasto} y
+   * {@link RepartoIngreso} asociados. Cada
+   * {@link RepartoGasto}/{@link RepartoIngreso} también consolida su importe de
+   * los importes pendientes de {@link InvencionGasto}/{@link InvencionIngreso},
+   *
+   * @param repartoInput la entidad {@link Reparto} a guardar.
+   * @return la entidad {@link Reparto} persistida.
+   */
+  @Transactional
+  public Reparto create(RepartoCreateInput repartoInput) {
+    log.debug("create(Reparto repartoInput) - start");
+    Reparto reparto = new Reparto();
+
+    reparto.setFecha(Instant.now());
+    reparto.setInvencionId(repartoInput.getInvencionId());
+    reparto.setEstado(Estado.PENDIENTE_EJECUTAR);
+    reparto
+        .setImporteUniversidad(this.calculateImporteUniversidad(repartoInput.getGastos(), repartoInput.getIngresos()));
+    Reparto repartoCreated = repository.save(reparto);
+
+    repartoInput.getGastos().stream().forEach(gastoInput -> {
+      InvencionGasto invencionGastoConsolidada = invencionGastoService
+          .consolidate(convert(gastoInput.getInvencionGasto()), gastoInput.getImporteADeducir());
+      RepartoGasto repartoGasto = new RepartoGasto();
+      repartoGasto.setRepartoId(repartoCreated.getId());
+      repartoGasto.setInvencionGastoId(invencionGastoConsolidada.getId());
+      repartoGasto.setImporteADeducir(gastoInput.getImporteADeducir());
+
+      repartoGastoService.create(repartoGasto);
+    });
+
+    repartoInput.getIngresos().stream().forEach(ingresoInput -> {
+      InvencionIngreso invencionIngresoConsolidada = invencionIngresoService
+          .consolidate(convert(ingresoInput.getInvencionIngreso()), ingresoInput.getImporteARepartir());
+      RepartoIngreso repartoIngreso = new RepartoIngreso();
+      repartoIngreso.setRepartoId(repartoCreated.getId());
+      repartoIngreso.setInvencionIngresoId(invencionIngresoConsolidada.getId());
+      repartoIngreso.setImporteARepartir(ingresoInput.getImporteARepartir());
+
+      repartoIngresoService.create(repartoIngreso);
+    });
+
+    log.debug("create(Reparto repartoInput) - end");
+    return repartoCreated;
+  }
+
+  private BigDecimal calculateImporteUniversidad(List<RepartoGastoCreateInput> gastos,
+      List<RepartoIngresoCreateInput> ingresos) {
+    return ingresos.stream().map(RepartoIngresoCreateInput::getImporteARepartir)
+        .reduce(new BigDecimal("0.00"), BigDecimal::add).subtract(gastos.stream()
+            .map(RepartoGastoCreateInput::getImporteADeducir).reduce(new BigDecimal("0.00"), BigDecimal::add));
+  }
+
+  private InvencionGasto convert(InvencionGastoCreateInput invencionGastoInput) {
+    return modelMapper.map(invencionGastoInput, InvencionGasto.class);
+  }
+
+  private InvencionIngreso convert(InvencionIngresoCreateInput invencionIngresoInput) {
+    return modelMapper.map(invencionIngresoInput, InvencionIngreso.class);
+  }
+
+  /**
+   * Actualizar {@link Reparto}.
+   *
+   * @param reparto la entidad {@link Reparto} a actualizar.
+   * @return la entidad {@link Reparto} persistida.
+   */
+  @Transactional
+  public Reparto update(Reparto reparto) {
+    log.debug("update(Reparto reparto) - start");
+
+    Assert.notNull(reparto.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Reparto.class)).build());
+
+    return repository.findById(reparto.getId()).map(repartoExistente -> {
+
+      // Establecemos los campos actualizables con los recibidos
+      repartoExistente.setImporteUniversidad(reparto.getImporteUniversidad());
+
+      // Actualizamos la entidad
+      Reparto returnValue = repository.save(repartoExistente);
+      log.debug("update(Reparto reparto) - end");
+      return returnValue;
+    }).orElseThrow(() -> new RepartoNotFoundException(reparto.getId()));
   }
 }

@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.pii.validation;
 
-import java.util.Optional;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

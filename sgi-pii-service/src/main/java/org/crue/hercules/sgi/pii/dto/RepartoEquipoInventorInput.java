@@ -1,0 +1,22 @@
+package org.crue.hercules.sgi.pii.dto;
+
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RepartoEquipoInventorInput {
+  private Long repartoId;
+  private String personaRef;
+  private BigDecimal importeNomina;
+  private BigDecimal importeProyecto;
+  private BigDecimal importeOtros;
+}
