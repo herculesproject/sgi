@@ -120,8 +120,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   }
 
   protected buildFormGroup(): FormGroup {
+    let form: FormGroup;
     if (this.isInvestigador) {
-      const form = new FormGroup({
+      form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
         titulo: new FormControl({ value: '', disabled: true }, [Validators.maxLength(250)]),
         convocatoria: new FormControl({ value: '', disabled: true }),
@@ -130,10 +131,15 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         comentariosEstado: new FormControl({ value: '', disabled: true })
       });
 
-      return form;
-
+      this.subscriptions.push(
+        form.controls.convocatoria.valueChanges.subscribe(
+          (convocatoria) => {
+            this.convocatoria$.next(convocatoria);
+          }
+        )
+      );
     } else {
-      const form = new FormGroup({
+      form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
         titulo: new FormControl(undefined, [Validators.maxLength(250)]),
         solicitante: new FormControl('', Validators.required),
@@ -167,12 +173,12 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
           }
         )
       );
-
-      if (this.readonly) {
-        form.disable();
-      }
-      return form;
     }
+
+    if (this.readonly) {
+      form.disable();
+    }
+    return form;
   }
 
   buildPatch(solicitud: SolicitudDatosGenerales): { [key: string]: any } {
