@@ -1466,12 +1466,9 @@ public class MemoriaServiceTest extends BaseServiceTest {
     Configuracion configuracion = new Configuracion();
 
     configuracion.setId(1L);
-    configuracion.setDiasArchivadaPendienteCorrecciones(20);
+    configuracion.setMesesArchivadaPendienteCorrecciones(20);
     configuracion.setDiasLimiteEvaluador(3);
-    configuracion.setMesesArchivadaInactivo(2);
-    configuracion.setMesesAvisoProyectoCEEA(1);
-    configuracion.setMesesAvisoProyectoCEI(1);
-    configuracion.setMesesAvisoProyectoCBE(1);
+    configuracion.setDiasArchivadaInactivo(2);
 
     return configuracion;
   }

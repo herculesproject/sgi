@@ -986,7 +986,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   /**
    * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
-   * pasado "diasArchivadaPendienteCorrecciones" días desde la fecha de estado de
+   * pasado "mesesArchivadaPendienteCorrecciones" días desde la fecha de estado de
    * una memoria cuyo estado es "Pendiente Correcciones"
    * 
    * @return Los ids de memorias que pasan al estado "Archivado"
@@ -995,14 +995,14 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug("archivarNoPresentados() - start");
     Configuracion configuracion = configuracionService.findConfiguracion();
     // Devuelve un listado de {@link Memoria} que han
-    // pasado "diasArchivadaPendienteCorrecciones" días desde la fecha de estado de
+    // pasado "mesesArchivadaPendienteCorrecciones" días desde la fecha de estado de
     // una memoria cuyo estado es "Pendiente Correcciones"
-    Specification<Memoria> specsMemoriasByDiasArchivadaPendienteCorrecciones = MemoriaSpecifications.activos()
+    Specification<Memoria> specsMemoriasByMesesArchivadaPendienteCorrecciones = MemoriaSpecifications.activos()
         .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES)))
         .and(MemoriaSpecifications
-            .byFechaActualMayorFechaEstadoByDiasDiff(configuracion.getDiasArchivadaPendienteCorrecciones()));
+            .byFechaActualMayorFechaEstadoByMesesDiff(configuracion.getMesesArchivadaPendienteCorrecciones()));
 
-    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaPendienteCorrecciones);
+    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByMesesArchivadaPendienteCorrecciones);
 
     List<Long> memoriasArchivadas = new ArrayList<Long>();
     if (!CollectionUtils.isEmpty(memorias)) {
@@ -1021,7 +1021,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   /**
    * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
-   * pasado "mesesArchivadaInactivo" meses desde la fecha de estado de una memoria
+   * pasado "diasArchivadaInactivo" meses desde la fecha de estado de una memoria
    * cuyo estados son "Favorable Pendiente de Modificaciones Mínimas" o "No
    * procede evaluar" o "Solicitud modificación"
    * 
@@ -1031,16 +1031,16 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug("archivarInactivos() - start");
     Configuracion configuracion = configuracionService.findConfiguracion();
     // Devuelve un listado de {@link Memoria} que han pasado
-    // "mesesArchivadaInactivo" meses desde la fecha de estado de una memoria cuyo
+    // "diasArchivadaInactivo" meses desde la fecha de estado de una memoria cuyo
     // estados son "Favorable Pendiente de Modificaciones Mínimas" o "No procede
     // evaluar" o "Solicitud modificación"
-    Specification<Memoria> specsMemoriasByMesesArchivadaInactivo = MemoriaSpecifications.activos()
+    Specification<Memoria> specsMemoriasByDiasArchivadaInactivo = MemoriaSpecifications.activos()
         .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(
             Constantes.TIPO_ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS,
             Constantes.TIPO_ESTADO_MEMORIA_NO_PROCEDE_EVALUAR, Constantes.TIPO_ESTADO_MEMORIA_SOLICITUD_MODIFICACION)))
-        .and(MemoriaSpecifications.byFechaActualMayorFechaEstadoByMesesDiff(configuracion.getMesesArchivadaInactivo()));
+        .and(MemoriaSpecifications.byFechaActualMayorFechaEstadoByDiasDiff(configuracion.getDiasArchivadaInactivo()));
 
-    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByMesesArchivadaInactivo);
+    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaInactivo);
 
     List<Long> memoriasArchivadas = new ArrayList<Long>();
     if (!CollectionUtils.isEmpty(memorias)) {
