@@ -84,27 +84,6 @@ export class DateValidator {
     };
   }
 
-  /**
-   * Comprueba que la segunda fecha sea anterior o igual a la primera cuando los dos campos están informados.
-   *
-   * @param firstDateFieldName Nombre del campo contra el que se quiere hacer la validacion.
-   * @param secondDateFieldName Nombre del campo que se quiere validar.
-   */
-  static isBeforeOrEqualNotFireWhenfirstDateNameEmpty(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
-
-    return (formGroup: FormGroup): ValidationErrors | null => {
-      const fechaAnteriorControl = formGroup.controls[secondDateFieldName];
-      const fechaPosteriorControl = formGroup.controls[firstDateFieldName];
-
-      if (fechaAnteriorControl.errors && !fechaAnteriorControl.errors.before
-         || (!fechaAnteriorControl.value || !fechaPosteriorControl.value)) {
-        return;
-      }
-
-      DateValidator.validateBeforeOrEqualInRange(fechaAnteriorControl, fechaPosteriorControl);
-    };
-  }
-
   private static validateBeforeOrEqualInRange(fechaAnteriorControl: AbstractControl, fechaPosteriorControl: AbstractControl): void {
     const fechaAnteriorDate: DateTime = fechaAnteriorControl.value;
     const fechaPosteriorDate: DateTime = fechaPosteriorControl.value;
@@ -252,6 +231,17 @@ export class DateValidator {
       if (control.value && other.value) {
         if (control.value.toMillis() <= other.value.toMillis()) {
           return { after: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  static isBeforeOther(other: AbstractControl): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && other.value) {
+        if (control.value.toMillis() >= other.value.toMillis()) {
+          return { before: true };
         }
       }
       return null;
