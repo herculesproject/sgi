@@ -12,6 +12,9 @@ import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
 import org.crue.hercules.sgi.pii.model.PaisValidado;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.service.PaisValidadoService;
+import org.crue.hercules.sgi.pii.dto.ProcedimientoOutput;
+import org.crue.hercules.sgi.pii.model.Procedimiento;
+import org.crue.hercules.sgi.pii.service.ProcedimientoService;
 import org.crue.hercules.sgi.pii.service.SolicitudProteccionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -34,14 +37,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("solicitudesproteccion")
+@RequestMapping(SolicitudProteccionController.MAPPING)
 @Slf4j
 public class SolicitudProteccionController {
+  public static final String MAPPING = "/solicitudesproteccion";
+
+  public static final String PATH_PROCEDIMIENTOS = "/{solicitudProteccionId}/procedimientos";
 
   public static final String PATH_PAISESVALIDADOS = "/{solicitudProteccionId}/paisesvalidados";
 
   private final SolicitudProteccionService solicitudProteccionService;
   private final PaisValidadoService paisValidadoService;
+  private final ProcedimientoService procedimientoService;
   private final ModelMapper modelMapper;
 
   /**
@@ -137,10 +144,37 @@ public class SolicitudProteccionController {
           "findPaisesValidados(@PathVariable Long solicitudProteccionId, @RequestPageable(sort = 's') Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
     log.debug(
         "findPaisesValidados(@PathVariable Long solicitudProteccionId, @RequestPageable(sort = 's') Pageable paging) - end");
     return ResponseEntity.ok().body(convertToPaisValidadoPage(page));
+  }
+
+  /**
+   * Devuelve los {@link Procedimiento} asociados a la {@link SolicitudProteccion}
+   * con el id indicado.
+   * 
+   * @param solicitudProteccionId Identificador de {@link SolicitudProteccion}
+   * @return Elementos paginados de tipo {@link Procedimiento} asociados a la
+   *         {@link SolicitudProteccion}
+   */
+
+  @GetMapping(PATH_PROCEDIMIENTOS)
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-C')")
+  public ResponseEntity<Page<ProcedimientoOutput>> findProcedimientosBySolicitudProteccion(
+      @PathVariable Long solicitudProteccionId, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findProcedimientosBySolicitudProteccion(@PathVariable Long solicitudProteccionId, @RequestParam(name = 'q' @RequestPageable(sort = 's') Pageable paging) - start");
+
+    Page<Procedimiento> page = procedimientoService.findAllBySolicitudProteccionId(solicitudProteccionId, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findProcedimientosBySolicitudProteccion(@PathVariable Long solicitudProteccionId, @RequestParam(name = 'q' @RequestPageable(sort = 's') Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug(
+        "findProcedimientosBySolicitudProteccion(@PathVariable Long solicitudProteccionId, @RequestParam(name = 'q' @RequestPageable(sort = 's') Pageable paging) - end");
+    return ResponseEntity.ok().body(convertToProcedimientoPage(page));
   }
 
   /****************/
@@ -167,4 +201,16 @@ public class SolicitudProteccionController {
     solicitudProteccion.setId(id);
     return solicitudProteccion;
   }
+
+  private Page<ProcedimientoOutput> convertToProcedimientoPage(Page<Procedimiento> page) {
+    List<ProcedimientoOutput> content = page.getContent().stream().map((procedimiento) -> convert(procedimiento))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private ProcedimientoOutput convert(Procedimiento procedimiento) {
+    return modelMapper.map(procedimiento, ProcedimientoOutput.class);
+  }
+
 }

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.pii.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,10 +25,13 @@ import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnCrear;
 import org.crue.hercules.sgi.pii.validation.EntidadActiva;
 import org.crue.hercules.sgi.pii.validation.UniqueSolicitudViaProteccion;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -113,6 +118,11 @@ public class SolicitudProteccion extends BaseActivableEntity {
 
   @Column(name = "comentarios", length = COMENTARIOS_MAX_LENGTH, nullable = true)
   private String comentarios;
+
+  @OneToMany(mappedBy = "solicitudProteccion")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<Procedimiento> procedimientos = null;
 
   /**
    * Interfaz para marcar validaciones en la creación de la entidad.

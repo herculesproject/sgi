@@ -145,4 +145,92 @@
       <column name="invencion_id" valueNumeric="107" />
     </insert>
   </changeSet>
+  <changeSet context="dev" author="master" id="0000000000002-tipo_procedimiento">
+    <insert tableName="tipo_procedimiento">
+      <column name="id" valueSequenceNext="tipo_procedimiento_seq" />
+      <column name="nombre" value="Tipo Procedimiento 1" />
+      <column name="descripcion" value="Descripción Tipo Procedimiento 1" />
+    </insert>
+    <insert tableName="tipo_procedimiento">
+      <column name="id" valueSequenceNext="tipo_procedimiento_seq" />
+      <column name="nombre" value="Tipo Procedimiento 2" />
+      <column name="descripcion" value="Descripción Tipo Procedimiento 2" />
+    </insert>
+    <insert tableName="tipo_procedimiento">
+      <column name="id" valueSequenceNext="tipo_procedimiento_seq" />
+      <column name="nombre" value="Tipo Procedimiento 3" />
+      <column name="descripcion" value="Descripción Tipo Procedimiento 3" />
+    </insert>
+  </changeSet>
+  <changeSet context="dev" author="master" id="0000000000002-procedimiento">
+    <insert tableName="procedimiento">
+      <column name="id" valueSequenceNext="procedimiento_seq" />
+      <column name="fecha" valueDate="2021-09-30T22:00:00" />
+      <column name="tipo_procedimiento_id" valueNumeric="1" />
+      <column name="solicitud_proteccion_id" valueNumeric="1" />
+      <column name="accion_a_tomar" value="Accion a Tomar Procedimiento 1" />
+      <column name="fecha_limite_accion" valueDate="2021-12-31T22:59:59" />
+      <column name="generar_aviso" valueBoolean="true" />
+      <column name="comentarios" value="Comentario Procedimiento 1" />
+    </insert>
+    <insert tableName="procedimiento">
+      <column name="id" valueSequenceNext="procedimiento_seq" />
+      <column name="fecha" valueDate="2021-09-30T22:00:00" />
+      <column name="tipo_procedimiento_id" valueNumeric="2" />
+      <column name="solicitud_proteccion_id" valueNumeric="1" />
+      <column name="accion_a_tomar" value="Accion a Tomar Procedimiento 2" />
+      <column name="fecha_limite_accion" valueDate="2021-12-31T22:59:59" />
+      <column name="generar_aviso" valueBoolean="true" />
+      <column name="comentarios" value="Comentario Procedimiento 2" />
+    </insert>
+    <insert tableName="procedimiento">
+      <column name="id" valueSequenceNext="procedimiento_seq" />
+      <column name="fecha" valueDate="2021-09-30T22:00:00" />
+      <column name="tipo_procedimiento_id" valueNumeric="3" />
+      <column name="solicitud_proteccion_id" valueNumeric="1" />
+      <column name="accion_a_tomar" value="Accion a Tomar Procedimiento 3" />
+      <column name="fecha_limite_accion" valueDate="2021-12-31T22:59:59" />
+      <column name="generar_aviso" valueBoolean="false" />
+      <column name="comentarios" value="Comentario Procedimiento 3" />
+    </insert>
+  </changeSet>
+  <changeSet context="dev" author="master" id="0000000000002-procedimiento_documento">
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 1 Procedimiento 1" />
+      <column name="procedimiento_id" valueNumeric="1" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 2 Procedimiento 1" />
+      <column name="procedimiento_id" valueNumeric="1" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 3 Procedimiento 1" />
+      <column name="procedimiento_id" valueNumeric="1" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 1 Procedimiento 2" />
+      <column name="procedimiento_id" valueNumeric="2" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 2 Procedimiento 2" />
+      <column name="procedimiento_id" valueNumeric="2" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+    <insert tableName="procedimiento_documento">
+      <column name="id" valueSequenceNext="procedimiento_documento_seq" />
+      <column name="nombre" value="Documento 3 Procedimiento 2" />
+      <column name="procedimiento_id" valueNumeric="2" />
+      <column name="documento_ref" value="61f34b61-0e67-40a6-a581-2e188c1cbd78" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

@@ -105,7 +105,7 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000002-13">
-    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="pais_validado" constraintName="FK_PAISVALIDADO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+    <createSequence incrementBy="1" sequenceName="procedimiento_seq" startValue="1" />
   </changeSet>
   <changeSet author="master" id="0000000000002-14">
     <createSequence incrementBy="1" sequenceName="reparto_equipo_inventor_seq" startValue="1" />
@@ -196,6 +196,63 @@
   </changeSet>
   <changeSet author="master" id="0000000000002-24">
     <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_ingreso" constraintName="FK_REPARTOINGRESO_REPARTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reparto" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-25">
+    <createTable tableName="procedimiento">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="procedimientoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="accion_a_tomar" type="VARCHAR(500)" />
+      <column name="comentarios" type="VARCHAR(2000)" />
+      <column name="fecha" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_limite_accion" type="TIMESTAMP" />
+      <column name="generar_aviso" type="BOOLEAN" />
+      <column name="solicitud_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_procedimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-26">
+    <createSequence incrementBy="1" sequenceName="procedimiento_documento_seq" startValue="1" />
+    <createTable tableName="procedimiento_documento">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="procedimiento_documentoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="documento_ref" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="procedimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-27">
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="pais_validado" constraintName="FK_PAISVALIDADO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-28">
+    <addForeignKeyConstraint baseColumnNames="procedimiento_id" baseTableName="procedimiento_documento" constraintName="FK_PROCEDIMIENTODOCUMENTO_PROCEDIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="procedimiento" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-29">
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="procedimiento" constraintName="FK_PROCEDIMIENTO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-30">
+    <addForeignKeyConstraint baseColumnNames="tipo_procedimiento_id" baseTableName="procedimiento" constraintName="FK_PROCEDIMIENTO_TIPOPROCEDIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_procedimiento" validate="true" />
   </changeSet>
 
 </databaseChangeLog>
