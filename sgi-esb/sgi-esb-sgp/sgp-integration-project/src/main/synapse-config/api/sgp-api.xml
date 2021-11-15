@@ -808,7 +808,10 @@
         },
         "fieldGroup": [
           {
-            "template": ""
+            "wrappers": [
+              "subtitle-div"
+            ],
+            "template": "<p>Datos en entidad propia/PDI</p>"
           },
           {
             "fieldGroupClassName": "row-formly",
@@ -901,7 +904,10 @@
             }
           },
           {
-            "template": ""
+            "wrappers": [
+              "subtitle-div"
+            ],
+            "template": "<p>Datos en entidad propia/PAS</p>"
           },
           {
             "fieldGroupClassName": "row-formly",
@@ -1447,7 +1453,10 @@
         },
         "fieldGroup": [
           {
-            "template": ""
+            "wrappers": [
+              "subtitle-div"
+            ],
+            "template": "<p>Datos en entidad propia/PDI</p>"
           },
           {
             "fieldGroupClassName": "row-formly",
@@ -1540,7 +1549,10 @@
             }
           },
           {
-            "template": ""
+            "wrappers": [
+              "subtitle-div"
+            ],
+            "template": "<p>Datos en entidad propia/PAS</p>"
           },
           {
             "fieldGroupClassName": "row-formly",
