@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPaisValidado } from '@core/models/pii/pais-validado';
+import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { environment } from '@env';
 import {
@@ -17,6 +18,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IPaisValidadoResponse } from './pais-validado/pais-validado-response';
 import { PAIS_VALIDADO_RESPONSE_CONVERTER } from './pais-validado/pais-validado-response.converter';
+import { IProcedimientoResponse } from './solicitud-proteccion-procedimiento/solicitud-proteccion-procedimiento-response';
+import { SOLICITUD_PROTECCION_PROCEDIMIENTO_RESPONSE_CONVERTER } from './solicitud-proteccion-procedimiento/solicitud-proteccion-procedimiento-response.converter';
 import { ISolicitudProteccionRequest } from './solicitud-proteccion-request';
 import { SOLICITUD_PROTECCION_REQUEST_CONVERTER } from './solicitud-proteccion-request.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion-response';
@@ -93,6 +96,21 @@ export class SolicitudProteccionService extends _SolicitudProteccionServiceMixin
       `${this.endpointUrl}/${solicitudProteccionId}/paisesvalidados`,
       {},
       PAIS_VALIDADO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Obtiene los {@link IProcedimiento} relacionados a una {@link ISolicitudProteccion}
+   *
+   * @param solicitudId Id de la {@link ISolicitudProteccion}
+   * @returns Lista de {@link IProcedimiento} asociados a la {@link ISolicitudProteccion} pasada por parámetros
+   */
+  findProcedimientosBySolicitudId(solicitudId: number): Observable<SgiRestListResult<IProcedimiento>> {
+
+    return this.find<IProcedimientoResponse, IProcedimiento>(
+      `${this.endpointUrl}/${solicitudId}/procedimientos`,
+      {},
+      SOLICITUD_PROTECCION_PROCEDIMIENTO_RESPONSE_CONVERTER
     );
   }
 

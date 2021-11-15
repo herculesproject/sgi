@@ -104,7 +104,6 @@ export class SolicitudProteccionCrearComponent extends ActionComponent implement
       },
       () => {
         this.snackBarService.showSuccess(this.textCrearSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
