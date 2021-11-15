@@ -10,6 +10,7 @@ import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
+import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { FacturasEmitidasModalComponent } from '../../modals/facturas-emitidas-modal/facturas-emitidas-modal.component';
@@ -52,7 +53,15 @@ export class FacturasEmitidasComponent extends FragmentComponent implements OnIn
 
   ngOnInit(): void {
     super.ngOnInit();
-
+    this.subscriptions.push(
+      this.formPart.formGroupFechas.controls.facturaDesde.valueChanges.subscribe(
+        (value) => {
+          if (!!value && !!!this.formPart.formGroupFechas.controls.facturaHasta.value) {
+            this.formPart.formGroupFechas.controls.facturaHasta.setValue(DateTime.now());
+          }
+        }
+      )
+    );
     this.subscriptions.push(this.formPart.desglose$.subscribe(elements => {
       this.dataSourceDesglose.data = elements;
     }));

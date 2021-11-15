@@ -6,8 +6,9 @@ import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { DesgloseEconomicoFragment, IColumnDefinition, RowTreeDesglose } from '../desglose-economico.fragment';
 
 export class FacturasEmitidasFragment extends DesgloseEconomicoFragment<IDatoEconomico> {
@@ -49,6 +50,27 @@ export class FacturasEmitidasFragment extends DesgloseEconomicoFragment<IDatoEco
 
   protected getDatosEconomicos(facturaRange?: any): Observable<IDatoEconomico[]> {
     return this.calendarioFacturacionService.getFacturasEmitidas(this.proyectoSge.id, facturaRange);
+  }
+
+  public loadDesglose(): void {
+    const fechas = this.formGroupFechas.controls;
+    const facturaRange = {
+      desde: LuxonUtils.toBackend(fechas.facturaDesde.value, true),
+      hasta: LuxonUtils.toBackend(fechas.facturaHasta.value, true)
+    };
+    this.getDatosEconomicos(facturaRange)
+      .pipe(
+        switchMap(response => this.buildRows(response))
+      ).subscribe(
+        (root) => {
+          const regs: RowTreeDesglose<any>[] = [];
+          root.forEach(r => {
+            r.compute(this.columns);
+            regs.push(...this.addChilds(r));
+          });
+          this.desglose$.next(regs);
+        }
+      );
   }
 
   protected buildRows(datosEconomicos: IDatoEconomico[]): Observable<RowTreeDesglose<IDatoEconomico>[]> {
