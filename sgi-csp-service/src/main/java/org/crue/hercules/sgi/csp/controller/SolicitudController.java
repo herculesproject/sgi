@@ -112,7 +112,7 @@ public class SolicitudController {
 
   /** SolicitudProyectoEntidadService */
   private final SolicitudProyectoEntidadService solicitudProyectoEntidadService;
-  
+
   /** ProyectoService */
   private final ProyectoService proyectoService;
 
@@ -134,7 +134,7 @@ public class SolicitudController {
    * @param solicitudProyectoAreaConocimientoService         {@link SolicitudProyectoAreaConocimientoService}.
    * @param solicitudProyectoResponsableEconomicoService     {@link SolicitudProyectoResponsableEconomicoService}.
    * @param solicitudProyectoEntidadService                  {@link SolicitudProyectoEntidadService}.
-   * @param proyectoService                                  {@link ProyectoService}. 
+   * @param proyectoService                                  {@link ProyectoService}.
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -146,8 +146,7 @@ public class SolicitudController {
       SolicitudProyectoClasificacionService solicitudProyectoClasificacionService,
       SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService,
       SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService,
-      SolicitudProyectoEntidadService solicitudProyectoEntidadService,
-      ProyectoService proyectoService) {
+      SolicitudProyectoEntidadService solicitudProyectoEntidadService, ProyectoService proyectoService) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -334,7 +333,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/estadosolicitudes")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   ResponseEntity<Page<EstadoSolicitud>> findAllEstadoSolicitud(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - start");
@@ -709,7 +708,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitud-proyecto-clasificaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V','CSP-SOL-INV-ER')")
   ResponseEntity<Page<SolicitudProyectoClasificacion>> findAllSolicitudProyectoClasificaciones(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - start");
@@ -901,8 +900,9 @@ public class SolicitudController {
   }
 
   /**
-   * Devuelve una lista de identificadores de los objetos de tipo {@link Proyecto} que están que tienen relación 
-   * con el objeto de tipo {@link Solicitud} cuyo id se recibe por el path
+   * Devuelve una lista de identificadores de los objetos de tipo {@link Proyecto}
+   * que están que tienen relación con el objeto de tipo {@link Solicitud} cuyo id
+   * se recibe por el path
    * 
    * @param id id del objeto {@link Solicitud}
    * @return lista de identificadores de los objetos de tipo {@link Proyecto}
