@@ -413,4 +413,16 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     );
   }
 
+  /**
+   * Comprueba si el usuario es responsable de la memoria  o creador de la petición de evaluación
+   *
+   * @param id Id de la Memoria
+   */
+  isResponsableOrCreador(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/responsable-creador`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
 }

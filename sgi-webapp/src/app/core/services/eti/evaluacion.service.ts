@@ -266,4 +266,26 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
     );
   }
 
+  /**
+   * Comprueba si el usuario es evaluador de la evaluación
+   *
+   */
+  isEvaluacionEvaluable(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/evaluacion`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si el usuario es evaluador de la evaluación en seguimiento
+   *
+   */
+  isSeguimientoEvaluable(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/evaluacion-seguimiento`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

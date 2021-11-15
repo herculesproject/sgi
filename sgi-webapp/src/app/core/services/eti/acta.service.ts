@@ -62,4 +62,15 @@ export class ActaService extends SgiMutableRestService<number, IActaBackend, IAc
     );
   }
 
+  /**
+   * Comprueba si el usuario es miembro activo del comité del acta
+   * @param id Id del Acta
+   */
+  isMiembroActivoComite(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/miembro-comite`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
 }
