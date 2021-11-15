@@ -123,10 +123,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     if (this.isInvestigador) {
       const form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-        titulo: new FormControl('', [Validators.maxLength(250)]),
+        titulo: new FormControl({ value: '', disabled: true }, [Validators.maxLength(250)]),
         convocatoria: new FormControl({ value: '', disabled: true }),
-        codigoExterno: new FormControl('', Validators.maxLength(50)),
-        observaciones: new FormControl('', Validators.maxLength(2000))
+        codigoExterno: new FormControl({ value: '', disabled: true }, Validators.maxLength(50)),
+        observaciones: new FormControl({ value: '', disabled: true }, Validators.maxLength(2000)),
+        comentariosEstado: new FormControl({ value: '', disabled: true })
       });
 
       return form;
@@ -176,13 +177,22 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   buildPatch(solicitud: SolicitudDatosGenerales): { [key: string]: any } {
     this.solicitud = solicitud;
+    if (solicitud.estado.estado === Estado.BORRADOR) {
+      this.getFormGroup().controls.titulo.enable();
+      this.getFormGroup().controls.estado.enable();
+      this.getFormGroup().controls.convocatoria.enable();
+      this.getFormGroup().controls.codigoExterno.enable();
+      this.getFormGroup().controls.observaciones.enable();
+      this.getFormGroup().controls.comentariosEstado.enable();
+    }
     if (this.isInvestigador) {
       const result = {
         estado: solicitud.estado?.estado,
         titulo: solicitud.titulo,
         convocatoria: solicitud.convocatoria,
         codigoExterno: solicitud.codigoExterno,
-        observaciones: solicitud.observaciones
+        observaciones: solicitud.observaciones,
+        comentariosEstado: solicitud.estado?.comentario,
       };
       return result;
     } else {

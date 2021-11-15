@@ -17,9 +17,8 @@
     </div>
 
     <!-- Comentarios del estado -->
-    <div *ngIf="(formPart.showComentariosEstado$ | async) && !this.formPart.isInvestigador"
-      [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="(formPart.showComentariosEstado$ | async)" [fxFlex.sm]="fxFlexProperties.sm"
+      [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field fxFill>
         <mat-label>{{'csp.solicitud.estado-solicitud.comentario' | translate}}</mat-label>
         <textarea matInput formControlName="comentariosEstado" type="text" id="comentariosEstado"
