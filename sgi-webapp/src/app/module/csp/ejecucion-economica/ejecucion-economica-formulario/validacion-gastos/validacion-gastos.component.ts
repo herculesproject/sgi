@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -12,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { ValidacionGastosEditarModalComponent } from '../../modals/validacion-gastos-editar-modal/validacion-gastos-editar-modal.component';
+import { ValidacionGastosHistoricoModalComponent } from '../../modals/validacion-gastos-historico-modal/validacion-gastos-historico-modal.component';
 import { GastoDetalleModalData, ValidacionGastosModalComponent } from '../../modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { EstadoTipo, ESTADO_TIPO_MAP, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
 
@@ -139,6 +141,19 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
             });
           }
         )
+    );
+  }
+
+  showHistorical(element: ValidacionGasto): void {
+    this.gastoProyectoService.findByGastoRef(element.id).subscribe(
+      (detalle) => {
+        const gastoProyecto = detalle as IGastoProyecto;
+        const config: MatDialogConfig<number> = {
+          panelClass: 'sgi-dialog-container',
+          data: gastoProyecto.id
+        };
+        this.matDialog.open(ValidacionGastosHistoricoModalComponent, config);
+      }
     );
   }
 
