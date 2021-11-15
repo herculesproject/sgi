@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
@@ -811,7 +812,8 @@ public class MemoriaController {
    */
   @GetMapping("/{id}/informe/ultima-version/tipo/{tipoEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ER', 'ETI-MEM-V', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Informe> getInformeFormularioUltimaVersionTipoEvaluacion(@PathVariable Long id, @PathVariable Long tipoEvaluacion) {
+  public ResponseEntity<Informe> getInformeFormularioUltimaVersionTipoEvaluacion(@PathVariable Long id,
+      @PathVariable Long tipoEvaluacion) {
     log.debug("getInformeFormularioUltimaVersionTipoEvaluacion(Long id, Long tipoEvaluacion) - start");
     Optional<Informe> returnValue = informeService.findByMemoriaAndTipoEvaluacion(id, tipoEvaluacion);
 
@@ -824,4 +826,26 @@ public class MemoriaController {
     return new ResponseEntity<>(returnValue.get(), HttpStatus.OK);
 
   }
+
+  /**
+   * Comprueba si la persona es responsable de la {@link Memoria} o creador de la
+   * {@link PeticionEvaluacion} con el id de {@link Memoria} indicado.
+   * 
+   * @param id             Identificador de {@link Memoria}.
+   * @param authentication Authentication
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/responsable-creador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEM-INV-ER')")
+  public ResponseEntity<?> isResponsableOrCreador(@PathVariable Long id, Authentication authentication) {
+    log.debug("isResponsableOrCreador(Long id) - start");
+    String personaRef = authentication.getName();
+    if (service.isMemoriaWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(personaRef, id)) {
+      log.debug("isResponsableOrCreador(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isResponsableOrCreador(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

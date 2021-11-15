@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
@@ -20,16 +21,20 @@ import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.ReportService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -135,10 +140,32 @@ public class ActaServiceImpl implements ActaService {
   public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(String query, Pageable paging,
       String personaRef) {
     log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
-    Page<ActaWithNumEvaluaciones> returnValue = actaRepository.findAllActaWithNumEvaluaciones(query, paging,
+    Specification<Acta> specActa = null;
+    if (StringUtils.isNotBlank(query)) {
+      specActa = SgiRSQLJPASupport.toSpecification(query);
+    }
+    Page<ActaWithNumEvaluaciones> returnValue = actaRepository.findAllActaWithNumEvaluaciones(specActa, paging,
         SgiSecurityContextHolder.hasAuthority("ETI-ACT-V") ? null : personaRef);
     log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve si el usuario es miembro activo del comité del {@link Acta}
+   * 
+   * @param personaRef usuario
+   * @param idActa     identificador del {@link Acta}
+   * @return las entidades {@link Acta}
+   */
+  @Override
+  public Boolean isMiembroComiteActa(String personaRef, Long idActa) {
+    log.debug("isMiembroComiteActa(String personaRef, Long idActa) - start");
+    Specification<Acta> specActa = ActaSpecifications.byId(idActa);
+
+    Page<ActaWithNumEvaluaciones> returnValue = actaRepository.findAllActaWithNumEvaluaciones(specActa,
+        PageRequest.of(0, 1), personaRef);
+    log.debug("isMiembroComiteActa(String personaRef, Long idActa) - end");
+    return returnValue.hasContent();
   }
 
   /**

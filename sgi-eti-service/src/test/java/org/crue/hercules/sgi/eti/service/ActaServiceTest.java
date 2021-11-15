@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.test.context.support.WithMockUser;
 
 /**
@@ -225,7 +226,7 @@ public class ActaServiceTest extends BaseServiceTest {
       actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), i));
     }
 
-    BDDMockito.given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<String>any(),
+    BDDMockito.given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<Specification<Acta>>any(),
         ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(actas));
 
     // when: find unlimited
@@ -249,7 +250,7 @@ public class ActaServiceTest extends BaseServiceTest {
     }
 
     BDDMockito
-        .given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<String>any(),
+        .given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<Specification<Acta>>any(),
             ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
         .willAnswer(new Answer<Page<ActaWithNumEvaluaciones>>() {
           @Override

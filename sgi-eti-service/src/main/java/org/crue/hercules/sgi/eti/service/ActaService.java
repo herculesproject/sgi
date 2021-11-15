@@ -112,4 +112,13 @@ public interface ActaService {
    * @return El documento del informe del acta
    */
   DocumentoOutput generarDocumentoActa(Long idActa);
+
+  /**
+   * Devuelve si el usuario es miembro activo del comité del {@link Acta}
+   * 
+   * @param personaRef usuario
+   * @param idActa     identificador del {@link Acta}
+   * @return las entidades {@link Acta}
+   */
+  Boolean isMiembroComiteActa(String personaRef, Long idActa);
 }

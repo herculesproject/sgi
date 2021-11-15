@@ -225,4 +225,14 @@ public interface MemoriaService {
    * @return Los ids de memorias que pasan al estado "Archivado"
    */
   List<Long> archivarInactivos();
+
+  /**
+   * Devuelve si la {@link Memoria} existe para la persona responsable de memorias
+   * o creador de la petición de evaluación
+   * 
+   * @param personaRef usuario
+   * @param idMemoria  identificador de la {@link Memoria}
+   * @return la entidad {@link Memoria}
+   */
+  Boolean isMemoriaWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idMemoria);
 }

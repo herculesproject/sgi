@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -537,6 +538,46 @@ public class EvaluacionController {
     DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion);
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si el usuario es Evaluador de la {@link Evaluacion}
+   * 
+   * @param id            identificador de la {@link Evaluacion}
+   * @param authorization authorization
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/evaluacion", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR')")
+  public ResponseEntity<?> isEvaluacionEvaluable(@PathVariable Long id, Authentication authorization) {
+    log.debug("isEvaluacionEvaluable(Long id, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (service.isEvaluacionEvaluableByEvaluador(id, personaRef)) {
+      log.debug("isEvaluacionEvaluable(Long id, Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isEvaluacionEvaluable(Long id, Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si el usuario es Evaluador de la {@link Evaluacion} en Seguimiento
+   * 
+   * @param id            identificador de la {@link Evaluacion} en Seguimiento
+   * @param authorization authorization
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/evaluacion-seguimiento", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR')")
+  public ResponseEntity<?> isSeguimientoEvaluable(@PathVariable Long id, Authentication authorization) {
+    log.debug("isSeguimientoEvaluable(Long id, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (service.isEvaluacionSeguimientoEvaluableByEvaluador(id, personaRef)) {
+      log.debug("isSeguimientoEvaluable(Long id, Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isSeguimientoEvaluable(Long id, Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

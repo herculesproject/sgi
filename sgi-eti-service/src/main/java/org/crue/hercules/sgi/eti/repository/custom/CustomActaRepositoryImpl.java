@@ -57,12 +57,12 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
   /**
    * Devuelve una lista paginada y filtrada {@link ActaWithNumEvaluaciones}.
    * 
-   * @param query      la información del filtro.
+   * @param specActa   Acta Specification.
    * @param pageable   la información de la paginación.
    * @param personaRef referencia de la persona.
    * @return la lista de {@link ActaWithNumEvaluaciones} paginadas y/o filtradas.
    */
-  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(String query, Pageable pageable,
+  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(Specification<Acta> specActa, Pageable pageable,
       String personaRef) {
     log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
 
@@ -101,10 +101,9 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     }
 
     // Where
-    if (query != null) {
-      Specification<Acta> spec = SgiRSQLJPASupport.toSpecification(query);
-      listPredicates.add(spec.toPredicate(root, cq, cb));
-      listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
+    if (specActa != null) {
+      listPredicates.add(specActa.toPredicate(root, cq, cb));
+      listPredicatesCount.add(specActa.toPredicate(rootCount, cq, cb));
     }
 
     cq.where(listPredicates.toArray(new Predicate[] {}));

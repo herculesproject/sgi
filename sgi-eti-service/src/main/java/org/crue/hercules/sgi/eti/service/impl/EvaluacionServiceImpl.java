@@ -523,7 +523,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
               || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
               || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
-       documento = this.generarDocumento(evaluacion, false);
+        documento = this.generarDocumento(evaluacion, false);
       } else if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
         documento = this.generarDocumento(evaluacion, true);
@@ -717,6 +717,33 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) {
     log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
     return evaluacionRepository.hasAssignedEvaluacionesSeguimientoByEvaluador(personaRef);
+  }
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en la {@link Evaluacion}
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param personaRef   El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public Boolean isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef) {
+    log.debug("isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef) - end");
+    return evaluacionRepository.isEvaluacionEvaluableByEvaluador(idEvaluacion, personaRef);
+  }
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion} en
+   * Seguimiento
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion} en Seguimiento
+   * @param personaRef   El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public Boolean isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef) {
+    log.debug("isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef) - end");
+    return evaluacionRepository.isEvaluacionSeguimientoEvaluableByEvaluador(idEvaluacion, personaRef);
   }
 
   /**

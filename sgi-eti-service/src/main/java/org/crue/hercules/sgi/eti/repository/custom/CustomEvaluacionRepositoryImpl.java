@@ -442,6 +442,12 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     return returnValue;
   }
 
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoAnual(Root<Evaluacion> rootEvaluacion,
+      CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq, String personaRef) {
+    return getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion(rootEvaluacion, cb, cq, personaRef,
+        null);
+  }
+
   /**
    * Crea el predicate necesario para recuperar las evaluaciones de tipo memoria
    * que se encuentran en seguimiento:
@@ -449,14 +455,16 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * "En evaluación seguimiento anual" (id = 11), "En evaluación seguimiento
    * final" (id = 12) o "En secretaría seguimiento final aclaraciones" (id = 13)
    * 
+   * @param idEvaluacion   identificador de la {@link Evaluacion}
    * @param rootEvaluacion
    * @param cb
    * @return lista con los predicates necesarios
    */
-  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoAnual(Root<Evaluacion> rootEvaluacion,
-      CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq, String personaRef) {
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion(
+      Root<Evaluacion> rootEvaluacion, CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq, String personaRef,
+      Long idEvaluacion) {
 
-    log.debug("getPredicateEvaluacionEnSeguimiento : {} - start");
+    log.debug("getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion : {} - start");
     List<Predicate> listPredicates = new ArrayList<Predicate>();
 
     listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
@@ -492,13 +500,25 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       Subquery<String> queryEvaluadores = cq.subquery(String.class);
       Root<Evaluador> subqRootEvaluadores = queryEvaluadores.from(Evaluador.class);
 
-      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(
-          cb.and(
-              cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
-                  rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
-              cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
-              cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
-              cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres))),
+      Predicate predicateEvaluacion = null;
+      if (idEvaluacion != null) {
+        predicateEvaluacion = cb.and(
+            cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+                rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+            cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+            cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+            cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)),
+            cb.equal(rootEvaluacion.get(Evaluacion_.id), idEvaluacion));
+      } else {
+        predicateEvaluacion = cb.and(
+            cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+                rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+            cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+            cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+            cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
+      }
+
+      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(predicateEvaluacion,
           cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
               cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
@@ -511,7 +531,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
         rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.version));
     listPredicates.add(memoriaVersion);
 
-    log.debug("getPredicateEvaluacionEnSeguimiento : {} - end");
+    log.debug("getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion : {} - end");
 
     return listPredicates;
   }
@@ -576,17 +596,23 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
   }
 
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoFinal(Root<Evaluacion> root, CriteriaBuilder cb,
+      CriteriaQuery<Evaluacion> cq, String personaRef) {
+    return getPredicatesEvaluacionesEnSeguimientoFinalByEvaluadorAndEvaluacion(root, cb, cq, personaRef, null);
+  }
+
   /**
    * Devuelve la lista de predicados para la búsqueda de evaluaciones en
    * seguimiento final.
    * 
-   * @param root root
-   * @param cb   Criteria builder
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param root         root
+   * @param cb           Criteria builder
    * @return lista de predicates.
    */
-  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoFinal(Root<Evaluacion> root, CriteriaBuilder cb,
-      CriteriaQuery<Evaluacion> cq, String personaRef) {
-    log.debug("getPredicatesEvaluacionesEnSeguimientoFinal : {} - start");
+  private List<Predicate> getPredicatesEvaluacionesEnSeguimientoFinalByEvaluadorAndEvaluacion(Root<Evaluacion> root,
+      CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq, String personaRef, Long idEvaluacion) {
+    log.debug("getPredicatesEvaluacionesEnSeguimientoFinalByEvaluadorAndEvaluacion : {} - start");
     List<Predicate> listPredicates = new ArrayList<Predicate>();
 
     listPredicates.add(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
@@ -620,13 +646,25 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       Subquery<String> queryEvaluadores = cq.subquery(String.class);
       Root<Evaluador> subqRootEvaluadores = queryEvaluadores.from(Evaluador.class);
 
-      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(
-          cb.and(
-              cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
-                  root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
-              cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
-              cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
-              cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres))),
+      Predicate predicateEvaluacion = null;
+      if (idEvaluacion != null) {
+        predicateEvaluacion = cb.and(
+            cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+                root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+            cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+            cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+            cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)),
+            cb.equal(root.get(Evaluacion_.id), idEvaluacion));
+      } else {
+        predicateEvaluacion = cb.and(
+            cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+                root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+            cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+            cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+            cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
+      }
+
+      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(predicateEvaluacion,
           cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
               cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
@@ -638,8 +676,13 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     listPredicates.add(cb.equal(root.get(Evaluacion_.version), root.get(Evaluacion_.memoria).get(Memoria_.version)));
 
     listPredicates.add(cb.and(cb.isTrue(root.get(Evaluacion_.activo))));
-    log.debug("getPredicatesEvaluacionesEnSeguimientoFinal : {} - end");
+    log.debug("getPredicatesEvaluacionesEnSeguimientoFinalByEvaluadorAndEvaluacion : {} - end");
     return listPredicates;
+  }
+
+  private List<Predicate> getPredicatesByEvaluador(Root<Evaluacion> root, CriteriaBuilder cb,
+      CriteriaQuery<Evaluacion> cq, String personaRef) {
+    return getPredicatesByEvaluadorAndEvaluacion(root, cb, cq, personaRef, null);
   }
 
   /**
@@ -651,8 +694,8 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * @param personaRef Referencia de persona
    * @return listado de predicados
    */
-  private List<Predicate> getPredicatesByEvaluador(Root<Evaluacion> root, CriteriaBuilder cb,
-      CriteriaQuery<Evaluacion> cq, String personaRef) {
+  private List<Predicate> getPredicatesByEvaluadorAndEvaluacion(Root<Evaluacion> root, CriteriaBuilder cb,
+      CriteriaQuery<Evaluacion> cq, String personaRef, Long idEvaluacion) {
 
     List<Predicate> listPredicates = new ArrayList<>();
     Predicate memoriaVersion = cb.equal(root.get(Evaluacion_.version),
@@ -673,13 +716,25 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Subquery<String> queryEvaluadores = cq.subquery(String.class);
     Root<Evaluador> subqRootEvaluadores = queryEvaluadores.from(Evaluador.class);
 
-    queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(
-        cb.and(
-            cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
-                root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
-            cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
-            cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
-            cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres))),
+    Predicate predicateEvaluacion = null;
+    if (idEvaluacion != null) {
+      predicateEvaluacion = cb.and(
+          cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+              root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+          cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+          cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+          cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)),
+          cb.equal(root.get(Evaluacion_.id), idEvaluacion));
+    } else {
+      predicateEvaluacion = cb.and(
+          cb.equal(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id),
+              root.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id)),
+          cb.in(subqRootEvaluadores.get(Evaluador_.personaRef)).value(personaRef),
+          cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
+          cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
+    }
+
+    queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(predicateEvaluacion,
         cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
             cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
@@ -750,6 +805,40 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   /**
+   * Recupera la Evaluación del tipo memoria en estado 'En evaluacion' (id = 4) o
+   * 'En secretaria revisión minima'(id = 5), o tipo retrospectiva, memoria que
+   * requiere retrospectiva y el estado de la RETROSPECTIVA es 'En evaluacion' (id
+   * = 4).
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param personaRef   Identificador del {@link Evaluador}
+   * @return true/false si existen datos
+   */
+  @Override
+  public Boolean isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef) {
+    log.debug("isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef) - start");
+
+    // Create query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    countQuery.select(cb.count(rootCount));
+
+    List<Predicate> listPredicatesCount = getPredicatesByEvaluadorAndEvaluacion(rootCount, cb, cq, personaRef,
+        idEvaluacion);
+
+    // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef) - end");
+    return count > 0;
+  }
+
+  /**
    * Obtiene todas las entidades {@link Evaluacion}, en estado "En evaluación
    * seguimiento anual" (id = 11), "En evaluación seguimiento final" (id = 12) o
    * "En secretaría seguimiento final aclaraciones" (id = 13), paginadas asociadas
@@ -782,6 +871,45 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
+    return count > 0;
+  }
+
+  /**
+   * Obtiene la {@link Evaluacion}, en estado "En evaluación seguimiento anual"
+   * (id = 11), "En evaluación seguimiento final" (id = 12) o "En secretaría
+   * seguimiento final aclaraciones" (id = 13), paginadas asociadas a un
+   * evaluador.
+   * 
+   * @param idEvaluacion identificador de la Evaluación en Seguimiento
+   * @param personaRef   Persona Ref del {@link Evaluador}
+   * @return true/false si existen datos
+   */
+  @Override
+  public Boolean isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef) {
+    log.debug("isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef) - start");
+
+    // Create query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> root = countQuery.from(Evaluacion.class);
+
+    countQuery.select(cb.count(root));
+    // Evaluaciones en seguimiento
+    List<Predicate> listPredicatesAnualCount = getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion(root,
+        cb, cq, personaRef, idEvaluacion);
+    List<Predicate> listPredicatesFinalCount = getPredicatesEvaluacionesEnSeguimientoFinalByEvaluadorAndEvaluacion(root,
+        cb, cq, personaRef, idEvaluacion);
+
+    // Número de registros totales para la paginación
+    Predicate predicateFinalCount = cb.and(listPredicatesFinalCount.toArray(new Predicate[] {}));
+    Predicate predicateAnualCount = cb.and(listPredicatesAnualCount.toArray(new Predicate[] {}));
+    countQuery.where(cb.or(predicateFinalCount, predicateAnualCount));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef) - end");
     return count > 0;
   }
 

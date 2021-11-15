@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -418,6 +419,27 @@ public class PeticionEvaluacionController {
     }
     log.debug("findAllPeticionEvaluacionMemoria(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si la persona es responsable o creador de la
+   * {@link PeticionEvaluacion} con el id indicado.
+   * 
+   * @param id             Identificador de {@link PeticionEvaluacion}.
+   * @param authentication Authentication
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/responsable-creador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-INV-ER')")
+  public ResponseEntity<?> isResponsableOrCreador(@PathVariable Long id, Authentication authentication) {
+    log.debug("isResponsableOrCreador(Long id) - start");
+    String personaRef = authentication.getName();
+    if (service.isPeticionWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(personaRef, id)) {
+      log.debug("isResponsableOrCreador(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isResponsableOrCreador(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

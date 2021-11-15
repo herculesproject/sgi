@@ -54,6 +54,7 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -488,6 +489,29 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug(
         "findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(String query,Pageable paging, String personaRef) - end");
     return page;
+  }
+
+  /**
+   * Devuelve si la {@link Memoria} existe para la persona responsable de memorias
+   * o creador de la petición de evaluación
+   * 
+   * @param personaRef usuario
+   * @param idMemoria  identificador de la {@link Memoria}
+   * @return la entidad {@link Memoria}
+   */
+  @Override
+  public Boolean isMemoriaWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef,
+      Long idMemoria) {
+    log.debug(
+        "isMemoriaWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idMemoria) - start");
+    Specification<Memoria> specsMem = MemoriaSpecifications.byId(idMemoria);
+
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(specsMem,
+        PageRequest.of(0, 1), personaRef);
+
+    log.debug(
+        "isMemoriaWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idMemoria) - end");
+    return returnValue.hasContent();
   }
 
   /**

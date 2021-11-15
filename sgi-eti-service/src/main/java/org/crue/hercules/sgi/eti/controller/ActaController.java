@@ -228,4 +228,24 @@ public class ActaController {
     log.debug("documentoActa(@PathVariable Long idActa) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }
+
+  /**
+   * Comprueba si la persona es miembro activo del comité del {@link Acta}
+   * 
+   * @param id             Identificador de {@link Acta}.
+   * @param authentication Authentication
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/miembro-comite", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-INV-ER')")
+  public ResponseEntity<?> isMiembroActivoComiteActa(@PathVariable Long id, Authentication authentication) {
+    log.debug("isMiembroActivoComiteActa(Long id, Authentication authentication) - start");
+    String personaRef = authentication.getName();
+    if (service.isMiembroComiteActa(personaRef, id)) {
+      log.debug("isMiembroActivoComiteActa(Long id, Authentication authentication) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isResponsableOrCreador(Long id, Authentication authentication) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }

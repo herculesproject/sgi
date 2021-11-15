@@ -94,6 +94,25 @@ public interface CustomEvaluacionRepository {
   Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef);
 
   /**
+   * Identifica si el usuario es {@link Evaluador} en la {@link Evaluacion}
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param personaRef   El usuario de la petición
+   * @return true/false
+   */
+  Boolean isEvaluacionEvaluableByEvaluador(Long idEvaluacion, String personaRef);
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en la {@link Evaluacion} en
+   * Seguimiento
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param personaRef   El usuario de la petición
+   * @return true/false
+   */
+  Boolean isEvaluacionSeguimientoEvaluableByEvaluador(Long idEvaluacion, String personaRef);
+
+  /**
    * Retorna el identificador de la usuarioRef del presidente
    * 
    * @param idEvaluacion Id de {@link Evaluacion}.
