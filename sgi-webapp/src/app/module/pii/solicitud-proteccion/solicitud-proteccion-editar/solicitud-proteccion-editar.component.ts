@@ -103,7 +103,6 @@ export class SolicitudProteccionEditarComponent extends ActionComponent implemen
       },
       () => {
         this.snackBarService.showSuccess(this.textEditarSuccess);
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

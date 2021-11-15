@@ -152,8 +152,8 @@
       </div>
 
       <!-- Fecha de Concesión -->
-      <div fxFlex="24%" fxFlex.lt-sm="100%" *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INDUSTRIAL" &&
-        formPart.solicitudProteccion?.id>
+      <div fxFlex="24%" fxFlex.lt-sm="100%" *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INDUSTRIAL &&
+        formPart.solicitudProteccion?.id">
         <mat-form-field fxFill>
           <mat-label>
             {{'pii.solicitud-proteccion.fecha-concesion-form' | translate}}
@@ -225,6 +225,9 @@
           {{'error.maxlength.entity' | translate:msgParamComentariosEntity}}
         </mat-error>
       </mat-form-field>
+    </div>
+    <div *ngIf="formPart.isViaEuropea$ | async">
+      <sgi-solicitud-proteccion-paises-validados></sgi-solicitud-proteccion-paises-validados>
     </div>
 
   </form>

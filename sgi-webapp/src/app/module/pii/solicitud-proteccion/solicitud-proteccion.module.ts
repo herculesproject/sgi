@@ -12,14 +12,16 @@ import { SolicitudProteccionDataResolver } from './solicitud-proteccion-data.res
 import { SolicitudProteccionEditarComponent } from './solicitud-proteccion-editar/solicitud-proteccion-editar.component';
 import { SolicitudProteccionDatosGeneralesComponent } from './solicitud-proteccion-formulario/solicitud-proteccion-datos-generales/solicitud-proteccion-datos-generales.component';
 import { SolicitudProteccionRoutingModule } from './solicitud-proteccion-routing.module';
-
-
+import { SolicitudProteccionPaisesValidadosComponent } from './solicitud-proteccion-formulario/solicitud-proteccion-datos-generales/solicitud-proteccion-paises-validados/solicitud-proteccion-paises-validados.component';
+import { PaisValidadoModalComponent } from './modals/pais-validado-modal/pais-validado-modal.component';
 
 @NgModule({
   declarations: [
     SolicitudProteccionCrearComponent,
     SolicitudProteccionEditarComponent,
-    SolicitudProteccionDatosGeneralesComponent],
+    SolicitudProteccionDatosGeneralesComponent,
+    SolicitudProteccionPaisesValidadosComponent,
+    PaisValidadoModalComponent],
   imports: [
     CommonModule,
     SharedModule,

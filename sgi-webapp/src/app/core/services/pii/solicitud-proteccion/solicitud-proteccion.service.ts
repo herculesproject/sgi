@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IPaisValidado } from '@core/models/pii/pais-validado';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { environment } from '@env';
 import {
@@ -10,10 +11,12 @@ import {
   mixinFindAll,
   mixinFindById,
   mixinUpdate,
-  SgiRestBaseService, UpdateCtor
+  SgiRestBaseService, SgiRestListResult, UpdateCtor
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IPaisValidadoResponse } from './pais-validado/pais-validado-response';
+import { PAIS_VALIDADO_RESPONSE_CONVERTER } from './pais-validado/pais-validado-response.converter';
 import { ISolicitudProteccionRequest } from './solicitud-proteccion-request';
 import { SOLICITUD_PROTECCION_REQUEST_CONVERTER } from './solicitud-proteccion-request.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion-response';
@@ -77,6 +80,19 @@ export class SolicitudProteccionService extends _SolicitudProteccionServiceMixin
     const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /*
+   * Devuelve todos los {@link IPaisValidado} asociados a la {@link ISolicitudProteccion} pasada por parametros
+   * @param invencionId Id de la {@link ISolicitudProteccion}
+   * @returns Listado de {@link IPaisValidado}
+   */
+  findPaisesValidadosBySolicitudProteccionId(solicitudProteccionId: number): Observable<SgiRestListResult<IPaisValidado>> {
+    return this.find<IPaisValidadoResponse, IPaisValidado>(
+      `${this.endpointUrl}/${solicitudProteccionId}/paisesvalidados`,
+      {},
+      PAIS_VALIDADO_RESPONSE_CONVERTER
     );
   }
 

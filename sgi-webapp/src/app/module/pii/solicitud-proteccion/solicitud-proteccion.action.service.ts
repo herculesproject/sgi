@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ActionService } from '@core/services/action-service';
+import { PaisValidadoService } from '@core/services/pii/solicitud-proteccion/pais-validado/pais-validado.service';
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
 import { TipoCaducidadService } from '@core/services/pii/tipo-caducidad/tipo-caducidad.service';
 import { ViaProteccionService } from '@core/services/pii/via-proteccion/via-proteccion.service';
@@ -39,7 +40,8 @@ export class SolicitudProteccionActionService extends ActionService {
     private viaProteccionService: ViaProteccionService,
     private paisService: PaisService,
     private empresaService: EmpresaService,
-    private tipoCaducidadService: TipoCaducidadService
+    private tipoCaducidadService: TipoCaducidadService,
+    private paisValidadoService: PaisValidadoService
   ) {
     super();
 
@@ -48,8 +50,6 @@ export class SolicitudProteccionActionService extends ActionService {
     if (id) {
       this.enableEdit();
     }
-
-
 
     this.datosGenerales = new SolicitudProteccionDatosGeneralesFragment(
       logger,
@@ -63,7 +63,8 @@ export class SolicitudProteccionActionService extends ActionService {
       this.paisService,
       this.empresaService,
       this.tipoCaducidadService,
-      this.data.solicitudesProteccion
+      this.data.solicitudesProteccion,
+      this.paisValidadoService
     );
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

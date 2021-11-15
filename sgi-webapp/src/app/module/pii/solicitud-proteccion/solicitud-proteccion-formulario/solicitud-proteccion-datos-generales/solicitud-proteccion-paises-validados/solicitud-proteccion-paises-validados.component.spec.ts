@@ -1,3 +1,4 @@
+import { IInvencion } from '@core/models/pii/invencion';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
@@ -5,19 +6,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IInvencion } from '@core/models/pii/invencion';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SOLICITUD_PROTECCION_DATA_KEY } from '../../solicitud-proteccion-data.resolver';
-import { ISolicitudProteccionData, SolicitudProteccionActionService } from '../../solicitud-proteccion.action.service';
-import { SolicitudProteccionDatosGeneralesComponent } from './solicitud-proteccion-datos-generales.component';
+
+import { SolicitudProteccionPaisesValidadosComponent } from './solicitud-proteccion-paises-validados.component';
+import { ISolicitudProteccionData, SolicitudProteccionActionService } from '../../../solicitud-proteccion.action.service';
+import { SOLICITUD_PROTECCION_DATA_KEY } from '../../../solicitud-proteccion-data.resolver';
 
 
-describe('SolicitudProteccionDatosGeneralesComponent', () => {
-  let component: SolicitudProteccionDatosGeneralesComponent;
-  let fixture: ComponentFixture<SolicitudProteccionDatosGeneralesComponent>;
+describe('SolicitudProteccionPaisesValidadosComponent', () => {
+  let component: SolicitudProteccionPaisesValidadosComponent;
+  let fixture: ComponentFixture<SolicitudProteccionPaisesValidadosComponent>;
 
   const routeData: Data = {
     [SOLICITUD_PROTECCION_DATA_KEY]: {
@@ -31,7 +32,7 @@ describe('SolicitudProteccionDatosGeneralesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudProteccionDatosGeneralesComponent],
+      declarations: [SolicitudProteccionPaisesValidadosComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -53,7 +54,7 @@ describe('SolicitudProteccionDatosGeneralesComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudProteccionDatosGeneralesComponent);
+    fixture = TestBed.createComponent(SolicitudProteccionPaisesValidadosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
