@@ -873,6 +873,7 @@
   "csp.solicitud-proyecto.tipo-presupuesto.GLOBAL": "Global",
   "csp.solicitud-proyecto.tipo-presupuesto.MIXTO": "Mixto",
   "csp.solicitud-proyecto.tipo-presupuesto.POR_ENTIDAD": "Por Entidad",
+  "csp.solicitud-proyecto.titulo": "Título",
   "csp.solicitud-socio-colaborador.importe-presupuestado": "Importe presupuestado",
   "csp.solicitud-socio-colaborador.importe-solicitado": "Importe solicitado",
   "csp.solicitud-socio-colaborador.mes-fin": "Mes fin colaboración",

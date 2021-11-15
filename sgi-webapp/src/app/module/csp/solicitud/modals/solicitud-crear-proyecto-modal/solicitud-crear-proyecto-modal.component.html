@@ -5,9 +5,26 @@
     <mat-icon class="close-icon">close</mat-icon>
   </button>
 </div>
-<p>{{'info.csp.solicitud-proyecto.new'| translate}}</p>
 <mat-dialog-content>
+  <div fxLayout="row" fxLayout.xs="column" fxFlexFill fxLayoutAlign="center center">
+    <p fxFlex="100">{{'info.csp.solicitud-proyecto.new'| translate}}</p>
+  </div>
   <form [formGroup]="formGroup">
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <!-- Título -->
+      <mat-form-field>
+        <mat-label>{{'csp.solicitud-proyecto.titulo' | translate}}</mat-label>
+        <input matInput type="text" formControlName="titulo" required>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
+          {{'error.required.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
       <!-- Fecha inicio proyecto -->
@@ -121,7 +138,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button color="accent" (click)="saveOrUpdate()" mat-raised-button type="submit">
+  <button color="accent" [disabled]="formGroup.invalid" (click)="saveOrUpdate()" mat-raised-button type="submit">
     <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate |
     translate}}
   </button>

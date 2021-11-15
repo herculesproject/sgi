@@ -26,10 +26,10 @@ import { merge, Observable, of } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
 const MSG_ACEPTAR = marker('btn.ok');
-const MSG_ERROR_INIT = marker('error.load');
 const SOLICITUD_PROYECTO_FECHA_INICIO_KEY = marker('csp.solicitud-proyecto.fecha-inicio');
 const SOLICITUD_PROYECTO_FECHA_FIN_KEY = marker('csp.solicitud-proyecto.fecha-fin');
 const SOLICITUD_PROYECTO_MODELO_EJECUCION_KEY = marker('csp.solicitud-proyecto.modelo-ejecucion');
+const SOLICITUD_PROYECTO_TITULO_KEY = marker('csp.solicitud-proyecto.titulo');
 
 export interface ISolicitudCrearProyectoModalData {
   solicitud: ISolicitud;
@@ -67,6 +67,7 @@ export class SolicitudCrearProyectoModalComponent
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamModeloEjecucionEntity = {};
+  msgParamTituloEntity = {};
   proyectos$: Observable<IProyectoData[]>;
 
   constructor(
@@ -118,11 +119,17 @@ export class SolicitudCrearProyectoModalComponent
       SOLICITUD_PROYECTO_MODELO_EJECUCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_TITULO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTituloEntity = {entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR});
   }
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
+        titulo: new FormControl(this.data.solicitud.titulo || null, [Validators.required, Validators.maxLength(250)]),
         fechaInicio: new FormControl(null, [Validators.required]),
         fechaFin: new FormControl(null, [Validators.required]),
         modeloEjecucion: new FormControl(null, [Validators.required]
@@ -154,7 +161,7 @@ export class SolicitudCrearProyectoModalComponent
       fechaInicio: this.formGroup.controls.fechaInicio.value,
       fechaFin: this.formGroup.controls.fechaFin.value,
       modeloEjecucion: this.formGroup.controls.modeloEjecucion.value,
-      titulo: this.data.solicitud.titulo,
+      titulo: this.formGroup.controls.titulo.value,
       solicitudId: this.data.solicitud.id
     } as IProyecto;
   }
