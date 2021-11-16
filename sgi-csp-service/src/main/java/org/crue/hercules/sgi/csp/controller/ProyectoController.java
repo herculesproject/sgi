@@ -364,7 +364,7 @@ public class ProyectoController {
    *         filtradas.
    */
   @GetMapping("/todos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R', 'CSP-PRO-INV-VR')")
   ResponseEntity<Page<Proyecto>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -1273,9 +1273,9 @@ public class ProyectoController {
 
   private Page<ProyectoFacturacionOutput> convertToProyectoFacturacionOutputPage(Page<ProyectoFacturacion> page) {
 
-    return new PageImpl<ProyectoFacturacionOutput>(page.getContent().stream()
-      .map((entity) -> this.convert(entity))
-      .collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
+    return new PageImpl<ProyectoFacturacionOutput>(
+        page.getContent().stream().map((entity) -> this.convert(entity)).collect(Collectors.toList()),
+        page.getPageable(), page.getTotalElements());
 
   }
 
