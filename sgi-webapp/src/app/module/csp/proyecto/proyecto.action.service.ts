@@ -285,7 +285,7 @@ export class ProyectoActionService extends ActionService {
         this.data?.proyecto?.convocatoriaId, this.readonly, this.data?.isVisor);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
         id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
-      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService,
+      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, this.data?.proyecto?.convocatoriaId, proyectoService, proyectoEquipoService, personaService,
         convocatoriaService, datosAcademicosService, convocatoriaRequisitoIPService, viculacionService,
         convocatoriaRequisitoEquipoService, datosPersonalesService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(
