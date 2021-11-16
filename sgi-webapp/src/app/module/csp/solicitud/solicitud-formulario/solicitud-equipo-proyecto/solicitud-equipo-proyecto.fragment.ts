@@ -64,6 +64,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     private vinculacionService: VinculacionService,
     private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     private datosPersonalesService: DatosPersonalesService,
+    public isInvestigador: boolean,
     public readonly: boolean
   ) {
     super(key);

@@ -11,6 +11,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
@@ -42,7 +43,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   personas$: Observable<IPersona[]> = of();
-
+  isInvestigador: boolean;
   msgParamEntity: {};
 
   constructor(
@@ -53,6 +54,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
     private empresaService: EmpresaService,
     private snackBarService: SnackBarService,
     private readonly translate: TranslateService,
+    private readonly authService: SgiAuthService,
     private personaCreateMatDialog: MatDialog
   ) { }
 
@@ -60,6 +62,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
     this.formGroup = new FormGroup({
       datosPersona: new FormControl()
     });
+    this.isInvestigador = this.authService.hasAuthority('CSP-SOL-INV-ER');
     this.setupI18N();
   }
 
