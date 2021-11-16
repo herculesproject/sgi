@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
@@ -100,6 +102,12 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
         TIPO_COMENTARIO_EVALUADOR);
     elementsRow.add(numComentariosEvaluador);
 
+    columnsDataTitulo.add("comite");
+    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
+
+    columnsDataTitulo.add("nombreInvestigacion");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
+
     rowsDataTitulo.add(elementsRow);
 
     DefaultTableModel tableModelTitulo = new DefaultTableModel();
@@ -132,6 +140,10 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
       iInformeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
 
       List<ComentarioDto> comentarios = evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion);
+      final Set<Long> apartados = new HashSet<>();
+      if (null != comentarios && !comentarios.isEmpty()) {
+        comentarios.forEach(c -> getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
+      }
 
       // @formatter:off
       BloquesReportInput bloquesReportInput = BloquesReportInput.builder()
@@ -140,6 +152,7 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
         .mostrarRespuestas(false)
         .mostrarContenidoApartado(false)
         .comentarios(comentarios)
+        .apartados(apartados)
         .build();
       // @formatter:on
 

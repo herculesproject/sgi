@@ -14,12 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class ConfiguracionDto extends BaseRestDto {
-
-  private Integer mesesArchivadaInactivo;
-  private Integer diasArchivadaPendienteCorrecciones;
+  private Integer diasArchivadaInactivo;
+  private Integer mesesArchivadaPendienteCorrecciones;
   private Integer diasLimiteEvaluador;
-  private Integer mesesAvisoProyectoCEEA;
-  private Integer mesesAvisoProyectoCEI;
-  private Integer mesesAvisoProyectoCBE;
-
 }

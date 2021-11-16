@@ -1,14 +1,13 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
-import java.time.Instant;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
-import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableRatificacion;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     super(sgiConfigProperties, personaService, evaluacionService);
   }
 
-  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion, Instant fechaInforme) {
+  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
 
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
@@ -51,11 +50,17 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     columnsData.add("nombreArticulo");
     elementsRow.add(evaluacion.getMemoria().getComite().getArticulo());
 
-    columnsData.add("fechaFirmante");
-    String i18nDe = ApplicationContextSupport.getMessage("common.de");
-    String pattern = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
-    elementsRow.add(formatInstantToString(fechaInforme, pattern));
+    columnsData.add("nombreInvestigacion");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
 
+    columnsData.add("del");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
+      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
+      elementsRow.add(i18nDela);
+    } else {
+      String i18nDel = ApplicationContextSupport.getMessage("common.del");
+      elementsRow.add(i18nDel);
+    }
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();
@@ -63,9 +68,8 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     return tableModel;
   }
 
-  public void getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport,
-      InformeEvaluacionReportInput input) {
-    getReportFromIdEvaluacion(sgiReport, input.getIdEvaluacion(), "informeFavorableRatificacion");
+  public void getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion) {
+    getReportFromIdEvaluacion(sgiReport, idEvaluacion, "informeFavorableRatificacion");
   }
 
 }

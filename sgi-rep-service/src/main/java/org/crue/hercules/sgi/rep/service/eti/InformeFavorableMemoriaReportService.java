@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Vector;
 
@@ -8,8 +7,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
-import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
@@ -46,7 +45,7 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     this.peticionEvaluacionService = peticionEvaluacionService;
   }
 
-  private DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion, Instant fechaInforme) {
+  private DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
 
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
@@ -72,9 +71,6 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     elementsRow.add(formatInstantToString(evaluacion.getFechaDictamen(), pattern));
 
-    columnsData.add("fecha");
-    elementsRow.add(formatInstantToString(fechaInforme, pattern));
-
     columnsData.add("numeroActa");
     elementsRow.add(evaluacion.getConvocatoriaReunion().getNumeroActa());
 
@@ -87,8 +83,19 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     columnsData.add("nombreInvestigacion");
     elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
 
-    columnsData.add("nombreDecreto");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreDecreto());
+    columnsData.add("del");
+    columnsData.add("este");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
+      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
+      elementsRow.add(i18nDela);
+      String i18nEsta = ApplicationContextSupport.getMessage("common.esta");
+      elementsRow.add(i18nEsta);
+    } else {
+      String i18nDel = ApplicationContextSupport.getMessage("common.del");
+      elementsRow.add(i18nDel);
+      String i18nEste = ApplicationContextSupport.getMessage("common.este");
+      elementsRow.add(i18nEste);
+    }
 
     rowsData.add(elementsRow);
 
@@ -124,17 +131,16 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     return tableModel;
   }
 
-  public void getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport,
-      InformeEvaluacionReportInput input) {
+  public void getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion) {
     try {
 
       final MasterReport report = getReportDefinition(sgiReport.getPath());
 
-      EvaluacionDto evaluacion = evaluacionService.findById(input.getIdEvaluacion());
+      EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
 
       String queryGeneral = QUERY_TYPE + SEPARATOR_KEY + NAME_GENERAL_TABLE_MODEL + SEPARATOR_KEY
           + "informeFavorableMemoria";
-      DefaultTableModel tableModelGeneral = getTableModelGeneral(evaluacion, input.getFecha());
+      DefaultTableModel tableModelGeneral = getTableModelGeneral(evaluacion);
 
       TableDataFactory dataFactory = new TableDataFactory();
       dataFactory.addTable(queryGeneral, tableModelGeneral);

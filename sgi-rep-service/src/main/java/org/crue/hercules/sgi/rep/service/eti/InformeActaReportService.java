@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto;
 import org.crue.hercules.sgi.rep.dto.eti.AsistentesDto;
-import org.crue.hercules.sgi.rep.dto.eti.InformeActaReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
@@ -50,7 +49,7 @@ public class InformeActaReportService extends SgiReportService {
     this.actaService = actaService;
   }
 
-  private DefaultTableModel getTableModelGeneral(ActaDto acta, Instant fechaInforme) {
+  private DefaultTableModel getTableModelGeneral(ActaDto acta) {
 
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
@@ -69,11 +68,6 @@ public class InformeActaReportService extends SgiReportService {
     String pattern = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
     elementsRow.add(formatInstantToString(fechaEvaluacion, pattern));
-
-    String fechaFirmantePattern = "EEEE dd '%s' MMMM '%s' yyyy";
-    columnsData.add("fechaFirmante");
-    pattern = String.format(fechaFirmantePattern, i18nDe, i18nDe);
-    elementsRow.add(formatInstantToString(fechaInforme, pattern));
 
     columnsData.add("lugar");
     elementsRow.add(acta.getConvocatoriaReunion().getLugar());
@@ -162,15 +156,15 @@ public class InformeActaReportService extends SgiReportService {
     return tableModel;
   }
 
-  public void getReportInformeActa(ReportInformeActa sgiReport, InformeActaReportInput input) {
+  public void getReportInformeActa(ReportInformeActa sgiReport, Long idActa) {
     try {
 
       final MasterReport report = getReportDefinition(sgiReport.getPath());
 
-      ActaDto acta = actaService.findById(input.getIdActa());
+      ActaDto acta = actaService.findById(idActa);
 
       String queryGeneral = QUERY_TYPE + SEPARATOR_KEY + NAME_GENERAL_TABLE_MODEL + SEPARATOR_KEY + "informeActa";
-      DefaultTableModel tableModelGeneral = getTableModelGeneral(acta, input.getFecha());
+      DefaultTableModel tableModelGeneral = getTableModelGeneral(acta);
 
       TableDataFactory dataFactory = new TableDataFactory();
       dataFactory.addTable(queryGeneral, tableModelGeneral);

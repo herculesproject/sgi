@@ -108,6 +108,9 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     columnsDataTitulo.add("comite");
     elementsRow.add(evaluacion.getMemoria().getComite().getComite());
 
+    columnsDataTitulo.add("nombreInvestigacion");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
+
     columnsDataTitulo.add("idDictamenPendienteCorrecciones");
     elementsRow.add(DICTAMEN_PENDIENTE_CORRECCIONES);
 
@@ -123,9 +126,10 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     columnsDataTitulo.add("comentarioNoProcedeEvaluar");
     elementsRow.add(null != evaluacion.getComentario() ? evaluacion.getComentario() : "");
 
-    columnsDataTitulo.add("numeroDiasArchivado");
-    Integer numeroDiasArchivado = configuracionService.findConfiguracion().getDiasArchivadaPendienteCorrecciones();
-    elementsRow.add(numeroDiasArchivado);
+    columnsDataTitulo.add("mesesArchivadaPendienteCorrecciones");
+    Integer mesesArchivadaPendienteCorrecciones = configuracionService.findConfiguracion()
+        .getMesesArchivadaPendienteCorrecciones();
+    elementsRow.add(mesesArchivadaPendienteCorrecciones);
 
     columnsDataTitulo.add("numeroComentarios");
     Integer numComentariosGestor = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),

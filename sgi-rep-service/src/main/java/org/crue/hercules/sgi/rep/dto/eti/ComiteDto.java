@@ -18,8 +18,17 @@ public class ComiteDto extends BaseRestDto {
   private String comite;
   private String nombreSecretario;
   private String nombreInvestigacion;
+  private Genero genero;
   private String nombreDecreto;
   private String articulo;
   private FormularioDto formulario;
   private Boolean activo;
+
+  /** Género de nombre de investigación */
+  public enum Genero {
+    /** Femenino */
+    F,
+    /** Masculino */
+    M;
+  }
 }

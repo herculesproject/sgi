@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
-import java.time.Instant;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
@@ -46,7 +45,7 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
 
       String queryGeneral = QUERY_TYPE + SEPARATOR_KEY + NAME_GENERAL_TABLE_MODEL + SEPARATOR_KEY + reportSuffix;
-      DefaultTableModel tableModelGeneral = getTableModelGeneral(evaluacion, null);
+      DefaultTableModel tableModelGeneral = getTableModelGeneral(evaluacion);
 
       TableDataFactory dataFactory = new TableDataFactory();
       dataFactory.addTable(queryGeneral, tableModelGeneral);
@@ -77,6 +76,6 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     }
   }
 
-  protected abstract DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion, Instant fechaInforme);
+  protected abstract DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion);
 
 }

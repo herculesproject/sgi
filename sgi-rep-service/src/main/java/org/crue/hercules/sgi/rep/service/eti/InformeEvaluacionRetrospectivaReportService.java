@@ -1,11 +1,9 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
-import java.time.Instant;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
@@ -30,7 +28,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     this.evaluacionService = evaluacionService;
   }
 
-  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion, Instant fechaInforme) {
+  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
 
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
@@ -52,13 +50,12 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
 
     columnsData.add("nombrePresidente");
-    String idPresidente = evaluacionService.findIdPresidenteByIdEvaluacion(evaluacion.getId());
-    addRowDataInvestigador(idPresidente, elementsRow);
-
-    String i18nDe = ApplicationContextSupport.getMessage("common.de");
-    String fechaFirmantePattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
-    columnsData.add("fechaFirmante");
-    elementsRow.add(formatInstantToString(fechaInforme, fechaFirmantePattern));
+    try {
+      String idPresidente = evaluacionService.findIdPresidenteByIdEvaluacion(evaluacion.getId());
+      addRowDataInvestigador(idPresidente, elementsRow);
+    } catch (Exception e) {
+      elementsRow.add(getErrorMessageToReport(e));
+    }
 
     rowsData.add(elementsRow);
 

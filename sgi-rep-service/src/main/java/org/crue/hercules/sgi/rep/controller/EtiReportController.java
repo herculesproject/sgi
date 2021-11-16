@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.rep.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.rep.dto.OutputReportType;
-import org.crue.hercules.sgi.rep.dto.eti.InformeActaReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
@@ -150,20 +149,20 @@ public class EtiReportController {
   /**
    * Devuelve un informe favorable memoria
    *
-   * @param input InformeEvaluacionReportInput con Identificador de la evaluación
-   *              y fecha del informe
+   * @param idEvaluacion Identificador de la evaluación
+   * 
    * @return Resource
    */
-  @PostMapping("/informe-favorable-memoria")
+  @GetMapping("/informe-favorable-memoria/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<Resource> getInformeFavorableMemoria(@Valid @RequestBody InformeEvaluacionReportInput input) {
+  public ResponseEntity<Resource> getInformeFavorableMemoria(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableMemoria(input) - start");
 
     ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
     report.setOutputReportType(OutputReportType.PDF);
 
-    informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, input);
+    informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(report.getContent());
 
     HttpHeaders headers = new HttpHeaders();
@@ -175,20 +174,20 @@ public class EtiReportController {
   /**
    * Devuelve un informe acta
    *
-   * @param input InformeEvaluacionReportInput con Identificador del acta y fecha
-   *              del informe
+   * @param idActa Identificador de la evaluación
+   * 
    * @return Resource
    */
-  @PostMapping("/informe-acta")
+  @GetMapping("/informe-acta/{idActa}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-DES', 'ETI-ACT-DESR', 'ETI-ACT-INV-DESR')")
-  public ResponseEntity<Resource> getInformeActa(@Valid @RequestBody InformeActaReportInput input) {
+  public ResponseEntity<Resource> getInformeActa(@PathVariable Long idActa) {
 
     log.debug("getInformeActa(input) - start");
 
     ReportInformeActa report = new ReportInformeActa();
     report.setOutputReportType(OutputReportType.PDF);
 
-    informeActaReportService.getReportInformeActa(report, input);
+    informeActaReportService.getReportInformeActa(report, idActa);
     ByteArrayResource archivo = new ByteArrayResource(report.getContent());
 
     HttpHeaders headers = new HttpHeaders();
@@ -205,7 +204,7 @@ public class EtiReportController {
    * @return Resource
    */
   @PostMapping("/informe-evaluacion-retrospectiva")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ERTR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-MEM-INV-ERTR')")
   public ResponseEntity<Resource> getInformeEvaluacionRetrospectiva(
       @Valid @RequestBody InformeEvaluacionReportInput input) {
 
@@ -226,21 +225,20 @@ public class EtiReportController {
   /**
    * Devuelve un informe favorable modificación
    *
-   * @param input InformeEvaluacionReportInput con Identificador de la evaluación
-   *              y fecha del informe
+   * @param idEvaluacion Identificador de la evaluación
+   * 
    * @return Resource
    */
-  @PostMapping("/informe-favorable-modificacion")
+  @GetMapping("/informe-favorable-modificacion/{idEvaluacion}")
   @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
-  public ResponseEntity<Resource> getInformeFavorableModificacion(
-      @Valid @RequestBody InformeEvaluacionReportInput input) {
+  public ResponseEntity<Resource> getInformeFavorableModificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableModificacion(input) - start");
 
     ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion();
     report.setOutputReportType(OutputReportType.PDF);
 
-    informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report, input);
+    informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(report.getContent());
 
     HttpHeaders headers = new HttpHeaders();
@@ -252,21 +250,20 @@ public class EtiReportController {
   /**
    * Devuelve un informe favorable ratificación
    *
-   * @param input InformeEvaluacionReportInput con Identificador de la evaluación
-   *              y fecha del informe
+   * @param idEvaluacion Identificador de la evaluación
+   * 
    * @return Resource
    */
-  @PostMapping("/informe-favorable-ratificacion")
+  @GetMapping("/informe-favorable-ratificacion/{idEvaluacion}")
   @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
-  public ResponseEntity<Resource> getInformeFavorableRatificacion(
-      @Valid @RequestBody InformeEvaluacionReportInput input) {
+  public ResponseEntity<Resource> getInformeFavorableRatificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableRatificacion(input) - start");
 
     ReportInformeFavorableRatificacion report = new ReportInformeFavorableRatificacion();
     report.setOutputReportType(OutputReportType.PDF);
 
-    informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report, input);
+    informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(report.getContent());
 
     HttpHeaders headers = new HttpHeaders();
