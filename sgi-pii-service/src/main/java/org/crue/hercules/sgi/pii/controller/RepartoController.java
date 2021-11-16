@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.RepartoCreateInput;
 import org.crue.hercules.sgi.pii.dto.RepartoEquipoInventorOutput;
 import org.crue.hercules.sgi.pii.dto.RepartoGastoOutput;
@@ -20,6 +21,9 @@ import org.crue.hercules.sgi.pii.service.RepartoGastoService;
 import org.crue.hercules.sgi.pii.service.RepartoIngresoService;
 import org.crue.hercules.sgi.pii.service.RepartoService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -119,77 +123,83 @@ public class RepartoController {
 
   /**
    * Devuelve los {@link RepartoGasto} asociados a la entidad {@link Reparto} con
-   * el id indicado.
+   * el id indicado paginadas y/o filtradas.
    * 
    * @param repartoId Identificador de {@link Reparto}
    * @param query     filtro de búsqueda.
-   * @return {@link RepartoGasto} asociados a la entidad {@link Reparto}
+   * @param paging    pageable.
+   * @return {@link RepartoGasto} asociados a la entidad {@link Reparto} paginadas
+   *         y/o filtradas.
    */
   @GetMapping(PATH_GASTOS)
   @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V')")
-  public ResponseEntity<List<RepartoGastoOutput>> findGastos(@PathVariable Long repartoId,
-      @RequestParam(name = "q", required = false) String query) {
+  public ResponseEntity<Page<RepartoGastoOutput>> findGastos(@PathVariable Long repartoId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findGastos(Long repartoId, String query) - start");
 
-    List<RepartoGasto> list = repartoGastoService.findByRepartoId(repartoId, query);
+    Page<RepartoGasto> page = repartoGastoService.findByRepartoId(repartoId, query, paging);
 
-    if (list.isEmpty()) {
+    if (page.isEmpty()) {
       log.debug("findGastos(Long repartoId, String query) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     log.debug("findGastos(Long repartoId, String query) - end");
-    return new ResponseEntity<>(convertGastos(list), HttpStatus.OK);
+    return new ResponseEntity<>(convertGastos(page), HttpStatus.OK);
   }
 
   /**
    * Devuelve los {@link RepartoIngreso} asociados a la entidad {@link Reparto}
-   * con el id indicado.
+   * con el id indicado paginadas y/o filtradas.
    * 
    * @param repartoId Identificador de {@link Reparto}
    * @param query     filtro de búsqueda.
+   * @param paging    pageable.
    * @return {@link RepartoIngreso} asociados a la entidad {@link Reparto}
+   *         paginadas y/o filtradas.
    */
   @GetMapping(PATH_INGRESOS)
   @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V')")
-  public ResponseEntity<List<RepartoIngresoOutput>> findIngresos(@PathVariable Long repartoId,
-      @RequestParam(name = "q", required = false) String query) {
-    log.debug("findIngresos(Long repartoId, String query) - start");
+  public ResponseEntity<Page<RepartoIngresoOutput>> findIngresos(@PathVariable Long repartoId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findIngresos(Long repartoId, String query, Pageable paging) - start");
 
-    List<RepartoIngreso> list = repartoIngresoService.findByRepartoId(repartoId, query);
+    Page<RepartoIngreso> page = repartoIngresoService.findByRepartoId(repartoId, query, paging);
 
-    if (list.isEmpty()) {
-      log.debug("findIngresos(Long repartoId, String query) - end");
+    if (page.isEmpty()) {
+      log.debug("findIngresos(Long repartoId, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findIngresos(Long repartoId, String query) - end");
-    return new ResponseEntity<>(convertIngresos(list), HttpStatus.OK);
+    log.debug("findIngresos(Long repartoId, String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertIngresos(page), HttpStatus.OK);
   }
 
   /**
    * Devuelve los {@link RepartoEquipoInventor} asociados a la entidad
-   * {@link Reparto} con el id indicado.
+   * {@link Reparto} con el id indicado paginadas y/o filtradas.
    * 
    * @param repartoId Identificador de {@link Reparto}
    * @param query     filtro de búsqueda.
+   * @param paging    pageable.
    * @return {@link RepartoEquipoInventor} asociados a la entidad {@link Reparto}
+   *         paginadas y/o filtradas.
    */
   @GetMapping(PATH_EQUIPO_INVENTOR)
   @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V')")
-  public ResponseEntity<List<RepartoEquipoInventorOutput>> findEquipoInventor(@PathVariable Long repartoId,
-      @RequestParam(name = "q", required = false) String query) {
-    log.debug("findEquipoInventor(Long repartoId, String query) - start");
+  public ResponseEntity<Page<RepartoEquipoInventorOutput>> findEquipoInventor(@PathVariable Long repartoId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findEquipoInventor(Long repartoId, String query, Pageable paging) - start");
 
-    List<RepartoEquipoInventor> list = repartoEquipoInventorService.findByRepartoId(repartoId, query);
+    Page<RepartoEquipoInventor> page = repartoEquipoInventorService.findByRepartoId(repartoId, query, paging);
 
-    if (list.isEmpty()) {
-      log.debug("findEquipoInventor(Long repartoId, String query) - end");
+    if (page.isEmpty()) {
+      log.debug("findEquipoInventor(Long repartoId, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findEquipoInventor(Long repartoId, String query) - end");
-    return new ResponseEntity<>(convertEquiposInventor(list), HttpStatus.OK);
+    log.debug("findEquipoInventor(Long repartoId, String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertEquiposInventor(page), HttpStatus.OK);
   }
 
   // Converters
@@ -204,24 +214,33 @@ public class RepartoController {
     return reparto;
   }
 
-  private List<RepartoGastoOutput> convertGastos(List<RepartoGasto> entities) {
-    return entities.stream().map((entity) -> convertGasto(entity)).collect(Collectors.toList());
+  private Page<RepartoGastoOutput> convertGastos(Page<RepartoGasto> page) {
+    List<RepartoGastoOutput> content = page.getContent().stream().map(repartoGasto -> convertGasto(repartoGasto))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   private RepartoGastoOutput convertGasto(RepartoGasto repartoGasto) {
     return modelMapper.map(repartoGasto, RepartoGastoOutput.class);
   }
 
-  private List<RepartoIngresoOutput> convertIngresos(List<RepartoIngreso> entities) {
-    return entities.stream().map((entity) -> convertIngreso(entity)).collect(Collectors.toList());
+  private Page<RepartoIngresoOutput> convertIngresos(Page<RepartoIngreso> page) {
+    List<RepartoIngresoOutput> content = page.getContent().stream()
+        .map(repartoIngreso -> convertIngreso(repartoIngreso)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   private RepartoIngresoOutput convertIngreso(RepartoIngreso repartoIngreso) {
     return modelMapper.map(repartoIngreso, RepartoIngresoOutput.class);
   }
 
-  private List<RepartoEquipoInventorOutput> convertEquiposInventor(List<RepartoEquipoInventor> entities) {
-    return entities.stream().map((entity) -> convertEquipoInventor(entity)).collect(Collectors.toList());
+  private Page<RepartoEquipoInventorOutput> convertEquiposInventor(Page<RepartoEquipoInventor> page) {
+    List<RepartoEquipoInventorOutput> content = page.getContent().stream()
+        .map(repartoEquipoInventor -> convertEquipoInventor(repartoEquipoInventor)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   private RepartoEquipoInventorOutput convertEquipoInventor(RepartoEquipoInventor repartoEquipoInventor) {

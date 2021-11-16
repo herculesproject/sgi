@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.pii.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -10,6 +8,8 @@ import org.crue.hercules.sgi.pii.model.Reparto;
 import org.crue.hercules.sgi.pii.model.RepartoGasto;
 import org.crue.hercules.sgi.pii.repository.RepartoGastoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.RepartoGastoSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,21 +32,23 @@ public class RepartoGastoService {
   }
 
   /**
-   * Obtiene los {@link RepartoGasto} para una entidad {@link Reparto} filtradas.
+   * Obtiene los {@link RepartoGasto} para una entidad {@link Reparto} paginadas
+   * y/o filtradas.
    * 
    * @param repartoId el id de la entidad {@link Reparto}.
    * @param query     la información del filtro.
+   * @param pageable  la información de la paginación.
    * @return la lista de {@link RepartoGasto} de la entidad {@link Reparto}
-   *         filtradas.
+   *         paginadas y/o filtradas.
    */
-  public List<RepartoGasto> findByRepartoId(Long repartoId, String query) {
-    log.debug("findByRepartoId(Long repartoId, String query) - start");
+  public Page<RepartoGasto> findByRepartoId(Long repartoId, String query, Pageable pageable) {
+    log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - start");
 
     Specification<RepartoGasto> specs = RepartoGastoSpecifications.byRepartoId(repartoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
-    List<RepartoGasto> returnValue = repository.findAll(specs);
-    log.debug("findByRepartoId(Long repartoId, String query) - end");
+    Page<RepartoGasto> returnValue = repository.findAll(specs, pageable);
+    log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

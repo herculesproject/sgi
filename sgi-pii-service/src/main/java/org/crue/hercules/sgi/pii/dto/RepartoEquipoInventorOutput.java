@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 public class RepartoEquipoInventorOutput {
   private Long id;
   private Long repartoId;
-  private String personaRef;
+  private Long invencionInventorId;
+  private String proyectoRef;
   private BigDecimal importeNomina;
   private BigDecimal importeProyecto;
   private BigDecimal importeOtros;

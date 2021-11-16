@@ -50,7 +50,7 @@ public class Reparto extends BaseEntity {
   @SequenceGenerator(name = "reparto_seq", sequenceName = "reparto_seq", allocationSize = 1)
   private Long id;
 
-  /** Invencion Id */
+  /** Invencion Id. */
   @Column(name = "invencion_id", nullable = false)
   private Long invencionId;
 
@@ -58,11 +58,15 @@ public class Reparto extends BaseEntity {
   @Column(name = "fecha", nullable = false)
   private Instant fecha;
 
-  /** Importe Universidad */
+  /** Importe Universidad. */
   @Column(name = "importe_universidad", nullable = false)
   private BigDecimal importeUniversidad;
 
-  /** Estado del reparto */
+  /** Importe Equipo Inventor. */
+  @Column(name = "importe_equipo_inventor", nullable = true)
+  private BigDecimal importeEquipoInventor;
+
+  /** Estado del reparto. */
   @Enumerated(EnumType.STRING)
   @Column(name = "estado", length = ESTADO_LENGTH, nullable = false)
   private Estado estado;

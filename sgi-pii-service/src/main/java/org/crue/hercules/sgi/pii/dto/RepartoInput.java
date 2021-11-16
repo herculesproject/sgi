@@ -33,6 +33,9 @@ public class RepartoInput implements Serializable {
   @NotNull
   private BigDecimal importeUniversidad;
 
+  @Min(0)
+  private BigDecimal importeEquipoInventor;
+
   @NotNull
   private Estado estado;
 }

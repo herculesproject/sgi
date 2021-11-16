@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.pii.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -10,6 +8,8 @@ import org.crue.hercules.sgi.pii.model.Reparto;
 import org.crue.hercules.sgi.pii.model.RepartoEquipoInventor;
 import org.crue.hercules.sgi.pii.repository.RepartoEquipoInventorRepository;
 import org.crue.hercules.sgi.pii.repository.specification.RepartoEquipoInventorSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,21 +32,22 @@ public class RepartoEquipoInventorService {
 
   /**
    * Obtiene los {@link RepartoEquipoInventor} para una entidad {@link Reparto}
-   * filtradas.
+   * paginadas y/o filtradas.
    * 
    * @param repartoId el id de la entidad {@link Reparto}.
    * @param query     la información del filtro.
+   * @param pageable  la información de la paginación.
    * @return la lista de {@link RepartoEquipoInventor} de la entidad
-   *         {@link Reparto} filtradas.
+   *         {@link Reparto} paginadas y/o filtradas.
    */
-  public List<RepartoEquipoInventor> findByRepartoId(Long repartoId, String query) {
-    log.debug("findByRepartoId(Long repartoId, String query) - start");
+  public Page<RepartoEquipoInventor> findByRepartoId(Long repartoId, String query, Pageable pageable) {
+    log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - start");
 
     Specification<RepartoEquipoInventor> specs = RepartoEquipoInventorSpecifications.byRepartoId(repartoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
-    List<RepartoEquipoInventor> returnValue = repository.findAll(specs);
-    log.debug("findByRepartoId(Long repartoId, String query) - end");
+    Page<RepartoEquipoInventor> returnValue = repository.findAll(specs, pageable);
+    log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -107,6 +108,7 @@ public class RepartoEquipoInventorService {
     return repository.findById(repartoEquipoInventor.getId()).map(repartoEquipoInventorExistente -> {
 
       // Establecemos los campos actualizables con los recibidos
+      repartoEquipoInventorExistente.setProyectoRef(repartoEquipoInventor.getProyectoRef());
       repartoEquipoInventorExistente.setImporteNomina(repartoEquipoInventor.getImporteNomina());
       repartoEquipoInventorExistente.setImporteOtros(repartoEquipoInventor.getImporteOtros());
       repartoEquipoInventorExistente.setImporteProyecto(repartoEquipoInventor.getImporteProyecto());

@@ -11,17 +11,20 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.crue.hercules.sgi.pii.model.TramoReparto;
 import org.crue.hercules.sgi.pii.model.TramoReparto_;
+import org.crue.hercules.sgi.pii.model.TramoReparto.Tipo;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import cz.jirutka.rsql.parser.ast.RSQLOperators;
 
 public class TramoRepartoPredicateResolver implements SgiRSQLPredicateResolver<TramoReparto> {
-  private Pattern integerPattern = Pattern.compile("^\\d+$");
+  private static final Pattern integerPattern = Pattern.compile("^\\d+$");
 
   private enum Property {
     /* Máximo valor Hasta */
-    MAX_HASTA("maxHasta");
+    MAX_HASTA("maxHasta"),
+    /* Tramo que contiene al valor recibido entre sus campos Desde y Hasta */
+    BETWEEN_DESDE_HASTA("betweenDesdeHasta");
 
     private String code;
 
@@ -70,6 +73,31 @@ public class TramoRepartoPredicateResolver implements SgiRSQLPredicateResolver<T
     return cb.equal(root.get(TramoReparto_.hasta), subquery);
   }
 
+  private Predicate buildByBetweenDesdeHasta(ComparisonNode node, Root<TramoReparto> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    ComparisonOperator operator = node.getOperator();
+    if (!operator.equals(RSQLOperators.EQUAL)) {
+      // Unsupported Operator
+      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
+    }
+    if (node.getArguments().size() != 1) {
+      // Bad number of arguments
+      throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
+    }
+    String argument = node.getArguments().get(0);
+    if (!isPositiveInteger(argument)) {
+      throw new IllegalArgumentException("Argument should be a positive integer for " + node.getSelector());
+    }
+
+    Integer value = Integer.parseInt(argument);
+
+    return cb.or(
+        cb.and(cb.lessThanOrEqualTo(root.get(TramoReparto_.desde), value),
+            cb.greaterThanOrEqualTo(root.get(TramoReparto_.hasta), value)),
+        cb.and(cb.equal(root.get(TramoReparto_.tipo), Tipo.FINAL),
+            cb.lessThanOrEqualTo(root.get(TramoReparto_.desde), value)));
+  }
+
   public boolean isPositiveInteger(String strInt) {
     if (strInt == null) {
       return false;
@@ -87,10 +115,12 @@ public class TramoRepartoPredicateResolver implements SgiRSQLPredicateResolver<T
   public Predicate toPredicate(ComparisonNode node, Root<TramoReparto> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     switch (Property.fromCode(node.getSelector())) {
-      case MAX_HASTA:
-        return buildByMaxHasta(node, root, query, criteriaBuilder);
-      default:
-        return null;
+    case MAX_HASTA:
+      return buildByMaxHasta(node, root, query, criteriaBuilder);
+    case BETWEEN_DESDE_HASTA:
+      return buildByBetweenDesdeHasta(node, root, query, criteriaBuilder);
+    default:
+      return null;
     }
   }
 

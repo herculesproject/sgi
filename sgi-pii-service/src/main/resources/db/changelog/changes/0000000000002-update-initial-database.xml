@@ -254,5 +254,28 @@
   <changeSet author="master" id="0000000000002-30">
     <addForeignKeyConstraint baseColumnNames="tipo_procedimiento_id" baseTableName="procedimiento" constraintName="FK_PROCEDIMIENTO_TIPOPROCEDIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_procedimiento" validate="true" />
   </changeSet>
+  <changeSet author="master" id="0000000000002-31">
+    <addColumn tableName="reparto_equipo_inventor">
+      <column name="invencion_inventor_id" type="bigint">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-32">
+    <addForeignKeyConstraint baseColumnNames="invencion_inventor_id" baseTableName="reparto_equipo_inventor" constraintName="FK_REPARTOEQUIPOINVENTOR_INVENCIONINVENTOR" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_inventor" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-33">
+    <dropColumn columnName="PERSONA_REF" tableName="REPARTO_EQUIPO_INVENTOR" />
+  </changeSet>
+  <changeSet author="master" id="0000000000002-34">
+    <addColumn tableName="reparto_equipo_inventor">
+      <column name="proyecto_ref" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="master" id="0000000000002-35">
+    <addColumn tableName="reparto">
+      <column name="importe_equipo_inventor" type="decimal(19, 2)" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

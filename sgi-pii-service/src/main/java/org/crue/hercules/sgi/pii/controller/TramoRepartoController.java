@@ -63,7 +63,7 @@ public class TramoRepartoController {
    * @return la lista de entidades {@link TramoReparto} paginadas y/o filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthority('PII-TRE-V', 'PII-TRE-C', 'PII-TRE-E', 'PII-TRE-B', 'PII-TRE-R')")
+  @PreAuthorize("hasAnyAuthority('PII-TRE-V', 'PII-TRE-C', 'PII-TRE-E', 'PII-TRE-B', 'PII-TRE-R', 'PII-INV-V', 'PII-INV-E')")
   ResponseEntity<Page<TramoRepartoOutput>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");

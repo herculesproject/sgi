@@ -43,9 +43,13 @@ public class RepartoEquipoInventor extends BaseEntity {
   @Column(name = "reparto_id", nullable = false)
   private Long repartoId;
 
-  /** Referencia a una Persona */
-  @Column(name = "persona_ref", length = REF_LENGTH, nullable = false)
-  private String personaRef;
+  /** Referencia a un InvencionInventor */
+  @Column(name = "invencion_inventor_id", nullable = false)
+  private Long invencionInventorId;
+
+  /** Proyecto ref */
+  @Column(name = "proyecto_ref", length = REF_LENGTH, nullable = true)
+  private String proyectoRef;
 
   /** Importe Nomina */
   @Column(name = "importe_nomina", nullable = false)
@@ -65,4 +69,10 @@ public class RepartoEquipoInventor extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Reparto reparto = null;
+
+  @ManyToOne
+  @JoinColumn(name = "invencion_inventor_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_REPARTOEQUIPOINVENTOR_INVENCIONINVENTOR"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final InvencionInventor invencionInventor = null;
 }

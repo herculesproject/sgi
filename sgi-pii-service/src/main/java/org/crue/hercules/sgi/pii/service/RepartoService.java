@@ -174,6 +174,7 @@ public class RepartoService {
 
       // Establecemos los campos actualizables con los recibidos
       repartoExistente.setImporteUniversidad(reparto.getImporteUniversidad());
+      repartoExistente.setImporteEquipoInventor(reparto.getImporteEquipoInventor());
 
       // Actualizamos la entidad
       Reparto returnValue = repository.save(repartoExistente);

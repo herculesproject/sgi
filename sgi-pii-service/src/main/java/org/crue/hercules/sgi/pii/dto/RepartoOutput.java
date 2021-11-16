@@ -21,5 +21,6 @@ public class RepartoOutput {
   private Long invencionId;
   private Instant fecha;
   private BigDecimal importeUniversidad;
+  private BigDecimal importeEquipoInventor;
   private Estado estado;
 }
