@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -111,6 +112,7 @@ public class ComiteIT extends BaseIT {
     nuevoComite.setComite("Comite1");
     nuevoComite.setActivo(Boolean.TRUE);
     nuevoComite.setFormulario(formulario);
+    nuevoComite.setGenero(Genero.M);
 
     ResponseEntity<Comite> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(null, nuevoComite), Comite.class);
@@ -153,6 +155,7 @@ public class ComiteIT extends BaseIT {
     replaceComite.setComite("Comite2");
     replaceComite.setFormulario(new Formulario(2L, "M20", "Descripcion"));
     replaceComite.setActivo(Boolean.TRUE);
+    replaceComite.setGenero(Genero.M);
 
     final ResponseEntity<Comite> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, replaceComite), Comite.class, 3L);

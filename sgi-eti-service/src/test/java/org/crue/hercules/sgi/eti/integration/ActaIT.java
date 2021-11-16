@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -355,6 +356,7 @@ public class ActaIT extends BaseIT {
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setComite("CEEA");
+    comite.setGenero(Genero.F);
     comite.setFormulario(formulario);
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();

@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
@@ -334,6 +335,8 @@ public class ActaServiceTest extends BaseServiceTest {
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setComite("CEEA");
+    comite.setGenero(Genero.M);
+
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);

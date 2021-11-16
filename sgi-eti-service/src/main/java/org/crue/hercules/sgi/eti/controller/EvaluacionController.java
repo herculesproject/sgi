@@ -487,7 +487,7 @@ public class EvaluacionController {
    * @return Id del presidente
    */
   @GetMapping("/{idEvaluacion}/presidente")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-MEM-INV-ERTR')")
   public ResponseEntity<String> findIdPresidenteByIdEvaluacion(@PathVariable Long idEvaluacion) {
     log.debug("findIdPresidenteByIdEvaluacion(@PathVariable Long idEvaluacion) - start");
     String presidente = service.findIdPresidenteByIdEvaluacion(idEvaluacion);

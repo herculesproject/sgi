@@ -25,11 +25,12 @@ import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.ReportService;
-import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,8 +86,11 @@ public class ActaServiceImpl implements ActaService {
    * @param retrospectivaRepository  {@link RetrospectivaRepository}
    * @param memoriaService           {@link MemoriaService}
    * @param retrospectivaService     {@link RetrospectivaService}
+   * @param reportService            {@link ReportService}
+   * @param sgdocService             {@link SgdocService}
    * 
    */
+  @Autowired
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
       RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService,
@@ -308,6 +312,8 @@ public class ActaServiceImpl implements ActaService {
         memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION);
         break;
       }
+      default:
+        break;
       }
     });
 
@@ -320,7 +326,8 @@ public class ActaServiceImpl implements ActaService {
 
       switch (evaluacion.getDictamen().getId().intValue()) {
       case Constantes.DICTAMEN_DESFAVORABLE_RETROSPECTIVA:
-      case Constantes.DICTAMEN_FAVORABLE_RETROSPECTIVA: {
+      case Constantes.DICTAMEN_FAVORABLE_RETROSPECTIVA:
+      default: {
         // Dictamen "Favorable y desfavorable retrospectiva"
         // Se actualiza memoria a estado 5: "Fin evaluación retrospectiva"
         retrospectivaService.updateEstadoRetrospectiva(evaluacion.getMemoria().getRetrospectiva(),
@@ -354,6 +361,8 @@ public class ActaServiceImpl implements ActaService {
             Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES);
         break;
       }
+      default:
+        break;
       }
 
     });
@@ -379,6 +388,8 @@ public class ActaServiceImpl implements ActaService {
         memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION);
         break;
       }
+      default:
+        break;
       }
 
     });
@@ -451,7 +462,7 @@ public class ActaServiceImpl implements ActaService {
    */
   @Override
   public DocumentoOutput generarDocumentoActa(Long idActa) {
-    Resource informePdf = reportService.getInformeActa(idActa, Instant.now());
+    Resource informePdf = reportService.getInformeActa(idActa);
     // Se sube el informe a sgdoc
     String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
     return sgdocService.uploadInforme(fileName, informePdf);

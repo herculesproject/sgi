@@ -112,4 +112,43 @@
     </update>
   </changeSet>
 
+  <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000002-comite-add-genero">
+    <!-- Cambio de nombre investigación y genero para cada comité -->
+    <update tableName="comite">
+      <column name="nombre_investigacion" value="Comisión de Ética de Investigación" />
+      <column name="genero" value="F" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="1" />
+      </whereParams>
+    </update>
+    <update tableName="comite">
+      <column name="nombre_investigacion" value="Comité de Ética de Experimentación Animal" />
+      <column name="genero" value="M" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="2" />
+      </whereParams>
+    </update>
+    <update tableName="comite">
+      <column name="nombre_investigacion" value="Comité de Ética de Bioseguridad en Experimentación" />
+      <column name="genero" value="M" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="3" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+  <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000002-configuracion-update">
+    <update tableName="configuracion">
+      <column name="meses_archivada_pendiente_correcciones" valueNumeric="6" />
+      <column name="dias_archivada_inactivo" valueNumeric="45" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="1" />
+      </whereParams>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

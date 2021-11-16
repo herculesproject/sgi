@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.custom.CustomConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -1294,8 +1295,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreSecretario", "nombreInvestigacion", "nombreDecreto", "articulo", formulario,
-        activo);
+    return new Comite(id, comite, "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto", "articulo",
+        formulario, activo);
 
   }
 
@@ -1398,8 +1399,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", "nombreDecreto", "articulo",
-        formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto",
+        "articulo", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
@@ -1496,6 +1497,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     Comite comite = new Comite();
     comite.setId(id);
+    comite.setGenero(Genero.M);
     memoria.setComite(comite);
 
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();

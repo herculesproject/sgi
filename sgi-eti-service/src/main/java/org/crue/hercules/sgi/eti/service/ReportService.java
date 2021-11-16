@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
-import org.crue.hercules.sgi.eti.dto.InformeActaReportInput;
 import org.crue.hercules.sgi.eti.dto.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.eti.exceptions.rep.GetDataReportException;
 import org.crue.hercules.sgi.eti.model.Acta;
@@ -109,6 +108,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
+    log.debug("getInformeEvaluacion(idEvaluacion)- end");
     return informe;
   }
 
@@ -139,6 +139,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
+    log.debug("getInformeEvaluador(idEvaluacion)- end");
     return informe;
   }
 
@@ -146,26 +147,22 @@ public class ReportService {
    * Devuelve un informe favorable memoria en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param fecha        Fecha del informe
    * @return Resource informe
    */
-  public Resource getInformeFavorableMemoria(Long idEvaluacion, Instant fecha) {
-    log.debug("getInformeFavorableMemoria(idEvaluacion, fecha)- start");
+  public Resource getInformeFavorableMemoria(Long idEvaluacion) {
+    log.debug("getInformeFavorableMemoria(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
             .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
-    InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
-        .build();
-
     Resource informe = null;
     try {
 
       final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-memoria", HttpMethod.POST,
-          new HttpEntityBuilder<>(input).withCurrentUserAuthorization().build(), Resource.class);
+          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-memoria/" + idEvaluacion, HttpMethod.GET,
+          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
 
       informe = response.getBody();
     } catch (Exception e) {
@@ -173,6 +170,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
+    log.debug("getInformeFavorableMemoria(idEvaluacion)- end");
     return informe;
   }
 
@@ -180,27 +178,23 @@ public class ReportService {
    * Devuelve un informe favorable ratificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param fecha        Fecha del informe
    * 
    * @return Resource informe
    */
-  public Resource getInformeFavorableRatificacion(Long idEvaluacion, Instant fecha) {
-    log.debug("getInformeFavorableRatificacion(idEvaluacion, fecha)- start");
+  public Resource getInformeFavorableRatificacion(Long idEvaluacion) {
+    log.debug("getInformeFavorableRatificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
             .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
-    InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
-        .build();
-
     Resource informe = null;
     try {
 
       final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-ratificacion", HttpMethod.POST,
-          new HttpEntityBuilder<>(input).withCurrentUserAuthorization().build(), Resource.class);
+          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-ratificacion/" + idEvaluacion, HttpMethod.GET,
+          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
 
       informe = response.getBody();
     } catch (Exception e) {
@@ -208,6 +202,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
+    log.debug("getInformeFavorableRatificacion(idEvaluacion)- end");
     return informe;
   }
 
@@ -215,27 +210,22 @@ public class ReportService {
    * Devuelve un informe favorable modificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param fecha        Fecha del informe
    * 
    * @return Resource informe
    */
-  public Resource getInformeFavorableModificacion(Long idEvaluacion, Instant fecha) {
-    log.debug("getInformeFavorableModificacion(idEvaluacion, fecha)- start");
+  public Resource getInformeFavorableModificacion(Long idEvaluacion) {
+    log.debug("getInformeFavorableModificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
             .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Evaluacion.class)).build());
 
-    InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion).fecha(fecha)
-        .build();
-
     Resource informe = null;
     try {
-
       final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-modificacion", HttpMethod.POST,
-          new HttpEntityBuilder<>(input).withCurrentUserAuthorization().build(), Resource.class);
+          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-modificacion/" + idEvaluacion, HttpMethod.GET,
+          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
 
       informe = response.getBody();
     } catch (Exception e) {
@@ -243,7 +233,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
-    log.debug("getInformeFavorableModificacion(idEvaluacion, fecha)- end");
+    log.debug("getInformeFavorableModificacion(idEvaluacion)- end");
     return informe;
   }
 
@@ -251,24 +241,21 @@ public class ReportService {
    * Devuelve un informe acta en pdf
    *
    * @param idActa Id del acta
-   * @param fecha  fecha del informe
    * @return Resource informe
    */
-  public Resource getInformeActa(Long idActa, Instant fecha) {
-    log.debug("getInformeActa(idActa, fecha)- start");
+  public Resource getInformeActa(Long idActa) {
+    log.debug("getInformeActa(idActa)- start");
     Assert.notNull(idActa,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, NOT_NULL)
             .parameter(FIELD, ApplicationContextSupport.getMessage(ID))
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Acta.class)).build());
-
-    InformeActaReportInput input = InformeActaReportInput.builder().idActa(idActa).fecha(fecha).build();
     Resource informe = null;
     try {
 
       final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-acta", HttpMethod.POST,
-          new HttpEntityBuilder<>(input).withCurrentUserAuthorization().build(), Resource.class);
+          restApiProperties.getRepUrl() + URL_API + "/informe-acta/" + idActa, HttpMethod.GET,
+          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
 
       informe = response.getBody();
     } catch (Exception e) {
@@ -276,7 +263,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
-    log.debug("getInformeActa(idActa, fecha)- end");
+    log.debug("getInformeActa(idActa)- end");
     return informe;
   }
 
@@ -312,6 +299,7 @@ public class ReportService {
       throw new GetDataReportException();
     }
 
+    log.debug("getInformeEvaluacionRetrospectiva(idEvaluacion, fecha)- end");
     return informe;
   }
 }

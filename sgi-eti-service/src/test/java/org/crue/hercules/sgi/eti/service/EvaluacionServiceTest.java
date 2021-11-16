@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
@@ -83,14 +84,11 @@ public class EvaluacionServiceTest extends BaseServiceTest {
   @Mock
   private SgdocService sgdocService;
 
-  @Mock
-  private InformeService informeService;
-
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
         retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository, memoriaRepository,
-        evaluacionConverter, reportService, sgdocService, informeService);
+        evaluacionConverter, reportService, sgdocService);
   }
 
   @Test
@@ -393,7 +391,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: Get a page with one hundred Evaluaciones
     Assertions.assertThat(page.getContent().size()).isEqualTo(100);
-    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getNumber()).isZero();
     Assertions.assertThat(page.getSize()).isEqualTo(100);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
   }
@@ -457,7 +455,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getContent()).isEqualTo(response);
-    Assertions.assertThat(result.getNumber()).isEqualTo(0);
+    Assertions.assertThat(result.getNumber()).isZero();
     Assertions.assertThat(result.getSize()).isEqualTo(response.size());
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
@@ -618,7 +616,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: Get a page with one hundred Evaluaciones
     Assertions.assertThat(page.getContent().size()).isEqualTo(100);
-    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getNumber()).isZero();
     Assertions.assertThat(page.getSize()).isEqualTo(100);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
   }
@@ -758,7 +756,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: Get a page with ten Evaluaciones
     Assertions.assertThat(page.getContent().size()).isEqualTo(10);
-    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getNumber()).isZero();
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(10);
   }
@@ -827,7 +825,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getContent()).isEqualTo(response);
-    Assertions.assertThat(result.getNumber()).isEqualTo(0);
+    Assertions.assertThat(result.getNumber()).isZero();
     Assertions.assertThat(result.getSize()).isEqualTo(response.size());
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
@@ -915,8 +913,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     final Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    final Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", "nombreDecreto",
-        "articulo", formulario, Boolean.TRUE);
+    final Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M,
+        "nombreDecreto", "articulo", formulario, Boolean.TRUE);
 
     final TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L); // Nueva
@@ -1011,8 +1009,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", "nombreDecreto", "articulo",
-        formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto",
+        "articulo", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);

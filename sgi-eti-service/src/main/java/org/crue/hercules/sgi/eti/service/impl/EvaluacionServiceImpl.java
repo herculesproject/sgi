@@ -29,12 +29,12 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
-import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.ReportService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -89,9 +89,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** SGDOC service */
   private final SgdocService sgdocService;
 
-  /** Informe service */
-  private final InformeService informeService;
-
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
@@ -108,14 +105,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    *                                      {@link ReportService}
    * @param sgdocService                  servicio gestor documental
    *                                      {@link SgdocService}
-   * @param informeService                service para {@link Informe}
    */
+  @Autowired
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
-      EvaluacionConverter evaluacionConverter, ReportService reportService, SgdocService sgdocService,
-      InformeService informeService) {
+      EvaluacionConverter evaluacionConverter, ReportService reportService, SgdocService sgdocService) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -127,7 +123,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.evaluacionConverter = evaluacionConverter;
     this.reportService = reportService;
     this.sgdocService = sgdocService;
-    this.informeService = informeService;
   }
 
   /**
@@ -159,12 +154,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     // Si la evaluación es creada mediante la asignación de memorias en
     // ConvocatoriaReunión
-    evaluacion.setConvocatoriaReunion(
-        convocatoriaReunionRepository.findById(evaluacion.getConvocatoriaReunion().getId()).get());
+    ConvocatoriaReunion crEvaluacion = convocatoriaReunionRepository
+        .findById(evaluacion.getConvocatoriaReunion().getId())
+        .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(evaluacion.getConvocatoriaReunion().getId()));
+    evaluacion.setConvocatoriaReunion(crEvaluacion);
 
     Evaluacion evaluacionCompleta = rellenarEvaluacionConEstadosMemoria(evaluacion);
 
-    if (evaluacionCompleta.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
+    if (evaluacionCompleta.getTipoEvaluacion().getId().compareTo(Constantes.TIPO_EVALUACION_RETROSPECTIVA) == 0) {
       retrospectivaRepository.save(evaluacionCompleta.getMemoria().getRetrospectiva());
     } else {
       estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacionCompleta.getMemoria(),
@@ -185,18 +182,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     evaluacion.setTipoEvaluacion(new TipoEvaluacion());
 
     // Convocatoria Seguimiento
-    if (evaluacion.getConvocatoriaReunion().getTipoConvocatoriaReunion()
-        .getId() == Constantes.TIPO_CONVOCATORIA_REUNION_SEGUIMIENTO) {
+    if (evaluacion.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId()
+        .compareTo(Constantes.TIPO_CONVOCATORIA_REUNION_SEGUIMIENTO) == 0) {
       // mismo tipo seguimiento que la memoria Anual(3) Final(4)
       evaluacion.getTipoEvaluacion()
-          .setId((evaluacion.getMemoria().getEstadoActual()
-              .getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
+          .setId((evaluacion.getMemoria().getEstadoActual().getId()
+              .compareTo(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL) == 0)
                   ? Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL
                   : Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL);
       // se actualiza estado de la memoria a 'En evaluación'
       evaluacion.getMemoria().getEstadoActual()
-          .setId((evaluacion.getMemoria().getEstadoActual()
-              .getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
+          .setId((evaluacion.getMemoria().getEstadoActual().getId()
+              .compareTo(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL) == 0)
                   ? Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL
                   : Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL);
 
@@ -204,8 +201,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     } else {
       // memoria 'en secretaría' y retrospectiva 'en secretaría'
       if (evaluacion.getMemoria().getEstadoActual().getId() > Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
-          && evaluacion.getMemoria().getRequiereRetrospectiva() && evaluacion.getMemoria().getRetrospectiva()
-              .getEstadoRetrospectiva().getId() == Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) {
+          && evaluacion.getMemoria().getRequiereRetrospectiva().booleanValue()
+          && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId()
+              .compareTo(Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) == 0) {
         // tipo retrospectiva
         evaluacion.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_RETROSPECTIVA);
         // se actualiza el estado retrospectiva a 'En evaluación'
@@ -271,9 +269,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     Page<Evaluacion> returnValue = evaluacionRepository.findAll(specs, paging);
 
-    return new PageImpl<EvaluacionWithIsEliminable>(
-        evaluacionConverter.evaluacionesToEvaluacionesWithIsEliminable(returnValue.getContent()), paging,
-        returnValue.getTotalElements());
+    return new PageImpl<>(evaluacionConverter.evaluacionesToEvaluacionesWithIsEliminable(returnValue.getContent()),
+        paging, returnValue.getTotalElements());
   }
 
   /**
@@ -405,12 +402,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    *                                     con ese id.
    */
   public Evaluacion findById(final Long id) throws EvaluacionNotFoundException {
-    log.debug("Petición a get Evaluacion : {}  - start", id);
-    final Evaluacion Evaluacion = evaluacionRepository.findById(id)
-        .orElseThrow(() -> new EvaluacionNotFoundException(id));
-    log.debug("Petición a get Evaluacion : {}  - end", id);
-    return Evaluacion;
-
+    log.debug("Petición a get Evaluacion : {}  - start -end", id);
+    return evaluacionRepository.findById(id).orElseThrow(() -> new EvaluacionNotFoundException(id));
   }
 
   /**
@@ -458,14 +451,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     // Si la Evaluación es de Revisión Mínima
     // se actualiza la fechaDictamen con la fecha actual
-    if (evaluacionActualizar.getEsRevMinima()) {
+    if (evaluacionActualizar.getEsRevMinima().booleanValue()) {
       evaluacionActualizar.setFechaDictamen(Instant.now());
     }
 
     // Si el dictamen es "Favorable" y la Evaluación es de Revisión Mínima
     if (evaluacionActualizar.getDictamen() != null
-        && evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")
-        && evaluacionActualizar.getEsRevMinima()) {
+        && evaluacionActualizar.getDictamen().getNombre().equalsIgnoreCase("FAVORABLE")
+        && evaluacionActualizar.getEsRevMinima().booleanValue()) {
 
       // Si el estado de la memoria es "En evaluación" o
       // "En secretaria revisión mínima"
@@ -489,7 +482,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     // la Evaluación es de Revisión Mínima, se cambia el estado de la
     // memoria a "Favorable Pendiente de Modificaciones Mínimas".
     if (evaluacionActualizar.getDictamen() != null && evaluacionActualizar.getDictamen().getId().equals(2L)
-        && evaluacionActualizar.getEsRevMinima()) {
+        && evaluacionActualizar.getEsRevMinima().booleanValue()) {
       memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
     }
 
@@ -519,15 +512,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     DocumentoOutput documento = null;
     switch (evaluacion.getTipoEvaluacion().getId().intValue()) {
     case Constantes.TIPO_EVALUACION_MEMORIA_INT:
-      if (evaluacion.getDictamen() != null
-          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
-              || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
-              || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
-        documento = this.generarDocumento(evaluacion, false);
-      } else if (evaluacion.getDictamen() != null
-          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
-        documento = this.generarDocumento(evaluacion, true);
-      }
+      documento = getDocumentoByTipoEvaluacionMemoria(evaluacion, documento);
       break;
     case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
       if (evaluacion.getDictamen() != null
@@ -542,6 +527,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
       break;
     case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
+    default:
       if (evaluacion.getDictamen() != null
           && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
         documento = this.generarDocumento(evaluacion, true);
@@ -551,13 +537,26 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     return documento;
   }
 
-  @Transactional
+  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, DocumentoOutput documento) {
+    if (evaluacion.getDictamen() != null
+        && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
+            || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
+            || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
+      documento = this.generarDocumento(evaluacion, false);
+    } else if (evaluacion.getDictamen() != null
+        && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
+      documento = this.generarDocumento(evaluacion, true);
+    }
+
+    return documento;
+  }
+
   private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable) {
     log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- start");
 
     Resource informePdf = null;
     String tituloInforme = "";
-    if (favorable) {
+    if (favorable.booleanValue()) {
       // Se obtiene el informe favorable en formato pdf creado mediante el
       // servicio de reporting
       if (evaluacion.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
@@ -566,13 +565,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       } else {
         switch (evaluacion.getMemoria().getTipoMemoria().getId().intValue()) {
         case Constantes.TIPO_MEMORIA_NUEVA:
-          informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId(), Instant.now());
+          informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId());
           break;
         case Constantes.TIPO_MEMORIA_MODIFICACION:
-          informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId(), Instant.now());
+          informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId());
           break;
         case Constantes.TIPO_MEMORIA_RATIFICACION:
-          informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId(), Instant.now());
+          informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId());
           break;
         default:
           break;
@@ -639,13 +638,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Memoria memoria = null;
 
     Optional<Evaluacion> evaluacion = evaluacionRepository.findById(idEvaluacion);
-    Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getId() == idConvocatoriaReunion,
-        "La evaluación no pertenece a esta convocatoria de reunión");
     if (evaluacion.isPresent()) {
+      Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getId().compareTo(idConvocatoriaReunion) == 0,
+          "La evaluación no pertenece a esta convocatoria de reunión");
       Optional<Memoria> memoriaOpt = memoriaRepository.findById(evaluacion.get().getMemoria().getId());
       if (!memoriaOpt.isPresent()) {
         throw new MemoriaNotFoundException(evaluacion.get().getMemoria().getId());
-
       } else {
         memoria = memoriaOpt.get();
       }

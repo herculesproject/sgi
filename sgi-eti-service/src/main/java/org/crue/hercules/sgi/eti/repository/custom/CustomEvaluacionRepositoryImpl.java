@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.CargoComite_;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario_;
@@ -62,7 +63,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepository {
 
-  private static final String COMITE_CEEA = "CEEA";
+  private static final Long ID_COMITE_CEEA = 2L;
+
   /**
    * The entity manager.
    */
@@ -930,47 +932,44 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       CriteriaQuery<String> cq = cb.createQuery(String.class);
 
       // Define FROM clause
-      Root<Evaluacion> root = cq.from(Evaluacion.class);
-      Join<Evaluacion, ConvocatoriaReunion> joinConvocatoriaReunion = root.join(Evaluacion_.convocatoriaReunion);
-      Join<ConvocatoriaReunion, Comite> joinComite = joinConvocatoriaReunion.join(ConvocatoriaReunion_.comite);
+      Root<Evaluador> root = cq.from(Evaluador.class);
+      Join<Evaluador, Comite> joinEComite = root.join(Evaluador_.comite);
+      Join<Evaluador, CargoComite> joinCargoComite = root.join(Evaluador_.cargoComite);
 
-      Root<Evaluador> rootEvaluador = cq.from(Evaluador.class);
+      Root<Evaluacion> rootEvaluacion = cq.from(Evaluacion.class);
+      Join<Evaluacion, ConvocatoriaReunion> joinConvocatoriaReunion = rootEvaluacion
+          .join(Evaluacion_.convocatoriaReunion);
+      Join<ConvocatoriaReunion, Comite> joinCRComite = joinConvocatoriaReunion.join(ConvocatoriaReunion_.comite);
 
-      cq.multiselect(rootEvaluador.get(Evaluador_.personaRef));
+      cq.multiselect(root.get(Evaluador_.personaRef));
 
-      List<Predicate> predicates = new ArrayList<Predicate>();
-      Predicate pJoinComite = cb.equal(rootEvaluador.get(Evaluador_.comite).get(Comite_.id),
-          joinConvocatoriaReunion.get(ConvocatoriaReunion_.comite).get(Comite_.id));
-      Predicate pJoinCargoComite = cb.equal(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.id),
-          joinConvocatoriaReunion.get(ConvocatoriaReunion_.comite).get(Comite_.id));
-      Predicate pIdEvaluacionEq = cb.equal(root.get(Evaluacion_.id), idEvaluacion);
-      Predicate pComiteCEEA = cb.equal(cb.upper(joinComite.get(Comite_.comite)), COMITE_CEEA);
-      Predicate pComiteActivo = cb.equal(joinComite.get(Comite_.activo), true);
-      Predicate pCargoComitePresidente = cb.equal(
-          cb.lower(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.nombre)),
+      List<Predicate> predicates = new ArrayList<>();
+      Predicate pJoinComite = cb.equal(joinEComite.get(Comite_.id), joinCRComite.get(Comite_.id));
+      Predicate pIdEvaluacionEq = cb.equal(rootEvaluacion.get(Evaluacion_.id), idEvaluacion);
+      Predicate pComiteCEEA = cb.equal(joinEComite.get(Comite_.id), ID_COMITE_CEEA);
+      Predicate pComiteActivo = cb.equal(joinEComite.get(Comite_.activo), true);
+      Predicate pEvaluadorActivo = cb.equal(root.get(Evaluador_.activo), true);
+      Predicate pCargoComiteActivo = cb.equal(joinCargoComite.get(CargoComite_.activo), true);
+      Predicate pCargoComitePresidente = cb.equal(cb.lower(joinCargoComite.get(CargoComite_.nombre)),
           EvaluadorSpecifications.PRESIDENTE);
-      Predicate pCargoComiteActivo = cb.equal(rootEvaluador.get(Evaluador_.cargoComite).get(CargoComite_.activo), true);
-      Predicate pEvaluadorActivo = cb.equal(rootEvaluador.get(Evaluador_.activo), true);
 
-      Predicate pFechaBajaIsNull = cb.isNull(rootEvaluador.get(Evaluador_.fechaBaja));
-      Predicate pFechaAltaGTFechaEvaluacion = cb.greaterThanOrEqualTo(rootEvaluador.get(Evaluador_.fechaAlta),
+      Predicate pFechaBajaIsNull = cb.isNull(root.get(Evaluador_.fechaBaja));
+      Predicate pFechaAltaLTEFechaEvaluacion = cb.lessThanOrEqualTo(root.get(Evaluador_.fechaAlta),
           joinConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion));
-      Predicate pAndFechaBajaIsNullAndFechaAlta = cb.and(pFechaBajaIsNull, pFechaAltaGTFechaEvaluacion);
+      Predicate pAndFechaBajaIsNullAndFechaAlta = cb.and(pFechaBajaIsNull, pFechaAltaLTEFechaEvaluacion);
 
-      Predicate pFechaBajaLTFechaEvaluacion = cb.lessThanOrEqualTo(rootEvaluador.get(Evaluador_.fechaBaja),
+      Predicate pFechaBajaGTEFechaEvaluacion = cb.greaterThanOrEqualTo(root.get(Evaluador_.fechaBaja),
           joinConvocatoriaReunion.get(ConvocatoriaReunion_.fechaEvaluacion));
-      Predicate pAndFechaBajaFechaAlta = cb.and(pFechaBajaLTFechaEvaluacion, pFechaAltaGTFechaEvaluacion);
+      Predicate pAndFechaBajaFechaAlta = cb.and(pFechaBajaGTEFechaEvaluacion, pFechaAltaLTEFechaEvaluacion);
 
       Predicate pOrFechaBajaFechaAlta = cb.or(pAndFechaBajaIsNullAndFechaAlta, pAndFechaBajaFechaAlta);
 
       predicates.add(pJoinComite);
-      predicates.add(pJoinCargoComite);
       predicates.add(pIdEvaluacionEq);
       predicates.add(pComiteCEEA);
       predicates.add(pComiteActivo);
       predicates.add(pCargoComitePresidente);
       predicates.add(pCargoComiteActivo);
-      predicates.add(pEvaluadorActivo);
       predicates.add(pEvaluadorActivo);
       predicates.add(pOrFechaBajaFechaAlta);
 
