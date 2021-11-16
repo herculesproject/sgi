@@ -3,6 +3,10 @@ package org.crue.hercules.sgi.framework.validation;
 import javax.persistence.PersistenceUnitUtil;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * Checks that the database has an entity with the identification of the
+ * provided entity.
+ */
 public class ExistsByIdValidator extends AbstractEntityValidator<ExistsById, Object> {
   private PersistenceUnitUtil persistenceUnitUtil;
   private Object id;

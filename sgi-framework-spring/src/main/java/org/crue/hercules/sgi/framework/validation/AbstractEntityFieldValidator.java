@@ -54,9 +54,10 @@ public abstract class AbstractEntityFieldValidator<A extends Annotation, T> exte
   }
 
   /**
-   * The current entity field value to be validated.
+   * Gets the field value to be validated from the provided entity.
    * 
-   * @return the entity field value
+   * @param value entity
+   * @return the field value
    */
   protected Object getFieldValue(Object value) {
     BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(value);
