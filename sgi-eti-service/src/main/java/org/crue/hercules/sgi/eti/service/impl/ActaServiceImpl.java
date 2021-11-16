@@ -348,9 +348,10 @@ public class ActaServiceImpl implements ActaService {
       }
       case Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL: {
         // Dictamen "Solicitud aclaraciones seguimiento final"
-        // Se actualiza memoria a estado 21: "En aclaracion seguimiento final"
+        // Se actualiza memoria a estado 18: "En secretaría seguimiento final
+        // aclaraciones"
         memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
-            Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
+            Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES);
         break;
       }
       }
