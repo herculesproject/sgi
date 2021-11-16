@@ -9,21 +9,23 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.Activable;
+
 /**
- * Checks that the provided entity (found by id) has a field with the specified
- * value.
+ * Checks that the database has an {@link Activable} entity with the identifier
+ * of the provided entity and the field "activo" TRUE.
  */
 @Documented
 @Constraint(validatedBy = {})
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FieldValueEquals {
+public @interface ActivableIsActivo {
   /**
    * Key for creating error messages
    * 
    * @return the key for creating error messages
    */
-  String message() default "{org.crue.hercules.sgi.framework.validation.FieldValueEquals.message}";
+  String message() default "{org.crue.hercules.sgi.framework.validation.ActivableIsActivo.message}";
 
   /**
    * Validation groups for our constraints
@@ -41,23 +43,9 @@ public @interface FieldValueEquals {
   Class<? extends Payload>[] payload() default {};
 
   /**
-   * The {@link javax.persistence.Entity} class to check.
+   * The {@link Activable} class to check.
    * 
-   * @return the {@link javax.persistence.Entity} class
+   * @return the {@link Activable} class
    */
-  Class<?> entityClass();
-
-  /**
-   * The entity field name to be checked.
-   * 
-   * @return the field name
-   */
-  String fieldName();
-
-  /**
-   * The value to check against.
-   * 
-   * @return the value to check
-   */
-  String value();
+  Class<? extends Activable> entityClass();
 }

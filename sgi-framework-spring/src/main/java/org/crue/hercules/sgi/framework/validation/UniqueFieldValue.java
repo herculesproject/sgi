@@ -52,5 +52,5 @@ public @interface UniqueFieldValue {
    * 
    * @return the field name
    */
-  String field();
+  String fieldName();
 }

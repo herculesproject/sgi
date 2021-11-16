@@ -16,48 +16,37 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Base class for database driven field level entity validatos.
+ * Base class for database driven entity validators.
  */
-public abstract class AbstractFieldValidator<A extends Annotation, T> implements ConstraintValidator<A, T> {
+public abstract class AbstractEntityValidator<A extends Annotation, T> implements ConstraintValidator<A, T> {
   /** Message parameter holding the entity name */
   public static final String MESSAGE_PARAMETER_ENTITY = "entity";
-  /** Message parameter holding the entity field name */
-  public static final String MESSAGE_PARAMETER_FIELD = "field";
   /** Message parameter holding the entity field value */
   public static final String MESSAGE_PARAMETER_VALUE = "value";
 
   /** Annotation method to get validated entity class */
   public static final String METHOD_ENTITY_CLASS = "entityClass";
-  /** Annotation method to get validated entity field name */
-  public static final String METHOD_FIELD = "field";
 
   /** Annotation method signature to get validated entity class */
   private static final String METHOD_ENTITY_CLASS_SIGNATURE = "Class<?> " + METHOD_ENTITY_CLASS + "()";
-  /** Annotation method signature to get validated entity field name */
-  private static final String METHOD_FIELD_SIGNATURE = "String " + METHOD_FIELD + "()";
 
   /** The JPA {@link EntityManager} */
   protected EntityManager entityManager;
-  /** The entity {@link Class} that this validatos can validate */
-  protected Class<?> entityClass;
-  /** The entity field name that this validatos can validate */
-  protected String field;
+  /** The entity {@link Class} that this validator can validate */
+  private Class<?> entityClass;
 
   @Override
   public void initialize(A constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
     Class<? extends Annotation> currentClass = constraintAnnotation.getClass();
-    Method entytClassMethod;
-    Method fieldMethod;
+    Method entityClassMethod;
     try {
-      entytClassMethod = currentClass.getMethod(METHOD_ENTITY_CLASS);
-      entityClass = (Class<?>) entytClassMethod.invoke(constraintAnnotation);
-      fieldMethod = currentClass.getMethod(METHOD_FIELD);
-      field = (String) fieldMethod.invoke(constraintAnnotation);
+      entityClassMethod = currentClass.getMethod(METHOD_ENTITY_CLASS);
+      entityClass = (Class<?>) entityClassMethod.invoke(constraintAnnotation);
     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
         | InvocationTargetException e) {
-      throw new IllegalArgumentException(String.format("Annotation %s does not have methods %s and %s",
-          currentClass.getSimpleName(), METHOD_ENTITY_CLASS_SIGNATURE, METHOD_FIELD_SIGNATURE), e);
+      throw new IllegalArgumentException(String.format("Annotation %s does not have method %s",
+          currentClass.getSimpleName(), METHOD_ENTITY_CLASS_SIGNATURE), e);
     }
 
     // type check
@@ -66,6 +55,15 @@ public abstract class AbstractFieldValidator<A extends Annotation, T> implements
     }
     ApplicationContext applicationContext = ApplicationContextSupport.getApplicationContext();
     entityManager = (EntityManager) applicationContext.getBean(EntityManager.class);
+  }
+
+  /**
+   * The entity {@link Class} that this validator can validate.
+   * 
+   * @return the entity {@link Class}
+   */
+  protected Class<?> getEntityClass() {
+    return entityClass;
   }
 
   @Override
@@ -82,7 +80,7 @@ public abstract class AbstractFieldValidator<A extends Annotation, T> implements
         return true;
       }
     }
-    addEntityMessageParameter(value, context);
+    addEntityMessageParameters(value, context);
     return false;
   }
 
@@ -98,8 +96,8 @@ public abstract class AbstractFieldValidator<A extends Annotation, T> implements
   protected abstract boolean validate(Object value, ConstraintValidatorContext context);
 
   /**
-   * Add "entity", "field" and "value" message parameters so they can be used in
-   * the error message.
+   * Add "entity" and "value" message parameters so they can be used in the error
+   * message.
    * <p>
    * The value can be customized with the
    * {@link #getValue(Object, ConstraintValidatorContext)} method.
@@ -107,12 +105,11 @@ public abstract class AbstractFieldValidator<A extends Annotation, T> implements
    * @param value   object to validate
    * @param context context in which the constraint is evaluated
    */
-  protected void addEntityMessageParameter(Object value, ConstraintValidatorContext context) {
+  protected void addEntityMessageParameters(Object value, ConstraintValidatorContext context) {
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-    // Add "entity", "field" and "value" message parameters so they can be used in
+    // Add "entity", and "value" message parameters so they can be used in
     // the error message
     hibernateContext.addMessageParameter(MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(entityClass));
-    hibernateContext.addMessageParameter(MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(field));
     hibernateContext.addMessageParameter(MESSAGE_PARAMETER_VALUE, getValue(value, context));
   }
 
@@ -125,7 +122,7 @@ public abstract class AbstractFieldValidator<A extends Annotation, T> implements
    *
    * @return the specific value (generally the field value) been validated
    */
-  protected String getValue(Object value, ConstraintValidatorContext context) {
-    return value.toString();
+  protected Object getValue(Object value, ConstraintValidatorContext context) {
+    return value;
   };
 }

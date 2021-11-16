@@ -10,20 +10,20 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * Checks that the provided entity (found by id) has a field with the specified
- * value.
+ * Checks that the database has an entity with the identification of the
+ * provided entity.
  */
 @Documented
 @Constraint(validatedBy = {})
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FieldValueEquals {
+public @interface ExistsById {
   /**
    * Key for creating error messages
    * 
    * @return the key for creating error messages
    */
-  String message() default "{org.crue.hercules.sgi.framework.validation.FieldValueEquals.message}";
+  String message() default "{org.crue.hercules.sgi.framework.validation.ExistsById.message}";
 
   /**
    * Validation groups for our constraints
@@ -46,18 +46,4 @@ public @interface FieldValueEquals {
    * @return the {@link javax.persistence.Entity} class
    */
   Class<?> entityClass();
-
-  /**
-   * The entity field name to be checked.
-   * 
-   * @return the field name
-   */
-  String fieldName();
-
-  /**
-   * The value to check against.
-   * 
-   * @return the value to check
-   */
-  String value();
 }
