@@ -11,7 +11,7 @@ export class TramoRepartoTramoPipe implements PipeTransform {
   }
 
   transform(value: ITramoReparto): string {
-    switch (value.tipo) {
+    switch (value?.tipo) {
       case Tipo.INICIAL:
         return `<= ${this.formatNumber(value.hasta)}`;
       case Tipo.INTERMEDIO:

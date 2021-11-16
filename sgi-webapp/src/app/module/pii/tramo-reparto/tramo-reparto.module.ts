@@ -24,6 +24,9 @@ import { TramoRepartoTramoPipe } from './pipes/tramo-reparto-tramo.pipe';
     FormsModule,
     SgiAuthModule,
   ],
+  exports: [
+    TramoRepartoTramoPipe
+  ],
   providers: [DecimalPipe]
 })
 export class TramoRepartoModule { }

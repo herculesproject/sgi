@@ -16,6 +16,7 @@ class RepartoRequestConverter extends SgiBaseConverter<IRepartoRequest, IReparto
       invencion: { id: value.invencionId } as IInvencion,
       fecha: LuxonUtils.fromBackend(value.fecha),
       importeUniversidad: value.importeUniversidad,
+      importeEquipoInventor: value.importeEquipoInventor,
       estado: value.estado
     };
   }
@@ -29,6 +30,7 @@ class RepartoRequestConverter extends SgiBaseConverter<IRepartoRequest, IReparto
       invencionId: value.invencion?.id,
       fecha: LuxonUtils.toBackend(value.fecha),
       importeUniversidad: value.importeUniversidad,
+      importeEquipoInventor: value.importeEquipoInventor,
       estado: value.estado
     };
   }

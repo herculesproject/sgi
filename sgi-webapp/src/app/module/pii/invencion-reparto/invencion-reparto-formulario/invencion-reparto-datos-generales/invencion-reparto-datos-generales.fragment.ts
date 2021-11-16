@@ -10,12 +10,11 @@ import { Fragment } from '@core/services/action-service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { RepartoService } from '@core/services/pii/reparto/reparto.service';
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
-import { GastosInvencionService, TipoOperacion } from '@core/services/sgepii/gastos-invencion.service';
-import { IngresosInvencionService } from '@core/services/sgepii/ingresos-invencion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
+import { InvencionRepartoDataResolverService } from '../../services/invencion-reparto-data-resolver.service';
 
 export class InvencionRepartoDatosGeneralesFragment extends Fragment {
   private repartoGastos$ = new BehaviorSubject<StatusWrapper<IRepartoGasto>[]>([]);
@@ -31,11 +30,10 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
   constructor(
     private readonly invencion: IInvencion,
     private readonly reparto: IReparto,
+    private readonly dataResolverService: InvencionRepartoDataResolverService,
     private readonly repartoService: RepartoService,
     private readonly invencionService: InvencionService,
-    private readonly gastosInvencionService: GastosInvencionService,
     private readonly solicitudProteccionService: SolicitudProteccionService,
-    private readonly ingresosInvencionService: IngresosInvencionService,
   ) {
     super(reparto?.id);
   }
@@ -47,7 +45,7 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
 
   private initializeGastos(): void {
     const invencionIdQueryParam = this.invencion.id.toString();
-    this.subscriptions.push(this.getGastosColumns(invencionIdQueryParam).pipe(
+    this.subscriptions.push(this.dataResolverService.getGastosColumns(invencionIdQueryParam).pipe(
       tap((columns) => {
         this.gastosColumns = columns;
         this.displayGastosColumns = [
@@ -62,7 +60,7 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
       switchMap(() =>
         forkJoin(
           {
-            gastosInvencion: this.gastosInvencionService.getGastos(invencionIdQueryParam, TipoOperacion.REPARTO),
+            gastosInvencion: this.dataResolverService.getGastosReparto(invencionIdQueryParam),
             invencionGastos: this.getInvencionGasto$(this.invencion.id)
           })
       ),
@@ -80,21 +78,6 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
       (invencionGastos) =>
         this.repartoGastos$.next(invencionGastos)
     ));
-  }
-
-  private getGastosColumns(invencionId: string): Observable<IColumnDefinition[]> {
-    return this.gastosInvencionService.getColumnas(invencionId)
-      .pipe(
-        map(columnas => columnas.map(columna => {
-          return {
-            id: columna.id,
-            name: columna.nombre,
-            compute: columna.acumulable,
-            importeReparto: columna.importeReparto
-          };
-        })
-        )
-      );
   }
 
   private getInvencionGasto$(invencionId: number): Observable<IInvencionGasto[]> {
@@ -149,7 +132,7 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
 
   private initializeIngresos(): void {
     this.subscriptions.push(
-      this.getIngresosColumns()
+      this.dataResolverService.getIngresosColumns()
         .pipe(
           tap((columns) => {
             this.ingresosColumns = columns;
@@ -163,7 +146,7 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
           }),
           switchMap(() =>
             forkJoin({
-              ingresosInvencion: this.ingresosInvencionService.getIngresosByInvencionId(this.invencion.id),
+              ingresosInvencion: this.dataResolverService.getIngresosByInvencionId(this.invencion.id),
               invencionIngresos: this.invencionService.findIngresos(this.invencion.id)
             })
           ),
@@ -196,21 +179,6 @@ export class InvencionRepartoDatosGeneralesFragment extends Fragment {
           (repartoIngresos) =>
             this.repartoIngresos$.next(repartoIngresos)
         ));
-  }
-
-  private getIngresosColumns(): Observable<IColumnDefinition[]> {
-    return this.ingresosInvencionService.getColumnas().pipe(
-      map((columnas) =>
-        columnas.map((columna) => {
-          return {
-            id: columna.id,
-            name: columna.nombre,
-            compute: columna.acumulable,
-            importeReparto: columna.importeReparto
-          };
-        })
-      )
-    );
   }
 
   private createRepartoIngreso(gastoInvencion: IDatoEconomico, relatedInvencionIngreso: IInvencionIngreso): IRepartoIngreso {

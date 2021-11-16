@@ -5,5 +5,6 @@ export interface IRepartoResponse {
   invencionId: number;
   fecha: string;
   importeUniversidad: number;
+  importeEquipoInventor: number;
   estado: Estado;
 }

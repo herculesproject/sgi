@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -13,6 +13,9 @@ import { InvencionRepartoRoutingModule } from './invencion-reparto-routing.modul
 import { RepartoGastoModalComponent } from './modals/reparto-gasto-modal/reparto-gasto-modal.component';
 import { RepartoIngresoModalComponent } from './modals/reparto-ingreso-modal/reparto-ingreso-modal.component';
 import { InvencionRepartoEquipoInventorComponent } from './invencion-reparto-formulario/invencion-reparto-equipo-inventor/invencion-reparto-equipo-inventor.component';
+import { RepartoEquipoModalComponent } from './modals/reparto-equipo-modal/reparto-equipo-modal.component';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { InvencionRepartoDataResolverService } from './services/invencion-reparto-data-resolver.service';
 
 
 @NgModule({
@@ -22,7 +25,8 @@ import { InvencionRepartoEquipoInventorComponent } from './invencion-reparto-for
     InvencionRepartoDatosGeneralesComponent,
     RepartoGastoModalComponent,
     RepartoIngresoModalComponent,
-    InvencionRepartoEquipoInventorComponent
+    InvencionRepartoEquipoInventorComponent,
+    RepartoEquipoModalComponent
   ],
   imports: [
     CommonModule,
@@ -33,9 +37,12 @@ import { InvencionRepartoEquipoInventorComponent } from './invencion-reparto-for
     TranslateModule,
     FormsModule,
     SgiAuthModule,
+    CspSharedModule
   ],
   providers: [
-    InvencionRepartoDataResolver
+    InvencionRepartoDataResolverService,
+    InvencionRepartoDataResolver,
+    DecimalPipe
   ]
 })
 export class InvencionRepartoModule { }

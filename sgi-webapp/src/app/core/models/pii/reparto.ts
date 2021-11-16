@@ -9,6 +9,7 @@ export interface IReparto {
   invencion: IInvencion;
   fecha: DateTime;
   importeUniversidad: number;
+  importeEquipoInventor: number;
   estado: Estado;
 }
 

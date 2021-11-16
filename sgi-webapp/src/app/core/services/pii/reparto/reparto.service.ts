@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IReparto, IRepartoCreate } from '@core/models/pii/reparto';
+import { IRepartoEquipoInventor } from '@core/models/pii/reparto-equipo-inventor';
 import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
 import { environment } from '@env';
@@ -11,6 +12,8 @@ import {
 import { Observable } from 'rxjs';
 import { IRepartoCreateRequest } from './reparto-create-request';
 import { REPARTO_CREATE_REQUEST_CONVERTER } from './reparto-create-request.converter';
+import { IRepartoEquipoInventorResponse } from './reparto-equipo-inventor/reparto-equipo-inventor-response';
+import { REPARTO_EQUIPO_INVENTOR_RESPONSE_CONVERTER } from './reparto-equipo-inventor/reparto-equipo-inventor-response.converter';
 import { IRepartoGastoResponse } from './reparto-gasto/reparto-gasto-response';
 import { REPARTO_GASTO_RESPONSE_CONVERTER } from './reparto-gasto/reparto-gasto-response.converter';
 import { IRepartoIngresoResponse } from './reparto-ingreso/reparto-ingreso-response';
@@ -59,7 +62,7 @@ export class RepartoService extends _RepartoServiceMixinBase {
   /**
    * Recupera los RepartoGasto asociados a la entidad Reparto con el id indicado.
    *
-   * @param id Id de la entidad Repartos
+   * @param id de la entidad Reparto
    * @param options opciones de búsqueda
    */
   findGastos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IRepartoGasto>> {
@@ -72,7 +75,7 @@ export class RepartoService extends _RepartoServiceMixinBase {
   /**
    * Recupera los IRepartoIngreso asociados a la entidad Reparto con el id indicado.
    *
-   * @param id Id de la entidad Repartos
+   * @param id de la entidad Reparto
    * @param options opciones de búsqueda
    */
   findIngresos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IRepartoIngreso>> {
@@ -80,5 +83,18 @@ export class RepartoService extends _RepartoServiceMixinBase {
       `${this.endpointUrl}/${id}/ingresos`,
       options,
       REPARTO_INGRESO_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Recupera los RepartoEquipoInventor asociados a la entidad Reparto con el id indicado.
+   *
+   * @param id de la entidad Reparto
+   * @param options opciones de búsqueda
+   */
+  findEquipoInventor(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IRepartoEquipoInventor>> {
+    return this.find<IRepartoEquipoInventorResponse, IRepartoEquipoInventor>(
+      `${this.endpointUrl}/${id}/equiposinventor`,
+      options,
+      REPARTO_EQUIPO_INVENTOR_RESPONSE_CONVERTER);
   }
 }

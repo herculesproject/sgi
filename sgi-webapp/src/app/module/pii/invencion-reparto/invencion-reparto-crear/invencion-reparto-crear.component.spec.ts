@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
@@ -15,6 +16,7 @@ import { INVENCION_DATA_KEY } from '../../invencion/invencion.resolver';
 import { INVENCION_REPARTO_DATA_KEY } from '../invencion-reparto-data.resolver';
 import { InvencionRepartoDatosGeneralesComponent } from '../invencion-reparto-formulario/invencion-reparto-datos-generales/invencion-reparto-datos-generales.component';
 import { IInvencionRepartoData, InvencionRepartoActionService } from '../invencion-reparto.action.service';
+import { InvencionRepartoDataResolverService } from '../services/invencion-reparto-data-resolver.service';
 
 import { InvencionRepartoCrearComponent } from './invencion-reparto-crear.component';
 
@@ -61,6 +63,8 @@ describe('InvencionRepartoCrearComponent', () => {
       providers: [
         InvencionRepartoActionService,
         { provide: ActivatedRoute, useValue: routeMock },
+        InvencionRepartoDataResolverService,
+        DecimalPipe
       ],
     })
       .compileComponents();

@@ -232,6 +232,20 @@ export class InvencionService extends _InvencionServiceMixinBase {
   }
 
   /**
+   * Obtiene la lista de inventores asociados a una invencion
+   * @param id id de la invencion
+   * @param options opciones de busqueda
+   * @returns lista de inventores asociados a una invencion
+   */
+  findInventoresWithOptions(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IInvencionInventor>> {
+    return this.find<IInvencionInventorResponse, IInvencionInventor>(
+      `${this.endpointUrl}/${id}/invencion-inventores`,
+      options,
+      INVENCION_INVENTOR_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
    * Persiste los cambios efectuados a las entidades {@link IInvencionInventor}.
    *
    * @param id Id de la {@link IInvencion}

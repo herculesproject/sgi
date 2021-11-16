@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
@@ -15,6 +16,7 @@ import { IInvencionData } from '../../../invencion/invencion.action.service';
 import { INVENCION_DATA_KEY } from '../../../invencion/invencion.resolver';
 import { INVENCION_REPARTO_DATA_KEY } from '../../invencion-reparto-data.resolver';
 import { IInvencionRepartoData, InvencionRepartoActionService } from '../../invencion-reparto.action.service';
+import { InvencionRepartoDataResolverService } from '../../services/invencion-reparto-data-resolver.service';
 
 import { InvencionRepartoEquipoInventorComponent } from './invencion-reparto-equipo-inventor.component';
 
@@ -60,6 +62,8 @@ describe('InvencionRepartoEquipoInventorComponent', () => {
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: ActivatedRoute, useValue: routeMock },
         InvencionRepartoActionService,
+        InvencionRepartoDataResolverService,
+        DecimalPipe,
         SgiAuthService
       ],
     })

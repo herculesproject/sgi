@@ -68,5 +68,4 @@ export class RepartoIngresoModalComponent extends BaseModalComponent<IRepartoIng
       this.msgParamImporteARepartirEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
     );
   }
-
 }
