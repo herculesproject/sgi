@@ -54,14 +54,14 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     this.proyecto = value;
     const result = {
       anualidades: value.anualidades,
-      importePresupuesto: value.importePresupuesto || 0,
-      importePresupuestoCostesIndirectos: value.importePresupuestoCostesIndirectos || 0,
-      importePresupuestoSocios: value.importePresupuestoSocios || 0,
-      importeConcedidoCostesIndirectos: value.importeConcedidoCostesIndirectos || 0,
-      importeConcedido: value.importeConcedido || 0,
-      importeConcedidoSocios: value.importeConcedidoSocios || 0,
-      totalImportePresupuesto: value.totalImportePresupuesto || 0,
-      totalImporteConcedido: value.totalImporteConcedido || 0
+      importePresupuesto: value.importePresupuesto,
+      importePresupuestoCostesIndirectos: value.importePresupuestoCostesIndirectos,
+      importePresupuestoSocios: value.importePresupuestoSocios,
+      importeConcedidoCostesIndirectos: value.importeConcedidoCostesIndirectos,
+      importeConcedido: value.importeConcedido,
+      importeConcedidoSocios: value.importeConcedidoSocios,
+      totalImportePresupuesto: value.totalImportePresupuesto,
+      totalImporteConcedido: value.totalImporteConcedido
     };
 
     const form = this.getFormGroup();
