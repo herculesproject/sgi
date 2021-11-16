@@ -73,17 +73,7 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
     </mat-paginator>
 
-    <mat-error *ngIf="isInvecionInvtoresEmpty; else errorParticipacion">
-      {{'pii.invencion-inventor.error.vacio' | translate}}
-    </mat-error>
-    <ng-template #errorParticipacion>
-      <mat-error *ngIf="!(formPart.participacionCompleta$ | async)">
-        {{msgErrorParticipacion}}
-      </mat-error>
-    </ng-template>
-
   </div>
-
 
   <ng-container *sgiHasAuthority="'PII-INV-C'">
     <div class="separation-button">
@@ -93,5 +83,14 @@
       </button>
     </div>
   </ng-container>
+
+  <mat-error *ngIf="isInvecionInvtoresEmpty; else errorParticipacion">
+    {{'pii.invencion-inventor.error.vacio' | translate}}
+  </mat-error>
+  <ng-template #errorParticipacion>
+    <mat-error *ngIf="!(formPart.participacionCompleta$ | async)">
+      {{msgErrorParticipacion}}
+    </mat-error>
+  </ng-template>
 
 </sgi-fragment>
