@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.crue.hercules.sgi.pii.validation.EntidadActiva;
+import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -51,7 +51,7 @@ public class Procedimiento extends BaseEntity {
   /** Tipo de Procedimiento. */
   @ManyToOne
   @JoinColumn(name = "tipo_procedimiento_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROCEDIMIENTO_TIPOPROCEDIMIENTO"))
-  @EntidadActiva(entityClass = TipoProcedimiento.class, groups = { OnCrear.class, OnActualizar.class })
+  @ActivableIsActivo(entityClass = TipoProcedimiento.class, groups = { OnCrear.class, OnActualizar.class })
   private TipoProcedimiento tipoProcedimiento;
 
   /** SolicitudProteccion Id */

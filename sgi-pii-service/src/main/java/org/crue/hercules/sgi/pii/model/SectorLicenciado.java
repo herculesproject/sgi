@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.crue.hercules.sgi.pii.validation.EntidadActiva;
+import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -56,7 +56,8 @@ public class SectorLicenciado extends BaseEntity {
   /** Sector Aplicación */
   @ManyToOne
   @JoinColumn(name = "sector_aplicacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SECTORLICENCIADO_SECTORAPLICACION"))
-  @EntidadActiva(entityClass = SectorAplicacion.class, groups = { OnCrear.class, OnActualizarSectorAplicacion.class })
+  @ActivableIsActivo(entityClass = SectorAplicacion.class, groups = { OnCrear.class,
+      OnActualizarSectorAplicacion.class })
   private SectorAplicacion sectorAplicacion;
 
   /** Referencia a un Contrato */
