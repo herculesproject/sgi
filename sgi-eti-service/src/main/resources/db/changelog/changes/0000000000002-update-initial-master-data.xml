@@ -151,4 +151,16 @@
     </update>
   </changeSet>
 
+  <!-- CHECKLIST -->
+  <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000002-formly-required-fields">
+    <update tableName="formly">
+      <column name="esquema" valueClobFile="clob/0000000000002/checklist-required-fields.json" />
+      <where>:name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="nombre" value="CHECKLIST" />
+        <param name="version" valueNumeric="1" />
+      </whereParams>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
