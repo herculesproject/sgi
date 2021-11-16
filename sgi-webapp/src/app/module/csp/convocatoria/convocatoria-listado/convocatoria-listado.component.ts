@@ -136,6 +136,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       areaTematica: new FormControl(null),
     });
 
+
+
     this.filter = this.createFilter();
   }
 
@@ -293,6 +295,15 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             return this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaListado.convocatoria.id).pipe(
               map(entidadFinanciadora => {
                 if (entidadFinanciadora.items.length > 0) {
+                  const fuenteFinanciacionFilter = this.formGroup.get('fuenteFinanciacion').value;
+                  const entidadFinanciadoraFilter = this.formGroup.get('entidadFinanciadora').value;
+                  if (entidadFinanciadoraFilter) {
+                    entidadFinanciadora.items = entidadFinanciadora.items
+                      .filter(entidadF => entidadF.empresa.id === entidadFinanciadoraFilter.id);
+                  } else if (fuenteFinanciacionFilter) {
+                    entidadFinanciadora.items = entidadFinanciadora.items
+                      .filter(entidadF => entidadF.fuenteFinanciacion.id === fuenteFinanciacionFilter.id);
+                  }
                   convocatoriaListado.entidadFinanciadora = entidadFinanciadora.items[0];
                 }
                 return convocatoriaListado;
@@ -321,7 +332,13 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               switchMap(() => {
                 return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(convocatoriaListado.convocatoria.id).pipe(
                   map(convocatoriaEntidadConvocante => {
+                    const entidadConvocanteFilter = this.formGroup.get('entidadConvocante').value;
+
                     if (convocatoriaEntidadConvocante.items.length > 0) {
+                      if (entidadConvocanteFilter) {
+                        convocatoriaEntidadConvocante.items = convocatoriaEntidadConvocante.items
+                          .filter(entidadC => entidadC.entidad.id === entidadConvocanteFilter.id);
+                      }
                       convocatoriaListado.entidadConvocante = convocatoriaEntidadConvocante.items[0];
                     }
                     return convocatoriaListado;
