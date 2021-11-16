@@ -13,6 +13,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { HistoricoIpModalComponent } from '../../modals/historico-ip-modal/historico-ip-modal.component';
@@ -194,6 +195,9 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
         this.formPart.addProyectoFacturacion(returnedModalData.proyectoFacturacion);
       } else {
         const itemToUpdate = new StatusWrapper<IProyectoFacturacionData>(returnedModalData.proyectoFacturacion);
+        if (itemToUpdate.value.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA) {
+          itemToUpdate.value.fechaConformidad = DateTime.now();
+        }
         this.formPart.updateProyectoFacturacion(itemToUpdate, row);
       }
     });
