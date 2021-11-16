@@ -49,6 +49,9 @@ spring:
     liquibase-schema: cnf
     # Set Liquibase contexts same as spring profiles
     contexts: dev
+    # Set Liquibase changeLog parameters
+    parameters:
+      schemaPrefix: "cnf."
   jpa:
     hibernate:
       # Make sure Hibernate will not use the entities to create, update or validate the database
@@ -131,6 +134,9 @@ spring:
     default-schema: cnf
     # Schema to use for Liquibase objects
     liquibase-schema: cnf
+    # Set Liquibase changeLog parameters
+    parameters:
+      schemaPrefix: "tp."
   jpa:
     hibernate:
       # Hibernate will use the entities to validate the database

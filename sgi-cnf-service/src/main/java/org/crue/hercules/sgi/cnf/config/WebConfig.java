@@ -17,6 +17,11 @@ import org.springframework.context.annotation.Configuration;
 @EnableApplicationContextSupport
 public class WebConfig extends SgiWebConfig {
 
+  /**
+   * Returns a new {@link ModelMapper}.
+   * 
+   * @return the {@link ModelMapper}
+   */
   @Bean
   public ModelMapper modelMapper() {
     return new ModelMapper();

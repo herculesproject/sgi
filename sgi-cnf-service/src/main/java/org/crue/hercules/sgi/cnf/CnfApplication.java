@@ -9,11 +9,19 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * SGI Configuration Service.
+ */
 @SpringBootApplication
 @ConfigurationPropertiesScan("org.crue.hercules.sgi.cnf.config")
 @Slf4j
 public class CnfApplication {
 
+  /**
+   * Main method to start de service.
+   * 
+   * @param args command line arguments
+   */
   public static void main(String[] args) {
     log.debug("main(String[] args) - start");
     log.info("Setting UTC as the default JVM TimeZone");
