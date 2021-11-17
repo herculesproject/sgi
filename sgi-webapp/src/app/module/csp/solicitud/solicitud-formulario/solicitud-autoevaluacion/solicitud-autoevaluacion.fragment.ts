@@ -8,7 +8,7 @@ import { ChecklistService } from '@core/services/eti/checklist/checklist.service
 import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 export interface FormlyData {
@@ -75,6 +75,12 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
       filter(value => value !== undefined),
       take(1),
       switchMap(value => {
+        this.data.options.formState = {
+          solicitud: this.solicitud
+        };
+        return of(value);
+      }),
+      switchMap(value => {
         this.setKey(value.checklistRef);
         if (value.checklistRef) {
           this.refreshInitialState(true);
@@ -82,9 +88,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
             tap((checklist: IChecklist) => {
               this.data.formly = checklist.formly;
               this.data.model = checklist.respuesta;
-              this.data.options.formState = {
-                solicitud: this.solicitud
-              };
+
               if (value.readonly) {
                 this.switchToReadonly(this.data.formly.esquema);
               }
