@@ -17,8 +17,9 @@ class ProblemExceptionTest {
   @Test
   void testProblemException_allFieldConstructor() {
     Problem problem = Problem.builder().detail("My message").build();
+    RuntimeException cause = new RuntimeException();
     Assertions.assertThatThrownBy(() -> {
-      throw new ProblemException(problem, new RuntimeException());
+      throw new ProblemException(problem, cause);
     }).isInstanceOf(ProblemException.class).hasCauseInstanceOf(RuntimeException.class).hasMessage("My message")
         .extracting("problem").isEqualToComparingFieldByField(problem);
   }

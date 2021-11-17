@@ -30,10 +30,8 @@ public class ActivableIsActivoValidator extends AbstractEntityValidator<Activabl
     id = persistenceUnitUtil.getIdentifier(value);
     if (id != null) {
       Activable entity = (Activable) entityManager.find(entityClass, id);
-      if (entity != null) {
-        if (Boolean.TRUE.equals(entity.getActivo())) {
-          return true;
-        }
+      if (entity != null && Boolean.TRUE.equals(entity.getActivo())) {
+        return true;
       }
     } else {
       throw new IllegalArgumentException(

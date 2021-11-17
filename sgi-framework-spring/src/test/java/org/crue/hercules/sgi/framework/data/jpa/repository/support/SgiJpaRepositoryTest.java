@@ -75,8 +75,7 @@ class SgiJpaRepositoryTest {
     // then: the repository can be used to fetch the TestEntity
     Assertions.assertThat(sgiJpaRepository).isNotNull();
     TestEntity entity = sgiJpaRepository.getOne(1l);
-    Assertions.assertThat(entity).isNotNull();
-    Assertions.assertThat(entity).isEqualTo(TestEntity.builder().id(1l).name("Name 1").build());
+    Assertions.assertThat(entity).isNotNull().isEqualTo(TestEntity.builder().id(1l).name("Name 1").build());
   }
 
   @Test
@@ -95,8 +94,7 @@ class SgiJpaRepositoryTest {
     sgiJpaRepository.refresh(entity);
 
     // then: the refresed entity contains the modded data
-    Assertions.assertThat(entity).isNotNull();
-    Assertions.assertThat(entity).isEqualTo(TestEntity.builder().id(1l).name("Modded name").build());
+    Assertions.assertThat(entity).isNotNull().isEqualTo(TestEntity.builder().id(1l).name("Modded name").build());
   }
 
   @Test

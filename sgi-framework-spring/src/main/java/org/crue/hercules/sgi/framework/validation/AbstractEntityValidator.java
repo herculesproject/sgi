@@ -54,7 +54,7 @@ public abstract class AbstractEntityValidator<A extends Annotation, T> implement
       throw new IllegalArgumentException("The provided entityClass is not annotated with @Entity");
     }
     ApplicationContext applicationContext = ApplicationContextSupport.getApplicationContext();
-    entityManager = (EntityManager) applicationContext.getBean(EntityManager.class);
+    entityManager = applicationContext.getBean(EntityManager.class);
   }
 
   /**
@@ -124,5 +124,5 @@ public abstract class AbstractEntityValidator<A extends Annotation, T> implement
    */
   protected Object getValue(Object value, ConstraintValidatorContext context) {
     return value;
-  };
+  }
 }

@@ -38,14 +38,13 @@ class SgiAuditorAwareTest {
   @WithMockUser(username = "user")
   void currentAuditor_withUser_returnsUser() {
     Optional<String> currentAuditor = auditorAware.getCurrentAuditor();
-    Assertions.assertThat(currentAuditor.isPresent()).isTrue();
-    Assertions.assertThat(currentAuditor.get()).isEqualTo("user");
+    Assertions.assertThat(currentAuditor).isPresent().contains("user");
   }
 
   @Test
-  void currentAuditor_withoutUser_returnEmpty() {
+  void currentAuditor_withoutUser_returnsEmpty() {
     Optional<String> currentAuditor = auditorAware.getCurrentAuditor();
-    Assertions.assertThat(currentAuditor.isPresent()).isFalse();
+    Assertions.assertThat(currentAuditor).isEmpty();
   }
 
   // Using full qualified class names (otherwise compilation fail with maven).

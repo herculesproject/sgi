@@ -61,8 +61,7 @@ public abstract class AbstractEntityFieldValidator<A extends Annotation, T> exte
    */
   protected Object getFieldValue(Object value) {
     BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(value);
-    Object fieldValue = wrapper.getPropertyValue(getFieldName());
-    return fieldValue;
+    return wrapper.getPropertyValue(getFieldName());
   }
 
   /**
@@ -86,6 +85,7 @@ public abstract class AbstractEntityFieldValidator<A extends Annotation, T> exte
    * @param value   object to validate
    * @param context context in which the constraint is evaluated
    */
+  @Override
   protected void addEntityMessageParameters(Object value, ConstraintValidatorContext context) {
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     // Add "entity", "field" and "value" message parameters so they can be used in
