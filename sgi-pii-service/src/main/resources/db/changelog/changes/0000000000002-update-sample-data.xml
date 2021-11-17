@@ -45,10 +45,8 @@
       <column name="estado" value="PENDIENTE_EJECUTAR" />
     </insert>
   </changeSet>
-  <changeSet context="dev" author=" master" id=" 0000000000002-delete-tramo_reparto">
-    <delete tableName="tramo_reparto"></delete>
-  </changeSet>
-  <changeSet context="dev" author=" master" id=" 0000000000002-tramo_reparto">
+
+  <changeSet context="dev" author=" master" id=" 0000000000002-tramo_reparto-sample">
     <insert tableName="tramo_reparto">
       <column name="id" valueSequenceNext="tramo_reparto_seq" />
       <column name="desde" valueNumeric="1" />
@@ -81,7 +79,8 @@
       <column name="tipo" value="FINAL" />
     </insert>
   </changeSet>
-  <changeSet context="dev" author=" master" id=" 0000000000002-set-null-invencion-proyecto_ref">
+
+  <changeSet context="dev" author=" master" id=" 0000000000002-invencion">
     <update tableName="invencion">
       <column name="proyecto_ref" />
       <where>:name=:value</where>
@@ -103,8 +102,18 @@
         <param name="id" valueNumeric="113" />
       </whereParams>
     </update>
+    <insert tableName="invencion">
+      <column name="id" valueNumeric="107" />
+      <column name="titulo" value="Dispositivo de aseguramiento de tuerca y tornillo" />
+      <column name="fecha_comunicacion" valueDate="2021-06-22T15:00:00" />
+      <column name="descripcion" value="La presente invención se refiere a un dispositivo de aseguramiento de tuerca y tornillo en donde la tuerca tiene un orificio roscado, el tornillo tiene una porción de su longitud con un roscado exterior para conexión por rosca con la tuerca." />
+      <column name="comentarios" value="La tecnología se encuentra protegida mediante patente nacional española" />
+      <column name="tipo_proteccion_id" valueNumeric="5" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
   </changeSet>
-  <changeSet context="dev" author="master" id="0000000000002-correct-data-tipo_caducidad">
+
+  <changeSet context="dev" author="master" id="0000000000002-tipo_caducidad">
     <update tableName="tipo_caducidad">
       <column name="descripcion" value="Abandono" />
       <where>:name=:value</where>
@@ -124,27 +133,23 @@
       <column name="descripcion" value="Denegación" />
     </insert>
   </changeSet>
-  <changeSet context="dev" author="master" id="0000000000002-invencion_107_gastos_reparto">
-    <insert tableName="invencion">
-      <column name="id" valueNumeric="107" />
-      <column name="titulo" value="Dispositivo de aseguramiento de tuerca y tornillo" />
-      <column name="fecha_comunicacion" valueDate="2021-06-22T15:00:00" />
-      <column name="descripcion" value="La presente invención se refiere a un dispositivo de aseguramiento de tuerca y tornillo en donde la tuerca tiene un orificio roscado, el tornillo tiene una porción de su longitud con un roscado exterior para conexión por rosca con la tuerca." />
-      <column name="comentarios" value="La tecnología se encuentra protegida mediante patente nacional española" />
-      <column name="tipo_proteccion_id" valueNumeric="5" />
-      <column name="activo" valueBoolean="true" />
-    </insert>
+
+  <changeSet context="dev" author="master" id="0000000000002-invencion_sector_aplicacion">
     <insert tableName="invencion_sector_aplicacion">
       <column name="id" valueSequenceNext="invencion_sector_aplicacion_seq" />
       <column name="sector_aplicacion_id" valueNumeric="1" />
       <column name="invencion_id" valueNumeric="107" />
     </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000002-invencion_area_conocimiento">
     <insert tableName="invencion_area_conocimiento">
       <column name="id" valueSequenceNext="invencion_area_conocimiento_seq" />
       <column name="area_conocimiento_ref" value="560" />
       <column name="invencion_id" valueNumeric="107" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000002-tipo_procedimiento">
     <insert tableName="tipo_procedimiento">
       <column name="id" valueSequenceNext="tipo_procedimiento_seq" />
@@ -162,6 +167,7 @@
       <column name="descripcion" value="Descripción Tipo Procedimiento 3" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000002-procedimiento">
     <insert tableName="procedimiento">
       <column name="id" valueSequenceNext="procedimiento_seq" />
@@ -194,6 +200,7 @@
       <column name="comentarios" value="Comentario Procedimiento 3" />
     </insert>
   </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000002-procedimiento_documento">
     <insert tableName="procedimiento_documento">
       <column name="id" valueSequenceNext="procedimiento_documento_seq" />
