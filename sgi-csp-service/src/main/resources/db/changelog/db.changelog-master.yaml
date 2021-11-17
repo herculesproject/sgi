@@ -20,3 +20,5 @@ databaseChangeLog:
       file: classpath*:db/changelog/changes/0000000000002-update-initial-database.xml
   - include:
       file: classpath*:db/changelog/changes/0000000000002-update-sample-data.xml
+  - include:
+      file: classpath*:db/changelog/changes/0000000000002-update-data.xml
