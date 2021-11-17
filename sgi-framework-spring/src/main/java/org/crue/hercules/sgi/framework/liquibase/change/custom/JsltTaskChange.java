@@ -73,12 +73,16 @@ public class JsltTaskChange implements CustomTaskChange {
 
     try {
       StringBuilder select = new StringBuilder();
+      StringBuilder columnNames = new StringBuilder();
+      columnNames.append(idColumnName);
+      columnNames.append(",");
+      columnNames.append(jsonColumnName);
+
       select.append("SELECT ");
-      select.append(idColumnName);
-      select.append(", ");
-      select.append(jsonColumnName);
+      select.append(database.escapeColumnNameList(columnNames.toString()));
       select.append(" FROM ");
-      select.append(tableName);
+      select.append(
+          database.escapeTableName(database.getDefaultCatalogName(), database.getDefaultSchemaName(), tableName));
       if (where != null) {
         select.append(" WHERE ");
         select.append(where);
@@ -102,10 +106,17 @@ public class JsltTaskChange implements CustomTaskChange {
         if (!jsonNode.equals(newJsonNode)) {
           String newJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(newJsonNode);
           StringBuilder update = new StringBuilder();
-          update.append("UPDATE " + tableName);
+          update.append("UPDATE ");
+          update.append(
+              database.escapeTableName(database.getDefaultCatalogName(), database.getDefaultSchemaName(), tableName));
           update.append(" SET ");
-          update.append(jsonColumnName + " = ? ");
-          update.append("WHERE " + idColumnName + " = ?");
+          update.append(database.escapeColumnName(database.getDefaultCatalogName(), database.getDefaultSchemaName(),
+              tableName, jsonColumnName));
+          update.append(" = ? ");
+          update.append("WHERE ");
+          update.append(database.escapeColumnName(database.getDefaultCatalogName(), database.getDefaultSchemaName(),
+              tableName, idColumnName));
+          update.append(" = ?");
           log.info(update.toString());
           updateStatement = dbConnection.prepareStatement(update.toString());
           log.debug("Applaying column parameter = 1 for column {}", jsonColumnName);
