@@ -148,7 +148,7 @@ spring:
     # Make sure database schema is created (schema.sql is executed)
     initialization-mode: always
     # We use PostgreSQL database
-    url: "jdbc:postgresql://postgres:5432/eti
+    url: "jdbc:postgresql://postgres:5432/eti?currentSchema=eti"
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin
