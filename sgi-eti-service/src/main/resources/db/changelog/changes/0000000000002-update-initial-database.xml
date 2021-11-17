@@ -19,7 +19,7 @@
 
   <!-- COMITE -->
   <!-- Nueva columna genero en comite -->
-  <changeSet author="master" id="0000000000002-comite-add-column">
+  <changeSet author="master" id="0000000000002-6">
     <addColumn tableName="comite">
       <column name="genero" type="VARCHAR(1)" />
     </addColumn>
