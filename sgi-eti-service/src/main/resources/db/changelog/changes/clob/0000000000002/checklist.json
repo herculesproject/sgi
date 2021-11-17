@@ -7,7 +7,6 @@
     "key": "pregunta_1",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -19,6 +18,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   },
   {
@@ -29,7 +31,6 @@
     "key": "pregunta_2",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -41,6 +42,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   },
   {
@@ -51,7 +55,6 @@
     "key": "pregunta_3",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -63,6 +66,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   },
   {
@@ -73,7 +79,6 @@
     "key": "pregunta_4",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -85,6 +90,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   },
   {
@@ -95,7 +103,6 @@
     "key": "pregunta_5",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -107,6 +114,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   },
   {
@@ -117,7 +127,6 @@
     "key": "pregunta_6",
     "templateOptions": {
       "label": "Respuesta",
-      "required": true,
       "color": "primary",
       "options": [
         {
@@ -129,6 +138,9 @@
           "value": true
         }
       ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
     }
   }
 ]
