@@ -138,6 +138,19 @@
         </mat-form-field>
       </div>
 
+      <!-- Fecha de Concesión -->
+      <div fxFlex="24%" fxFlex.lt-sm="100%" *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INDUSTRIAL &&
+                    formPart.solicitudProteccion?.id">
+        <mat-form-field fxFill>
+          <mat-label>
+            {{'pii.solicitud-proteccion.fecha-concesion-form' | translate}}
+          </mat-label>
+          <input matInput formControlName="fechaConcesion" [matDatepicker]="fechaConcesion">
+          <mat-datepicker-toggle matSuffix [for]="fechaConcesion"></mat-datepicker-toggle>
+          <mat-datepicker #fechaConcesion></mat-datepicker>
+        </mat-form-field>
+      </div>
+
       <!-- Número de Concesión -->
       <div fxFlex="24%" fxFlex.lt-sm="100%"
         *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INDUSTRIAL && formPart.solicitudProteccion?.id">
@@ -151,18 +164,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Fecha de Concesión -->
-      <div fxFlex="24%" fxFlex.lt-sm="100%" *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INDUSTRIAL &&
-        formPart.solicitudProteccion?.id">
-        <mat-form-field fxFill>
-          <mat-label>
-            {{'pii.solicitud-proteccion.fecha-concesion-form' | translate}}
-          </mat-label>
-          <input matInput formControlName="fechaConcesion" [matDatepicker]="fechaConcesion">
-          <mat-datepicker-toggle matSuffix [for]="fechaConcesion"></mat-datepicker-toggle>
-          <mat-datepicker #fechaConcesion></mat-datepicker>
-        </mat-form-field>
-      </div>
       <!-- Número de Registro -->
       <div fxFlex="24%" fxFlex.lt-sm="100%" *ngIf="formPart.tipoPropiedad === formPart.TipoPropiedad.INTELECTUAL">
         <mat-form-field fxFill>
@@ -202,7 +203,6 @@
           </mat-error>
         </mat-form-field>
       </div>
-
     </div>
 
     <!-- Agente de la propiedad -->

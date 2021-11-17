@@ -257,7 +257,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
           this.findPaisesValidadosBySolicitudProteccion(this.solicitudProteccion).subscribe();
           this.checkState();
         }),
-        map(() => void 0),
+        map(() => this.solicitudProteccion.id),
       );
 
   }

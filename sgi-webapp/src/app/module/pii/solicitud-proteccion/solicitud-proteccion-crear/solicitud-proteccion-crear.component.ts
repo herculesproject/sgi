@@ -104,6 +104,8 @@ export class SolicitudProteccionCrearComponent extends ActionComponent implement
       },
       () => {
         this.snackBarService.showSuccess(this.textCrearSuccess);
+        const solicitudId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+        this.router.navigate([`../${solicitudId}`], { relativeTo: this.activatedRoute });
       }
     );
   }
