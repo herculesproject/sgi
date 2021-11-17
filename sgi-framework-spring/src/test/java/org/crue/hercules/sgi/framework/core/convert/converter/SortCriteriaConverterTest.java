@@ -18,9 +18,6 @@ class SortCriteriaConverterTest {
   @InjectMocks
   SortCriteriaConverter sortCriteriaConverter;
 
-  /**
-   * @throws Exception
-   */
   @ParameterizedTest
   @CsvSource(value = {// @formatter:off
       "column; asc; column,asc",
@@ -29,9 +26,8 @@ class SortCriteriaConverterTest {
       "column.column; desc; column.column,desc" 
       // @formatter:on
   }, delimiter = ';')
-  void convertAscendingSortExpression_returnsAscendingSortCriteria(String column, String operator, String query)
-      throws Exception {
-    // given: an equals expression
+  void convert_sortExpression_returnsSortCriteria(String column, String operator, String query) throws Exception {
+    // given: a parametrized expression
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -42,9 +38,6 @@ class SortCriteriaConverterTest {
     Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
   }
 
-  /**
-   * @throws Exception
-   */
   @Test
   void convert_multipleExpresion_returnsSortCriteriaList() throws Exception {
     // given: an equals expression
@@ -68,9 +61,6 @@ class SortCriteriaConverterTest {
     }
   }
 
-  /**
-   * @throws Exception
-   */
   @Test
   void convert_multipleExpresionNestedProperty_returnsSortCriteriaList() throws Exception {
     // given: an equals expression
@@ -94,13 +84,22 @@ class SortCriteriaConverterTest {
     }
   }
 
-  /**
-   * @throws Exception
-   */
   @Test
   void convert_noExpresion_returnsEmptyList() throws Exception {
     // given: a no sort expression
     String query = "value not";
+
+    // when: convert method invoqued with given expression
+    List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
+
+    // then: no QueryCriteria is returned
+    Assertions.assertThat(sortCriterias.size()).isZero();
+  }
+
+  @Test
+  void convert_null_returnsEmptyList() throws Exception {
+    // given: a no sort expression
+    String query = null;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
