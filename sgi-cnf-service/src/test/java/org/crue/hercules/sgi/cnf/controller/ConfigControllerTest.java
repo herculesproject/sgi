@@ -44,8 +44,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 // Since WebMvcTest is only sliced controller layer for the testing, it would
 // not take the ConfigConverter.
 @Import(ConfigConverter.class)
-public class ConfigControllerTest extends BaseControllerTest {
-  public static final String TIMEZONE_LONDON = "Europe/London";
+class ConfigControllerTest extends BaseControllerTest {
+  static final String TIMEZONE_LONDON = "Europe/London";
 
   @MockBean
   private ConfigService service;
@@ -55,7 +55,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void getTimeZone_ReturnsTimeZone() throws Exception {
+  void getTimeZone_ReturnsTimeZone() throws Exception {
     // given: configured time
     // "Europe/London"
     // when: get time zone
@@ -70,7 +70,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void getConfig_ReturnsConfig() throws Exception {
+  void getConfig_ReturnsConfig() throws Exception {
     // given: existing Config
     Config config = Config.builder().name("test-config").description("Test config description")
         .value("Test config value").build();
@@ -89,7 +89,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void getConfig_NotExisting_ReturnsNotFound() throws Exception {
+  void getConfig_NotExisting_ReturnsNotFound() throws Exception {
     // given: non existing Config
     String name = "test-config";
     BDDMockito.given(service.get(ArgumentMatchers.anyString())).will(invocation -> {
@@ -106,7 +106,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void creteConfig_ReturnsConfig() throws Exception {
+  void creteConfig_ReturnsConfig() throws Exception {
     // given: new Config
     Config config = Config.builder().name("test-config").description("Test config description")
         .value("Test config value").build();
@@ -128,7 +128,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void creteConfig_WithExistingName_ReturnsBadRequest() throws Exception {
+  void creteConfig_WithExistingName_ReturnsBadRequest() throws Exception {
     // given: existing Config name
     Config config = Config.builder().name("test-config").description("Test config description")
         .value("Test config value").build();
@@ -166,7 +166,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void updateConfig_ReturnsConfig() throws Exception {
+  void updateConfig_ReturnsConfig() throws Exception {
     Config config = Config.builder().name("test-config").description("Test config description")
         .value("Test config value").build();
     BDDMockito.given(service.update(ArgumentMatchers.<Config>any())).will(invocation -> {
@@ -185,7 +185,7 @@ public class ConfigControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void deleteConfig_ReturnsNothing() throws Exception {
+  void deleteConfig_ReturnsNothing() throws Exception {
     String name = "test-config";
 
     mockMvc
