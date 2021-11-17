@@ -225,7 +225,7 @@ public class SolicitudController {
    * @return {@link Solicitud} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-B', 'CSP-SOL-BR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-B', 'CSP-SOL-BR-INV', 'CSP-SOL-INV-ER')")
   Solicitud desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
 
