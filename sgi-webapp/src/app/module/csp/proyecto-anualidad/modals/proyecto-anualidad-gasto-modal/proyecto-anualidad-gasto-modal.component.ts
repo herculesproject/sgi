@@ -207,7 +207,10 @@ export class ProyectoAnualidadGastoModalComponent extends
     this.translate.get(
       PROYECTO_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamProyectoSgeEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.MALE,
+      ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
   }
 
   protected getDatosForm(): ProyectoAnualidadGastoModalData {
