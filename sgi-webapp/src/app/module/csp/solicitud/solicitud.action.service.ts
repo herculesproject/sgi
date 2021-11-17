@@ -251,7 +251,7 @@ export class SolicitudActionService extends ActionService {
       solicitudService, clasificacionService, this.readonly);
     this.responsableEconomico = new SolicitudProyectoResponsableEconomicoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoResponsableEconomicoService, personaService, this.readonly);
-    this.autoevaluacion = new SolicitudAutoevaluacionFragment(formlyService, checklistService, authService);
+    this.autoevaluacion = new SolicitudAutoevaluacionFragment(this.data?.solicitud, formlyService, checklistService, authService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
