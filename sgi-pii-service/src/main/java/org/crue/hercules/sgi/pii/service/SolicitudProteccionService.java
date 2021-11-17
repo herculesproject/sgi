@@ -103,7 +103,9 @@ public class SolicitudProteccionService {
           Assert.notNull(solicitudProteccion.getEstado(),
               // Defer message resolution untill is needed
               () -> ProblemMessage.builder().key(Assert.class, "notNull")
-                  .parameter("field", ApplicationContextSupport.getMessage("estado"))
+                  .parameter("field",
+                      ApplicationContextSupport
+                          .getMessage("org.crue.hercules.sgi.pii.model.SolicitudProteccion.estado"))
                   .parameter("entity", ApplicationContextSupport.getMessage(SolicitudProteccion.class)).build());
           if (solicitudProteccion.getEstado().equals(EstadoSolicitudProteccion.CADUCADA)) {
             Assert.notNull(solicitudProteccion.getFechaCaducidad(),
@@ -116,7 +118,7 @@ public class SolicitudProteccionService {
                 () -> ProblemMessage.builder().key(Assert.class, "notNull")
                     .parameter("field", ApplicationContextSupport.getMessage("tipoCaducidad"))
                     .parameter("entity", ApplicationContextSupport.getMessage(SolicitudProteccion.class)).build());
-            if (viaProteccion.getPaisEspecifico()) {
+            if (Boolean.TRUE.equals(viaProteccion.getPaisEspecifico())) {
               Assert.notNull(solicitudProteccion.getPaisProteccionRef(),
                   // Defer message resolution untill is needed
                   () -> ProblemMessage.builder().key(Assert.class, "notNull")
@@ -146,10 +148,13 @@ public class SolicitudProteccionService {
             solicitudProteccionExistente
                 .setFechaFinPriorPresFasNacRec(solicitudProteccion.getFechaFinPriorPresFasNacRec());
           }
-          solicitudProteccionExistente.setEstado(solicitudProteccion.getEstado());
-          if (solicitudProteccionExistente.getEstado().equals(EstadoSolicitudProteccion.CADUCADA)) {
-            solicitudProteccionExistente.setFechaCaducidad(solicitudProteccion.getFechaCaducidad());
-            solicitudProteccionExistente.setTipoCaducidad(solicitudProteccion.getTipoCaducidad());
+
+          if (solicitudProteccion.getViaProteccion().getTipoPropiedad().equals(TipoPropiedad.INDUSTRIAL)) {
+            solicitudProteccionExistente.setEstado(solicitudProteccion.getEstado());
+            if (solicitudProteccionExistente.getEstado().equals(EstadoSolicitudProteccion.CADUCADA)) {
+              solicitudProteccionExistente.setFechaCaducidad(solicitudProteccion.getFechaCaducidad());
+              solicitudProteccionExistente.setTipoCaducidad(solicitudProteccion.getTipoCaducidad());
+            }
           }
           solicitudProteccionExistente.setAgentePropiedadRef(solicitudProteccion.getAgentePropiedadRef());
           solicitudProteccionExistente.setPaisProteccionRef(solicitudProteccion.getPaisProteccionRef());
@@ -180,7 +185,7 @@ public class SolicitudProteccionService {
             .parameter("entity", ApplicationContextSupport.getMessage(SolicitudProteccion.class)).build());
 
     return this.solicitudProteccionRepository.findById(id).map(solicitudProteccion -> {
-      if (solicitudProteccion.getActivo()) {
+      if (Boolean.TRUE.equals(solicitudProteccion.getActivo())) {
         return solicitudProteccion;
       }
       // Invocar validaciones asociadas a OnActivar
@@ -211,7 +216,7 @@ public class SolicitudProteccionService {
 
     return this.solicitudProteccionRepository.findById(id).map(solicitudProteccion -> {
 
-      if (!solicitudProteccion.getActivo()) {
+      if (Boolean.FALSE.equals(solicitudProteccion.getActivo())) {
         return solicitudProteccion;
       }
       solicitudProteccion.setActivo(false);
