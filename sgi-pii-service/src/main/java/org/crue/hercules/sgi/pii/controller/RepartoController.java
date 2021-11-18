@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.pii.model.Reparto;
 import org.crue.hercules.sgi.pii.model.RepartoEquipoInventor;
 import org.crue.hercules.sgi.pii.model.RepartoGasto;
 import org.crue.hercules.sgi.pii.model.RepartoIngreso;
+import org.crue.hercules.sgi.pii.model.Reparto.Estado;
 import org.crue.hercules.sgi.pii.service.RepartoEquipoInventorService;
 import org.crue.hercules.sgi.pii.service.RepartoGastoService;
 import org.crue.hercules.sgi.pii.service.RepartoIngresoService;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -200,6 +202,24 @@ public class RepartoController {
 
     log.debug("findEquipoInventor(Long repartoId, String query, Pageable paging) - end");
     return new ResponseEntity<>(convertEquiposInventor(page), HttpStatus.OK);
+  }
+
+  /**
+   * Realiza el cambio de estado de la entidad {@link Reparto} al {@link Estado}
+   * EJECUTADO.
+   * 
+   * @param id Identificador de la entidad {@link Reparto}.
+   * @return {@link Reparto} actualizado.
+   */
+  @PatchMapping("/{id}/ejecutar")
+  @PreAuthorize("hasAuthority('PII-INV-E')")
+  public RepartoOutput ejecutar(@PathVariable Long id) {
+    log.debug("ejecutar(Long id) - start");
+
+    Reparto returnValue = service.ejecutar(id);
+
+    log.debug("ejecutar(Long id) - end");
+    return convert(returnValue);
   }
 
   // Converters

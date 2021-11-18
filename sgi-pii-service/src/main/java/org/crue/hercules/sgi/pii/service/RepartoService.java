@@ -3,6 +3,11 @@ package org.crue.hercules.sgi.pii.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -17,7 +22,10 @@ import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.InvencionGasto;
 import org.crue.hercules.sgi.pii.model.InvencionIngreso;
 import org.crue.hercules.sgi.pii.model.Reparto;
+import org.crue.hercules.sgi.pii.model.RepartoEquipoInventor;
 import org.crue.hercules.sgi.pii.model.Reparto.Estado;
+import org.crue.hercules.sgi.pii.model.Reparto.OnActualizar;
+import org.crue.hercules.sgi.pii.model.Reparto.OnEjecutar;
 import org.crue.hercules.sgi.pii.model.RepartoGasto;
 import org.crue.hercules.sgi.pii.model.RepartoIngreso;
 import org.crue.hercules.sgi.pii.repository.RepartoRepository;
@@ -40,20 +48,25 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class RepartoService {
 
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+  private final Validator validator;
   private final RepartoRepository repository;
   private final RepartoGastoService repartoGastoService;
   private final RepartoIngresoService repartoIngresoService;
+  private final RepartoEquipoInventorService repartoEquipoInventorService;
   private final InvencionGastoService invencionGastoService;
   private final InvencionIngresoService invencionIngresoService;
 
   public RepartoService(ModelMapper modelMapper, RepartoRepository repartoRepository,
       RepartoGastoService repartoGastoService, RepartoIngresoService repartoIngresoService,
-      InvencionGastoService invencionGastoService, InvencionIngresoService invencionIngresoService) {
+      RepartoEquipoInventorService repartoEquipoInventorService, InvencionGastoService invencionGastoService,
+      InvencionIngresoService invencionIngresoService, Validator validator) {
     this.modelMapper = modelMapper;
+    this.validator = validator;
     this.repository = repartoRepository;
     this.repartoGastoService = repartoGastoService;
     this.repartoIngresoService = repartoIngresoService;
+    this.repartoEquipoInventorService = repartoEquipoInventorService;
     this.invencionGastoService = invencionGastoService;
     this.invencionIngresoService = invencionIngresoService;
   }
@@ -172,6 +185,12 @@ public class RepartoService {
 
     return repository.findById(reparto.getId()).map(repartoExistente -> {
 
+      // Invocar validaciones asociadas a OnActualizar
+      Set<ConstraintViolation<Reparto>> result = validator.validate(repartoExistente, OnActualizar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
+
       // Establecemos los campos actualizables con los recibidos
       repartoExistente.setImporteUniversidad(reparto.getImporteUniversidad());
       repartoExistente.setImporteEquipoInventor(reparto.getImporteEquipoInventor());
@@ -181,5 +200,38 @@ public class RepartoService {
       log.debug("update(Reparto reparto) - end");
       return returnValue;
     }).orElseThrow(() -> new RepartoNotFoundException(reparto.getId()));
+  }
+
+  @Transactional
+  public Reparto ejecutar(Long id) {
+    log.debug("ejecutar(Long id) - start");
+
+    return repository.findById(id).map(repartoExistente -> {
+      if (repartoExistente.getEstado() == Estado.EJECUTADO) {
+        log.debug("ejecutar(Long id) - end");
+        return repartoExistente;
+      }
+
+      // Invocar validaciones asociadas a OnEjecutar
+      Set<ConstraintViolation<Reparto>> result = validator.validate(repartoExistente, OnEjecutar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
+
+      // Actualizamos el estado del Reparto a EJECUTADO
+      repartoExistente.setEstado(Estado.EJECUTADO);
+      if (repartoExistente.getImporteEquipoInventor() == null) {
+        final List<RepartoEquipoInventor> equipoInventor = repartoEquipoInventorService
+            .findByRepartoId(repartoExistente.getId(), null);
+        final BigDecimal importeEquipoInventor = equipoInventor.stream().map(
+            inventor -> inventor.getImporteNomina().add(inventor.getImporteProyecto()).add(inventor.getImporteOtros()))
+            .reduce(new BigDecimal("0.00"), BigDecimal::add);
+        repartoExistente.setImporteEquipoInventor(importeEquipoInventor);
+      }
+
+      Reparto returnValue = repository.save(repartoExistente);
+      log.debug("ejecutar(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new RepartoNotFoundException(id));
   }
 }

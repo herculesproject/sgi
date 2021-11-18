@@ -1,12 +1,23 @@
 package org.crue.hercules.sgi.pii.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.exceptions.RepartoGastoNotFoundException;
+import org.crue.hercules.sgi.pii.exceptions.RepartoNotFoundException;
 import org.crue.hercules.sgi.pii.model.Reparto;
+import org.crue.hercules.sgi.pii.model.Reparto.OnActualizar;
 import org.crue.hercules.sgi.pii.model.RepartoGasto;
 import org.crue.hercules.sgi.pii.repository.RepartoGastoRepository;
+import org.crue.hercules.sgi.pii.repository.RepartoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.RepartoGastoSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +35,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class RepartoGastoService {
-
   private final RepartoGastoRepository repository;
+  private final RepartoRepository repartoRepository;
+  private final Validator validator;
 
-  public RepartoGastoService(RepartoGastoRepository repartoIngresoRepository) {
+  public RepartoGastoService(RepartoGastoRepository repartoIngresoRepository, RepartoRepository repartoRepository,
+      Validator validator) {
     this.repository = repartoIngresoRepository;
+    this.repartoRepository = repartoRepository;
+    this.validator = validator;
   }
 
   /**
@@ -49,6 +64,25 @@ public class RepartoGastoService {
 
     Page<RepartoGasto> returnValue = repository.findAll(specs, pageable);
     log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link RepartoGasto} para una entidad {@link Reparto} filtradas.
+   * 
+   * @param repartoId el id de la entidad {@link Reparto}.
+   * @param query     la información del filtro.
+   * @return la lista de {@link RepartoGasto} de la entidad {@link Reparto}
+   *         filtradas.
+   */
+  public List<RepartoGasto> findByRepartoId(Long repartoId, String query) {
+    log.debug("findByRepartoId(Long repartoId, String query) - start");
+
+    Specification<RepartoGasto> specs = RepartoGastoSpecifications.byRepartoId(repartoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    List<RepartoGasto> returnValue = repository.findAll(specs);
+    log.debug("findByRepartoId(Long repartoId, String query) - end");
     return returnValue;
   }
 
@@ -81,6 +115,7 @@ public class RepartoGastoService {
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoGasto.class)).build());
 
+    checkRepartoIsUpdatable(repartoGasto.getRepartoId());
     RepartoGasto returnValue = repository.save(repartoGasto);
 
     log.debug("create(RepartoGasto repartoGasto) - end");
@@ -103,6 +138,7 @@ public class RepartoGastoService {
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoGasto.class)).build());
 
+    checkRepartoIsUpdatable(repartoGasto.getRepartoId());
     return repository.findById(repartoGasto.getId()).map(repartoGastoExistente -> {
 
       // Establecemos los campos actualizables con los recibidos
@@ -128,10 +164,26 @@ public class RepartoGastoService {
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoGasto.class)).build());
-    if (!repository.existsById(id)) {
+
+    Optional<RepartoGasto> optionalRepartoGasto = repository.findById(id);
+
+    if (!optionalRepartoGasto.isPresent()) {
       throw new RepartoGastoNotFoundException(id);
     }
+
+    checkRepartoIsUpdatable(optionalRepartoGasto.get().getRepartoId());
     repository.deleteById(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  private void checkRepartoIsUpdatable(Long repartoId) {
+    final Reparto repartoToValidate = repartoRepository.findById(repartoId)
+        .orElseThrow(() -> new RepartoNotFoundException(repartoId));
+
+    // Invocar validaciones asociadas a Reparto OnActualizar
+    Set<ConstraintViolation<Reparto>> result = validator.validate(repartoToValidate, OnActualizar.class);
+    if (!result.isEmpty()) {
+      throw new ConstraintViolationException(result);
+    }
   }
 }

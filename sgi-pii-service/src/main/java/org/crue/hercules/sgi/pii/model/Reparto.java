@@ -16,6 +16,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.crue.hercules.sgi.pii.model.Reparto.OnActualizar;
+import org.crue.hercules.sgi.pii.model.Reparto.OnEjecutar;
+import org.crue.hercules.sgi.pii.validation.RepartoIsEjecutable;
+import org.crue.hercules.sgi.pii.validation.RepartoIsUpdatable;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +37,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@RepartoIsUpdatable(groups = { OnActualizar.class })
+@RepartoIsEjecutable(groups = { OnEjecutar.class })
 public class Reparto extends BaseEntity {
 
   public static final int ESTADO_LENGTH = 25;
@@ -77,4 +84,16 @@ public class Reparto extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Invencion invencion = null;
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion de la entidad.
+   */
+  public interface OnActualizar {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la ejecucion de la entidad.
+   */
+  public interface OnEjecutar {
+  }
 }

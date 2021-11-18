@@ -1,12 +1,23 @@
 package org.crue.hercules.sgi.pii.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.exceptions.RepartoEquipoInventorNotFoundException;
+import org.crue.hercules.sgi.pii.exceptions.RepartoNotFoundException;
 import org.crue.hercules.sgi.pii.model.Reparto;
+import org.crue.hercules.sgi.pii.model.Reparto.OnActualizar;
 import org.crue.hercules.sgi.pii.model.RepartoEquipoInventor;
 import org.crue.hercules.sgi.pii.repository.RepartoEquipoInventorRepository;
+import org.crue.hercules.sgi.pii.repository.RepartoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.RepartoEquipoInventorSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +36,14 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class RepartoEquipoInventorService {
   private final RepartoEquipoInventorRepository repository;
+  private final RepartoRepository repartoRepository;
+  private final Validator validator;
 
-  public RepartoEquipoInventorService(RepartoEquipoInventorRepository repartoEquipoInventorRepository) {
+  public RepartoEquipoInventorService(RepartoEquipoInventorRepository repartoEquipoInventorRepository,
+      RepartoRepository repartoRepository, Validator validator) {
     this.repository = repartoEquipoInventorRepository;
+    this.repartoRepository = repartoRepository;
+    this.validator = validator;
   }
 
   /**
@@ -48,6 +64,26 @@ public class RepartoEquipoInventorService {
 
     Page<RepartoEquipoInventor> returnValue = repository.findAll(specs, pageable);
     log.debug("findByRepartoId(Long repartoId, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link RepartoEquipoInventor} para una entidad {@link Reparto}
+   * filtradas.
+   * 
+   * @param repartoId el id de la entidad {@link Reparto}.
+   * @param query     la información del filtro.
+   * @return la lista de {@link RepartoEquipoInventor} de la entidad
+   *         {@link Reparto} filtradas.
+   */
+  public List<RepartoEquipoInventor> findByRepartoId(Long repartoId, String query) {
+    log.debug("findByRepartoId(Long repartoId, String query) - start");
+
+    Specification<RepartoEquipoInventor> specs = RepartoEquipoInventorSpecifications.byRepartoId(repartoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    List<RepartoEquipoInventor> returnValue = repository.findAll(specs);
+    log.debug("findByRepartoId(Long repartoId, String query) - end");
     return returnValue;
   }
 
@@ -82,6 +118,7 @@ public class RepartoEquipoInventorService {
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoEquipoInventor.class)).build());
 
+    checkRepartoIsUpdatable(repartoEquipoInventor.getRepartoId());
     RepartoEquipoInventor returnValue = repository.save(repartoEquipoInventor);
 
     log.debug("create(RepartoEquipoInventor repartoEquipoInventor) - end");
@@ -105,6 +142,7 @@ public class RepartoEquipoInventorService {
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoEquipoInventor.class)).build());
 
+    checkRepartoIsUpdatable(repartoEquipoInventor.getRepartoId());
     return repository.findById(repartoEquipoInventor.getId()).map(repartoEquipoInventorExistente -> {
 
       // Establecemos los campos actualizables con los recibidos
@@ -133,10 +171,26 @@ public class RepartoEquipoInventorService {
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(RepartoEquipoInventor.class)).build());
-    if (!repository.existsById(id)) {
+
+    Optional<RepartoEquipoInventor> optionalRepartoEquipoInventor = repository.findById(id);
+
+    if (!optionalRepartoEquipoInventor.isPresent()) {
       throw new RepartoEquipoInventorNotFoundException(id);
     }
+
+    checkRepartoIsUpdatable(optionalRepartoEquipoInventor.get().getRepartoId());
     repository.deleteById(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  private void checkRepartoIsUpdatable(Long repartoId) {
+    final Reparto repartoToValidate = repartoRepository.findById(repartoId)
+        .orElseThrow(() -> new RepartoNotFoundException(repartoId));
+
+    // Invocar validaciones asociadas a Reparto OnActualizar
+    Set<ConstraintViolation<Reparto>> result = validator.validate(repartoToValidate, OnActualizar.class);
+    if (!result.isEmpty()) {
+      throw new ConstraintViolationException(result);
+    }
   }
 }
