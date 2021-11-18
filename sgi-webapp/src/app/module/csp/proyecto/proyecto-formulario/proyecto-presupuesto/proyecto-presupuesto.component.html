@@ -89,6 +89,13 @@
                   <mat-icon color="warn">highlight_off</mat-icon>
                 </button>
               </ng-container>
+              <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-CON-E', 'CSP-CON-C']">
+                <button *ngIf="!data.value.enviadoSge && data.value.presupuestar" color="primary" mat-raised-button
+                  matTooltip="{{'btn.enviar-sge' | translate}}" (click)="sendSGE(data)"
+                  [disabled]="this.formPart.hasChanges()">
+                  {{'btn.enviar-sge' | translate}}
+                </button>
+              </ng-container>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="columns"></tr>
@@ -172,7 +179,8 @@
           <mat-form-field>
             <input attr.aria-label="{{'csp.proyecto-presupuesto.valor-calculado' | translate}}:
              {{'csp.proyecto-presupuesto.importe-presupuesto-universidad-costes-indirectos' | translate}}" matInput
-              type="text" [value]="this.valoresCalculadosData.importeTotalPresupuestoUniversidadCostesIndirectos" disabled />
+              type="text" [value]="this.valoresCalculadosData.importeTotalPresupuestoUniversidadCostesIndirectos"
+              disabled />
           </mat-form-field>
         </div>
         <div>
@@ -254,7 +262,8 @@
           <mat-form-field>
             <input attr.aria-label="{{'csp.proyecto-presupuesto.valor-calculado' | translate}}:
              {{'csp.proyecto-presupuesto.importe-concedido-universidad-costes-indirectos' | translate}}" matInput
-              type="text" [value]="this.valoresCalculadosData.importeTotalConcedidoUniversidadCostesIndirectos" disabled>
+              type="text" [value]="this.valoresCalculadosData.importeTotalConcedidoUniversidadCostesIndirectos"
+              disabled>
           </mat-form-field>
         </div>
         <div>
