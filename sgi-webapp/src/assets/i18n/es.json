@@ -1809,7 +1809,7 @@
   "sgo.area-conocimiento": "Área{count,plural,=0{} one{} other{s}} de conocimiento",
   "sgo.clasificacion": "Clasificaci{count,plural,=0{} one{ón} other{ones}}",
   "sgp.apellidos": "Apellidos",
-  "sgp.datos-persona": "Introduzca nombre, apellidos o número del documento de identificación personal",
+  "sgp.datos-persona": "Introduzca nombre, apellidos o email",
   "sgp.entidad-externa": "Entidad externa",
   "sgp.nombre": "Nombre",
   "sgp.numero-documento": "Nº Documento",
