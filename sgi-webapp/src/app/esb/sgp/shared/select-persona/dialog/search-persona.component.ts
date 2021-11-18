@@ -200,7 +200,16 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
       panelClass: 'sgi-dialog-container',
       data: personaData
     };
-    this.personaCreateMatDialog.open(PersonaFormlyModalComponent, config);
+    const dialogRef = this.personaCreateMatDialog.open(PersonaFormlyModalComponent, config);
+
+    dialogRef.afterClosed().subscribe(
+      (persona) => {
+        if (persona) {
+          this.closeModal(persona);
+        }
+      }
+    );
+
   }
 
 }
