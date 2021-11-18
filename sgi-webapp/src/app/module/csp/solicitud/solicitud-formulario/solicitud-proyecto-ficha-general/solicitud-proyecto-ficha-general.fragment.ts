@@ -46,7 +46,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.setComplete(true);
     this.solicitudProyecto = {} as ISolicitudProyecto;
 
-    this.userCanEdit = !this.isInvestigador || (this.isInvestigador && this.estado.estado === Estado.BORRADOR);
+    this.userCanEdit = !this.isInvestigador || (this.isInvestigador && (!!!key || this.estado.estado === Estado.BORRADOR));
 
     // Hack edit mode
     this.initialized$.pipe(
@@ -63,18 +63,12 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       acronimo: new FormControl(
         { value: null, disabled: (!this.userCanEdit) },
         [Validators.maxLength(50)]),
-      importeSolicitado: new FormControl({ value: null, disabled: !this.userCanEdit }),
       codExterno: new FormControl(
         { value: undefined, disabled: !this.userCanEdit },
         [Validators.maxLength(250)]),
       duracion: new FormControl(
         { value: null, disabled: !this.userCanEdit },
         [Validators.min(1), Validators.max(9999)]),
-
-      colaborativo: new FormControl(null, []),
-      coordinado: new FormControl(undefined, [Validators.required]),
-      coordinadorExterno: new FormControl(undefined),
-      tipoDesglosePresupuesto: new FormControl(undefined, [Validators.required]),
 
       objetivos: new FormControl(
         { value: null, disabled: !this.userCanEdit },
@@ -87,24 +81,32 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         [Validators.maxLength(2000)]),
       peticionEvaluacionRef: new FormControl(null, [])
     });
+    if (this.isInvestigador) {
+      form.addControl('importeSolicitado', new FormControl({ value: null, disabled: !this.userCanEdit }));
+    } else {
+      form.addControl('colaborativo', new FormControl(null, []));
+      form.addControl('coordinado', new FormControl(undefined, [Validators.required]));
+      form.addControl('coordinadorExterno', new FormControl(undefined));
+      form.addControl('tipoDesglosePresupuesto', new FormControl(undefined, [Validators.required]));
+
+      this.subscriptions.push(
+        this.coordinadoValueChangeListener(form.controls.coordinado as FormControl, form.controls.coordinadorExterno as FormControl)
+      );
+
+      this.subscriptions.push(
+        this.coordinadoExternoValueChangeListener(form.controls.coordinadorExterno as FormControl)
+      );
+
+      this.subscriptions.push(
+        form.controls.tipoDesglosePresupuesto.valueChanges.subscribe((value) => {
+          this.tipoDesglosePresupuesto$.next(value);
+        })
+      );
+    }
 
     if (this.readonly) {
       form.disable();
     }
-
-    this.subscriptions.push(
-      this.coordinadoValueChangeListener(form.controls.coordinado as FormControl, form.controls.coordinadorExterno as FormControl)
-    );
-
-    this.subscriptions.push(
-      this.coordinadoExternoValueChangeListener(form.controls.coordinadorExterno as FormControl)
-    );
-
-    this.subscriptions.push(
-      form.controls.tipoDesglosePresupuesto.valueChanges.subscribe((value) => {
-        this.tipoDesglosePresupuesto$.next(value);
-      })
-    );
 
     return form;
   }
@@ -179,21 +181,33 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     if (solicitudProyecto) {
       this.solicitudProyecto = solicitudProyecto;
     }
-    const controls = {
-      acronimo: solicitudProyecto?.acronimo,
-      importeSolicitado: solicitudProyecto?.totalImporteSolicitado,
-      codExterno: solicitudProyecto?.codExterno,
-      duracion: solicitudProyecto?.duracion,
-      colaborativo: solicitudProyecto?.colaborativo,
-      coordinado: solicitudProyecto?.coordinado,
-      coordinadorExterno: solicitudProyecto?.coordinadorExterno,
-      tipoDesglosePresupuesto: solicitudProyecto?.tipoPresupuesto,
-      objetivos: solicitudProyecto?.objetivos,
-      intereses: solicitudProyecto?.intereses,
-      resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
-      peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
-    };
-
+    let controls;
+    if (this.isInvestigador) {
+      controls = {
+        acronimo: solicitudProyecto?.acronimo,
+        importeSolicitado: solicitudProyecto?.totalImporteSolicitado,
+        codExterno: solicitudProyecto?.codExterno,
+        duracion: solicitudProyecto?.duracion,
+        objetivos: solicitudProyecto?.objetivos,
+        intereses: solicitudProyecto?.intereses,
+        resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
+        peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
+      };
+    } else {
+      controls = {
+        acronimo: solicitudProyecto?.acronimo,
+        codExterno: solicitudProyecto?.codExterno,
+        duracion: solicitudProyecto?.duracion,
+        colaborativo: solicitudProyecto?.colaborativo,
+        coordinado: solicitudProyecto?.coordinado,
+        coordinadorExterno: solicitudProyecto?.coordinadorExterno,
+        tipoDesglosePresupuesto: solicitudProyecto?.tipoPresupuesto,
+        objetivos: solicitudProyecto?.objetivos,
+        intereses: solicitudProyecto?.intereses,
+        resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
+        peticionEvaluacionRef: solicitudProyecto?.peticionEvaluacionRef
+      };
+    }
     if (!this.userCanEdit) {
       this.getFormGroup()?.disable();
     }
