@@ -1,4 +1,23 @@
 <sgi-fragment title="{{ 'label.datos-generales' | translate }}">
+  <section>
+    <form [formGroup]="repartoFormGroup">
+      <div fxLayout="row">
+        <div fxFlex="20%" fxFlex.lt-md="100%">
+          <!-- Estado -->
+          <mat-form-field>
+            <mat-label>{{'pii.invencion-reparto.estado' | translate}}</mat-label>
+            <sgi-select-enum formControlName="estado" [enumMap]="REPARTO_ESTADO_MAP" required>
+            </sgi-select-enum>
+            <mat-error *ngIf="repartoFormGroup.controls.estado.errors?.required">
+              {{'error.required.entity' | translate:msgParamEstadoEntity}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+  </section>
+
   <section class="reparto-gastos">
     <h2>{{'pii.reparto.gasto.gastos-deducir' | translate }}</h2>
     <table class="table-gastos mat-elevation-z4" mat-table [dataSource]="gastosDataSource" matSort
@@ -130,12 +149,12 @@
     </h2>
   </section>
 
-  <section class="reparto-resultado" *ngIf="totalRepartir > 0">
+  <section class="reparto-resultado" *ngIf="getTotalRepartirRounded() > 0">
     <h2>
       {{ 'pii.reparto.reparto-resultado' | translate }}
     </h2>
     <section class="tramo-reparto">
-      <form [formGroup]="formGroup">
+      <form [formGroup]="tramoRepartoFormGroup">
         <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
           [fxLayoutGap]="fxLayoutProperties.gap">
           <!-- Resultado a repartir -->
@@ -184,17 +203,17 @@
               <input matInput formControlName="importeRepartoEquipoInventor" type="number"
                 id="importeRepartoEquipoInventor"
                 placeholder="{{'pii.reparto.equipo-inventor.importe-equipo-inventor' | translate}}">
-              <mat-error *ngIf="formGroup.controls.importeRepartoEquipoInventor.errors?.required">
+              <mat-error *ngIf="tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.errors?.required">
                 {{'error.required.entity' | translate:msgParamImporteRepartoEquipoInventorEntity}}
               </mat-error>
-              <mat-error *ngIf="formGroup.controls.importeRepartoEquipoInventor.errors?.min">
+              <mat-error *ngIf="tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.errors?.min">
                 {{'error.min.entity' | translate:msgParamImporteRepartoEquipoInventorEntity}}
               </mat-error>
-              <mat-error *ngIf="formGroup.controls.importeRepartoEquipoInventor.errors?.max">
+              <mat-error *ngIf="tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.errors?.max">
                 {{'error.max.entity' | translate:msgParamImporteRepartoEquipoInventorEntity}}
               </mat-error>
               <mat-error
-                *ngIf="!formGroup.controls.importeRepartoEquipoInventor.errors?.max && formGroup.controls.importeRepartoEquipoInventor.errors?.maxDecimals">
+                *ngIf="!tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.errors?.max && tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.errors?.maxDecimals">
                 {{'error.max.decimals.entity' | translate:msgParamImporteRepartoEquipoInventorEntity}}
               </mat-error>
             </mat-form-field>
@@ -343,15 +362,14 @@
 
         <!-- Total Importe Desglose Reparto a Equipo Inventor  -->
         <ng-container matColumnDef="totalRepartoEquipoInventorCaption">
-          <td mat-footer-cell *matFooterCellDef colspan="10">
+          <td mat-footer-cell *matFooterCellDef [attr.colspan]="getTotalRepartoEquipoInventorCaptionColspan()">
             {{'pii.reparto.equipo-inventor.total-reparto-equipo-inventor' | translate}}
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="formPart.displayEquipoInventorColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: formPart.displayEquipoInventorColumns;"></tr>
-        <tr mat-footer-row *matFooterRowDef="['totalRepartoEquipoInventorCaption', 'importeTotal', 'acciones']"
-          class="footer-row-total">
+        <tr mat-footer-row *matFooterRowDef="formPart.displayEquipoInventorFooterColumns" class="footer-row-total">
         </tr>
       </table>
     </section>

@@ -26,7 +26,7 @@ import { NumberUtils } from '@core/utils/number.utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { BehaviorSubject, combineLatest, forkJoin, from, merge, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
 import { InvencionRepartoDataResolverService } from '../../services/invencion-reparto-data-resolver.service';
 
@@ -47,11 +47,12 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   private repartoIngresos$ = new BehaviorSubject<IRepartoIngreso[]>(undefined);
   private tramoReparto$ = new Subject<ITramoReparto>();
   private repartoEquipoInventorTableData$ = new BehaviorSubject<StatusWrapper<IRepartoEquipoInventorTableData>[]>([]);
+  private readonly$: BehaviorSubject<boolean>;
   private gastosInvencion: IDatoEconomico[];
   private ingresosInvencion: IDatoEconomico[];
   private importeRepartoEquipoInventor = 0;
   private initialImporteEquipoInventor: number;
-  private errorRedondeoAccum = 0;
+  private updatedRepartoEstado: Estado;
 
   importeTotalSumEquipoInventorRoundingErrorParam = {};
   importeTotalSumEquipoInventor = 0;
@@ -64,9 +65,19 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   private _displayEquipoInventorColumns = ['nombre', 'apellidos', 'numeroDocumento',
     'entidad', 'participacion', 'porcentajeRepartoInventor', 'importeNomina',
     'importeProyecto', 'importeOtros', 'importeTotal'];
+  displayEquipoInventorFooterColumns: string[] = [];
+  private _displayEquipoInventorFooterColumns: string[] = ['totalRepartoEquipoInventorCaption', 'importeTotal'];
 
   get importeEquipoInventor(): number {
-    return this.reparto.importeEquipoInventor;
+    return this.reparto?.importeEquipoInventor;
+  }
+
+  get repartoEstado(): Estado {
+    return this.reparto?.estado;
+  }
+
+  get isRepartoEjecutado(): boolean {
+    return this.reparto?.estado === Estado.EJECUTADO;
   }
 
   constructor(
@@ -88,6 +99,7 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   ) {
     super(reparto?.id);
     this.initialImporteEquipoInventor = reparto.importeEquipoInventor;
+    this.readonly$ = new BehaviorSubject(this.isRepartoEjecutado);
   }
 
   protected onInitialize(): void | Observable<any> {
@@ -227,12 +239,15 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   }
 
   private initializeRepartoResultado(): void {
-    this.displayEquipoInventorColumns = this.reparto.estado === Estado.EJECUTADO ?
+    this.displayEquipoInventorColumns = this.isRepartoEjecutado ?
       this._displayEquipoInventorColumns :
       ['helpIcon', ...this._displayEquipoInventorColumns, 'acciones'];
+    this.displayEquipoInventorFooterColumns = this.isRepartoEjecutado ?
+      this._displayEquipoInventorFooterColumns :
+      [...this._displayEquipoInventorFooterColumns, 'acciones'];
     this.subscriptions.push(this.getTotalRepartir$().pipe(
       map(({ importeGastos, importeIngresos }) => importeIngresos - importeGastos),
-      filter(totalReparto => totalReparto > 0),
+      filter(totalReparto => NumberUtils.roundNumber(totalReparto) > 0),
       switchMap(totalReparto => forkJoin({
         tramoReparto: this.getTramoReparto(totalReparto),
         equiposInventor: this.getEquiposInventor(),
@@ -395,6 +410,10 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
     );
   }
 
+  getReadonly$(): Observable<boolean> {
+    return this.readonly$.asObservable();
+  }
+
   getTramoReparto$(): Observable<ITramoReparto> {
     return this.tramoReparto$.asObservable();
   }
@@ -441,6 +460,11 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
         return accum + importe;
       }, 0))
     );
+  }
+
+  onRepartoEstadoChanges(estado: Estado): void {
+    this.updatedRepartoEstado = estado;
+    this.setChanges(true);
   }
 
   onImporteRepartoEquipoInventorChanges(importeRepartoEquipoInventor: number, isUserInput: boolean): void {
@@ -547,8 +571,28 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
       takeLast(1),
       tap(() => {
         this.setChanges(this.hasFragmentChangesPending());
-      })
+      }),
+      concatMap(() => this.executeReparto())
     );
+  }
+
+  private executeReparto(): Observable<void> {
+    if (!this.updatedRepartoEstado || this.updatedRepartoEstado === Estado.PENDIENTE_EJECUTAR) {
+      return of(void 0);
+    }
+    return this.repartoService.ejecutar(this.reparto.id)
+      .pipe(
+        tap(() => {
+          this.displayEquipoInventorColumns = this._displayEquipoInventorColumns;
+          this.displayEquipoInventorFooterColumns = this._displayEquipoInventorFooterColumns;
+          this.reparto.estado = Estado.EJECUTADO;
+          this.readonly$.next(true);
+        }),
+        catchError(error => {
+          this.setChanges(true);
+          throw error;
+        })
+      );
   }
 
   private updateRepartoImporteEquipoInventor(): Observable<void> {
@@ -612,7 +656,7 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   }
 
   private updateFragmentStatus(): void {
-    const hasErrors = this.hasFragmentErrors();
+    const hasErrors = this.isRepartoEjecutado ? false : this.hasFragmentErrors();
     this.setErrors(hasErrors);
     this.setComplete(!hasErrors);
   }
@@ -628,7 +672,7 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
     this.isRightTotalSumImporteTotalInventor =
       NumberUtils.roundNumber(this.importeTotalSumEquipoInventor) !==
       NumberUtils.roundNumber(this.importeRepartoEquipoInventor);
-    return this.importeRepartoEquipoInventor <= 0 ||
+    return NumberUtils.roundNumber(this.importeRepartoEquipoInventor) <= 0 ||
       this.isRightTotalSumImporteTotalInventor ||
       this.hasArrayRepartoEquipoInventorTableDataAnyError();
   }

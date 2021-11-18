@@ -153,7 +153,8 @@ export class InvencionGastosFragment extends Fragment {
           return {
             id: columna.id,
             name: columna.nombre,
-            compute: columna.acumulable
+            compute: columna.acumulable,
+            importeReparto: columna.importeReparto
           };
         })
         )
@@ -197,6 +198,7 @@ export class InvencionGastosFragment extends Fragment {
       };
     } else {
       return {
+        importePendienteDeducir: gastoInvencion.columnas[this.getImporteRepartoColumnId(this.columns)],
         gasto: gastoInvencion,
         estado: Estado.NO_DEDUCIDO
       } as IInvencionGasto;
@@ -217,5 +219,10 @@ export class InvencionGastosFragment extends Fragment {
       }
     });
     return values;
+  }
+
+  private getImporteRepartoColumnId(columnas: IColumnDefinition[]): number {
+    const importeRepartoColumn = columnas.find(column => column.importeReparto);
+    return importeRepartoColumn ? Number(importeRepartoColumn.id) : 0;
   }
 }

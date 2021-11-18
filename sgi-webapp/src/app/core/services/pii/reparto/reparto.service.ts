@@ -97,4 +97,12 @@ export class RepartoService extends _RepartoServiceMixinBase {
       options,
       REPARTO_EQUIPO_INVENTOR_RESPONSE_CONVERTER);
   }
+
+  /**
+   * Cambia el estado del Reparto a ejecutado
+   * @param id del Reparto
+   */
+  ejecutar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/ejecutar`, { id });
+  }
 }

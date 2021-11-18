@@ -21,10 +21,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RepartoEquipoModalComponent } from '../../modals/reparto-equipo-modal/reparto-equipo-modal.component';
 import { NumberUtils } from '@core/utils/number.utils';
+import { ESTADO_MAP } from '@core/models/pii/reparto';
 
 const UNIVERSIDAD_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-universidad');
 const INVENTORES_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-inventores');
 const REPARTO_IMPORTE_REPARTO_EQUIPO_INVENTOR_KEY = marker('pii.reparto.reparto-equipo.importe-reparto-equipo-inventor');
+const REPARTO_ESTADO_KEY = marker('pii.invencion-reparto.estado');
 
 @Component({
   selector: 'sgi-invencion-reparto-equipo-inventor',
@@ -81,12 +83,18 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
   totalIngresosRepartir = 0;
   totalRepartir = 0;
   hasTramoReparto = false;
-  formGroup: FormGroup;
+  tramoRepartoFormGroup: FormGroup;
+  repartoFormGroup: FormGroup;
 
   msgParamImporteRepartoEquipoInventorEntity = {};
+  msgParamEstadoEntity = {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
+  }
+
+  get REPARTO_ESTADO_MAP() {
+    return ESTADO_MAP;
   }
 
   constructor(
@@ -102,6 +110,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
   ngOnInit(): void {
     this.initFormPartSubscriptions();
     super.ngOnInit();
+    this.initializeRepartoFormGroup();
     this.initFlexProperties();
     this.initializeGastosDataSource();
     this.initializeIngresosDataSource();
@@ -110,6 +119,21 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  private initializeRepartoFormGroup(): void {
+    this.repartoFormGroup = new FormGroup({
+      estado: new FormControl(
+        { value: this.formPart.repartoEstado, disabled: this.formPart.isRepartoEjecutado }, [Validators.required]
+      )
+    });
+
+    if (!this.formPart.isRepartoEjecutado) {
+      this.subscriptions.push(
+        this.repartoFormGroup.valueChanges
+          .subscribe(estado => this.formPart.onRepartoEstadoChanges(estado))
+      );
+    }
   }
 
   private initializeGastosDataSource(): void {
@@ -162,7 +186,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
         this.totalRepartir = importeIngresos - importeGastos;
         if (this.totalRepartir > 0) {
           this.initializeEquipoInventorTable();
-          this.initFormGroup();
+          this.initTramoRepartoFormGroup();
         }
       })
     );
@@ -170,8 +194,8 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
       this.formPart.getTramoReparto$().subscribe((tramoReparto) => {
         this.hasTramoReparto = !!tramoReparto;
         const importeRepartoEquipoInventor = this.calculateImporteRepartoEquipoInventor(tramoReparto);
-        this.formGroup.controls.importeRepartoEquipoInventor.markAsTouched();
-        this.formGroup.patchValue({
+        this.tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.markAsTouched();
+        this.tramoRepartoFormGroup.patchValue({
           resultadoRepartir: NumberUtils.roundNumber(this.totalRepartir),
           rango: this.tramoRepartoPipe.transform(tramoReparto),
           porcentajeUniversidad: this.translate.instant(UNIVERSIDAD_PERCENTAGE, { percentage: tramoReparto?.porcentajeUniversidad }),
@@ -179,6 +203,21 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
           importeRepartoUniversidad: NumberUtils.roundNumber(this.totalRepartir - importeRepartoEquipoInventor),
           importeRepartoEquipoInventor: NumberUtils.roundNumber(importeRepartoEquipoInventor)
         });
+        if (this.formPart.isRepartoEjecutado) {
+          this.tramoRepartoFormGroup.disable();
+        }
+      })
+    );
+    this.subscriptions.push(
+      this.formPart.getReadonly$().pipe(
+        filter(readonly => readonly)
+      ).subscribe(() => {
+        if (this.repartoFormGroup) {
+          this.repartoFormGroup.disable();
+        }
+        if (this.tramoRepartoFormGroup) {
+          this.tramoRepartoFormGroup.disable();
+        }
       })
     );
   }
@@ -188,8 +227,8 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
       .subscribe(elements => this.equipoInventorDataSource.data = elements));
   }
 
-  private initFormGroup(): void {
-    this.formGroup = new FormGroup({
+  private initTramoRepartoFormGroup(): void {
+    this.tramoRepartoFormGroup = new FormGroup({
       resultadoRepartir: new FormControl({
         value: undefined,
         disabled: true
@@ -211,21 +250,23 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
         disabled: true
       }),
       importeRepartoEquipoInventor: new FormControl(
-        undefined, [Validators.required, Validators.min(0.01), Validators.max(this.totalRepartir), NumberValidator.maxDecimalDigits(2)]
+        undefined,
+        [Validators.required, Validators.min(0.01), Validators.max(this.totalRepartir), NumberValidator.maxDecimalDigits(2)]
       )
     });
 
     this.subscriptions.push(
-      this.formGroup.controls.importeRepartoEquipoInventor.valueChanges.pipe(
+      this.tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.valueChanges.pipe(
         distinctUntilChanged(),
         debounceTime(500)
       ).subscribe(importeRepartoEquipoInventor => {
-        if (this.formGroup.controls.importeRepartoEquipoInventor.status === 'VALID') {
+        if (this.tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.status === 'VALID' ||
+          this.tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.status === 'DISABLED') {
           this.formPart.onImporteRepartoEquipoInventorChanges(
             importeRepartoEquipoInventor,
-            this.formGroup.controls.importeRepartoEquipoInventor.dirty
+            this.tramoRepartoFormGroup.controls.importeRepartoEquipoInventor.dirty
           );
-          this.formGroup.controls.importeRepartoUniversidad.setValue(
+          this.tramoRepartoFormGroup.controls.importeRepartoUniversidad.setValue(
             NumberUtils.roundNumber(this.totalRepartir - importeRepartoEquipoInventor)
           );
         } else {
@@ -254,6 +295,10 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     return this.formPart.displayIngresosColumns.length - 1;
   }
 
+  getTotalRepartoEquipoInventorCaptionColspan(): number {
+    return this.formPart.displayEquipoInventorColumns.length - 1;
+  }
+
   openModalRepartoEquipoInventor(wrapper: StatusWrapper<IRepartoEquipoInventorTableData>): void {
     const config: MatDialogConfig<IRepartoEquipoInventorTableData> = {
       panelClass: 'sgi-dialog-container',
@@ -266,6 +311,10 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
           this.formPart.modifyRepartoEquipo(wrapper);
         }
       });
+  }
+
+  getTotalRepartirRounded(): number {
+    return NumberUtils.roundNumber(this.totalRepartir);
   }
 
   private initFlexProperties() {
@@ -287,6 +336,12 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) =>
       this.msgParamImporteRepartoEquipoInventorEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+    );
+    this.translate.get(
+      REPARTO_ESTADO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) =>
+      this.msgParamEstadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
     );
   }
 }
