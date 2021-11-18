@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.repository.predicate;
 
 import java.time.Instant;
+import java.util.regex.Pattern;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,6 +35,8 @@ import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import io.github.perplexhub.rsql.RSQLOperators;
 
 public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<Convocatoria> {
+  private static final Pattern integerPattern = Pattern.compile("^\\d+$");
+
   private enum Property {
     PLAZO_PRESENTACION_SOLICITUD("abiertoPlazoPresentacionSolicitud"),
     /* REQUISITOS IP */
@@ -80,8 +83,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return instance;
   }
 
-  private static Predicate buildInPlazoPresentacionSolicitudes(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInPlazoPresentacionSolicitudes(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -105,8 +108,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
   }
 
   /* Validaciones Requisito Ip */
-  private static Predicate buildInRequisitoSexoIp(ComparisonNode node, Root<Convocatoria> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildInRequisitoSexoIp(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -124,8 +126,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, sexo);
   }
 
-  private static Predicate buildInRequisitoEdadIp(ComparisonNode node, Root<Convocatoria> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildInRequisitoEdadIp(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
       // Unsupported Operator
@@ -136,17 +137,19 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
       throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
     }
     String edadArgument = node.getArguments().get(0);
-    Integer edad = Integer.parseInt(edadArgument);
-
-    Predicate edadMaxima = cb.greaterThanOrEqualTo(root.get(Convocatoria_.requisitoIP).get(RequisitoIP_.edadMaxima),
-        edad);
-
     Predicate isNull = cb.isNull(root.get(Convocatoria_.requisitoIP).get(RequisitoIP_.edadMaxima));
+    if (isPositiveInteger(edadArgument)) {
+      Integer edad = Integer.parseInt(edadArgument);
 
-    return cb.or(isNull, edadMaxima);
+      Predicate edadMaxima = cb.greaterThanOrEqualTo(root.get(Convocatoria_.requisitoIP).get(RequisitoIP_.edadMaxima),
+          edad);
+
+      return cb.or(isNull, edadMaxima);
+    }
+    return isNull;
   }
 
-  private static Predicate buildInRequisitoNivelAcademicoIp(ComparisonNode node, Root<Convocatoria> root,
+  private Predicate buildInRequisitoNivelAcademicoIp(ComparisonNode node, Root<Convocatoria> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
@@ -175,12 +178,12 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, nivelAcademico);
   }
 
-  private static Predicate buildInRequisitoFechasNivelAcademicoIp(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoFechasNivelAcademicoIp(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
-      throw new IllegalArgumentException("Unsupported operator: " + operator + "for " + node.getSelector());
+      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
     }
     if (node.getArguments().size() != 1) {
       // Bad number of arguments
@@ -209,8 +212,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
         cb.and(isNullFechaMaxima, isNullFechaMinima));
   }
 
-  private static Predicate buildInRequisitoVinculacionIp(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoVinculacionIp(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -231,7 +233,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNullVinculacion, hasVinvulacion);
   }
 
-  private static Predicate buildInRequisitoCategoriaProfesionalIp(ComparisonNode node, Root<Convocatoria> root,
+  private Predicate buildInRequisitoCategoriaProfesionalIp(ComparisonNode node, Root<Convocatoria> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
@@ -262,8 +264,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, categoriaProfesional);
   }
 
-  private static Predicate buildInRequisitoFechasCategoriaProfesionalIp(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoFechasCategoriaProfesionalIp(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -297,12 +299,11 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
   }
 
   /* Validaciones requisito Equipo */
-  private static Predicate buildInRequisitoSexoEquipo(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoSexoEquipo(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
-      throw new IllegalArgumentException("Unsupported operator: " + operator + "  for " + node.getSelector());
+      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
     }
     if (node.getArguments().size() != 1) {
       // Bad number of arguments
@@ -316,8 +317,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, sexo);
   }
 
-  private static Predicate buildInRequisitoEdadEquipo(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoEdadEquipo(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
       // Unsupported Operator
@@ -328,17 +328,18 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
       throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
     }
     String edadArgument = node.getArguments().get(0);
-    Integer edad = Integer.parseInt(edadArgument);
-
-    Predicate edadMaxima = cb
-        .greaterThanOrEqualTo(root.get(Convocatoria_.requisitoEquipo).get(RequisitoEquipo_.edadMaxima), edad);
-
     Predicate isNull = cb.isNull(root.get(Convocatoria_.requisitoEquipo).get(RequisitoEquipo_.edadMaxima));
+    if (isPositiveInteger(edadArgument)) {
+      Integer edad = Integer.parseInt(edadArgument);
 
-    return cb.or(isNull, edadMaxima);
+      Predicate edadMaxima = cb
+          .greaterThanOrEqualTo(root.get(Convocatoria_.requisitoEquipo).get(RequisitoEquipo_.edadMaxima), edad);
+      return cb.or(isNull, edadMaxima);
+    }
+    return isNull;
   }
 
-  private static Predicate buildInRequisitoNivelAcademicoEquipo(ComparisonNode node, Root<Convocatoria> root,
+  private Predicate buildInRequisitoNivelAcademicoEquipo(ComparisonNode node, Root<Convocatoria> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
@@ -367,8 +368,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, nivelAcademico);
   }
 
-  private static Predicate buildInRequisitoFechasNivelAcademicoEquipo(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoFechasNivelAcademicoEquipo(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -401,8 +402,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
         cb.and(isNullFechaMaxima, isNullFechaMinima));
   }
 
-  private static Predicate buildInRequisitoVinculacionEquipo(ComparisonNode node, Root<Convocatoria> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoVinculacionEquipo(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -423,7 +424,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNullVinculacion, hasVinvulacion);
   }
 
-  private static Predicate buildInRequisitoCategoriaProfesionalEquipo(ComparisonNode node, Root<Convocatoria> root,
+  private Predicate buildInRequisitoCategoriaProfesionalEquipo(ComparisonNode node, Root<Convocatoria> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
@@ -454,8 +455,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return cb.or(isNull, categoriaProfesional);
   }
 
-  private static Predicate buildInRequisitoFechasCategoriaProfesionalEquipo(ComparisonNode node,
-      Root<Convocatoria> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+  private Predicate buildInRequisitoFechasCategoriaProfesionalEquipo(ComparisonNode node, Root<Convocatoria> root,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -497,41 +498,52 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
   @Override
   public Predicate toPredicate(ComparisonNode node, Root<Convocatoria> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
-    switch (Property.fromCode(node.getSelector())) {
+    Property property = Property.fromCode(node.getSelector());
+    if (property == null) {
+      return null;
+    }
+    switch (property) {
     case PLAZO_PRESENTACION_SOLICITUD:
-      return buildInPlazoPresentacionSolicitudes(node, root, query, criteriaBuilder);
+      return buildInPlazoPresentacionSolicitudes(node, root, criteriaBuilder);
     /* REQUISITO IP */
     case REQUISITO_SEXO_IP:
-      return buildInRequisitoSexoIp(node, root, query, criteriaBuilder);
+      return buildInRequisitoSexoIp(node, root, criteriaBuilder);
     case REQUISITO_EDAD_IP:
-      return buildInRequisitoEdadIp(node, root, query, criteriaBuilder);
+      return buildInRequisitoEdadIp(node, root, criteriaBuilder);
     case REQUISITO_NIVEL_ACADEMICO_IP:
       return buildInRequisitoNivelAcademicoIp(node, root, query, criteriaBuilder);
     case REQUISITO_FECHA_NIVEL_ACADEMICO_IP:
-      return buildInRequisitoFechasNivelAcademicoIp(node, root, query, criteriaBuilder);
+      return buildInRequisitoFechasNivelAcademicoIp(node, root, criteriaBuilder);
     case REQUISITO_VINCULACION_IP:
-      return buildInRequisitoVinculacionIp(node, root, query, criteriaBuilder);
+      return buildInRequisitoVinculacionIp(node, root, criteriaBuilder);
     case REQUISITO_CATEGORIA_PROFESIONAL_IP:
       return buildInRequisitoCategoriaProfesionalIp(node, root, query, criteriaBuilder);
     case REQUISITO_FECHA_CATEGORIA_PROFESIONAL_IP:
-      return buildInRequisitoFechasCategoriaProfesionalIp(node, root, query, criteriaBuilder);
+      return buildInRequisitoFechasCategoriaProfesionalIp(node, root, criteriaBuilder);
     /* REQUISITOS EQUIPO */
     case REQUISITO_SEXO_EQUIPO:
-      return buildInRequisitoSexoEquipo(node, root, query, criteriaBuilder);
+      return buildInRequisitoSexoEquipo(node, root, criteriaBuilder);
     case REQUISITO_EDAD_EQUIPO:
-      return buildInRequisitoEdadEquipo(node, root, query, criteriaBuilder);
+      return buildInRequisitoEdadEquipo(node, root, criteriaBuilder);
     case REQUISITO_NIVEL_ACADEMICO_EQUIPO:
       return buildInRequisitoNivelAcademicoEquipo(node, root, query, criteriaBuilder);
     case REQUISITO_FECHA_NIVEL_ACADEMICO_EQUIPO:
-      return buildInRequisitoFechasNivelAcademicoEquipo(node, root, query, criteriaBuilder);
+      return buildInRequisitoFechasNivelAcademicoEquipo(node, root, criteriaBuilder);
     case REQUISITO_VINCULACION_EQUIPO:
-      return buildInRequisitoVinculacionEquipo(node, root, query, criteriaBuilder);
+      return buildInRequisitoVinculacionEquipo(node, root, criteriaBuilder);
     case REQUISITO_CATEGORIA_PROFESIONAL_EQUIPO:
       return buildInRequisitoCategoriaProfesionalEquipo(node, root, query, criteriaBuilder);
     case REQUISITO_FECHA_CATEGORIA_PROFESIONAL_EQUIPO:
-      return buildInRequisitoFechasCategoriaProfesionalEquipo(node, root, query, criteriaBuilder);
+      return buildInRequisitoFechasCategoriaProfesionalEquipo(node, root, criteriaBuilder);
     default:
       return null;
     }
+  }
+
+  private boolean isPositiveInteger(String strInt) {
+    if (strInt == null) {
+      return false;
+    }
+    return integerPattern.matcher(strInt).matches();
   }
 }
