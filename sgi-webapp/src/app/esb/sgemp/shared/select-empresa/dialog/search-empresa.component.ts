@@ -172,7 +172,15 @@ export class SearchEmpresaModalComponent implements OnInit, AfterViewInit {
       panelClass: 'sgi-dialog-container',
       data: empresaData
     };
-    this.empresaCreateMatDialog.open(EmpresaFormlyModalComponent, config);
+    const dialogRef = this.empresaCreateMatDialog.open(EmpresaFormlyModalComponent, config);
+
+    dialogRef.afterClosed().subscribe(
+      (empresa) => {
+        if (empresa) {
+          this.closeModal(empresa);
+        }
+      }
+    );
   }
 
 }

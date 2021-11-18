@@ -9,7 +9,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { ACTION_MODAL_MODE, BaseFormlyModalComponent, IFormlyData } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 
 const EMPRESA_KEY = marker('sgemp.empresa');
@@ -120,9 +120,18 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent implem
 
       if (this.empresaData.action === ACTION_MODAL_MODE.NEW) {
         FormlyUtils.convertFormlyToJSON(this.formlyData.model, this.formlyData.fields);
-        this.subscriptions.push(this.empresaService.createEmpresa(this.formlyData.model).subscribe(
-          () => {
-            this.matDialogRef.close();
+        this.subscriptions.push(this.empresaService.createEmpresa(this.formlyData.model).pipe(
+          mergeMap(response =>
+            //TODO se busca a la empresa según respuesta actual del servicio. Es posible que esta cambie
+            this.empresaService.findById(response).pipe(
+              map(proyecto => {
+                return proyecto;
+              })
+            )
+          )
+        ).subscribe(
+          (empresaCreada) => {
+            this.matDialogRef.close(empresaCreada);
             this.snackBarService.showSuccess(this.textoCrearSuccess);
           },
           (error) => {
