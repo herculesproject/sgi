@@ -706,19 +706,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       }
 
       if (crearEvaluacion) {
-        evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId()).map(evaluacion -> {
-          Evaluacion evaluacionNueva = new Evaluacion();
-          BeanUtils.copyProperties(evaluacion, evaluacionNueva);
-          evaluacionNueva.setId(null);
-          evaluacionNueva.setVersion(memoria.getVersion() + 1);
-          evaluacionNueva.setEsRevMinima(true);
-          evaluacionNueva.setDictamen(null);
-          evaluacionNueva.setActivo(true);
-          evaluacionRepository.save(evaluacionNueva);
-
-          return evaluacionNueva;
-        }).orElseThrow(() -> new EvaluacionNotFoundException(idMemoria));
-
+        this.crearEvaluacion(memoria, tipoEvaluacion);
         memoria.setVersion(memoria.getVersion() + 1);
       }
 
@@ -732,6 +720,32 @@ public class MemoriaServiceImpl implements MemoriaService {
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
     log.debug("enviarSecretaria(Long id) - end");
+  }
+
+  /**
+   * Crea la evaluación a partir de los datos de la memoria en caso de que sea
+   * necesario
+   * 
+   * @param memoria        los datos de la {@link Memoria}
+   * @param tipoEvaluacion el tipo de {@link Evaluacion}
+   */
+  private void crearEvaluacion(Memoria memoria, Long tipoEvaluacion) {
+    log.debug("crearEvaluacion(memoria, tipoEvaluacion)- start");
+    evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId()).map(evaluacion -> {
+      Evaluacion evaluacionNueva = new Evaluacion();
+      BeanUtils.copyProperties(evaluacion, evaluacionNueva);
+      evaluacionNueva.setId(null);
+      evaluacionNueva.setVersion(memoria.getVersion() + 1);
+      evaluacionNueva.setEsRevMinima(true);
+      evaluacionNueva.setDictamen(null);
+      evaluacionNueva.setTipoEvaluacion(new TipoEvaluacion());
+      evaluacionNueva.getTipoEvaluacion().setId(tipoEvaluacion);
+      evaluacionNueva.setActivo(true);
+      evaluacionRepository.save(evaluacionNueva);
+
+      return evaluacionNueva;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(memoria.getId()));
+    log.debug("crearEvaluacion(memoria, tipoEvaluacion)- end");
   }
 
   private void crearInforme(Memoria memoria, Long tipoEvaluacion) {
