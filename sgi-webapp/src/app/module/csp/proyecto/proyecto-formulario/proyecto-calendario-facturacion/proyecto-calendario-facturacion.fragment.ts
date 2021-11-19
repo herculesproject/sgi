@@ -183,9 +183,11 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
       mergeMap((toCreate: StatusWrapper<IProyectoFacturacionData>) => {
         return this.proyectoFacturacionService.create(toCreate.value)
           .pipe(
-            map((created: IProyectoFacturacionData) => {
+            map((createdProyectoFacturacion: IProyectoFacturacionData) => {
               const index = this.proyectosFacturacion$.value.findIndex(currentItem => currentItem.value === toCreate.value);
-              this.proyectosFacturacion$.value[index] = new StatusWrapper<IProyectoFacturacionData>(created);
+              const proyectoFacturacionListado = toCreate.value;
+              proyectoFacturacionListado.id = createdProyectoFacturacion.id;
+              this.proyectosFacturacion$.value[index] = new StatusWrapper<IProyectoFacturacionData>(proyectoFacturacionListado);
               this.proyectosFacturacion$.next(this.proyectosFacturacion$.value);
             }));
       })
