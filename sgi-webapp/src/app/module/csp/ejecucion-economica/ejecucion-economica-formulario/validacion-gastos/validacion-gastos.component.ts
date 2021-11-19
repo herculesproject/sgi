@@ -150,7 +150,7 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
         const gastoProyecto = detalle as IGastoProyecto;
         const config: MatDialogConfig<number> = {
           panelClass: 'sgi-dialog-container',
-          data: gastoProyecto.id
+          data: gastoProyecto?.id
         };
         this.matDialog.open(ValidacionGastosHistoricoModalComponent, config);
       }
