@@ -391,12 +391,9 @@ export class PeriodoTitularidadFragment extends Fragment {
    */
   private validateStatus() {
     this.setChanges(
-      this.periodoVigente === this.periodosTitularidadSelected.getValue() &&
-      (
-        this.periodoVigente?.touched ||
-        this.hasChangesTitulares() ||
-        this.periodosTitularidadesToDelete.length > 0
-      )
+      this.periodoVigente?.touched ||
+      this.hasChangesTitulares() ||
+      this.periodosTitularidadesToDelete.length > 0
     );
   }
 
