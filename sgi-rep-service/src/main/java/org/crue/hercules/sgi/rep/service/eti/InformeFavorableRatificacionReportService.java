@@ -4,9 +4,7 @@ import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableRatificacion;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
@@ -32,35 +30,13 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     Vector<Vector<Object>> rowsData = new Vector<>();
     Vector<Object> elementsRow = new Vector<>();
 
-    addColumnAndRowtDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
+    addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
         elementsRow);
-
-    columnsData.add("tituloProyecto");
-    elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
-
-    columnsData.add("comite");
-    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
-
-    columnsData.add("nombreSecretario");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
-
-    columnsData.add("nombreDecreto");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreDecreto());
 
     columnsData.add("nombreArticulo");
     elementsRow.add(evaluacion.getMemoria().getComite().getArticulo());
 
-    columnsData.add("nombreInvestigacion");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
-
-    columnsData.add("del");
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
-      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
-      elementsRow.add(i18nDela);
-    } else {
-      String i18nDel = ApplicationContextSupport.getMessage("common.del");
-      elementsRow.add(i18nDel);
-    }
+    fillCommonFieldsEvaluacion(evaluacion, columnsData, elementsRow);
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();

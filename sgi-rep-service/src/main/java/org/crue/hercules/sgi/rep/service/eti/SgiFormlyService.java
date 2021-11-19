@@ -325,7 +325,8 @@ public class SgiFormlyService {
       break;
     case DATEPICKER_TYPE:
       String dtFormatDatePickerOut = "dd/MM/yyyy";
-      respuestaFieldConfig = formatDatePicker(dtFormatDatePickerOut, respuestaFieldConfig);
+      respuestaFieldConfig = formatDatePickerCustom(dtFormatDatePickerOut, respuestaFieldConfig,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
       break;
     case DATETIMEPICKER_TYPE:
       String dtFormatDateTimePickerOut = "dd/MM/yyyy HH:mm:ss";
@@ -356,11 +357,12 @@ public class SgiFormlyService {
     return respuestaFieldConfig;
   }
 
-  private String formatDatePicker(String dtFormatOut, String datePicker) {
+  private String formatDatePickerCustom(String dtFormatOut, String datePicker, String dtFormatIn) {
     String result = "";
     if (StringUtils.hasText(datePicker)) {
       try {
-        DateTimeFormatter dfDateTimeIn = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        dtFormatIn = StringUtils.hasText(dtFormatIn) ? dtFormatIn : "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        DateTimeFormatter dfDateTimeIn = DateTimeFormatter.ofPattern(dtFormatIn);
         dfDateTimeIn.withZone(sgiConfigProperties.getTimeZone().toZoneId());
 
         DateTimeFormatter dfDateTimeOut = DateTimeFormatter.ofPattern(dtFormatOut);
@@ -372,6 +374,10 @@ public class SgiFormlyService {
       }
     }
     return result;
+  }
+
+  private String formatDatePicker(String dtFormatOut, String datePicker) {
+    return formatDatePickerCustom(dtFormatOut, datePicker, null);
   }
 
   @SuppressWarnings("unchecked")

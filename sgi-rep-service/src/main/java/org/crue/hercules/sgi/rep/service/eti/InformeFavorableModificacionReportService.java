@@ -5,10 +5,8 @@ import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.ConvocatoriaReunionDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableModificacion;
@@ -41,7 +39,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     Vector<Vector<Object>> rowsData = new Vector<>();
     Vector<Object> elementsRow = new Vector<>();
 
-    addColumnAndRowtDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
+    addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
         elementsRow);
 
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
@@ -63,9 +61,6 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
 
     }
 
-    columnsData.add("tituloProyecto");
-    elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
-
     columnsData.add("fechaEnvioSecretaria");
     try {
       Instant fechaEnvioSecretaria = evaluacionService.findFirstFechaEnvioSecretariaByIdEvaluacion(evaluacion.getId());
@@ -83,28 +78,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     columnsData.add("referenciaMemoria");
     elementsRow.add(evaluacion.getMemoria().getNumReferencia());
 
-    columnsData.add("comite");
-    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
-
-    columnsData.add("nombreSecretario");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
-
-    columnsData.add("nombreInvestigacion");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
-
-    columnsData.add("del");
-    columnsData.add("el");
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
-      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
-      elementsRow.add(i18nDela);
-      String i18nLa = ApplicationContextSupport.getMessage("common.la");
-      elementsRow.add(StringUtils.capitalize(i18nLa));
-    } else {
-      String i18nDel = ApplicationContextSupport.getMessage("common.del");
-      elementsRow.add(i18nDel);
-      String i18nEl = ApplicationContextSupport.getMessage("common.el");
-      elementsRow.add(StringUtils.capitalize(i18nEl));
-    }
+    fillCommonFieldsEvaluacion(evaluacion, columnsData, elementsRow);
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();

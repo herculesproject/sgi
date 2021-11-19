@@ -34,7 +34,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     Vector<Vector<Object>> rowsData = new Vector<>();
     Vector<Object> elementsRow = new Vector<>();
 
-    addColumnAndRowtDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
+    addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
         elementsRow);
 
     columnsData.add("tituloProyecto");

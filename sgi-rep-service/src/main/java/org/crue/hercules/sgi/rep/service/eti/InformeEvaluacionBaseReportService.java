@@ -1,11 +1,14 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -14,6 +17,7 @@ import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.TableDataFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +65,7 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     }
   }
 
-  protected void addColumnAndRowtDataInvestigador(String personaRef, List<Object> columnsData,
+  protected void addColumnAndRowDataInvestigador(String personaRef, List<Object> columnsData,
       List<Object> elementsRow) {
     columnsData.add("nombreInvestigador");
     addRowDataInvestigador(personaRef, elementsRow);
@@ -74,6 +78,36 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     } catch (Exception e) {
       elementsRow.add(getErrorMessageToReport(e));
     }
+  }
+
+  protected void fillCommonFieldsEvaluacion(EvaluacionDto evaluacion, Collection<Object> columnsData,
+      Collection<Object> elementsRow) {
+    columnsData.add("tituloProyecto");
+    elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+
+    columnsData.add("comite");
+    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
+
+    columnsData.add("nombreSecretario");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
+
+    columnsData.add("nombreInvestigacion");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
+
+    columnsData.add("del");
+    columnsData.add("el");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
+      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
+      elementsRow.add(i18nDela);
+      String i18nLa = ApplicationContextSupport.getMessage("common.la");
+      elementsRow.add(StringUtils.capitalize(i18nLa));
+    } else {
+      String i18nDel = ApplicationContextSupport.getMessage("common.del");
+      elementsRow.add(i18nDel);
+      String i18nEl = ApplicationContextSupport.getMessage("common.el");
+      elementsRow.add(StringUtils.capitalize(i18nEl));
+    }
+
   }
 
   protected abstract DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion);
