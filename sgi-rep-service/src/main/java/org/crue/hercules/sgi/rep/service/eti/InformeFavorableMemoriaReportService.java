@@ -7,13 +7,10 @@ import javax.swing.table.DefaultTableModel;
 
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto;
-import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
-import org.crue.hercules.sgi.rep.service.SgiReportService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -30,22 +27,20 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Validated
-public class InformeFavorableMemoriaReportService extends SgiReportService {
-
-  private final PersonaService personaService;
+public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseReportService {
   private final EvaluacionService evaluacionService;
   private final PeticionEvaluacionService peticionEvaluacionService;
 
   public InformeFavorableMemoriaReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
       EvaluacionService evaluacionService, PeticionEvaluacionService peticionEvaluacionService) {
 
-    super(sgiConfigProperties);
-    this.personaService = personaService;
+    super(sgiConfigProperties, personaService, evaluacionService);
     this.evaluacionService = evaluacionService;
+
     this.peticionEvaluacionService = peticionEvaluacionService;
   }
 
-  private DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
+  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
 
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
@@ -54,17 +49,8 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     columnsData.add("codigoMemoria");
     elementsRow.add(evaluacion.getMemoria().getNumReferencia());
 
-    columnsData.add("nombreInvestigador");
-    try {
-      PersonaDto persona = personaService.findById(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
-
-      elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
-    } catch (Exception e) {
-      elementsRow.add(getErrorMessageToReport(e));
-    }
-
-    columnsData.add("tituloProyecto");
-    elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+    addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
+        elementsRow);
 
     columnsData.add("fechaDictamen");
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
@@ -74,29 +60,7 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     columnsData.add("numeroActa");
     elementsRow.add(evaluacion.getConvocatoriaReunion().getNumeroActa());
 
-    columnsData.add("comite");
-    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
-
-    columnsData.add("nombreSecretario");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
-
-    columnsData.add("nombreInvestigacion");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
-
-    columnsData.add("del");
-    columnsData.add("este");
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
-      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
-      elementsRow.add(i18nDela);
-      String i18nEsta = ApplicationContextSupport.getMessage("common.esta");
-      elementsRow.add(i18nEsta);
-    } else {
-      String i18nDel = ApplicationContextSupport.getMessage("common.del");
-      elementsRow.add(i18nDel);
-      String i18nEste = ApplicationContextSupport.getMessage("common.este");
-      elementsRow.add(i18nEste);
-    }
-
+    fillCommonFieldsEvaluacion(evaluacion, columnsData, elementsRow);
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();
@@ -116,12 +80,7 @@ public class InformeFavorableMemoriaReportService extends SgiReportService {
     tareas.forEach(tarea -> {
       Vector<Object> elementsRow = new Vector<>();
 
-      try {
-        PersonaDto persona = personaService.findById(tarea.getEquipoTrabajo().getPersonaRef());
-        elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
-      } catch (Exception e) {
-        elementsRow.add(getErrorMessageToReport(e));
-      }
+      addRowDataInvestigador(tarea.getEquipoTrabajo().getPersonaRef(), elementsRow);
 
       rowsData.add(elementsRow);
     });

@@ -96,16 +96,21 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
 
     columnsData.add("del");
     columnsData.add("el");
+    columnsData.add("este");
     if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
       String i18nDela = ApplicationContextSupport.getMessage("common.dela");
       elementsRow.add(i18nDela);
       String i18nLa = ApplicationContextSupport.getMessage("common.la");
       elementsRow.add(StringUtils.capitalize(i18nLa));
+      String i18nEsta = ApplicationContextSupport.getMessage("common.esta");
+      elementsRow.add(i18nEsta);
     } else {
       String i18nDel = ApplicationContextSupport.getMessage("common.del");
       elementsRow.add(i18nDel);
       String i18nEl = ApplicationContextSupport.getMessage("common.el");
       elementsRow.add(StringUtils.capitalize(i18nEl));
+      String i18nEste = ApplicationContextSupport.getMessage("common.este");
+      elementsRow.add(i18nEste);
     }
 
   }

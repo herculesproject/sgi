@@ -64,8 +64,6 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     COMPONENT_ID, COMPONENT_TYPE, "content", "content_orden" };
   // @formatter:on
 
-  private static final int SUBNIVELES_MAX = 4;
-
   protected BaseApartadosRespuestasReportService(SgiConfigProperties sgiConfigProperties, BloqueService bloqueService,
       ApartadoService apartadoService, SgiFormlyService sgiFormlyService, RespuestaService respuestaService) {
     super(sgiConfigProperties);
@@ -217,8 +215,6 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
     tableModelGeneral.setColumnIdentifiers(COLUMNS_TABLE_MODEL);
 
-    // No se utiliza un método recursivo porque el TableModel a generar es finito y
-    // queda mas claro asi
     List<ApartadoOutput> apartados = new ArrayList<>();
     for (BloqueOutput bloque : bloquesReportOutput.getBloques()) {
       for (ApartadoOutput apartado : bloque.getApartados()) {
@@ -226,10 +222,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
         apartados.add(apartado);
         generateElementTableModelApartado(hmTableModel, tableModelGeneral, bloque, apartados);
 
-        // apartadoHijo, apartadoNieto, apartadoBisnieto y apartadoTataranieto
-        for (int i = 0; i < SUBNIVELES_MAX; i++) {
-          parseApartadoHijoElementTableModel(hmTableModel, tableModelGeneral, bloque, apartados);
-        }
+        parseApartadoHijoElementTableModel(hmTableModel, tableModelGeneral, bloque, apartados);
       }
     }
 
@@ -239,40 +232,43 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
   }
 
   private void parseApartadoHijoElementTableModel(Map<String, TableModel> hmTableModel,
-      final DefaultTableModel tableModelGeneral, BloqueOutput bloque, List<ApartadoOutput> apartados) {
-    ApartadoOutput apartado = apartados.get(apartados.size() - 1);
+      final DefaultTableModel tableModelGeneral, BloqueOutput bloque, List<ApartadoOutput> jerarquiaApartados) {
+    ApartadoOutput apartado = jerarquiaApartados.get(jerarquiaApartados.size() - 1);
     if (CollectionUtils.isNotEmpty(apartado.getApartadosHijos())) {
       for (ApartadoOutput apartadoHijo : apartado.getApartadosHijos()) {
-        apartados.add(apartadoHijo);
-        generateElementTableModelApartado(hmTableModel, tableModelGeneral, bloque, apartados);
+        List<ApartadoOutput> jerarquiaApartadosHijos = new ArrayList<>();
+        jerarquiaApartadosHijos.addAll(jerarquiaApartados);
+        jerarquiaApartadosHijos.add(apartadoHijo);
+        generateElementTableModelApartado(hmTableModel, tableModelGeneral, bloque, jerarquiaApartadosHijos);
+        parseApartadoHijoElementTableModel(hmTableModel, tableModelGeneral, bloque, jerarquiaApartadosHijos);
       }
     }
   }
 
   private void generateElementTableModelApartado(Map<String, TableModel> hmTableModel,
-      final DefaultTableModel tableModelGeneral, BloqueOutput bloque, List<ApartadoOutput> apartados) {
-    ApartadoOutput apartado = apartados.get(apartados.size() - 1);
+      final DefaultTableModel tableModelGeneral, BloqueOutput bloque, List<ApartadoOutput> jerarquiaApartados) {
+    ApartadoOutput apartado = jerarquiaApartados.get(jerarquiaApartados.size() - 1);
     if (CollectionUtils.isNotEmpty(apartado.getElementos())) {
       for (int i = 0; i < apartado.getElementos().size(); i++) {
         ElementOutput elemento = apartado.getElementos().get(i);
 
         parseElementTypeFromTableModel(hmTableModel, elemento);
-        tableModelGeneral.addRow(generateElementRow(bloque, apartados, elemento, i));
+        tableModelGeneral.addRow(generateElementRow(bloque, jerarquiaApartados, elemento, i));
       }
     } else {
       ElementOutput elementoVacio = ElementOutput.builder().content("").tipo(EMPTY_TYPE).nombre("").build();
-      tableModelGeneral.addRow(generateElementRow(bloque, apartados, elementoVacio, 0));
+      tableModelGeneral.addRow(generateElementRow(bloque, jerarquiaApartados, elementoVacio, 0));
     }
   }
 
-  protected Object[] generateElementRow(BloqueOutput bloque, List<ApartadoOutput> apartados, ElementOutput elemento,
-      int rowIndex) {
+  protected Object[] generateElementRow(BloqueOutput bloque, List<ApartadoOutput> jerarquiaApartados,
+      ElementOutput elemento, int rowIndex) {
     int i = 0;
-    ApartadoOutput apartado = getApartadoOutputFromElementRow(i++, apartados);
-    ApartadoOutput apartadoHijo = getApartadoOutputFromElementRow(i++, apartados);
-    ApartadoOutput apartadoNieto = getApartadoOutputFromElementRow(i++, apartados);
-    ApartadoOutput apartadoBisnieto = getApartadoOutputFromElementRow(i++, apartados);
-    ApartadoOutput apartadoTataraNieto = getApartadoOutputFromElementRow(i, apartados);
+    ApartadoOutput apartado = getApartadoOutputFromElementRow(i++, jerarquiaApartados);
+    ApartadoOutput apartadoHijo = getApartadoOutputFromElementRow(i++, jerarquiaApartados);
+    ApartadoOutput apartadoNieto = getApartadoOutputFromElementRow(i++, jerarquiaApartados);
+    ApartadoOutput apartadoBisnieto = getApartadoOutputFromElementRow(i++, jerarquiaApartados);
+    ApartadoOutput apartadoTataraNieto = getApartadoOutputFromElementRow(i, jerarquiaApartados);
 
     // @formatter:off
     return new Object[] { 
@@ -287,10 +283,10 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     // @formatter:on  
   }
 
-  private ApartadoOutput getApartadoOutputFromElementRow(int index, List<ApartadoOutput> apartados) {
+  private ApartadoOutput getApartadoOutputFromElementRow(int index, List<ApartadoOutput> jerarquiaApartados) {
     ApartadoOutput apartadoOutput = null;
-    if (apartados.size() >= index + 1 && null != apartados.get(index)) {
-      apartadoOutput = apartados.get(index);
+    if (jerarquiaApartados.size() >= index + 1 && null != jerarquiaApartados.get(index)) {
+      apartadoOutput = jerarquiaApartados.get(index);
       if (null == apartadoOutput.getOrden()) {
         apartadoOutput.setOrden(0);
       }

@@ -107,7 +107,6 @@ public class SgiReportService {
   @Validated({ SgiReportDto.Create.class, Default.class })
   protected void generateReport(@Valid SgiReportDto sgiReport) {
     try {
-      // Get the report and data factory
       final MasterReport report = getReportDefinition(sgiReport.getPath());
       if (report == null) {
         throw new IllegalArgumentException();
@@ -115,12 +114,10 @@ public class SgiReportService {
 
       final DataFactory dataFactory = getDataFactory(sgiReport.getDataModel());
 
-      // Set the data factory for the report
       if (dataFactory != null) {
         report.setDataFactory(dataFactory);
       }
 
-      // Add any parameters to the report
       final Map<String, Object> reportParameters = sgiReport.getParameters();
       if (null != reportParameters) {
         for (Entry<String, Object> entry : reportParameters.entrySet()) {
