@@ -111,6 +111,9 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
    * Apertura del modal de {@link IProcedimiento}
    */
   openModal(procedimiento: StatusWrapper<IProcedimiento>): void {
+    if (procedimiento) {
+      procedimiento.setEdited();
+    }
     const procedimientoModalData: ISolicitudProteccionProcedimientoModalData = {
       procedimiento: procedimiento ?? this.formPart.createEmptyProcedimiento(),
       tiposProcedimiento: this.formPart.tiposProcedimiento

@@ -33,7 +33,8 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let procedimiento">
         <ng-container *sgiHasAuthority="'PII-INV-E'">
-          <button mat-button matTooltip="{{'btn.edit' | translate}}" (click)="openModal(procedimiento)">
+          <button mat-button matTooltip="{{'btn.edit' | translate}}"
+            (click)="openModal(procedimiento);$any($event).stopPropagation()">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>

@@ -87,7 +87,11 @@ export class SolicitudProteccionProcedimientosFragment extends Fragment {
     this.subscriptions.push(
       this.procedimientos$
         .subscribe(
-          elems => this.procedimientoSelected.next(elems.length ? elems[0] : null)
+          elems => {
+            if (!elems.includes(this.procedimientoSelected.value)) {
+              this.procedimientoSelected.next(elems.length ? elems[0] : null);
+            }
+          }
         )
     );
 
@@ -269,7 +273,7 @@ export class SolicitudProteccionProcedimientosFragment extends Fragment {
   }
 
   private updateProcedimientos(): Observable<void> {
-    return from(this.procedimientos.value.filter(elem => elem.touched && !elem.created)).pipe(
+    return from(this.procedimientos.value.filter(elem => elem.value?.id && elem.touched && !elem.created)).pipe(
       mergeMap((wrapped) => {
         return forkJoin([of(wrapped), this.solicitudProteccionProcedimientoService.update(wrapped.value?.id, wrapped.value)]);
       }),
@@ -304,7 +308,7 @@ export class SolicitudProteccionProcedimientosFragment extends Fragment {
   }
 
   private addProcedimientos(): Observable<void> {
-    return from(this.procedimientos.value.filter(elem => elem.created)).pipe(
+    return from(this.procedimientos.value.filter(elem => elem.created || (elem.edited && !elem.value?.id))).pipe(
       mergeMap((wrapped) => {
         return forkJoin([of(wrapped), this.solicitudProteccionProcedimientoService.create(wrapped.value)]);
       }),
