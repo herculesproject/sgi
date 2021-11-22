@@ -38,6 +38,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
   public tiposCaducidad$ = new BehaviorSubject<ITipoCaducidad[]>([]);
 
   public solicitudProteccion: ISolicitudProteccion;
+  public firstSolicitudProteccionWithPrioridad = new BehaviorSubject<ISolicitudProteccion>(null);
 
   public showPaisSelector = new BehaviorSubject<boolean>(false);
 
@@ -64,7 +65,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
     private paisService: PaisService,
     private empresaService: EmpresaService,
     private tipoCaducidadService: TipoCaducidadService,
-    private solicitudesAnteriores: ISolicitudProteccion[],
+    solicitudesAnteriores: ISolicitudProteccion[],
     private paisValidadoService: PaisValidadoService
   ) {
     super(key, true);
@@ -73,6 +74,14 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
       invencion:
         { id: invencionId }
     } as ISolicitudProteccion;
+
+    solicitudesAnteriores.sort((a, b) => a.id > b.id ? 1 : -1);
+    const firstSolicitudProteccion = solicitudesAnteriores
+      .find(solicitud =>
+        solicitud.invencion.tipoProteccion.tipoPropiedad === TipoPropiedad.INDUSTRIAL
+        && solicitud.activo === true
+      );
+    this.firstSolicitudProteccionWithPrioridad.next(firstSolicitudProteccion ?? null);
     if (!key) {
       this.loadViasProteccion$().subscribe(viasProteccion => {
         this.viasProteccion$.next(viasProteccion);
@@ -341,10 +350,8 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
           form.controls.fechaFinPrioridad.setValue(null);
         } else {
           form.controls.fechaFinPrioridad.setValidators([Validators.required]);
-          const fechaPri: DateTime = form.controls.fechaPrioridad.value;
-
-          if (fechaPri && this.solicitudProteccion.fechaFinPriorPresFasNacRec === null) {
-            this.resolveFechaFinPrioridad(via, form.controls.fechaFinPrioridad as FormControl, fechaPri);
+          if (form.controls.viaProteccion.dirty) {
+            this.resolveFechaFinPrioridad(via);
           }
         }
         form.controls.fechaFinPrioridad.updateValueAndValidity();
@@ -376,8 +383,8 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
         if (!fechaPri || !via) {
           return;
         }
-        if (this.solicitudProteccion.fechaFinPriorPresFasNacRec === null) {
-          this.resolveFechaFinPrioridad(via, form.controls.fechaFinPrioridad as FormControl, fechaPri);
+        if (form.controls.fechaPrioridad.dirty) {
+          this.resolveFechaFinPrioridad(via);
         }
       });
   }
@@ -385,8 +392,8 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
   public canShowFechaPrioridad(): Observable<boolean> {
 
     return this.isExtensionInternacional$.pipe(
-      map(isPCT => {
-        return !isPCT && TipoPropiedad.INDUSTRIAL === this.tipoPropiedad && !this.solicitudesBefore;
+      map(isExtensionInternacional => {
+        return !isExtensionInternacional && TipoPropiedad.INDUSTRIAL === this.tipoPropiedad && !this.solicitudesBefore;
       })
     );
   }
@@ -394,15 +401,15 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
   public canShowFechaFinPrioridad(): Observable<boolean> {
 
     return this.isExtensionInternacional$.pipe(
-      map(isPCT => {
-        return isPCT
+      map(isExtensionInternacional => {
+        return isExtensionInternacional
           || (TipoPropiedad.INDUSTRIAL === this.tipoPropiedad && !this.solicitudesBefore);
       })
     );
   }
 
   get solicitudesBefore(): boolean {
-    return (this.solicitudesAnteriores ?? []).some(elem => elem.activo === true && this.solicitudProteccion?.id !== elem.id);
+    return this.firstSolicitudProteccionWithPrioridad.value?.id !== this.solicitudProteccion?.id;
   }
 
   /**
@@ -499,12 +506,14 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
       || (TipoPropiedad.INDUSTRIAL === this.tipoPropiedad && !this.solicitudesBefore);
   }
 
-  private resolveFechaFinPrioridad(via: IViaProteccion, fechaFinPriCtrl: FormControl, fechaPri: DateTime): void {
-
-    if ((this.tipoPropiedad === TipoPropiedad.INDUSTRIAL && !this.solicitudesBefore)
-      || via.extensionInternacional) {
-
-      fechaFinPriCtrl.setValue(fechaPri.plus({ months: via.mesesPrioridad }));
+  private resolveFechaFinPrioridad(via: IViaProteccion): void {
+    const form = this.getFormGroup();
+    let fechaPri: DateTime = form.controls.fechaPrioridad.value;
+    if (this.isExtensionInternacional$.value) {
+      fechaPri = this.firstSolicitudProteccionWithPrioridad.value?.fechaPrioridadSolicitud ?? fechaPri;
+    }
+    if (fechaPri) {
+      form.controls.fechaFinPrioridad.setValue(fechaPri.plus({ months: (via ?? this.solicitudProteccion?.viaProteccion).mesesPrioridad }));
     }
   }
 
