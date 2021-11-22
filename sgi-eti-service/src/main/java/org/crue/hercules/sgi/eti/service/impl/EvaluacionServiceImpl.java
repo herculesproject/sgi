@@ -529,7 +529,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
     default:
       if (evaluacion.getDictamen() != null
-          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
+          && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE
+              || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_RETROSPECTIVA)) {
         documento = this.generarDocumento(evaluacion, true);
       }
       break;
