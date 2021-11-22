@@ -230,7 +230,7 @@ public class EtiReportController {
    * @return Resource
    */
   @GetMapping("/informe-favorable-modificacion/{idEvaluacion}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
   public ResponseEntity<Resource> getInformeFavorableModificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableModificacion(input) - start");
@@ -255,7 +255,7 @@ public class EtiReportController {
    * @return Resource
    */
   @GetMapping("/informe-favorable-ratificacion/{idEvaluacion}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
   public ResponseEntity<Resource> getInformeFavorableRatificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableRatificacion(input) - start");
