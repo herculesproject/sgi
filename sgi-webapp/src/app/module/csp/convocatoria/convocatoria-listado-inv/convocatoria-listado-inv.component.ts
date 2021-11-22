@@ -109,7 +109,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
       fechaPublicacionDesde: new FormControl(null),
       fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(true),
-      aplicarFiltro: new FormControl(true),
+      aplicarFiltro: new FormControl(false),
       finalidad: new FormControl(null),
       ambitoGeografico: new FormControl(null),
       entidadConvocante: new FormControl(null),
@@ -281,23 +281,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
         .and('requisitoFechasCategoriaProfesionalIp', SgiRestFilterOperator.EQUALS,
           this.datosPersona?.vinculacion?.fechaObtencionCategoria ?
             LuxonUtils.toBackend(this.datosPersona?.vinculacion?.fechaObtencionCategoria) : '0001-01-01T00:00:00Z')
-        .and('requisitoCategoriaProfesionalIp', SgiRestFilterOperator.EQUALS, this.datosPersona?.vinculacion?.categoriaProfesional?.id ?? ' ')
-        /*Requisitos Equipo */
-        .and('requisitoSexoEquipo', SgiRestFilterOperator.EQUALS, this.datosPersona?.persona?.sexo?.id ?? ' ')
-        .and('requisitoEdadMaximaEquipo', SgiRestFilterOperator.GREATHER_OR_EQUAL,
-          this.datosPersona?.datosPersonales?.fechaNacimiento ?
-            DateTime.local().diff(this.datosPersona?.datosPersonales?.fechaNacimiento,
-              ['years', 'months', 'days', 'hours']).years.toString() : ' ')
-        .and('requisitoNivelAcademicoEquipo', SgiRestFilterOperator.EQUALS, this.datosPersona?.datosAcademicos?.nivelAcademico?.id ?? ' ')
-        .and('requisitoFechasNivelAcademicoEquipo', SgiRestFilterOperator.EQUALS,
-          LuxonUtils.toBackend(this.datosPersona?.datosAcademicos?.fechaObtencion)
-            ? LuxonUtils.toBackend(this.datosPersona?.datosAcademicos?.fechaObtencion) : '0001-01-01T00:00:00Z')
-        .and('requisitoVinculacionEquipo', SgiRestFilterOperator.EQUALS, this.datosPersona?.vinculacion ? 'true' : 'false')
-        .and('requisitoFechasCategoriaProfesionalEquipo', SgiRestFilterOperator.EQUALS,
-          LuxonUtils.toBackend(this.datosPersona?.vinculacion?.fechaObtencionCategoria)
-            ? LuxonUtils.toBackend(this.datosPersona?.vinculacion?.fechaObtencionCategoria) : '0001-01-01T00:00:00Z')
-        .and('requisitoCategoriaProfesionalEquipo', SgiRestFilterOperator.EQUALS,
-          this.datosPersona?.vinculacion?.categoriaProfesional?.id ?? ' ');
+        .and('requisitoCategoriaProfesionalIp', SgiRestFilterOperator.EQUALS, this.datosPersona?.vinculacion?.categoriaProfesional?.id ?? ' ');
     }
 
     return filter;
