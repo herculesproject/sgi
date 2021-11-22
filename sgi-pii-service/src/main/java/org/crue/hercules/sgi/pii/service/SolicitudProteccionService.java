@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.exceptions.SolicitudProteccionNotFoundException;
+import org.crue.hercules.sgi.pii.exceptions.ViaProteccionNotFoundException;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion.EstadoSolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnActivar;
@@ -132,14 +133,17 @@ public class SolicitudProteccionService {
         .map(solicitudProteccionExistente -> {
           solicitudProteccionExistente.setTitulo(solicitudProteccion.getTitulo());
           solicitudProteccionExistente.setFechaPrioridadSolicitud(solicitudProteccion.getFechaPrioridadSolicitud());
-          if (solicitudProteccionExistente.getViaProteccion().getId() != solicitudProteccion.getViaProteccion()
-              .getId()) {
+          if (!solicitudProteccionExistente.getViaProteccion().getId()
+              .equals(solicitudProteccion.getViaProteccion().getId())) {
             Set<ConstraintViolation<SolicitudProteccion>> result = validator.validate(solicitudProteccion,
                 SolicitudProteccion.OnActualizarViaProteccion.class);
             if (!result.isEmpty()) {
               throw new ConstraintViolationException(result);
             }
-            solicitudProteccionExistente.setViaProteccion(solicitudProteccion.getViaProteccion());
+            ViaProteccion viaProteccionActualizar = this.viaProteccionRepository
+                .findById(solicitudProteccion.getViaProteccion().getId())
+                .orElseThrow(() -> new ViaProteccionNotFoundException(solicitudProteccion.getViaProteccion().getId()));
+            solicitudProteccionExistente.setViaProteccion(viaProteccionActualizar);
           }
           solicitudProteccionExistente.setNumeroSolicitud(solicitudProteccion.getNumeroSolicitud());
           solicitudProteccionExistente.setComentarios(solicitudProteccion.getComentarios());
@@ -149,7 +153,7 @@ public class SolicitudProteccionService {
                 .setFechaFinPriorPresFasNacRec(solicitudProteccion.getFechaFinPriorPresFasNacRec());
           }
 
-          if (solicitudProteccion.getViaProteccion().getTipoPropiedad().equals(TipoPropiedad.INDUSTRIAL)) {
+          if (solicitudProteccionExistente.getViaProteccion().getTipoPropiedad().equals(TipoPropiedad.INDUSTRIAL)) {
             solicitudProteccionExistente.setEstado(solicitudProteccion.getEstado());
             if (solicitudProteccionExistente.getEstado().equals(EstadoSolicitudProteccion.CADUCADA)) {
               solicitudProteccionExistente.setFechaCaducidad(solicitudProteccion.getFechaCaducidad());
