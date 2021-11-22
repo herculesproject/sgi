@@ -1484,6 +1484,7 @@
   "menu.secundario.selector-modulo": "Selector de módulo",
   "msg.cloned.entity.success": "{entity} clonad{gender,select,male{o} female{a} other{o/a}} correctamente",
   "msg.continue.entity.not-set": "¿Desea continuar sin especificar el/la {entity}?",
+  "msg.continue.notificacion.presupuesto": "Se enviará la notificación de presupuestos al Sistema de gestión económica ¿desea continuar?",
   "msg.convocatoria-concepto-gasto.create.success": "Se ha asignado correctamente el concepto de gasto a la convocatoria",
   "msg.csp.cambio-estado.success": "Se ha realizado el cambio de estado correctamente",
   "msg.csp.convocatoria-concepto-gasto.listado.codigo-economico.delete": "Existen códigos económicos asignados al concepto de gasto de la convocatoria. ¿Desea eliminar el concepto de gasto asignado a la convocatoria?",
