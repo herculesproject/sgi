@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { SgpFormlyFormsModule } from '../formly-forms/sgp-formly-forms.module';
 import { PersonaEmailPipe } from './pipes/persona-email.pipe';
@@ -26,7 +27,8 @@ import { PersonaNombreCompletoPipe } from './pipes/persona-nombre-completo.pipe'
     MaterialDesignModule,
     FormsModule,
     ReactiveFormsModule,
-    SgpFormlyFormsModule
+    SgpFormlyFormsModule,
+    SgiAuthModule
   ],
   exports: [
     SelectPersonaComponent,
