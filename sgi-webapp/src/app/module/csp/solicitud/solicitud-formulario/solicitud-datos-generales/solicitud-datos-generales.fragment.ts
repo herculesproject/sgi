@@ -185,7 +185,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.solicitud = solicitud;
     if (solicitud?.estado?.estado === Estado.BORRADOR) {
       this.getFormGroup().controls.titulo.enable();
-      this.getFormGroup().controls.estado.enable();
       this.getFormGroup().controls.convocatoria.enable();
       this.getFormGroup().controls.codigoExterno.enable();
       this.getFormGroup().controls.observaciones.enable();
