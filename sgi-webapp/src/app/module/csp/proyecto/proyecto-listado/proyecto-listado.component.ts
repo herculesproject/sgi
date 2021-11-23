@@ -291,12 +291,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.onSearch();
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IProyectoListadoData>> {
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IProyectoListadoData>> {
     let observable$: Observable<SgiRestListResult<IProyecto>> = null;
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      observable$ = this.proyectoService.findTodos(this.getFindOptions());
+      observable$ = this.proyectoService.findTodos(this.getFindOptions(reset));
     } else {
-      observable$ = this.proyectoService.findAll(this.getFindOptions());
+      observable$ = this.proyectoService.findAll(this.getFindOptions(reset));
     }
     return observable$.pipe(
       map((response) => {

@@ -140,8 +140,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IEvaluador>> {
-    const observable$ = this.evaluadoresService.findAll(this.getFindOptions());
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluador>> {
+    const observable$ = this.evaluadoresService.findAll(this.getFindOptions(reset));
     return observable$;
   }
 

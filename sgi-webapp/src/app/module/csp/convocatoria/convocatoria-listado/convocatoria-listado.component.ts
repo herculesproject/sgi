@@ -259,8 +259,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     ).subscribe((value) => this.textErrorCloning = value);
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
-    const observable$ = this.convocatoriaService.findAllTodosRestringidos(this.getFindOptions()).pipe(
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IConvocatoriaListado>> {
+    const observable$ = this.convocatoriaService.findAllTodosRestringidos(this.getFindOptions(reset)).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {

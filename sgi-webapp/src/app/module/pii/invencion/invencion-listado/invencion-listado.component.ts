@@ -147,8 +147,8 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     ));
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IInvencion>> {
-    const observable$ = this.invencionService.findTodos(this.getFindOptions());
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IInvencion>> {
+    const observable$ = this.invencionService.findTodos(this.getFindOptions(reset));
     return observable$;
   }
 
