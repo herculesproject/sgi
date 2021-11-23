@@ -14,4 +14,6 @@ export interface IPersona {
   vinculacion: IVinculacion;
   datosAcademicos: IDatosAcademicos;
   entidad: IEmpresa;
+  personalPropio: boolean;
+  entidadPropia: IEmpresa;
 }

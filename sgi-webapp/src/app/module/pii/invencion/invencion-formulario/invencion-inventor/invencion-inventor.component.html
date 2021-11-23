@@ -29,7 +29,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.invencion-inventor.entidad' |
           translate}}
         </th>
-        <td mat-cell *matCellDef="let inventor">{{inventor.value.inventor?.entidad?.nombre}}</td>
+        <td mat-cell *matCellDef="let inventor">{{inventor.value.inventor | inventorEntidad}}</td>
       </ng-container>
       <!-- Porcentaje Participacion -->
       <ng-container matColumnDef="participacion">

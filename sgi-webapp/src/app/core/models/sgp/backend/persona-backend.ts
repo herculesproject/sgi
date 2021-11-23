@@ -13,4 +13,6 @@ export interface IPersonaBackend {
   vinculacion: IVinculacion;
   datosAcademicos: IDatosAcademicos;
   empresaRef: string;
+  personalPropio: boolean;
+  entidadPropiaRef: string;
 }
