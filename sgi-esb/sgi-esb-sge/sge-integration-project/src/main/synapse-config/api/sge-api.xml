@@ -736,10 +736,27 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value="" />
       </call-template>
-      <sequence key="sge-add-x-api-key-sequence" />
-      <send>
-        <endpoint key="sge-endpoint" />
-      </send>
+
+      <log level="custom">
+        <property name="SGI_ESB_CONTEXT" expression="get-property('env', 'SGI_ESB_CONTEXT')" />
+      </log>
+
+      <switch source="get-property('env', 'SGI_ESB_CONTEXT')">
+        <case regex="dev">
+          <log level="custom">
+            <property name="response" value="dev mock" />
+          </log>
+          <property name="NO_ENTITY_BODY" value="true" scope="axis2" type="BOOLEAN" />
+          <respond />
+        </case>
+        <default>
+          <sequence key="sge-add-x-api-key-sequence" />
+          <send>
+            <endpoint key="sge-endpoint" />
+          </send>
+        </default>
+      </switch>
+
     </inSequence>
     <outSequence>
       <respond />
