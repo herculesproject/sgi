@@ -300,7 +300,7 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
       } else if (this.proyectoData.action === ACTION_MODAL_MODE.EDIT) {
         delete this.formlyData.model.proyectoSgeId;
         this.parseModel();
-        this.subscriptions.push(this.proyectoSgeService.updateProyecto(this.proyectoData.proyectoSgiId, this.formlyData.model).subscribe(
+        this.subscriptions.push(this.proyectoSgeService.updateProyecto(this.proyectoData.proyectoSge.id, this.formlyData.model).subscribe(
           () => {
             this.snackBarService.showSuccess(this.textoUpdateSuccess);
             this.matDialogRef.close(this.proyectoData.proyectoSge);
