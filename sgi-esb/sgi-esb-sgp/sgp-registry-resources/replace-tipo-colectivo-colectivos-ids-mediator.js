@@ -40,6 +40,9 @@ function mediate(mc) {
       case 'AUTOR_INVENCION':
         colectivosId = '1,2,3,4';
         break;
+      case 'RESPONSABLE_PROYECTO_EXTERNO':
+        colectivosId = '4';
+        break;
       default:
         colectivosId = '0';
         break;
