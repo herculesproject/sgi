@@ -318,12 +318,12 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
     FormlyUtils.convertFormlyToJSON(this.formlyData.model, this.formlyData.fields);
     this.formlyData.model.causaExencion = this.formlyData.data.causaExencion;
     this.formlyData.model.modeloEjecucion = {
-      id: this.formlyData.model.modeloEjecucion.id,
-      nombre: this.formlyData.model.modeloEjecucion.nombre,
+      id: this.formlyData.model.modeloEjecucion?.id,
+      nombre: this.formlyData.model.modeloEjecucion?.nombre,
     };
     this.formlyData.model.tipoFinalidad = {
-      id: this.formlyData.model.tipoFinalidad.id,
-      nombre: this.formlyData.model.tipoFinalidad.nombre,
+      id: this.formlyData.model.tipoFinalidad?.id,
+      nombre: this.formlyData.model.tipoFinalidad?.nombre,
     };
   }
 
