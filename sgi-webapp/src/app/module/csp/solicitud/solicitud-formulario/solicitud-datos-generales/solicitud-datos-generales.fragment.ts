@@ -191,7 +191,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.getFormGroup().controls.comentariosEstado.enable();
     }
     if (this.isInvestigador) {
-      const result = {
+      return {
         estado: solicitud?.estado?.estado,
         titulo: solicitud?.titulo ?? '',
         convocatoria: solicitud?.convocatoria,
@@ -199,9 +199,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         observaciones: solicitud?.observaciones ?? '',
         comentariosEstado: solicitud?.estado?.comentario,
       };
-      return result;
     } else {
-      const result = {
+      return {
         estado: solicitud.estado?.estado,
         titulo: solicitud.titulo,
         comentariosEstado: solicitud.estado?.comentario,
@@ -214,7 +213,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         codigoExterno: solicitud.codigoExterno,
         observaciones: solicitud.observaciones
       };
-      return result;
     }
 
   }
@@ -222,9 +220,13 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   getValue(): ISolicitud {
     const form = this.getFormGroup().controls;
     if (this.isInvestigador) {
-      this.solicitud.solicitante = {} as IPersona;
+      if (!this.solicitud.solicitante) {
+        this.solicitud.solicitante = {
+          id: this.authService.authStatus$?.getValue()?.userRefId
+        } as IPersona;
+      }
+
       this.solicitud.titulo = form.titulo.value;
-      this.solicitud.solicitante.id = this.authService.authStatus$?.getValue()?.userRefId;
       this.solicitud.observaciones = form.observaciones.value;
       this.solicitud.codigoExterno = form.codigoExterno.value;
     } else {
