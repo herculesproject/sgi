@@ -274,7 +274,7 @@ public class SolicitudService {
     Assert.notNull(id, "Solicitud id no puede ser null para desactivar un Solicitud");
 
     return repository.findById(id).map(solicitud -> {
-      String authorityInv = "CSP-SOL-BR-INV";
+      String authorityInv = "CSP-SOL-INV-BR";
       boolean hasAuthorityInv = SgiSecurityContextHolder.hasAuthority(authorityInv);
 
       if (hasAuthorityInv) {
@@ -519,54 +519,54 @@ public class SolicitudService {
           } else {
             // Si ya se había creado la petición de evaluación en ética
             switch (estadoSolicitud.getEstado()) {
-              case DENEGADA:
-                // Se debe recuperar la petición de ética y cambiar el valor del
-                // campo "estadoFinanciacion" a "Denegado"
-                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                    peticionEvaluacionRef);
+            case DENEGADA:
+              // Se debe recuperar la petición de ética y cambiar el valor del
+              // campo "estadoFinanciacion" a "Denegado"
+              ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
+                  restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
+                  new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                  peticionEvaluacionRef);
 
-                PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
-                if (peticionEvaluacionDenegada != null) {
-                  peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
+              PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
+              if (peticionEvaluacionDenegada != null) {
+                peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
 
-                  responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
-                      PeticionEvaluacion.class, peticionEvaluacionRef);
-                } else {
-                  // throw exception
-                  throw new GetPeticionEvaluacionException();
-                }
-                break;
-              case CONCEDIDA_PROVISIONAL:
-              case CONCEDIDA_PROVISIONAL_ALEGADA:
-              case CONCEDIDA_PROVISIONAL_NO_ALEGADA:
-              case CONCEDIDA:
-                // Se debe recuperar la petición de ética y cambiar el valor del
-                // campo "estadoFinanciacion" a "Concedido"
-                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                    peticionEvaluacionRef);
+                responsePeticionEvaluacionDenegada = restTemplate.exchange(
+                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                    new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
+                    PeticionEvaluacion.class, peticionEvaluacionRef);
+              } else {
+                // throw exception
+                throw new GetPeticionEvaluacionException();
+              }
+              break;
+            case CONCEDIDA_PROVISIONAL:
+            case CONCEDIDA_PROVISIONAL_ALEGADA:
+            case CONCEDIDA_PROVISIONAL_NO_ALEGADA:
+            case CONCEDIDA:
+              // Se debe recuperar la petición de ética y cambiar el valor del
+              // campo "estadoFinanciacion" a "Concedido"
+              ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
+                  restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
+                  new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                  peticionEvaluacionRef);
 
-                PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
-                if (peticionEvaluacionConcedida != null) {
-                  peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
+              PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
+              if (peticionEvaluacionConcedida != null) {
+                peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
 
-                  responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
-                      PeticionEvaluacion.class, peticionEvaluacionRef);
-                } else {
-                  // throw exception
-                  throw new GetPeticionEvaluacionException();
-                }
-                break;
-              default:
-                // Do nothing
-                break;
+                responsePeticionEvaluacionConcedida = restTemplate.exchange(
+                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                    new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
+                    PeticionEvaluacion.class, peticionEvaluacionRef);
+              } else {
+                // throw exception
+                throw new GetPeticionEvaluacionException();
+              }
+              break;
+            default:
+              // Do nothing
+              break;
             }
           }
         }
@@ -808,28 +808,36 @@ public class SolicitudService {
         throw new SolicitudProyectoNotFoundException(solicitud.getId());
       }
 
-      // En caso de sea colaborativo y no tenga coordinador externo
-      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null) {
-        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-        throw new ColaborativoWithoutCoordinadorExternoException();
-      }
-
       if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
         log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
         throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
       }
 
-      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
-        List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
-            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
-
-        if (CollectionUtils.isEmpty(solicitudProyectoSocios)) {
+      if (!hasAuthorityEditInvestigador()) {
+        // En caso de sea colaborativo y no tenga coordinador externo
+        if (Boolean.TRUE.equals(solicitudProyecto.getColaborativo())
+            && solicitudProyecto.getCoordinadorExterno() == null) {
           log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-          throw new SolicitudProyectoWithoutSocioCoordinadorException();
+          throw new ColaborativoWithoutCoordinadorExternoException();
+        }
+
+        if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
+          List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
+              .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
+
+          if (CollectionUtils.isEmpty(solicitudProyectoSocios)) {
+            log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+            throw new SolicitudProyectoWithoutSocioCoordinadorException();
+          }
         }
       }
+
     }
     log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+  }
+
+  private boolean hasAuthorityEditInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
