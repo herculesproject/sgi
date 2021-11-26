@@ -32,6 +32,7 @@ import { MenuContentComponent, MenuContentFooter } from './menu-content/menu-con
 import { MenuGroupComponent } from './menu-group/menu-group.component';
 import { MenuItemComponent } from './menu-item/menu-item.component';
 import { MenuSubItemComponent } from './menu-subitem/menu-subitem.component';
+import { PalabraClaveComponent } from './palabra-clave/palabra-clave.component';
 import { ProblemPanelComponent } from './problem-panel/problem-panel.component';
 import { RootComponent } from './root/root.component';
 import { SelectBooleanComponent } from './select-boolean/select-boolean.component';
@@ -74,7 +75,8 @@ import { SelectComponent } from './select/select.component';
     DialogHeaderComponent,
     DialogFooterComponent,
     ActionDialogComponent,
-    ExportDialogComponent
+    ExportDialogComponent,
+    PalabraClaveComponent
   ],
   imports: [
     CommonModule,
@@ -114,7 +116,8 @@ import { SelectComponent } from './select/select.component';
     MenuGroupComponent,
     MenuSubItemComponent,
     ActionDialogComponent,
-    ExportDialogComponent
+    ExportDialogComponent,
+    PalabraClaveComponent
   ]
 })
 export class SharedModule { }
