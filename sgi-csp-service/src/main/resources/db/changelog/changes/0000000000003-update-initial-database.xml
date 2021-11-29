@@ -16,4 +16,11 @@
   <changeSet author="user (generated)" id="0000000000003-5">
     <dropNotNullConstraint columnDataType="varchar(50)" columnName="tipo_presupuesto" tableName="solicitud_proyecto" />
   </changeSet>
+
+  <!-- UPDATE TABLE TIPO_FACTURACION -->
+  <changeSet author="user (generated)" id="0000000000003-6">
+    <addColumn tableName="tipo_facturacion">
+      <column name="tipo_comunicado" type="VARCHAR(250)" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
