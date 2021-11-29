@@ -1112,7 +1112,7 @@
   "error.pii.invencion-titularidad.periodo-titularidad.fecha-inicio.after": "La Fecha Inicio Nueva Titularidad tiene que ser posterior a la Fecha de Fin Titularidad Vigente",
   "error.pii.invencion-titularidad.periodo-titularidad.fecha-inicio.min": "La Fecha de Inicio introducida, ha de ser posterior a la Fecha de Inicio del periodo vigente",
   "error.pii.invencion-titularidad.periodo-titularidad.participacion": "La participación debe sumar 100",
-  "error.pii.reparto.equipo-inventor.importe-total-inventor": "La suma del Importe a Nómina, Importe a Proyecto e Importe a Otros, debe ser igual al Importe Total",
+  "error.pii.reparto.equipo-inventor.importe-total-inventor": "La suma de los importes parciales debe ser igual al importe total",
   "error.pii.reparto.equipo-inventor.importe-total-sum-equipo-inventor": "El Importe del reparto a equipo inventor debe coincidir con el Total importe desglose reparto a equipo inventor. Hay un desvio de {roundingError}€",
   "error.pii.reparto.resultado": "El resultado del reparto debe ser igual o mayor que 0",
   "error.proyecto-concepto-gasto.create": "Error al asignar el concepto de gasto al proyecto",

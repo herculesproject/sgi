@@ -251,7 +251,11 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
       }),
       importeRepartoEquipoInventor: new FormControl(
         undefined,
-        [Validators.required, Validators.min(0.01), Validators.max(this.totalRepartir), NumberValidator.maxDecimalDigits(2)]
+        [
+          Validators.required, Validators.min(0),
+          Validators.max(NumberUtils.roundNumber(this.totalRepartir)),
+          NumberValidator.maxDecimalDigits(2)
+        ]
       )
     });
 
@@ -270,14 +274,14 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
             NumberUtils.roundNumber(this.totalRepartir - importeRepartoEquipoInventor)
           );
         } else {
-          this.formPart.onImporteRepartoEquipoInventorChanges(0, false);
+          this.formPart.onImporteRepartoEquipoInventorChanges(importeRepartoEquipoInventor, false, true);
         }
       })
     );
   }
 
   private calculateImporteRepartoEquipoInventor(tramoReparto: ITramoReparto): number {
-    if (this.formPart.importeEquipoInventor) {
+    if (typeof this.formPart.importeEquipoInventor === 'number' && this.formPart.importeEquipoInventor >= 0) {
       return this.formPart.importeEquipoInventor;
     }
     if (tramoReparto) {
