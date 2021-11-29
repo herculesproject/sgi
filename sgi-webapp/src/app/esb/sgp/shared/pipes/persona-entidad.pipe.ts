@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { IPersona } from '@core/models/sgp/persona';
 
 @Pipe({
-  name: 'inventorEntidad'
+  name: 'personaEntidad'
 })
-export class InventorEntidadPipe implements PipeTransform {
+export class PersonaEntidadPipe implements PipeTransform {
 
   transform({ entidad, entidadPropia }: IPersona): string {
     let entidadTitle = '';
@@ -18,5 +18,4 @@ export class InventorEntidadPipe implements PipeTransform {
     }
     return entidadTitle;
   }
-
 }

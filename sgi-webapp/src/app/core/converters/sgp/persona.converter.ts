@@ -20,6 +20,7 @@ class PersonaConverter extends SgiBaseConverter<IPersonaBackend, IPersona> {
       entidad: value.empresaRef ? { id: value.empresaRef } as IEmpresa : undefined,
       personalPropio: value.personalPropio,
       entidadPropia: value.entidadPropiaRef ? { id: value.entidadPropiaRef } as IEmpresa : undefined,
+      emails: value.emails,
     };
   }
 
@@ -39,6 +40,7 @@ class PersonaConverter extends SgiBaseConverter<IPersonaBackend, IPersona> {
       empresaRef: value.entidad?.id,
       personalPropio: value.personalPropio,
       entidadPropiaRef: value.entidadPropia?.id,
+      emails: value.emails,
     };
   }
 }

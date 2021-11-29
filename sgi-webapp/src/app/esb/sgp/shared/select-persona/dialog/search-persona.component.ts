@@ -36,7 +36,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
 
   formGroup: FormGroup;
 
-  displayedColumns = ['nombre', 'apellidos', 'numeroDocumento', 'entidad', 'acciones'];
+  displayedColumns = ['nombre', 'apellidos', 'email', 'entidad', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
 

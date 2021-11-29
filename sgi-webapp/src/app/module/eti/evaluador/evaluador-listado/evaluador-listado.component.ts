@@ -146,7 +146,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['nombre', 'numeroDocumento', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
+    this.displayedColumns = ['nombre', 'persona', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
   }
 
   protected createFilter(): SgiRestFilter {

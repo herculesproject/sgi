@@ -22,6 +22,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RepartoEquipoModalComponent } from '../../modals/reparto-equipo-modal/reparto-equipo-modal.component';
 import { NumberUtils } from '@core/utils/number.utils';
 import { ESTADO_MAP } from '@core/models/pii/reparto';
+import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/persona-email.pipe';
 
 const UNIVERSIDAD_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-universidad');
 const INVENTORES_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-inventores');
@@ -56,8 +57,8 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
           return wrapper.value?.repartoEquipoInventor?.invencionInventor?.inventor?.nombre;
         case 'apellidos':
           return wrapper.value?.repartoEquipoInventor?.invencionInventor?.inventor?.apellidos;
-        case 'numeroDocumento':
-          return wrapper.value?.repartoEquipoInventor?.invencionInventor?.inventor?.numeroDocumento;
+        case 'persona':
+          return getPersonaEmailListConcatenated(wrapper.value?.repartoEquipoInventor?.invencionInventor?.inventor);
         case 'entidad':
           return wrapper.value?.repartoEquipoInventor?.invencionInventor?.inventor?.entidad?.nombre;
         case 'participacion':

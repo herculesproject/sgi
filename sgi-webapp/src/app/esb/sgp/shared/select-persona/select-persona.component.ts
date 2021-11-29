@@ -93,7 +93,15 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
       return '';
     }
 
-    return `${this.value.nombre} ${this.value.apellidos} (${this.value.numeroDocumento})`;
+    return `${this.value.nombre} ${this.value.apellidos} (${this.getEmailPrincipal(this.value)})`;
+  }
+
+  private getEmailPrincipal({ emails }: IPersona): string {
+    if (!emails) {
+      return '';
+    }
+    const emailDataPrincipal = emails.find(emailData => emailData.principal);
+    return emailDataPrincipal?.email ?? '';
   }
 
 }

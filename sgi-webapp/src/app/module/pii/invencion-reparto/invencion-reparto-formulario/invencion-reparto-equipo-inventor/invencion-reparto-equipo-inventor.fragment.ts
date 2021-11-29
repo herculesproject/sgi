@@ -62,7 +62,7 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   displayIngresosColumns: string[] = [];
   ingresosColumns: IColumnDefinition[] = [];
   displayEquipoInventorColumns: string[] = [];
-  private _displayEquipoInventorColumns = ['nombre', 'apellidos', 'numeroDocumento',
+  private _displayEquipoInventorColumns = ['nombre', 'apellidos', 'persona',
     'entidad', 'participacion', 'porcentajeRepartoInventor', 'importeNomina',
     'importeProyecto', 'importeOtros', 'importeTotal'];
   displayEquipoInventorFooterColumns: string[] = [];

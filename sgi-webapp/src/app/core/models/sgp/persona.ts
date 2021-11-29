@@ -1,5 +1,6 @@
 import { IEmpresa } from '../sgemp/empresa';
 import { IDatosAcademicos } from './datos-academicos';
+import { IEmail } from './email';
 import { ISexo } from './sexo';
 import { ITipoDocumento } from './tipo-documento';
 import { IVinculacion } from './vinculacion';
@@ -16,4 +17,5 @@ export interface IPersona {
   entidad: IEmpresa;
   personalPropio: boolean;
   entidadPropia: IEmpresa;
+  emails: IEmail[];
 }

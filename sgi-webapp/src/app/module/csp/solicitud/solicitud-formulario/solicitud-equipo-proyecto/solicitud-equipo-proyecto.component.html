@@ -29,9 +29,9 @@
       <!-- Nº identificacion Column -->
       <ng-container matColumnDef="persona">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'csp.solicitud-equipo-proyecto.numero-identificacion' | translate}}
+          {{'csp.solicitud-equipo-proyecto.email' | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.solicitudProyectoEquipo.persona?.numeroDocumento}} </td>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.solicitudProyectoEquipo.persona | personaEmail}} </td>
       </ng-container>
 
       <!-- Nombre Column -->
