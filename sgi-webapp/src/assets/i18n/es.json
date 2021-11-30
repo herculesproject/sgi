@@ -1703,6 +1703,7 @@
   "pii.sector-aplicacion.descripcion": "Descripción",
   "pii.sector-aplicacion.nombre": "Nombre",
   "pii.sector-licenciado": "Sector{count,plural,=0{es} one{} other{es}} licenciado{count,plural,=0{s} one{} other{s}}",
+  "pii.sector-licenciado.duplicado": "Ya existe un {entity} con esas caraterísticas",
   "pii.sector-licenciado.exclusividad": "Exclusividad",
   "pii.sector-licenciado.fecha-fin": "Fecha fin licencia",
   "pii.sector-licenciado.fecha-inicio": "Fecha inicio licencia",
