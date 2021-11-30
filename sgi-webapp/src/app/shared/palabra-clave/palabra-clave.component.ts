@@ -21,7 +21,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, startWith, switchMap } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -241,15 +241,21 @@ export class PalabraClaveComponent implements
           size: 5
         }
       };
-      return this.palabraClaveService.findAll(findOptions);
+      return this.palabraClaveService.findAll(findOptions).pipe(
+        catchError(() => this.buildEmptyResponse())
+      );
     }
     else {
-      return of({
-        items: [],
-        page: { count: 0, index: 0, size: 0, total: 0 },
-        total: 0
-      } as SgiRestListResult<string>);
+      return this.buildEmptyResponse();
     }
+  }
+
+  private buildEmptyResponse(): Observable<SgiRestListResult<string>> {
+    return of({
+      items: [],
+      page: { count: 0, index: 0, size: 0, total: 0 },
+      total: 0
+    } as SgiRestListResult<string>);
   }
 
   ngAfterViewInit(): void {

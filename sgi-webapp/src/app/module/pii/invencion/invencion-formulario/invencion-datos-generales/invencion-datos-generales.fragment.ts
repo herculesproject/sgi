@@ -3,6 +3,7 @@ import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionAreaConocimiento } from '@core/models/pii/invencion-area-conocimiento';
 import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
+import { IInvencionPalabraClave } from '@core/models/pii/invencion-palabra-clave';
 import { IInvencionSectorAplicacion } from '@core/models/pii/invencion-sector-aplicacion';
 import { IPeriodoTitularidad } from '@core/models/pii/periodo-titularidad';
 import { IPeriodoTitularidadTitular } from '@core/models/pii/periodo-titularidad-titular';
@@ -15,6 +16,7 @@ import { InvencionDocumentoService } from '@core/services/pii/invencion/invencio
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { PeriodoTitularidadService } from '@core/services/pii/invencion/periodo-titularidad/periodo-titularidad.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
+import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
@@ -61,7 +63,8 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     private readonly areaConocimientoService: AreaConocimientoService,
     private readonly invencionDocumentoService: InvencionDocumentoService,
     private readonly isEditPerm: boolean,
-    private readonly periodoTitularidadService: PeriodoTitularidadService
+    private readonly periodoTitularidadService: PeriodoTitularidadService,
+    private readonly palabraClaveService: PalabraClaveService
   ) {
     super(key, true);
     this.invencion = {} as IInvencion;
@@ -79,6 +82,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       subtipoProteccion: new FormControl(null),
       proyecto: new FormControl(null),
       comentarios: new FormControl('', [Validators.maxLength(2000)]),
+      palabrasClave: new FormControl(null)
     });
 
     if (!this.hasEditPerm()) {
@@ -109,8 +113,11 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     return forkJoin({
       invencion: this.invencionService.findById(key),
       sectoresAplicacion: this.loadSectoresAplicacion(key),
-      areasConocimiento: this.loadAreasConocimiento(key)
+      areasConocimiento: this.loadAreasConocimiento(key),
+      palabrasClave: this.invencionService.findPalabrasClave(key).pipe(
+        map(({ items }) => items.map(invencionPalabraClave => invencionPalabraClave.palabraClave)))
     }).pipe(
+      tap(({ palabrasClave }) => this.getFormGroup().controls.palabrasClave.setValue(palabrasClave)),
       tap(({ sectoresAplicacion }) => this.sectoresAplicacion$.next(sectoresAplicacion)),
       tap(({ areasConocimiento }) => this.areasConocimiento$.next(areasConocimiento)),
       switchMap(({ invencion }) => {
@@ -122,10 +129,6 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
         } else {
           return of(invencion);
         }
-      }),
-      catchError((err) => {
-        this.logger.error(err);
-        return EMPTY;
       })
     );
   }
@@ -269,6 +272,12 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       mergeMap((createdInvencion: IInvencion) => this.persistPeriodoTitularidad(createdInvencion))
     );
 
+    if (this.getFormGroup().controls.palabrasClave.dirty) {
+      cascade = cascade.pipe(
+        mergeMap((createdInvencion: IInvencion) => this.saveOrUpdatePalabrasClave(createdInvencion))
+      );
+    }
+
     return cascade;
   }
 
@@ -281,7 +290,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     } else {
       cascade = cascade.pipe(
         switchMap(() => of(invencion))
-      )
+      );
     }
 
     if (this.hasChangesInvecionDatosGeneralesFragmentPart('hasChangesSectoresAplicacion')) {
@@ -293,6 +302,12 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
     if (this.hasChangesInvecionDatosGeneralesFragmentPart('hasChangesAreasConocimiento')) {
       cascade = cascade.pipe(
         mergeMap((updatedInvencion: IInvencion) => this.saveOrUpdateAreaConocimiento(updatedInvencion))
+      );
+    }
+
+    if (this.getFormGroup().controls.palabrasClave.dirty) {
+      cascade = cascade.pipe(
+        mergeMap((updatedInvencion: IInvencion) => this.saveOrUpdatePalabrasClave(updatedInvencion))
       );
     }
 
@@ -496,6 +511,18 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
         tap(() => this.setChangesInvencionDatosGeneralesFragment({ hasChangesSectoresAplicacion: false })),
         switchMap(() => of(invencion))
       );
+  }
+
+  private saveOrUpdatePalabrasClave(invencion: IInvencion): Observable<IInvencion> {
+    const palabrasClave = this.getFormGroup().controls.palabrasClave.value ?? [];
+    const invencionPalabrasClave: IInvencionPalabraClave[] = palabrasClave.map(palabraClave => ({
+      invencion,
+      palabraClave
+    } as IInvencionPalabraClave));
+    return this.palabraClaveService.update(palabrasClave).pipe(
+      mergeMap(() => this.invencionService.updatePalabrasClave(invencion.id, invencionPalabrasClave)),
+      map(() => invencion)
+    );
   }
 
   addSectorAplicacion(sectorAplicacion: ISectorAplicacion): void {
