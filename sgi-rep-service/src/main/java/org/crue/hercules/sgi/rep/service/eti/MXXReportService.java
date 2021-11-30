@@ -127,8 +127,9 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
    * @param reportOutput SgiReport
    * @param idMemoria    Id de la memoria
    * @param idFormulario Id del formulario
+   * @return byte[] Report
    */
-  public void getReportMXX(SgiReportDto reportOutput, Long idMemoria, Long idFormulario) {
+  public byte[] getReportMXX(SgiReportDto reportOutput, Long idMemoria, Long idFormulario) {
 
     Assert.notNull(idMemoria,
         // Defer message resolution untill is needed
@@ -143,6 +144,8 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
     getTituloMXX(hmTableModel, mxxReportOutput.getMemoria());
 
     getReportMXXIntern(reportOutput, hmTableModel);
+
+    return reportOutput.getContent();
   }
 
   private void getTituloMXX(Map<String, TableModel> hmTableModel, MemoriaDto memoria) {

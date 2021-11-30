@@ -168,30 +168,31 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
       informeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
 
       List<ComentarioDto> comentarios = evaluacionService.findByEvaluacionIdGestor(idEvaluacion);
-      final Set<Long> apartados = new HashSet<>();
       if (null != comentarios && !comentarios.isEmpty()) {
+        final Set<Long> apartados = new HashSet<>();
         comentarios.forEach(c -> getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
-      }
+        Long idFormulario = comentarios.get(0).getApartado().getBloque().getFormulario().getId();
 
-      // @formatter:off
-      BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
+        // @formatter:off
+        BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
         .idMemoria(idEvaluacion)
-        .idFormulario(evaluacion.getMemoria().getComite().getFormulario().getId())
+        .idFormulario(idFormulario)
         .mostrarRespuestas(false)
         .mostrarContenidoApartado(false)
         .comentarios(comentarios)
         .apartados(apartados)
         .build();
-      // @formatter:on
+        // @formatter:on
 
-      BloquesReportOutput reportOutput = getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+        BloquesReportOutput reportOutput = getDataFromApartadosAndRespuestas(etiBloquesReportInput);
 
-      final int orden = informeEvaluacionEvaluadorReportOutput.getBloques().size();
-      for (BloqueOutput bloque : reportOutput.getBloques()) {
-        bloque.setOrden(bloque.getOrden() + orden);
+        final int orden = informeEvaluacionEvaluadorReportOutput.getBloques().size();
+        for (BloqueOutput bloque : reportOutput.getBloques()) {
+          bloque.setOrden(bloque.getOrden() + orden);
+        }
+
+        informeEvaluacionEvaluadorReportOutput.getBloques().addAll(reportOutput.getBloques());
       }
-
-      informeEvaluacionEvaluadorReportOutput.getBloques().addAll(reportOutput.getBloques());
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);

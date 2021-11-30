@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.integration;
+package org.crue.hercules.sgi.rep.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -6,21 +6,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
-import org.crue.hercules.sgi.rep.service.SgiDynamicReportService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SgiDynamicReportServiceIT extends BaseIT {
+/**
+ * SgiDynamicReportServiceTest
+ */
+class SgiDynamicReportServiceTest extends BaseReportServiceTest {
+
+  private SgiDynamicReportService sgiDynamicReportService;
 
   @Autowired
-  SgiDynamicReportService sgiDynamicReportService;
+  private SgiConfigProperties sgiConfigProperties;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    sgiDynamicReportService = new SgiDynamicReportService(sgiConfigProperties);
+  }
 
   @Test
-  void testInformeDinamico() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-MEM-INV-ESCR" })
+  public void getDynamicReport_ReturnsResource() throws Exception {
     // given: data for report
 
     // @formatter:off
@@ -55,6 +66,7 @@ class SgiDynamicReportServiceIT extends BaseIT {
 
     // given: report generated
     assertNotNull(report);
+
   }
 
 }
