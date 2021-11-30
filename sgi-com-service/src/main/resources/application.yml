@@ -51,6 +51,21 @@ spring:
     # Set Liquibase changeLog parameters
     parameters:
       schemaPrefix: ${spring.jpa.properties.hibernate.[default_schema]}.
+  mail:
+    host: smtp.email.com
+    port: 465
+    protocol: smtps
+    username: info@hercules.org
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          startttls:
+            enabled: true
+        from:
+          email: noreply@hercules.org
+          name: Hércules Email
   mvc:
     # Whether a "NoHandlerFoundException" should be thrown if no Handler was found to process a request
     throw-exception-if-no-handler-found: true
