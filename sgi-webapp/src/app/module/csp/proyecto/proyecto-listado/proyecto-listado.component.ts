@@ -35,8 +35,7 @@ import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
-import { IProyectoListadoModalData, ProyectoListadoModalComponent }
-  from '../modals/proyecto-listado-modal/proyecto-listado-modal.component';
+import { IProyectoListadoModalData, ProyectoListadoModalComponent } from '../modals/proyecto-listado-modal/proyecto-listado-modal.component';
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
