@@ -17,6 +17,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogContentComponent } from './dialog-content/dialog-content.component';
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
+import { FormAutocompleteOffDirective } from './directives/form-autocomplete-off.directive';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
@@ -76,7 +77,8 @@ import { SelectComponent } from './select/select.component';
     DialogFooterComponent,
     ActionDialogComponent,
     ExportDialogComponent,
-    PalabraClaveComponent
+    PalabraClaveComponent,
+    FormAutocompleteOffDirective
   ],
   imports: [
     CommonModule,
@@ -117,7 +119,8 @@ import { SelectComponent } from './select/select.component';
     MenuSubItemComponent,
     ActionDialogComponent,
     ExportDialogComponent,
-    PalabraClaveComponent
+    PalabraClaveComponent,
+    FormAutocompleteOffDirective
   ]
 })
 export class SharedModule { }
