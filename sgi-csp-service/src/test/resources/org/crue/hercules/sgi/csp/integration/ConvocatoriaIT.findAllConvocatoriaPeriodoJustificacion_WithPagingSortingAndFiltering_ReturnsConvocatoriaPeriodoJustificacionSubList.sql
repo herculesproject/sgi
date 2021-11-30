@@ -49,4 +49,13 @@ INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_pe
 INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
   VALUES (8, 2, 4, 25, 28, null, null, 'observaciones-8', 'FINAL');
 
+-- TIPO FASE
+INSERT INTO test.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 
+--CONVOCATORIA FASE
+INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
+
+-- CONFIGURACION SOLICITUD
+INSERT INTO test.configuracion_solicitud 
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345);

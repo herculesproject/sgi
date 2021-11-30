@@ -39,3 +39,14 @@ INSERT INTO test.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref
 INSERT INTO test.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (6, 2, 'entidad-002');
 INSERT INTO test.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (7, 2, 'entidad-003');
 INSERT INTO test.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (8, 2, 'entidad-004');
+
+-- TIPO FASE
+INSERT INTO test.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+
+--CONVOCATORIA FASE
+INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
+
+-- CONFIGURACION SOLICITUD
+INSERT INTO test.configuracion_solicitud 
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345);

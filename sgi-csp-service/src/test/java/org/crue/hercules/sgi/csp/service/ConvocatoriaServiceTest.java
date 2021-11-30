@@ -2472,6 +2472,10 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: existing Convocatoria
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
     // when: find by id Convocatoria
@@ -2808,6 +2812,44 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
         .convocatoriaId(convocatoria.getId())
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .build();
+    // @formatter:on
+
+    return configuracionSolicitud;
+  }
+
+  /**
+   * Genera un objeto ConfiguracionSolicitud
+   * 
+   * @param configuracionSolicitudId
+   * @param convocatoriaId
+   * @param convocatoriaFaseId
+   * @return
+   */
+  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
+      Long convocatoriaFaseId) {
+    // @formatter:off
+    TipoFase tipoFase = TipoFase.builder()
+        .id(convocatoriaFaseId)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
+        .build();
+
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoriaId(convocatoriaId)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
+        .build();
+
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))

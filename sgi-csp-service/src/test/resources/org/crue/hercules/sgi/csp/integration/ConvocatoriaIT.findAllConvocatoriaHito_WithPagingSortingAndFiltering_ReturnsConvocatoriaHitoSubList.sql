@@ -40,3 +40,14 @@ INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, c
 INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(4, 1, 1,'2021-10-25T00:00:00Z', 'comentario-4', true);
 INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(5, 2, 1,'2021-10-26T00:00:00Z', 'comentario-005', true);
 INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(6, 1, 1,'2021-10-27T00:00:00Z', 'comentario-06', true);
+
+-- TIPO FASE
+INSERT INTO test.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+
+--CONVOCATORIA FASE
+INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
+
+-- CONFIGURACION SOLICITUD
+INSERT INTO test.configuracion_solicitud 
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345);

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +11,15 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFo
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
@@ -31,6 +36,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ConvocatoriaEntidadFinanciadoraServiceTest
@@ -47,13 +53,16 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   private TipoFinanciacionRepository tipoFinanciacionRepository;
   @Mock
   private ConvocatoriaService convocatoriaService;
+  @Mock
+  ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
   private ConvocatoriaEntidadFinanciadoraService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaEntidadFinanciadoraServiceImpl(repository, convocatoriaRepository,
-        fuenteFinanciacionRepository, tipoFinanciacionRepository, convocatoriaService);
+        fuenteFinanciacionRepository, tipoFinanciacionRepository, convocatoriaService,
+        configuracionSolicitudRepository);
   }
 
   @Test
@@ -514,14 +523,20 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllByConvocatoria_ReturnsPage() {
     // given: Una lista con 37 ConvocatoriaEntidadFinanciadora para la Convocatoria
     Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     List<ConvocatoriaEntidadFinanciadora> convocatoriasEntidadesFinanciadoras = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
       convocatoriasEntidadesFinanciadoras.add(generarMockConvocatoriaEntidadFinanciadora(i, convocatoriaId));
     }
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaEntidadFinanciadora>>any(),
         ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -618,4 +633,41 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     return convocatoriaEntidadFinanciadora;
   }
 
+  /**
+   * Genera un objeto ConfiguracionSolicitud
+   * 
+   * @param configuracionSolicitudId
+   * @param convocatoriaId
+   * @param convocatoriaFaseId
+   * @return
+   */
+  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
+      Long convocatoriaFaseId) {
+    // @formatter:off
+    TipoFase tipoFase = TipoFase.builder()
+        .id(convocatoriaFaseId)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
+        .build();
+
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoriaId(convocatoriaId)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
+        .build();
+
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoriaId(convocatoriaId)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .build();
+    // @formatter:on
+
+    return configuracionSolicitud;
+  }
 }

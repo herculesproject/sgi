@@ -59,3 +59,11 @@ INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO
 INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, NOMBRE, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(6, 2, 1, 2, 'nombre doc-6', true, 'observaciones-6', 'documentoRef-3');
 INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, NOMBRE, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(7, 2, 1, 3, 'nombre doc-7', true, 'observaciones-7', 'documentoRef-2');
 INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, NOMBRE, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(8, 2, null, 1, 'nombre doc-8', true, 'observaciones-8', 'documentoRef-2');
+
+--CONVOCATORIA FASE
+INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
+
+-- CONFIGURACION SOLICITUD
+INSERT INTO test.configuracion_solicitud 
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345);

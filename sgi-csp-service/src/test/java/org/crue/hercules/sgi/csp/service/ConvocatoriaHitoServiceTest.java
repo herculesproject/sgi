@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
@@ -10,15 +11,19 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaHitoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
@@ -34,6 +39,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ConvocatoriaHitoServiceTest
@@ -50,11 +56,15 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   @Mock
   private ModeloTipoHitoRepository modeloTipoHitoRepository;
 
+  @Mock
+  ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+
   private ConvocatoriaHitoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaHitoServiceImpl(repository, convocatoriaRepository, modeloTipoHitoRepository);
+    service = new ConvocatoriaHitoServiceImpl(repository, convocatoriaRepository, modeloTipoHitoRepository,
+        configuracionSolicitudRepository);
   }
 
   @Test
@@ -532,14 +542,20 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllByConvocatoria_ReturnsPage() {
     // given: Una lista con 37 ConvocatoriaHito para la Convocatoria
     Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     List<ConvocatoriaHito> convocatoriasEntidadesConvocantes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
       convocatoriasEntidadesConvocantes.add(generarMockConvocatoriaHito(i, convocatoriaId));
     }
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaHito>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -734,4 +750,47 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         .build();
     // @formatter:on
   }
+
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).build();
+  }
+
+  /**
+   * Genera un objeto ConfiguracionSolicitud
+   * 
+   * @param configuracionSolicitudId
+   * @param convocatoriaId
+   * @param convocatoriaFaseId
+   * @return
+   */
+  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
+      Long convocatoriaFaseId) {
+    // @formatter:off
+    TipoFase tipoFase = TipoFase.builder()
+        .id(convocatoriaFaseId)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
+        .build();
+
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoriaId(convocatoriaId)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
+        .build();
+
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoriaId(convocatoriaId)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .build();
+    // @formatter:on
+
+    return configuracionSolicitud;
+  }
+
 }

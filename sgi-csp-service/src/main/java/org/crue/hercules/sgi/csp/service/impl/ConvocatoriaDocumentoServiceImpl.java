@@ -2,12 +2,17 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.Optional;
 
+import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessConvocatoriaException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
@@ -15,6 +20,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,14 +44,17 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
+  private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
   public ConvocatoriaDocumentoServiceImpl(ConvocatoriaDocumentoRepository convocatoriaDocumentoRepository,
       ConvocatoriaRepository convocatoriaRepository, ModeloTipoFaseRepository modeloTipoFaseRepository,
-      ModeloTipoDocumentoRepository modeloTipoDocumentoRepository) {
+      ModeloTipoDocumentoRepository modeloTipoDocumentoRepository,
+      ConfiguracionSolicitudRepository configuracionSolicitudRepository) {
     this.repository = convocatoriaDocumentoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.modeloTipoDocumentoRepository = modeloTipoDocumentoRepository;
+    this.configuracionSolicitudRepository = configuracionSolicitudRepository;
   }
 
   /**
@@ -155,6 +164,18 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
   @Override
   public Page<ConvocatoriaDocumento> findAllByConvocatoria(Long idConvocatoria, String query, Pageable paging) {
     log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - start");
+
+    Convocatoria convocatoria = convocatoriaRepository.findById(idConvocatoria)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(idConvocatoria));
+    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(idConvocatoria)
+        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(idConvocatoria));
+
+    if ((hasAuthorityViewInvestigador() && (!convocatoria.getEstado().equals(Estado.REGISTRADA))
+        || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI()))) {
+      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    }
+
     Specification<ConvocatoriaDocumento> specs = ConvocatoriaDocumentoSpecifications.byConvocatoriaId(idConvocatoria)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -299,5 +320,9 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
   @Override
   public boolean existsByConvocatoriaId(Long convocatoriaId) {
     return repository.existsByConvocatoriaId(convocatoriaId);
+  }
+
+  private boolean hasAuthorityViewInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-CON-INV-V");
   }
 }

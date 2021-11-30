@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -312,6 +313,11 @@ public class SolicitudService {
     log.debug("findById(Long id) - start");
     final Solicitud returnValue = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    if ((hasAuthorityViewInvestigador() && !returnValue.getSolicitanteRef().equals(getAuthenticationPersonaRef()))
+        || !hasAuthorityViewUnidadGestion(returnValue)) {
+      throw new UserNotAuthorizedToAccessSolicitudException();
+    }
+
     String authorityVisualizar = "CSP-SOL-V";
 
     Assert
@@ -519,54 +525,54 @@ public class SolicitudService {
           } else {
             // Si ya se había creado la petición de evaluación en ética
             switch (estadoSolicitud.getEstado()) {
-            case DENEGADA:
-              // Se debe recuperar la petición de ética y cambiar el valor del
-              // campo "estadoFinanciacion" a "Denegado"
-              ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                  restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                  new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                  peticionEvaluacionRef);
+              case DENEGADA:
+                // Se debe recuperar la petición de ética y cambiar el valor del
+                // campo "estadoFinanciacion" a "Denegado"
+                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
+                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
+                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                    peticionEvaluacionRef);
 
-              PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
-              if (peticionEvaluacionDenegada != null) {
-                peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
+                PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
+                if (peticionEvaluacionDenegada != null) {
+                  peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
 
-                responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                    new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
-                    PeticionEvaluacion.class, peticionEvaluacionRef);
-              } else {
-                // throw exception
-                throw new GetPeticionEvaluacionException();
-              }
-              break;
-            case CONCEDIDA_PROVISIONAL:
-            case CONCEDIDA_PROVISIONAL_ALEGADA:
-            case CONCEDIDA_PROVISIONAL_NO_ALEGADA:
-            case CONCEDIDA:
-              // Se debe recuperar la petición de ética y cambiar el valor del
-              // campo "estadoFinanciacion" a "Concedido"
-              ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                  restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                  new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                  peticionEvaluacionRef);
+                  responsePeticionEvaluacionDenegada = restTemplate.exchange(
+                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                      new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
+                      PeticionEvaluacion.class, peticionEvaluacionRef);
+                } else {
+                  // throw exception
+                  throw new GetPeticionEvaluacionException();
+                }
+                break;
+              case CONCEDIDA_PROVISIONAL:
+              case CONCEDIDA_PROVISIONAL_ALEGADA:
+              case CONCEDIDA_PROVISIONAL_NO_ALEGADA:
+              case CONCEDIDA:
+                // Se debe recuperar la petición de ética y cambiar el valor del
+                // campo "estadoFinanciacion" a "Concedido"
+                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
+                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
+                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
+                    peticionEvaluacionRef);
 
-              PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
-              if (peticionEvaluacionConcedida != null) {
-                peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
+                PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
+                if (peticionEvaluacionConcedida != null) {
+                  peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
 
-                responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                    new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
-                    PeticionEvaluacion.class, peticionEvaluacionRef);
-              } else {
-                // throw exception
-                throw new GetPeticionEvaluacionException();
-              }
-              break;
-            default:
-              // Do nothing
-              break;
+                  responsePeticionEvaluacionConcedida = restTemplate.exchange(
+                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
+                      new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
+                      PeticionEvaluacion.class, peticionEvaluacionRef);
+                } else {
+                  // throw exception
+                  throw new GetPeticionEvaluacionException();
+                }
+                break;
+              default:
+                // Do nothing
+                break;
             }
           }
         }
@@ -838,6 +844,19 @@ public class SolicitudService {
 
   private boolean hasAuthorityEditInvestigador() {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
+  }
+
+  private boolean hasAuthorityViewInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
+  }
+
+  private String getAuthenticationPersonaRef() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
+
+  private boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {
+    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", solicitud.getUnidadGestionRef())
+        || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef());
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
