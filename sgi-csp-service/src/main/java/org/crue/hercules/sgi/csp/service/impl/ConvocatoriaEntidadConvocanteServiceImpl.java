@@ -201,29 +201,30 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
    * Obtiene las {@link ConvocatoriaEntidadConvocante} para una
    * {@link Convocatoria}.
    *
-   * @param idConvocatoria el id de la {@link Convocatoria}.
+   * @param convocatoriaId el id de la {@link Convocatoria}.
    * @param query          la información del filtro.
    * @param pageable       la información de la paginación.
    * @return la lista de entidades {@link ConvocatoriaEntidadConvocante} de la
    *         {@link Convocatoria} paginadas.
    */
-  public Page<ConvocatoriaEntidadConvocante> findAllByConvocatoria(Long idConvocatoria, String query,
+  public Page<ConvocatoriaEntidadConvocante> findAllByConvocatoria(Long convocatoriaId, String query,
       Pageable pageable) {
     log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - start");
 
-    Convocatoria convocatoria = convocatoriaRepository.findById(idConvocatoria)
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(idConvocatoria));
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-        .findByConvocatoriaId(idConvocatoria)
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(idConvocatoria));
-
-    if ((hasAuthorityViewInvestigador() && (!convocatoria.getEstado().equals(Estado.REGISTRADA))
-        || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI()))) {
-      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
+    if (hasAuthorityViewInvestigador()) {
+      ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+          .findByConvocatoriaId(convocatoriaId)
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoriaId));
+      if (!convocatoria.getEstado().equals(Estado.REGISTRADA)
+          || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI())) {
+        throw new UserNotAuthorizedToAccessConvocatoriaException();
+      }
     }
 
     Specification<ConvocatoriaEntidadConvocante> specs = ConvocatoriaEntidadConvocanteSpecifications
-        .byConvocatoriaId(idConvocatoria).and(SgiRSQLJPASupport.toSpecification(query));
+        .byConvocatoriaId(convocatoriaId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConvocatoriaEntidadConvocante> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - end");

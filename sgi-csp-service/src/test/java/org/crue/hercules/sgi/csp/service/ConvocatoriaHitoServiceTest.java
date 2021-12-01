@@ -547,15 +547,12 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     // given: Una lista con 37 ConvocatoriaHito para la Convocatoria
     Long convocatoriaId = 1L;
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     List<ConvocatoriaHito> convocatoriasEntidadesConvocantes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
       convocatoriasEntidadesConvocantes.add(generarMockConvocatoriaHito(i, convocatoriaId));
     }
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoria));
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaHito>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -753,44 +750,6 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
     return Convocatoria.builder().id(convocatoriaId).build();
-  }
-
-  /**
-   * Genera un objeto ConfiguracionSolicitud
-   * 
-   * @param configuracionSolicitudId
-   * @param convocatoriaId
-   * @param convocatoriaFaseId
-   * @return
-   */
-  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
-      Long convocatoriaFaseId) {
-    // @formatter:off
-    TipoFase tipoFase = TipoFase.builder()
-        .id(convocatoriaFaseId)
-        .nombre("nombre-1")
-        .activo(Boolean.TRUE)
-        .build();
-
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
-        .id(convocatoriaFaseId)
-        .convocatoriaId(convocatoriaId)
-        .tipoFase(tipoFase)
-        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
-        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
-        .observaciones("observaciones")
-        .build();
-
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
-        .id(configuracionSolicitudId)
-        .convocatoriaId(convocatoriaId)
-        .tramitacionSGI(Boolean.TRUE)
-        .fasePresentacionSolicitudes(convocatoriaFase)
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
-        .build();
-    // @formatter:on
-
-    return configuracionSolicitud;
   }
 
 }

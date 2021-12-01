@@ -140,13 +140,14 @@ public class ConvocatoriaEntidadGestoraServiceImpl implements ConvocatoriaEntida
 
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-        .findByConvocatoriaId(convocatoriaId)
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoriaId));
-
-    if ((hasAuthorityViewInvestigador() && (!convocatoria.getEstado().equals(Estado.REGISTRADA))
-        || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI()))) {
-      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    if (hasAuthorityViewInvestigador()) {
+      ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+          .findByConvocatoriaId(convocatoriaId)
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoriaId));
+      if (!convocatoria.getEstado().equals(Estado.REGISTRADA)
+          || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI())) {
+        throw new UserNotAuthorizedToAccessConvocatoriaException();
+      }
     }
 
     Specification<ConvocatoriaEntidadGestora> specs = ConvocatoriaEntidadGestoraSpecifications

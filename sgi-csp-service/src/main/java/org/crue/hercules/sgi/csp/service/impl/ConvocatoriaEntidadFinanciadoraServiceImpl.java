@@ -268,15 +268,16 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     Convocatoria convocatoria = convocatoriaRepository.findById(idConvocatoria)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(idConvocatoria));
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-        .findByConvocatoriaId(idConvocatoria)
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(idConvocatoria));
 
-    if ((hasAuthorityViewInvestigador() && (!convocatoria.getEstado().equals(Estado.REGISTRADA))
-        || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI()))) {
-      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    if (hasAuthorityViewInvestigador()) {
+      ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+          .findByConvocatoriaId(idConvocatoria)
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(idConvocatoria));
+      if (!convocatoria.getEstado().equals(Estado.REGISTRADA)
+          || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI())) {
+        throw new UserNotAuthorizedToAccessConvocatoriaException();
+      }
     }
-
     Specification<ConvocatoriaEntidadFinanciadora> specs = ConvocatoriaEntidadFinanciadoraSpecifications
         .byConvocatoriaId(idConvocatoria).and(SgiRSQLJPASupport.toSpecification(query));
 
