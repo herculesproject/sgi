@@ -394,6 +394,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       form.disable();
     }
 
+    this.subscriptions.push(
+      this.getCodigosExternosProyectosRelacionados().subscribe(codigos => {
+        form.controls?.proyectosRelacionados.setValue(codigos.map(codigo => codigo).join(', '));
+      }));
+
     return form;
   }
 
@@ -492,11 +497,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.disableProyectoCoordinadoIfAnySocioExists(hasAnySocio);
         return proyecto;
       })).subscribe();
-
-    this.subscriptions.push(
-      this.getCodigosExternosProyectosRelacionados().subscribe(codigos => {
-        this.getFormGroup().controls?.proyectosRelacionados.setValue(codigos.map(codigo => codigo).join(', '));
-      }));
 
     return result;
   }
