@@ -313,8 +313,7 @@ public class SolicitudService {
     log.debug("findById(Long id) - start");
     final Solicitud returnValue = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    if ((hasAuthorityViewInvestigador() && !returnValue.getSolicitanteRef().equals(getAuthenticationPersonaRef()))
-        || !hasAuthorityViewUnidadGestion(returnValue)) {
+    if (!(hasAuthorityViewInvestigador(returnValue) || hasAuthorityViewUnidadGestion(returnValue))) {
       throw new UserNotAuthorizedToAccessSolicitudException();
     }
 
@@ -846,8 +845,9 @@ public class SolicitudService {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
   }
 
-  private boolean hasAuthorityViewInvestigador() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
+  private boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER")
+        && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
   }
 
   private String getAuthenticationPersonaRef() {

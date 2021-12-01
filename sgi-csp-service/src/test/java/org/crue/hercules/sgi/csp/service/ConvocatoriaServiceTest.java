@@ -2472,10 +2472,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: existing Convocatoria
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
     // when: find by id Convocatoria

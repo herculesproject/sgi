@@ -367,12 +367,14 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("findById(Long id) - start");
     final Convocatoria returnValue = repository.findById(id).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
 
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository.findByConvocatoriaId(id)
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(id));
+    if (hasAuthorityViewInvestigador()) {
+      ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository.findByConvocatoriaId(id)
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(id));
 
-    if ((hasAuthorityViewInvestigador() && (!returnValue.getEstado().equals(Estado.REGISTRADA))
-        || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI()))) {
-      throw new UserNotAuthorizedToAccessConvocatoriaException();
+      if (!returnValue.getEstado().equals(Estado.REGISTRADA)
+          || Boolean.FALSE.equals(configuracionSolicitud.getTramitacionSGI())) {
+        throw new UserNotAuthorizedToAccessConvocatoriaException();
+      }
     }
 
     log.debug("findById(Long id) - end");

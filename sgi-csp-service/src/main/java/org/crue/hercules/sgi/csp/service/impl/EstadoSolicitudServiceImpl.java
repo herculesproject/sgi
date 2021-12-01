@@ -68,8 +68,7 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
 
     Solicitud solicitud = solicitudRepository.findById(solicitudId)
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
-    if ((hasAuthorityViewInvestigador() && !solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef()))
-        || !hasAuthorityViewUnidadGestion(solicitud)) {
+    if (!(hasAuthorityViewInvestigador(solicitud) || hasAuthorityViewUnidadGestion(solicitud))) {
       throw new UserNotAuthorizedToAccessSolicitudException();
     }
 
@@ -78,8 +77,9 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
     return returnValue;
   }
 
-  private boolean hasAuthorityViewInvestigador() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
+  private boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER")
+        && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
   }
 
   private String getAuthenticationPersonaRef() {
