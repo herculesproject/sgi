@@ -62,7 +62,7 @@ class EtiReportControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-MEM-INV-ESCR", "ETI-MEM-INV-ERTR" })
-  public void getMXX_ReturnsResource() throws Exception {
+  void getMXX_ReturnsResource() throws Exception {
     Long idMemoria = 26L;
     Long idFormulario = 3L;
 
@@ -94,7 +94,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeEvaluacion_ReturnsResource() throws Exception {
+  void getReportInformeEvaluacion_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING).append("/informe-evaluacion/{idEvaluacion}")
@@ -124,7 +124,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeEvaluador_ReturnsResource() throws Exception {
+  void getReportInformeEvaluador_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING).append("/informe-ficha-evaluador/{idEvaluacion}")
@@ -154,7 +154,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeFavorableMemoria_ReturnsResource() throws Exception {
+  void getReportInformeFavorableMemoria_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
@@ -185,7 +185,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-DES",
       "ETI-ACT-DESR" })
-  public void getReportInformeActa_ReturnsResource() throws Exception {
+  void getReportInformeActa_ReturnsResource() throws Exception {
     Long idActa = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
@@ -216,7 +216,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeEvaluacionRetrospectiva_ReturnsResource() throws Exception {
+  void getReportInformeEvaluacionRetrospectiva_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().fecha(Instant.now())
@@ -252,7 +252,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeFavorableModificacion_ReturnsResource() throws Exception {
+  void getReportInformeFavorableModificacion_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
@@ -283,7 +283,7 @@ class EtiReportControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL",
       "ETI-EVC-INV-EVALR" })
-  public void getReportInformeFavorableRatificacion_ReturnsResource() throws Exception {
+  void getReportInformeFavorableRatificacion_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)

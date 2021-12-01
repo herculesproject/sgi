@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.rep.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
+import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluador;
 import org.crue.hercules.sgi.rep.service.eti.ApartadoService;
 import org.crue.hercules.sgi.rep.service.eti.BloqueService;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -56,12 +59,25 @@ class InformeEvaluadorReportServiceTest extends BaseReportServiceTest {
   }
 
   @Test
+  void getInformeEvaluacion_ReturnsMemoriaValidationException() throws Exception {
+
+    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    report.setOutputType(OutputType.PDF);
+
+    Assertions
+        .assertThatThrownBy(() -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
-  public void getInformeEvaluador_ReturnsResource() throws Exception {
+  void getInformeEvaluador_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
-    BDDMockito.given(evaluacionService.findById(
-        idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
+    BDDMockito.given(evaluacionService.findById(idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
+    BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
+    BDDMockito.given(
+        evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion)).willReturn((generarMockComentarios()));
 
     ReportInformeEvaluador report = new ReportInformeEvaluador();
     report.setOutputType(OutputType.PDF);
@@ -69,6 +85,26 @@ class InformeEvaluadorReportServiceTest extends BaseReportServiceTest {
     byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
     assertNotNull(reportContent);
 
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
+  void getInformeEvaluacionTipoActividad_ReturnsResource() throws Exception {
+    Long idEvaluacion = 1L;
+
+    BDDMockito.given(evaluacionService.findById(idEvaluacion))
+        .willAnswer((InvocationOnMock invocation) -> {
+          EvaluacionDto evaluacion = generarMockEvaluacion(idEvaluacion);
+          evaluacion.getMemoria().getPeticionEvaluacion().setTipoInvestigacionTutelada(null);
+          return evaluacion;
+        });
+    BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
+
+    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    report.setOutputType(OutputType.PDF);
+
+    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
+    assertNotNull(reportContent);
   }
 
 }

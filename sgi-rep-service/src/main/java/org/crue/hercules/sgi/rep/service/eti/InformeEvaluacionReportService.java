@@ -83,9 +83,9 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
       elementsRow.add(persona.getNumeroDocumento());
 
       String email = "";
-      if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getTelefonos()
-          && !persona.getDatosContacto().getTelefonos().isEmpty()) {
-        email = persona.getDatosContacto().getTelefonos().get(0);
+      if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getEmails()
+          && !persona.getDatosContacto().getEmails().isEmpty()) {
+        email = persona.getDatosContacto().getEmails().get(0);
       }
       elementsRow.add(email);
     } catch (Exception e) {

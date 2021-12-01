@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
+import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MXXReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
@@ -130,12 +131,17 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
    * @return byte[] Report
    */
   public byte[] getReportMXX(SgiReportDto reportOutput, Long idMemoria, Long idFormulario) {
-
     Assert.notNull(idMemoria,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
             .parameter("field", ApplicationContextSupport.getMessage("id"))
             .parameter("entity", ApplicationContextSupport.getMessage(MemoriaDto.class)).build());
+    Assert.notNull(
+        idFormulario,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(FormularioDto.class)).build());
 
     MXXReportOutput mxxReportOutput = this.getMXX(idMemoria, idFormulario);
 
@@ -333,7 +339,7 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
     ElementOutput dataSolicitanteElement = ElementOutput.builder()
       .nombre("")
       .tipo(DATOS_SOLICITANTE_TYPE)
-      .content(personaRef)
+      .content(StringUtils.hasText(personaRef) ? personaRef: "")
       .build();
     // @formatter:on
 
@@ -540,14 +546,14 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       }
 
       String telefono = "";
-      if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getEmails()
-          && !persona.getDatosContacto().getEmails().isEmpty()) {
-        telefono = persona.getDatosContacto().getEmails().get(0);
-      }
-      String email = "";
       if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getTelefonos()
           && !persona.getDatosContacto().getTelefonos().isEmpty()) {
-        email = persona.getDatosContacto().getTelefonos().get(0);
+        telefono = persona.getDatosContacto().getTelefonos().get(0);
+      }
+      String email = "";
+      if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getEmails()
+          && !persona.getDatosContacto().getEmails().isEmpty()) {
+        email = persona.getDatosContacto().getEmails().get(0);
       }
 
       String departamento = "";

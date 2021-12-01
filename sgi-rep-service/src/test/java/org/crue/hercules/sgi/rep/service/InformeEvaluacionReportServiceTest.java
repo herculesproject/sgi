@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
@@ -60,22 +61,34 @@ class InformeEvaluacionReportServiceTest extends BaseReportServiceTest {
   }
 
   @Test
+  void getInformeEvaluacion_ReturnsMemoriaValidationException() throws Exception {
+
+    ReportInformeEvaluacion report = new ReportInformeEvaluacion();
+    report.setOutputType(OutputType.PDF);
+
+    Assertions
+        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluadorEvaluacion(report, null))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
-  public void getInformeEvaluacion_ReturnsResource() throws Exception {
+  void getInformeEvaluacion_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
-    BDDMockito.given(evaluacionService.findById(
-        idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
-
+    BDDMockito.given(evaluacionService.findById(idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
+    BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
+    BDDMockito.given(personaService.findDatosContactoByPersonaId(null)).willReturn((generarMockDatosContacto()));
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn((generarMockConfiguracion()));
     BDDMockito.given(
-        configuracionService.findConfiguracion()).willReturn((generarMockConfiguracion()));
+        evaluacionService.findByEvaluacionIdGestor(idEvaluacion)).willReturn((generarMockComentarios()));
 
     ReportInformeEvaluacion report = new ReportInformeEvaluacion();
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
-    assertNotNull(reportContent);
 
+    assertNotNull(reportContent);
   }
 
 }

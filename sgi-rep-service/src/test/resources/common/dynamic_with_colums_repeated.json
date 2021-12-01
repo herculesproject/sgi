@@ -1,6 +1,6 @@
 {
   "customWidth": 630,
-  "columnMinWidth": 60,
+  "columnMinWidth": 10,
   "fieldOrientation": "HORIZONTAL",
   "outputType": "PDF",
   "title": "Listado de proyectos",
@@ -23,7 +23,7 @@
     {
       "name": "Id",
       "type": "NUMBER",
-      "format": "#"
+      "format": ""
     },
     {
       "name": "Convocatoria",
@@ -32,7 +32,7 @@
     },
     {
       "name": "Solicitud",
-      "type": "NUMBER",
+      "type": "SUBREPORT",
       "format": ""
     },
     {

@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.rep.service;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -20,15 +19,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
+import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.ColumnType;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiColumReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiGroupReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiRowReportDto;
-import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.ColumnType;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto.FieldOrientation;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
@@ -774,16 +772,6 @@ public class SgiDynamicReportService extends SgiReportService {
           });
         }
       });
-    }
-  }
-
-  protected void toJsonFile(SgiDynamicReportDto sgiDynamicReportDto) {
-    try {
-      String jsonSgiDynamicReportDto = sgiDynamicReportDto.toJson();
-      File file = File.createTempFile("jsonSgiDynamicReportDto", ".json");
-      FileUtils.writeStringToFile(file, jsonSgiDynamicReportDto);
-    } catch (Exception e) {
-      log.debug(e.getMessage());
     }
   }
 
