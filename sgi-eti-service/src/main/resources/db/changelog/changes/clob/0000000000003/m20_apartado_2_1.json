@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los animales de experimentación.<br><br>Especificar por cada persona<br><ul><li>Datos indentificativos (nombre, NIF, vinculacion y nivel académico)</li><li>Tareas concretas que realizará de acuerdo o lo descrito en el apartado '3.3 Diseño metodológico' (diseño del proyecto y metodología, realización de cada intervención y/o eutanasia, aplicación del protocolo de supervisión, etc..)</li></ul></p>"
+        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los animales de experimentación.<br><br>Especificar por cada persona<br><ul><li>Datos indentificativos (nombre, E-mail, vinculacion y nivel académico)</li><li>Tareas concretas que realizará de acuerdo o lo descrito en el apartado '3.3 Diseño metodológico' (diseño del proyecto y metodología, realización de cada intervención y/o eutanasia, aplicación del protocolo de supervisión, etc..)</li></ul></p>"
       },
       {
         "wrappers": [
@@ -61,7 +61,7 @@
               "key": "email",
               "type": "input",
               "templateOptions": {
-                "label": "Email",
+                "label": "E-mail",
                 "order": 20,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
               }
