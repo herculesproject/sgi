@@ -3,21 +3,18 @@ package org.crue.hercules.sgi.com.service;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,42 +46,43 @@ public class EmailService {
   }
 
   public void sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody,
-      String htmlBody)
+      String htmlBody, List<DataSource> attachments)
       throws MessagingException {
     log.debug(
-        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody) - start");
+        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody, List<DataSource> attachments) - start");
     MimeMessage message = emailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-    message.setSubject(subject);
-    message.setFrom(from);
+    helper.setSubject(subject);
+
+    helper.setFrom(from);
     if (copyToSender) {
-      message.addRecipient(Message.RecipientType.CC, from);
+      helper.addCc(from);
     }
 
-    for (InternetAddress internetAddress : internetAddresses) {
-      message.addRecipient(Message.RecipientType.BCC, internetAddress);
+    for (InternetAddress internetAddress : ListUtils.emptyIfNull(internetAddresses)) {
+      helper.addBcc(internetAddress);
     }
-
-    Multipart multipart = new MimeMultipart();
 
     // PLAIN TEXT
     if (StringUtils.isNotEmpty(textBody)) {
-      BodyPart messageBodyPart = new MimeBodyPart();
-      messageBodyPart.setText(textBody);
-      multipart.addBodyPart(messageBodyPart);
+      // HTML TEXT
+      if (StringUtils.isNotEmpty(htmlBody)) {
+        helper.setText(textBody, htmlBody);
+      } else {
+        helper.setText(textBody, false);
+      }
+      // HTML TEXT
+    } else if (StringUtils.isNotEmpty(htmlBody)) {
+      helper.setText(htmlBody, true);
     }
 
-    // HTML TEXT
-    if (StringUtils.isNotEmpty(htmlBody)) {
-      BodyPart messageBodyPart = new MimeBodyPart();
-      messageBodyPart.setContent(htmlBody, MediaType.TEXT_HTML_VALUE);
-      multipart.addBodyPart(messageBodyPart);
+    for (DataSource attachment : ListUtils.emptyIfNull(attachments)) {
+      helper.addAttachment(attachment.getName(), attachment);
     }
-
-    message.setContent(multipart);
 
     emailSender.send(message);
     log.debug(
-        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody) - end");
+        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody, List<DataSource> attachments) - end");
   }
 }

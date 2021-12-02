@@ -1,13 +1,19 @@
 package org.crue.hercules.sgi.com.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.activation.DataSource;
 import javax.mail.Address;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -17,6 +23,7 @@ import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +31,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 @TestPropertySource(properties = { "spring.mail.host=127.0.0.1",
@@ -74,13 +82,37 @@ class EmailServiceTest extends BaseServiceTest {
     // given: A new message to be sent
     InternetAddress sender = new InternetAddress(SENDER_EMAIL, SENDER_NAME);
     InternetAddress receiver = new InternetAddress(RECEIVER_EMAIL, RECEIVER_NAME);
-    List<InternetAddress> receivers = Arrays.asList(receiver);
     String subject = "Subject";
     String textBody = "Hello World!";
     String htmlBody = "<b class=\"color:red\">Hello World!</b>";
+    String attachmentName = "attachment-1";
+    String attachmentContent = "Text attachment";
+    DataSource attachment = new DataSource() {
+      DataSource innerDataSource = new ByteArrayDataSource(attachmentContent, MediaType.TEXT_PLAIN_VALUE);
+
+      @Override
+      public InputStream getInputStream() throws IOException {
+        return innerDataSource.getInputStream();
+      }
+
+      @Override
+      public OutputStream getOutputStream() throws IOException {
+        return innerDataSource.getOutputStream();
+      }
+
+      @Override
+      public String getContentType() {
+        return innerDataSource.getContentType();
+      }
+
+      @Override
+      public String getName() {
+        return attachmentName;
+      }
+    };
 
     // when: The message is sent
-    service.sendMessage(receivers, subject, textBody, htmlBody);
+    service.sendMessage(Arrays.asList(receiver), subject, textBody, htmlBody, Arrays.asList(attachment));
 
     // then: Two message are received
     MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
@@ -92,6 +124,16 @@ class EmailServiceTest extends BaseServiceTest {
     Assertions.assertThat(parser0.getPlainContent()).isEqualTo(parser1.getPlainContent());
     Assertions.assertThat(parser0.getHtmlContent()).isEqualTo(parser1.getHtmlContent());
     Assertions.assertThat(receivedMessages[0].getAllRecipients()).isEqualTo(receivedMessages[1].getAllRecipients());
+    List<DataSource> attachments0 = parser0.getAttachmentList();
+    List<DataSource> attachments1 = parser1.getAttachmentList();
+    Assertions.assertThat(attachments0.size()).isEqualTo(attachments1.size());
+    for (int i = 0; i < attachments0.size(); i++) {
+      DataSource attachment0 = attachments0.get(i);
+      DataSource attachment1 = attachments1.get(i);
+      Assertions.assertThat(attachment0.getName()).isEqualTo(attachment1.getName());
+      Assertions.assertThat(attachment0.getContentType()).isEqualTo(attachment1.getContentType());
+      Assertions.assertThat(IOUtils.contentEquals(attachment0.getInputStream(), attachment1.getInputStream())).isTrue();
+    }
     // "to" is mpty
     Address[] tos = receivedMessages[0].getRecipients(RecipientType.TO);
     Assertions.assertThat(tos).isNullOrEmpty();
@@ -108,6 +150,12 @@ class EmailServiceTest extends BaseServiceTest {
     MimeMessageParser targetMessageParser = new MimeMessageParser(targetMessages.get(0).getMimeMessage()).parse();
     Assertions.assertThat(targetMessageParser.getPlainContent()).isEqualTo(textBody);
     Assertions.assertThat(targetMessageParser.getHtmlContent()).isEqualTo(htmlBody);
+    List<DataSource> targetAttachments = targetMessageParser.getAttachmentList();
+    Assertions.assertThat(targetAttachments.size()).isEqualTo(1);
+    DataSource targetAttachment = targetAttachments.get(0);
+    Assertions.assertThat(targetAttachment.getName()).isEqualTo(attachmentName);
+    Assertions.assertThat(IOUtils.toString(
+        targetAttachment.getInputStream(), StandardCharsets.UTF_8.name())).isEqualTo(attachmentContent);
     // one and only one message is in the sender inbox
     GreenMailUser senderUser = greenMail.setUser(SENDER_NAME, SENDER_PASSWORD);
     MailFolder senderInbox = greenMail.getManagers().getImapHostManager().getInbox(senderUser);
@@ -117,6 +165,12 @@ class EmailServiceTest extends BaseServiceTest {
     MimeMessageParser senderMessageParser = new MimeMessageParser(senderMessages.get(0).getMimeMessage()).parse();
     Assertions.assertThat(senderMessageParser.getPlainContent()).isEqualTo(textBody);
     Assertions.assertThat(senderMessageParser.getHtmlContent()).isEqualTo(htmlBody);
+    List<DataSource> senderAttachments = targetMessageParser.getAttachmentList();
+    Assertions.assertThat(senderAttachments.size()).isEqualTo(1);
+    DataSource senderAttachment = senderAttachments.get(0);
+    Assertions.assertThat(senderAttachment.getName()).isEqualTo(attachmentName);
+    Assertions.assertThat(IOUtils.toString(
+        senderAttachment.getInputStream(), StandardCharsets.UTF_8.name())).isEqualTo(attachmentContent);
   }
 
 }

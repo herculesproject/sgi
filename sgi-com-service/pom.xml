@@ -100,6 +100,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>${commons-collections4.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
       <artifactId>commons-email</artifactId>
       <version>${commons-email.version}</version>
     </dependency>
@@ -162,6 +167,7 @@
     <lombok.version>1.18.20</lombok.version>
     <h2.version>1.4.200</h2.version>
     <commons-email.version>1.5</commons-email.version>
+    <commons-collections4.version>4.4</commons-collections4.version>
 
     <!-- Plugin versions (only those that are not defined in `spring-boot-starter-parent`) -->
     <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
