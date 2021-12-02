@@ -20,15 +20,22 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class EmailService {
 
   private JavaMailSender emailSender;
   private InternetAddress from;
+  private boolean copyToSender;
 
   public EmailService(@Autowired JavaMailSender emailSender,
-      @Value("${spring.mail.properties.mail.from.email}") String fromEmail,
-      @Value("${spring.mail.properties.mail.from.name}") String fromName) throws AddressException {
+      @Value("${spring.mail.properties.mail.from.email:sgi@hercules.com}") String fromEmail,
+      @Value("${spring.mail.properties.mail.from.name:SGI}") String fromName,
+      @Value("${spring.mail.properties.mail.from.copy:false}") boolean copyToSender) throws AddressException {
+    log.debug(
+        "EmailService(JavaMailSender emailSender, String fromEmail, String fromName, boolean copyToSender) - start");
     this.emailSender = emailSender;
     try {
       from = new InternetAddress(fromEmail, fromName);
@@ -36,16 +43,23 @@ public class EmailService {
       e.printStackTrace();
       from = new InternetAddress(fromEmail);
     }
+    this.copyToSender = copyToSender;
+    log.debug(
+        "EmailService(JavaMailSender emailSender, String fromEmail, String fromName, boolean copyToSender) - end");
   }
 
   public void sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody,
       String htmlBody)
-      throws UnsupportedEncodingException, MessagingException {
+      throws MessagingException {
+    log.debug(
+        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody) - start");
     MimeMessage message = emailSender.createMimeMessage();
 
     message.setSubject(subject);
     message.setFrom(from);
-    message.addRecipient(Message.RecipientType.TO, from);
+    if (copyToSender) {
+      message.addRecipient(Message.RecipientType.CC, from);
+    }
 
     for (InternetAddress internetAddress : internetAddresses) {
       message.addRecipient(Message.RecipientType.BCC, internetAddress);
@@ -70,5 +84,7 @@ public class EmailService {
     message.setContent(multipart);
 
     emailSender.send(message);
+    log.debug(
+        "sendMessage(List<InternetAddress> internetAddresses, String subject, String textBody, String htmlBody) - end");
   }
 }
