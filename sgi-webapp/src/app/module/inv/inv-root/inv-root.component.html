@@ -10,7 +10,7 @@
       *sgiHasAnyAuthorityForAnyUO="['ETI-MEM-INV-VR', 'ETI-MEM-INV-ER', 'ETI-MEM-INV-BR', 'ETI-MEM-INV-ESCR', 'ETI-MEM-INV-ERTR']"
       [route]="[INV_ROUTE_NAMES.MEMORIAS]" title="{{'menu.principal.inv.memorias' | translate}}">
     </sgi-menu-subitem>
-    <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'ETI-CHK-E'" [route]="[INV_ROUTE_NAMES.CHECKLIST]"
+    <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'ETI-CHK-INV-E'" [route]="[INV_ROUTE_NAMES.CHECKLIST]"
       title="{{'menu.principal.inv.checklist' | translate}}">
     </sgi-menu-subitem>
     <ng-container *ngIf="showEvaluaciones">

@@ -93,7 +93,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CHECKLIST_TITLE,
-          hasAuthorityForAnyUO: 'ETI-CHK-E'
+          hasAuthorityForAnyUO: 'ETI-CHK-INV-E'
         }
       },
       {
