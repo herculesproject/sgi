@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.dto.eti;
+package org.crue.hercules.sgi.rep.dto.sgp;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,8 +23,9 @@ public class DatosContactoDto implements Serializable {
   private String ciudadContacto;
   private String codigoPostalContacto;
   private String direccionContacto;
-  private List<String> emails;
+  private List<EmailDto> emails;
   private List<String> telefonos;
+  private List<String> moviles;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

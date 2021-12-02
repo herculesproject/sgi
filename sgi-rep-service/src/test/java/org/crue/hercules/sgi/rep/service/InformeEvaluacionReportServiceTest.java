@@ -78,7 +78,6 @@ class InformeEvaluacionReportServiceTest extends BaseReportServiceTest {
 
     BDDMockito.given(evaluacionService.findById(idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
     BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
-    BDDMockito.given(personaService.findDatosContactoByPersonaId(null)).willReturn((generarMockDatosContacto()));
     BDDMockito.given(configuracionService.findConfiguracion()).willReturn((generarMockConfiguracion()));
     BDDMockito.given(
         evaluacionService.findByEvaluacionIdGestor(idEvaluacion)).willReturn((generarMockComentarios()));

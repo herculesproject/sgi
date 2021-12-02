@@ -1,16 +1,12 @@
 package org.crue.hercules.sgi.rep.service;
 
-import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
-import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.eti.ComentarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.client.RestTemplate;
@@ -49,8 +45,7 @@ class ComentarioServiceTest extends BaseReportServiceTest {
     Assertions.assertThatThrownBy(() -> comentarioService.findAll(
         query,
         paging,
-        new ParameterizedTypeReference<List<ComentarioDto>>() {
-        }))
+        null))
         .isInstanceOf(GetDataReportException.class);
   }
 

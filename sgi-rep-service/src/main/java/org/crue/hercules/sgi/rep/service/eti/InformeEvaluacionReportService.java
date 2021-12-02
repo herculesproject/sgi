@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,22 +71,20 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     elementsRow.add(evaluacion.getVersion());
 
     columnsDataTitulo.add("nombreResponsable");
-    columnsDataTitulo.add("nifResponsable");
     columnsDataTitulo.add("emailResponsable");
 
     try {
       String personaRef = evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef();
       PersonaDto persona = personaService.findById(personaRef);
-      persona.setDatosContacto(personaService.findDatosContactoByPersonaId(personaRef));
 
       elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
 
-      elementsRow.add(persona.getNumeroDocumento());
-
       String email = "";
-      if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getEmails()
-          && !persona.getDatosContacto().getEmails().isEmpty()) {
-        email = persona.getDatosContacto().getEmails().get(0);
+      if (null != persona.getEmails() && !persona.getEmails().isEmpty()) {
+        email = persona.getEmails().stream()
+            .filter(e -> null != e.getPrincipal() && e.getPrincipal().equals(Boolean.TRUE)).findFirst()
+            .orElse(new EmailDto())
+            .getEmail();
       }
       elementsRow.add(email);
     } catch (Exception e) {

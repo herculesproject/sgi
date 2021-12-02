@@ -27,10 +27,6 @@ import org.crue.hercules.sgi.rep.dto.eti.ComiteDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.ConfiguracionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ConvocatoriaReunionDto;
-import org.crue.hercules.sgi.rep.dto.eti.DatosContactoDto;
-import org.crue.hercules.sgi.rep.dto.eti.DatosContactoDto.ComunidadAutonomaDto;
-import org.crue.hercules.sgi.rep.dto.eti.DatosContactoDto.PaisDto;
-import org.crue.hercules.sgi.rep.dto.eti.DatosContactoDto.ProvinciaDto;
 import org.crue.hercules.sgi.rep.dto.eti.DictamenDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
@@ -43,7 +39,12 @@ import org.crue.hercules.sgi.rep.dto.eti.TipoConvocatoriaReunionDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoEvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoInvestigacionTuteladaDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoMemoriaDto;
+import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
+import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.ComunidadAutonomaDto;
+import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.PaisDto;
+import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.ProvinciaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.AreaConocimientoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.DepartamentoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.SexoDto;
@@ -142,6 +143,7 @@ abstract class BaseReportServiceTest extends BaseServiceTest {
         .numeroDocumento(numeroDocumento)
         .tipoDocumento(TipoDocumentoDto.builder().nombre("NIF").build())
         .sexo(SexoDto.builder().nombre("V").build())
+        .emails(generarMockEmails())
         .build();
   }
 
@@ -158,8 +160,22 @@ abstract class BaseReportServiceTest extends BaseServiceTest {
         .comAutonomaContacto(ComunidadAutonomaDto.builder().nombre("ASTURIAS").build())
         .provinciaContacto(ProvinciaDto.builder().nombre("ASTURIAS").build())
         .paisContacto(PaisDto.builder().nombre("ESPAÑA").build())
-        .emails(Arrays.asList("p@es.com", "y@es.com"))
+        .emails(generarMockEmails())
         .telefonos(Arrays.asList("234234", "34554654"))
+        .build();
+  }
+
+  protected List<EmailDto> generarMockEmails() {
+    List<EmailDto> emails = new ArrayList<>();
+    emails.add(generarMockEmail("p@es.com", Boolean.TRUE));
+    emails.add(generarMockEmail("p2@es.com", Boolean.FALSE));
+    return emails;
+  }
+
+  protected EmailDto generarMockEmail(String email, Boolean principal) {
+    return EmailDto.builder()
+        .email(email)
+        .principal(principal)
         .build();
   }
 

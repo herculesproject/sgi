@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.rep.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
@@ -10,6 +9,8 @@ import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -37,18 +38,25 @@ class SgiFormlyServiceTest extends BaseReportServiceTest {
         .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test
-  void getApartadoOutputEquipoInvestigador_ReturnsApartadoOutput() throws Exception {
+  @ParameterizedTest
+  @CsvSource({
+      "'apartadoEquipoInvestigador.json','respuestaEquipoInvestigador.json'",
+      "'apartado3_6_1.json','respuesta3_6_1.json'",
+      "'apartado3_4_1.json','respuesta3_4_1.json'",
+      "'apartado3_4_4.json','respuesta3_4_4.json'",
+      "'apartado1_1.json','respuesta1_1.json'"
+  })
+  void getApartadoOutput_ReturnsApartadoOutput(String apartadoFileName, String respuestaFileName) throws Exception {
     // given: data ApartadoOutput
     RespuestaDto respuesta = generarMockRespuesta(3L);
-    respuesta.setValor(getJsonFromResources("eti/respuestaEquipoInvestigador.json"));
+    respuesta.setValor(getJsonFromResources("eti/" + respuestaFileName));
 
     ApartadoOutput apartadoOutput = ApartadoOutput.builder()
         .mostrarContenidoApartado(Boolean.TRUE)
         .titulo("titulo")
         .nombre("nombre")
         .orden(1)
-        .esquema(getJsonFromResources("eti/apartadoEquipoInvestigador.json"))
+        .esquema(getJsonFromResources("eti/" + apartadoFileName))
         .respuesta(respuesta)
         .comentarios(generarMockComentarios())
         .build();
@@ -57,95 +65,6 @@ class SgiFormlyServiceTest extends BaseReportServiceTest {
 
     // given: apartadoOutput parsed
     assertNotNull(apartadoOutput);
-    assertEquals(3, apartadoOutput.getElementos().size());
-  }
-
-  @Test
-  void getApartadoOutput3_6_1_ReturnsApartadoOutput() throws Exception {
-    // given: data ApartadoOutput
-    RespuestaDto respuesta = generarMockRespuesta(3L);
-    respuesta.setValor(getJsonFromResources("eti/respuesta3_6_1.json"));
-
-    ApartadoOutput apartadoOutput = ApartadoOutput.builder()
-        .mostrarContenidoApartado(Boolean.TRUE)
-        .titulo("titulo")
-        .nombre("nombre")
-        .orden(1)
-        .esquema(getJsonFromResources("eti/apartado3_6_1.json"))
-        .respuesta(respuesta)
-        .build();
-
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
-
-    // given: apartadoOutput parsed
-    assertNotNull(apartadoOutput);
-    assertEquals(0, apartadoOutput.getElementos().size());
-  }
-
-  @Test
-  void getApartadoOutput3_4_4_ReturnsApartadoOutput() throws Exception {
-    // given: data ApartadoOutput
-    RespuestaDto respuesta = generarMockRespuesta(3L);
-    respuesta.setValor(getJsonFromResources("eti/respuesta3_4_4.json"));
-
-    ApartadoOutput apartadoOutput = ApartadoOutput.builder()
-        .mostrarContenidoApartado(Boolean.TRUE)
-        .titulo("titulo")
-        .nombre("nombre")
-        .orden(1)
-        .esquema(getJsonFromResources("eti/apartado3_4_4.json"))
-        .respuesta(respuesta)
-        .build();
-
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
-
-    // given: apartadoOutput parsed
-    assertNotNull(apartadoOutput);
-    assertEquals(4, apartadoOutput.getElementos().size());
-  }
-
-  @Test
-  void getApartadoOutput3_4_1_ReturnsApartadoOutput() throws Exception {
-    // given: data ApartadoOutput
-    RespuestaDto respuesta = generarMockRespuesta(3L);
-    respuesta.setValor(getJsonFromResources("eti/respuesta3_4_1.json"));
-
-    ApartadoOutput apartadoOutput = ApartadoOutput.builder()
-        .mostrarContenidoApartado(Boolean.TRUE)
-        .titulo("titulo")
-        .nombre("nombre")
-        .orden(1)
-        .esquema(getJsonFromResources("eti/apartado3_4_1.json"))
-        .respuesta(respuesta)
-        .build();
-
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
-
-    // given: apartadoOutput parsed
-    assertNotNull(apartadoOutput);
-    assertEquals(6, apartadoOutput.getElementos().size());
-  }
-
-  @Test
-  void getApartadoOutput1_1_ReturnsApartadoOutput() throws Exception {
-    // given: data ApartadoOutput
-    RespuestaDto respuesta = generarMockRespuesta(3L);
-    respuesta.setValor(getJsonFromResources("eti/respuesta1_1.json"));
-
-    ApartadoOutput apartadoOutput = ApartadoOutput.builder()
-        .mostrarContenidoApartado(Boolean.TRUE)
-        .titulo("titulo")
-        .nombre("nombre")
-        .orden(1)
-        .esquema(getJsonFromResources("eti/apartado1_1.json"))
-        .respuesta(respuesta)
-        .build();
-
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
-
-    // given: apartadoOutput parsed
-    assertNotNull(apartadoOutput);
-    assertEquals(4, apartadoOutput.getElementos().size());
   }
 
 }

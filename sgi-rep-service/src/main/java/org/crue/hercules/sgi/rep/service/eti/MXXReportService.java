@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.PeticionEvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -516,7 +517,6 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
         String personaRef = elemento.getContent();
 
         columnsDataSolicitante.add("nombre");
-        columnsDataSolicitante.add("nif");
         columnsDataSolicitante.add("telefono");
         columnsDataSolicitante.add("email");
         columnsDataSolicitante.add("departamento");
@@ -553,7 +553,10 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       String email = "";
       if (null != persona.getDatosContacto() && null != persona.getDatosContacto().getEmails()
           && !persona.getDatosContacto().getEmails().isEmpty()) {
-        email = persona.getDatosContacto().getEmails().get(0);
+        email = persona.getDatosContacto().getEmails().stream()
+            .filter(e -> null != e.getPrincipal() && e.getPrincipal().equals(Boolean.TRUE)).findFirst()
+            .orElse(new EmailDto())
+            .getEmail();
       }
 
       String departamento = "";
@@ -567,7 +570,6 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       }
 
       elementsRow.add(persona.getNombre());
-      elementsRow.add(persona.getNumeroDocumento());
       elementsRow.add(telefono);
       elementsRow.add(email);
       elementsRow.add(departamento);
