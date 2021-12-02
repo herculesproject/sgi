@@ -26,6 +26,42 @@
         <param name="orden" valueNumeric="2" />
       </whereParams>
     </update>
+
+    <!-- FORMULARIO M10 -->
+    <!-- 2.1  Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos-->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/0000000000003/m10_apartado_2_1.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id" valueComputed="(select id from ${schemaPrefix}bloque where orden = '2' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param name="nombre" value="Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos" />
+        <param name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <!-- FORMULARIO M20 -->
+    <!-- 2.1  Personal que llevará a cabo las tareas animales-->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/0000000000003/m20_apartado_2_1.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id" valueComputed="(select id from ${schemaPrefix}bloque where orden = '2' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param name="nombre" value="Personal que llevará a cabo las tareas animales" />
+        <param name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <!-- FORMULARIO M30 -->
+    <!-- 2.1  Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas-->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/0000000000003/m30_apartado_2_1.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id" valueComputed="(select id from ${schemaPrefix}bloque where orden = '2' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))" />
+        <param name="nombre" value="Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas" />
+        <param name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
