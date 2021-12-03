@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
@@ -11,17 +12,26 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import {
+  RSQLSgiRestFilter,
+  RSQLSgiRestSort,
+  SgiRestFilter,
+  SgiRestFilterOperator,
+  SgiRestFindOptions,
+  SgiRestListResult,
+  SgiRestSortDirection
+} from '@sgi/framework/http';
 import { merge, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
-export interface SearchProyectoModalData {
-  personas: IPersona[]
+export interface SearchProyectoModalData extends SearchModalData {
+  personas: IPersona[];
 }
 
 interface IProyectoListado extends IProyecto {
   proyectosSGE: string;
 }
+
 @Component({
   templateUrl: './search-proyecto.component.html',
   styleUrls: ['./search-proyecto.component.scss']
@@ -54,7 +64,7 @@ export class SearchProyectoModalComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      titulo: new FormControl(),
+      titulo: new FormControl(this.data.searchTerm),
       acronimo: new FormControl(),
       codigoExterno: new FormControl(),
       fechaInicioDesde: new FormControl(),
@@ -136,11 +146,11 @@ export class SearchProyectoModalComponent implements OnInit, AfterViewInit, OnDe
   private resolveProyectosSgeSubscription(item: IProyectoListado): void {
     this.subscriptions.push(
       this.proyectoService.findAllProyectosSgeProyecto(item.id)
-      .pipe(
-        switchMap((proyectosSge: SgiRestListResult<IProyectoProyectoSge>) => {
-          item.proyectosSGE = proyectosSge.items.map(element => element.proyectoSge.id).join(', ');
-          return of(item);
-        })).subscribe());
+        .pipe(
+          switchMap((proyectosSge: SgiRestListResult<IProyectoProyectoSge>) => {
+            item.proyectosSGE = proyectosSge.items.map(element => element.proyectoSge.id).join(', ');
+            return of(item);
+          })).subscribe());
   }
 
   private buildFilter(): SgiRestFilter {

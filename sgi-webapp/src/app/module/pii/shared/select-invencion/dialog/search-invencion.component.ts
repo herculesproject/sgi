@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
@@ -12,6 +13,10 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+
+export interface SearchInvencionModalData extends SearchModalData {
+
+}
 
 @Component({
   selector: 'sgi-search-invencion',
@@ -37,6 +42,7 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
 
   constructor(
     public dialogRef: MatDialogRef<SearchInvencionModalComponent, IInvencion>,
+    @Inject(MAT_DIALOG_DATA) public data: SearchInvencionModalData,
     private readonly invencionService: InvencionService,
     readonly tipoProteccionService: TipoProteccionService
   ) {
@@ -48,7 +54,7 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
       id: new FormControl(),
       fechaComunicacionDesde: new FormControl(),
       fechaComunicacionHasta: new FormControl(),
-      titulo: new FormControl(),
+      titulo: new FormControl(this.data.searchTerm),
       tipoProteccion: new FormControl(),
     });
   }
@@ -77,8 +83,8 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
   }
 
   /**
-  * Clean filters an reload the table
-  */
+   * Clean filters an reload the table
+   */
   onClearFilters(): void {
     this.formGroup.reset();
     this.search(true);

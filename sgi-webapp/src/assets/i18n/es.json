@@ -1395,6 +1395,7 @@
   "label.page.next": "Página siguiente",
   "label.page.of": "de",
   "label.page.prev": "Página anterior",
+  "label.search.too-many-results": "Demasiados resultados, por favor, refine la búsqueda",
   "label.si": "Sí",
   "label.todos": "Todos",
   "list.entity": "Listado de {entity}",

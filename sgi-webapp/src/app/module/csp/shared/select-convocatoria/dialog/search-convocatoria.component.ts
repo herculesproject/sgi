@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -23,7 +24,7 @@ import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 
 const MSG_LISTADO_ERROR = marker('error.load');
 
-export interface SearchConvocatoriaModalData {
+export interface SearchConvocatoriaModalData extends SearchModalData {
   unidadesGestion: string[];
   investigador: boolean;
 }
@@ -41,7 +42,7 @@ interface IConvocatoriaListado {
   templateUrl: './search-convocatoria.component.html',
   styleUrls: ['./search-convocatoria.component.scss']
 })
-export class SearchConvocatoriaModalComponent implements AfterViewInit {
+export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
   formGroup: FormGroup;
   displayedColumns = ['codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
     'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
@@ -51,9 +52,11 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
+
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
+
   constructor(
     private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchConvocatoriaModalComponent>,
@@ -63,16 +66,20 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     private readonly snackBarService: SnackBarService
   ) {
   }
+
   ngOnInit(): void {
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
-      titulo: new FormControl(''),
+      titulo: new FormControl(this.data.searchTerm),
       fechaPublicacionDesde: new FormControl(null),
       fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
     });
   }
+
   ngAfterViewInit(): void {
+    this.buscarConvocatorias();
+
     merge(
       this.paginator.page,
       this.sort.sortChange
@@ -82,6 +89,7 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       })
     ).subscribe();
   }
+
   buscarConvocatorias(reset?: boolean) {
     const options: SgiRestFindOptions = {
       page: {
@@ -189,6 +197,7 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
         })
       );
   }
+
   private buildFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
