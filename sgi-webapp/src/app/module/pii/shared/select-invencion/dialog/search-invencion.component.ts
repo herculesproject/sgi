@@ -108,14 +108,12 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
 
   private buildFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
+
+    return new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
       .and('fechaComunicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaComunicacionDesde.value))
       .and('fechaComunicacion', SgiRestFilterOperator.LOWER_OR_EQUAL,
         LuxonUtils.toBackend(controls.fechaComunicacionHasta.value?.plus({ hour: 23, minutes: 59, seconds: 59 })))
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
-      // TODO incluir and anidado con or de tipoProteccion.id y tipoProteccion.padre.id
-      .and('tipoProteccion.id', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString());
-
-    return filter;
+      .and('tipoProteccion', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString());;
   }
 }
