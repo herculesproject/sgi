@@ -586,8 +586,9 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Page<Proyecto> findAllTodosRestringidos(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query,
-        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository));
+    Specification<Proyecto> specs = ProyectoSpecifications.distinct()
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
 
     List<String> unidadesGestion = SgiSecurityContextHolder
         .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
@@ -1625,9 +1626,11 @@ public class ProyectoServiceImpl implements ProyectoService {
     final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
 
     returnValue.setImporteTotalPresupuesto(
-        returnValue.getImporteTotalPresupuestoUniversidadSinCosteIndirecto().add(returnValue.getImporteTotalPresupuestoSocios()));
+        returnValue.getImporteTotalPresupuestoUniversidadSinCosteIndirecto()
+            .add(returnValue.getImporteTotalPresupuestoSocios()));
     returnValue.setImporteTotalConcedido(
-        returnValue.getImporteTotalConcedidoUniversidadSinCosteIndirecto().add(returnValue.getImporteTotalConcedidoSocios()));
+        returnValue.getImporteTotalConcedidoUniversidadSinCosteIndirecto()
+            .add(returnValue.getImporteTotalConcedidoSocios()));
     log.debug("getTotales(Long proyectoId) - end");
     return returnValue;
   }

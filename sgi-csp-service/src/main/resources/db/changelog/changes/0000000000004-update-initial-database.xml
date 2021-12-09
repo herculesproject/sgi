@@ -120,4 +120,74 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000004-11">
+    <createSequence incrementBy="1" sequenceName="convocatoria_palabra_clave_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-12">
+    <createSequence incrementBy="1" sequenceName="proyecto_palabra_clave_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-13">
+    <createSequence incrementBy="1" sequenceName="solicitud_palabra_clave_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-14">
+    <createTable tableName="convocatoria_palabra_clave">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_palabra_clavePK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="palabra_clave_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-15">
+    <createTable tableName="proyecto_palabra_clave">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="proyecto_palabra_clavePK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="palabra_clave_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-16">
+    <createTable tableName="solicitud_palabra_clave">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_palabra_clavePK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="palabra_clave_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="solicitud_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-17">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_palabra_clave" constraintName="FK_CONVOCATORIAPALABRACLAVE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-18">
+    <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="proyecto_palabra_clave" constraintName="FK_PROYECTOPALABRACLAVE_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-19">
+    <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_palabra_clave" constraintName="FK_SOLICITUDPALABRACLAVE_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

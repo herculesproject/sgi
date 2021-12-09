@@ -46,4 +46,17 @@ public class SolicitudSpecifications {
     };
   }
 
+  /**
+   * Solo {@link Solicitud} distintas.
+   * 
+   * @return specification para obtener las entidades {@link Solicitud} distintas
+   *         solamente.
+   */
+  public static Specification<Solicitud> distinct() {
+    return (root, query, cb) -> {
+      query.distinct(true);
+      return null;
+    };
+  }
+
 }

@@ -5,10 +5,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveInput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
+import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -20,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPalabraClave;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -41,6 +45,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
@@ -52,6 +57,7 @@ import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +87,7 @@ public class ConvocatoriaController {
   public static final String PATH_CATEGORIAS_PROFESIONALES_REQUISITOS_EQUIPO = "/{id}/categoriasprofesionalesrequisitosequipo";
   public static final String PATH_NIVELES_REQUISITOS_EQUIPO = "/{id}/nivelesrequisitosequipo";
   public static final String PATH_NIVELES_REQUISITOS_IP = "/{id}/nivelesrequisitosip";
+  public static final String PATH_PALABRAS_CLAVE = "/{convocatoriaId}/palabrasclave";
 
   private ModelMapper modelMapper;
 
@@ -137,6 +144,9 @@ public class ConvocatoriaController {
   /** RequisitoEquipoNivelAcademicoService */
   private final RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService;
 
+  /**  */
+  private final ConvocatoriaPalabraClaveService convocatoriaPalabraClaveService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    *
@@ -158,6 +168,7 @@ public class ConvocatoriaController {
    * @param requisitoIPCategoriaProfesionalService          {@link RequisitoIPCategoriaProfesionalService}.
    * @param requisitoEquipoCategoriaProfesionalService      {@link requisitoEquipoCategoriaProfesionalService}.
    * @param requisitoEquipoNivelAcademicoService            {@link requisitoEquipoNivelAcademicoService}.
+   * @param convocatoriaPalabraClaveService                 {@link ConvocatoriaPalabraClaveService}.
    * @param modelMapper                                     {@link ModelMapper}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
@@ -175,7 +186,9 @@ public class ConvocatoriaController {
       RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
       RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService,
       RequisitoEquipoCategoriaProfesionalService requisitoEquipoCategoriaProfesionalService,
-      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService, ModelMapper modelMapper) {
+      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService,
+      ConvocatoriaPalabraClaveService convocatoriaPalabraClaveService,
+      ModelMapper modelMapper) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaDocumentoService = convocatoriaDocumentoService;
@@ -194,6 +207,7 @@ public class ConvocatoriaController {
     this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
     this.requisitoEquipoCategoriaProfesionalService = requisitoEquipoCategoriaProfesionalService;
     this.requisitoEquipoNivelAcademicoService = requisitoEquipoNivelAcademicoService;
+    this.convocatoriaPalabraClaveService = convocatoriaPalabraClaveService;
     this.modelMapper = modelMapper;
   }
 
@@ -1157,4 +1171,82 @@ public class ConvocatoriaController {
     return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
   }
 
+  /**
+   * Devuelve las {@link ConvocatoriaPalabraClave} asociadas a la entidad
+   * {@link Convocatoria} con el id indicado
+   * 
+   * @param convocatoriaId Identificador de {@link Convocatoria}
+   * @param query          filtro de búsqueda.
+   * @param paging         pageable.
+   * @return {@link ConvocatoriaPalabraClave} correspondientes al id de la entidad
+   *         {@link Convocatoria}
+   */
+  @GetMapping(PATH_PALABRAS_CLAVE)
+  @PreAuthorize("hasAnyAuthority('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-C', 'CSP-CON-INV-V')")
+  public Page<ConvocatoriaPalabraClaveOutput> findPalabrasClave(@PathVariable Long convocatoriaId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findPalabrasClave(@PathVariable Long convocatoriaId, String query, Pageable paging) - start");
+    Page<ConvocatoriaPalabraClaveOutput> returnValue = convertConvocatoriaPalabraClave(
+        convocatoriaPalabraClaveService.findByConvocatoriaId(convocatoriaId, query, paging));
+    log.debug("findPalabrasClave(@PathVariable Long convocatoriaId, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la lista de {@link ConvocatoriaPalabraClave} asociadas a la entidad
+   * {@link Convocatoria} con el id indicado
+   * 
+   * @param convocatoriaId identificador de {@link Convocatoria}
+   * @param palabrasClave  nueva lista de {@link ConvocatoriaPalabraClave} de
+   *                       la entidad {@link Convocatoria}
+   * @return la nueva lista de {@link ConvocatoriaPalabraClave} asociadas a la
+   *         entidad {@link Convocatoria}
+   */
+  @PatchMapping(PATH_PALABRAS_CLAVE)
+  @PreAuthorize("hasAnyAuthority('CSP-CON-E', 'CSP-CON-C')")
+  public ResponseEntity<List<ConvocatoriaPalabraClaveOutput>> updatePalabrasClave(@PathVariable Long convocatoriaId,
+      @Valid @RequestBody List<ConvocatoriaPalabraClaveInput> palabrasClave) {
+    log.debug("updatePalabrasClave(Long convocatoriaId, List<ConvocatoriaPalabraClave> palabrasClave) - start");
+
+    palabrasClave.stream().forEach(palabraClave -> {
+      if (!palabraClave.getConvocatoriaId().equals(convocatoriaId)) {
+        throw new NoRelatedEntitiesException(ConvocatoriaPalabraClave.class, Convocatoria.class);
+      }
+    });
+
+    List<ConvocatoriaPalabraClaveOutput> returnValue = convertConvocatoriaPalabraClave(
+        convocatoriaPalabraClaveService.updatePalabrasClave(convocatoriaId,
+            convertConvocatoriaPalabraClaveInputs(convocatoriaId, palabrasClave)));
+    log.debug("updatePalabrasClave(Long convocatoriaId, List<ConvocatoriaPalabraClave> palabrasClave) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  private Page<ConvocatoriaPalabraClaveOutput> convertConvocatoriaPalabraClave(Page<ConvocatoriaPalabraClave> page) {
+    List<ConvocatoriaPalabraClaveOutput> content = page.getContent().stream()
+        .map((convocatoriaPalabraClave) -> convert(convocatoriaPalabraClave))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private List<ConvocatoriaPalabraClaveOutput> convertConvocatoriaPalabraClave(List<ConvocatoriaPalabraClave> list) {
+    return list.stream()
+        .map((element) -> convert(element))
+        .collect(Collectors.toList());
+  }
+
+  private ConvocatoriaPalabraClaveOutput convert(ConvocatoriaPalabraClave convocatoriaPalabraClave) {
+    return modelMapper.map(convocatoriaPalabraClave, ConvocatoriaPalabraClaveOutput.class);
+  }
+
+  private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(Long convocatoriaId,
+      List<ConvocatoriaPalabraClaveInput> inputs) {
+    return inputs.stream().map((input) -> convert(convocatoriaId, input)).collect(Collectors.toList());
+  }
+
+  private ConvocatoriaPalabraClave convert(Long convocatoriaId, ConvocatoriaPalabraClaveInput input) {
+    ConvocatoriaPalabraClave entity = modelMapper.map(input, ConvocatoriaPalabraClave.class);
+    entity.setConvocatoriaId(convocatoriaId);
+    return entity;
+  }
 }

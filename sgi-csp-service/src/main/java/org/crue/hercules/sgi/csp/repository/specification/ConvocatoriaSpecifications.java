@@ -65,4 +65,17 @@ public class ConvocatoriaSpecifications {
 
     };
   }
+
+  /**
+   * Solo {@link Convocatoria} distintas.
+   * 
+   * @return specification para obtener las entidades {@link Convocatoria}
+   *         distintas solamente.
+   */
+  public static Specification<Convocatoria> distinct() {
+    return (root, query, cb) -> {
+      query.distinct(true);
+      return null;
+    };
+  }
 }

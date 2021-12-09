@@ -5,9 +5,12 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -15,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudPalabraClave;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
@@ -29,6 +33,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
@@ -116,6 +121,9 @@ public class SolicitudController {
   /** ProyectoService */
   private final ProyectoService proyectoService;
 
+  /** SolicitudPalabraClaveService */
+  private final SolicitudPalabraClaveService solicitudPalabraClaveService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -135,6 +143,7 @@ public class SolicitudController {
    * @param solicitudProyectoResponsableEconomicoService     {@link SolicitudProyectoResponsableEconomicoService}.
    * @param solicitudProyectoEntidadService                  {@link SolicitudProyectoEntidadService}.
    * @param proyectoService                                  {@link ProyectoService}.
+   * @param solicitudPalabraClaveService                     {@link SolicitudPalabraClaveService}.
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -146,7 +155,8 @@ public class SolicitudController {
       SolicitudProyectoClasificacionService solicitudProyectoClasificacionService,
       SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService,
       SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService,
-      SolicitudProyectoEntidadService solicitudProyectoEntidadService, ProyectoService proyectoService) {
+      SolicitudProyectoEntidadService solicitudProyectoEntidadService, ProyectoService proyectoService,
+      SolicitudPalabraClaveService solicitudPalabraClaveService) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -163,6 +173,7 @@ public class SolicitudController {
     this.solicitudProyectoResponsableEconomicoService = solicitudProyectoResponsableEconomicoService;
     this.solicitudProyectoEntidadService = solicitudProyectoEntidadService;
     this.proyectoService = proyectoService;
+    this.solicitudPalabraClaveService = solicitudPalabraClaveService;
   }
 
   /**
@@ -952,4 +963,82 @@ public class SolicitudController {
     return proyectos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(proyectos);
   }
 
+  /**
+   * Devuelve las {@link SolicitudPalabraClave} asociadas a la entidad
+   * {@link Solicitud} con el id indicado
+   * 
+   * @param solicitudId Identificador de {@link Solicitud}
+   * @param query       filtro de búsqueda.
+   * @param paging      pageable.
+   * @return {@link SolicitudPalabraClave} correspondientes al id de la entidad
+   *         {@link Solicitud}
+   */
+  @GetMapping("/{solicitudId}/palabrasclave")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-C', 'CSP-SOL-INV-ER')")
+  public Page<SolicitudPalabraClaveOutput> findPalabrasClave(@PathVariable Long solicitudId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findPalabrasClave(@PathVariable Long solicitudId, String query, Pageable paging) - start");
+    Page<SolicitudPalabraClaveOutput> returnValue = convertSolicitudPalabraClave(
+        solicitudPalabraClaveService.findBySolicitudId(solicitudId, query, paging));
+    log.debug("findPalabrasClave(@PathVariable Long solicitudId, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la lista de {@link SolicitudPalabraClave} asociadas a la entidad
+   * {@link Solicitud} con el id indicado
+   * 
+   * @param solicitudId   identificador de {@link Solicitud}
+   * @param palabrasClave nueva lista de {@link SolicitudPalabraClave} de
+   *                      la entidad {@link Solicitud}
+   * @return la nueva lista de {@link SolicitudPalabraClave} asociadas a la
+   *         entidad {@link Solicitud}
+   */
+  @PatchMapping("/{solicitudId}/palabrasclave")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-C', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<List<SolicitudPalabraClaveOutput>> updatePalabrasClave(@PathVariable Long solicitudId,
+      @Valid @RequestBody List<SolicitudPalabraClaveInput> palabrasClave) {
+    log.debug("updatePalabrasClave(Long solicitudId, List<SolicitudPalabraClaveInput> palabrasClave) - start");
+
+    palabrasClave.stream().forEach(palabraClave -> {
+      if (!palabraClave.getSolicitudId().equals(solicitudId)) {
+        throw new NoRelatedEntitiesException(SolicitudPalabraClave.class, Solicitud.class);
+      }
+    });
+
+    List<SolicitudPalabraClaveOutput> returnValue = convertSolicitudPalabraClave(
+        solicitudPalabraClaveService.updatePalabrasClave(solicitudId,
+            convertSolicitudPalabraClaveInputs(solicitudId, palabrasClave)));
+    log.debug("updatePalabrasClave(Long solicitudId, List<SolicitudPalabraClaveInput> palabrasClave) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {
+    List<SolicitudPalabraClaveOutput> content = page.getContent().stream()
+        .map((solicitudPalabraClave) -> convert(solicitudPalabraClave))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private List<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(List<SolicitudPalabraClave> list) {
+    return list.stream()
+        .map((element) -> convert(element))
+        .collect(Collectors.toList());
+  }
+
+  private SolicitudPalabraClaveOutput convert(SolicitudPalabraClave solicitudPalabraClave) {
+    return modelMapper.map(solicitudPalabraClave, SolicitudPalabraClaveOutput.class);
+  }
+
+  private List<SolicitudPalabraClave> convertSolicitudPalabraClaveInputs(Long solicitudId,
+      List<SolicitudPalabraClaveInput> inputs) {
+    return inputs.stream().map((input) -> convert(solicitudId, input)).collect(Collectors.toList());
+  }
+
+  private SolicitudPalabraClave convert(Long solicitudId, SolicitudPalabraClaveInput input) {
+    SolicitudPalabraClave entity = modelMapper.map(input, SolicitudPalabraClave.class);
+    entity.setSolicitudId(solicitudId);
+    return entity;
+  }
 }

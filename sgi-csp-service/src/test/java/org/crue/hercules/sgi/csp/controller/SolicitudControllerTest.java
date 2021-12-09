@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
@@ -110,9 +111,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudProyectoEntidadService solicitudProyectoEntidadService;
-  
+
   @MockBean
   private ProyectoService proyectoService;
+
+  @MockBean
+  private SolicitudPalabraClaveService solicitudPalabraClaveService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

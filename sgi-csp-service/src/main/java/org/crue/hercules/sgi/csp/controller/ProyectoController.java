@@ -10,8 +10,11 @@ import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoFacturacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
+import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -29,6 +32,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoPalabraClave;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
@@ -52,6 +56,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
@@ -171,6 +176,9 @@ public class ProyectoController {
 
   private final AnualidadGastoService anualidadGastoService;
 
+  /** ProyectoPalabraClaveService */
+  private final ProyectoPalabraClaveService proyectoPalabraClaveService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -201,6 +209,7 @@ public class ProyectoController {
    * @param proyectoAgrupacionGastoService                    {@link ProyectoAgrupacionGastoService}.
    * @param proyectoPeriodoJustificacionService               {@link ProyectoPeriodoJustificacionService}.
    * @param anualidadGastoService                             {@link AnualidadGastoService}
+   * @param proyectoPalabraClaveService                       {@link ProyectoPalabraClaveService}
    */
   public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
       ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
@@ -219,7 +228,7 @@ public class ProyectoController {
       ProyectoResponsableEconomicoService proyectoResponsableEconomicoService,
       ProyectoAgrupacionGastoService proyectoAgrupacionGastoService,
       ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService,
-      AnualidadGastoService anualidadGastoService) {
+      AnualidadGastoService anualidadGastoService, ProyectoPalabraClaveService proyectoPalabraClaveService) {
     this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
@@ -246,6 +255,7 @@ public class ProyectoController {
     this.proyectoAgrupacionGastoService = proyectoAgrupacionGastoService;
     this.proyectoPeriodoJustificacionService = proyectoPeriodoJustificacionService;
     this.anualidadGastoService = anualidadGastoService;
+    this.proyectoPalabraClaveService = proyectoPalabraClaveService;
   }
 
   /**
@@ -1326,6 +1336,85 @@ public class ProyectoController {
     return new PageImpl<>(page.getContent().stream().map(entity -> this.convert(entity)).collect(Collectors.toList()),
         page.getPageable(), page.getTotalElements());
 
+  }
+
+  /**
+   * Devuelve las {@link ProyectoPalabraClave} asociadas a la entidad
+   * {@link Proyecto} con el id indicado
+   * 
+   * @param proyectoId Identificador de {@link Proyecto}
+   * @param query      filtro de búsqueda.
+   * @param paging     pageable.
+   * @return {@link ProyectoPalabraClave} correspondientes al id de la entidad
+   *         {@link Proyecto}
+   */
+  @GetMapping("/{proyectoId}/palabrasclave")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-C')")
+  public Page<ProyectoPalabraClaveOutput> findPalabrasClave(@PathVariable Long proyectoId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findPalabrasClave(@PathVariable Long proyectoId, String query, Pageable paging) - start");
+    Page<ProyectoPalabraClaveOutput> returnValue = convertProyectoPalabraClave(
+        proyectoPalabraClaveService.findByProyectoId(proyectoId, query, paging));
+    log.debug("findPalabrasClave(@PathVariable Long proyectoId, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la lista de {@link ProyectoPalabraClave} asociadas a la entidad
+   * {@link Proyecto} con el id indicado
+   * 
+   * @param proyectoId    identificador de {@link Proyecto}
+   * @param palabrasClave nueva lista de {@link ProyectoPalabraClave} de
+   *                      la entidad {@link Proyecto}
+   * @return la nueva lista de {@link ProyectoPalabraClave} asociadas a la entidad
+   *         {@link Proyecto}
+   */
+  @PatchMapping("/{proyectoId}/palabrasclave")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-C')")
+  public ResponseEntity<List<ProyectoPalabraClaveOutput>> updatePalabrasClave(@PathVariable Long proyectoId,
+      @Valid @RequestBody List<ProyectoPalabraClaveInput> palabrasClave) {
+    log.debug("updatePalabrasClave(Long proyectoId, List<ProyectoPalabraClaveInput> palabrasClave) - start");
+
+    palabrasClave.stream().forEach(palabraClave -> {
+      if (!palabraClave.getProyectoId().equals(proyectoId)) {
+        throw new NoRelatedEntitiesException(ProyectoPalabraClave.class, Proyecto.class);
+      }
+    });
+
+    List<ProyectoPalabraClaveOutput> returnValue = convertProyectoPalabraClave(
+        proyectoPalabraClaveService.updatePalabrasClave(proyectoId,
+            convertProyectoPalabraClaveInputs(proyectoId, palabrasClave)));
+    log.debug("updatePalabrasClave(Long proyectoId, List<ProyectoPalabraClaveInput> palabrasClave) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
+    List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
+        .map((proyectoPalabraClave) -> convert(proyectoPalabraClave))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private List<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(List<ProyectoPalabraClave> list) {
+    return list.stream()
+        .map((element) -> convert(element))
+        .collect(Collectors.toList());
+  }
+
+  private ProyectoPalabraClaveOutput convert(ProyectoPalabraClave proyectoPalabraClave) {
+    return modelMapper.map(proyectoPalabraClave, ProyectoPalabraClaveOutput.class);
+  }
+
+  private List<ProyectoPalabraClave> convertProyectoPalabraClaveInputs(Long proyectoId,
+      List<ProyectoPalabraClaveInput> inputs) {
+    return inputs.stream().map((input) -> convert(proyectoId, input)).collect(Collectors.toList());
+  }
+
+  private ProyectoPalabraClave convert(Long proyectoId, ProyectoPalabraClaveInput input) {
+    ProyectoPalabraClave entity = modelMapper.map(input, ProyectoPalabraClave.class);
+    entity.setProyectoId(proyectoId);
+    return entity;
   }
 
 }

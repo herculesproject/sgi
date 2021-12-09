@@ -58,4 +58,17 @@ public class ProyectoSpecifications {
     };
   }
 
+  /**
+   * Solo {@link Proyecto} distintas.
+   * 
+   * @return specification para obtener las entidades {@link Proyecto} distintas
+   *         solamente.
+   */
+  public static Specification<Proyecto> distinct() {
+    return (root, query, cb) -> {
+      query.distinct(true);
+      return null;
+    };
+  }
+
 }
