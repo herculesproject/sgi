@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="dev" author="master" id="0000000000004-tipo_facturacion">
+    <update tableName="tipo_facturacion">
+      <column name="nombre" value="Sin requisito" />
+      <column name="activo" valueBoolean="true" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Pago En Efectivo" />
+      </whereParams>
+    </update>
+    <update tableName="tipo_facturacion">
+      <column name="nombre" value="Informe" />
+      <column name="activo" valueBoolean="true" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Única" />
+      </whereParams>
+    </update>
+    <update tableName="tipo_facturacion">
+      <column name="nombre" value="Prototipo" />
+      <column name="activo" valueBoolean="true" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Pago A Plazos" />
+      </whereParams>
+    </update>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Trabajo" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Análisis" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Memoria" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Mitad de trabajo" />
+    </insert>
+    <insert tableName="tipo_facturacion">
+      <column name="id" valueSequenceNext="tipo_facturacion_seq" />
+      <column name="nombre" value="Hito" />
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>
