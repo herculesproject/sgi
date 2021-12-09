@@ -792,21 +792,22 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private getCodigosExternosProyectosRelacionados(): Observable<string[]> {
     const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('entidadOrigenRef', SgiRestFilterOperator.EQUALS, this.getKey().toString())
-        .or('entidadDestinoRef', SgiRestFilterOperator.EQUALS, this.getKey().toString())
-        .and('tipoEntidadOrigen', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO)
-        .and('tipoEntidadDestino', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO)
+      filter: new RSQLSgiRestFilter('tipoEntidadOrigen', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO)
+        .and('tipoEntidadDestino', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO).and(
+          new RSQLSgiRestFilter('entidadOrigenRef', SgiRestFilterOperator.EQUALS, this.getKey().toString())
+            .or('entidadDestinoRef', SgiRestFilterOperator.EQUALS, this.getKey().toString())
+        )
     };
 
     return this.relacionService.findAll(options).pipe(
       map(response => this.getProyectosRelacionadosIds(response.items)),
-      switchMap(proyectosIds => {
-        return from(proyectosIds).pipe(
+      switchMap(proyectosIds =>
+        from(proyectosIds).pipe(
           mergeMap(proyectoId => this.service.findById(proyectoId).pipe(
             map(response => response.codigoExterno))),
           toArray()
         )
-      }));
+      ));
   }
 
   private getProyectosRelacionadosIds(relaciones: IRelacion[]): number[] {
