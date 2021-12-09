@@ -189,6 +189,18 @@
 
       </div>
 
+      <!-- Palabras clave -->
+      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+        <div fxFlex="100%">
+          <mat-form-field fxFill>
+            <mat-label>{{'csp.convocatoria.palabras-clave' | translate}}</mat-label>
+            <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+              placeholder="{{'csp.convocatoria.palabras-clave' | translate}}"></sgi-palabra-clave>
+          </mat-form-field>
+        </div>
+      </div>
+
       <div class="buttons-final">
         <div class="col filter-button">
           <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">

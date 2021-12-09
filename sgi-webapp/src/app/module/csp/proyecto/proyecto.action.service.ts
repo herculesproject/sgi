@@ -49,6 +49,7 @@ import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
+import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -247,7 +248,8 @@ export class ProyectoActionService extends ActionService {
     invencionService: InvencionService,
     sgiAuthService: SgiAuthService,
     proyectoFacturacionService: ProyectoFacturacionService,
-    facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService
+    facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    palabraClaveService: PalabraClaveService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -270,7 +272,8 @@ export class ProyectoActionService extends ActionService {
       this.data?.disableCoordinadorExterno,
       this.data?.hasAnyProyectoSocioCoordinador,
       this.data?.isVisor,
-      relacionService
+      relacionService,
+      palabraClaveService
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -436,7 +439,7 @@ export class ProyectoActionService extends ActionService {
     }
 
     this.subscriptions.push(this.fichaGeneral.iva$.subscribe(newIVA => {
-      if(this.proyectoCalendarioFacturacion){
+      if (this.proyectoCalendarioFacturacion) {
         this.proyectoCalendarioFacturacion.proyectoIVA = newIVA;
       }
     }));

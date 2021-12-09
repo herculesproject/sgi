@@ -242,6 +242,19 @@
         </div>
       </div>
 
+
+      <!-- Palabras clave -->
+      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+        <div fxFlex="100%">
+          <mat-form-field fxFill>
+            <mat-label>{{'csp.solicitud.palabras-clave' | translate}}</mat-label>
+            <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+              placeholder="{{'csp.solicitud.palabras-clave' | translate}}"></sgi-palabra-clave>
+          </mat-form-field>
+        </div>
+      </div>
+
       <!-- Acciones -->
       <div class="buttons-final">
         <div class="col filter-button">

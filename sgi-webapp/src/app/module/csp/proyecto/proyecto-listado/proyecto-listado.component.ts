@@ -186,7 +186,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       fuenteFinanciacion: new FormControl(''),
       codigoExterno: new FormControl(''),
       finalizado: new FormControl(''),
-      prorrogado: new FormControl('')
+      prorrogado: new FormControl(''),
+      palabrasClave: new FormControl(null),
     });
     this.loadAmbitoGeografico();
     this.loadPlanInvestigacion();
@@ -383,7 +384,24 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('prorrogado', SgiRestFilterOperator.EQUALS, controls.prorrogado.value?.toString())
       .and('solicitudId', SgiRestFilterOperator.EQUALS, this.solicitudId?.toString());
 
+    const palabrasClave = controls.palabrasClave.value as string[];
+    if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
+      filter.and(this.createPalabrasClaveFilter(palabrasClave));
+    }
+
     return filter;
+  }
+
+  private createPalabrasClaveFilter(palabrasClave: string[]): SgiRestFilter {
+    let palabrasClaveFilter: SgiRestFilter;
+    palabrasClave.forEach(palabraClave => {
+      if (palabrasClaveFilter) {
+        palabrasClaveFilter.or('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
+      } else {
+        palabrasClaveFilter = new RSQLSgiRestFilter('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
+      }
+    });
+    return palabrasClaveFilter;
   }
 
   /**

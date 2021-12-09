@@ -35,6 +35,7 @@ import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
+import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -187,7 +188,8 @@ export class SolicitudActionService extends ActionService {
     private dialogService: DialogService,
     rolProyectoService: RolProyectoService,
     private translate: TranslateService,
-    datosPersonalesService: DatosPersonalesService
+    datosPersonalesService: DatosPersonalesService,
+    palabraClaveService: PalabraClaveService
   ) {
     super();
 
@@ -233,7 +235,7 @@ export class SolicitudActionService extends ActionService {
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id,
       this.isInvestigador, this.data?.solicitud.estado, solicitudService,
       solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId,
-      this.hasAnySolicitudProyectoSocioWithRolCoordinador$, this.data?.hasPopulatedPeriodosSocios);
+      this.hasAnySolicitudProyectoSocioWithRolCoordinador$, this.data?.hasPopulatedPeriodosSocios, palabraClaveService);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
       solicitudService, solicitudProyectoEquipoService, this, rolProyectoService,
       convocatoriaService, datosAcademicosService, convocatoriaRequisitoIpService, vinculacionService,

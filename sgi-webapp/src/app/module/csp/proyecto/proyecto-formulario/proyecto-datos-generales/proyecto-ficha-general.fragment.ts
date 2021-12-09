@@ -3,6 +3,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
+import { IProyectoPalabraClave } from '@core/models/csp/proyecto-palabra-clave';
 import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
@@ -20,13 +21,14 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
+import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -92,7 +94,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     public disableCoordinadorExterno: boolean,
     private hasAnyProyectoSocioCoordinador: boolean,
     public isVisor: boolean,
-    private relacionService: RelacionService
+    private relacionService: RelacionService,
+    private readonly palabraClaveService: PalabraClaveService
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -171,6 +174,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       switchMap((proyecto) => {
         return this.verifyProyectoSocioCoordinado(proyecto);
       }),
+      switchMap(proyecto =>
+        this.service.findPalabrasClave(key).pipe(
+          map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave)),
+          tap(palabrasClave => this.getFormGroup().controls.palabrasClave.setValue(palabrasClave)),
+          map(() => proyecto)
+        )
+      ),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
@@ -243,7 +253,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         disabled: true
       }),
       solicitudProyecto: new FormControl({ value: '', disabled: true }),
-      proyectosRelacionados: new FormControl({ value: '', disabled: true })
+      proyectosRelacionados: new FormControl({ value: '', disabled: true }),
+      palabrasClave: new FormControl(null)
     },
       {
         validators: [
@@ -683,11 +694,39 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   private create(proyecto: IProyecto): Observable<IProyecto> {
-    return this.service.create(proyecto);
+    let cascade = this.service.create(proyecto);
+
+    if (this.getFormGroup().controls.palabrasClave.dirty) {
+      cascade = cascade.pipe(
+        mergeMap((createdProyecto: IProyecto) => this.saveOrUpdatePalabrasClave(createdProyecto))
+      );
+    }
+
+    return cascade;
   }
 
   private update(proyecto: IProyecto): Observable<IProyecto> {
-    return this.service.update(Number(this.getKey()), proyecto);
+    let cascade = this.service.update(Number(this.getKey()), proyecto);
+
+    if (this.getFormGroup().controls.palabrasClave.dirty) {
+      cascade = cascade.pipe(
+        mergeMap((updatedProyecto: IProyecto) => this.saveOrUpdatePalabrasClave(updatedProyecto))
+      );
+    }
+
+    return cascade;
+  }
+
+  private saveOrUpdatePalabrasClave(proyecto: IProyecto): Observable<IProyecto> {
+    const palabrasClave = this.getFormGroup().controls.palabrasClave.value ?? [];
+    const proyectoPalabrasClave: IProyectoPalabraClave[] = palabrasClave.map(palabraClave => ({
+      proyecto,
+      palabraClave
+    } as IProyectoPalabraClave));
+    return this.palabraClaveService.update(palabrasClave).pipe(
+      mergeMap(() => this.service.updatePalabrasClave(proyecto.id, proyectoPalabrasClave)),
+      map(() => proyecto)
+    );
   }
 
   /**

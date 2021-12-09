@@ -35,6 +35,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
+import { ISolicitudPalabraClave } from '@core/models/csp/solicitud-palabra-clave';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoAreaConocimiento } from '@core/models/csp/solicitud-proyecto-area-conocimiento';
 import { ISolicitudProyectoClasificacion } from '@core/models/csp/solicitud-proyecto-clasificacion';
@@ -53,6 +54,9 @@ import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { PersonaService } from '../sgp/persona.service';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
+import { SOLICITUD_PALABRACLAVE_REQUEST_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-request.converter';
+import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave/solicitud-palabra-clave-response';
+import { SOLICITUD_PALABRACLAVE_RESPONSE_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-response.converter';
 import { ISolicitudProyectoEntidadResponse } from './solicitud-proyecto-entidad/solicitud-proyecto-entidad-response';
 import { SOLICITUD_PROYECTO_ENTIDAD_RESPONSE_CONVERTER } from './solicitud-proyecto-entidad/solicitud-proyecto-entidad-response.converter';
 import { ISolicitudProyectoResponsableEconomicoResponse } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response';
@@ -506,5 +510,31 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
 
   public findIdsProyectosBySolicitudId(solicitudId: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.endpointUrl}/${solicitudId}/proyectosids`);
+  }
+
+  /**
+   * Recupera las Palabras Clave asociadas a la Solicitud con el id indicado.
+   *
+   * @param id de la Solicitud
+   */
+  findPalabrasClave(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudPalabraClave>> {
+    return this.find<ISolicitudPalabraClaveResponse, ISolicitudPalabraClave>(
+      `${this.endpointUrl}/${id}/palabrasclave`,
+      options,
+      SOLICITUD_PALABRACLAVE_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Actualiza las Palabras Clave  asociadas a la Solicitud con el id indicado.
+   *
+   * @param id Identificador de la Solicitud
+   * @param palabrasClave Palabras Clave a actualizar
+   */
+  updatePalabrasClave(id: number, palabrasClave: ISolicitudPalabraClave[]): Observable<ISolicitudPalabraClave[]> {
+    return this.http.patch<ISolicitudPalabraClaveResponse[]>(`${this.endpointUrl}/${id}/palabrasclave`,
+      SOLICITUD_PALABRACLAVE_REQUEST_CONVERTER.fromTargetArray(palabrasClave)
+    ).pipe(
+      map((response => SOLICITUD_PALABRACLAVE_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
   }
 }

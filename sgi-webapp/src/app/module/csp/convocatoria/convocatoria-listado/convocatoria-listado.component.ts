@@ -134,6 +134,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       entidadFinanciadora: new FormControl(null),
       fuenteFinanciacion: new FormControl(null),
       areaTematica: new FormControl(null),
+      palabrasClave: new FormControl(null),
     });
 
 
@@ -408,7 +409,24 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
       .and('areasTematicas.areaTematica.id', SgiRestFilterOperator.EQUALS, controls.areaTematica.value?.id?.toString());
 
+    const palabrasClave = controls.palabrasClave.value as string[];
+    if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
+      filter.and(this.createPalabrasClaveFilter(palabrasClave));
+    }
+
     return filter;
+  }
+
+  private createPalabrasClaveFilter(palabrasClave: string[]): SgiRestFilter {
+    let palabrasClaveFilter: SgiRestFilter;
+    palabrasClave.forEach(palabraClave => {
+      if (palabrasClaveFilter) {
+        palabrasClaveFilter.or('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
+      } else {
+        palabrasClaveFilter = new RSQLSgiRestFilter('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
+      }
+    });
+    return palabrasClaveFilter;
   }
 
   onClearFilters() {
