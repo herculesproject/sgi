@@ -78,7 +78,8 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     // comprobar si convocatoria es modificable
     Assert.isTrue(
         convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadConvocante.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-E", "CSP-CON-C" }),
+            convocatoria.getUnidadGestionRef(), new String[] {
+                "CSP-CON-E", "CSP-CON-C" }),
         "No se puede crear ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     Assert.isTrue(
@@ -127,9 +128,11 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
               null, new String[] { "CSP-CON-E" }),
           "No se puede modificar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
-      repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
-          convocatoriaEntidadConvocanteActualizar.getEntidadRef()).ifPresent(convocatoriaR -> {
-            Assert.isTrue(convocatoriaEntidadConvocante.getId() == convocatoriaR.getId(),
+      repository
+          .findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
+              convocatoriaEntidadConvocanteActualizar.getEntidadRef())
+          .ifPresent(convocatoriaR -> {
+            Assert.isTrue(convocatoriaEntidadConvocante.getId().equals(convocatoriaR.getId()),
                 "Ya existe una asociación activa para esa Convocatoria y Entidad");
           });
 

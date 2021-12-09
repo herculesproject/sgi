@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
+  private static final String MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX = "Ya existe un ModeloEjecucion activo con el nombre '";
   private final ModeloEjecucionRepository modeloEjecucionRepository;
 
   public ModeloEjecucionServiceImpl(ModeloEjecucionRepository modeloEjecucionRepository) {
@@ -42,7 +43,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
     Assert.isNull(modeloEjecucion.getId(), "ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
     Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-        "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucion.getNombre() + "'");
+        MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX + modeloEjecucion.getNombre() + "'");
 
     modeloEjecucion.setActivo(true);
 
@@ -67,10 +68,11 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     Assert.notNull(modeloEjecucionActualizar.getId(),
         "ModeloEjecucion id no puede ser null para actualizar un ModeloEjecucion");
     modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionActualizar.getNombre())
-        .ifPresent((modeloEjecucionExistente) -> {
-          Assert.isTrue(modeloEjecucionActualizar.getId() == modeloEjecucionExistente.getId(),
-              "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucionExistente.getNombre() + "'");
-        });
+        .ifPresent(modeloEjecucionExistente -> Assert
+            .isTrue(modeloEjecucionActualizar.getId().equals(modeloEjecucionExistente.getId()),
+                MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX
+                    + modeloEjecucionExistente.getNombre()
+                    + "'"));
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {
       modeloEjecucion.setNombre(modeloEjecucionActualizar.getNombre());
@@ -101,7 +103,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
       }
 
       Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-          "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucion.getNombre() + "'");
+          MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX + modeloEjecucion.getNombre() + "'");
 
       modeloEjecucion.setActivo(true);
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);

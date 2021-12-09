@@ -209,7 +209,7 @@ public class SolicitudController {
    */
   @PatchMapping("/{id}/reactivar")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-R')")
-  Solicitud reactivar(@PathVariable Long id) {
+  public Solicitud reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
 
     Solicitud returnValue = service.enable(id);
@@ -241,7 +241,7 @@ public class SolicitudController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C')")
-  Solicitud findById(@PathVariable Long id) {
+  public Solicitud findById(@PathVariable Long id) {
     log.debug("Solicitud findById(Long id) - start");
 
     Solicitud returnValue = service.findById(id);
@@ -260,8 +260,8 @@ public class SolicitudController {
    */
   @GetMapping()
   @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
-  ResponseEntity<Page<Solicitud>> findAll(@RequestParam(name = "q", required = false) String query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
+  public ResponseEntity<Page<Solicitud>> findAll(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Page<Solicitud> page = service.findAllRestringidos(query, paging);
@@ -285,8 +285,8 @@ public class SolicitudController {
    */
   @GetMapping("/todos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V','CSP-SOL-B', 'CSP-SOL-C', 'CSP-SOL-R', 'CSP-PRO-C')")
-  ResponseEntity<Page<Solicitud>> findAllTodos(@RequestParam(name = "q", required = false) String query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
+  public ResponseEntity<Page<Solicitud>> findAllTodos(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
 
     Page<Solicitud> page = service.findAllTodosRestringidos(query, paging);
@@ -306,10 +306,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudModalidad} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/solicitudmodalidades")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V', 'CSP-SOL-INV-C')")
-  ResponseEntity<Page<SolicitudModalidad>> findAllSolicitudModalidad(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudModalidad>> findAllSolicitudModalidad(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudModalidad(Long id, String query, Pageable paging) - start");
     Page<SolicitudModalidad> page = solicitudModalidadService.findAllBySolicitud(id, query, paging);
@@ -324,16 +326,17 @@ public class SolicitudController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link SolicitudHito} de la
+   * Devuelve una lista paginada y filtrada de {@link EstadoSolicitud} de la
    * {@link Solicitud}.
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link EstadoSolicitud} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/estadosolicitudes")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
-  ResponseEntity<Page<EstadoSolicitud>> findAllEstadoSolicitud(@PathVariable Long id,
+  public ResponseEntity<Page<EstadoSolicitud>> findAllEstadoSolicitud(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - start");
     Page<EstadoSolicitud> page = estadoSolicitudService.findAllBySolicitud(id, paging);
@@ -354,10 +357,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudHito} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/solicitudhitos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
-  ResponseEntity<Page<SolicitudHito>> findAllSolicitudHito(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudHito>> findAllSolicitudHito(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudHito(Long id, String query, Pageable paging) - start");
     Page<SolicitudHito> page = solicitudHitoService.findAllBySolicitud(id, query, paging);
@@ -378,10 +383,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudDocumento} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/solicituddocumentos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V','CSP-SOL-INV-ER')")
-  ResponseEntity<Page<SolicitudDocumento>> findAllSolicitudDocumentos(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudDocumento>> findAllSolicitudDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudDocumentos(Long id, String query, Pageable paging) - start");
     Page<SolicitudDocumento> page = solicitudDocumentoService.findAllBySolicitud(id, query, paging);
@@ -404,11 +411,12 @@ public class SolicitudController {
    */
   @RequestMapping(path = "/{id}/convocatoria-sgi", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  public ResponseEntity<?> hasConvocatoriaSgi(@PathVariable Long id) {
+  public ResponseEntity<Void> hasConvocatoriaSgi(@PathVariable Long id) {
     log.debug("hasConvocatoriaSgi(Long id) - start");
     Boolean returnValue = service.hasConvocatoriaSgi(id);
     log.debug("hasConvocatoriaSgi(Long id) - end");
-    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -417,7 +425,7 @@ public class SolicitudController {
    * @param id Identificador de {@link Solicitud}.
    * @return {@link SolicitudProyecto}
    */
-  @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.GET)
+  @GetMapping(path = "/{id}/solicitudproyecto")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<SolicitudProyecto> findSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("findSolictudProyectoDatos(Long id) - start");
@@ -438,10 +446,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link SolicitudProyectoSocio}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoSocio} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/solicitudproyectosocio")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
-  ResponseEntity<Page<SolicitudProyectoSocio>> findAllSolicitudProyectoSocio(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudProyectoSocio>> findAllSolicitudProyectoSocio(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoSocio(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoSocio> page = solicitudProyectoSocioService.findAllBySolicitud(id, query, paging);
@@ -461,10 +471,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link SolicitudProyecto}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoEquipo} paginados y
+   *         filtrados.
    */
   @GetMapping("/{id}/solicitudproyectoequipo")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
-  ResponseEntity<Page<SolicitudProyectoEquipo>> findAllSolicitudProyectoEquipo(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudProyectoEquipo>> findAllSolicitudProyectoEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoEquipo(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoEquipo> page = solicitudProyectoEquipoService.findAllBySolicitud(id, query, paging);
@@ -482,10 +494,12 @@ public class SolicitudController {
    * Devuelve true si el solicitante existe en la SolicitudProyectoEquipo
    * 
    * @param id Identificador de {@link SolicitudProyecto}.
+   * @return {@link HttpStatus#OK} si existe, {@link HttpStatus#NO_CONTENT} en
+   *         cualquier otro caso
    */
   @RequestMapping(path = "/{id}/existssolicitante", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
-  ResponseEntity<?> existSolicitanteInSolicitudProyectoEquipo(@PathVariable Long id) {
+  public ResponseEntity<Void> existSolicitanteInSolicitudProyectoEquipo(@PathVariable Long id) {
     log.debug("existSolicitanteInSolicitudProyectoEquipo(Long id) - start");
     boolean returnValue = this.solicitudProyectoEquipoService.existsSolicitanteInSolicitudProyectoEquipo(id);
     log.debug("existSolicitanteInSolicitudProyectoEquipo(Long id) - end");
@@ -494,13 +508,18 @@ public class SolicitudController {
 
   /**
    * Devuelve una lista paginada de
+   * {@link SolicitudProyectoEntidadFinanciadoraAjena} de una {@link Solicitud}
    * 
+   * @param id     id {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades
+   *         {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   *         paginados y filtrados.
    */
   @GetMapping("/{id}/solicitudproyectoentidadfinanciadoraajenas")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  ResponseEntity<Page<SolicitudProyectoEntidadFinanciadoraAjena>> findAllSolicitudProyectoEntidadFinanciadoraAjena(
+  public ResponseEntity<Page<SolicitudProyectoEntidadFinanciadoraAjena>> findAllSolicitudProyectoEntidadFinanciadoraAjena(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, String query, Pageable paging) - start");
@@ -524,7 +543,7 @@ public class SolicitudController {
    */
   @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
-  public ResponseEntity<?> existSolictudProyectoDatos(@PathVariable Long id) {
+  public ResponseEntity<Void> existSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("existSolictudProyectoDatos(Long id) - start");
     boolean returnValue = solicitudProyectoService.existsBySolicitudId(id);
 
@@ -538,10 +557,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoPresupuesto}
+   *         paginados y filtrados.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
-  ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuesto(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuesto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoPresupuesto(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitud(id, query, paging);
@@ -561,12 +582,12 @@ public class SolicitudController {
    * 
    * @param id         Id de la Solicitud
    * @param entidadRef Referencia de la Entidad
-   * @return {@link HttpStatus.OK} si existe alguna relación,
-   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   * @return {@link HttpStatus#OK} si existe alguna relación,
+   *         {@link HttpStatus#NO_CONTENT} en cualquier otro caso
    */
   @RequestMapping(path = "/{id}/solicitudproyectopresupuestos/entidadconvocatoria/{entidadRef}", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
-  ResponseEntity<?> existSolicitudProyectoPresupuestoEntidadConvocatoria(@PathVariable Long id,
+  public ResponseEntity<Void> existSolicitudProyectoPresupuestoEntidadConvocatoria(@PathVariable Long id,
       @PathVariable String entidadRef) {
     log.debug("existSolicitudProyectoPresupuestoEntidadConvocatoria(Long id, String entidadRef) - start");
     boolean returnValue = solicitudProyectoPresupuestoService
@@ -582,12 +603,12 @@ public class SolicitudController {
    * 
    * @param id         Id de la Solicitud
    * @param entidadRef Referencia de la Entidad
-   * @return {@link HttpStatus.OK} si existe alguna relación,
-   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   * @return {@link HttpStatus#OK} si existe alguna relación,
+   *         {@link HttpStatus#NO_CONTENT} en cualquier otro caso
    */
   @RequestMapping(path = "/{id}/solicitudproyectopresupuestos/entidadajena/{entidadRef}", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
-  ResponseEntity<?> existSolicitudProyectoPresupuestoEntidadAjena(@PathVariable Long id,
+  public ResponseEntity<Void> existSolicitudProyectoPresupuestoEntidadAjena(@PathVariable Long id,
       @PathVariable String entidadRef) {
     log.debug("existSolicitudProyectoPresupuestoEntidadAjena(Long id, String entidadRef) - start");
     boolean returnValue = solicitudProyectoPresupuestoService
@@ -606,7 +627,7 @@ public class SolicitudController {
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos/totales")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  SolicitudProyectoPresupuestoTotales getSolicitudProyectoPresupuestoTotales(@PathVariable Long id) {
+  public SolicitudProyectoPresupuestoTotales getSolicitudProyectoPresupuestoTotales(@PathVariable Long id) {
     log.debug("getSolicitudProyectoPresupuestoTotales(Long id) - start");
     SolicitudProyectoPresupuestoTotales returnValue = solicitudProyectoPresupuestoService.getTotales(id);
     log.debug("getSolicitudProyectoPresupuestoTotales(Long id) - end");
@@ -634,11 +655,12 @@ public class SolicitudController {
    */
   @RequestMapping(path = "/{id}/crearproyecto", method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
-  ResponseEntity<Solicitud> isPosibleCrearProyecto(@PathVariable Long id) {
+  public ResponseEntity<Solicitud> isPosibleCrearProyecto(@PathVariable Long id) {
     log.debug("isPosibleCrearProyecto(Long id) - start");
     Boolean returnValue = service.isPosibleCrearProyecto(id);
     log.debug("isPosibleCrearProyecto(Long id) - end");
-    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -651,22 +673,24 @@ public class SolicitudController {
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
-  ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
+  public ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     Boolean returnValue = service.modificable(id);
     log.debug("modificable(Long id) - end");
-    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
    * Se hace el cambio de estado de "Borrador" a "Presentada".
    * 
-   * @param id Identificador de {@link Solicitud}.
+   * @param id              Identificador de {@link Solicitud}.
+   * @param estadoSolicitud nuevo {@link EstadoSolicitud}.
    * @return {@link Solicitud} actualizado.
    */
   @PatchMapping("/{id}/cambiar-estado")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
-  Solicitud cambiarEstado(@PathVariable Long id, @RequestBody EstadoSolicitud estadoSolicitud) {
+  public Solicitud cambiarEstado(@PathVariable Long id, @RequestBody EstadoSolicitud estadoSolicitud) {
     log.debug("presentar(Long id) - start");
 
     Solicitud returnValue = service.cambiarEstado(id, estadoSolicitud);
@@ -686,7 +710,7 @@ public class SolicitudController {
    */
   @GetMapping("/investigador")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
-  ResponseEntity<Page<Solicitud>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<Solicitud>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllInvestigador(String query, Pageable paging) - start");
     Page<Solicitud> page = service.findAllInvestigador(query, paging);
@@ -705,11 +729,14 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoClasificacion}
+   *         paginados y filtrados.
    */
   @GetMapping("/{id}/solicitud-proyecto-clasificaciones")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V','CSP-SOL-INV-ER')")
-  ResponseEntity<Page<SolicitudProyectoClasificacion>> findAllSolicitudProyectoClasificaciones(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+  public ResponseEntity<Page<SolicitudProyectoClasificacion>> findAllSolicitudProyectoClasificaciones(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoClasificacion> page = solicitudProyectoClasificacionService.findAllBySolicitud(id, query,
         paging);
@@ -727,12 +754,14 @@ public class SolicitudController {
    * Devuelve una lista de {@link SolicitudProyectoAreaConocimiento} con una
    * {@link SolicitudProyecto} con id indicado.
    * 
-   * @param id Identificador de {@link SolicitudProyecto}.
+   * @param id     Identificador de {@link SolicitudProyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
    * @return Lista de {@link SolicitudProyectoAreaConocimiento} correspondiente al
    *         id
    */
   @GetMapping("/{id}/solicitud-proyecto-areas-conocimiento")
-  ResponseEntity<Page<SolicitudProyectoAreaConocimiento>> findAllBySolicitudProyectoId(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudProyectoAreaConocimiento>> findAllBySolicitudProyectoId(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllBySolicitudProyectoId(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoAreaConocimiento> page = solicitudProyectoAreaConocimientoService
@@ -751,13 +780,15 @@ public class SolicitudController {
    * Devuelve una lista de {@link SolicitudProyectoResponsableEconomico} con una
    * {@link SolicitudProyecto} con id indicado.
    * 
-   * @param id Identificador de {@link SolicitudProyectoResponsableEconomico}.
+   * @param id     Identificador de {@link SolicitudProyectoResponsableEconomico}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
    * @return Lista de {@link SolicitudProyectoResponsableEconomico}
    *         correspondiente al id
    */
   @GetMapping("/{id}/solicitudproyectoresponsableseconomicos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
-  ResponseEntity<Page<SolicitudProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosBySolicitud(
+  public ResponseEntity<Page<SolicitudProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosBySolicitud(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllResponsablesEconomicosBySolicitud(Long id, String query, Pageable paging) - start");
@@ -778,12 +809,12 @@ public class SolicitudController {
    * una solicitud
    * 
    * @param id Id de la Solicitud
-   * @return {@link HttpStatus.OK} si existe alguna relación,
-   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   * @return {@link HttpStatus#OK} si existe alguna relación,
+   *         {@link HttpStatus#NO_CONTENT} en cualquier otro caso
    */
   @RequestMapping(path = "/{id}/solicitudproyectopresupuestos", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
-  ResponseEntity<?> existSolicitudProyectoPresupuesto(@PathVariable Long id) {
+  public ResponseEntity<Void> existSolicitudProyectoPresupuesto(@PathVariable Long id) {
     log.debug("existSolicitudProyectoPresupuesto(Long id) - start");
     boolean returnValue = solicitudProyectoPresupuestoService.existsBySolicitudProyectoSolicitudId(id);
 
@@ -795,12 +826,12 @@ public class SolicitudController {
    * Comprueba si la solicitud proyecto de la solicitud es de tipo Global
    * 
    * @param id Id de la Solicitud
-   * @return {@link HttpStatus.OK} si es tipo Global,
-   *         {@link HttpStatus.NO_CONTENT} Por Entidad o Mixto
+   * @return {@link HttpStatus#OK} si es tipo Global,
+   *         {@link HttpStatus#NO_CONTENT} Por Entidad o Mixto
    */
   @RequestMapping(path = "/{id}/solicitudproyecto-global", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E')")
-  ResponseEntity<?> hasSolicitudProyectoTipoGlobal(@PathVariable Long id) {
+  public ResponseEntity<Void> hasSolicitudProyectoTipoGlobal(@PathVariable Long id) {
     log.debug("hasSolicitudProyectoTipoGlobal(Long id) - start");
     boolean returnValue = solicitudProyectoService.isTipoPresupuestoGlobalBySolicitudId(id);
 
@@ -815,7 +846,7 @@ public class SolicitudController {
 
   private Page<SolicitudProyectoResponsableEconomicoOutput> convert(Page<SolicitudProyectoResponsableEconomico> page) {
     List<SolicitudProyectoResponsableEconomicoOutput> content = page.getContent().stream()
-        .map((responsableEconomico) -> convert(responsableEconomico)).collect(Collectors.toList());
+        .map(responsableEconomico -> convert(responsableEconomico)).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
@@ -826,10 +857,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link ConvocatoriaEntidadFinanciadora}
+   *         paginados y filtrados.
    */
   @GetMapping("/{id}/solicitudproyectoentidadfinanciadora")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  ResponseEntity<Page<ConvocatoriaEntidadFinanciadora>> findAllSolicitudProyectoEntidadFinanciadora(
+  public ResponseEntity<Page<ConvocatoriaEntidadFinanciadora>> findAllSolicitudProyectoEntidadFinanciadora(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoEntidadFinanciadora(Long id, String query, Pageable paging) - start");
@@ -853,11 +886,14 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoEntidad}
+   *         paginadas y filtradas.
    */
   @GetMapping("/{id}/solicitudproyectoentidad/tipopresupuestomixto")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  ResponseEntity<Page<SolicitudProyectoEntidad>> findSolicitudProyectoEntidadTipoPresupuestoMixto(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+  public ResponseEntity<Page<SolicitudProyectoEntidad>> findSolicitudProyectoEntidadTipoPresupuestoMixto(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findSolicitudProyectoEntidadTipoPresupuestoMixto(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoEntidad> page = solicitudProyectoEntidadService
         .findSolicitudProyectoEntidadTipoPresupuestoMixto(id, query, paging);
@@ -879,10 +915,12 @@ public class SolicitudController {
    * @param id     Identificador de {@link Solicitud}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
+   * @return el listado de entidades {@link SolicitudProyectoEntidad}
+   *         paginadas y filtradas.
    */
   @GetMapping("/{id}/solicitudproyectoentidad/tipopresupuestoporentidad")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
-  ResponseEntity<Page<SolicitudProyectoEntidad>> findSolicitudProyectoEntidadTipoPresupuestoPorEntidad(
+  public ResponseEntity<Page<SolicitudProyectoEntidad>> findSolicitudProyectoEntidadTipoPresupuestoPorEntidad(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findSolicitudProyectoEntidadTipoPresupuestoPorEntidad(Long id, String query, Pageable paging) - start");

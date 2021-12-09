@@ -68,18 +68,14 @@ public class AnualidadIngresoController {
   }
 
   private List<AnualidadIngresoOutput> convertListAnualidadIngresoOutput(List<AnualidadIngreso> anualidadesIngreso) {
-    List<AnualidadIngresoOutput> anualidadesIngresoOutput = anualidadesIngreso.stream().map((anualidadIngreso) -> {
-      return modelMapper.map(anualidadIngreso, AnualidadIngresoOutput.class);
-    }).collect(Collectors.toList());
-
-    return anualidadesIngresoOutput;
+    return anualidadesIngreso.stream()
+        .map(anualidadIngreso -> modelMapper.map(anualidadIngreso, AnualidadIngresoOutput.class))
+        .collect(Collectors.toList());
   }
 
   private List<AnualidadIngreso> convertListAnualidadIngreso(List<AnualidadIngresoInput> anualidadesIngresoInput) {
-    List<AnualidadIngreso> anualidadesIngreso = anualidadesIngresoInput.stream().map((anualidadIngreso) -> {
-      return modelMapper.map(anualidadIngreso, AnualidadIngreso.class);
-    }).collect(Collectors.toList());
-
-    return anualidadesIngreso;
+    return anualidadesIngresoInput.stream()
+        .map(anualidadIngreso -> modelMapper.map(anualidadIngreso, AnualidadIngreso.class))
+        .collect(Collectors.toList());
   }
 }

@@ -136,7 +136,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(convocatoria.getFormularioSolicitud(),
         "FormularioSolicitud no puede ser null para actualizar Convocatoria");
 
-    return repository.findById(convocatoria.getId()).map((data) -> {
+    return repository.findById(convocatoria.getId()).map(data -> {
 
       Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, data);
 
@@ -178,7 +178,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     Assert.notNull(id, "Id no puede ser null para registrar Convocatoria");
 
-    return repository.findById(id).map((data) -> {
+    return repository.findById(id).map(data -> {
 
       Assert.isTrue(data.getEstado() == Convocatoria.Estado.BORRADOR,
           "Convocatoria deber estar en estado 'Borrador' para pasar a 'Registrada'");
@@ -208,7 +208,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(id, "Convocatoria id no puede ser null para reactivar un Convocatoria");
 
     return repository.findById(id).map(convocatoria -> {
-      if (convocatoria.getActivo()) {
+      if (Boolean.TRUE.equals(convocatoria.getActivo())) {
         return convocatoria;
       }
       convocatoria.setActivo(Boolean.TRUE);
@@ -232,7 +232,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(id, "Convocatoria id no puede ser null para desactivar un Convocatoria");
 
     return repository.findById(id).map(convocatoria -> {
-      if (!convocatoria.getActivo()) {
+      if (Boolean.FALSE.equals(convocatoria.getActivo())) {
         return convocatoria;
       }
 
@@ -306,36 +306,28 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   public boolean registrable(Long id) {
     log.debug("registrable(Long id) - start");
 
-    // id convocatoria presente
-    if (id != null) {
+    // si no tiene id no es registrable
+    if (id == null) {
+      log.debug("registrable(Long id) - end");
+      return false;
+    }
 
-      Optional<Convocatoria> convocatoria = repository.findById(id);
+    Optional<Convocatoria> convocatoria = repository.findById(id);
 
-      // convocatoria existe y su estado actual es 'Borrador'
-      if (convocatoria.isPresent() && convocatoria.get().getEstado() == Convocatoria.Estado.BORRADOR) {
+    // convocatoria existe y su estado actual es 'Borrador'
+    if (convocatoria.isPresent() && convocatoria.get().getEstado() == Convocatoria.Estado.BORRADOR
+        && convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
+        && convocatoria.get().getFinalidad() != null && convocatoria.get().getAmbitoGeografico() != null
+        && convocatoria.get().getFormularioSolicitud() != null) {
 
-        // Campos requeridos a nivel de convocatoria
-        if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
-            && convocatoria.get().getFinalidad() != null && convocatoria.get().getAmbitoGeografico() != null
-            && convocatoria.get().getFormularioSolicitud() != null) {
+      Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
+          .findByConvocatoriaId(convocatoria.get().getId());
 
-          Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
-              .findByConvocatoriaId(convocatoria.get().getId());
-
-          // tiene configuración solicitud
-          if (configuracionSolicitud.isPresent()) {
-
-            // campos requeridos a nivel de configuración solicitud
-            if (configuracionSolicitud.get().getTramitacionSGI() != null) {
-
-              // con tramitación SGI debe tener una fase asignada
-              if (!(configuracionSolicitud.get().getFasePresentacionSolicitudes() == null
-                  && configuracionSolicitud.get().getTramitacionSGI() == Boolean.TRUE)) {
-                return true;
-              }
-            }
-          }
-        }
+      // tiene configuración solicitud
+      if (configuracionSolicitud.isPresent() && configuracionSolicitud.get().getTramitacionSGI() != null
+          && !(configuracionSolicitud.get().getFasePresentacionSolicitudes() == null
+              && configuracionSolicitud.get().getTramitacionSGI() == Boolean.TRUE)) {
+        return true;
       }
     }
     log.debug("registrable(Long id) - end");
@@ -609,7 +601,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
         // Permitir no activos solo si estamos modificando y es el mismo
         if (datosOriginales == null || (datosOriginales.getRegimenConcurrencia() != null
-            && (tipoRegimenConcurrencia.get().getId() != datosOriginales.getRegimenConcurrencia().getId()))) {
+            && (!tipoRegimenConcurrencia.get().getId().equals(datosOriginales.getRegimenConcurrencia().getId())))) {
           Assert.isTrue(tipoRegimenConcurrencia.get().getActivo(),
               "RegimenConcurrencia '" + tipoRegimenConcurrencia.get().getNombre() + "' no está activo");
         }
@@ -650,7 +642,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     // Duración mayor que el mayor mes del Periodo Seguimiento Cientifico
     if (datosOriginales != null && datosConvocatoria.getDuracion() != null
-        && (datosConvocatoria.getDuracion() != datosOriginales.getDuracion())) {
+        && (!datosConvocatoria.getDuracion().equals(datosOriginales.getDuracion()))) {
       List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientificos = convocatoriaPeriodoSeguimientoCientificoRepository
           .findAllByConvocatoriaIdOrderByMesInicial(datosConvocatoria.getId());
       if (!listaConvocatoriaPeriodoSeguimientoCientificos.isEmpty()) {

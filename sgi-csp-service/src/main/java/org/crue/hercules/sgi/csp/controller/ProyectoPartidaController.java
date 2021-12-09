@@ -53,7 +53,7 @@ public class ProyectoPartidaController {
    */
   @PostMapping
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  ResponseEntity<ProyectoPartida> create(@Valid @RequestBody ProyectoPartida proyectoPartida) {
+  public ResponseEntity<ProyectoPartida> create(@Valid @RequestBody ProyectoPartida proyectoPartida) {
     log.debug("create(ProyectoPartida proyectoPartida) - start");
     ProyectoPartida returnValue = service.create(proyectoPartida);
     log.debug("create(ProyectoPartida proyectoPartida) - end");
@@ -69,8 +69,8 @@ public class ProyectoPartidaController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  ProyectoPartida update(@Validated({ Update.class, Default.class }) @RequestBody ProyectoPartida proyectoPartida,
-      @PathVariable Long id) {
+  public ProyectoPartida update(
+      @Validated({ Update.class, Default.class }) @RequestBody ProyectoPartida proyectoPartida, @PathVariable Long id) {
     log.debug("update(ProyectoPartida proyectoPartida, Long id) - start");
     proyectoPartida.setId(id);
     ProyectoPartida returnValue = service.update(proyectoPartida);
@@ -86,7 +86,7 @@ public class ProyectoPartidaController {
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
+  public void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
@@ -100,7 +100,7 @@ public class ProyectoPartidaController {
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
+  public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("exists(Long id) - start");
     if (service.existsById(id)) {
       log.debug("exists(Long id) - end");
@@ -118,7 +118,7 @@ public class ProyectoPartidaController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  ProyectoPartida findById(@PathVariable Long id) {
+  public ProyectoPartida findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPartida returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
@@ -135,7 +135,7 @@ public class ProyectoPartidaController {
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
-  ResponseEntity<ProyectoPartida> modificable(@PathVariable Long id) {
+  public ResponseEntity<ProyectoPartida> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable(id, "CSP-PRO-E");
     log.debug("modificable(Long id) - end");

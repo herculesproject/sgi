@@ -58,9 +58,8 @@ public class EstadoValidacionIPController {
 
   private Page<EstadoValidacionIPOutput> convertToEstadoValidacionIPOutputPage(Page<EstadoValidacionIP> page) {
 
-    return new PageImpl<EstadoValidacionIPOutput>(
-        page.getContent().stream().map(this::entityToOutput).collect(Collectors.toList()), page.getPageable(),
-        page.getTotalElements());
+    return new PageImpl<>(page.getContent().stream().map(this::entityToOutput).collect(Collectors.toList()),
+        page.getPageable(), page.getTotalElements());
 
   }
 
