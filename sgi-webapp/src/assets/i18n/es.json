@@ -1124,7 +1124,6 @@
   "error.pii.invencion-titularidad.periodo-titularidad.fecha-fin.before": "La Fecha de Fin Titularidad Vigente tiene que ser anterior a la Fecha Inicio Nueva Titularidad",
   "error.pii.invencion-titularidad.periodo-titularidad.fecha-fin.min": "La fecha de fin titularidad vigente introducida tiene que ser posterior o igual a la fecha de inicio del período vigente",
   "error.pii.invencion-titularidad.periodo-titularidad.fecha-inicio.after": "La fecha inicio nueva titularidad tiene que ser posterior a la fecha de fin titularidad vigente",
-  "error.pii.invencion-titularidad.periodo-titularidad.fecha-inicio.min": "La fecha de inicio de nueva titularidad ha de ser posterior a la fecha de fin del período vigente",
   "error.pii.invencion-titularidad.periodo-titularidad.participacion": "La participación debe sumar 100",
   "error.pii.reparto.equipo-inventor.importe-total-inventor": "La suma de los importes parciales debe ser igual al importe total",
   "error.pii.reparto.equipo-inventor.importe-total-sum-equipo-inventor": "El Importe del reparto a equipo inventor debe coincidir con el Total importe desglose reparto a equipo inventor. Hay un desvio de {roundingError}€",
