@@ -30,6 +30,7 @@
       <column name="datos_entidad" type="VARCHAR(250)" />
       <column name="datos_responsable" type="VARCHAR(250)" />
       <column name="entidad_ref" type="VARCHAR(255)" />
+      <column name="horas_dedicacion" type="BIGINT" />
       <column name="estado_id" type="BIGINT" />
       <column name="observaciones" type="VARCHAR(250)" />
       <column name="responsable_ref" type="VARCHAR(250)" />

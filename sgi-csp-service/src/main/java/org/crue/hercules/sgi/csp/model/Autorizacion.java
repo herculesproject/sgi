@@ -71,6 +71,10 @@ public class Autorizacion extends BaseEntity {
   @Column(name = "entidad_ref", nullable = true)
   private String entidadRef;
 
+  /** Horas Dedicacion Ref */
+  @Column(name = "horas_dedicacion", nullable = true)
+  private Integer horasDedicacion;
+
   /** Datos Responsable */
   @Column(name = "datos_responsable", length = Autorizacion.MAX_LENGTH, nullable = true)
   @Size(max = Autorizacion.MAX_LENGTH)

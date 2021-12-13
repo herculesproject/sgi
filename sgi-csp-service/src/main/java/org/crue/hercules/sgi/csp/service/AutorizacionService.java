@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.exceptions.AutoriazcionNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,9 +50,13 @@ public class AutorizacionService {
     log.debug("delete(Long id) - start");
 
     Assert.notNull(id,
-        "Autorizacion id no puede ser null para eliminar un Autorizacion");
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+
     if (!repository.existsById(id)) {
-      throw new AutoriazcionNotFoundException(id);
+      throw new AutorizacionNotFoundException(id);
     }
 
     repository.deleteById(id);
