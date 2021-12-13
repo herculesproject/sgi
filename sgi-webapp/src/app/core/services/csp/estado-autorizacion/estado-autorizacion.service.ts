@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IEstadoAutorizacionRequest } from './estado-autorizacion-request';
 import { ESTADO_AUTORIZACION_REQUEST_CONVERTER } from './estado-autorizacion-request.converter';
 import { IEstadoAutorizacionResponse } from './estado-autorizacion-response';
@@ -43,4 +45,5 @@ export class EstadoAutorizacionService extends _EstadoAutorizacionMixinBase {
       http,
     );
   }
+
 }

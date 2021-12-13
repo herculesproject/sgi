@@ -10,6 +10,7 @@ export interface IAutorizacion {
   solitante: IPersona;
   tituloProyecto: string;
   entidad: IEmpresa;
+  horasDedicacion: number;
   datosResponsable: string;
   datosEntidad: string;
   datosConvocatoria: string;

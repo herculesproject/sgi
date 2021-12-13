@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { Observable } from 'rxjs';
 import { IAutorizacionRequest } from './autorizacion-request';
 import { AUTORIZACION_REQUEST_CONVERTER } from './autorizacion-request.converter';
 import { IAutorizacionResponse } from './autorizacion-response';
@@ -41,5 +42,9 @@ export class AutorizacionService extends _AutorizacionMixinBase {
       `${environment.serviceServers.csp}${AutorizacionService.MAPPING}`,
       http,
     );
+  }
+
+  public deleteById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.endpointUrl}/${id}`);
   }
 }

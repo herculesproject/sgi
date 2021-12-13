@@ -5,6 +5,7 @@ export interface IAutorizacionResponse {
   solitanteRef: string;
   tituloProyecto: string;
   entidadRef: string;
+  horasDedicacion: number;
   datosResponsable: string;
   datosEntidad: string;
   datosConvocatoria: string;
