@@ -507,28 +507,85 @@
         </configuration>
         <executions>
           <execution>
-            <id>default-prepare-agent</id>
+            <!-- Unit test analisys config -->
+            <id>ut-prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file where the execution data will be generated -->
+              <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>default-prepare-agent-integration</id>
+            <!-- Integration test analisys config -->
+            <id>it-prepare-agent</id>
             <goals>
               <goal>prepare-agent-integration</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file where the execution data will be generated -->
+              <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>default-report</id>
+            <!-- Unit test report generation config -->
+            <id>ut-report</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+              <!-- Sets the output directory for the unit tests code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+            </configuration>
           </execution>
           <execution>
-            <id>default-report-integration</id>
+            <!-- Integration test report generation config -->
+            <id>it-report</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>report-integration</goal>
             </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+              <!-- Sets the output directory for the integration tests code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- Merge unit an integration tests execution data -->
+            <id>merge-results</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}/coverage-reports</directory>
+                  <include>*.exec</include>
+                </fileSet>
+              </fileSets>
+              <destFile>${project.build.directory}/coverage-reports/aggregate.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- Unit and integration test merged report generation config -->
+            <id>merge-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the path to the file which contains the execution data -->
+              <dataFile>${project.build.directory}/coverage-reports/aggregate.exec</dataFile>
+              <!-- Sets the output directory for the code coverage report -->
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+            </configuration>
           </execution>
         </executions>
       </plugin>
