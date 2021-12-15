@@ -123,6 +123,10 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
   @Column(name = "responsable_ref", nullable = true)
   private String responsableRef;
 
+  /** Solicitante Ref */
+  @Column(name = "solicitante_ref", nullable = true)
+  private String solicitanteRef;
+
   /** Url Documento acreditacion */
   @Column(name = "url_documento_acreditacion", length = NotificacionProyectoExternoCVN.MAX_LENGTH, nullable = true)
   @Size(max = NotificacionProyectoExternoCVN.MAX_LENGTH)
@@ -139,6 +143,6 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
   @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_NOTIFICACIONPROYECTOEXTERNOCVN_PROYECTO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  private static final Proyecto proyecto = null;
+  private final Proyecto proyecto = null;
 
 }

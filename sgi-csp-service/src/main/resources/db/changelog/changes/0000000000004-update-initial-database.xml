@@ -191,4 +191,16 @@
     <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_palabra_clave" constraintName="FK_SOLICITUDPALABRACLAVE_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000004-20">
+    <addColumn tableName="notificacion_proyecto_externo_cvn">
+      <column name="solicitante_ref" type="varchar(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-21">
+    <addForeignKeyConstraint baseColumnNames="autorizacion_id" baseTableName="notificacion_proyecto_externo_cvn" constraintName="FK_NOTIFICACIONPROYECTOEXTERNOCVN_AUTORIZACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="autorizacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-22">
+    <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="notificacion_proyecto_externo_cvn" constraintName="FK_NOTIFICACIONPROYECTOEXTERNOCVN_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>
