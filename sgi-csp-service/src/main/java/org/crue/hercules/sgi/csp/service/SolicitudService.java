@@ -598,7 +598,7 @@ public class SolicitudService {
 
     solicitudProyectoEquipoRepository.findAllBySolicitudProyectoId(solicitudProyectoId).stream()
         .map((solicitudProyectoEquipo) -> {
-          log.debug("Copy SolicitudProyectoEquipo with id: {0}", solicitudProyectoEquipo.getId());
+          log.debug("Copy SolicitudProyectoEquipo with id: {}", solicitudProyectoEquipo.getId());
           EquipoTrabajo.EquipoTrabajoBuilder equipoTrabajo = EquipoTrabajo.builder();
           equipoTrabajo.peticionEvaluacion(peticionEvaluacion);
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());

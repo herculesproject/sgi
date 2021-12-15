@@ -871,7 +871,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ConvocatoriaEntidadFinanciadora> entidadesConvocatoria = convocatoriaEntidadFinanciadoraRepository
         .findByConvocatoriaId(convocatoriaId);
     entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
-      log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {0}", entidadConvocatoria.getId());
+      log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {}", entidadConvocatoria.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
       entidadProyecto.setProyectoId(proyectoId);
       entidadProyecto.setEntidadRef(entidadConvocatoria.getEntidadRef());
@@ -898,7 +898,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     convocatoriaPeriodoSeguimientoCientificoRepository
         .findAllByConvocatoriaIdOrderByMesInicial(proyecto.getConvocatoriaId()).forEach((convocatoriaSeguimiento) -> {
 
-          log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {0}", convocatoriaSeguimiento.getId());
+          log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {}", convocatoriaSeguimiento.getId());
 
           ProyectoPeriodoSeguimiento.ProyectoPeriodoSeguimientoBuilder projectBuilder = ProyectoPeriodoSeguimiento
               .builder();
@@ -941,7 +941,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ConvocatoriaEntidadGestora> entidadesConvocatoria = convocatoriaEntidadGestoraRepository
         .findAllByConvocatoriaId(proyecto.getConvocatoriaId());
     entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
-      log.debug("Copy copyEntidadesGestoras with id: {0}", entidadConvocatoria.getId());
+      log.debug("Copy copyEntidadesGestoras with id: {}", entidadConvocatoria.getId());
       ProyectoEntidadGestora entidadProyecto = new ProyectoEntidadGestora();
       entidadProyecto.setProyectoId(proyecto.getId());
       entidadProyecto.setEntidadRef(entidadConvocatoria.getEntidadRef());
@@ -1039,7 +1039,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<SolicitudProyectoAreaConocimiento> areasConocimineto = solicitudProyectoAreaConocimientoRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
     areasConocimineto.stream().forEach((areaConocimentoSolicitud) -> {
-      log.debug("Copy SolicitudProyectoAreaConocimiento with id: {0}", areaConocimentoSolicitud.getId());
+      log.debug("Copy SolicitudProyectoAreaConocimiento with id: {}", areaConocimentoSolicitud.getId());
       ProyectoAreaConocimiento areaConocimientoProyecto = new ProyectoAreaConocimiento();
       areaConocimientoProyecto.setProyectoId(proyecto.getId());
       areaConocimientoProyecto.setAreaConocimientoRef(areaConocimentoSolicitud.getAreaConocimientoRef());
@@ -1060,7 +1060,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<SolicitudProyectoClasificacion> clasificaciones = solicitudProyectoClasificacionRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
     clasificaciones.stream().forEach((clasificacionSolicitud) -> {
-      log.debug("Copy SolicitudProyectoClasificacion with id: {0}", clasificacionSolicitud.getId());
+      log.debug("Copy SolicitudProyectoClasificacion with id: {}", clasificacionSolicitud.getId());
       ProyectoClasificacion clasificacionProyecto = new ProyectoClasificacion();
       clasificacionProyecto.setProyectoId(proyecto.getId());
       clasificacionProyecto.setClasificacionRef(clasificacionSolicitud.getClasificacionRef());
@@ -1105,7 +1105,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<SolicitudModalidad> entidadesSolicitud = solicitudModalidadRepository
         .findAllBySolicitudId(proyecto.getSolicitudId());
     entidadesSolicitud.stream().forEach((entidadSolicitud) -> {
-      log.debug("Copy SolicitudModalidad with id: {0}", entidadSolicitud.getId());
+      log.debug("Copy SolicitudModalidad with id: {}", entidadSolicitud.getId());
       ProyectoEntidadConvocante entidadProyecto = new ProyectoEntidadConvocante();
       entidadProyecto.setProyectoId(proyecto.getId());
       entidadProyecto.setPrograma(entidadSolicitud.getPrograma());
@@ -1127,7 +1127,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<SolicitudProyectoEntidadFinanciadoraAjena> entidadesSolicitud = solicitudProyectoEntidadFinanciadoraAjenaRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
     entidadesSolicitud.stream().forEach((entidadSolicitud) -> {
-      log.debug("Copy SolicitudProyectoEntidadFinanciadoraAjena with id: {0}", entidadSolicitud.getId());
+      log.debug("Copy SolicitudProyectoEntidadFinanciadoraAjena with id: {}", entidadSolicitud.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
       entidadProyecto.setProyectoId(proyecto.getId());
       entidadProyecto.setEntidadRef(entidadSolicitud.getEntidadRef());
@@ -1155,7 +1155,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ProyectoEquipo> proyectoEquipos = solicitudEquipoRepository.findAllBySolicitudProyectoId(solicitudProyectoId)
         .stream().map((solicitudProyectoEquipo) -> {
 
-          log.debug("Copy SolicitudProyectoEquipo with id: {0}", solicitudProyectoEquipo.getId());
+          log.debug("Copy SolicitudProyectoEquipo with id: {}", solicitudProyectoEquipo.getId());
 
           ProyectoEquipo.ProyectoEquipoBuilder proyectoEquipoBuilder = ProyectoEquipo.builder();
           proyectoEquipoBuilder.proyectoId(proyecto.getId());
@@ -1195,7 +1195,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     List<ProyectoResponsableEconomico> responsablesEconomicosProyecto = solicitudProyectoResponsableEconomicoRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId).stream().map(responsableEconomicoSolicitud -> {
-          log.debug("Copy SolicitudProyectoResponsableEconomico with id: {0}", responsableEconomicoSolicitud.getId());
+          log.debug("Copy SolicitudProyectoResponsableEconomico with id: {}", responsableEconomicoSolicitud.getId());
 
           ProyectoResponsableEconomico proyectoResponsableEconomico = ProyectoResponsableEconomico.builder()
               .proyectoId(proyecto.getId()).personaRef(responsableEconomicoSolicitud.getPersonaRef()).build();
@@ -1236,7 +1236,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     solicitudSocioRepository.findAllBySolicitudProyectoId(solicitudProyectoId).stream().forEach((entidadSolicitud) -> {
 
-      log.debug("Copy SolicitudProyectoSocio with id: {0}", entidadSolicitud.getId());
+      log.debug("Copy SolicitudProyectoSocio with id: {}", entidadSolicitud.getId());
 
       ProyectoSocio proyectoSocio = createProyectoSocio(proyecto, entidadSolicitud);
 
@@ -1277,7 +1277,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     solicitudPeriodoJustificacionRepository.findAllBySolicitudProyectoSocioId(entidadSolicitud.getId()).stream()
         .forEach((entidadPeriodoJustificacionSolicitud) -> {
 
-          log.debug("Copy ProyectoSocioPeriodoJustificacion with id: {0}",
+          log.debug("Copy ProyectoSocioPeriodoJustificacion with id: {}",
               entidadPeriodoJustificacionSolicitud.getId());
 
           ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = ProyectoSocioPeriodoJustificacion
@@ -1327,7 +1327,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     List<ProyectoSocioEquipo> proyectoSocioEquipos = solicitudEquipoSocioRepository
         .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId()).stream().map((entidadEquipoSolicitud) -> {
-          log.debug("Copy SolicitudProyectoSocioEquipo with id: {0}", entidadEquipoSolicitud.getId());
+          log.debug("Copy SolicitudProyectoSocioEquipo with id: {}", entidadEquipoSolicitud.getId());
           return ProyectoSocioEquipo.builder()
               .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                   entidadEquipoSolicitud.getMesInicio(), sgiConfigProperties.getTimeZone()))
@@ -1374,7 +1374,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         .findAllByConvocatoriaIdAndConceptoGastoActivoTrue(proyecto.getConvocatoriaId());
 
     conceptosGastoConvocatoria.stream().forEach((conceptoGastoConvocatoria) -> {
-      log.debug("Copy ConvocatoriaConceptoGasto with id: {0}", conceptoGastoConvocatoria.getId());
+      log.debug("Copy ConvocatoriaConceptoGasto with id: {}", conceptoGastoConvocatoria.getId());
       ProyectoConceptoGasto conceptoGastoProyecto = new ProyectoConceptoGasto();
       conceptoGastoProyecto.setProyectoId(proyecto.getId());
       conceptoGastoProyecto.setConceptoGasto(conceptoGastoConvocatoria.getConceptoGasto());
@@ -1424,7 +1424,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     List<ProyectoConceptoGastoCodigoEc> proyectoConceptoGastoCodigoEcs = codigosEconomicosConceptosGastoConvocatoria
         .stream().map((codigoEconomicoConvocatoria) -> {
-          log.debug("Copy ConvocatoriaConceptoGastoCodigoEc with id: {0}", codigoEconomicoConvocatoria.getId());
+          log.debug("Copy ConvocatoriaConceptoGastoCodigoEc with id: {}", codigoEconomicoConvocatoria.getId());
           ProyectoConceptoGastoCodigoEc codigoEconomicoProyecto = new ProyectoConceptoGastoCodigoEc();
           codigoEconomicoProyecto.setProyectoConceptoGastoId(proyectoConceptoGastoId);
           codigoEconomicoProyecto.setCodigoEconomicoRef(codigoEconomicoConvocatoria.getCodigoEconomicoRef());
@@ -1468,7 +1468,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     if (partidasConvocatoria != null && partidasConvocatoria.hasContent()) {
       partidasConvocatoria.getContent().stream().forEach((partidaConvocatoria) -> {
-        log.debug("Copy copyPartidasPresupuestarias with id: {0}", partidaConvocatoria.getId());
+        log.debug("Copy copyPartidasPresupuestarias with id: {}", partidaConvocatoria.getId());
         ProyectoPartida partidaProyecto = new ProyectoPartida();
         partidaProyecto.setProyectoId(proyectoId);
         partidaProyecto.setCodigo(partidaConvocatoria.getCodigo());
