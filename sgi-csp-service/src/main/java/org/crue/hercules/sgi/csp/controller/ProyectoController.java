@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAgrupacionGasto;

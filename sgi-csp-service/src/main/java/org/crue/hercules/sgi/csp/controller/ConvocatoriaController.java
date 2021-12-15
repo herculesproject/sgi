@@ -1182,7 +1182,7 @@ public class ConvocatoriaController {
    *         {@link Convocatoria}
    */
   @GetMapping(PATH_PALABRAS_CLAVE)
-  @PreAuthorize("hasAnyAuthority('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-C', 'CSP-CON-INV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-C', 'CSP-CON-INV-V')")
   public Page<ConvocatoriaPalabraClaveOutput> findPalabrasClave(@PathVariable Long convocatoriaId,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findPalabrasClave(@PathVariable Long convocatoriaId, String query, Pageable paging) - start");
@@ -1203,7 +1203,7 @@ public class ConvocatoriaController {
    *         entidad {@link Convocatoria}
    */
   @PatchMapping(PATH_PALABRAS_CLAVE)
-  @PreAuthorize("hasAnyAuthority('CSP-CON-E', 'CSP-CON-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-C')")
   public ResponseEntity<List<ConvocatoriaPalabraClaveOutput>> updatePalabrasClave(@PathVariable Long convocatoriaId,
       @Valid @RequestBody List<ConvocatoriaPalabraClaveInput> palabrasClave) {
     log.debug("updatePalabrasClave(Long convocatoriaId, List<ConvocatoriaPalabraClave> palabrasClave) - start");
