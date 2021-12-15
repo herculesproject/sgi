@@ -456,7 +456,6 @@
           <execution>
             <goals>
               <goal>integration-test</goal>
-              <goal>verify</goal>
             </goals>
           </execution>
         </executions>
@@ -553,7 +552,6 @@
           <execution>
             <!-- Merge unit an integration tests execution data -->
             <id>merge-results</id>
-            <phase>verify</phase>
             <goals>
               <goal>merge</goal>
             </goals>
