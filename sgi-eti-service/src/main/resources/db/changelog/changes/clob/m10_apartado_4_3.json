@@ -67,7 +67,7 @@
         }
       },
       {
-        "template": "Especificar en qué pueden beneficiar los resultados de estas investigaciones a estas personas o colectivos especialmente vulnerables"
+        "template": "<p>Especificar en qué pueden beneficiar los resultados de estas investigaciones a estas personas o colectivos</p><p>especialmente vulnerables.</p>"
       },
       {
         "key": "especificarBeneficiosInvestigacionVulnerables",
@@ -85,7 +85,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que la condición especial de estas personas debe tenerse en cuenta y obliga a:</p><ul><li>Cuidar al máximo cuestiones como la voluntariedad, información, consentimiento, proceso de reclutamiento, etc. (ver apartados 3.4.1, 4.1 y 4.2) aquél que tenga la custodia</li><li>En caso de menores de 12 años debe incluirse la firma de ambos progenitores en el documento de consentimiento, entre 12 y 18 años ha de incorporarse el asentimiento del menor, y en personas legalmente incapacitadas, debe incluirse la firma de su representante legal (ver punto 4.4.2 Información obligatoria mínima)</li></ul><p>Para más información sobre protección de grupos vulnerables consultar los <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a20' target='_blank'>artículos 20, 21</a> de la LIB 14/2007.</p>",
+        "template": "<p>Nota: recuerde que la condición especial de estas personas debe tenerse en cuenta y obliga a:</p><ul><li>Cuidar al máximo cuestiones como la voluntariedad, información, consentimiento, proceso de reclutamiento, etc. (ver apartados 3.4.1, 4.1 y 4.2)</li><li>En caso de menores de 12 años debe incluirse la firma de ambos progenitores en el documento de consentimiento, entre 12 y 18 años ha de incorporarse también el asentimiento del menor, y en personas legalmente incapacitadas, debe incluirse la firma de su representante legal (ver punto 4.4.2 Información obligatoria mínima)</li></ul><p>Para más información sobre protección de grupos vulnerables consultar los <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a20' target='_blank'>artículos 20, 21</a> de la LIB 14/2007.</p>",
         "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
       }
     ]
