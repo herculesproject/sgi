@@ -9,13 +9,15 @@ import { PersonaEmailPipe } from './pipes/persona-email.pipe';
 import { PersonaEntidadPipe } from './pipes/persona-entidad.pipe';
 import { SearchPersonaModalComponent } from './select-persona/dialog/search-persona.component';
 import { SelectPersonaComponent } from './select-persona/select-persona.component';
+import { PersonaNombreCompletoPipe } from './pipes/persona-nombre-completo.pipe';
 
 @NgModule({
   declarations: [
     SearchPersonaModalComponent,
     SelectPersonaComponent,
     PersonaEntidadPipe,
-    PersonaEmailPipe
+    PersonaEmailPipe,
+    PersonaNombreCompletoPipe
   ],
   imports: [
     SharedModule,
@@ -29,7 +31,8 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
   exports: [
     SelectPersonaComponent,
     PersonaEntidadPipe,
-    PersonaEmailPipe
+    PersonaEmailPipe,
+    PersonaNombreCompletoPipe
   ]
 })
 export class SgpSharedModule { }

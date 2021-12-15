@@ -33,8 +33,8 @@ class INotificacionProyectoExternoCVNResponseConverter
       porcentajeSubvencion: value.porcentajeSubvencion,
       proyectoCVNId: value.proyectoCVNId,
       responsable: { id: value.responsableRef } as IPersona,
-      urlDocumentoAcreditacion: value.responsableRef
-
+      urlDocumentoAcreditacion: value.responsableRef,
+      solicitante: { id: value.solicitanteRef } as IPersona,
     };
   }
 
@@ -61,7 +61,8 @@ class INotificacionProyectoExternoCVNResponseConverter
       porcentajeSubvencion: value.porcentajeSubvencion,
       proyectoCVNId: value.proyectoCVNId,
       responsableRef: value.responsable?.id,
-      urlDocumentoAcreditacion: value.urlDocumentoAcreditacion
+      urlDocumentoAcreditacion: value.urlDocumentoAcreditacion,
+      solicitanteRef: value.solicitante?.id
     };
   }
 }

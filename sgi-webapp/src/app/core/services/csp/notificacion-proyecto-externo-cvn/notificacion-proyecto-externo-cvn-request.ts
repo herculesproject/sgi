@@ -17,4 +17,5 @@ export interface INotificacionProyectoExternoCVNRequest {
   proyectoCVNId: string;
   responsableRef: string;
   urlDocumentoAcreditacion: string;
+  solicitanteRef: string;
 }
