@@ -26,7 +26,7 @@ import { map, switchMap, toArray } from 'rxjs/operators';
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_LOAD = marker('error.load');
 const MSG_DELETE = marker('msg.delete.entity');
-const MSG_ERROR_DELETE = marker('error.delete.entity"');
+const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
 

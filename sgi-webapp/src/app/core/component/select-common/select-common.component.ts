@@ -397,11 +397,9 @@ export abstract class SelectCommonComponent<T>
             displayText: this.displayWith(value),
             missing: true
           };
-          if (missingValue.displayText) {
-            const insertIndex = this.getInsertIndex(this.selectValues, missingValue);
-            this.selectValues.splice(insertIndex, 0, missingValue);
-            this.selectValues.sort(this.sortWith);
-          }
+          const insertIndex = this.getInsertIndex(this.selectValues, missingValue);
+          this.selectValues.splice(insertIndex, 0, missingValue);
+          this.selectValues.sort(this.sortWith);
         }
       }
     }
