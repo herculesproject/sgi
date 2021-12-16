@@ -4,6 +4,7 @@ import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IAutorizacionRequest } from './autorizacion-request';
 import { AUTORIZACION_REQUEST_CONVERTER } from './autorizacion-request.converter';
 import { IAutorizacionResponse } from './autorizacion-response';
@@ -46,5 +47,19 @@ export class AutorizacionService extends _AutorizacionMixinBase {
 
   public deleteById(id: number): Observable<void> {
     return this.http.delete<void>(`${this.endpointUrl}/${id}`);
+  }
+
+  /**
+   * Acción de presentacion de una autorizacion
+   * @param id identificador de la autorizacion a presentar
+   */
+  presentar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/presentar`, undefined);
+  }
+
+  presentable(id: number): Observable<boolean> {
+    return this.http.head(`${this.endpointUrl}/${id}/presentable`, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
   }
 }

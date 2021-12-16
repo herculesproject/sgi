@@ -43,7 +43,7 @@ class AutorizacionRequestConverter
       datosEntidad: value.datosEntidad,
       datosConvocatoria: value.datosConvocatoria,
       convocatoriaId: value.convocatoria?.id,
-      estadoId: value.estado.id
+      estadoId: value.estado?.id
     };
   }
 }

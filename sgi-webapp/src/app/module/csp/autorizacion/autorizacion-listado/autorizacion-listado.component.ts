@@ -20,7 +20,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { map, switchMap, toArray } from 'rxjs/operators';
+import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
@@ -166,7 +166,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       }),
       switchMap(response =>
         from(response.items).pipe(
-          switchMap(autorizacionListado => {
+          mergeMap(autorizacionListado => {
             if (autorizacionListado.autorizacion.estado.id) {
               return this.estadoAutorizacionService.findById(autorizacionListado.autorizacion.estado.id).pipe(
                 map(estadoAutorizacion => {
@@ -180,7 +180,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
             }
             return of(autorizacionListado);
           }),
-          switchMap(autorizacionListado => {
+          mergeMap(autorizacionListado => {
             if (autorizacionListado?.autorizacion?.entidad?.id) {
               return this.empresaService.findById(autorizacionListado?.autorizacion?.entidad?.id).pipe(
                 map((empresa) => {
