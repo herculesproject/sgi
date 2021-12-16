@@ -10,7 +10,7 @@
     },
     "fieldGroup": [
       {
-        "template": "Si parte de su proyecto se realiza fuera de las instalaciones de la Universidad ¿dispone de Documento de Autorización del Responsable del Centro o lugar?"
+        "template": "<p>Si parte de su proyecto se realiza fuera de las instalaciones de la Universidad ¿dispone de Documento de</p><p>Autorización del Responsable del Centro o lugar?</p>"
       },
       {
         "wrappers": [
