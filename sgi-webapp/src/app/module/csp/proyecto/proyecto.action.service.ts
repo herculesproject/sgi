@@ -3,9 +3,8 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ActionService } from '@core/services/action-service';
@@ -197,6 +196,10 @@ export class ProyectoActionService extends ActionService {
 
   get hasPopulatedSocios$() {
     return this.fichaGeneral.hasPopulatedSocios$;
+  }
+
+  get hasMiembrosEquipo() {
+    return !!this.relaciones.miembrosEquipoProyecto && this.relaciones.miembrosEquipoProyecto.length > 0;
   }
 
   constructor(
@@ -428,7 +431,7 @@ export class ProyectoActionService extends ActionService {
       }
 
       this.subscriptions.push(
-        this.relaciones.initialized$.subscribe(value => {
+        this.fichaGeneral.initialized$.subscribe(value => {
           if (value) {
             this.proyectoEquipo.initialize();
           }
@@ -491,14 +494,6 @@ export class ProyectoActionService extends ActionService {
     } else {
       return super.saveOrUpdate();
     }
-  }
-
-  /**
-   * Cambio de estado a **Presentada** desde:
-   * - **Borrador**
-   */
-  cambiarEstado(estadoNuevo: IEstadoProyecto): Observable<void> {
-    return this.proyectoService.cambiarEstado(this.fichaGeneral.getKey() as number, estadoNuevo);
   }
 
   private onProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<IProyectoSocio>[]): void {

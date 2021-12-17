@@ -127,6 +127,11 @@ export class SolicitudActionService extends ActionService {
 
   private readonly data: ISolicitudData;
   private convocatoria: IConvocatoria;
+  private _isSolicitanteInSolicitudEquipo: boolean;
+
+  get solicitud(): ISolicitud {
+    return this.datosGenerales.getValue();
+  }
 
   get formularioSolicitud(): FormularioSolicitud {
     return this.datosGenerales.getValue().formularioSolicitud;
@@ -150,6 +155,22 @@ export class SolicitudActionService extends ActionService {
 
   get solicitante(): IPersona {
     return this.datosGenerales.getValue().solicitante;
+  }
+
+  get solicitudProyecto(): ISolicitudProyecto {
+    return this.proyectoDatos.getValue();
+  }
+
+  get isSolicitanteInSolicitudEquipo(): boolean {
+    return this._isSolicitanteInSolicitudEquipo;
+  }
+
+  get isAutoevaluacionEticaFullfilled() {
+    return this.autoevaluacion.isFormFullFilled;
+  }
+
+  get hasRequiredDocumentos() {
+    return this.documentos.hasRequiredDocumentos;
   }
 
   get readonly(): boolean {
@@ -383,12 +404,17 @@ export class SolicitudActionService extends ActionService {
         this.subscriptions.push(this.datosGenerales.initialized$.subscribe(
           (value) => {
             if (value) {
-              if (!this.proyectoDatos.isEdit() && this.isInvestigador) {
-                this.equipoProyecto.initialize();
-              }
+              this.equipoProyecto.initialize();
+              this.documentos.initialize();
             }
           }
         ));
+
+        this.subscriptions.push(
+          this.equipoProyecto.proyectoEquipos$.subscribe(
+            proyectoEquipo => this._isSolicitanteInSolicitudEquipo = proyectoEquipo.some(miembroEquipo =>
+              miembroEquipo.value.solicitudProyectoEquipo.persona.id === this.solicitud.solicitante.id))
+        );
 
       }
     }
