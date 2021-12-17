@@ -77,7 +77,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.convocatoria.finalidad' | translate}}</mat-label>
-            <sgi-select-tipo-finalidad formControlName="finalidad">
+            <sgi-select-tipo-finalidad formControlName="finalidad" extended="false">
             </sgi-select-tipo-finalidad>
           </mat-form-field>
         </div>
@@ -155,7 +155,8 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.convocatoria.fuente-financiacion' | translate}}</mat-label>
-            <sgi-select-fuente-financiacion formControlName="fuenteFinanciacion"></sgi-select-fuente-financiacion>
+            <sgi-select-fuente-financiacion formControlName="fuenteFinanciacion" extended="false">
+            </sgi-select-fuente-financiacion>
           </mat-form-field>
         </div>
 

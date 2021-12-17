@@ -37,12 +37,12 @@
       <!-- Modelo de Ejecución -->
       <mat-form-field fxFlex="33">
         <mat-label>{{'csp.proyecto.modelo-ejecucion' | translate}}</mat-label>
-        <sgi-select-modelo-ejecucion formControlName="modeloEjecucion"></sgi-select-modelo-ejecucion>
+        <sgi-select-modelo-ejecucion formControlName="modeloEjecucion" extended="false"></sgi-select-modelo-ejecucion>
       </mat-form-field>
       <!-- Tipo finalidad -->
       <mat-form-field fxFlex="33">
         <mat-label>{{'csp.proyecto.tipo-finalidad' | translate}}</mat-label>
-        <sgi-select-tipo-finalidad formControlName="tipoFinalidad"></sgi-select-tipo-finalidad>
+        <sgi-select-tipo-finalidad formControlName="tipoFinalidad" extended="false"></sgi-select-tipo-finalidad>
       </mat-form-field>
     </div>
     <!-- Rangos de Fechas -->
@@ -111,7 +111,7 @@
         <span fxFlex="100" [matTooltip]="msgMiembrosEquipoFullName" class="truncate">{{
           msgMiembrosEquipoFullName }}</span>
       </div>
-      </ng-container>
+    </ng-container>
 
   </form>
   <div fxFlex fxLayoutAlign="start">
