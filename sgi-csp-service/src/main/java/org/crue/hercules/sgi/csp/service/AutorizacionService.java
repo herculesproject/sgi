@@ -1,8 +1,16 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.time.Instant;
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.EstadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
+import org.crue.hercules.sgi.csp.model.EstadoAutorizacion.Estado;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
+import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
+import org.crue.hercules.sgi.csp.service.impl.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -25,10 +33,82 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class AutorizacionService {
   private final AutorizacionRepository repository;
+  private final EstadoAutorizacionRepository estadoAutorizacionRepository;
 
-  public AutorizacionService(AutorizacionRepository repository) {
+  public AutorizacionService(AutorizacionRepository repository,
+      EstadoAutorizacionRepository estadoAutorizacionRepository) {
     this.repository = repository;
+    this.estadoAutorizacionRepository = estadoAutorizacionRepository;
 
+  }
+
+  /**
+   * Guarda la entidad {@link Autorizacion}.
+   * 
+   * @param autorizacion la entidad {@link Autorizacion} a guardar.
+   * @return Convocatoria la entidad {@link Autorizacion} persistida.
+   */
+  @Transactional
+  public Autorizacion create(Autorizacion autorizacion) {
+    log.debug("create(Autorizacion autorizacion) - start");
+
+    Assert.isNull(autorizacion.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "isNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+
+    // Crea la autorizacion
+    repository.save(autorizacion);
+
+    // Crea el estado inicial de la autorizacion
+    EstadoAutorizacion estadoAutorizacion = addEstadoAutorizacion(autorizacion, EstadoAutorizacion.Estado.BORRADOR,
+        null);
+
+    autorizacion.setEstadoId(estadoAutorizacion.getId());
+
+    Autorizacion returnValue = repository.save(autorizacion);
+
+    log.debug("create(Autorizacion autorizacion) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza los datos del {@link Autorizacion}.
+   *
+   * @param autorizacionActualizar autorizacionActualizar {@link Autorizacion} con
+   *                               los datos actualizados.
+   * @return {@link Autorizacion} actualizado.
+   */
+  @Transactional
+  public Autorizacion update(Autorizacion autorizacionActualizar) {
+    log.debug("update(Autorizacion autorizacionActualizar- start");
+    return repository.findById(autorizacionActualizar.getId()).map((data) -> {
+
+      data.setId(autorizacionActualizar.getId());
+      data.setObservaciones(autorizacionActualizar.getObservaciones());
+      data.setResponsableRef(autorizacionActualizar.getResponsableRef());
+      data.setSolitanteRef(autorizacionActualizar.getSolitanteRef());
+      data.setTituloProyecto(autorizacionActualizar.getTituloProyecto());
+      data.setEntidadRef(autorizacionActualizar.getEntidadRef());
+      data.setHorasDedicacion(autorizacionActualizar.getHorasDedicacion());
+      data.setDatosResponsable(autorizacionActualizar.getDatosResponsable());
+      data.setDatosEntidad(autorizacionActualizar.getDatosEntidad());
+      data.setDatosConvocatoria(autorizacionActualizar.getDatosConvocatoria());
+      data.setConvocaoriaId(autorizacionActualizar.getConvocaoriaId());
+
+      Autorizacion returnValue = repository.save(data);
+
+      log.debug("update(Autorizacion autorizacionActualizar - end");
+      return returnValue;
+    }).orElseThrow(() -> new AutorizacionNotFoundException(autorizacionActualizar.getId()));
+  }
+
+  public Autorizacion findById(long id) {
+    log.debug("findById(Long id) - start");
+    final Autorizacion returnValue = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
+    log.debug("findById(Long id) - end");
+    return returnValue;
   }
 
   public Page<Autorizacion> findAll(String query, Pageable paging) {
@@ -62,5 +142,121 @@ public class AutorizacionService {
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
 
+  }
+
+  /**
+   * Se hace el cambio de estado de un Autorizacion.
+   *
+   * @param id Identificador de {@link Autorizacion}.
+   * @return {@link Autorizacion} actualizado.
+   */
+  @Transactional
+  public Autorizacion cambiarEstado(Long id, EstadoAutorizacion estadoAutorizacion) {
+
+    log.debug("cambiarEstado(Long id, EstadoProyecto estadoProyecto) - start");
+
+    Autorizacion autorizacion = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
+
+    estadoAutorizacion.setAutorizacionId(autorizacion.getId());
+
+    Optional<EstadoAutorizacion> estadoActual = estadoAutorizacionRepository.findById(autorizacion.getEstadoId());
+
+    // El nuevo estado es diferente al estado actual de del Autorizacion
+    if (estadoAutorizacion.getEstado().equals(estadoActual.get().getEstado())) {
+      throw new IllegalArgumentException("La Autorizacion ya se encuentra en el estado al que se quiere modificar.");
+    }
+
+    Instant fechaActual = Instant.now();
+
+    // Se cambia el estado del proyecto
+    estadoAutorizacion.setFecha(fechaActual);
+    estadoAutorizacion = estadoAutorizacionRepository.save(estadoAutorizacion);
+    autorizacion.setEstadoId(estadoAutorizacion.getId());
+
+    Autorizacion returnValue = repository.save(autorizacion);
+
+    log.debug("cambiarEstado(Long id, EstadoProyecto estadoProyecto) - end");
+    return returnValue;
+  }
+
+  /**
+   * Se hace el cambio de estado de un Autorizacion a presentada.
+   *
+   * @param id Identificador de {@link Autorizacion}.
+   * @return {@link Autorizacion} actualizado.
+   */
+  @Transactional
+  public Autorizacion presentar(Long id) {
+    log.debug("presentar(Long id) - start");
+
+    Autorizacion autorizacion = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
+    EstadoAutorizacion estadoAutorizacion = new EstadoAutorizacion();
+    estadoAutorizacion.setAutorizacionId(autorizacion.getId());
+    estadoAutorizacion.setEstado(Estado.PRESENTADA);
+
+    EstadoAutorizacion estadoActual = estadoAutorizacionRepository.findById(autorizacion.getEstadoId())
+        .orElseThrow(() -> new EstadoAutorizacionNotFoundException(autorizacion.getEstadoId()));
+
+    // El nuevo estado es diferente al estado actual de del Autorizacion
+    if (estadoAutorizacion.getEstado().equals(estadoActual.getEstado())) {
+      throw new AlreadyInEstadoAutorizacionException();
+    }
+    Instant fechaActual = Instant.now();
+
+    // Se cambia el estado del proyecto
+    estadoAutorizacion.setFecha(fechaActual);
+    estadoAutorizacion = estadoAutorizacionRepository.save(estadoAutorizacion);
+    autorizacion.setEstadoId(estadoAutorizacion.getId());
+
+    Autorizacion returnValue = repository.save(autorizacion);
+
+    log.debug("presentar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Autorizacion}
+   * puede pasar a estado 'Presentada'.
+   *
+   * @param id Id del {@link Autorizacion}.
+   * @return true si puede ser presentada / false si no puede ser presentada
+   */
+  public boolean presentable(Long id) {
+    log.debug("presentable(Long id) - start");
+
+    // id autorizacion presente
+    if (id != null) {
+
+      Autorizacion autorizacion = repository.findById(id)
+          .orElseThrow(() -> new AutorizacionNotFoundException(id));
+
+      EstadoAutorizacion estado = estadoAutorizacionRepository.findById(autorizacion.getEstadoId())
+          .orElseThrow(() -> new EstadoAutorizacionNotFoundException(autorizacion.getEstadoId()));
+
+      if (estado.getEstado() == Estado.BORRADOR) {
+        return true;
+      }
+    }
+    log.debug("presentable(Long id) - end");
+    return false;
+  }
+
+  private EstadoAutorizacion addEstadoAutorizacion(Autorizacion autorizacion,
+      EstadoAutorizacion.Estado tipoEstadoAutorizacion,
+      String comentario) {
+    log.debug(
+        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion,String comentario) - start");
+
+    EstadoAutorizacion estadoAutorizacion = new EstadoAutorizacion();
+    estadoAutorizacion.setEstado(tipoEstadoAutorizacion);
+    estadoAutorizacion.setAutorizacionId(autorizacion.getId());
+    estadoAutorizacion.setComentario(comentario);
+    estadoAutorizacion.setFecha(Instant.now());
+
+    EstadoAutorizacion returnValue = estadoAutorizacionRepository.save(estadoAutorizacion);
+
+    log.debug(
+        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion, String comentario) - end");
+    return returnValue;
   }
 }

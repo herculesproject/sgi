@@ -69,9 +69,9 @@ public class EstadoAutorizacion extends BaseEntity {
   private Long autorizacionId;
 
   /** Comentario */
-  @Column(name = "cometario", length = EstadoAutorizacion.MAX_LENGTH, nullable = true)
+  @Column(name = "comentario", length = EstadoAutorizacion.MAX_LENGTH, nullable = true)
   @Size(max = EstadoAutorizacion.MAX_LENGTH)
-  private String cometario;
+  private String comentario;
 
   /** Fecha */
   @Column(name = "fecha", nullable = false)
