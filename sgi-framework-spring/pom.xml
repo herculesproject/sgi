@@ -244,36 +244,12 @@
         <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
       <!--
-        Maven Compiler Plugin - Compile the sources of the project.
-        https://maven.apache.org/plugins/maven-compiler-plugin/
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <!--
-        Maven Enforcer Plugin - Bans certain dependencies and ensure minimum Maven version is used.
-        http://maven.apache.org/enforcer/maven-enforcer-plugin/
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <!--
         Maven Failsafe Plugin - Runs integration tests.
         http://maven.apache.org/surefire/maven-failsafe-plugin/
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-      </plugin>
-      <!--
-        Maven JAR Plugin - Provides the capability to build jars.
-        https://maven.apache.org/plugins/maven-jar-plugin/
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
       </plugin>
       <!--
         Maven Javadoc Plugin - Uses the Javadoc tool to generate javadocs for the specified project.
@@ -290,14 +266,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <!--
-        Surefire Maven Plugin - Runs unit tests.
-        http://maven.apache.org/surefire/maven-surefire-plugin/
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
       <!--
           SonarScanner for Maven - Executes the SonarQube analysis via a regular Maven goal.
