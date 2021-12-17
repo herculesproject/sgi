@@ -45,9 +45,12 @@
     <!-- Dependencies versions (not defined in parent pom) -->
     <jslt.version>0.1.11</jslt.version>
     <lombok.version>1.18.20</lombok.version> <!-- Update Lombok to be JDK 16 compatible -->
+    <modelmapper.version>2.3.5</modelmapper.version>
     <rsql-jpa-spring-boot-starter.version>5.0.9</rsql-jpa-spring-boot-starter.version>
+    <spel-scriptengine.version>1.0.0</spel-scriptengine.version>
     <wiremock-jre8.version>2.31.0</wiremock-jre8.version>
     <!-- Plugin versions (not defined in parent pom) -->
+    <liquibase-maven-plugin.version>4.5.0</liquibase-maven-plugin.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     <!-- Test execution modifiers -->
@@ -79,6 +82,15 @@
         <version>${jslt.version}</version>
       </dependency>
       <!--
+        ModelMapper - Makes object mapping easy.
+        http://modelmapper.org/
+      -->
+      <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>${modelmapper.version}</version>
+      </dependency>
+      <!--
         RSQL to Spring JPA translation - Translate RSQL query into org.springframework.data.jpa.domain.Specification or com.querydsl.core.types.Predicate.
         https://github.com/perplexhub/rsql-jpa-specification
       -->
@@ -86,6 +98,15 @@
         <groupId>io.github.perplexhub</groupId>
         <artifactId>rsql-jpa-spring-boot-starter</artifactId>
         <version>${rsql-jpa-spring-boot-starter.version}</version>
+      </dependency>
+      <!-- 
+        Spring Expression Language - A powerful expression language that supports querying and manipulating an object graph at runtime (see: https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#expressions).
+        https://github.com/eobermuhlner/spel-scriptengine
+      -->
+      <dependency>
+        <groupId>ch.obermuhlner</groupId>
+        <artifactId>spel-scriptengine</artifactId>
+        <version>${spel-scriptengine.version}</version>
       </dependency>
       <!--
         Spring Boot Test Starter - Imports both Spring Boot test modules as well as JUnit Jupiter, AssertJ, Hamcrest, and a number of other useful libraries.
@@ -215,6 +236,56 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <!-- 
+        Maven Liquibase Plugin - Generates liquibase changesets.
+        https://www.liquibase.org/documentation/maven/index.html
+        -->
+          <groupId>org.liquibase</groupId>
+          <artifactId>liquibase-maven-plugin</artifactId>
+          <version>${liquibase-maven-plugin.version}</version>
+          <configuration>
+            <verbose>true</verbose>
+            <logging>debug</logging>
+            <!-- see: http://blog.nutpan.com/2012/03/liquibase-maven-plugin-issue-with-non.html -->
+            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.liquibase.ext</groupId>
+              <artifactId>liquibase-hibernate5</artifactId>
+              <version>${liquibase-hibernate5.version}</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-envers</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.hibernate.javax.persistence</groupId>
+                  <artifactId>hibernate-jpa-2.0-api</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-data-jpa</artifactId>
+              <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>jakarta.validation</groupId>
+              <artifactId>jakarta.validation-api</artifactId>
+              <version>${jakarta.validation-api.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
         <!--
           Maven Compiler Plugin - Compile the sources of the project.
           https://maven.apache.org/plugins/maven-compiler-plugin/
@@ -246,56 +317,6 @@
           </configuration>
         </plugin>
         <!--
-          Maven Enforcer Plugin - Bans certain dependencies and ensure minimum Maven version is used.
-          http://maven.apache.org/enforcer/maven-enforcer-plugin/
-        -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <executions>
-            <!--
-              If these banned dependencies exist, fail the build right away.
-              Xalan, Xerces and Xml-APIs - Known to cause problem when deployed to server. Use the ones
-              provided by server.
-              See http://stackoverflow.com/questions/11677572/dealing-with-xerces-hell-in-java-maven
-            -->
-            <execution>
-              <id>enforce-banned-dependencies</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <fail>true</fail>
-                <rules>
-                  <bannedDependencies>
-                    <excludes>
-                      <exclude>xalan</exclude>
-                      <exclude>xerces</exclude>
-                      <exclude>xml-apis</exclude>
-                    </excludes>
-                  </bannedDependencies>
-                </rules>
-              </configuration>
-            </execution>
-            <!--
-              Ensures everyone is using at least the specified Maven version or later.
-            -->
-            <execution>
-              <id>enforce-maven</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireMavenVersion>
-                    <version>${maven.version}</version>
-                  </requireMavenVersion>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <!--
           Maven Failsafe Plugin - Runs integration tests.
           http://maven.apache.org/surefire/maven-failsafe-plugin/
         -->
@@ -304,6 +325,7 @@
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
             <skipTests>${skipIntegrationTests}</skipTests>
+            <argLine>-Duser.timezone=UTC</argLine>
           </configuration>
           <executions>
             <execution>
@@ -390,6 +412,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <skipTests>${skipUnitTests}</skipTests>
+            <argLine>-Duser.timezone=UTC</argLine>
           </configuration>
         </plugin>
         <!--
@@ -400,6 +423,37 @@
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>${sonar-maven-plugin.version}</version>
+        </plugin>
+        <!--
+          Spring Boot Maven Plugin - Spring Boot support in Apache Maven.
+          http://docs.spring.io/spring-boot/docs/current/maven-plugin/
+        -->
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <jvmArguments>
+            -Xmx256m
+            -Xss256k
+          </jvmArguments>
+            <profiles>
+              <!-- Set default active profile -->
+              <profile>${spring.profiles.active}</profile>
+            </profiles>
+            <!--
+              Create 2 artifacts: one as dependency and another as executable fat JAR
+              See https://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-create-an-additional-executable-jar
+            -->
+            <classifier>exec</classifier>
+          </configuration>
+          <executions>
+            <execution>
+              <id>build-info</id>
+              <goals>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
