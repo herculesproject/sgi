@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -434,41 +433,36 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Se obtienen los {@link ProyectoEquipo} a actualizar la fecha de fin del
-   * equipo
+   * Se obtienen los {@link ProyectoEquipo} con las fechas de inicio y fin
+   * adaptadas a la nueva fecha de fin
    *
-   * @param proyectoId    identificador del {@link Proyecto}
-   * @param fechaBusqueda fecha fin para filtrar el {@link ProyectoEquipo}
-   * @param fechaFinNew   fecha fin nueva para actualizar el
-   *                      {@link ProyectoEquipo}
+   * @param proyectoId          identificador del {@link Proyecto}
+   * @param fechaFinMaxPrevious fecha fin previa maxima para los
+   *                            {@link ProyectoEquipo} del {@link Proyecto}
+   * @param fechaFinNew         fecha fin nueva para actualizar el
+   *                            {@link ProyectoEquipo}
+   * @return la lista con los miembros del equipo del {@link Proyecto} con las
+   *         fechas adaptadas a la nueva fecha de fin
    */
-  private List<ProyectoEquipo> getEquiposUpdateFechaFinProyectoEquipo(Long proyectoId, Instant fechaBusqueda,
+  private List<ProyectoEquipo> getEquiposUpdateFechaFinProyectoEquipo(Long proyectoId, Instant fechaFinMaxPrevious,
       Instant fechaFinNew) {
-    List<ProyectoEquipo> equipos = new ArrayList<ProyectoEquipo>();
-    List<ProyectoEquipo> equiposFechaFinIgualAFechaFinActual = proyectoEquipoService
-        .findAllByProyectoIdAndFechaFin(proyectoId, fechaBusqueda);
-    if (!CollectionUtils.isEmpty(equiposFechaFinIgualAFechaFinActual)) {
-      equipos.addAll(
-          equiposFechaFinIgualAFechaFinActual.stream().filter(e -> !equipos.contains(e)).collect(Collectors.toList()));
-    }
+    return proyectoEquipoService.findAllByProyectoId(proyectoId).stream().map(miembroEquipo -> {
+      if (miembroEquipo.getFechaInicio() != null && miembroEquipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
+        // La fecha de inicio nunca puede ser superior a la de fin
+        miembroEquipo.setFechaInicio(fechaFinNew);
+      }
 
-    if (!CollectionUtils.isEmpty(equipos)) {
-      equipos.stream().map(equipo -> {
-        equipo.setFechaFin(fechaFinNew);
-        if (equipo.getFechaInicio() != null && equipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
-          // La fecha de inicio nunca puede ser superior a la de fin
-          equipo.setFechaInicio(fechaFinNew);
-        }
-        return equipo;
-      }).collect(Collectors.toList());
-    }
-    List<ProyectoEquipo> proyectoEquiposBD = proyectoEquipoService.findAllByProyectoId(proyectoId);
-    if (!CollectionUtils.isEmpty(proyectoEquiposBD)) {
-      equipos.addAll(proyectoEquiposBD.stream()
-          .filter(equipo -> !equipos.stream().map(ProyectoEquipo::getId).anyMatch(id -> id == equipo.getId()))
-          .collect(Collectors.toList()));
-    }
-    return equipos;
+      if (miembroEquipo.getFechaFin() != null
+          && (miembroEquipo.getFechaFin().compareTo(fechaFinNew) > 0 || miembroEquipo
+              .getFechaFin().compareTo(fechaFinMaxPrevious) == 0)) {
+        // Se actualizan con la nueva fecha fin maxima los miembros con fecha fin igual
+        // a la fecha fin maxima previa y los que tengan una fecha de fin superior a la
+        // nueva fecha de fin
+        miembroEquipo.setFechaFin(fechaFinNew);
+      }
+
+      return miembroEquipo;
+    }).collect(Collectors.toList());
   }
 
   /**
@@ -1590,17 +1584,19 @@ public class ProyectoServiceImpl implements ProyectoService {
     Instant fechaActual = Instant.now();
     if (estadoProyecto.getEstado() == EstadoProyecto.Estado.RENUNCIADO
         || estadoProyecto.getEstado() == EstadoProyecto.Estado.RESCINDIDO) {
+
+      Instant fechaFinNew = fechaActual.atZone(sgiConfigProperties.getTimeZone().toZoneId()).withHour(23)
+          .withMinute(59).withSecond(59).withNano(0).toInstant();
+
+      Instant fechaFinPrevious = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+          : proyecto.getFechaFin();
+
       // La fecha debe actualizarse también para los miembros de los equipos.
-      List<ProyectoEquipo> equiposActualizados;
-      if (proyecto.getFechaFinDefinitiva() != null) {
-        equiposActualizados = getEquiposUpdateFechaFinProyectoEquipo(proyecto.getId(), proyecto.getFechaFinDefinitiva(),
-            fechaActual);
-      } else {
-        equiposActualizados = getEquiposUpdateFechaFinProyectoEquipo(proyecto.getId(), proyecto.getFechaFin(),
-            fechaActual);
-      }
+      List<ProyectoEquipo> equiposActualizados = getEquiposUpdateFechaFinProyectoEquipo(proyecto.getId(),
+          fechaFinPrevious, fechaFinNew);
+
       proyectoEquipoService.update(proyecto.getId(), equiposActualizados);
-      proyecto.setFechaFinDefinitiva(fechaActual);
+      proyecto.setFechaFinDefinitiva(fechaFinNew);
     }
 
     // Se cambia el estado del proyecto
