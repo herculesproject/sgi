@@ -6,7 +6,6 @@
     <groupId>org.crue.hercules.sgi</groupId>
     <artifactId>sgi-starter-parent</artifactId>
     <version>0.0.6-SNAPSHOT</version>
-    <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>org.crue.hercules.sgi</groupId>
@@ -236,8 +235,8 @@
   <build>
     <plugins>
       <!--
-        Maven JaCoCo Plugin - Provides the JaCoCo runtime agent to your tests and allows basic report creation.
-        https://www.eclemma.org/jacoco/trunk/doc/maven.html
+        JaCoCo Maven Plugin - Code coverage report for JVM languages.
+        http://www.eclemma.org/jacoco/
       -->
       <plugin>
         <groupId>org.jacoco</groupId>
