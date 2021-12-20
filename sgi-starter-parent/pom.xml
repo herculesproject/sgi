@@ -195,7 +195,8 @@
             <execution>
               <!-- Integration test report generation config -->
               <id>it-report</id>
-              <phase>integration-test</phase>
+              <!-- Could be integration-test but then maven-failsafe-plugin should be defined before as is associated to same integration-test phase -->
+              <phase>post-integration-test</phase>
               <goals>
                 <goal>report-integration</goal>
               </goals>
@@ -424,6 +425,18 @@
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>${sonar-maven-plugin.version}</version>
+          <configuration>
+            <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+          </configuration>
+          <executions>
+            <execution>
+              <id>sonar</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sonar</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <!--
           Spring Boot Maven Plugin - Spring Boot support in Apache Maven.
