@@ -40,17 +40,6 @@
     <manifest.name>org/crue/hercules/sgi/framework</manifest.name>
   </properties>
 
-  <distributionManagement>
-    <repository>
-      <id>releases</id>
-      <url>${dist.repo.rel.url}</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>${dist.repo.snap.url}</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <dependencies>
     <!--
       Commons Lang - Provides a host of helper utilities for the java.lang API, notably String manipulation methods, basic numerical methods, object reflection, concurrency, creation and serialization and System properties.
