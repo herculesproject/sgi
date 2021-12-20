@@ -43,6 +43,7 @@
     <!-- spring-boot-starter-parent version to allow reconfiguration of spring boot dependencies defined there  -->
     <spring-boot-starter-parent.version>2.3.9.RELEASE</spring-boot-starter-parent.version>
     <!-- Dependencies versions (not defined in parent pom) -->
+    <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     <jslt.version>0.1.11</jslt.version>
     <lombok.version>1.18.20</lombok.version> <!-- Update Lombok to be JDK 16 compatible -->
     <modelmapper.version>2.3.5</modelmapper.version>
@@ -279,7 +280,7 @@
             <dependency>
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-starter-data-jpa</artifactId>
-              <version>${project.parent.version}</version>
+              <version>${spring-boot-starter-parent.version}</version>
             </dependency>
             <dependency>
               <groupId>jakarta.validation</groupId>
