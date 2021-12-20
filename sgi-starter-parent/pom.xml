@@ -57,6 +57,8 @@
     <skipTests>false</skipTests>
     <skipUnitTests>${skipTests}</skipUnitTests>
     <skipIntegrationTests>${skipTests}</skipIntegrationTests>
+    <!-- Define "argLine" as a Maven property rather than as part of the configuration of maven-surefire-plugin -->
+    <argLine>-Duser.timezone=UTC</argLine>
   </properties>
 
   <distributionManagement>
@@ -178,7 +180,7 @@
             <execution>
               <!-- Unit test report generation config -->
               <id>ut-report</id>
-              <phase>prepare-package</phase>
+              <phase>test</phase>
               <goals>
                 <goal>report</goal>
               </goals>
@@ -192,7 +194,7 @@
             <execution>
               <!-- Integration test report generation config -->
               <id>it-report</id>
-              <phase>prepare-package</phase>
+              <phase>integration-test</phase>
               <goals>
                 <goal>report-integration</goal>
               </goals>
@@ -325,7 +327,6 @@
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
             <skipTests>${skipIntegrationTests}</skipTests>
-            <argLine>-Duser.timezone=UTC</argLine>
           </configuration>
           <executions>
             <execution>
@@ -412,7 +413,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <skipTests>${skipUnitTests}</skipTests>
-            <argLine>-Duser.timezone=UTC</argLine>
           </configuration>
         </plugin>
         <!--
