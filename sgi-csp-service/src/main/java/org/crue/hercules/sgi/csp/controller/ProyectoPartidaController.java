@@ -29,9 +29,11 @@ import lombok.extern.slf4j.Slf4j;
  * ProyectoPartidaController
  */
 @RestController
-@RequestMapping("/proyecto-partidas")
+@RequestMapping(ProyectoPartidaController.REQUEST_MAPPING)
 @Slf4j
 public class ProyectoPartidaController {
+
+  public static final String REQUEST_MAPPING = "/proyecto-partidas";
 
   /** ProyectoPartida service */
   private final ProyectoPartidaService service;

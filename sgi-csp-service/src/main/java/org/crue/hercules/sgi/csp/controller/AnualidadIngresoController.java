@@ -28,10 +28,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @RestController
-@RequestMapping("/anualidadingreso")
+@RequestMapping(AnualidadIngresoController.MAPPING)
 @Slf4j
 public class AnualidadIngresoController {
 
+  public static final String MAPPING = "/anualidadingreso";
   private ModelMapper modelMapper;
 
   /** AnualidadIngreso service */
