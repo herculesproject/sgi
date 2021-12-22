@@ -148,6 +148,7 @@ public class AutorizacionService {
    * Se hace el cambio de estado de un Autorizacion.
    *
    * @param id Identificador de {@link Autorizacion}.
+   * @aparam estadoAutorizacion el {@link EstadoAutorizacion} al que cambiar.
    * @return {@link Autorizacion} actualizado.
    */
   @Transactional
