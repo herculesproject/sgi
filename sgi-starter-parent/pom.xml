@@ -43,8 +43,13 @@
     <!-- spring-boot-starter-parent version to allow reconfiguration of spring boot dependencies defined there  -->
     <spring-boot-starter-parent.version>2.3.9.RELEASE</spring-boot-starter-parent.version>
     <!-- Dependencies versions (not defined in parent pom) -->
+    <classic-core.version>8.3.0.24-1314</classic-core.version>
+    <commons-collections4.version>4.4</commons-collections4.version>
+    <commons-email.version>1.5</commons-email.version>
+    <greenmail.version>1.6.5</greenmail.version>
     <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     <jslt.version>0.1.11</jslt.version>
+    <json-path.version>2.6.0</json-path.version>
     <lombok.version>1.18.20</lombok.version> <!-- Update Lombok to be JDK 16 compatible -->
     <modelmapper.version>2.3.5</modelmapper.version>
     <rsql-jpa-spring-boot-starter.version>5.0.9</rsql-jpa-spring-boot-starter.version>
@@ -75,6 +80,48 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- 
+        Pentaho Reporting Engine Classic Core - Java class library for generating reports
+        https://github.com/pentaho/pentaho-reporting
+      -->
+      <dependency>
+        <groupId>org.pentaho.reporting.engine</groupId>
+        <artifactId>classic-core</artifactId>
+        <version>${classic-core.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis-ext</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- 
+        Apache Commons Collections - Powerful data structures that accelerate development of most significant Java applications
+        https://commons.apache.org/proper/commons-collections/index.html
+      -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${commons-collections4.version}</version>
+      </dependency>
+      <!-- 
+        Commons Email - An API for sending email built on top of the Java Mail API, which it aims to simplify.
+        https://commons.apache.org/proper/commons-email/
+      -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-email</artifactId>
+        <version>${commons-email.version}</version>
+      </dependency>
+      <!-- 
+        GreenMail - An easy-to-use test suite of email servers for testing purposes
+        https://greenmail-mail-test.github.io/greenmail/
+      -->
+      <dependency>
+        <groupId>com.icegreen</groupId>
+        <artifactId>greenmail-junit5</artifactId>
+        <version>${greenmail.version}</version>
+      </dependency>
       <!--
         JSLT - A complete query and transformation language for JSON.
         https://github.com/schibsted/jslt
@@ -83,6 +130,15 @@
         <groupId>com.schibsted.spt.data</groupId>
         <artifactId>jslt</artifactId>
         <version>${jslt.version}</version>
+      </dependency>
+      <!-- 
+        Jayway JsonPath - A Java DSL for reading JSON documents.
+        https://github.com/json-path/JsonPath
+      -->
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>${json-path.version}</version>
       </dependency>
       <!--
         ModelMapper - Makes object mapping easy.
@@ -240,11 +296,11 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <!-- 
-        Maven Liquibase Plugin - Generates liquibase changesets.
-        https://www.liquibase.org/documentation/maven/index.html
+        <!-- 
+          Maven Liquibase Plugin - Generates liquibase changesets.
+          https://www.liquibase.org/documentation/maven/index.html
         -->
+        <plugin>
           <groupId>org.liquibase</groupId>
           <artifactId>liquibase-maven-plugin</artifactId>
           <version>${liquibase-maven-plugin.version}</version>
@@ -258,7 +314,7 @@
             <dependency>
               <groupId>org.liquibase.ext</groupId>
               <artifactId>liquibase-hibernate5</artifactId>
-              <version>${liquibase-hibernate5.version}</version>
+              <version>${liquibase-maven-plugin.version}</version>
               <exclusions>
                 <exclusion>
                   <groupId>org.hibernate</groupId>
