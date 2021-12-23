@@ -17,7 +17,6 @@ export const OUTPUT_REPORT_TYPE_MAP: Map<OutputReport, string> = new Map([
   [OutputReport.XLSX, marker('export.type.xlsx')],
   [OutputReport.RTF, marker('export.type.rtf')],
   [OutputReport.CSV, marker('export.type.csv')],
-  [OutputReport.HTML, marker('export.type.html')]
 ]);
 
 @Directive()

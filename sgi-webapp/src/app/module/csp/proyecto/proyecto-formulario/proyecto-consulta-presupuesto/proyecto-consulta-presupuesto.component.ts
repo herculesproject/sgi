@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
@@ -12,9 +13,11 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, of, Subscription } from 'rxjs';
+import { map, mergeAll, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
+import { ProyectoConsultaPresupuestoExportModalComponent } from './export/proyecto-consulta-presupuesto-export-modal.component';
+import { IConsultaPresupuestoExportData } from './export/proyecto-consulta-presupuesto-export.service';
 import { IAnualidadGastoWithProyectoAgrupacionGasto, ProyectoConsultaPresupuestoFragment } from './proyecto-consulta-presupuesto.fragment';
 
 const ANUALIDAD_GENERICA_KEY = marker('csp.proyecto-presupuesto.generica');
@@ -325,5 +328,51 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
     }
 
     this.formPart.anualidadesGastos$.next(filteredAnualidadesGasto);
+  }
+
+  openExportModal(): void {
+
+    this.subscriptions.push(
+      this.formPart.anualidadesGastos$.pipe(
+        map((gastosAnualidad: IAnualidadGastoWithProyectoAgrupacionGasto[]) => {
+
+          this.sortCollectionByProperty<IAnualidadGastoWithProyectoAgrupacionGasto>(gastosAnualidad, DIR_ASC, 'codigoEconomico', 'id');
+          this.sortCollectionByProperty<IAnualidadGastoWithProyectoAgrupacionGasto>(gastosAnualidad, DIR_ASC, 'proyectoPartida', 'codigo');
+          this.sortCollectionByProperty<IAnualidadGastoWithProyectoAgrupacionGasto>(gastosAnualidad, DIR_ASC, 'conceptoGasto', 'nombre');
+          this.sortCollectionByProperty<IAnualidadGastoWithProyectoAgrupacionGasto>(gastosAnualidad, DIR_ASC, 'proyectoAgrupacionGasto', 'nombre');
+          this.sortCollectionByProperty<IAnualidadGastoWithProyectoAgrupacionGasto>(gastosAnualidad, DIR_ASC, 'proyectoAnualidad', 'anio');
+
+          return gastosAnualidad;
+        }),
+        switchMap((anualidadesGastos) => {
+          return from(anualidadesGastos).pipe(
+            mergeMap(anualidadGasto => {
+              return this.codigoEconomicoGastoService.findById(anualidadGasto.codigoEconomico.id).pipe(
+                map((value) => {
+                  anualidadGasto.codigoEconomico = value;
+                  return anualidadesGastos;
+                })
+              );
+            }),
+            takeLast(1)
+          );
+        })
+      ).subscribe(
+        (anualidadesGastos) => {
+          const exportData: IConsultaPresupuestoExportData = {
+            data: anualidadesGastos,
+            columns: []
+          };
+          const config = {
+            data: exportData
+          };
+          this.matDialog.open(ProyectoConsultaPresupuestoExportModalComponent, config);
+        },
+        (error) => {
+          if (error instanceof HttpProblem) {
+            this.formPart.pushProblems(error);
+          }
+        })
+    );
   }
 }

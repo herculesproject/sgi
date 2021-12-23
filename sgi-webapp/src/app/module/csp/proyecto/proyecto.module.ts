@@ -32,6 +32,8 @@ import { ProyectoCalendarioFacturacionComponent } from './proyecto-formulario/pr
 import { ProyectoCalendarioJustificacionComponent } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.component';
 import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoConceptosGastoComponent } from './proyecto-formulario/proyecto-conceptos-gasto/proyecto-conceptos-gasto.component';
+import { ProyectoConsultaPresupuestoExportModalComponent } from './proyecto-formulario/proyecto-consulta-presupuesto/export/proyecto-consulta-presupuesto-export-modal.component';
+import { ProyectoConsultaPresupuestoExportService } from './proyecto-formulario/proyecto-consulta-presupuesto/export/proyecto-consulta-presupuesto-export.service';
 import { ProyectoConsultaPresupuestoComponent } from './proyecto-formulario/proyecto-consulta-presupuesto/proyecto-consulta-presupuesto.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
@@ -99,7 +101,8 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     ProyectoRelacionModalComponent,
     ProyectoCalendarioFacturacionComponent,
     ProyectoCalendarioFacturacionModalComponent,
-    HistoricoIpModalComponent
+    HistoricoIpModalComponent,
+    ProyectoConsultaPresupuestoExportModalComponent
   ],
   imports: [
     SharedModule,
@@ -119,7 +122,8 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
   providers: [
     ProyectoDataResolver,
     ProyectoEntidadConvocantePlanPipe,
-    ProyectoListadoService
+    ProyectoListadoService,
+    ProyectoConsultaPresupuestoExportService
   ]
 })
 export class ProyectoModule { }
