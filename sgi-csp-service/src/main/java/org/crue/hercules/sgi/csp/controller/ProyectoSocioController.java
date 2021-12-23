@@ -58,7 +58,6 @@ public class ProyectoSocioController {
    * 
    * @param proyectoSocioService                     {@link ProyectoSocioService}.
    * @param proyectoSocioEquipoService               {@link ProyectoSocioEquipoService}
-   * @param proyectoSocioService                     {@link ProyectoSocioService}.
    * @param proyectoSocioPeriodoPagoService          {@link ProyectoSocioPeriodoPagoService}.
    * @param proyectoSocioPeriodoJustificacionService {@link ProyectoSocioPeriodoJustificacionService}.
    */

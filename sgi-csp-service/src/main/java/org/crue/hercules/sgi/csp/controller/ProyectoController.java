@@ -191,7 +191,6 @@ public class ProyectoController {
    * @param proyectoPeriodoSeguimientoService                 {@link ProyectoPeriodoSeguimientoService}
    * @param proyectoEntidadGestoraService                     {@link ProyectoEntidadGestoraService}
    * @param proyectoEquipoService                             {@link ProyectoEquipoService}.
-   * @param proyectoProrrogaService                           {@link ProyectoProrrogaService}.
    * @param estadoProyectoService                             {@link EstadoProyectoService}.
    * @param proyectoProrrogaService                           {@link ProyectoProrrogaService}.
    * @param proyectoDocumentoService                          {@link ProyectoDocumentoService}.
