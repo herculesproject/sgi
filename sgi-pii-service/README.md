@@ -1,4 +1,3 @@
-
 ![](./doc/images/logos_feder.png)
 
 # HÉRCULES - SGI 
