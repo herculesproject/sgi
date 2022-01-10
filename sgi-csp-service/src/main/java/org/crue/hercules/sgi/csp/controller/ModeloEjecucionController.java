@@ -101,7 +101,7 @@ public class ModeloEjecucionController {
    *         paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-MOD-V', 'CSP-PRO-E', 'CSP-PRO-V')")
   public ResponseEntity<Page<ModeloEjecucion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");

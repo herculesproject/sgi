@@ -110,7 +110,7 @@ public class TipoFinalidadController {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-INV-V', 'CSP-ME-C', 'CSP-ME-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-INV-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-MOD-V')")
   public ResponseEntity<Page<TipoFinalidad>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");

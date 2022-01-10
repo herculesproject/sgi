@@ -53,13 +53,13 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
     ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L, proyecto1.getId());
     entityManager.persistAndFlush(contextoProyecto1);
 
-    Long proyectoIdBuscado = 2L;
+    Long proyectoIdBuscado = 2000L;
 
     // when: se busca el ContextoProyecto por idProyecto que no existe
     Optional<ContextoProyecto> contextoProyectoEncontrado = repository.findByProyectoId(proyectoIdBuscado);
 
     // then: No se recupera ningún ContextoProyecto
-    Assertions.assertThat(contextoProyectoEncontrado).isEqualTo(Optional.empty());
+    Assertions.assertThat(contextoProyectoEncontrado).isEmpty();
   }
 
   private Proyecto generarMockProyecto(Long proyectoId) {
