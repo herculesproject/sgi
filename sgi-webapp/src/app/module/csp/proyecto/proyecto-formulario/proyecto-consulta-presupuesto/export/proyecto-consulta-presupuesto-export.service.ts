@@ -11,7 +11,6 @@ import { Observable, of } from 'rxjs';
 import { IAnualidadGastoWithProyectoAgrupacionGasto } from '../proyecto-consulta-presupuesto.fragment';
 
 const ANUALIDAD_KEY = marker('csp.proyecto-consulta-presupuesto.label.anualidad');
-const AGRUPACION_GASTO_KEY = marker('csp.proyecto-consulta-presupuesto.label.agrupacion-gastos');
 const CONCEPTO_GASTO_KEY = marker('csp.proyecto-consulta-presupuesto.label.concepto-gasto');
 const APLICACION_PRESUPUESTARIA_KEY = marker('csp.proyecto-consulta-presupuesto.label.aplicacion-presupuestaria');
 const CODIGO_ECONOMICO_KEY = marker('csp.proyecto-consulta-presupuesto.label.codigo-economico');
@@ -56,7 +55,6 @@ export class ProyectoConsultaPresupuestoExportService
         elements: []
       };
       row.elements.push(item.proyectoAnualidad?.anio ?? '');
-      row.elements.push(item.proyectoAgrupacionGasto?.nombre ?? 'Sin clasificar');
       row.elements.push(item.conceptoGasto?.nombre ?? 'Sin clasificar');
       row.elements.push(item.proyectoPartida?.codigo ?? 'Sin clasificar');
       row.elements.push(item.codigoEconomico?.id ?? '');
@@ -91,11 +89,6 @@ export class ProyectoConsultaPresupuestoExportService
         title: this.translate.instant(ANUALIDAD_KEY),
         name: 'anualidad',
         type: ColumnType.STRING,
-      },
-      {
-        title: this.translate.instant(AGRUPACION_GASTO_KEY),
-        name: 'agrupacionGasto',
-        type: ColumnType.STRING
       },
       {
         title: this.translate.instant(CONCEPTO_GASTO_KEY),
