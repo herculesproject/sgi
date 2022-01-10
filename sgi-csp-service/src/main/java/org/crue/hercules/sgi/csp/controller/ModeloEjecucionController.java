@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -538,6 +539,25 @@ public class ModeloEjecucionController {
 
     log.debug("findAllUnidades(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si el {@link ModeloEjecucion} esta asociado a algun proyecto.
+   * 
+   * @param id Identificador de {@link ModeloEjecucion}.
+   * @return {@link HttpStatus#OK} si existe alguna asociacion,
+   *         {@link HttpStatus#NO_CONTENT} si no.
+   */
+  @RequestMapping(path = "/{id}/proyectos", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-ME-E')")
+  public ResponseEntity<Void> hasProyectosAsociados(@PathVariable Long id) {
+    log.debug("hasProyectosAsociados(Long id) - start");
+    if (modeloEjecucionService.hasProyectosAsociados(id)) {
+      log.debug("hasProyectosAsociados(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("hasProyectosAsociados(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

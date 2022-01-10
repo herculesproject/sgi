@@ -203,4 +203,15 @@
     <addForeignKeyConstraint baseColumnNames="proyecto_id" baseTableName="notificacion_proyecto_externo_cvn" constraintName="FK_NOTIFICACIONPROYECTOEXTERNOCVN_PROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000004-23">
+    <addColumn tableName="modelo_ejecucion">
+      <column defaultValueBoolean="false" name="contrato" type="boolean"></column>
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-24">
+    <addColumn tableName="modelo_ejecucion">
+      <column defaultValueBoolean="false" name="externo" type="boolean"></column>
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

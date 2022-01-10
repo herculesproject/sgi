@@ -2,8 +2,11 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloEjecucionSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -25,9 +28,12 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
   private static final String MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX = "Ya existe un ModeloEjecucion activo con el nombre '";
   private final ModeloEjecucionRepository modeloEjecucionRepository;
+  private final ProyectoRepository proyectoRepository;
 
-  public ModeloEjecucionServiceImpl(ModeloEjecucionRepository modeloEjecucionRepository) {
+  public ModeloEjecucionServiceImpl(ModeloEjecucionRepository modeloEjecucionRepository,
+      ProyectoRepository proyectoRepository) {
     this.modeloEjecucionRepository = modeloEjecucionRepository;
+    this.proyectoRepository = proyectoRepository;
   }
 
   /**
@@ -190,4 +196,21 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     return returnValue;
   }
 
+  /**
+   * Obtiene un Booleano indicando si el modelo de ejecucion esta asociado a algun
+   * proyecto
+   *
+   * @param id el id de la entidad {@link ModeloEjecucion}.
+   * @return true si existe algun proyecto asociado y false si no tiene ninguno.
+   */
+  @Override
+  public Boolean hasProyectosAsociados(Long id) {
+    log.debug("hasProyectosAsociados(id)- start");
+
+    Specification<Proyecto> specs = ProyectoSpecifications.byModeloEjecucionId(id);
+
+    Boolean returnValue = proyectoRepository.count(specs) > 0 ? true : false;
+    log.debug("hasProyectosAsociados(id) - end");
+    return returnValue;
+  }
 }

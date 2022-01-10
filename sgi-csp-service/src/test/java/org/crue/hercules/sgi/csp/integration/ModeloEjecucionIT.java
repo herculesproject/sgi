@@ -66,6 +66,8 @@ public class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloEjecucionCreado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(modeloEjecucion.getDescripcion());
     Assertions.assertThat(modeloEjecucionCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloEjecucionCreado.getExterno()).as("getExterno()").isEqualTo(false);
+    Assertions.assertThat(modeloEjecucionCreado.getContrato()).as("getContrato()").isEqualTo(false);
   }
 
   @Sql
@@ -88,6 +90,8 @@ public class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloEjecucionActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(modeloEjecucion.getDescripcion());
     Assertions.assertThat(modeloEjecucionActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloEjecucionActualizado.getExterno()).as("getExterno()").isEqualTo(false);
+    Assertions.assertThat(modeloEjecucionActualizado.getContrato()).as("getContrato()").isEqualTo(false);
   }
 
   @Sql
@@ -671,6 +675,8 @@ public class ModeloEjecucionIT extends BaseIT {
     modeloEjecucion.setNombre(nombre);
     modeloEjecucion.setDescripcion("descripcion-" + id);
     modeloEjecucion.setActivo(Boolean.TRUE);
+    modeloEjecucion.setExterno(Boolean.FALSE);
+    modeloEjecucion.setContrato(Boolean.FALSE);
 
     return modeloEjecucion;
   }

@@ -145,4 +145,15 @@
     </insert>
   </changeSet>
 
+  <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000004-modelo_ejecucion">
+    <update tableName="modelo_ejecucion">
+      <column name="externo" value="false" />
+      <where>externo is null</where>
+    </update>
+    <update tableName="modelo_ejecucion">
+      <column name="contrato" value="false" />
+      <where>contrato is null</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

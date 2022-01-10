@@ -31,3 +31,5 @@ databaseChangeLog:
      file: classpath*:db/changelog/changes/0000000000004-update-initial-database.xml
   - include:
      file: classpath*:db/changelog/changes/0000000000004-update-sample-data.xml
+  - include:
+      file: classpath*:db/changelog/changes/0000000000004-fixup-initial-database.xml
