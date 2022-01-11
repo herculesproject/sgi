@@ -57,8 +57,24 @@ export class AutorizacionService extends _AutorizacionMixinBase {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/presentar`, undefined);
   }
 
+  /**
+   * Comprueba si la Autorizacion es o no presentable
+   * @param id el identificador de la autorizacion a comporobar
+   */
   presentable(id: number): Observable<boolean> {
     return this.http.head(`${this.endpointUrl}/${id}/presentable`, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si Autorizacion tiene NotificacionProyectoExternoCVN relacionado
+   *
+   * @param id Autorizacion
+   */
+  hasAutorizacionNotificacionProyectoExterno(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/vinculacionesnotificacionesproyectosexternos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );
   }

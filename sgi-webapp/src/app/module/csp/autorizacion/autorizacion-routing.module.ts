@@ -25,7 +25,7 @@ const routes: SgiRoutes = [
     data: {
       title: AUTORIZACION_TITLE_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
-      hasAnyAuthorityForAnyUO: ['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR'],
+      hasAnyAuthorityForAnyUO: ['CSP-AUT-E', 'CSP-AUT-V', 'CSP-AUT-B', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR'],
     }
   },
   {
@@ -61,7 +61,7 @@ const routes: SgiRoutes = [
     data: {
       title: AUTORIZACION_TITLE_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
-      hasAnyAuthorityForAnyUO: ['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']
+      hasAnyAuthorityForAnyUO: ['CSP-AUT-E', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR'],
     },
     children: [
       {

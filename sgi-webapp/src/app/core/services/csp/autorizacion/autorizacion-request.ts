@@ -1,8 +1,7 @@
-
 export interface IAutorizacionRequest {
   observaciones: string;
   responsableRef: string;
-  solitanteRef: string;
+  solicitanteRef: string;
   tituloProyecto: string;
   entidadRef: string;
   horasDedicacion: number;

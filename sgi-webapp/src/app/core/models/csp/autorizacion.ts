@@ -7,7 +7,7 @@ export interface IAutorizacion {
   id: number;
   observaciones: string;
   responsable: IPersona;
-  solitante: IPersona;
+  solicitante: IPersona;
   tituloProyecto: string;
   entidad: IEmpresa;
   horasDedicacion: number;

@@ -20,8 +20,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';
-
+import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_LOAD = marker('error.load');
@@ -52,6 +51,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   textoDelete: string;
   textoSuccessDelete: string;
   textoErrorDelete: string;
+  mapCanBeDeleted: Map<number, boolean> = new Map();
+  isInvestigador: boolean;
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -91,8 +92,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     });
     this.filter = this.createFilter();
 
+    this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
 
   }
+
   private setupI18N(): void {
 
     this.translate.get(
@@ -107,7 +110,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       })
     ).subscribe((value) => this.textoCrear = value);
 
-
     this.translate.get(
       AUTORIZACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -119,7 +121,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
 
     this.translate.get(
       AUTORIZACION_KEY,
@@ -166,6 +167,12 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       }),
       switchMap(response =>
         from(response.items).pipe(
+          mergeMap(autorizacionListado => {
+            return this.autorizacionService.hasAutorizacionNotificacionProyectoExterno(autorizacionListado.autorizacion.id).pipe(
+              tap((hasAutorizacionNotificacionProyectoExterno) => this.mapCanBeDeleted.set(autorizacionListado.autorizacion.id, hasAutorizacionNotificacionProyectoExterno)),
+              map(() => autorizacionListado)
+            );
+          }),
           mergeMap(autorizacionListado => {
             if (autorizacionListado.autorizacion.estado.id) {
               return this.estadoAutorizacionService.findById(autorizacionListado.autorizacion.estado.id).pipe(

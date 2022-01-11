@@ -151,5 +151,4 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
     );
   }
 
-
 }

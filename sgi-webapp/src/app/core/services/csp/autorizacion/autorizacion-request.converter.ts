@@ -16,7 +16,7 @@ class AutorizacionRequestConverter
       id: undefined,
       observaciones: value.observaciones,
       responsable: { id: value.responsableRef } as IPersona,
-      solitante: { id: value.solitanteRef } as IPersona,
+      solicitante: { id: value.solicitanteRef } as IPersona,
       tituloProyecto: value.tituloProyecto,
       entidad: { id: value.entidadRef } as IEmpresa,
       horasDedicacion: value.horasDedicacion,
@@ -35,7 +35,7 @@ class AutorizacionRequestConverter
     return {
       observaciones: value.observaciones,
       responsableRef: value.responsable?.id,
-      solitanteRef: value.solitante?.id,
+      solicitanteRef: value.solicitante?.id,
       tituloProyecto: value.tituloProyecto,
       entidadRef: value.entidad?.id,
       horasDedicacion: value.horasDedicacion,

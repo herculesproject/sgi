@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
-import { Estado } from '@core/models/csp/estado-autorizacion';
+import { Estado, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { FormFragment } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -46,14 +46,6 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       observaciones: new FormControl(null, Validators.maxLength(2000))
     });
 
-
-    // Se setean los validaores condicionales y
-    // se hace una subscripcion a los campos que provocan
-    // cambios en los validadores del formulario
-
-    this.setConditionalValidatorsEntidad(form);
-    this.setConditionalValidatorsIP(form);
-
     this.subscriptions.push(form.controls.convocatoria.valueChanges.subscribe(
       (convocatoria) => {
         if (this.autorizacion?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
@@ -67,6 +59,12 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
         }
       }
     ));
+
+    // Se setean los validadores condicionales y
+    // se hace una subscripcion a los campos que provocan
+    // cambios en los validadores del formulario
+    this.setConditionalValidatorsEntidad(form);
+    this.setConditionalValidatorsIP(form);
 
     this.subscriptions.push(
       merge(
@@ -97,7 +95,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       datosConvocatoria: autorizacion.datosConvocatoria,
       entidadParticipa: autorizacion.entidad,
       datosEntidad: autorizacion.datosEntidad,
-      investigadorPrincipalProyecto: autorizacion.solitante,
+      investigadorPrincipalProyecto: autorizacion.solicitante,
       datosIpProyecto: autorizacion.datosResponsable,
       horasDedicacion: autorizacion.horasDedicacion,
       observaciones: autorizacion.observaciones
@@ -108,15 +106,15 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return this.autorizacionService.findById(key as number).pipe(
       switchMap((autorizacion) => {
         this.autorizacion = autorizacion;
-        if (autorizacion.solitante.id) {
-          return this.personaService.findById(autorizacion.solitante?.id).pipe(
+        if (autorizacion.solicitante.id) {
+          return this.personaService.findById(autorizacion.solicitante?.id).pipe(
             map(solicitante => {
-              autorizacion.solitante = solicitante;
+              autorizacion.solicitante = solicitante;
               return autorizacion;
             })
           );
         } else {
-          autorizacion.solitante = null;
+          autorizacion.solicitante = null;
           return of(autorizacion);
         }
       }),
@@ -152,7 +150,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
             map(estado => {
               autorizacion.estado = estado;
               if (this.isEdit()) {
-                this.checkEstado(this.getFormGroup(), this.autorizacion);
+                this.disableNotEditableFieldsEstado(this.getFormGroup(), this.autorizacion.estado);
               }
               return autorizacion;
             })
@@ -167,6 +165,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       })
     );
   }
+
   getValue(): IAutorizacion {
     const form = this.getFormGroup().controls;
     this.autorizacion.estado = form.estado.value;
@@ -175,7 +174,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     this.autorizacion.datosConvocatoria = form.datosConvocatoria?.value;
     this.autorizacion.entidad = form.entidadParticipa.value;
     this.autorizacion.datosEntidad = form.datosEntidad.value;
-    this.autorizacion.solitante = form.investigadorPrincipalProyecto.value;
+    this.autorizacion.solicitante = form.investigadorPrincipalProyecto.value;
     this.autorizacion.datosResponsable = form.datosIpProyecto.value;
     this.autorizacion.horasDedicacion = form.horasDedicacion?.value;
     this.autorizacion.observaciones = form.observaciones?.value;
@@ -262,9 +261,9 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       this.investigadorRequired = investigadorPrincipal;
     }
   }
-  /** Deshabilita campos en funcion del estado de la autorizacion */
-  private checkEstado(formgroup: FormGroup, autorizacion: IAutorizacion): void {
-    if (autorizacion?.estado?.estado && autorizacion?.estado?.estado !== Estado.BORRADOR) {
+
+  private disableNotEditableFieldsEstado(formgroup: FormGroup, estadoAutorizacion: IEstadoAutorizacion): void {
+    if (estadoAutorizacion?.estado && estadoAutorizacion?.estado !== Estado.BORRADOR) {
       formgroup.controls.tituloProyecto.disable();
       formgroup.controls.convocatoria.disable({ emitEvent: false });
       formgroup.controls.datosConvocatoria.disable({ emitEvent: false });
@@ -286,6 +285,5 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       formgroup.controls.observaciones.enable();
     }
   }
-
 
 }

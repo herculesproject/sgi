@@ -17,7 +17,6 @@ const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.save.entity.success');
 const MSG_ERROR = marker('error.save.entity');
 
-
 @Component({
   selector: 'sgi-autorizacion-crear',
   templateUrl: './autorizacion-crear.component.html',

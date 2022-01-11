@@ -256,7 +256,7 @@ const routes: SgiRoutes = [
         data: {
           title: AUTORIZACION_KEY,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
-          hasAnyAuthorityForAnyUO: ['CSP-AUT-E', 'CSP-AUT-V', 'CSP-AUT-B']
+          hasAnyAuthorityForAnyUO: ['CSP-AUT-E', 'CSP-AUT-V', 'CSP-AUT-B', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR'],
         }
       },
       {
