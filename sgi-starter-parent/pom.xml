@@ -434,8 +434,8 @@
           </executions>
           <configuration>
             <!--
-            Shuts off non-error and non-warning messages, leaving only the warnings and errors
-            appear, making them easier to view.
+              Shuts off non-error and non-warning messages, leaving only the warnings and errors
+              appear, making them easier to view.
             -->
             <quiet>true</quiet>
             <!-- Exclude the JPA meta model classes from javadoc -->
