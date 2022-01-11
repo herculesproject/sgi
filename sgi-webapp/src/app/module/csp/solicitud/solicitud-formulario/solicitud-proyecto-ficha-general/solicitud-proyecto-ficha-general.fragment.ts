@@ -30,6 +30,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   readonly tipoDesglosePresupuesto$: Subject<TipoPresupuesto> = new Subject<TipoPresupuesto>();
   readonly hasSolicitudSocio$ = new BehaviorSubject<boolean>(false);
   public readonly userCanEdit: boolean;
+  private solicitudId: number;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -220,6 +221,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   }
 
   protected initializer(key: number): Observable<ISolicitudProyecto> {
+    this.solicitudId = key;
 
     return this.solicitudService.findSolicitudProyecto(key).pipe(
       switchMap(solicitudProyecto => {
@@ -235,7 +237,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       }),
       switchMap(solicitudProyecto => {
         if (this.convocatoriaId && !solicitudProyecto?.id) {
-          return this.convocatoriaService.findById(this.convocatoriaId).pipe(
+          const convocatoriaSolicitud$ = this.isInvestigador ? this.solicitudService.findConvocatoria(this.solicitudId) : this.convocatoriaService.findById(this.solicitudId);
+          return convocatoriaSolicitud$.pipe(
             map(convocatoria => {
               solicitudProyecto = {} as ISolicitudProyecto;
               solicitudProyecto.duracion = convocatoria.duracion;

@@ -232,7 +232,6 @@ export class SolicitudActionService extends ActionService {
       logger,
       this.data?.solicitud?.id,
       solicitudService,
-      configuracionSolicitudService,
       convocatoriaService,
       empresaService,
       personaService,

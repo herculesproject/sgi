@@ -14,6 +14,7 @@ import { CONVOCATORIA_PARTIDA_PRESUPUESTARIA_CONVERTER } from '@core/converters/
 import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
 import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER } from '@core/converters/csp/convocatoria-periodo-seguimiento-cientifico.converter';
 import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
@@ -526,4 +527,16 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       map((response => CONVOCATORIA_PALABRACLAVE_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
+
+  /**
+   * Devuelve el tipo de formulario solicitud de una convocatoria
+   *
+   * @param convocatoriaId Id de la convocatoria
+   */
+  getFormularioSolicitud(convocatoriaId: number): Observable<FormularioSolicitud> {
+    return this.http.get<FormularioSolicitud>(
+      `${this.endpointUrl}/${convocatoriaId}/formulariosolicitud`
+    );
+  }
+
 }
