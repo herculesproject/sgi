@@ -58,9 +58,9 @@ public class Autorizacion extends BaseEntity {
   private String responsableRef;
 
   /** Solicitante Ref */
-  @Column(name = "solitante_ref", nullable = true)
+  @Column(name = "solicitante_ref", nullable = true)
   @Size(max = Autorizacion.MAX_LENGTH)
-  private String solitanteRef;
+  private String solicitanteRef;
 
   /** Titulo Proyecto */
   @Column(name = "titulo_proyecto", length = Autorizacion.MAX_LENGTH, nullable = true)

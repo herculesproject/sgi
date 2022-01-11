@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.AutorizacionService;
+import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,9 +39,12 @@ public class AutorizacionController {
   public static final String REQUEST_MAPPING = "/autorizaciones";
 
   private final AutorizacionService service;
+  private final NotificacionProyectoExternoCVNService notificacionProyectoExternoService;
 
-  public AutorizacionController(AutorizacionService service) {
+  public AutorizacionController(AutorizacionService service,
+      NotificacionProyectoExternoCVNService notificacionProyectoExternoService) {
     this.service = service;
+    this.notificacionProyectoExternoService = notificacionProyectoExternoService;
   }
 
   /**
@@ -157,5 +162,21 @@ public class AutorizacionController {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Autorizacion} de
+   * {@link NotificacionProyectoExternoCVN}
+   *
+   * @param id Id del {@link Autorizacion}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/vinculacionesnotificacionesproyectosexternos", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
+  public ResponseEntity<Autorizacion> hasAutorizacionNotificacionProyectoExterno(@PathVariable Long id) {
+    log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - start");
+    boolean returnValue = notificacionProyectoExternoService.existsByAutorizacionId(id);
+    log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

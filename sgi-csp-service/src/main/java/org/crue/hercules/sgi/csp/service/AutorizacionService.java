@@ -88,7 +88,7 @@ public class AutorizacionService {
       data.setId(autorizacionActualizar.getId());
       data.setObservaciones(autorizacionActualizar.getObservaciones());
       data.setResponsableRef(autorizacionActualizar.getResponsableRef());
-      data.setSolitanteRef(autorizacionActualizar.getSolitanteRef());
+      data.setSolicitanteRef(autorizacionActualizar.getSolicitanteRef());
       data.setTituloProyecto(autorizacionActualizar.getTituloProyecto());
       data.setEntidadRef(autorizacionActualizar.getEntidadRef());
       data.setHorasDedicacion(autorizacionActualizar.getHorasDedicacion());

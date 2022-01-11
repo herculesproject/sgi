@@ -34,7 +34,7 @@
       <column name="estado_id" type="BIGINT" />
       <column name="observaciones" type="VARCHAR(250)" />
       <column name="responsable_ref" type="VARCHAR(250)" />
-      <column name="solitante_ref" type="VARCHAR(250)" />
+      <column name="solicitante_ref" type="VARCHAR(250)" />
       <column name="titulo_proyecto" type="VARCHAR(250)" />
     </createTable>
   </changeSet>

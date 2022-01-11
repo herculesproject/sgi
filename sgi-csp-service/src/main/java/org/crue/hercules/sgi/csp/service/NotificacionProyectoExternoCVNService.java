@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.repository.NotificacionProyectoExternoCVNRepository;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -43,5 +44,16 @@ public class NotificacionProyectoExternoCVNService {
     Page<NotificacionProyectoExternoCVN> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Autorizacion} de
+   * {@link NotificacionProyectoExternoCVN}
+   *
+   * @param autorizacionId Id del {@link Autorizacion}.
+   * @return si existe o no el Autorizacion
+   */
+  public boolean existsByAutorizacionId(Long autorizacionId) {
+    return repository.existsByAutorizacionId(autorizacionId);
   }
 }
