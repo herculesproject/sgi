@@ -23,8 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable, of } from 'rxjs';
-import { map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { ConvocatoriaListadoModalComponent, IConvocatoriaListadoModalData } from '../modals/convocatoria-listado-modal/convocatoria-listado-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
@@ -319,6 +319,10 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                       convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                       return convocatoriaListado;
                     }),
+                    catchError((error) => {
+                      this.logger.error(error);
+                      return EMPTY;
+                    })
                   );
                 }
                 return of(convocatoriaListado);
@@ -354,6 +358,10 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                           convocatoriaListado.entidadConvocanteEmpresa = empresa;
                           return convocatoriaListado;
                         }),
+                        catchError((error) => {
+                          this.logger.error(error);
+                          return EMPTY;
+                        })
                       );
                     }
                     return of(convocatoriaListado);
