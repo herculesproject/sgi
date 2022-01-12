@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ConvocatoriaSpecifications {
@@ -78,4 +80,23 @@ public class ConvocatoriaSpecifications {
       return null;
     };
   }
+
+  /**
+   * {@link Convocatoria} de la {@link Solicitud} con el id
+   * indicado.
+   * 
+   * @param solicitudId identificador de la {@link Solicitud}.
+   * @return specification para obtener las {@link Convocatoria} de
+   *         la {@link Solicitud} con el id indicado.
+   */
+  public static Specification<Convocatoria> bySolicitudId(Long solicitudId) {
+    return (root, query, cb) -> {
+      Subquery<Long> querySolicitud = query.subquery(Long.class);
+      Root<Solicitud> querySolicitudRoot = querySolicitud.from(Solicitud.class);
+      querySolicitud.select(querySolicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id))
+          .where(cb.equal(querySolicitudRoot.get(Solicitud_.id), solicitudId));
+      return root.get(Convocatoria_.id).in(querySolicitud);
+    };
+  }
+
 }

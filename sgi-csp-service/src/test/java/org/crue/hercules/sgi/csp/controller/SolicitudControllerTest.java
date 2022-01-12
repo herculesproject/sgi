@@ -28,8 +28,13 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
@@ -117,6 +122,21 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudPalabraClaveService solicitudPalabraClaveService;
+
+  @MockBean
+  private ConvocatoriaService convocatoriaService;
+
+  @MockBean
+  private ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
+  @MockBean
+  private RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService;
+
+  @MockBean
+  private RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService;
+
+  @MockBean
+  private RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

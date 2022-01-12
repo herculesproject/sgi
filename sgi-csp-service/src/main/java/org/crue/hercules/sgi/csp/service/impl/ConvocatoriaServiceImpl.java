@@ -2,9 +2,11 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessConvocatoriaException;
@@ -34,6 +36,7 @@ import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaClonerService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -41,6 +44,7 @@ import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextH
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -490,6 +494,47 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
+   * Devuelve la {@link Convocatoria} asociada a la {@link Solicitud} con el id
+   * indicado si el usuario que realiza la peticion es el solicitante de la
+   * {@link Solicitud}.
+   * 
+   * @param solicitudId Identificador de {@link Solicitud}.
+   * @return {@link Convocatoria} correspondiente a la {@link Solicitud}.
+   */
+  @Override
+  public Convocatoria findBySolicitudIdAndUserIsSolicitante(Long solicitudId) {
+    log.debug("findBySolicitudIdAndUserIsSolicitante(Long solicitudId) - start");
+
+    String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    if (solicitudRepository
+        .count(SolicitudSpecifications.bySolicitante(personaRef).and(SolicitudSpecifications.byId(solicitudId))) < 1) {
+      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    }
+
+    final Convocatoria returnValue = repository.findOne(ConvocatoriaSpecifications.bySolicitudId(solicitudId))
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitudId));
+
+    log.debug("findBySolicitudIdAndUserIsSolicitante(Long solicitudId) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve el {@link FormularioSolicitud} de la {@link Convocatoria}
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return {@link FormularioSolicitud} correspondiente a la
+   *         {@link Convocatoria}.
+   */
+  @Override
+  public FormularioSolicitud findFormularioSolicitudById(Long id) {
+    log.debug("findFormularioSolicitudById(Long id) - start");
+    final Convocatoria returnValue = repository.findById(id).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
+    log.debug("findFormularioSolicitudById(Long id) - end");
+    return returnValue.getFormularioSolicitud();
+  }
+
+  /**
    * Comprueba y valida los datos de una convocatoria.
    * 
    * @param datosConvocatoria
@@ -544,14 +589,16 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
       // Permitir no activos solo si estamos modificando y es el mismo
       if (datosOriginales == null || (datosOriginales.getModeloEjecucion() != null
-          && (modeloUnidad.get().getModeloEjecucion().getId() != datosOriginales.getModeloEjecucion().getId()))) {
+          && (!Objects.equals(modeloUnidad.get().getModeloEjecucion().getId(),
+              datosOriginales.getModeloEjecucion().getId())))) {
         Assert.isTrue(modeloUnidad.get().getActivo(),
             "ModeloEjecucion '" + modeloUnidad.get().getModeloEjecucion().getNombre()
                 + "' no está activo para la UnidadGestion " + modeloUnidad.get().getUnidadGestionRef());
       }
       // Permitir no activos solo si estamos modificando y es el mismo
       if (datosOriginales == null || (datosOriginales.getModeloEjecucion() != null
-          && (modeloUnidad.get().getModeloEjecucion().getId() != datosOriginales.getModeloEjecucion().getId()))) {
+          && (!Objects.equals(modeloUnidad.get().getModeloEjecucion().getId(),
+              datosOriginales.getModeloEjecucion().getId())))) {
         Assert.isTrue(modeloUnidad.get().getModeloEjecucion().getActivo(),
             "ModeloEjecucion '" + modeloUnidad.get().getModeloEjecucion().getNombre() + "' no está activo");
       }
@@ -572,7 +619,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
       // Permitir no activos solo si estamos modificando y es el mismo
       if (datosOriginales == null || (datosOriginales.getFinalidad() != null
-          && (modeloTipoFinalidad.get().getTipoFinalidad().getId() != datosOriginales.getFinalidad().getId()))) {
+          && (!Objects.equals(modeloTipoFinalidad.get().getTipoFinalidad().getId(),
+              datosOriginales.getFinalidad().getId())))) {
         Assert.isTrue(modeloTipoFinalidad.get().getActivo(),
             "ModeloTipoFinalidad '" + modeloTipoFinalidad.get().getTipoFinalidad().getNombre()
                 + "' no está activo para el ModeloEjecucion "
@@ -581,7 +629,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
       // Permitir no activos solo si estamos modificando y es el mismo
       if (datosOriginales == null || (datosOriginales.getFinalidad() != null
-          && (modeloTipoFinalidad.get().getTipoFinalidad().getId() != datosOriginales.getFinalidad().getId()))) {
+          && (!Objects.equals(modeloTipoFinalidad.get().getTipoFinalidad().getId(),
+              datosOriginales.getFinalidad().getId())))) {
         Assert.isTrue(modeloTipoFinalidad.get().getTipoFinalidad().getActivo(),
             "TipoFinalidad '" + modeloTipoFinalidad.get().getTipoFinalidad().getNombre() + "' no está activo");
       }
@@ -631,7 +680,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     if (datosConvocatoria.getId() != null) {
       // Comprueba que la duracion no sea menor que el ultimo mes del ultimo
       // ConvocatoriaPeriodoJustificacion de la convocatoria
-      if (datosConvocatoria.getDuracion() != null && datosConvocatoria.getDuracion() != datosOriginales.getDuracion()) {
+      if (datosConvocatoria.getDuracion() != null
+          && !Objects.equals(datosConvocatoria.getDuracion(), datosOriginales.getDuracion())) {
         convocatoriaPeriodoJustificacionRepository
             .findFirstByConvocatoriaIdOrderByNumPeriodoDesc(datosConvocatoria.getId())
             .ifPresent(convocatoriaPeriodoJustificacion -> {

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -1137,7 +1139,7 @@ public class ConvocatoriaController {
 
   private List<RequisitoEquipoCategoriaProfesionalOutput> convertRequisitoEquipoCategoriaProfesionales(
       List<RequisitoEquipoCategoriaProfesional> entities) {
-    return entities.stream().map(entity -> convert(entity)).collect(Collectors.toList());
+    return entities.stream().map(this::convert).collect(Collectors.toList());
   }
 
   private RequisitoEquipoCategoriaProfesionalOutput convert(RequisitoEquipoCategoriaProfesional entity) {
@@ -1150,7 +1152,7 @@ public class ConvocatoriaController {
 
   private List<RequisitoEquipoNivelAcademicoOutput> convertRequisitosEquipoNivelesAcademicos(
       List<RequisitoEquipoNivelAcademico> entities) {
-    return entities.stream().map(entity -> convert(entity)).collect(Collectors.toList());
+    return entities.stream().map(this::convert).collect(Collectors.toList());
   }
 
   private RequisitoIPNivelAcademicoOutput convert(RequisitoIPNivelAcademico entity) {
@@ -1159,12 +1161,12 @@ public class ConvocatoriaController {
 
   private List<RequisitoIPNivelAcademicoOutput> convertRequisitoIPNivelesAcademicos(
       List<RequisitoIPNivelAcademico> entities) {
-    return entities.stream().map(entity -> convert(entity)).collect(Collectors.toList());
+    return entities.stream().map(this::convert).collect(Collectors.toList());
   }
 
   private List<RequisitoIPCategoriaProfesionalOutput> convertRequisitoIPCategoriasProfesionales(
       List<RequisitoIPCategoriaProfesional> entities) {
-    return entities.stream().map(entity -> convertCategoriaProfesional(entity)).collect(Collectors.toList());
+    return entities.stream().map(this::convertCategoriaProfesional).collect(Collectors.toList());
   }
 
   private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
@@ -1221,9 +1223,32 @@ public class ConvocatoriaController {
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
+  /**
+   * Devuelve el {@link FormularioSolicitud} de la {@link Convocatoria}
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return {@link FormularioSolicitud} correspondiente a la
+   *         {@link Convocatoria}.
+   */
+  @GetMapping("/{id}/formulariosolicitud")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V','CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<FormularioSolicitud> findFormularioSolicitudByConvocatoriaId(@PathVariable Long id) {
+    log.debug("findFormularioSolicitudByConvocatoriaId(Long id) - start");
+
+    FormularioSolicitud returnValue = service.findFormularioSolicitudById(id);
+
+    if (Objects.isNull(returnValue)) {
+      log.debug("findFormularioSolicitudByConvocatoriaId(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findFormularioSolicitudByConvocatoriaId(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   private Page<ConvocatoriaPalabraClaveOutput> convertConvocatoriaPalabraClave(Page<ConvocatoriaPalabraClave> page) {
     List<ConvocatoriaPalabraClaveOutput> content = page.getContent().stream()
-        .map((convocatoriaPalabraClave) -> convert(convocatoriaPalabraClave))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -1231,7 +1256,7 @@ public class ConvocatoriaController {
 
   private List<ConvocatoriaPalabraClaveOutput> convertConvocatoriaPalabraClave(List<ConvocatoriaPalabraClave> list) {
     return list.stream()
-        .map((element) -> convert(element))
+        .map(this::convert)
         .collect(Collectors.toList());
   }
 
@@ -1241,7 +1266,7 @@ public class ConvocatoriaController {
 
   private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(Long convocatoriaId,
       List<ConvocatoriaPalabraClaveInput> inputs) {
-    return inputs.stream().map((input) -> convert(convocatoriaId, input)).collect(Collectors.toList());
+    return inputs.stream().map(input -> convert(convocatoriaId, input)).collect(Collectors.toList());
   }
 
   private ConvocatoriaPalabraClave convert(Long convocatoriaId, ConvocatoriaPalabraClaveInput input) {

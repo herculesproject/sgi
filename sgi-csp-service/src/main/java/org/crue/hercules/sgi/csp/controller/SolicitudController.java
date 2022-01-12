@@ -5,15 +5,24 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
+import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
+import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipoNivelAcademico;
+import org.crue.hercules.sgi.csp.model.RequisitoIP;
+import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
+import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
@@ -28,8 +37,13 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
+import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
@@ -124,6 +138,21 @@ public class SolicitudController {
   /** SolicitudPalabraClaveService */
   private final SolicitudPalabraClaveService solicitudPalabraClaveService;
 
+  /** ConvocatoriaService */
+  private final ConvocatoriaService convocatoriaService;
+
+  /** ConvocatoriaEntidadConvocante service */
+  private final ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
+  /** RequisitoIPCategoriaProfesionalService */
+  private final RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService;
+
+  /** RequisitoEquipoNivelAcademicoService */
+  private final RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService;
+
+  /** RequisitoIPNivelAcademicoService */
+  private final RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -144,6 +173,11 @@ public class SolicitudController {
    * @param solicitudProyectoEntidadService                  {@link SolicitudProyectoEntidadService}.
    * @param proyectoService                                  {@link ProyectoService}.
    * @param solicitudPalabraClaveService                     {@link SolicitudPalabraClaveService}.
+   * @param convocatoriaService                              {@link ConvocatoriaService}.
+   * @param convocatoriaEntidadConvocanteService             {@link ConvocatoriaEntidadConvocanteService}.
+   * @param requisitoIPCategoriaProfesionalService           {@link RequisitoIPCategoriaProfesionalService}.
+   * @param requisitoIPNivelAcademicoService                 {@link RequisitoIPNivelAcademicoService}.
+   * @param requisitoEquipoNivelAcademicoService             {@link RequisitoEquipoNivelAcademicoService}.
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -156,7 +190,12 @@ public class SolicitudController {
       SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService,
       SolicitudProyectoResponsableEconomicoService solicitudProyectoResponsableEconomicoService,
       SolicitudProyectoEntidadService solicitudProyectoEntidadService, ProyectoService proyectoService,
-      SolicitudPalabraClaveService solicitudPalabraClaveService) {
+      SolicitudPalabraClaveService solicitudPalabraClaveService,
+      ConvocatoriaService convocatoriaService,
+      ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
+      RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService,
+      RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
+      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -174,6 +213,11 @@ public class SolicitudController {
     this.solicitudProyectoEntidadService = solicitudProyectoEntidadService;
     this.proyectoService = proyectoService;
     this.solicitudPalabraClaveService = solicitudPalabraClaveService;
+    this.convocatoriaService = convocatoriaService;
+    this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
+    this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
+    this.requisitoIPNivelAcademicoService = requisitoIPNivelAcademicoService;
+    this.requisitoEquipoNivelAcademicoService = requisitoEquipoNivelAcademicoService;
   }
 
   /**
@@ -857,7 +901,7 @@ public class SolicitudController {
 
   private Page<SolicitudProyectoResponsableEconomicoOutput> convert(Page<SolicitudProyectoResponsableEconomico> page) {
     List<SolicitudProyectoResponsableEconomicoOutput> content = page.getContent().stream()
-        .map(responsableEconomico -> convert(responsableEconomico)).collect(Collectors.toList());
+        .map(this::convert).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
@@ -1013,9 +1057,117 @@ public class SolicitudController {
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
+  /**
+   * Devuelve la {@link Convocatoria} asociada a la {@link Solicitud} con el id
+   * indicado si el usuario que realiza la peticion es el solicitante de la
+   * {@link Solicitud}.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Convocatoria} correspondiente a la {@link Solicitud}.
+   */
+  @GetMapping("/{id}/convocatoria")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public ResponseEntity<Convocatoria> findConvocatoriaBySolicitudId(@PathVariable Long id) {
+    log.debug("findConvocatoriaBySolicitudId(Long id) - start");
+
+    Convocatoria returnValue = convocatoriaService.findBySolicitudIdAndUserIsSolicitante(id);
+
+    if (returnValue == null) {
+      log.debug("findConvocatoriaBySolicitudId(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findConvocatoriaBySolicitudId(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene las {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}
+   * para una {@link Solicitud} si el usuario que realiza la peticion es el
+   * solicitante de la {@link Solicitud}.
+   *
+   * @param id     el id de la {@link Solicitud}.
+   * @param paging la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaEntidadConvocante} de la
+   *         {@link Convocatoria} paginadas.
+   */
+  @GetMapping("/{id}/convocatoriaentidadconvocantes")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, Pageable paging) - start");
+    Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService
+        .findAllBySolicitudAndUserIsSolicitante(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los {@link RequisitoIPCategoriaProfesionalOutput} asociados a la
+   * {@link Convocatoria} con el id indicado si el usuario que realiza la peticion
+   * es el solicitante de la {@link Solicitud}.
+   * 
+   * @param id Identificador de {@link Solicitud}
+   * @return el {@link RequisitoIPCategoriaProfesionalOutput} correspondiente al
+   *         id
+   */
+  @GetMapping("/{id}/categoriasprofesionalesrequisitosip")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public List<RequisitoIPCategoriaProfesionalOutput> findRequisitosIpCategoriasProfesionales(@PathVariable Long id) {
+    log.debug("findRequisitosIpCategoriasProfesionales(@PathVariable Long id) - start");
+    List<RequisitoIPCategoriaProfesionalOutput> returnValue = convertRequisitoIPCategoriasProfesionales(
+        requisitoIPCategoriaProfesionalService.findBySolicitudAndUserIsSolicitante(id));
+    log.debug("findRequisitosIpCategoriasProfesionales(@PathVariable Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve los {@link RequisitoIPNivelAcademicoOutput} asociados al
+   * {@link RequisitoIP} con el id indicado si el usuario que realiza la peticion
+   * es el solicitante de la {@link Solicitud}.
+   * 
+   * @param id Identificador de la {@link Solicitud}
+   * @return los {@link RequisitoIPNivelAcademicoOutput} correspondiente a la
+   *         {@link Solicitud}
+   */
+  @GetMapping("/{id}/nivelesrequisitosip")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public List<RequisitoIPNivelAcademicoOutput> findRequisitoIPNivelesAcademicos(@PathVariable Long id) {
+    log.debug("findRequisitoIPNivelesAcademicos(Long id) - start");
+    List<RequisitoIPNivelAcademicoOutput> returnValue = convertRequisitoIPNivelesAcademicos(
+        requisitoIPNivelAcademicoService.findBySolicitudAndUserIsSolicitante(id));
+    log.debug("findRequisitoIPNivelesAcademicos(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve los {@link RequisitoEquipoNivelAcademicoOutput} asociados al
+   * {@link RequisitoIP} con el id indicado si el usuario que realiza la peticion
+   * es el solicitante de la {@link Solicitud}.
+   * 
+   * @param id Identificador de la {@link Solicitud}
+   * @return los {@link RequisitoEquipoNivelAcademicoOutput} correspondiente a la
+   *         {@link Solicitud}
+   */
+  @GetMapping("/{id}/nivelesrequisitosequipo")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public List<RequisitoEquipoNivelAcademicoOutput> findRequisitoEquipoNivelesAcademicos(@PathVariable Long id) {
+    log.debug("findRequisitoEquipoNivelesAcademicos(Long id) - start");
+    List<RequisitoEquipoNivelAcademicoOutput> returnValue = convertRequisitosEquipoNivelesAcademicos(
+        requisitoEquipoNivelAcademicoService.findBySolicitudAndUserIsSolicitante(id));
+    log.debug("findRequisitoEquipoNivelesAcademicos(Long id) - end");
+    return returnValue;
+  }
+
   private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {
     List<SolicitudPalabraClaveOutput> content = page.getContent().stream()
-        .map((solicitudPalabraClave) -> convert(solicitudPalabraClave))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -1023,7 +1175,7 @@ public class SolicitudController {
 
   private List<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(List<SolicitudPalabraClave> list) {
     return list.stream()
-        .map((element) -> convert(element))
+        .map(this::convert)
         .collect(Collectors.toList());
   }
 
@@ -1033,7 +1185,7 @@ public class SolicitudController {
 
   private List<SolicitudPalabraClave> convertSolicitudPalabraClaveInputs(Long solicitudId,
       List<SolicitudPalabraClaveInput> inputs) {
-    return inputs.stream().map((input) -> convert(solicitudId, input)).collect(Collectors.toList());
+    return inputs.stream().map(input -> convert(solicitudId, input)).collect(Collectors.toList());
   }
 
   private SolicitudPalabraClave convert(Long solicitudId, SolicitudPalabraClaveInput input) {
@@ -1041,4 +1193,32 @@ public class SolicitudController {
     entity.setSolicitudId(solicitudId);
     return entity;
   }
+
+  private List<RequisitoIPCategoriaProfesionalOutput> convertRequisitoIPCategoriasProfesionales(
+      List<RequisitoIPCategoriaProfesional> entities) {
+    return entities.stream().map(this::convertCategoriaProfesional).collect(Collectors.toList());
+  }
+
+  private RequisitoEquipoNivelAcademicoOutput convert(RequisitoEquipoNivelAcademico entity) {
+    return modelMapper.map(entity, RequisitoEquipoNivelAcademicoOutput.class);
+  }
+
+  private List<RequisitoEquipoNivelAcademicoOutput> convertRequisitosEquipoNivelesAcademicos(
+      List<RequisitoEquipoNivelAcademico> entities) {
+    return entities.stream().map(this::convert).collect(Collectors.toList());
+  }
+
+  private RequisitoIPCategoriaProfesionalOutput convertCategoriaProfesional(RequisitoIPCategoriaProfesional entity) {
+    return modelMapper.map(entity, RequisitoIPCategoriaProfesionalOutput.class);
+  }
+
+  private RequisitoIPNivelAcademicoOutput convert(RequisitoIPNivelAcademico entity) {
+    return modelMapper.map(entity, RequisitoIPNivelAcademicoOutput.class);
+  }
+
+  private List<RequisitoIPNivelAcademicoOutput> convertRequisitoIPNivelesAcademicos(
+      List<RequisitoIPNivelAcademico> entities) {
+    return entities.stream().map(this::convert).collect(Collectors.toList());
+  }
+
 }
