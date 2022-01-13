@@ -95,7 +95,7 @@ public class AutorizacionService {
       data.setDatosResponsable(autorizacionActualizar.getDatosResponsable());
       data.setDatosEntidad(autorizacionActualizar.getDatosEntidad());
       data.setDatosConvocatoria(autorizacionActualizar.getDatosConvocatoria());
-      data.setConvocaoriaId(autorizacionActualizar.getConvocaoriaId());
+      data.setConvocatoriaId(autorizacionActualizar.getConvocatoriaId());
 
       Autorizacion returnValue = repository.save(data);
 

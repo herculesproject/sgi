@@ -92,7 +92,7 @@ public class Autorizacion extends BaseEntity {
 
   /** Convocatoria */
   @Column(name = "convocatoria_id", nullable = true)
-  private Long convocaoriaId;
+  private Long convocatoriaId;
 
   /** Estado Autorizacion */
   @Column(name = "estado_id", nullable = true)
@@ -109,5 +109,5 @@ public class Autorizacion extends BaseEntity {
   @JoinColumn(name = "estado_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_AUTORIZACIONESTADO_AUTORIZACION"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  private static final EstadoAutorizacion estado = null;
+  private final EstadoAutorizacion estado = null;
 }

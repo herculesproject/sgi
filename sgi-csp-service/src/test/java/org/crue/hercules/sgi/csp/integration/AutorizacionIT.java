@@ -45,7 +45,8 @@ class AutorizacionIT extends BaseIT {
   private static final String PATH_PRESENTAR = "/presentar";
   private static final String PATH_PRESENTABLE = "/presentable";
 
-  private HttpEntity<Autorizacion> buildRequest(HttpHeaders headers, Autorizacion entity, String... roles) throws Exception {
+  private HttpEntity<Autorizacion> buildRequest(HttpHeaders headers, Autorizacion entity, String... roles)
+      throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -57,7 +58,7 @@ class AutorizacionIT extends BaseIT {
 
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -79,8 +80,8 @@ class AutorizacionIT extends BaseIT {
 
     Autorizacion created = response.getBody();
     Assertions.assertThat(created.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(created.getConvocaoriaId()).as("getConvocaoriaId()")
-    .isEqualTo(toCreate.getConvocaoriaId());
+    Assertions.assertThat(created.getConvocatoriaId()).as("getConvocaoriaId()")
+        .isEqualTo(toCreate.getConvocatoriaId());
     Assertions.assertThat(created.getObservaciones()).as("getObservaciones()")
         .isEqualTo(toCreate.getObservaciones());
     Assertions.assertThat(created.getDatosConvocatoria()).as("getDatosConvocatoria()")
@@ -101,7 +102,7 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toCreate.getTituloProyecto());
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -127,8 +128,8 @@ class AutorizacionIT extends BaseIT {
     Autorizacion updated = response.getBody();
 
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(toUpdate.getId());
-    Assertions.assertThat(updated.getConvocaoriaId()).as("getConvocaoriaId()")
-    .isEqualTo(toUpdate.getConvocaoriaId());
+    Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocaoriaId()")
+        .isEqualTo(toUpdate.getConvocatoriaId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
         .isEqualTo(toUpdate.getObservaciones());
     Assertions.assertThat(updated.getDatosConvocatoria()).as("getDatosConvocatoria()")
@@ -150,7 +151,7 @@ class AutorizacionIT extends BaseIT {
 
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -176,7 +177,7 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(autorizacion.getId()).as("getId()").isEqualTo(idAutorizacion);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -193,7 +194,8 @@ class AutorizacionIT extends BaseIT {
     String roles = "CSP-AUT-INV-C";
     Long idAutorizacion = 1L;
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTAR,
+    final ResponseEntity<Autorizacion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTAR,
         HttpMethod.PATCH, buildRequest(null, null, roles), Autorizacion.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -201,14 +203,15 @@ class AutorizacionIT extends BaseIT {
     Autorizacion autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion.getId()).as("getId()").isEqualTo(idAutorizacion);
-    
-    EstadoAutorizacion estadoAutorizacion = this.estadoAutorizacionRepository.findById(autorizacion.getEstadoId()).orElse(null);
+
+    EstadoAutorizacion estadoAutorizacion = this.estadoAutorizacionRepository.findById(autorizacion.getEstadoId())
+        .orElse(null);
 
     Assertions.assertThat(estadoAutorizacion).isNotNull();
     Assertions.assertThat(estadoAutorizacion.getEstado()).isEqualTo(EstadoAutorizacion.Estado.PRESENTADA);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -225,13 +228,14 @@ class AutorizacionIT extends BaseIT {
     String roles = "CSP-AUT-INV-C";
     Long idAutorizacion = 2L;
 
-    final ResponseEntity<Void> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTABLE,
+    final ResponseEntity<Void> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTABLE,
         HttpMethod.HEAD, buildRequest(null, null, roles), Void.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -244,7 +248,7 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void findAll_WithPagingSortingAndFiltering_ReturnsAutorizacionSubList() throws Exception {
-    String[] roles = {"CSP-AUT-E","CSP-AUT-B","CSP-AUT-INV-C", "CSP-AUT-INV-ER", "CSP-AUT-INV-BR"};
+    String[] roles = { "CSP-AUT-E", "CSP-AUT-B", "CSP-AUT-INV-C", "CSP-AUT-INV-ER", "CSP-AUT-INV-BR" };
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -273,7 +277,7 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()").isEqualTo(3);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -297,18 +301,18 @@ class AutorizacionIT extends BaseIT {
 
   private Autorizacion buildMockAutorizacion(Long id) {
     return Autorizacion.builder()
-    .convocaoriaId(DEFAULT_CONVOCATORIA_ID)
-    .datosConvocatoria(DEFAULT_DATOS_CONVOCATORIA)
-    .datosEntidad(DEFAULT_DATOS_ENTIDAD)
-    .datosResponsable(DEFAULT_DATOS_RESPONSABLES)
-    .entidadRef(DEFAULT_ENTIDAD_REF)
-    .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
-    .id(id)
-    .observaciones(DEFAULT_OBSERVACIONES)
-    .responsableRef(DEFAULT_RESPONSABLE_REF)
-    .solicitanteRef(DEFAULT_SOLICITUD_REF)
-    .tituloProyecto(DEFAULT_TITULO_PROYECTO)
-    .build();
+        .convocatoriaId(DEFAULT_CONVOCATORIA_ID)
+        .datosConvocatoria(DEFAULT_DATOS_CONVOCATORIA)
+        .datosEntidad(DEFAULT_DATOS_ENTIDAD)
+        .datosResponsable(DEFAULT_DATOS_RESPONSABLES)
+        .entidadRef(DEFAULT_ENTIDAD_REF)
+        .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
+        .id(id)
+        .observaciones(DEFAULT_OBSERVACIONES)
+        .responsableRef(DEFAULT_RESPONSABLE_REF)
+        .solicitanteRef(DEFAULT_SOLICITUD_REF)
+        .tituloProyecto(DEFAULT_TITULO_PROYECTO)
+        .build();
   }
 
 }

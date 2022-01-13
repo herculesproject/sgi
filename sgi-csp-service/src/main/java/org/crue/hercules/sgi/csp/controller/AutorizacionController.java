@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.AutorizacionService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
@@ -73,7 +74,7 @@ public class AutorizacionController {
    * @return Proyecto {@link Autorizacion} actualizado
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-ER')")
   public Autorizacion update(@Valid @RequestBody Autorizacion autorizacion, @PathVariable Long id) {
     log.debug("update(Autorizacion autorizacion, Long id) - start");
 
@@ -95,6 +96,17 @@ public class AutorizacionController {
     log.debug("Autorizacion findById(Long id) - start");
     Autorizacion returnValue = service.findById(id);
     log.debug("Autorizacion findById(Long id) - end");
+    return returnValue;
+  }
+
+  @PatchMapping("/{id}/cambiar-estado")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
+  public Autorizacion cambiarEstado(@PathVariable Long id, @RequestBody EstadoAutorizacion estadoAutorizacion) {
+    log.debug("cambiarEstado(Long id) - start");
+
+    Autorizacion returnValue = service.cambiarEstado(id, estadoAutorizacion);
+
+    log.debug("cambiarEstado(Long id) - end");
     return returnValue;
   }
 
