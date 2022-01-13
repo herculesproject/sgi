@@ -15,13 +15,15 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
 import { AutorizacionActionService } from './autorizacion.action.service';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { AutorizacionEditarComponent } from './autorizacion-editar/autorizacion-editar.component';
+import { CambioEstadoModalComponent } from './cambio-estado-modal/cambio-estado-modal.component';
 
 @NgModule({
   declarations: [
     AutorizacionListadoComponent,
     AutorizacionCrearComponent,
     AutorizacionDatosGeneralesComponent,
-    AutorizacionEditarComponent],
+    AutorizacionEditarComponent,
+    CambioEstadoModalComponent],
   imports: [
     CommonModule,
     SharedModule,

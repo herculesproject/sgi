@@ -1,12 +1,13 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
-import { Estado, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
+import { Estado } from '@core/models/csp/estado-autorizacion';
 import { FormFragment } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -17,6 +18,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
 
   public investigadorRequired: boolean;
   public entidadRequired: boolean;
+  public isInvestigador: boolean;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -25,17 +27,19 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     private personaService: PersonaService,
     private empresaService: EmpresaService,
     private estadoAutorizacionService: EstadoAutorizacionService,
+    public authService: SgiAuthService,
     private convocatoriaService: ConvocatoriaService
   ) {
     super(key, true);
     this.setComplete(true);
     this.autorizacion = {} as IAutorizacion;
+    this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
   }
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({ value: null, disabled: true }, Validators.required),
-      tituloProyecto: new FormControl(null, [Validators.maxLength(50), Validators.required]),
+      tituloProyecto: new FormControl(null, [Validators.maxLength(250), Validators.required]),
       convocatoria: new FormControl(null),
       datosConvocatoria: new FormControl(null, Validators.maxLength(250)),
       entidadParticipa: new FormControl(null, Validators.required),
@@ -150,7 +154,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
             map(estado => {
               autorizacion.estado = estado;
               if (this.isEdit()) {
-                this.disableNotEditableFieldsEstado(this.getFormGroup(), this.autorizacion.estado);
+                this.disableNotEditableFieldsEstado(this.getFormGroup(), this.autorizacion);
               }
               return autorizacion;
             })
@@ -168,7 +172,6 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
 
   getValue(): IAutorizacion {
     const form = this.getFormGroup().controls;
-    this.autorizacion.estado = form.estado.value;
     this.autorizacion.tituloProyecto = form.tituloProyecto.value;
     this.autorizacion.convocatoria = form.convocatoria?.value;
     this.autorizacion.datosConvocatoria = form.datosConvocatoria?.value;
@@ -188,7 +191,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       this.create(autorizacion);
     return observable$.pipe(
       map(value => {
-        this.autorizacion = value;
+        this.autorizacion.id = value.id;
         return this.autorizacion.id;
       })
     );
@@ -207,63 +210,67 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   private setConditionalValidatorsEntidad(form: FormGroup): void {
     const entidadParticipaControl = form.controls.entidadParticipa;
     const datosEntidadControl = form.controls.datosEntidad;
-    if (this.autorizacion?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
-      const entidadParticipa = entidadParticipaControl.value;
-      if (entidadParticipa) {
-        datosEntidadControl.disable({ emitEvent: false });
+    const entidadParticipa = entidadParticipaControl.value;
+    if (entidadParticipa) {
+      datosEntidadControl.disable({ emitEvent: false });
+      if (this.isInvestigador) {
         datosEntidadControl.setValue(null, { emitEvent: false });
-        entidadParticipaControl.setValidators(Validators.required);
-      } else {
-        entidadParticipaControl.clearValidators();
-        datosEntidadControl.enable({ emitEvent: false });
       }
-
-      const datosEntidad = datosEntidadControl.value;
-      if (datosEntidad) {
-        entidadParticipaControl.clearValidators();
-        datosEntidadControl.setValue(datosEntidad, { emitEvent: false });
-      } else {
-        entidadParticipaControl.setValidators(Validators.required);
-      }
-
-      entidadParticipaControl.updateValueAndValidity({ emitEvent: false });
-      datosEntidadControl.updateValueAndValidity({ emitEvent: false });
-      this.entidadRequired = entidadParticipa;
+      entidadParticipaControl.setValidators(Validators.required);
+    } else {
+      entidadParticipaControl.clearValidators();
+      datosEntidadControl.enable({ emitEvent: false });
+      this.disableNotEditableFieldsEstado(form, this.autorizacion);
     }
 
+    const datosEntidad = datosEntidadControl.value;
+    if (datosEntidad) {
+      entidadParticipaControl.clearValidators();
+      datosEntidadControl.setValue(datosEntidad, { emitEvent: false });
+    } else {
+      entidadParticipaControl.setValidators(Validators.required);
+    }
+
+    entidadParticipaControl.updateValueAndValidity({ emitEvent: false });
+    datosEntidadControl.updateValueAndValidity({ emitEvent: false });
+    this.entidadRequired = entidadParticipa;
   }
 
   private setConditionalValidatorsIP(form: FormGroup): void {
     const investigadorPrincipalControl = form.controls.investigadorPrincipalProyecto;
     const datosInvestigadorPrincipalControl = form.controls.datosIpProyecto;
-    if (this.autorizacion?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
-      const investigadorPrincipal = investigadorPrincipalControl.value;
-      if (investigadorPrincipal) {
-        datosInvestigadorPrincipalControl.disable({ emitEvent: false });
+    const investigadorPrincipal = investigadorPrincipalControl.value;
+    if (investigadorPrincipal) {
+      datosInvestigadorPrincipalControl.disable({ emitEvent: false });
+      if (this.isInvestigador) {
         datosInvestigadorPrincipalControl.setValue(null, { emitEvent: false });
-        datosInvestigadorPrincipalControl.setValidators(Validators.required);
-      } else {
-        investigadorPrincipalControl.clearValidators();
-        datosInvestigadorPrincipalControl.enable({ emitEvent: false });
       }
-
-      const datosInvestigadorPrincipal = datosInvestigadorPrincipalControl.value;
-      if (datosInvestigadorPrincipal) {
-        investigadorPrincipalControl.clearValidators();
-        datosInvestigadorPrincipalControl.setValue(datosInvestigadorPrincipal, { emitEvent: false });
-      } else {
-        investigadorPrincipalControl.setValidators(Validators.required);
-      }
-
-      investigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
-      datosInvestigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
-
-      this.investigadorRequired = investigadorPrincipal;
+      datosInvestigadorPrincipalControl.setValidators(Validators.required);
+    } else {
+      investigadorPrincipalControl.clearValidators();
+      datosInvestigadorPrincipalControl.enable({ emitEvent: false });
+      this.disableNotEditableFieldsEstado(form, this.autorizacion);
     }
+
+    const datosInvestigadorPrincipal = datosInvestigadorPrincipalControl.value;
+    if (datosInvestigadorPrincipal) {
+      investigadorPrincipalControl.clearValidators();
+      datosInvestigadorPrincipalControl.setValue(datosInvestigadorPrincipal, { emitEvent: false });
+    } else {
+      investigadorPrincipalControl.setValidators(Validators.required);
+    }
+
+    investigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
+    datosInvestigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
+
+    this.investigadorRequired = investigadorPrincipal;
+
   }
 
-  private disableNotEditableFieldsEstado(formgroup: FormGroup, estadoAutorizacion: IEstadoAutorizacion): void {
-    if (estadoAutorizacion?.estado && estadoAutorizacion?.estado !== Estado.BORRADOR) {
+  private disableNotEditableFieldsEstado(formgroup: FormGroup, autorizacion: IAutorizacion): void {
+    if (autorizacion?.estado?.estado
+      && (autorizacion?.estado?.estado !== Estado.BORRADOR && this.isInvestigador)
+      || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA)) {
       formgroup.controls.tituloProyecto.disable();
       formgroup.controls.convocatoria.disable({ emitEvent: false });
       formgroup.controls.datosConvocatoria.disable({ emitEvent: false });
@@ -283,6 +290,9 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       formgroup.controls.datosIpProyecto.enable({ emitEvent: false });
       formgroup.controls.horasDedicacion.enable();
       formgroup.controls.observaciones.enable();
+    }
+    if (!this.isInvestigador) {
+      formgroup.controls.datosEntidad.disable({ emitEvent: false });
     }
   }
 

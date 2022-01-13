@@ -5,7 +5,7 @@ import { IAutorizacion } from './autorizacion';
 export interface IEstadoAutorizacion {
   id: number;
   autorizacion: IAutorizacion;
-  cometario: string;
+  comentario: string;
   fecha: DateTime;
   estado: Estado;
 }

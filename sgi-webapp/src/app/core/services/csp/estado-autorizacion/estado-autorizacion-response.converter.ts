@@ -15,7 +15,7 @@ class EstadoAutorizacionResponseConverter
       autorizacion: {
         id: value.autorizacionId
       } as IAutorizacion,
-      cometario: value.cometario,
+      comentario: value.comentario,
       fecha: LuxonUtils.fromBackend(value.fecha),
       estado: value.estado
     };
@@ -28,7 +28,7 @@ class EstadoAutorizacionResponseConverter
     return {
       id: value.id,
       autorizacionId: value.autorizacion?.id,
-      cometario: value.cometario,
+      comentario: value.comentario,
       fecha: LuxonUtils.toBackend(value.fecha),
       estado: value.estado
     };

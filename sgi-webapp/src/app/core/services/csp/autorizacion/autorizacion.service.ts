@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEstadoAutorizacionResponse } from '../estado-autorizacion/estado-autorizacion-response';
+import { ESTADO_AUTORIZACION_RESPONSE_CONVERTER } from '../estado-autorizacion/estado-autorizacion-response.converter';
 import { IAutorizacionRequest } from './autorizacion-request';
 import { AUTORIZACION_REQUEST_CONVERTER } from './autorizacion-request.converter';
 import { IAutorizacionResponse } from './autorizacion-response';
@@ -64,6 +67,20 @@ export class AutorizacionService extends _AutorizacionMixinBase {
   presentable(id: number): Observable<boolean> {
     return this.http.head(`${this.endpointUrl}/${id}/presentable`, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Realiza el cambio de estado de estado de una autorizacion.
+   *
+   * @param id identificador de la autorizacion.
+   * @param estadoAutorizacion Nuevo estado de la autorizacion.
+   */
+  cambiarEstado(id: number, estadoAutorizacion: IEstadoAutorizacion): Observable<IEstadoAutorizacion> {
+    return this.http.patch<IEstadoAutorizacionResponse>(`${this.endpointUrl}/${id}/cambiar-estado`,
+      ESTADO_AUTORIZACION_RESPONSE_CONVERTER.fromTarget(estadoAutorizacion)
+    ).pipe(
+      map((response => ESTADO_AUTORIZACION_RESPONSE_CONVERTER.toTarget(response)))
     );
   }
 

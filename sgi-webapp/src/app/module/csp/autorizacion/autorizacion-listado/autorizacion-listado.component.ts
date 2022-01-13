@@ -14,6 +14,7 @@ import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacio
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -86,8 +87,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     this.setupI18N();
 
     this.formGroup = new FormGroup({
-      fechaSolicitudInicio: new FormControl(''),
-      fechaSolicitudFin: new FormControl(''),
+      fechaSolicitudInicio: new FormControl(null),
+      fechaSolicitudFin: new FormControl(null),
       estado: new FormControl(null),
     });
     this.filter = this.createFilter();
@@ -222,9 +223,9 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter(
-      'estado.fecha', SgiRestFilterOperator.GREATHER_OR_EQUAL, controls.fechaSolicitudInicio.value)
-      .and('estado.fecha', SgiRestFilterOperator.LOWER_OR_EQUAL, controls.fechaSolicitudFin.value)
-      .and('estado.estado.id', SgiRestFilterOperator.EQUALS, controls.estado.value);
+      'estado.fecha', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudInicio.value))
+      .and('estado.fecha', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudFin.value))
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
   }
 
   onClearFilters() {

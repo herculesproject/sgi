@@ -9,6 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { Observable, Subscription } from 'rxjs';
 import { AutorizacionActionService } from '../../autorizacion.action.service';
 import { AutorizacionDatosGeneralesFragment } from './autorizacion-datos-generales.fragment';
@@ -62,6 +63,7 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
     protected actionService: AutorizacionActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
+    public authService: SgiAuthService,
     private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
@@ -95,6 +97,7 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
 
   }
 
