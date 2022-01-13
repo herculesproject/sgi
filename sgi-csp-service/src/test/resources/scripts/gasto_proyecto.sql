@@ -5,8 +5,7 @@
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
       "classpath:scripts/proyecto.sql",
-      "classpath:scripts/concepto_gasto.sql",
-      "classpath:scripts/estado_gasto_proyecto.sql"
+      "classpath:scripts/concepto_gasto.sql"
        }
   */
 

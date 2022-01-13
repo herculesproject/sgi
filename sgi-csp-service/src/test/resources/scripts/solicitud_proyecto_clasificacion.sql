@@ -21,3 +21,5 @@ VALUES
 (3, '0003', 1),
 (4, '0004', 1),
 (5, '0005', 1);
+
+ALTER SEQUENCE test.solicitud_proyecto_clasificacion_seq RESTART WITH 6;

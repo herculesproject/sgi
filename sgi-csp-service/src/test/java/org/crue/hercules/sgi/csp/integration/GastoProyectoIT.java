@@ -53,7 +53,7 @@ class GastoProyectoIT extends BaseIT {
       "classpath:scripts/concepto_gasto.sql",
       "classpath:scripts/gasto_proyecto.sql",
       "classpath:scripts/estado_gasto_proyecto.sql",
-      "classpath:scripts/update_gasto_proyecto.sql"
+      "classpath:scripts/gasto_proyecto_update_estado.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -132,7 +132,7 @@ class GastoProyectoIT extends BaseIT {
       "classpath:scripts/concepto_gasto.sql",
       "classpath:scripts/gasto_proyecto.sql",
       "classpath:scripts/estado_gasto_proyecto.sql",
-      "classpath:scripts/update_gasto_proyecto.sql"
+      "classpath:scripts/gasto_proyecto_update_estado.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -176,7 +176,7 @@ class GastoProyectoIT extends BaseIT {
       "classpath:scripts/concepto_gasto.sql",
       "classpath:scripts/gasto_proyecto.sql",
       "classpath:scripts/estado_gasto_proyecto.sql",
-      "classpath:scripts/update_gasto_proyecto.sql"
+      "classpath:scripts/gasto_proyecto_update_estado.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")

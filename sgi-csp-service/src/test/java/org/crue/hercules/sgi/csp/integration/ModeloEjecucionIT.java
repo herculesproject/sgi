@@ -28,7 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ModeloEjecucion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ModeloEjecucionIT extends BaseIT {
+class ModeloEjecucionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -255,6 +255,27 @@ public class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloTipoEnlaces.get(2).getTipoEnlace().getNombre())
         .as("get(2).getTipoEnlace().getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
+  
+  @Test
+  void findAllModeloTipoEnlaces_WithPagingSortingAndFiltering_ReturnsStatusCode204() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "tipoEnlace.nombre,desc";
+    String filter = "tipoEnlace.descripcion=ke=00";
+
+    Long idModeloEjecucion = 5L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipoenlaces")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+
+    final ResponseEntity<List<ModeloTipoEnlace>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoEnlace>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
 
   /**
    * 
@@ -297,6 +318,27 @@ public class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
+  
+  @Test
+  void findAllModeloTipoFases_WithPagingSortingAndFiltering_ReturnsStatusCode204() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
+
+    Long idModeloEjecucion = 5L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+
+    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -334,6 +376,28 @@ public class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
+  
+  @Test
+  void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsStatusCode204()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
+
+    Long idModeloEjecucion = 5L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/convocatoria")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+
+    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -370,6 +434,28 @@ public class ModeloEjecucionIT extends BaseIT {
         .isEqualTo("nombre-" + String.format("%03d", 2));
     Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+  
+  @Test
+  void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsStatusCode204()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
+
+    Long idModeloEjecucion = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/proyecto")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+
+    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -651,6 +737,27 @@ public class ModeloEjecucionIT extends BaseIT {
         .isEqualTo("unidad-" + String.format("%03d", 2));
     Assertions.assertThat(unidadesModelo.get(2).getUnidadGestionRef()).as("get(2).getUnidadGestion())")
         .isEqualTo("unidad-" + String.format("%03d", 1));
+  }
+ 
+  @Test
+  void findAllModeloUnidades_WithPagingSortingAndFiltering_ReturnsStatusCode204() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "unidadGestionRef,desc";
+    String filter = "unidadGestionRef=ke=00";
+
+    Long idModeloEjecucion = 5L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelounidades")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+
+    final ResponseEntity<List<ModeloUnidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloUnidad>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   /**

@@ -128,18 +128,18 @@ class ConfiguracionSolicitudIT extends BaseIT {
         .isEqualTo(new BigDecimal("54321.00"));
 
   }
-
+  
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findByIdConvocatoria_ReturnsNotFoundStatusCode() throws Exception {
-    Long convocatoriaId = 22L;
+  void findByIdConvocatoria_ReturnsStatusCode204() throws Exception {
+    Long convocatoriaId = 2L;
 
     final ResponseEntity<ConfiguracionSolicitud> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         ConfiguracionSolicitud.class, convocatoriaId);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
   }
 
@@ -182,6 +182,29 @@ class ConfiguracionSolicitudIT extends BaseIT {
         .isEqualTo("observaciones-" + String.format("%03d", 7));
     Assertions.assertThat(documentos.get(2).getObservaciones()).as("get(2).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 6));
+
+  }
+  
+  @Test
+  void findAllDocumentoRequeridoSolicitud_WithPagingSortingAndFiltering_ReturnsStatusCode204()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
+
+    Long convocatoriaId = 2L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DOCUMENTOS)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<DocumentoRequeridoSolicitud>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentoRequeridoSolicitud>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
   }
 

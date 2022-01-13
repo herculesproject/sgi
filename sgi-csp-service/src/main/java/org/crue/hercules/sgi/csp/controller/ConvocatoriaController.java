@@ -1218,7 +1218,7 @@ public class ConvocatoriaController {
 
     List<ConvocatoriaPalabraClaveOutput> returnValue = convertConvocatoriaPalabraClave(
         convocatoriaPalabraClaveService.updatePalabrasClave(convocatoriaId,
-            convertConvocatoriaPalabraClaveInputs(convocatoriaId, palabrasClave)));
+            convertConvocatoriaPalabraClaveInputs(palabrasClave)));
     log.debug("updatePalabrasClave(Long convocatoriaId, List<ConvocatoriaPalabraClave> palabrasClave) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
@@ -1264,14 +1264,14 @@ public class ConvocatoriaController {
     return modelMapper.map(convocatoriaPalabraClave, ConvocatoriaPalabraClaveOutput.class);
   }
 
-  private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(Long convocatoriaId,
-      List<ConvocatoriaPalabraClaveInput> inputs) {
-    return inputs.stream().map(input -> convert(convocatoriaId, input)).collect(Collectors.toList());
+
+  private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(List<ConvocatoriaPalabraClaveInput> inputs) {
+    return inputs.stream().map(input -> convert(null, input)).collect(Collectors.toList());
   }
 
-  private ConvocatoriaPalabraClave convert(Long convocatoriaId, ConvocatoriaPalabraClaveInput input) {
+  private ConvocatoriaPalabraClave convert(Long id, ConvocatoriaPalabraClaveInput input) {
     ConvocatoriaPalabraClave entity = modelMapper.map(input, ConvocatoriaPalabraClave.class);
-    entity.setConvocatoriaId(convocatoriaId);
+    entity.setId(id);
     return entity;
   }
 }

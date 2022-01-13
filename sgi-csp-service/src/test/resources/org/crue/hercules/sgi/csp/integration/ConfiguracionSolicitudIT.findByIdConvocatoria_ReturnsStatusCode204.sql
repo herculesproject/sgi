@@ -36,6 +36,4 @@ INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inic
 INSERT INTO test.configuracion_solicitud 
 (id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
 VALUES(1, 1, TRUE, 1, 12345);
-INSERT INTO test.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
-VALUES(2, 2, FALSE, 2, 54321);
+

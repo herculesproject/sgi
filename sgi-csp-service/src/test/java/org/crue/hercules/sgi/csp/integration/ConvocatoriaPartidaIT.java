@@ -22,6 +22,7 @@ class ConvocatoriaPartidaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/convocatoria-partidas";
+  private static final String PATH_MODIFICABLE = "/modificable";
 
   private HttpEntity<ConvocatoriaPartida> buildRequest(HttpHeaders headers,
       ConvocatoriaPartida entity, String... roles) throws Exception {
@@ -151,6 +152,28 @@ class ConvocatoriaPartidaIT extends BaseIT {
         HttpMethod.DELETE, buildRequest(null, null, "CSP-CON-E"), Void.class, toDeleteId);
     // then: 204 NO CONTENT
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off  
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/convocatoria_partida.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void modificable_ReturnsStatusCode200() throws Exception {
+    // given: existing id
+    Long modificableId = 2L;
+    // when: exists by id
+    final ResponseEntity<Void> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_MODIFICABLE,
+        HttpMethod.HEAD, buildRequest(null, null, "CSP-CON-E"), Void.class, modificableId);
+    // then: 200 ok
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
   private ConvocatoriaPartida buildMockConvocatoriaPartida(Long convocatoriaPartidaId) throws Exception {

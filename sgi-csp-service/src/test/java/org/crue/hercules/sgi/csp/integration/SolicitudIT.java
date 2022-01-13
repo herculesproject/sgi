@@ -2,10 +2,13 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
@@ -75,6 +78,7 @@ public class SolicitudIT extends BaseIT {
   private static final String PATH_SOLICITUD_PROYECTO_ENTIDAD = "/solicitudproyectoentidad";
   private static final String PATH_TIPO_PRESUPUESTO_POR_ENTIDAD = "/tipopresupuestoporentidad";
   private static final String PATH_PROYECTOS_IDS = "/proyectosids";
+  private static final String PATH_PALABRAS_CLAVE = "/palabrasclave";
 
   private static final String[] DEFAULT_ROLES = {"AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-R"};
 
@@ -83,7 +87,7 @@ public class SolicitudIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", roles)));
+        tokenBuilder.buildToken("usr-002", roles)));
 
     HttpEntity<Object> request = new HttpEntity<>(entity, headers);
     return request;
@@ -986,8 +990,7 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/solicitud.sql",
-    "classpath:scripts/update_solicitud.sql"
+    "classpath:scripts/solicitud.sql"
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -1472,6 +1475,99 @@ public class SolicitudIT extends BaseIT {
     // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_palabra_clave.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findPalabrasClave_WithPagingSortingAndFiltering_ReturnsSolicitudPalabraClaveOutputSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id,desc";
+    String filter = "";
+
+    Long solicitudId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PALABRAS_CLAVE)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<SolicitudPalabraClaveOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, "CSP-SOL-E"), new ParameterizedTypeReference<List<SolicitudPalabraClaveOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<SolicitudPalabraClaveOutput> palabrasClave = response.getBody();
+    Assertions.assertThat(palabrasClave.size()).isEqualTo(3);
+    
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_palabra_clave.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updatePalabrasClave_ReturnsSolicitudPalabraClaveOutputList() throws Exception {
+    Long solicitudId = 1L;
+    List<SolicitudPalabraClaveInput> toUpdate = Arrays.asList(
+        buildMockSolicitudPalabraClaveInput(solicitudId, "palabra-ref-uptd-1"),
+        buildMockSolicitudPalabraClaveInput(solicitudId, "palabra-ref-uptd-2"),
+        buildMockSolicitudPalabraClaveInput(solicitudId, "palabra-ref-uptd-3"));
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PALABRAS_CLAVE)
+        .buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<SolicitudPalabraClaveOutput>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequest(null, toUpdate, "CSP-SOL-E"), new ParameterizedTypeReference<List<SolicitudPalabraClaveOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    
+    List<SolicitudPalabraClaveOutput> updated = response.getBody();
+    Assertions.assertThat(updated.size()).isEqualTo(3);
+
+    Assertions.assertThat(updated.get(0)).isNotNull();
+    Assertions.assertThat(updated.get(1)).isNotNull();
+    Assertions.assertThat(updated.get(2)).isNotNull();
+
+    Assertions.assertThat(updated.get(0).getPalabraClaveRef()).isEqualTo("palabra-ref-uptd-1");
+    Assertions.assertThat(updated.get(1).getPalabraClaveRef()).isEqualTo("palabra-ref-uptd-2");
+    Assertions.assertThat(updated.get(2).getPalabraClaveRef()).isEqualTo("palabra-ref-uptd-3");
+  }
+
+  private SolicitudPalabraClaveInput buildMockSolicitudPalabraClaveInput(Long solicitudId, String palabraRef) {
+    return SolicitudPalabraClaveInput.builder()
+    .solicitudId(solicitudId)
+    .palabraClaveRef(palabraRef)
+    .build();
   }
 
   /**

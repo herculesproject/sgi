@@ -1,6 +1,6 @@
--- DEPENDENCIAS: estado_solicitud, convocatoria
-/*
-  scripts = { 
+
+-- DEPENDENCIAS:
+  /* scripts = { 
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -12,4 +12,10 @@
     // @formatter:on
   }
 */
-UPDATE test.solicitud SET solicitante_ref = 'user';
+
+INSERT INTO test.solicitud_palabra_clave
+(id, palabra_clave_ref, solicitud_id)
+VALUES
+(1, 'palabra-ref-001', 1),
+(2, 'palabra-ref-002', 1),
+(3, 'palabra-ref-003', 1);

@@ -1052,7 +1052,7 @@ public class SolicitudController {
 
     List<SolicitudPalabraClaveOutput> returnValue = convertSolicitudPalabraClave(
         solicitudPalabraClaveService.updatePalabrasClave(solicitudId,
-            convertSolicitudPalabraClaveInputs(solicitudId, palabrasClave)));
+            convertSolicitudPalabraClaveInputs(palabrasClave)));
     log.debug("updatePalabrasClave(Long solicitudId, List<SolicitudPalabraClaveInput> palabrasClave) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
@@ -1183,14 +1183,15 @@ public class SolicitudController {
     return modelMapper.map(solicitudPalabraClave, SolicitudPalabraClaveOutput.class);
   }
 
-  private List<SolicitudPalabraClave> convertSolicitudPalabraClaveInputs(Long solicitudId,
+  private List<SolicitudPalabraClave> convertSolicitudPalabraClaveInputs(
       List<SolicitudPalabraClaveInput> inputs) {
-    return inputs.stream().map(input -> convert(solicitudId, input)).collect(Collectors.toList());
+    
+        return inputs.stream().map(input -> convert(null, input)).collect(Collectors.toList());
   }
 
-  private SolicitudPalabraClave convert(Long solicitudId, SolicitudPalabraClaveInput input) {
+  private SolicitudPalabraClave convert(Long id, SolicitudPalabraClaveInput input) {
     SolicitudPalabraClave entity = modelMapper.map(input, SolicitudPalabraClave.class);
-    entity.setSolicitudId(solicitudId);
+    entity.setId(id);
     return entity;
   }
 

@@ -46,7 +46,7 @@ class FacturaPrevistaIT extends BaseIT{
       "classpath:scripts/tipo_facturacion.sql",
       "classpath:scripts/proyecto_facturacion.sql",
       "classpath:scripts/estado_validacion_ip.sql",
-      "classpath:scripts/update_proyecto_facturacion.sql"
+      "classpath:scripts/proyecto_facturacion_update_estado_validacion_ip.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -85,7 +85,7 @@ class FacturaPrevistaIT extends BaseIT{
       "classpath:scripts/tipo_facturacion.sql",
       "classpath:scripts/proyecto_facturacion.sql",
       "classpath:scripts/estado_validacion_ip.sql",
-      "classpath:scripts/update_proyecto_facturacion.sql"
+      "classpath:scripts/proyecto_facturacion_update_estado_validacion_ip.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")

@@ -46,7 +46,7 @@ public class TipoFacturacionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_SortingAndFiltering_ReturnsTipoFacturacionSubList() throws Exception {
+  void findAll_SortingAndFiltering_ReturnsTipoFacturacionSubList() throws Exception {
 
     // sorted by nombre asc and filter by tipoComunicado
     String[] roles = { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-MOD-V" };
@@ -72,6 +72,26 @@ public class TipoFacturacionIT extends BaseIT {
         .isEqualTo("nombre-facturacion-" + String.format("%03d", 2));
     Assertions.assertThat(responseData.get(2).getNombre()).as("get(2).getNombre())")
         .isEqualTo("nombre-facturacion-" + String.format("%03d", 3));
+  }
+
+  @Test
+  void findAll_SortingAndFiltering_ReturnsStatusCode204() throws Exception {
+
+    // sorted by nombre asc and filter by tipoComunicado
+    String[] roles = { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-MOD-V" };
+    String sort = "nombre, asc";
+    String filter = "tipoComunicado=ke=00";
+
+    // when: find TipoFacturacion
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+
+    final ResponseEntity<List<TipoFacturacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null, roles), new ParameterizedTypeReference<List<TipoFacturacion>>() {
+        });
+
+    // given: TipoFacturacion data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
 }
