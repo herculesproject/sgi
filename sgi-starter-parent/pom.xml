@@ -332,6 +332,10 @@
                   <groupId>org.hibernate.javax.persistence</groupId>
                   <artifactId>hibernate-jpa-2.0-api</artifactId>
                 </exclusion>
+                <exclusion>
+                  <groupId>org.liquibase</groupId>
+                  <artifactId>liquibase-test-harness</artifactId>
+                </exclusion>
               </exclusions>
             </dependency>
             <dependency>
