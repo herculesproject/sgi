@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -35,10 +34,6 @@ public class Documento implements Serializable {
 
   @Column(name = "version")
   private Integer version;
-
-  @Lob
-  @Column(name = "archivo", columnDefinition = "blob")
-  private byte[] archivo;
 
   @Column(name = "fecha_creacion")
   private LocalDateTime fechaCreacion;

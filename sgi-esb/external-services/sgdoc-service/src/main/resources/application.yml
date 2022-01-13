@@ -8,13 +8,44 @@ server:
 spring:
   profiles:
     # Set spring-profile using maven
-    include: @spring.profiles.active@
+    active: @spring.profiles.active@
+  datasource:
+    # Make sure database schema is created (schema.sql is executed): always/never
+    initialization-mode: always
+    # We use a H2 in file database with PostgreSQL compatibility mode
+    url: "jdbc:h2:./target/db/sgdoc;DB_CLOSE_ON_EXIT=FALSE"
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  # H2 console
+  h2:
+    console:
+      enabled: false
   jpa:
     # Disable Open Session In View
     open-in-view: false
+    # Extra Hibernate properties
+    properties:
+      hibernate:
+        # We use a H2 database with PostgreSQL compatibility mode
+        dialect: org.hibernate.dialect.H2Dialect
+        # Set default Hibernate schema
+        '[default_schema]': ${spring.datasource.username}
+        jdbc:
+          # see: https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
+          '[time_zone]': UTC
   liquibase:
     # No Liquibase contexts
     contexts: none
+    # Default database schema
+    default-schema: ${spring.jpa.properties.hibernate.[default_schema]}
+    # Enable Liquibase
+    enabled: true
+    # Schema to use for Liquibase objects
+    liquibase-schema: ${spring.jpa.properties.hibernate.[default_schema]}
+    # Set Liquibase changeLog parameters
+    parameters:
+      schemaPrefix: ${spring.jpa.properties.hibernate.[default_schema]}.
   autoconfigure:
     # Disable security
     exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
@@ -22,41 +53,33 @@ spring:
 ---
 spring:
   profiles: dev
-  datasource:
-    # Make sure database schema is created (schema.sql is executed)
-    initialization-mode: always
-    # We use a H2 in file database with PostgreSQL compatibility mode
-    url: "jdbc:h2:./target/db/sgdoc;DB_CLOSE_ON_EXIT=FALSE"
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  liquibase:
-    # Enable Liquibase
-    enabled: true
-    # Default database schema
-    default-schema: sgdoc
-    # Schema to use for Liquibase objects
-    liquibase-schema: sgdoc
-    # Set Liquibase contexts same as spring profiles
-    contexts: dev
   jpa:
-    hibernate:
-      # Make sure Hibernate will not use the entities to create, update or validate the database
-      # validate | update | create | create-drop
-      ddl-auto: none
+    # Extra Hibernate properties
     properties:
       hibernate:
-        # We use a H2 database with PostgreSQL compatibility mode
-        dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
-        default_schema: sgdoc
+        '[default_schema]': sgdoc
+  liquibase:
+    # Set Liquibase contexts same as spring profiles
+    contexts: dev
   # H2 console
-  h2:
-    console:
-      enabled: false
-      #path: /h2-console
-      #settings:
-        #web-allow-others: true
+#  # H2 console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#      settings:
+#        web-allow-others: true
+#  security:
+#    oauth2:
+#      # Enable login page if JWT not provided (enable only for development)
+#      enable-login: true
+#    # Disable CSRF (disable only for development)
+#    csrf:
+#      enable: false
+#    # Disable X-Frame-Options (disable only for development)
+#    frameoptions:
+#      enable: false
 
 logging:
   level:
@@ -86,13 +109,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin
-  liquibase:
-    # Enable Liquibase
-    enabled: true
-    # Default database schema
-    default-schema: sgdoc
-    # Schema to use for Liquibase objects
-    liquibase-schema: sgdoc
   jpa:
     hibernate:
       # Hibernate will use the entities to validate the database
@@ -103,4 +119,4 @@ spring:
         # We use a PostgreSQL database
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         # Set default Hibernate Schema
-        default_schema: sgdoc
+        '[default_schema]': sgdoc

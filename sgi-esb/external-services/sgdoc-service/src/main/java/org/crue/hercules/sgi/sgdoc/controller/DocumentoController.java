@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.sgdoc.model.Archivo;
 import org.crue.hercules.sgi.sgdoc.model.Documento;
 import org.crue.hercules.sgi.sgdoc.service.DocumentoService;
 import org.springframework.core.io.ByteArrayResource;
@@ -60,15 +61,17 @@ public class DocumentoController {
     documento.setNombre(archivo.getOriginalFilename());
     documento.setFechaCreacion(LocalDateTime.now());
     documento.setAutorRef("anonymous");
+
+    Archivo archivoDocumento = null;
     try {
-      documento.setArchivo(archivo.getBytes());
+      archivoDocumento = Archivo.builder().archivo(archivo.getBytes()).build();
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     documento.setVersion(1);
     String[] contentType = (archivo.getContentType().split(";"));
     documento.setTipo(contentType[0]);
-    Documento documentoCreado = service.create(documento);
+    Documento documentoCreado = service.create(documento, archivoDocumento);
 
     log.debug("create(MultipartFile archivo) - end");
 
@@ -83,7 +86,7 @@ public class DocumentoController {
    * @return el listado de entidades {@link Documento} paginadas y filtradas.
    */
   @GetMapping()
-  ResponseEntity<Page<Documento>> findAll(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<Documento>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
@@ -98,41 +101,51 @@ public class DocumentoController {
   }
 
   /**
-   * Devuelve la {@link Persona} con el id indicado.
+   * Devuelve la {@link Documento} con el id indicado.
    * 
-   * @param id Identificador de {@link Persona}.
-   * @return {@link Persona} correspondiente al id
+   * @param id Identificador de {@link Documento}.
+   * @return {@link Documento} correspondiente al id
    */
   @GetMapping("/{id}")
-  Documento findById(@PathVariable String id) {
+  public Documento findById(@PathVariable String id) {
     log.debug("findById(String id) - start");
     Documento returnValue = service.findById(id);
     log.debug("findById(String id) - end");
     return returnValue;
   }
 
+  /**
+   * Devuelve el {@link Archivo} del {@link Documento} con el id indicado.
+   * 
+   * @param id Identificador de {@link Documento}.
+   * @return {@link Archivo} correspondiente al id del {@link Documento}.
+   */
   @GetMapping("/{id}/archivo")
   public ResponseEntity<Resource> findDocumentoArchivo(@PathVariable String id) {
     log.debug("findDocumentoArchivo(String id) - start");
 
     Documento documento = service.findById(id);
-    log.debug("findDocumentoArchivo(String id) - end");
-    ByteArrayResource archivo = new ByteArrayResource(documento.getArchivo());
+    Archivo archivo = service.findArchivoByDocumentoId(id);
+    ByteArrayResource archivoByte = new ByteArrayResource(archivo.getArchivo());
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", documento.getTipo());
-    return new ResponseEntity<>(archivo, headers, HttpStatus.OK);
+
+    log.debug("findDocumentoArchivo(String id) - end");
+    return new ResponseEntity<>(archivoByte, headers, HttpStatus.OK);
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link Documento} que tienen.
+   * Devuelve una lista paginada y filtrada de {@link Documento} que tienen alguno
+   * de los ids de la lista.
    * 
+   * @param ids    identificadores de {@link Documento}.
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Documento} paginadas y filtradas.
    */
   @GetMapping("/bydocumentorefs/{ids}")
-  ResponseEntity<Page<Documento>> findByDocumentoIds(@PathVariable String ids,
+  public ResponseEntity<Page<Documento>> findByDocumentoIds(@PathVariable String ids,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findByDocumentoIds(String ids, String query, Pageable paging) - start");
     List<String> idsList = Arrays.asList(ids.split("\\|"));
@@ -149,11 +162,11 @@ public class DocumentoController {
   /**
    * Elimina el {@link Documento} con id indicado.
    * 
-   * @param id Identificador de {@link AgrupacionGaDocumentostoConcepto}.
+   * @param id Identificador de {@link Documento}.
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable String id) {
+  public void deleteById(@PathVariable String id) {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");

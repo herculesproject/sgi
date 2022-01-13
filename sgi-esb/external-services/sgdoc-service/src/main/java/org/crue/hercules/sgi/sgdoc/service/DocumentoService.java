@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.sgdoc.exceptions.DocumentoNotFoundException;
+import org.crue.hercules.sgi.sgdoc.model.Archivo;
 import org.crue.hercules.sgi.sgdoc.model.Documento;
+import org.crue.hercules.sgi.sgdoc.repository.ArchivoRepository;
 import org.crue.hercules.sgi.sgdoc.repository.DocumentoRepository;
 import org.crue.hercules.sgi.sgdoc.repository.specification.DocumentoSpecifications;
 import org.springframework.data.domain.Page;
@@ -25,19 +27,23 @@ public class DocumentoService {
 
   /** Documento repository */
   private final DocumentoRepository repository;
+  /** Archivo repository */
+  private final ArchivoRepository archivoRepository;
 
-  public DocumentoService(DocumentoRepository repository) {
+  public DocumentoService(DocumentoRepository repository, ArchivoRepository archivoRepository) {
     this.repository = repository;
+    this.archivoRepository = archivoRepository;
   }
 
   /**
    * Guarda la entidad {@link Documento}.
    *
    * @param documento la entidad {@link Documento} a guardar.
+   * @param archivo   el {@link Archivo} del {@link Documento}.
    * @return la entidad {@link Documento} persistida.
    */
   @Transactional
-  public Documento create(Documento documento) {
+  public Documento create(Documento documento, Archivo archivo) {
     log.debug("create(Documento documento) - start");
     Assert.isNull(documento.getDocumentoRef(), "DocumentoRef tiene que ser null para crear una nueva documento");
 
@@ -45,39 +51,12 @@ public class DocumentoService {
 
     Documento returnValue = repository.save(documento);
 
+    archivo.setDocumentoRef(returnValue.getDocumentoRef());
+    archivoRepository.save(archivo);
+
     log.debug("create(Documento documento) - end");
 
     return returnValue;
-  }
-
-  /**
-   * Actualiza los datos de la {@link Documento}.
-   *
-   * @param documentoActualizar la entidad {@link Documento} con los datos
-   *                            actualizados.
-   * @return la entidad {@link Documento} persistida.
-   * @throws NotFoundException        Si no existe ningún {@link Documento} con
-   *                                  ese documentoRef.
-   * @throws IllegalArgumentException Si el {@link Documento} no tiene
-   *                                  documentoRef.
-   */
-  @Transactional
-  public Documento update(Documento documentoActualizar) {
-    log.debug("update(Documento documentoActualizar) - start");
-    Assert.notNull(documentoActualizar.getDocumentoRef(),
-        "DocumentoRef no puede ser null para actualizar una documento");
-
-    return repository.findById(documentoActualizar.getDocumentoRef()).map(documento -> {
-      documento.setNombre(documentoActualizar.getNombre());
-      documento.setVersion(documentoActualizar.getVersion());
-      documento.setArchivo(documentoActualizar.getArchivo());
-      documento.setTipo(documentoActualizar.getTipo());
-      documento.setAutorRef(documentoActualizar.getAutorRef());
-
-      Documento returnValue = repository.save(documento);
-      log.debug("update(Documento documentoActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new NotFoundException(documentoActualizar.getDocumentoRef()));
   }
 
   /**
@@ -95,10 +74,18 @@ public class DocumentoService {
       throw new NotFoundException(id);
     }
 
+    archivoRepository.deleteByDocumentoRef(id);
     repository.deleteById(id);
     log.debug("delete(String id) - end");
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada de {@link Documento}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Documento} paginadas y filtradas.
+   */
   public Page<Documento> findAll(String query, Pageable paging) {
     Specification<Documento> spec = SgiRSQLJPASupport.toSpecification(query);
 
@@ -106,6 +93,12 @@ public class DocumentoService {
     return returnValue;
   }
 
+  /**
+   * Devuelve el {@link Documento} con el id indicado.
+   * 
+   * @param id Identificador de {@link Documento}.
+   * @return {@link Documento} correspondiente al id
+   */
   public Documento findById(String id) {
     log.debug("findById(String id) - start");
     Documento returnValue = repository.findById(id).orElseThrow(() -> new DocumentoNotFoundException(id));
@@ -113,6 +106,15 @@ public class DocumentoService {
     return returnValue;
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada de {@link Documento} que tienen alguno
+   * de los ids de la lista.
+   * 
+   * @param ids    identificadores de {@link Documento}.
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Documento} paginadas y filtradas.
+   */
   public Page<Documento> findByDocumentoIds(List<String> ids, String query, Pageable paging) {
     Specification<Documento> specByQuery = SgiRSQLJPASupport.toSpecification(query);
     Specification<Documento> specByDocumentoRefs = DocumentoSpecifications.byDocumentoRefs(ids);
@@ -120,6 +122,20 @@ public class DocumentoService {
     Specification<Documento> specs = Specification.where(specByDocumentoRefs).and(specByQuery);
 
     Page<Documento> returnValue = repository.findAll(specs, paging);
+    return returnValue;
+  }
+
+  /**
+   * Devuelve el {@link Archivo} del {@link Documento} con el id indicado.
+   * 
+   * @param documentoId Identificador de {@link Documento}.
+   * @return {@link Archivo} correspondiente al id del {@link Documento}.
+   */
+  public Archivo findArchivoByDocumentoId(String documentoId) {
+    log.debug("findArchivoByDocumentoId(String documentoId) - start");
+    Archivo returnValue = archivoRepository.findByDocumentoRef(documentoId)
+        .orElseThrow(() -> new DocumentoNotFoundException(documentoId));
+    log.debug("findArchivoByDocumentoId(String documentoId) - end");
     return returnValue;
   }
 
