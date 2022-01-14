@@ -1,15 +1,18 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
+import { Module } from '@core/module';
+import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -23,6 +26,9 @@ import {
 } from '@sgi/framework/http';
 import { merge, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+
+const ENTITY_KEY = marker('csp.proyecto');
 
 export interface SearchProyectoModalData extends SearchModalData {
   personas: IPersona[];
@@ -49,18 +55,19 @@ export class SearchProyectoModalComponent implements OnInit, AfterViewInit, OnDe
   readonly proyectos$ = new Subject<IProyectoListado[]>();
   public msgMiembrosEquipoFullName: string;
 
+  msgParamEntity: {};
+
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
 
   constructor(
-    public dialogRef: MatDialogRef<SearchProyectoModalComponent, IProyecto>,
-    private readonly translate: TranslateService,
+    private readonly dialogRef: MatDialogRef<SearchProyectoModalComponent, IProyecto>,
     private readonly proyectoService: ProyectoService,
     @Inject(MAT_DIALOG_DATA) public data: SearchProyectoModalData,
-    private personaService: PersonaService
-  ) {
-  }
+    private readonly translate: TranslateService,
+    private readonly router: Router
+  ) { }
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
@@ -81,8 +88,16 @@ export class SearchProyectoModalComponent implements OnInit, AfterViewInit, OnDe
       miembroEquipo: new FormControl(),
       miembrosParticipantes: new FormControl()
     });
-
+    this.setupI18N();
     this.setNombresMiembrosParticipantes();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      ENTITY_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
   }
 
   private setNombresMiembrosParticipantes(): void {
@@ -190,5 +205,9 @@ export class SearchProyectoModalComponent implements OnInit, AfterViewInit, OnDe
 
   closeModal(proyecto?: IProyecto): void {
     this.dialogRef.close(proyecto);
+  }
+
+  openCreate(): void {
+    window.open(this.router.serializeUrl(this.router.createUrlTree(['/', Module.CSP.path, CSP_ROUTE_NAMES.PROYECTO, ROUTE_NAMES.NEW])), '_blank');
   }
 }

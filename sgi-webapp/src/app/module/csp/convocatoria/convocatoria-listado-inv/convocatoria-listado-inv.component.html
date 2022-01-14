@@ -271,14 +271,18 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let element;let i=index;">
           <ng-container>
-            <button class="button-accion" mat-stroked-button color="primary"
-              [routerLink]="[element.convocatoria.id]">{{'btn.view' | translate}}</button>
+            <a mat-button color="primary" matTooltip="{{'btn.view' | translate}}"
+              [routerLink]="[element.convocatoria.id]">
+              <mat-icon color="primary">visibility</mat-icon>
+            </a>
           </ng-container>
           <ng-container *sgiHasAuthority="'CSP-SOL-INV-C'">
-            <button *ngIf="mapTramitable.get(element.convocatoria.id) && element.convocatoria.activo === true"
+            <a *ngIf="mapTramitable.get(element.convocatoria.id) && element.convocatoria.activo === true"
               [routerLink]="['../..', INV_ROUTE_NAMES.SOLICITUDES, ROUTE_NAMES.NEW]"
-              [state]="getSolicitudState(element.convocatoria.id)" class="button-accion" mat-stroked-button
-              color="primary">{{'btn.process' | translate}}</button>
+              [state]="getSolicitudState(element.convocatoria.id)" mat-button matTooltip="{{'btn.process' | translate}}"
+              color="primary">
+              <mat-icon color="primary">shop</mat-icon>
+            </a>
           </ng-container>
         </td>
       </ng-container>

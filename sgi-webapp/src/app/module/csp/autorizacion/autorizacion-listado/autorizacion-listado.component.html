@@ -92,15 +92,15 @@
         <td mat-cell *matCellDef="let element">
           <ng-container
             *ngIf="(this.isInvestigador && element.estadoAutorizacion.estado !== 'BORRADOR') || (!this.isInvestigador && element.estadoAutorizacion.estado === 'AUTORIZADA')">
-            <button mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[element.autorizacion.id]">
+            <a mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[element.autorizacion.id]">
               <mat-icon color="primary">visibility</mat-icon>
-            </button>
+            </a>
           </ng-container>
           <ng-container
             *ngIf="(this.isInvestigador && element.estadoAutorizacion.estado === 'BORRADOR') || (!this.isInvestigador && element.estadoAutorizacion.estado !== 'AUTORIZADA')">
-            <button mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[element.autorizacion.id]">
+            <a mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[element.autorizacion.id]">
               <mat-icon color="primary">border_color</mat-icon>
-            </button>
+            </a>
           </ng-container>
           <ng-container>
             <button
@@ -112,22 +112,19 @@
           </ng-container>
 
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-AUT-INV-C'">
-            <button mat-button color="primary" matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}">
+            <button mat-button matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}">
               <mat-icon color="primary">arrow_downward</mat-icon>
-              {{'btn.autorizacion.descargar-certificado' | translate}}
             </button>
           </ng-container>
 
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-V'">
-            <button mat-button color="primary" matTooltip="{{'btn.autorizacion.ver-proyecto' | translate}}">
-              <mat-icon color="primary">visibility</mat-icon>
-              {{'btn.autorizacion.ver-proyecto' | translate}}
+            <button mat-button matTooltip="{{'btn.autorizacion.ver-proyecto' | translate}}">
+              <mat-icon color="primary">work</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-CVPR-V'">
-            <button mat-button color="primary" matTooltip="{{'btn.autorizacion.ver-notificacion' | translate}}">
-              <mat-icon color="primary">visibility</mat-icon>
-              {{'btn.autorizacion.ver-notificacion' | translate}}
+            <button mat-button matTooltip="{{'btn.autorizacion.ver-notificacion' | translate}}">
+              <mat-icon color="primary">notifications</mat-icon>
             </button>
           </ng-container>
 

@@ -20,6 +20,7 @@ let nextUniqueId = 0;
 
 export interface SearchModalData {
   searchTerm: string;
+  extended: boolean;
 }
 
 export interface SearchResult<T> {
@@ -89,7 +90,9 @@ export abstract class SelectDialogComponent<D, T> implements
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
-  get placeholder(): string { return this._placeholder; }
+  get placeholder(): string {
+    return this._placeholder ?? '';
+  }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
@@ -127,6 +130,16 @@ export abstract class SelectDialogComponent<D, T> implements
   }
   // tslint:disable-next-line: variable-name
   private _id: string;
+
+  @Input()
+  get extended(): boolean {
+    return this._extended;
+  }
+  set extended(value: boolean) {
+    this._extended = coerceBooleanProperty(value);
+  }
+  // tslint:disable-next-line: variable-name
+  private _extended = true;
 
   private dialogOpen = false;
 
@@ -258,7 +271,8 @@ export abstract class SelectDialogComponent<D, T> implements
 
   protected getDialogData(): SearchModalData {
     return {
-      searchTerm: this.empty ? this.searchInputCtrl.value : ''
+      searchTerm: this.empty ? this.searchInputCtrl.value : '',
+      extended: this.extended ?? false
     };
   }
 

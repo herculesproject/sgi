@@ -1370,7 +1370,6 @@
   "export.columns": "Seleccione las columnas a incluir en el informe:",
   "export.type": "Seleccione el tipo de exportación",
   "export.type.csv": "CSV",
-  "export.type.html": "HTML",
   "export.type.pdf": "PDF",
   "export.type.rtf": "RTF",
   "export.type.xlsx": "XLSX",

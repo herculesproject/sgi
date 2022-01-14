@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -11,18 +12,23 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IEmpresa } from '@core/models/sgemp/empresa';
+import { Module } from '@core/module';
+import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection
 } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 
 const MSG_LISTADO_ERROR = marker('error.load');
+const ENTITY_KEY = marker('csp.convocatoria');
 
 export interface SearchConvocatoriaModalData extends SearchModalData {
   unidadesGestion: string[];
@@ -44,14 +50,19 @@ interface IConvocatoriaListado {
 })
 export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
   formGroup: FormGroup;
+
   displayedColumns = ['codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
     'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
     'fuenteFinanciacion', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
+
+  msgParamEntity: {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -63,9 +74,10 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: SearchConvocatoriaModalData,
     private readonly convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
-    private readonly snackBarService: SnackBarService
-  ) {
-  }
+    private readonly snackBarService: SnackBarService,
+    private readonly translate: TranslateService,
+    private readonly router: Router
+  ) { }
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
@@ -75,6 +87,15 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
       fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
     });
+    this.setupI18N();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      ENTITY_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
   }
 
   ngAfterViewInit(): void {
@@ -214,4 +235,9 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
   closeModal(convocatoria?: IConvocatoria): void {
     this.dialogRef.close(convocatoria);
   }
+
+  openCreate(): void {
+    window.open(this.router.serializeUrl(this.router.createUrlTree(['/', Module.CSP.path, CSP_ROUTE_NAMES.CONVOCATORIA, ROUTE_NAMES.NEW])), '_blank');
+  }
+
 }

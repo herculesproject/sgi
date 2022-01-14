@@ -3,16 +3,24 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
+import { Module } from '@core/module';
+import { ROUTE_NAMES } from '@core/route.names';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { PII_ROUTE_NAMES } from '../../../pii-route-names';
+
+const ENTITY_KEY = marker('pii.invencion');
 
 export interface SearchInvencionModalData extends SearchModalData {
 
@@ -36,6 +44,8 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
   readonly invenciones$ = new Subject<IInvencion[]>();
   readonly tiposProteccion$: Observable<ITipoProteccion[]>;
 
+  msgParamEntity: {};
+
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
@@ -44,7 +54,9 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
     public dialogRef: MatDialogRef<SearchInvencionModalComponent, IInvencion>,
     @Inject(MAT_DIALOG_DATA) public data: SearchInvencionModalData,
     private readonly invencionService: InvencionService,
-    readonly tipoProteccionService: TipoProteccionService
+    readonly tipoProteccionService: TipoProteccionService,
+    private readonly translate: TranslateService,
+    private readonly router: Router
   ) {
     this.tiposProteccion$ = tipoProteccionService.findAll().pipe(map(({ items }) => items));
   }
@@ -57,6 +69,15 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
       titulo: new FormControl(this.data.searchTerm),
       tipoProteccion: new FormControl(),
     });
+    this.setupI18N();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      ENTITY_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
   }
 
   ngAfterViewInit(): void {
@@ -115,5 +136,9 @@ export class SearchInvencionModalComponent implements OnInit, AfterViewInit, OnD
         LuxonUtils.toBackend(controls.fechaComunicacionHasta.value?.plus({ hour: 23, minutes: 59, seconds: 59 })))
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('tipoProteccion', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString());;
+  }
+
+  openCreate(): void {
+    window.open(this.router.serializeUrl(this.router.createUrlTree(['/', Module.PII.path, PII_ROUTE_NAMES.INVENCION, ROUTE_NAMES.NEW])), '_blank');
   }
 }

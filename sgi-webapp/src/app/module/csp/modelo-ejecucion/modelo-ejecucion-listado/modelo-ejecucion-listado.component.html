@@ -69,10 +69,10 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let modeloEjecucion">
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-E'">
-            <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+            <a *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
               [routerLink]="[modeloEjecucion.id]">
               <mat-icon color="primary">border_color</mat-icon>
-            </button>
+            </a>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-B'">
             <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.delete' | translate}}"
