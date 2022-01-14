@@ -96,7 +96,7 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toCreate.getHorasDedicacion());
     Assertions.assertThat(created.getResponsableRef()).as("getResponsableRef()")
         .isEqualTo(toCreate.getResponsableRef());
-    Assertions.assertThat(created.getSolicitanteRef()).as("getSolitanteRef()")
+    Assertions.assertThat(created.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(toCreate.getSolicitanteRef());
     Assertions.assertThat(created.getTituloProyecto()).as("getTituloProyecto()")
         .isEqualTo(toCreate.getTituloProyecto());
@@ -144,7 +144,7 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toUpdate.getHorasDedicacion());
     Assertions.assertThat(updated.getResponsableRef()).as("getResponsableRef()")
         .isEqualTo(toUpdate.getResponsableRef());
-    Assertions.assertThat(updated.getSolicitanteRef()).as("getSolitanteRef()")
+    Assertions.assertThat(updated.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(toUpdate.getSolicitanteRef());
     Assertions.assertThat(updated.getTituloProyecto()).as("getTituloProyecto()")
         .isEqualTo(toUpdate.getTituloProyecto());
