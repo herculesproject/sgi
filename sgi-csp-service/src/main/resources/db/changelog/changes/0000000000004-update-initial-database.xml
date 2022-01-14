@@ -214,4 +214,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000004-25">
+    <addColumn tableName="configuracion">
+      <column defaultValueBoolean="false" name="validacion_gastos" type="boolean"></column>
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
