@@ -137,4 +137,8 @@ export abstract class AbstractTableExportService<T, R extends IReportOptions> im
       return fieldOrientation;
     }
   }
+
+  protected isExcelOrCsv(outputType: OutputReport): boolean {
+    return (outputType === OutputReport.XLS || outputType === OutputReport.XLSX || outputType === OutputReport.CSV);
+  }
 }
