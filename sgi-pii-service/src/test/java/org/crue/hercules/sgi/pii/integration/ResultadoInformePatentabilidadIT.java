@@ -42,7 +42,7 @@ public class ResultadoInformePatentabilidadIT extends BaseIT {
     return request;
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/resultado_informe_patentabilidad.sql",
 // @formatter:on
@@ -69,7 +69,7 @@ public class ResultadoInformePatentabilidadIT extends BaseIT {
         .isEqualTo(nuevoResultadoInformePatentabilidad.getDescripcion());
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/resultado_informe_patentabilidad.sql",
 // @formatter:on
@@ -101,7 +101,7 @@ public class ResultadoInformePatentabilidadIT extends BaseIT {
         .isEqualTo(resultadoInformePatentabilidad.getDescripcion());
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/resultado_informe_patentabilidad.sql",
 // @formatter:on
@@ -145,7 +145,7 @@ public class ResultadoInformePatentabilidadIT extends BaseIT {
         .isEqualTo("nombre-resultado-informe-" + String.format("%03d", 1));
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/resultado_informe_patentabilidad.sql",
 // @formatter:on

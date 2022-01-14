@@ -38,7 +38,7 @@ public class TipoCaducidadIT extends BaseIT {
     return request;
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_caducidad.sql",
 // @formatter:on

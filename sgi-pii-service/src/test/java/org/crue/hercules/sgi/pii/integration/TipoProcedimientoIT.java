@@ -39,7 +39,7 @@ public class TipoProcedimientoIT extends BaseIT {
     return request;
   }
 
-  @Sql(scripts = {
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_procedimiento.sql",
 // @formatter:on
