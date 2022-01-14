@@ -3,9 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ActionService } from '@core/services/action-service';
+import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
+import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
+import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
@@ -74,7 +77,10 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
     gastoProyectoService: GastoProyectoService,
     gastoService: GastoService,
-    calendarioFacturacionService: CalendarioFacturacionService
+    calendarioFacturacionService: CalendarioFacturacionService,
+    proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
+    proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    configuracionService: ConfiguracionService,
   ) {
     super();
 
@@ -109,18 +115,21 @@ export class EjecucionEconomicaActionService extends ActionService {
 
     this.facturasGastos = new FacturasGastosFragment(
       id, this.data.proyectoSge, this.data.proyectosRelacionados,
-      proyectoService, personaService, proyectoAnualidadService, proyectoAgrupacionGastoService,
-      gastoProyectoService, ejecucionEconomicaService);
+      proyectoService, personaService, proyectoAnualidadService,
+      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService, configuracionService);
 
     this.viajesDietas = new ViajesDietasFragment(
       id, this.data.proyectoSge, this.data.proyectosRelacionados,
-      proyectoService, personaService, proyectoAnualidadService, proyectoAgrupacionGastoService,
-      gastoProyectoService, ejecucionEconomicaService);
+      proyectoService, personaService, proyectoAnualidadService,
+      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService, configuracionService);
 
     this.personalContratado = new PersonalContratadoFragment(
       id, this.data.proyectoSge, this.data.proyectosRelacionados,
-      proyectoService, personaService, proyectoAnualidadService, proyectoAgrupacionGastoService,
-      gastoProyectoService, ejecucionEconomicaService);
+      proyectoService, personaService, proyectoAnualidadService,
+      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService, configuracionService);
 
     this.validacionGastos = new ValidacionGastosFragment(
       id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService, proyectoAgrupacionGastoService);
