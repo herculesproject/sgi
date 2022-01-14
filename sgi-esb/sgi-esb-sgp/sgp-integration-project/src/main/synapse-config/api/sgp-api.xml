@@ -414,7 +414,7 @@
         },
         "fieldGroup": [
           {
-            "type": "table-crud",
+            "type": "table-crud-one-element",
             "key": "emails",
             "templateOptions": {
               "title": "Emails",
@@ -1202,7 +1202,7 @@
             }
           },
           {
-            "type": "table-crud",
+            "type": "table-crud-one-element",
             "key": "emails",
             "templateOptions": {
               "title": "Emails",
@@ -1847,7 +1847,7 @@
             }
           },
           {
-            "type": "table-crud",
+            "type": "table-crud-one-element",
             "key": "emails",
             "templateOptions": {
               "title": "Emails",
