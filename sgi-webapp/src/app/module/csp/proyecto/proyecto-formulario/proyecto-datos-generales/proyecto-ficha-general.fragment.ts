@@ -252,7 +252,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         value: '',
         disabled: true
       }),
-      solicitudProyecto: new FormControl({ value: '', disabled: true }),
+      solicitudProyecto: new FormControl({ value: null, disabled: true }),
       proyectosRelacionados: new FormControl({ value: '', disabled: true }),
       palabrasClave: new FormControl(null)
     },
@@ -479,7 +479,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
-      solicitudProyecto: this.solicitud?.titulo,
+      solicitudProyecto: this.solicitud?.titulo ?? null,
     };
 
     this.checkEstado(this.getFormGroup(), proyecto);
