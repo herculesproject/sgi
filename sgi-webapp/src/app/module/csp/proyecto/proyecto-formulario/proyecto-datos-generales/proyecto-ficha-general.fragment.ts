@@ -221,7 +221,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       fechaInicio: new FormControl(null, [
         Validators.required]),
       fechaFin: new FormControl(null, [Validators.required, this.buildValidatorFechaFin()]),
-      fechaFinDefinitiva: new FormControl(null, [this.buildValidatorFechaFinDefinitiva()]),
+      fechaFinDefinitiva: new FormControl(null),
       convocatoria: new FormControl({
         value: '',
         disabled: this.isEdit()
@@ -259,6 +259,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
+          DateValidator.isAfterOrEqual('fechaInicio', 'fechaFinDefinitiva')
         ]
       });
 
@@ -660,14 +661,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('costeHora').setValidators([
         Validators.required]);
-      formgroup.setValidators([
-        DateValidator.isAfter('fechaFin', 'fechaFinDefinitiva')]);
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
     } else if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
-      formgroup.get('fechaFinDefinitiva').setErrors(null);
-      formgroup.get('fechaFinDefinitiva').clearValidators();
-      formgroup.get('fechaFinDefinitiva').updateValueAndValidity({ onlySelf: true, emitEvent: false });
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
       this.abiertoRequired = false;
@@ -746,19 +742,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         && this.ultimaProrroga.tipo !== Tipo.IMPORTE
         && this.ultimaProrroga.fechaFin <= control.value) {
         return { afterThanProrroga: true };
-      }
-      return null;
-    };
-  }
-
-  private buildValidatorFechaFinDefinitiva(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (this.ultimaProrroga &&
-        this.ultimaProrroga.fechaFin > control.value) {
-        return { afterThanProrroga: true };
-      }
-      if (this.proyecto.fechaFin && control.value && this.proyecto.fechaFin >= control.value) {
-        return { after: true };
       }
       return null;
     };
