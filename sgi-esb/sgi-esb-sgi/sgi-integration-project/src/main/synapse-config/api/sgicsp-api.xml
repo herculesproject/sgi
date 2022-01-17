@@ -210,7 +210,7 @@
     </faultSequence>
   </resource>
 
-  <resource methods="PUT" url-mapping="/notificaciones-proyectos">
+  <resource methods="POST" url-mapping="/notificaciones-proyectos">
     <inSequence>
       <send>
         <endpoint key="sgicsp-endpoint" />
