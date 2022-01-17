@@ -68,7 +68,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({ value: null, disabled: true }),
-      codigo: new FormControl('', Validators.maxLength(50)),
+      codigo: new FormControl(null, Validators.maxLength(50)),
       unidadGestion: new FormControl(null, Validators.required),
       fechaPublicacion: new FormControl(null),
       fechaProvisional: new FormControl(null),
