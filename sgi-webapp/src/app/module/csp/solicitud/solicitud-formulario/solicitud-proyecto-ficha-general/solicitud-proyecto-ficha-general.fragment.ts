@@ -237,7 +237,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       }),
       switchMap(solicitudProyecto => {
         if (this.convocatoriaId && !solicitudProyecto?.id) {
-          const convocatoriaSolicitud$ = this.isInvestigador ? this.solicitudService.findConvocatoria(this.solicitudId) : this.convocatoriaService.findById(this.solicitudId);
+          const convocatoriaSolicitud$ = this.isInvestigador ? this.solicitudService.findConvocatoria(this.solicitudId) : this.convocatoriaService.findById(this.convocatoriaId);
           return convocatoriaSolicitud$.pipe(
             map(convocatoria => {
               solicitudProyecto = {} as ISolicitudProyecto;
