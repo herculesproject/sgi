@@ -1,9 +1,9 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion_;
+import org.springframework.data.jpa.domain.Specification;
 
 public class CertificadoAutorizacionSpecifications {
 
@@ -24,7 +24,7 @@ public class CertificadoAutorizacionSpecifications {
    * Devuelve todos los {@link CertificadoAutorizacion} con el asociados a un
    * {@link Autorizacion}
    * 
-   * @param autorizacionId
+   * @param autorizacionId id de la {@link Autorizacion}
    * @return specification para obtener los {@link CertificadoAutorizacion}
    *         asociados a un {@link Autorizacion}
    */

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.CertificadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.CertificadoAutorizacionSpecifications;

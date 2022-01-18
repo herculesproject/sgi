@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
