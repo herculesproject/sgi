@@ -1,11 +1,11 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
+import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
@@ -28,7 +28,6 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   private proyectosMap = new Map<string, IProyecto>();
   private proyectoConceptoGastosMap = new Map<string, IProyectoConceptoGasto>();
-  private validacionGastos: boolean;
 
   readonly formGroupFechas = new FormGroup({
     devengoDesde: new FormControl(),
@@ -49,7 +48,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     protected gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    private configuracionService: ConfiguracionService,
+    private configuracion: IConfiguracion,
   ) {
     super(key, proyectoSge, proyectosRelacionados, proyectoService, personaService, proyectoAnualidadService);
     this.setComplete(true);
@@ -60,11 +59,6 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   protected onInitialize(): void {
     super.onInitialize();
-
-    this.subscriptions.push(
-      this.configuracionService.getConfiguracion()
-        .subscribe(({ validacionGastos }) => this.validacionGastos = validacionGastos)
-    );
   }
 
   protected abstract getColumns(reducida?: boolean): Observable<IColumnDefinition[]>;
@@ -80,7 +74,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   protected buildRows(datosEconomicos: IDatoEconomico[]): Observable<RowTreeDesglose<IDesglose>[]> {
     return from(datosEconomicos).pipe(
       concatMap((datoEconomico: IDesglose) => {
-        if (this.validacionGastos) {
+        if (this.configuracion?.validacionGastos) {
           const options: SgiRestFindOptions = {
             filter: new RSQLSgiRestFilter('gastoRef', SgiRestFilterOperator.EQUALS, datoEconomico.id)
           };

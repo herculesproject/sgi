@@ -1,7 +1,7 @@
+import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
@@ -27,10 +27,10 @@ export class FacturasGastosFragment extends FacturasJustificantesFragment {
     private ejecucionEconomicaService: EjecucionEconomicaService,
     proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    configuracionService: ConfiguracionService,
+    configuracion: IConfiguracion,
   ) {
     super(key, proyectoSge, proyectosRelacionados, proyectoService, personaService, proyectoAnualidadService,
-      gastoProyectoService, proyectoConceptoGastoCodigoEcService, proyectoConceptoGastoService, configuracionService);
+      gastoProyectoService, proyectoConceptoGastoCodigoEcService, proyectoConceptoGastoService, configuracion);
   }
 
   protected onInitialize(): void {
