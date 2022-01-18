@@ -3,9 +3,12 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.AutorizacionService;
+import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
+import org.crue.hercules.sgi.csp.service.EstadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -40,12 +43,18 @@ public class AutorizacionController {
   public static final String REQUEST_MAPPING = "/autorizaciones";
 
   private final AutorizacionService service;
+  private final EstadoAutorizacionService estadoAutorizacionService;
   private final NotificacionProyectoExternoCVNService notificacionProyectoExternoService;
+  private final CertificadoAutorizacionService certificadoAutorizacionService;
 
   public AutorizacionController(AutorizacionService service,
-      NotificacionProyectoExternoCVNService notificacionProyectoExternoService) {
+      NotificacionProyectoExternoCVNService notificacionProyectoExternoService,
+      EstadoAutorizacionService estadoAutorizacionService,
+      CertificadoAutorizacionService certificadoAutorizacionService) {
     this.service = service;
     this.notificacionProyectoExternoService = notificacionProyectoExternoService;
+    this.estadoAutorizacionService = estadoAutorizacionService;
+    this.certificadoAutorizacionService = certificadoAutorizacionService;
   }
 
   /**
@@ -117,7 +126,7 @@ public class AutorizacionController {
    * @return {@link Autorizacion} actualizado.
    */
   @PatchMapping("/{id}/presentar")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
   Autorizacion presentar(@PathVariable Long id) {
     log.debug("presentar(Long id)) - start");
 
@@ -136,7 +145,7 @@ public class AutorizacionController {
    *         presentada
    */
   @RequestMapping(path = "/{id}/presentable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
   ResponseEntity<Autorizacion> presentable(@PathVariable Long id) {
     log.debug("presentable(Long id) - start");
     boolean returnValue = service.presentable(id);
@@ -153,7 +162,7 @@ public class AutorizacionController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-V')")
   public ResponseEntity<Page<Autorizacion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
@@ -184,11 +193,83 @@ public class AutorizacionController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}/vinculacionesnotificacionesproyectosexternos", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
   public ResponseEntity<Autorizacion> hasAutorizacionNotificacionProyectoExterno(@PathVariable Long id) {
     log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - start");
     boolean returnValue = notificacionProyectoExternoService.existsByAutorizacionId(id);
     log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link EstadoAutorizacion} de la
+   * {@link Autorizacion}.
+   * 
+   * @param id     Identificador de {@link Autorizacion}.
+   * @param paging pageable.
+   * @return el listado de entidades {@link EstadoAutorizacion} paginados y
+   *         filtrados.
+   */
+  @GetMapping("/{id}/estados")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
+  public ResponseEntity<Page<EstadoAutorizacion>> findAllEstadoAutorizacion(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - start");
+    Page<EstadoAutorizacion> page = estadoAutorizacionService.findAllByAutorizacion(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link CertificadoAutorizacion} de
+   * la
+   * {@link Autorizacion}.
+   * 
+   * @param id     Identificador de {@link Autorizacion}.
+   * @param paging pageable.
+   * @return el listado de entidades {@link EstadoAutorizacion} paginados y
+   *         filtrados.
+   */
+  @GetMapping("/{id}/certificados")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
+  public ResponseEntity<Page<CertificadoAutorizacion>> findAllCertificadoAutorizacion(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - start");
+    Page<CertificadoAutorizacion> page = certificadoAutorizacionService.findAllByAutorizacion(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
+   * Comprueba si la {@link Autorizacion} tiene asociado algun
+   * {@link CertificadoAutorizacion} con el campo
+   * visible a 'true'.
+   * 
+   * @param id identificador del {@link Autorizacion}
+   * @return {@link ResponseEntity} conteniendo el estado de la respuesta, 200 si
+   *         contiene, 204 si no contiene.
+   */
+  @RequestMapping(path = "/{id}/hascertificadoautorizacionVisible", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
+  public ResponseEntity<Void> hasCertificadoAutorizacionVisible(@PathVariable Long id) {
+    log.debug("hasCertificadoAutorizacionVisible(Long id) - start");
+    boolean returnValue = certificadoAutorizacionService.hasCertificadoAutorizacionVisible(id);
+
+    log.debug("hasCertificadoAutorizacionVisible(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

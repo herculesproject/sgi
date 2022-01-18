@@ -6,10 +6,13 @@ import java.util.Optional;
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.EstadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion.Estado;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
+import org.crue.hercules.sgi.csp.repository.CertificadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
+import org.crue.hercules.sgi.csp.repository.specification.CertificadoAutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.service.impl.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -34,11 +37,14 @@ import lombok.extern.slf4j.Slf4j;
 public class AutorizacionService {
   private final AutorizacionRepository repository;
   private final EstadoAutorizacionRepository estadoAutorizacionRepository;
+  private final CertificadoAutorizacionRepository certificadoAutorizacionRepository;
 
   public AutorizacionService(AutorizacionRepository repository,
-      EstadoAutorizacionRepository estadoAutorizacionRepository) {
+      EstadoAutorizacionRepository estadoAutorizacionRepository,
+      CertificadoAutorizacionRepository certificadoAutorizacionRepository) {
     this.repository = repository;
     this.estadoAutorizacionRepository = estadoAutorizacionRepository;
+    this.certificadoAutorizacionRepository = certificadoAutorizacionRepository;
 
   }
 
@@ -260,4 +266,5 @@ public class AutorizacionService {
         "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion, String comentario) - end");
     return returnValue;
   }
+
 }
