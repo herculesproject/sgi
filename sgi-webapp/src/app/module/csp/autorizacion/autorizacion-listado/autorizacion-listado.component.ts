@@ -35,6 +35,7 @@ export interface IAutorizacionListado {
   estadoAutorizacion: IEstadoAutorizacion;
   fechaEstadoBorrador: DateTime;
   entidadPaticipacionNombre: string;
+  hasCertificadoVisible: boolean;
 }
 
 @Component({
@@ -158,6 +159,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
             estadoAutorizacion: {} as IEstadoAutorizacion,
             fechaEstadoBorrador: null,
             entidadPaticipacionNombre: null,
+            hasCertificadoVisible: null,
           } as IAutorizacionListado;
         });
         return {
@@ -170,7 +172,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
         from(response.items).pipe(
           mergeMap(autorizacionListado => {
             return this.autorizacionService.hasAutorizacionNotificacionProyectoExterno(autorizacionListado.autorizacion.id).pipe(
-              tap((hasAutorizacionNotificacionProyectoExterno) => this.mapCanBeDeleted.set(autorizacionListado.autorizacion.id, hasAutorizacionNotificacionProyectoExterno)),
+              tap((hasAutorizacionNotificacionProyectoExterno) =>
+                this.mapCanBeDeleted.set(autorizacionListado.autorizacion.id, hasAutorizacionNotificacionProyectoExterno)),
               map(() => autorizacionListado)
             );
           }),
@@ -182,6 +185,17 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                     autorizacionListado.fechaEstadoBorrador = estadoAutorizacion.fecha;
                   }
                   autorizacionListado.estadoAutorizacion = estadoAutorizacion;
+                  return autorizacionListado;
+                })
+              );
+            }
+            return of(autorizacionListado);
+          }),
+          mergeMap(autorizacionListado => {
+            if (autorizacionListado.autorizacion.id) {
+              return this.autorizacionService.hasCertificadoAutorizacionVisible(autorizacionListado.autorizacion.id).pipe(
+                map(exist => {
+                  autorizacionListado.hasCertificadoVisible = exist;
                   return autorizacionListado;
                 })
               );

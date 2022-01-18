@@ -1,20 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { MaterialDesignModule } from '@material/material-design.module';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { CspSharedModule } from '../shared/csp-shared.module';
-import { AutorizacionRoutingModule } from './autorizacion-routing.module';
-import { AutorizacionListadoComponent } from './autorizacion-listado/autorizacion-listado.component';
-import { AutorizacionCrearComponent } from './autorizacion-crear/autorizacion-crear.component';
-import { AutorizacionDatosGeneralesComponent } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.component';
-import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { SharedModule } from '@shared/shared.module';
 import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
-import { AutorizacionActionService } from './autorizacion.action.service';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../shared/csp-shared.module';
+import { AutorizacionCrearComponent } from './autorizacion-crear/autorizacion-crear.component';
 import { AutorizacionEditarComponent } from './autorizacion-editar/autorizacion-editar.component';
+import { AutorizacionDatosGeneralesComponent } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.component';
+import { AutorizacionHistoricoEstadosComponent } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.component';
+import { AutorizacionListadoComponent } from './autorizacion-listado/autorizacion-listado.component';
+import { AutorizacionRoutingModule } from './autorizacion-routing.module';
 import { CambioEstadoModalComponent } from './cambio-estado-modal/cambio-estado-modal.component';
 
 @NgModule({
@@ -23,7 +22,8 @@ import { CambioEstadoModalComponent } from './cambio-estado-modal/cambio-estado-
     AutorizacionCrearComponent,
     AutorizacionDatosGeneralesComponent,
     AutorizacionEditarComponent,
-    CambioEstadoModalComponent],
+    CambioEstadoModalComponent,
+    AutorizacionHistoricoEstadosComponent],
   imports: [
     CommonModule,
     SharedModule,

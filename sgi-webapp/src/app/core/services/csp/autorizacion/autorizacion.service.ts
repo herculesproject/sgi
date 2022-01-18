@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ICertificadoAutorizacionResponse } from '../certificado-autorizacion/certificado-autorizacion-response';
+import { CERTIFICADO_AUTORIZACION_RESPONSE_CONVERTER } from '../certificado-autorizacion/certificado-autorizacion-response.converter';
 import { IEstadoAutorizacionResponse } from '../estado-autorizacion/estado-autorizacion-response';
 import { ESTADO_AUTORIZACION_RESPONSE_CONVERTER } from '../estado-autorizacion/estado-autorizacion-response.converter';
 import { IAutorizacionRequest } from './autorizacion-request';
@@ -93,6 +96,46 @@ export class AutorizacionService extends _AutorizacionMixinBase {
     const url = `${this.endpointUrl}/${id}/vinculacionesnotificacionesproyectosexternos`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera listado de historico estado
+   * @param id autorizacion
+   * @param options opciones de búsqueda.
+   */
+  findEstadosAutorizacion(autorizacionId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoAutorizacion>> {
+    return this.find<IEstadoAutorizacionResponse, IEstadoAutorizacion>(
+      `${this.endpointUrl}/${autorizacionId}/estados`,
+      options,
+      ESTADO_AUTORIZACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera listado de historico estado
+   * @param id autorizacion
+   * @param options opciones de búsqueda.
+   */
+  findCertificadosAutorizacion(autorizacionId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ICertificadoAutorizacion>> {
+    return this.find<ICertificadoAutorizacionResponse, ICertificadoAutorizacion>(
+      `${this.endpointUrl}/${autorizacionId}/certificados`,
+      options,
+      CERTIFICADO_AUTORIZACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Comprueba si la autorizacion tiene asociado algun CertificadoAutorizacion con el campo 
+   * visible a 'true'.
+   * @param id identificador del {@link Autorizacion}
+   * @return  estado de la respuesta, 200 si contiene, 204 si no contiene.
+   */
+  hasCertificadoAutorizacionVisible(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/hascertificadoautorizacionVisible`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
     );
   }
 }

@@ -10,6 +10,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { AutorizacionCrearComponent } from './autorizacion-crear/autorizacion-crear.component';
 import { AutorizacionEditarComponent } from './autorizacion-editar/autorizacion-editar.component';
 import { AutorizacionDatosGeneralesComponent } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.component';
+import { AutorizacionHistoricoEstadosComponent } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.component';
 import { AutorizacionListadoComponent } from './autorizacion-listado/autorizacion-listado.component';
 import { AUTORIZACION_ROUTE_NAMES } from './autorizacion-route-names';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
@@ -72,6 +73,11 @@ const routes: SgiRoutes = [
       {
         path: AUTORIZACION_ROUTE_NAMES.DATOS_GENERALES,
         component: AutorizacionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: AUTORIZACION_ROUTE_NAMES.HISTORICO_ESTADOS,
+        component: AutorizacionHistoricoEstadosComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

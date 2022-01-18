@@ -1,21 +1,22 @@
-import { Injectable, OnDestroy } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { marker } from "@biesbjerg/ngx-translate-extract-marker";
-import { IAutorizacion } from "@core/models/csp/autorizacion";
-import { Estado } from "@core/models/csp/estado-autorizacion";
-import { ActionService } from "@core/services/action-service";
-import { AutorizacionService } from "@core/services/csp/autorizacion/autorizacion.service";
-import { ConvocatoriaService } from "@core/services/csp/convocatoria.service";
-import { EstadoAutorizacionService } from "@core/services/csp/estado-autorizacion/estado-autorizacion.service";
-import { DialogService } from "@core/services/dialog.service";
-import { EmpresaService } from "@core/services/sgemp/empresa.service";
-import { PersonaService } from "@core/services/sgp/persona.service";
-import { SgiAuthService } from "@sgi/framework/auth";
-import { NGXLogger } from "ngx-logger";
-import { Observable, of, throwError } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
-import { AutorizacionDatosGeneralesFragment } from "./autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment";
-import { AUTORIZACION_ROUTE_PARAMS } from "./autorizacion-route-params";
+import { Injectable, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { Estado } from '@core/models/csp/estado-autorizacion';
+import { ActionService } from '@core/services/action-service';
+import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
+import { DialogService } from '@core/services/dialog.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { AutorizacionDatosGeneralesFragment } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment';
+import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
+import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
 
 const MSG_REGISTRAR = marker('msg.csp.autorizacion.presentar');
 
@@ -25,11 +26,12 @@ export class AutorizacionActionService extends
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
+    HISTORICO_ESTADOS: 'historico-estados'
   };
 
   private datosGenerales: AutorizacionDatosGeneralesFragment;
 
-  private dialogService: DialogService;
+  private historicoEstados: AutorizacionHistoricoEstadosFragment;
 
   public readonly id: number;
 
@@ -41,6 +43,10 @@ export class AutorizacionActionService extends
     return this.datosGenerales.getValue();
   }
 
+  get isInvestigador(): boolean {
+    return this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
+  }
+
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
@@ -49,8 +55,8 @@ export class AutorizacionActionService extends
     personaService: PersonaService,
     empresaService: EmpresaService,
     estadoAutorizacionService: EstadoAutorizacionService,
-    authService: SgiAuthService,
-    dialogService: DialogService,
+    public authService: SgiAuthService,
+    public dialogService: DialogService,
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(AUTORIZACION_ROUTE_PARAMS.ID));
@@ -61,8 +67,11 @@ export class AutorizacionActionService extends
     this.dialogService = dialogService;
     this.datosGenerales = new AutorizacionDatosGeneralesFragment(
       logger, this.id, autorizacionService, personaService, empresaService, estadoAutorizacionService, authService, convocatoriaService);
+    this.historicoEstados = new AutorizacionHistoricoEstadosFragment(this.id, autorizacionService, false);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+
+    this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstados);
 
     this.datosGenerales.initialize();
   }

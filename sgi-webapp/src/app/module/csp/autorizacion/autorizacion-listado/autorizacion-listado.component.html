@@ -112,7 +112,8 @@
           </ng-container>
 
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-AUT-INV-C'">
-            <button mat-button matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}">
+            <button *ngIf="(element.hasCertificadoVisible)" mat-button color="primary"
+              matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}">
               <mat-icon color="primary">arrow_downward</mat-icon>
             </button>
           </ng-container>
