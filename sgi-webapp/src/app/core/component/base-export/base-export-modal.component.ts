@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { HttpProblem, Problem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { OutputReport } from '@core/models/rep/output-report.enum';
-import { IExportService, IReportConfig, RelationsTypeView } from '@core/services/rep/abstract-table-export.service';
+import { IExportService, IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -68,10 +68,6 @@ export abstract class BaseExportModalComponent<T> implements OnInit, OnDestroy {
   protected abstract getGender(): any;
 
   protected abstract getReportOptions(): IReportConfig<T>;
-
-  protected getRelationsTypeView(outputTypeValue: OutputReport): RelationsTypeView {
-    return outputTypeValue === OutputReport.PDF || outputTypeValue === OutputReport.RTF ? RelationsTypeView.TABLE : RelationsTypeView.LIST;
-  }
 
   export(): void {
     this.problems$.next([]);

@@ -46,7 +46,6 @@ export class ProyectoConsultaPresupuestoExportModalComponent
       reportOptions: {
         data: this.modalData.data,
         columns: this.modalData.columns ?? [],
-        relationsTypeView: this.getRelationsTypeView(this.formGroup.controls.outputType.value),
         columnMinWidth: 120
       }
     };

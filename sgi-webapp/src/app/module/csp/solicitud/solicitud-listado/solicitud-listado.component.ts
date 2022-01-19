@@ -263,7 +263,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<ISolicitudListado>> {
 
-    const observable$ = this.solicitudService.findAllTodos(this.getFindOptions(reset)).pipe(
+    return this.solicitudService.findAllTodos(this.getFindOptions(reset)).pipe(
       map(response => {
         return response as SgiRestListResult<ISolicitudListado>;
       }),
@@ -293,7 +293,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
         const solicitudes = response.items;
         const personaIdsSolicitantes = new Set<string>(solicitudes.map((solicitud) => solicitud.solicitante.id));
-        const solicitudesWithDatosSolicitante$ = this.personaService.findAllByIdIn([...personaIdsSolicitantes]).pipe(
+        return this.personaService.findAllByIdIn([...personaIdsSolicitantes]).pipe(
           map((result) => {
             const personas = result.items;
 
@@ -319,11 +319,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
           catchError(() => of(response))
         );
 
-        return solicitudesWithDatosSolicitante$;
       })
     );
-
-    return observable$;
   }
 
   protected initColumns(): void {
