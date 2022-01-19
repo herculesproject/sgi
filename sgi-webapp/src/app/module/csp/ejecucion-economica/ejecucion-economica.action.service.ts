@@ -5,7 +5,6 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ActionService } from '@core/services/action-service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
-import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
@@ -75,7 +74,6 @@ export class EjecucionEconomicaActionService extends ActionService {
     personaService: PersonaService,
     proyectoAnualidadService: ProyectoAnualidadService,
     ejecucionEconomicaService: EjecucionEconomicaService,
-    proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
     gastoProyectoService: GastoProyectoService,
     gastoService: GastoService,
     calendarioFacturacionService: CalendarioFacturacionService,
@@ -132,7 +130,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoService, this.data.configuracion);
 
     this.validacionGastos = new ValidacionGastosFragment(
-      id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService, proyectoAgrupacionGastoService);
+      id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService);
 
     this.facturasEmitidas = new FacturasEmitidasFragment(
       id, this.data.proyectoSge, this.data.proyectosRelacionados,
