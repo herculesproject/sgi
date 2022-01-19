@@ -80,7 +80,8 @@ public class SolicitudIT extends BaseIT {
   private static final String PATH_PROYECTOS_IDS = "/proyectosids";
   private static final String PATH_PALABRAS_CLAVE = "/palabrasclave";
 
-  private static final String[] DEFAULT_ROLES = {"AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-R"};
+  private static final String[] DEFAULT_ROLES = { "AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B",
+      "CSP-SOL-R" };
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -97,7 +98,7 @@ public class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsSolicitud() throws Exception {
+  void create_ReturnsSolicitud() throws Exception {
     Solicitud solicitud = generarMockSolicitud(null);
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -185,7 +186,8 @@ public class SolicitudIT extends BaseIT {
     Long idSolicitud = 1L;
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null, "CSP-SOL-R"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, "CSP-SOL-R"),
         Solicitud.class, idSolicitud);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -457,7 +459,8 @@ public class SolicitudIT extends BaseIT {
     Long idSolicitud = 1L;
 
     final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.GET,
+        buildRequest(null, null, "CSP-SOL-E"),
         SolicitudProyecto.class, idSolicitud);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -472,7 +475,8 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud datos proyecto
     final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         SolicitudProyecto.class, id);
 
     // then: Response is 200 OK
@@ -490,7 +494,8 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud datos proyecto
     final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         SolicitudProyecto.class, id);
 
     // then: Response is 204 No Content
@@ -596,6 +601,12 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
   })
@@ -617,7 +628,8 @@ public class SolicitudIT extends BaseIT {
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoPresupuesto>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, DEFAULT_ROLES), new ParameterizedTypeReference<List<SolicitudProyectoPresupuesto>>() {
+        buildRequest(headers, null, DEFAULT_ROLES),
+        new ParameterizedTypeReference<List<SolicitudProyectoPresupuesto>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -647,6 +659,12 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
   })
@@ -659,7 +677,9 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud datos proyecto presupuesto entidad convocatoria
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_ENTIDAD_CONVOCATORIA + PATH_PARAMETER_ENTIDAD_REF, HttpMethod.HEAD, buildRequest(null, null, "CSP-PRO-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_ENTIDAD_CONVOCATORIA
+            + PATH_PARAMETER_ENTIDAD_REF,
+        HttpMethod.HEAD, buildRequest(null, null, "CSP-PRO-E"),
         Object.class, id, entidadRef);
 
     // then: Response is 204 No Content
@@ -667,7 +687,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -686,19 +706,20 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud datos proyecto presupuesto entidad convocatoria
     final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO, HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO, HttpMethod.GET,
+        buildRequest(null, null, "CSP-SOL-E"),
         SolicitudProyecto.class, solicitudId);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    
+
     SolicitudProyecto solicitudProyecto = response.getBody();
-    
+
     Assertions.assertThat(solicitudProyecto).isNotNull();
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -714,7 +735,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllSolicitudProyectoEquipo_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEquipoSubList() throws Exception {
+  void findAllSolicitudProyectoEquipo_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEquipoSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -741,7 +763,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -763,15 +785,16 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exists solicitud proyecto equipo
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_EXISTS_SOLICITANTE, HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_EXISTS_SOLICITANTE, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         Object.class, id);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -791,10 +814,11 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exists solicitud proyecto
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO, HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         Object.class, id);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
@@ -810,6 +834,12 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
   })
@@ -821,20 +851,24 @@ public class SolicitudIT extends BaseIT {
 
     // when: get solicitud proyecto presupuesto totales
     final ResponseEntity<SolicitudProyectoPresupuestoTotales> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_TOTALES, HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_TOTALES, HttpMethod.GET,
+        buildRequest(null, null, "CSP-SOL-E"),
         SolicitudProyectoPresupuestoTotales.class, solicitudId);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    
+
     SolicitudProyectoPresupuestoTotales totales = response.getBody();
-    
+
     Assertions.assertThat(totales).isNotNull();
-    Assertions.assertThat(totales.getImporteTotalPresupuestadoAjeno()).as("getImporteTotalPresupuestadoAjeno()").isNotNull();
-    Assertions.assertThat(totales.getImporteTotalPresupuestadoNoAjeno()).as("getImporteTotalPresupuestadoNoAjeno()").isNotNull();
+    Assertions.assertThat(totales.getImporteTotalPresupuestadoAjeno()).as("getImporteTotalPresupuestadoAjeno()")
+        .isNotNull();
+    Assertions.assertThat(totales.getImporteTotalPresupuestadoNoAjeno()).as("getImporteTotalPresupuestadoNoAjeno()")
+        .isNotNull();
     Assertions.assertThat(totales.getImporteTotalSolicitadoAjeno()).as("getImporteTotalSolicitadoAjeno()").isNotNull();
-    Assertions.assertThat(totales.getImporteTotalSolicitadoNoAjeno()).as("getImporteTotalSolicitadoNoAjeno()").isNotNull();
+    Assertions.assertThat(totales.getImporteTotalSolicitadoNoAjeno()).as("getImporteTotalSolicitadoNoAjeno()")
+        .isNotNull();
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -848,25 +882,33 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllSolicitudProyectoPresupuestoTotalConceptoGastos_ReturnsSolicitudProyectoPresupuestoTotalConceptoGastoList() throws Exception {
+  void findAllSolicitudProyectoPresupuestoTotalConceptoGastos_ReturnsSolicitudProyectoPresupuestoTotalConceptoGastoList()
+      throws Exception {
     // Given existing solicitud id
     Long solicitudId = 1L;
 
     // when: get solicitud proyecto presupuesto totales
     final ResponseEntity<List<SolicitudProyectoPresupuestoTotalConceptoGasto>> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_TOTALES_CONCEPTO_GASTO, HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO + PATH_TOTALES_CONCEPTO_GASTO,
+        HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
         new ParameterizedTypeReference<List<SolicitudProyectoPresupuestoTotalConceptoGasto>>() {
         }, solicitudId);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    
+
     List<SolicitudProyectoPresupuestoTotalConceptoGasto> totales = response.getBody();
 
     Assertions.assertThat(totales).hasSize(4);
@@ -890,10 +932,11 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exists convocatoria sgi
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONVOCATORIA_SGI, HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONVOCATORIA_SGI, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         Object.class, solicitudId);
 
-    // then: Response is 200 
+    // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
@@ -917,10 +960,11 @@ public class SolicitudIT extends BaseIT {
 
     // when: check can create proyecto
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CREAR_PROYECTO, HttpMethod.HEAD, buildRequest(null, null, "CSP-PRO-C"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CREAR_PROYECTO, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-PRO-C"),
         Object.class, solicitudId);
 
-    // then: Response is 204 
+    // then: Response is 204
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
@@ -943,10 +987,11 @@ public class SolicitudIT extends BaseIT {
 
     // when: check if solicitud is modificable
     final ResponseEntity<Object> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_MODIFICABLE, HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_MODIFICABLE, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-V"),
         Object.class, solicitudId);
 
-    // then: Response is 204 
+    // then: Response is 204
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
@@ -971,7 +1016,8 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 1L;
     EstadoSolicitud estado = buildMockEstadoSolicitud(Estado.CONCEDIDA);
 
-    final ResponseEntity<Solicitud> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CAMBIAR_ESTADO,
+    final ResponseEntity<Solicitud> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CAMBIAR_ESTADO,
         HttpMethod.PATCH, buildRequest(null, estado, "CSP-SOL-INV-ER"), Solicitud.class, solicitudId);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -980,7 +1026,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(solicitudActualizado.getId()).as("getId()").isEqualTo(solicitudId);
     Assertions.assertThat(solicitudActualizado.getEstado().getEstado()).as("getEstado().getEstado()")
         .isEqualTo(Estado.CONCEDIDA);
-    
+
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1019,7 +1065,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("4");
   }
- 
+
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
@@ -1034,7 +1080,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllSolicitudProyectoClasificaciones_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoClasificacionesSubList() throws Exception {
+  void findAllSolicitudProyectoClasificaciones_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoClasificacionesSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1044,11 +1091,12 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_CLASIFICACIONES )
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_CLASIFICACIONES)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoClasificacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, "CSP-SOL-E"), new ParameterizedTypeReference<List<SolicitudProyectoClasificacion>>() {
+        buildRequest(headers, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<SolicitudProyectoClasificacion>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1074,7 +1122,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllBySolicitudProyectoId_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoAreaConocimientoSubList() throws Exception {
+  void findAllBySolicitudProyectoId_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoAreaConocimientoSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1088,7 +1137,8 @@ public class SolicitudIT extends BaseIT {
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoAreaConocimiento>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, "CSP-SOL-E"), new ParameterizedTypeReference<List<SolicitudProyectoAreaConocimiento>>() {
+        buildRequest(headers, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<SolicitudProyectoAreaConocimiento>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1114,7 +1164,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllResponsablesEconomicosBySolicitud_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoResponsableEconomicoOutputSubList() throws Exception {
+  void findAllResponsablesEconomicosBySolicitud_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoResponsableEconomicoOutputSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1127,8 +1178,10 @@ public class SolicitudIT extends BaseIT {
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_RESPONSABLES_ECONOMICOS)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
-    final ResponseEntity<List<SolicitudProyectoResponsableEconomicoOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, "CSP-SOL-E"), new ParameterizedTypeReference<List<SolicitudProyectoResponsableEconomicoOutput>>() {
+    final ResponseEntity<List<SolicitudProyectoResponsableEconomicoOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET,
+        buildRequest(headers, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<SolicitudProyectoResponsableEconomicoOutput>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1140,7 +1193,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1151,6 +1204,12 @@ public class SolicitudIT extends BaseIT {
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
   })
@@ -1161,7 +1220,8 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud proyecto presupuesto
     final ResponseEntity<Void> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO, HttpMethod.HEAD, buildRequest(null, null, "CSP-PRO-V"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-PRO-V"),
         Void.class, solicitudProyectoId);
 
     // then: Response is 200
@@ -1169,7 +1229,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1188,7 +1248,8 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud proyecto has tipo global
     final ResponseEntity<Void> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_TIPO_GLOBAL, HttpMethod.HEAD, buildRequest(null, null, "CSP-SOL-E"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_TIPO_GLOBAL, HttpMethod.HEAD,
+        buildRequest(null, null, "CSP-SOL-E"),
         Void.class, solicitudProyectoId);
 
     // then: Response is 200
@@ -1196,7 +1257,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1216,7 +1277,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllSolicitudProyectoEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadFinanciadoraSubList() throws Exception {
+  void findAllSolicitudProyectoEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadFinanciadoraSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1230,7 +1292,8 @@ public class SolicitudIT extends BaseIT {
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<ConvocatoriaEntidadFinanciadora>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, "CSP-SOL-E"), new ParameterizedTypeReference<List<ConvocatoriaEntidadFinanciadora>>() {
+        buildRequest(headers, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<ConvocatoriaEntidadFinanciadora>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1242,7 +1305,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1262,7 +1325,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findSolicitudProyectoEntidadTipoPresupuestoMixto_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadSubList() throws Exception {
+  void findSolicitudProyectoEntidadTipoPresupuestoMixto_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1272,7 +1336,8 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_MIXTO)
+        .fromUriString(
+            CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_MIXTO)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoEntidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -1287,8 +1352,8 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
   }
-  
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1308,7 +1373,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findSolicitudProyectoEntidadTipoPresupuestoMixto_WithPagingSortingAndFiltering_ReturnsStatusCode204() throws Exception {
+  void findSolicitudProyectoEntidadTipoPresupuestoMixto_WithPagingSortingAndFiltering_ReturnsStatusCode204()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1318,7 +1384,8 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 3L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_MIXTO)
+        .fromUriString(
+            CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_MIXTO)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoEntidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -1327,8 +1394,8 @@ public class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
-  
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1348,7 +1415,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findSolicitudProyectoEntidadTipoPresupuestoPorEntidad_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadSubList() throws Exception {
+  void findSolicitudProyectoEntidadTipoPresupuestoPorEntidad_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadSubList()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1358,7 +1426,8 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_POR_ENTIDAD)
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD
+            + PATH_TIPO_PRESUPUESTO_POR_ENTIDAD)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoEntidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -1373,8 +1442,8 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
   }
-  
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1394,7 +1463,8 @@ public class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findSolicitudProyectoEntidadTipoPresupuestoPorEntidad_WithPagingSortingAndFiltering_ReturnsStatusCode204() throws Exception {
+  void findSolicitudProyectoEntidadTipoPresupuestoPorEntidad_WithPagingSortingAndFiltering_ReturnsStatusCode204()
+      throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -1404,7 +1474,8 @@ public class SolicitudIT extends BaseIT {
     Long solicitudId = 3L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD + PATH_TIPO_PRESUPUESTO_POR_ENTIDAD)
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_ENTIDAD
+            + PATH_TIPO_PRESUPUESTO_POR_ENTIDAD)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
     final ResponseEntity<List<SolicitudProyectoEntidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -1414,7 +1485,7 @@ public class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
@@ -1435,20 +1506,22 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud proyecto has tipo global
     final ResponseEntity<List<Long>> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTOS_IDS, HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
-        new ParameterizedTypeReference<List<Long>>() {}, solicitudId);
-        
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTOS_IDS, HttpMethod.GET,
+        buildRequest(null, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<Long>>() {
+        }, solicitudId);
+
     // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    
-    List<Long>ids = response.getBody();
-    
+
+    List<Long> ids = response.getBody();
+
     Assertions.assertThat(ids).hasSize(5);
   }
 
-  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
@@ -1469,15 +1542,17 @@ public class SolicitudIT extends BaseIT {
 
     // when: check exist solicitud proyecto has tipo global
     final ResponseEntity<List<Long>> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTOS_IDS, HttpMethod.GET, buildRequest(null, null, "CSP-SOL-E"),
-        new ParameterizedTypeReference<List<Long>>() {}, solicitudId);
-        
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTOS_IDS, HttpMethod.GET,
+        buildRequest(null, null, "CSP-SOL-E"),
+        new ParameterizedTypeReference<List<Long>>() {
+        }, solicitudId);
+
     // then: Response is 200
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
     // @formatter:off
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
@@ -1513,7 +1588,7 @@ public class SolicitudIT extends BaseIT {
 
     final List<SolicitudPalabraClaveOutput> palabrasClave = response.getBody();
     Assertions.assertThat(palabrasClave.size()).isEqualTo(3);
-    
+
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1550,7 +1625,7 @@ public class SolicitudIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    
+
     List<SolicitudPalabraClaveOutput> updated = response.getBody();
     Assertions.assertThat(updated.size()).isEqualTo(3);
 
@@ -1565,9 +1640,9 @@ public class SolicitudIT extends BaseIT {
 
   private SolicitudPalabraClaveInput buildMockSolicitudPalabraClaveInput(Long solicitudId, String palabraRef) {
     return SolicitudPalabraClaveInput.builder()
-    .solicitudId(solicitudId)
-    .palabraClaveRef(palabraRef)
-    .build();
+        .solicitudId(solicitudId)
+        .palabraClaveRef(palabraRef)
+        .build();
   }
 
   /**
@@ -1606,10 +1681,10 @@ public class SolicitudIT extends BaseIT {
   }
 
   private EstadoSolicitud buildMockEstadoSolicitud(Estado estado) {
-      return EstadoSolicitud.builder()
-      .estado(estado)
-      .fechaEstado(Instant.now())
-      .build();
+    return EstadoSolicitud.builder()
+        .estado(estado)
+        .fechaEstado(Instant.now())
+        .build();
   }
 
 }
