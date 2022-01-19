@@ -49,7 +49,7 @@ public class ProyectoEntidadFinanciadoraController {
    * @return {@link ProyectoEntidadFinanciadora} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ProyectoEntidadFinanciadora findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoEntidadFinanciadora returnValue = service.findById(id);

@@ -220,4 +220,40 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000004-26">
+    <createSequence incrementBy="1" sequenceName="proyecto_periodo_amortizacion_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-27">
+    <createTable tableName="proyecto_periodo_amortizacion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="proyecto_periodo_amortizacionPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="fecha_limite_amortizacion" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="importe" type="DECIMAL(19, 2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="proyecto_sge_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="proyecto_anualidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="proyecto_entidad_financiadora_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-28">
+    <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="proyecto_periodo_amortizacion" constraintName="FK_PROYECTOPERIODOAMORTIZACION_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000004-29">
+    <addForeignKeyConstraint baseColumnNames="proyecto_entidad_financiadora_id" baseTableName="proyecto_periodo_amortizacion" constraintName="FK_PROYECTOPERIODOAMORTIZACION_PROYECTOENTIDADFINANCIADORA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_entidad_financiadora" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>
