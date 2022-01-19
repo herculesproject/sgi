@@ -130,6 +130,11 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CONSULTA_PRESUPUESTO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.AMORTIZACION_FONDOS]"
+        [title]="'menu.csp.proyectos.configuracion-economica.amortizacion-fondos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.AMORTIZACION_FONDOS)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
         [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_FACTURACION]"
         [title]="'csp.proyectos.configuracion-economica.calendario_facturacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_FACTURACION)">

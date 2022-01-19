@@ -18,6 +18,7 @@ import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entid
 import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
 import { ProyectoListadoModalComponent } from './modals/proyecto-listado-modal/proyecto-listado-modal.component';
 import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquetes-trabajo-modal/proyecto-paquetes-trabajo-modal.component';
+import { ProyectoPeriodoAmortizacionModalComponent } from './modals/proyecto-periodo-amortizacion-fondos-modal/proyecto-periodo-justificacion-modal/proyecto-periodo-amortizacion-fondos-modal.component';
 import { ProyectoPeriodoJustificacionModalComponent } from './modals/proyecto-periodo-justificacion-modal/proyecto-periodo-justificacion-modal/proyecto-periodo-justificacion-modal.component';
 import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
 import { ProyectoRelacionModalComponent } from './modals/proyecto-relacion-modal/proyecto-relacion-modal.component';
@@ -27,6 +28,7 @@ import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.componen
 import { ProyectoDataResolver } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
 import { ProyectoAgrupacionesGastoComponent } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.component';
+import { ProyectoAmortizacionFondosComponent } from './proyecto-formulario/proyecto-amortizacion-fondos/proyecto-amortizacion-fondos.component';
 import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
 import { ProyectoCalendarioFacturacionComponent } from './proyecto-formulario/proyecto-calendario-facturacion/proyecto-calendario-facturacion.component';
 import { ProyectoCalendarioJustificacionComponent } from './proyecto-formulario/proyecto-calendario-justificacion/proyecto-calendario-justificacion.component';
@@ -100,6 +102,8 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     ProyectoRelacionesComponent,
     ProyectoRelacionModalComponent,
     ProyectoCalendarioFacturacionComponent,
+    ProyectoAmortizacionFondosComponent,
+    ProyectoPeriodoAmortizacionModalComponent,
     ProyectoCalendarioFacturacionModalComponent,
     HistoricoIpModalComponent,
     ProyectoConsultaPresupuestoExportModalComponent
