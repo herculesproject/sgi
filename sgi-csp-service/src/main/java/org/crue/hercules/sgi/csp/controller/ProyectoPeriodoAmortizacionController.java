@@ -98,7 +98,7 @@ public class ProyectoPeriodoAmortizacionController {
   /**
    * Crea un nuevo {@link ProyectoPeriodoAmortizacion}.
    * 
-   * @param ProyectoPeriodoAmortizacion {@link ProyectoPeriodoAmortizacion} que se
+   * @param proyectoPeriodoAmortizacion {@link ProyectoPeriodoAmortizacion} que se
    *                                    quiere crear.
    * @return Nuevo {@link ProyectoPeriodoAmortizacion} creado.
    */
