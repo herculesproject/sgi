@@ -7,7 +7,10 @@
     <!-- Disable future tecnico-etica, tecnico1-etica, tecnico2-etica, tecnico3-etica, investigador4-etica -->
     <update tableName="evaluador">
       <column name="fecha_baja" valueDate="2022-01-16T23:59:59"></column>
-      <where>(fecha_baja IS NULL OR fecha_baja > '2022-01-16T23:59:59') AND persona_ref IN('01889311', '02591317', '48517010', '22481020', '02221287', '77503584', '34784622', '27486472', '34977558', '48541829')</where>
+      <where>(fecha_baja IS NULL OR :name > :value) AND persona_ref IN('01889311', '02591317', '48517010', '22481020', '02221287', '77503584', '34784622', '27486472', '34977558', '48541829')</where>
+      <whereParams>
+        <param name="fecha_baja" valueDate="2022-01-16T23:59:59" />
+      </whereParams>
     </update>
   </changeSet>
 
@@ -24,8 +27,9 @@
     <!-- Switch existent 'PRESIDENT's to 'VOCAL', to prevent duplicates -->
     <update tableName="evaluador">
       <column name="cargo_comite_id" valueComputed="(SELECT id FROM ${schemaPrefix}cargo_comite WHERE nombre = 'VOCAL')"></column>
-      <where>(fecha_baja IS NULL OR fecha_baja > '2022-01-16T23:59:59') AND :name=:value</where>
+      <where>(fecha_baja IS NULL OR :name > :value) AND :name=:value</where>
       <whereParams>
+        <param name="fecha_baja" valueDate="2022-01-16T23:59:59" />
         <param name="cargo_comite_id" valueComputed="(SELECT id FROM ${schemaPrefix}cargo_comite WHERE nombre = 'PRESIDENTE')" />
       </whereParams>
     </update>
