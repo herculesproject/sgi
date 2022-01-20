@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
@@ -8,7 +9,6 @@ import { ReportService } from '@core/services/rep/report.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { IAnualidadGastoWithProyectoAgrupacionGasto } from '../proyecto-consulta-presupuesto.fragment';
 
 const ANUALIDAD_KEY = marker('csp.proyecto-consulta-presupuesto.label.anualidad');
 const CONCEPTO_GASTO_KEY = marker('csp.proyecto-consulta-presupuesto.label.concepto-gasto');
@@ -25,18 +25,18 @@ export interface IColumnDefinition {
 }
 
 export interface IConsultaPresupuestoReportOptions extends IReportOptions {
-  data: IAnualidadGastoWithProyectoAgrupacionGasto[];
+  data: IAnualidadGasto[];
   columns: IColumnDefinition[];
 }
 
 export interface IConsultaPresupuestoExportData {
-  data: IAnualidadGastoWithProyectoAgrupacionGasto[];
+  data: IAnualidadGasto[];
   columns: IColumnDefinition[];
 }
 
 @Injectable()
 export class ProyectoConsultaPresupuestoExportService
-  extends AbstractTableExportService<IAnualidadGastoWithProyectoAgrupacionGasto, IConsultaPresupuestoReportOptions> {
+  extends AbstractTableExportService<IAnualidadGasto, IConsultaPresupuestoReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -46,11 +46,11 @@ export class ProyectoConsultaPresupuestoExportService
     super(reportService);
   }
 
-  protected getRows(data: IAnualidadGastoWithProyectoAgrupacionGasto[], reportConfig:
+  protected getRows(data: IAnualidadGasto[], reportConfig:
     IReportConfig<IConsultaPresupuestoReportOptions>): Observable<ISgiRowReport[]> {
     const rows: ISgiRowReport[] = [];
 
-    data.forEach((item: IAnualidadGastoWithProyectoAgrupacionGasto) => {
+    data.forEach((item: IAnualidadGasto) => {
       const row: ISgiRowReport = {
         elements: []
       };
@@ -70,12 +70,12 @@ export class ProyectoConsultaPresupuestoExportService
 
   protected getDataReport(
     reportConfig: IReportConfig<IConsultaPresupuestoReportOptions>
-  ): Observable<IAnualidadGastoWithProyectoAgrupacionGasto[]> {
+  ): Observable<IAnualidadGasto[]> {
     return of(reportConfig.reportOptions.data);
   }
 
   protected getColumns(
-    resultados: IAnualidadGastoWithProyectoAgrupacionGasto[],
+    resultados: IAnualidadGasto[],
     reportConfig: IReportConfig<IConsultaPresupuestoReportOptions>
   ): Observable<ISgiColumnReport[]> {
 

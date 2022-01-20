@@ -328,10 +328,9 @@ export class ProyectoActionService extends ActionService {
         proyectoAgrupacionGastoService, this.readonly, this.data?.isVisor);
       this.proyectoCalendarioJustificacion = new ProyectoCalendarioJustificacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
         proyectoService, proyectoPeriodoJustificacionService, convocatoriaService);
-      this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService,
-        proyectoAnualidadService, proyectoAgrupacionGastoService);
       this.amortizacionFondos = new ProyectoAmortizacionFondosFragment(this.data?.proyecto?.id, this.data.proyecto?.solicitudId,
         proyectoPeriodoAmortizacionService, proyectoEntidadFinanciadoraService, empresaService, proyectoAnualidadService, periodoAmortizacionService);
+      this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService);
       this.relaciones = new ProyectoRelacionFragment(
         id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, sgiAuthService);
       this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
