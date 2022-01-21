@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -446,13 +447,15 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   private List<ProyectoEquipo> getEquiposUpdateFechaFinProyectoEquipo(Long proyectoId, Instant fechaFinMaxPrevious,
       Instant fechaFinNew) {
+    final Instant todayDate = Instant.now().truncatedTo(ChronoUnit.DAYS);
     return proyectoEquipoService.findAllByProyectoId(proyectoId).stream().map(miembroEquipo -> {
       if (miembroEquipo.getFechaInicio() != null && miembroEquipo.getFechaInicio().compareTo(fechaFinNew) > 0) {
         // La fecha de inicio nunca puede ser superior a la de fin
         miembroEquipo.setFechaInicio(fechaFinNew);
       }
 
-      if (miembroEquipo.getFechaFin() != null
+      if (miembroEquipo.getFechaFin() != null &&
+          miembroEquipo.getFechaFin().truncatedTo(ChronoUnit.DAYS).compareTo(todayDate) > 0
           && (miembroEquipo.getFechaFin().compareTo(fechaFinNew) > 0 || miembroEquipo
               .getFechaFin().compareTo(fechaFinMaxPrevious) == 0)) {
         // Se actualizan con la nueva fecha fin maxima los miembros con fecha fin igual
