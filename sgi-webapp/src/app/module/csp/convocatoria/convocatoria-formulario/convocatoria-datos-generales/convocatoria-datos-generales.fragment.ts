@@ -73,7 +73,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       fechaPublicacion: new FormControl(null),
       fechaProvisional: new FormControl(null),
       fechaConcesion: new FormControl(null),
-      titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+      titulo: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
       modeloEjecucion: new FormControl(null),
       finalidad: new FormControl(null),
       duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),
