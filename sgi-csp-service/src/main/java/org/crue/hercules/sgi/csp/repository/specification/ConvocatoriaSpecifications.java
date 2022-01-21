@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.model.Autorizacion_;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -96,6 +98,24 @@ public class ConvocatoriaSpecifications {
       querySolicitud.select(querySolicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id))
           .where(cb.equal(querySolicitudRoot.get(Solicitud_.id), solicitudId));
       return root.get(Convocatoria_.id).in(querySolicitud);
+    };
+  }
+
+  /**
+   * {@link Convocatoria} de la {@link Autorizacion} con el id
+   * indicado.
+   * 
+   * @param autorizacionId identificador de la {@link Autorizacion}.
+   * @return specification para obtener las {@link Convocatoria} de
+   *         la {@link Autorizacion} con el id indicado.
+   */
+  public static Specification<Convocatoria> byAutorizacionId(Long autorizacionId) {
+    return (root, query, cb) -> {
+      Subquery<Long> queryAutorizacion = query.subquery(Long.class);
+      Root<Autorizacion> queryAutorizacionRoot = queryAutorizacion.from(Autorizacion.class);
+      queryAutorizacion.select(queryAutorizacionRoot.get(Autorizacion_.convocatoria).get(Convocatoria_.id))
+          .where(cb.equal(queryAutorizacionRoot.get(Autorizacion_.id), autorizacionId));
+      return root.get(Convocatoria_.id).in(queryAutorizacion);
     };
   }
 

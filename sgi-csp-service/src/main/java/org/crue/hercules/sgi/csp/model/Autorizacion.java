@@ -103,7 +103,7 @@ public class Autorizacion extends BaseEntity {
   @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_AUTORIZACION_CONVOCATORIA"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  private static final Convocatoria convocatoria = null;
+  private final Convocatoria convocatoria = null;
 
   @ManyToOne
   @JoinColumn(name = "estado_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_AUTORIZACIONESTADO_AUTORIZACION"))

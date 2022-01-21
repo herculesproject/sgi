@@ -13,6 +13,6 @@
 INSERT INTO test.autorizacion
 (id, convocatoria_id, datos_convocatoria, datos_entidad, datos_responsable, entidad_ref, estado_id, observaciones, responsable_ref, solicitante_ref, titulo_proyecto)
 VALUES
-(1, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 1', '00001', NULL, 'autorizacion 1', '28999000', '', 'Proyecto 1'),
-(2, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 2', '00002', NULL, 'autorizacion 2', '28999001', '', 'Proyecto 1'),
-(3, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 3', '00003', NULL, 'autorizacion 3', '28999002', '', 'Proyecto 1');
+(1, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 1', '00001', NULL, 'autorizacion 1', '28999000', '00112233', 'Proyecto 1'),
+(2, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 2', '00002', NULL, 'autorizacion 2', '28999001', '00112233', 'Proyecto 1'),
+(3, 1, 'datos convocatoria 1', 'datos entidad 1', 'datos responsable 3', '00003', NULL, 'autorizacion 3', '28999002', 'user', 'Proyecto 1');

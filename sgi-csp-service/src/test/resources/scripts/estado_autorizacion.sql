@@ -16,7 +16,7 @@ INSERT INTO test.estado_autorizacion
 VALUES
 (1, 1, 'AUTORIZADA', '2022-01-01T00:00:00Z'),
 (2, 2, 'BORRADOR', '2022-01-01T00:00:00Z'),
-(3, 3, 'AUTORIZADA', '2022-01-01T00:00:00Z');
+(3, 3, 'BORRADOR', '2022-01-01T00:00:00Z');
 
 UPDATE test.autorizacion SET estado_id = 1 WHERE id = 1;
 UPDATE test.autorizacion SET estado_id = 2 WHERE id = 2;

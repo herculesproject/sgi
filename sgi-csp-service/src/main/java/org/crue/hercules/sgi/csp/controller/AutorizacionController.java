@@ -1,17 +1,27 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
+import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.AutorizacionService;
 import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,19 +52,26 @@ public class AutorizacionController {
   /** El path que gestiona este controlador */
   public static final String REQUEST_MAPPING = "/autorizaciones";
 
+  private ModelMapper modelMapper;
+
   private final AutorizacionService service;
   private final EstadoAutorizacionService estadoAutorizacionService;
   private final NotificacionProyectoExternoCVNService notificacionProyectoExternoService;
   private final CertificadoAutorizacionService certificadoAutorizacionService;
+  private final ConvocatoriaService convocatoriaService;
 
-  public AutorizacionController(AutorizacionService service,
+  public AutorizacionController(ModelMapper modelMapper,
+      AutorizacionService service,
       NotificacionProyectoExternoCVNService notificacionProyectoExternoService,
       EstadoAutorizacionService estadoAutorizacionService,
-      CertificadoAutorizacionService certificadoAutorizacionService) {
+      CertificadoAutorizacionService certificadoAutorizacionService,
+      ConvocatoriaService convocatoriaService) {
+    this.modelMapper = modelMapper;
     this.service = service;
     this.notificacionProyectoExternoService = notificacionProyectoExternoService;
     this.estadoAutorizacionService = estadoAutorizacionService;
     this.certificadoAutorizacionService = certificadoAutorizacionService;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -66,10 +83,10 @@ public class AutorizacionController {
 
   @PostMapping
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C')")
-  public ResponseEntity<Autorizacion> create(@Valid @RequestBody Autorizacion autorizacion) {
+  public ResponseEntity<AutorizacionOutput> create(@Valid @RequestBody AutorizacionInput autorizacion) {
     log.debug("create(Autorizacion autorizacion) - start");
 
-    Autorizacion returnValue = service.create(autorizacion);
+    AutorizacionOutput returnValue = convert(service.create(convert(autorizacion)));
 
     log.debug("create(Autorizacion autorizacion) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
@@ -84,12 +101,10 @@ public class AutorizacionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-ER')")
-  public Autorizacion update(@Valid @RequestBody Autorizacion autorizacion, @PathVariable Long id) {
+  public AutorizacionOutput update(@Valid @RequestBody AutorizacionInput autorizacion, @PathVariable Long id) {
     log.debug("update(Autorizacion autorizacion, Long id) - start");
-
-    autorizacion.setId(id);
-    Autorizacion returnValue = service.update(autorizacion);
-    log.debug("update(Autorizacion aroyecto, Long id) - end");
+    AutorizacionOutput returnValue = convert(service.update(convert(id, autorizacion)));
+    log.debug("update(Autorizacion autorizacion, Long id) - end");
     return returnValue;
   }
 
@@ -97,40 +112,40 @@ public class AutorizacionController {
    * Devuelve el {@link Autorizacion} con el id indicado.
    * 
    * @param id Identificador de {@link Autorizacion}.
-   * @return Autorizacion {@link Autorizacion} correspondiente al id
+   * @return {@link Autorizacion} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
-  Autorizacion findById(@PathVariable Long id) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-V', 'CSP-AUT-INV-ER')")
+  public AutorizacionOutput findById(@PathVariable Long id) {
     log.debug("Autorizacion findById(Long id) - start");
-    Autorizacion returnValue = service.findById(id);
+    AutorizacionOutput returnValue = convert(service.findById(id));
     log.debug("Autorizacion findById(Long id) - end");
     return returnValue;
   }
 
   @PatchMapping("/{id}/cambiar-estado")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
-  public Autorizacion cambiarEstado(@PathVariable Long id, @RequestBody EstadoAutorizacion estadoAutorizacion) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-INV-ER')")
+  public AutorizacionOutput cambiarEstado(@PathVariable Long id, @RequestBody EstadoAutorizacion estadoAutorizacion) {
     log.debug("cambiarEstado(Long id) - start");
 
-    Autorizacion returnValue = service.cambiarEstado(id, estadoAutorizacion);
+    AutorizacionOutput returnValue = convert(service.cambiarEstado(id, estadoAutorizacion));
 
     log.debug("cambiarEstado(Long id) - end");
     return returnValue;
   }
 
   /**
-   * presenta una autorizacion".
+   * Pasa la {@link Autorizacion} al estado presentada.
    * 
    * @param id Identificador de {@link Autorizacion}.
    * @return {@link Autorizacion} actualizado.
    */
   @PatchMapping("/{id}/presentar")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
-  Autorizacion presentar(@PathVariable Long id) {
+  public AutorizacionOutput presentar(@PathVariable Long id) {
     log.debug("presentar(Long id)) - start");
 
-    Autorizacion returnValue = service.presentar(id);
+    AutorizacionOutput returnValue = convert(service.presentar(id));
 
     log.debug("presentar(Long id) - end");
     return returnValue;
@@ -145,8 +160,8 @@ public class AutorizacionController {
    *         presentada
    */
   @RequestMapping(path = "/{id}/presentable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
-  ResponseEntity<Autorizacion> presentable(@PathVariable Long id) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
+  public ResponseEntity<AutorizacionOutput> presentable(@PathVariable Long id) {
     log.debug("presentable(Long id) - start");
     boolean returnValue = service.presentable(id);
     log.debug("presentable(Long id) - end");
@@ -162,11 +177,11 @@ public class AutorizacionController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-V')")
-  public ResponseEntity<Page<Autorizacion>> findAll(@RequestParam(name = "q", required = false) String query,
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-V')")
+  public ResponseEntity<Page<AutorizacionOutput>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
-    Page<Autorizacion> page = service.findAll(query, paging);
+    Page<AutorizacionOutput> page = convert(service.findAll(query, paging));
 
     if (page.isEmpty()) {
       log.debug("findAll(String query,Pageable paging) - end");
@@ -186,6 +201,32 @@ public class AutorizacionController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link Autorizacion} que puede
+   * visualizar
+   * un investigador paginadas y filtradas.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Autorizacion} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  @GetMapping("/investigador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
+  public ResponseEntity<Page<AutorizacionOutput>> findAllInvestigador(
+      @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
+    Page<AutorizacionOutput> page = convert(service.findAllInvestigador(query, paging));
+
+    if (page.isEmpty()) {
+      log.debug("findAllInvestigador(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Comprueba si existen datos vinculados a {@link Autorizacion} de
    * {@link NotificacionProyectoExternoCVN}
    *
@@ -194,7 +235,7 @@ public class AutorizacionController {
    */
   @RequestMapping(path = "/{id}/vinculacionesnotificacionesproyectosexternos", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
-  public ResponseEntity<Autorizacion> hasAutorizacionNotificacionProyectoExterno(@PathVariable Long id) {
+  public ResponseEntity<Void> hasAutorizacionNotificacionProyectoExterno(@PathVariable Long id) {
     log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - start");
     boolean returnValue = notificacionProyectoExternoService.existsByAutorizacionId(id);
     log.debug("hasAutorizacionNotificacionProyectoExterno(Long id) - end");
@@ -263,7 +304,7 @@ public class AutorizacionController {
    * @return {@link ResponseEntity} conteniendo el estado de la respuesta, 200 si
    *         contiene, 204 si no contiene.
    */
-  @RequestMapping(path = "/{id}/hascertificadoautorizacionVisible", method = RequestMethod.HEAD)
+  @RequestMapping(path = "/{id}/hascertificadoautorizacionvisible", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
   public ResponseEntity<Void> hasCertificadoAutorizacionVisible(@PathVariable Long id) {
     log.debug("hasCertificadoAutorizacionVisible(Long id) - start");
@@ -272,4 +313,54 @@ public class AutorizacionController {
     log.debug("hasCertificadoAutorizacionVisible(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
+
+  /**
+   * Devuelve la {@link Convocatoria} asociada a la {@link Autorizacion} con el id
+   * indicado si el usuario que realiza la peticion es el solicitante de la
+   * {@link Autorizacion}.
+   * 
+   * @param id Identificador de {@link Autorizacion}.
+   * @return {@link Convocatoria} correspondiente a la {@link Autorizacion}.
+   */
+  @GetMapping("/{id}/convocatoria")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-AUT-INV-ER')")
+  public ResponseEntity<ConvocatoriaTituloOutput> findConvocatoriaByAutorizacionId(@PathVariable Long id) {
+    log.debug("findConvocatoriaByAutorizacionId(Long id) - start");
+
+    ConvocatoriaTituloOutput returnValue = convert(convocatoriaService.findByAutorizacionIdAndUserIsSolicitante(id));
+
+    if (returnValue == null) {
+      log.debug("findConvocatoriaByAutorizacionId(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findConvocatoriaByAutorizacionId(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  private AutorizacionOutput convert(Autorizacion autorizacion) {
+    return modelMapper.map(autorizacion, AutorizacionOutput.class);
+  }
+
+  private Autorizacion convert(AutorizacionInput autorizacionInput) {
+    return convert(null, autorizacionInput);
+  }
+
+  private Autorizacion convert(Long id, AutorizacionInput autorizacionInput) {
+    Autorizacion autorizacion = modelMapper.map(autorizacionInput, Autorizacion.class);
+    autorizacion.setId(id);
+    return autorizacion;
+  }
+
+  private Page<AutorizacionOutput> convert(Page<Autorizacion> page) {
+    List<AutorizacionOutput> content = page.getContent().stream()
+        .map(this::convert).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private ConvocatoriaTituloOutput convert(Convocatoria convocatoria) {
+    return modelMapper.map(convocatoria, ConvocatoriaTituloOutput.class);
+  }
+
 }

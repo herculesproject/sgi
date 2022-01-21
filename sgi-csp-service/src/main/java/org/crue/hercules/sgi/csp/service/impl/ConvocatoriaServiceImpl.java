@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessConvocatoriaException;
+import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
@@ -24,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
@@ -35,6 +37,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResolver;
+import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaClonerService;
@@ -71,6 +74,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final SolicitudRepository solicitudRepository;
   private final ProyectoRepository proyectoRepository;
   private final ConvocatoriaClonerService convocatoriaClonerService;
+  private final AutorizacionRepository autorizacionRepository;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
@@ -79,7 +83,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository,
       ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository, final SolicitudRepository solicitudRepository,
-      final ProyectoRepository proyectoRepository, final ConvocatoriaClonerService convocatoriaClonerService) {
+      final ProyectoRepository proyectoRepository, final ConvocatoriaClonerService convocatoriaClonerService,
+      AutorizacionRepository autorizacionRepository) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -91,6 +96,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     this.solicitudRepository = solicitudRepository;
     this.proyectoRepository = proyectoRepository;
     this.convocatoriaClonerService = convocatoriaClonerService;
+    this.autorizacionRepository = autorizacionRepository;
   }
 
   /**
@@ -516,6 +522,33 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
         .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitudId));
 
     log.debug("findBySolicitudIdAndUserIsSolicitante(Long solicitudId) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve la {@link Convocatoria} asociada a la {@link Autorizacion} con el id
+   * indicado si el usuario que realiza la peticion es el solicitante de la
+   * {@link Autorizacion}.
+   * 
+   * @param autorizacionId Identificador de {@link Autorizacion}.
+   * @return {@link Convocatoria} correspondiente a la {@link Autorizacion}.
+   */
+  @Override
+  public Convocatoria findByAutorizacionIdAndUserIsSolicitante(Long autorizacionId) {
+    log.debug("findByAutorizacionIdAndUserIsSolicitante(Long autorizacionId) - start");
+
+    String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    if (autorizacionRepository
+        .count(AutorizacionSpecifications.bySolicitante(personaRef).and(AutorizacionSpecifications.byId(
+            autorizacionId))) < 1) {
+      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    }
+
+    final Convocatoria returnValue = repository.findOne(ConvocatoriaSpecifications.byAutorizacionId(autorizacionId))
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(autorizacionId));
+
+    log.debug("findByAutorizacionIdAndUserIsSolicitante(Long autorizacionId) - end");
     return returnValue;
   }
 

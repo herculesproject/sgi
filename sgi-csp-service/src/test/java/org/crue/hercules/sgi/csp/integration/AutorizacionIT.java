@@ -7,7 +7,8 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.AutorizacionController;
-import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
+import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class AutorizacionIT extends BaseIT {
   private EstadoAutorizacionRepository estadoAutorizacionRepository;
 
   private static final String DEFAULT_TITULO_PROYECTO = "proyecto 1";
-  private static final String DEFAULT_SOLICITUD_REF = "39878833";
+  private static final String DEFAULT_SOLICITANTE_REF = "00112233";
   private static final String DEFAULT_RESPONSABLE_REF = "27333555";
   private static final String DEFAULT_OBSERVACIONES = "autorizacion nueva";
   private static final int DEFAULT_HORAS_DEDICADAS = 24;
@@ -40,6 +41,7 @@ class AutorizacionIT extends BaseIT {
   private static final String DEFAULT_DATOS_ENTIDAD = "datos entidad creada";
   private static final String DEFAULT_DATOS_CONVOCATORIA = "datos convocatoria creada";
   private static final long DEFAULT_CONVOCATORIA_ID = 1L;
+  private static final String USER_PERSONA_REF = "user";
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = AutorizacionController.REQUEST_MAPPING;
@@ -54,7 +56,7 @@ class AutorizacionIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", roles)));
+        tokenBuilder.buildToken(USER_PERSONA_REF, roles)));
 
     HttpEntity<Object> request = new HttpEntity<>(entity, headers);
     return request;
@@ -73,15 +75,15 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void create_ReturnsAutorizacion() throws Exception {
-    Autorizacion toCreate = buildMockAutorizacion(null);
+    AutorizacionInput toCreate = buildMockAutorizacion(null);
     String roles = "CSP-AUT-INV-C";
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, toCreate, roles), Autorizacion.class);
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, toCreate, roles), AutorizacionOutput.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-    Autorizacion created = response.getBody();
+    AutorizacionOutput created = response.getBody();
     Assertions.assertThat(created.getId()).as("getId()").isNotNull();
     Assertions.assertThat(created.getConvocatoriaId()).as("getConvocaoriaId()")
         .isEqualTo(toCreate.getConvocatoriaId());
@@ -100,7 +102,7 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(created.getResponsableRef()).as("getResponsableRef()")
         .isEqualTo(toCreate.getResponsableRef());
     Assertions.assertThat(created.getSolicitanteRef()).as("getSolicitanteRef()")
-        .isEqualTo(toCreate.getSolicitanteRef());
+        .isEqualTo(USER_PERSONA_REF);
     Assertions.assertThat(created.getTituloProyecto()).as("getTituloProyecto()")
         .isEqualTo(toCreate.getTituloProyecto());
   }
@@ -120,17 +122,17 @@ class AutorizacionIT extends BaseIT {
   void update_ReturnsAutorizacion() throws Exception {
     String roles = "CSP-AUT-INV-ER";
     Long idAutorizacion = 1L;
-    Autorizacion toUpdate = buildMockAutorizacion(1L);
+    AutorizacionInput toUpdate = buildMockAutorizacion(1L);
     toUpdate.setObservaciones("observaciones actualizadas");
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, toUpdate, roles), Autorizacion.class, idAutorizacion);
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    Autorizacion updated = response.getBody();
+    AutorizacionOutput updated = response.getBody();
 
-    Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(toUpdate.getId());
+    Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(idAutorizacion);
     Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocaoriaId()")
         .isEqualTo(toUpdate.getConvocatoriaId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
@@ -148,7 +150,7 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(updated.getResponsableRef()).as("getResponsableRef()")
         .isEqualTo(toUpdate.getResponsableRef());
     Assertions.assertThat(updated.getSolicitanteRef()).as("getSolicitanteRef()")
-        .isEqualTo(toUpdate.getSolicitanteRef());
+        .isEqualTo(DEFAULT_SOLICITANTE_REF);
     Assertions.assertThat(updated.getTituloProyecto()).as("getTituloProyecto()")
         .isEqualTo(toUpdate.getTituloProyecto());
 
@@ -170,12 +172,12 @@ class AutorizacionIT extends BaseIT {
     String roles = "CSP-AUT-E";
     Long idAutorizacion = 1L;
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null, roles), Autorizacion.class, idAutorizacion);
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null, roles), AutorizacionOutput.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    Autorizacion autorizacion = response.getBody();
+    AutorizacionOutput autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion.getId()).as("getId()").isEqualTo(idAutorizacion);
   }
@@ -194,16 +196,16 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void presentar_ReturnsAutorizacion() throws Exception {
-    String roles = "CSP-AUT-INV-C";
-    Long idAutorizacion = 1L;
+    String roles = "CSP-AUT-INV-ER";
+    Long idAutorizacion = 3L;
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTAR,
-        HttpMethod.PATCH, buildRequest(null, null, roles), Autorizacion.class, idAutorizacion);
+        HttpMethod.PATCH, buildRequest(null, null, roles), AutorizacionOutput.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    Autorizacion autorizacion = response.getBody();
+    AutorizacionOutput autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion.getId()).as("getId()").isEqualTo(idAutorizacion);
 
@@ -228,8 +230,8 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void presentable_ReturnsStatusCode200() throws Exception {
-    String roles = "CSP-AUT-INV-C";
-    Long idAutorizacion = 2L;
+    String roles = "CSP-AUT-INV-ER";
+    Long idAutorizacion = 3L;
 
     final ResponseEntity<Void> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESENTABLE,
@@ -262,13 +264,13 @@ class AutorizacionIT extends BaseIT {
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
-    final ResponseEntity<List<Autorizacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<Autorizacion>>() {
+    final ResponseEntity<List<AutorizacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<AutorizacionOutput>>() {
         });
 
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Autorizacion> responseData = response.getBody();
+    final List<AutorizacionOutput> responseData = response.getBody();
     Assertions.assertThat(responseData.size()).isEqualTo(3);
 
     HttpHeaders responseHeaders = response.getHeaders();
@@ -316,7 +318,7 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void cambiarEstado_ReturnsAutorizacion() throws Exception {
-    String roles = "CSP-SOL-E";
+    String roles = "CSP-AUT-E";
     Long idAutorizacion = 1L;
     EstadoAutorizacion nuevoEstado = EstadoAutorizacion.builder()
         .id(1L)
@@ -326,12 +328,12 @@ class AutorizacionIT extends BaseIT {
         .comentario("Nuevo estado")
         .build();
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CAMBIAR_ESTADO,
-        HttpMethod.PATCH, buildRequest(null, nuevoEstado, roles), Autorizacion.class, idAutorizacion);
+        HttpMethod.PATCH, buildRequest(null, nuevoEstado, roles), AutorizacionOutput.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Autorizacion autorizacion = response.getBody();
+    AutorizacionOutput autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion).isNotNull();
     EstadoAutorizacion estado = this.estadoAutorizacionRepository.findById(autorizacion.getEstadoId()).orElse(null);
@@ -345,28 +347,26 @@ class AutorizacionIT extends BaseIT {
     String roles = "CSP-AUT-E";
     Long idAutorizacion = 1L;
 
-    final ResponseEntity<Autorizacion> response = restTemplate.exchange(
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_VINCULACIONES_NOTIFICACIONES_PROYECTOS_EXTERNOS,
-        HttpMethod.HEAD, buildRequest(null, null, roles), Autorizacion.class, idAutorizacion);
+        HttpMethod.HEAD, buildRequest(null, null, roles), AutorizacionOutput.class, idAutorizacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-    Autorizacion autorizacion = response.getBody();
+    AutorizacionOutput autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion).isNull();
   }
 
-  private Autorizacion buildMockAutorizacion(Long id) {
-    return Autorizacion.builder()
+  private AutorizacionInput buildMockAutorizacion(Long id) {
+    return AutorizacionInput.builder()
         .convocatoriaId(DEFAULT_CONVOCATORIA_ID)
         .datosConvocatoria(DEFAULT_DATOS_CONVOCATORIA)
         .datosEntidad(DEFAULT_DATOS_ENTIDAD)
         .datosResponsable(DEFAULT_DATOS_RESPONSABLES)
         .entidadRef(DEFAULT_ENTIDAD_REF)
         .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
-        .id(id)
         .observaciones(DEFAULT_OBSERVACIONES)
         .responsableRef(DEFAULT_RESPONSABLE_REF)
-        .solicitanteRef(DEFAULT_SOLICITUD_REF)
         .tituloProyecto(DEFAULT_TITULO_PROYECTO)
         .build();
   }
