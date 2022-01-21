@@ -108,7 +108,8 @@
         <ng-container matColumnDef="periodo">
           <th mat-header-cell *matHeaderCellDef>
             {{'csp.proyecto-amortizacion-fondos.periodo-amortizacion.periodo' | translate}}</th>
-          <td mat-cell *matCellDef="let wrapper"> Periodo 1
+          <td mat-cell *matCellDef="let wrapper">
+            {{'csp.proyecto-amortizacion-fondos.periodo-amortizacion.periodo' | translate}} {{wrapper.value.periodo}}
           </td>
         </ng-container>
 

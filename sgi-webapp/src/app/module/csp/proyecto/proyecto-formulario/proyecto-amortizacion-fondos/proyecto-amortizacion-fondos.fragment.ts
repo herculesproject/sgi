@@ -10,15 +10,19 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IEntidadFinanciadora } from '../proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
+
+export interface IProyectoPeriodoAmortizacionListado extends IProyectoPeriodoAmortizacion {
+  periodo: number;
+}
 
 export class ProyectoAmortizacionFondosFragment extends Fragment {
 
   entidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<IEntidadFinanciadora>[]>([]);
-  periodosAmortizacion$ = new BehaviorSubject<StatusWrapper<IProyectoPeriodoAmortizacion>[]>([]);
+  periodosAmortizacion$ = new BehaviorSubject<StatusWrapper<IProyectoPeriodoAmortizacionListado>[]>([]);
   proyectosSGE$ = new BehaviorSubject<IProyectoProyectoSge[]>([]);
-  private periodosAmortizacionEliminados: StatusWrapper<IProyectoPeriodoAmortizacion>[] = [];
+  private periodosAmortizacionEliminados: StatusWrapper<IProyectoPeriodoAmortizacionListado>[] = [];
   hasProyectoSGE = false;
 
   constructor(
@@ -53,12 +57,12 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
               return of(void 0);
             }
             this.hasProyectoSGE = true;
-            if (this.isInitialized) {
+            if (this.isInitialized() && this.periodosAmortizacion$.value.length > 0) {
               return of(void 0);
             }
             return this.proyectoPeriodoAmortizacionService.findByproyectoSGERef(listadoProyectosSGE).pipe(
-              map((response: SgiRestListResult<IProyectoPeriodoAmortizacion>) => {
-                return response.items.map(periodo => new StatusWrapper<IProyectoPeriodoAmortizacion>(periodo));
+              map((response: SgiRestListResult<IProyectoPeriodoAmortizacionListado>) => {
+                return response.items.map(periodo => new StatusWrapper<IProyectoPeriodoAmortizacionListado>(periodo));
               }),
               tap((value) => {
                 this.periodosAmortizacion$.next(value);
@@ -90,12 +94,13 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
                   })
                 )
               ),
+              toArray(),
               catchError((error) => EMPTY)
             )
-
-          })
-        )
-          .subscribe();
+          }),
+        ).subscribe(() => {
+          this.recalcularNumPeriodos();
+        });
       this.subscriptions.push(subscription);
     }
   }
@@ -113,7 +118,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
     }
   }
 
-  public updatePeriodoAmortizacion(wrapper: StatusWrapper<IProyectoPeriodoAmortizacion>) {
+  public updatePeriodoAmortizacion(wrapper: StatusWrapper<IProyectoPeriodoAmortizacionListado>) {
     const current = this.periodosAmortizacion$.value;
     const index = current.findIndex(value => value.value.id === wrapper.value.id);
     if (index >= 0) {
@@ -123,8 +128,8 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
     }
   }
 
-  public addPeriodoAmortizacion(periodoAmortizacion: IProyectoPeriodoAmortizacion) {
-    const wrapped = new StatusWrapper<IProyectoPeriodoAmortizacion>(periodoAmortizacion);
+  public addPeriodoAmortizacion(periodoAmortizacion: IProyectoPeriodoAmortizacionListado) {
+    const wrapped = new StatusWrapper<IProyectoPeriodoAmortizacionListado>(periodoAmortizacion);
     wrapped.setCreated();
     const current = this.periodosAmortizacion$.value;
     current.push(wrapped);
@@ -187,7 +192,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
     );
   }
 
-  private createProyectoPeriodosAmortizacion(target$: BehaviorSubject<StatusWrapper<IProyectoPeriodoAmortizacion>[]>): Observable<void> {
+  private createProyectoPeriodosAmortizacion(target$: BehaviorSubject<StatusWrapper<IProyectoPeriodoAmortizacionListado>[]>): Observable<void> {
     const created = target$.value.filter((value) => value.created);
     if (created.length === 0) {
       return of(void 0);
@@ -200,7 +205,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
             const index = target$.value.findIndex((current) => current === wrapped);
             const proyectoPeriodoAmortizacionListado = wrapped.value;
             proyectoPeriodoAmortizacionListado.id = createdproyectoPeriodoAmortizacion.id;
-            target$.value[index] = new StatusWrapper<IProyectoPeriodoAmortizacion>(proyectoPeriodoAmortizacionListado);
+            target$.value[index] = new StatusWrapper<IProyectoPeriodoAmortizacionListado>(proyectoPeriodoAmortizacionListado);
             target$.next(target$.value);
             return proyectoPeriodoAmortizacionListado;
           }),
@@ -216,6 +221,29 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
   private isSaveOrUpdateComplete(): boolean {
     const touched = this.periodosAmortizacion$.value.some((wrapper) => wrapper.touched);
     return !(this.periodosAmortizacionEliminados.length > 0 || touched);
+  }
+
+  /**
+ * Recalcula los numeros de los periodos de todos los periodos de amortizacion de la tabla en funcion de su anualidad y entidad.
+ */
+  public recalcularNumPeriodos(): void {
+    let numPeriodo = 1;
+    let nombreActual: string;
+    this.periodosAmortizacion$.value
+      .sort((a, b) => {
+        return a.value.proyectoEntidadFinanciadora.empresa.nombre.localeCompare(b.value.proyectoEntidadFinanciadora.empresa.nombre)
+          || a.value.proyectoAnualidad.anio.toString().localeCompare(b.value.proyectoAnualidad.anio.toString())
+      });
+
+    this.periodosAmortizacion$.value.forEach(c => {
+      if (c.value.proyectoEntidadFinanciadora.empresa.nombre !== nombreActual) {
+        numPeriodo = 1;
+        nombreActual = c.value.proyectoEntidadFinanciadora.empresa.nombre;
+      }
+      c.value.periodo = numPeriodo++;
+    });
+
+    this.periodosAmortizacion$.next(this.periodosAmortizacion$.value);
   }
 
 }

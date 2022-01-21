@@ -19,7 +19,7 @@ import { IProyectoPeriodoAmortizacionModalData, ProyectoPeriodoAmortizacionModal
 import { PROYECTO_ROUTE_NAMES } from '../../proyecto-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { IEntidadFinanciadora } from '../proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
-import { ProyectoAmortizacionFondosFragment } from './proyecto-amortizacion-fondos.fragment';
+import { IProyectoPeriodoAmortizacionListado, ProyectoAmortizacionFondosFragment } from './proyecto-amortizacion-fondos.fragment';
 
 const MSG_NUEVO = marker('title.new.entity');
 const MSG_DELETE = marker('msg.delete.entity');
@@ -62,7 +62,7 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
   elementsPeriodosAmortizacion = [...this.elements];
 
   dataSourceEntidades = new MatTableDataSource<StatusWrapper<IEntidadFinanciadora>>();
-  dataSourcePeriodosAmortizacion = new MatTableDataSource<StatusWrapper<IProyectoPeriodoAmortizacion>>();
+  dataSourcePeriodosAmortizacion = new MatTableDataSource<StatusWrapper<IProyectoPeriodoAmortizacionListado>>();
   @ViewChild('paginatorEntidades', { static: true }) paginatorEntidades: MatPaginator;
   @ViewChild('sortEntidades', { static: true }) sortEntidades: MatSort;
   @ViewChild('paginatorPeriodos', { static: true }) paginatorPeriodos: MatPaginator;
@@ -147,10 +147,10 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
     ).subscribe((value) => this.msgCrear = value);
   }
 
-  openModal(wrapper?: StatusWrapper<IProyectoPeriodoAmortizacion>): void {
+  openModal(wrapper?: StatusWrapper<IProyectoPeriodoAmortizacionListado>): void {
     const data: IProyectoPeriodoAmortizacionModalData = {
       title: !!!wrapper ? this.msgCrear : this.modalTitle,
-      periodoAmortizacion: wrapper?.value ?? {} as IProyectoPeriodoAmortizacion,
+      periodoAmortizacion: wrapper?.value ?? {} as IProyectoPeriodoAmortizacionListado,
       proyectoId: this.formPart.getKey() as number,
       entidadesFinanciadoras: this.formPart.entidadesFinanciadoras$.value.map(entidad => entidad.value),
       proyectosSGE: this.formPart.proyectosSGE$.value
@@ -165,10 +165,11 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
         if (!wrapper) {
           this.formPart.addPeriodoAmortizacion(periodoAmortizacionModalData.periodoAmortizacion);
         } else if (!wrapper.created) {
-          const periodo = new StatusWrapper<IProyectoPeriodoAmortizacion>(wrapper.value);
+          const periodo = new StatusWrapper<IProyectoPeriodoAmortizacionListado>(wrapper.value);
           this.formPart.updatePeriodoAmortizacion(periodo);
         }
       }
+      this.formPart.recalcularNumPeriodos();
     });
   }
 
@@ -179,6 +180,7 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoAmortizacion(wrapper);
+            this.formPart.recalcularNumPeriodos();
           }
         }
       )
