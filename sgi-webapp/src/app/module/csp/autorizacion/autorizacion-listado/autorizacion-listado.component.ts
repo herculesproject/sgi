@@ -151,7 +151,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IAutorizacionListado>> {
-    return this.autorizacionService.findAll(this.getFindOptions(reset)).pipe(
+    const autorizaciones$ = this.isInvestigador ? this.autorizacionService.findAllInvestigador(this.getFindOptions(reset)) : this.autorizacionService.findAll(this.getFindOptions(reset));
+    return autorizaciones$.pipe(
       map(result => {
         const autorizaciones = result.items.map((autorizacion) => {
           return {

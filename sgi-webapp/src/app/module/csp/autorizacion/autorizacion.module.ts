@@ -9,6 +9,7 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { AutorizacionCrearComponent } from './autorizacion-crear/autorizacion-crear.component';
+import { AutorizacionDataResolver } from './autorizacion-data.resolver';
 import { AutorizacionEditarComponent } from './autorizacion-editar/autorizacion-editar.component';
 import { AutorizacionDatosGeneralesComponent } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.component';
 import { AutorizacionHistoricoEstadosComponent } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.component';
@@ -36,6 +37,9 @@ import { CambioEstadoModalComponent } from './cambio-estado-modal/cambio-estado-
     CspSharedModule,
     SgempSharedModule,
     SgpSharedModule
+  ],
+  providers: [
+    AutorizacionDataResolver
   ]
 })
 export class AutorizacionModule { }

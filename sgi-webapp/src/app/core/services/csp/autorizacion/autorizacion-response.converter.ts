@@ -15,15 +15,15 @@ class AutorizacionResponseConverter
     return {
       id: value.id,
       observaciones: value.observaciones,
-      responsable: { id: value.responsableRef } as IPersona,
+      responsable: value.responsableRef ? { id: value.responsableRef } as IPersona : undefined,
       solicitante: { id: value.solicitanteRef } as IPersona,
       tituloProyecto: value.tituloProyecto,
-      entidad: { id: value.entidadRef } as IEmpresa,
+      entidad: value.entidadRef ? { id: value.entidadRef } as IEmpresa : undefined,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
       datosConvocatoria: value.datosConvocatoria,
-      convocatoria: { id: value.convocatoriaId } as IConvocatoria,
+      convocatoria: value.convocatoriaId ? { id: value.convocatoriaId } as IConvocatoria : undefined,
       estado: { id: value.estadoId } as IEstadoAutorizacion,
     };
   }

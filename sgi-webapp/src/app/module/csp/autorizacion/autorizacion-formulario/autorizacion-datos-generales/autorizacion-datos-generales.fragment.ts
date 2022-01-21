@@ -27,8 +27,8 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     private personaService: PersonaService,
     private empresaService: EmpresaService,
     private estadoAutorizacionService: EstadoAutorizacionService,
-    public authService: SgiAuthService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    public authService: SgiAuthService
   ) {
     super(key, true);
     this.setComplete(true);
@@ -99,7 +99,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       datosConvocatoria: autorizacion.datosConvocatoria,
       entidadParticipa: autorizacion.entidad,
       datosEntidad: autorizacion.datosEntidad,
-      investigadorPrincipalProyecto: autorizacion.solicitante,
+      investigadorPrincipalProyecto: autorizacion.responsable,
       datosIpProyecto: autorizacion.datosResponsable,
       horasDedicacion: autorizacion.horasDedicacion,
       observaciones: autorizacion.observaciones
@@ -110,33 +110,32 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return this.autorizacionService.findById(key as number).pipe(
       switchMap((autorizacion) => {
         this.autorizacion = autorizacion;
-        if (autorizacion.solicitante.id) {
-          return this.personaService.findById(autorizacion.solicitante?.id).pipe(
-            map(solicitante => {
-              autorizacion.solicitante = solicitante;
+        if (autorizacion.responsable?.id) {
+          return this.personaService.findById(autorizacion.responsable?.id).pipe(
+            map(responsable => {
+              autorizacion.responsable = responsable;
               return autorizacion;
             })
           );
         } else {
-          autorizacion.solicitante = null;
           return of(autorizacion);
         }
       }),
       switchMap(autorizacion => {
-        if (autorizacion.convocatoria.id) {
-          return this.convocatoriaService.findById(autorizacion.convocatoria.id).pipe(
+        if (autorizacion.convocatoria?.id) {
+          const convocatoria$ = this.isInvestigador ? this.autorizacionService.findConvocatoria(autorizacion.id) : this.convocatoriaService.findById(autorizacion.convocatoria.id);
+          return convocatoria$.pipe(
             map(convocatoria => {
               autorizacion.convocatoria = convocatoria;
               return autorizacion;
             })
           );
         } else {
-          autorizacion.convocatoria = null;
           return of(autorizacion);
         }
       }),
       switchMap(autorizacion => {
-        if (autorizacion.entidad.id) {
+        if (autorizacion.entidad?.id) {
           return this.empresaService.findById(autorizacion.entidad.id).pipe(
             map(entidad => {
               autorizacion.entidad = entidad;
@@ -144,7 +143,6 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
             })
           );
         } else {
-          autorizacion.entidad = null;
           return of(autorizacion);
         }
       }),
@@ -177,7 +175,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     this.autorizacion.datosConvocatoria = form.datosConvocatoria?.value;
     this.autorizacion.entidad = form.entidadParticipa.value;
     this.autorizacion.datosEntidad = form.datosEntidad.value;
-    this.autorizacion.solicitante = form.investigadorPrincipalProyecto.value;
+    this.autorizacion.responsable = form.investigadorPrincipalProyecto.value;
     this.autorizacion.datosResponsable = form.datosIpProyecto.value;
     this.autorizacion.horasDedicacion = form.horasDedicacion?.value;
     this.autorizacion.observaciones = form.observaciones?.value;

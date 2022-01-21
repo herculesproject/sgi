@@ -154,7 +154,7 @@
 
         <mat-form-field class="input-form">
           <mat-label>{{'csp.autorizacion.horas-dedicacion' | translate}}</mat-label>
-          <input matInput formControlName="horasDedicacion" type="text" id="horasDedicacion"
+          <input matInput formControlName="horasDedicacion" type="number" id="horasDedicacion"
             placeholder="{{'csp.autorizacion.horas-dedicacion' | translate}}">
           <mat-error *ngIf="formGroup.controls.horasDedicacion.errors?.maxlength">
             {{ 'error.maxlength.entity' | translate:msgParamHorasDedicacionEntity }}

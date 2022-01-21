@@ -1,6 +1,5 @@
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -16,7 +15,7 @@ class AutorizacionRequestConverter
       id: undefined,
       observaciones: value.observaciones,
       responsable: { id: value.responsableRef } as IPersona,
-      solicitante: { id: value.solicitanteRef } as IPersona,
+      solicitante: undefined,
       tituloProyecto: value.tituloProyecto,
       entidad: { id: value.entidadRef } as IEmpresa,
       horasDedicacion: value.horasDedicacion,
@@ -24,7 +23,7 @@ class AutorizacionRequestConverter
       datosEntidad: value.datosEntidad,
       datosConvocatoria: value.datosConvocatoria,
       convocatoria: { id: value.convocatoriaId } as IConvocatoria,
-      estado: { id: value.estadoId } as IEstadoAutorizacion,
+      estado: undefined,
     };
   }
 
@@ -35,15 +34,13 @@ class AutorizacionRequestConverter
     return {
       observaciones: value.observaciones,
       responsableRef: value.responsable?.id,
-      solicitanteRef: value.solicitante?.id,
       tituloProyecto: value.tituloProyecto,
       entidadRef: value.entidad?.id,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
       datosConvocatoria: value.datosConvocatoria,
-      convocatoriaId: value.convocatoria?.id,
-      estadoId: value.estado?.id
+      convocatoriaId: value.convocatoria?.id
     };
   }
 }

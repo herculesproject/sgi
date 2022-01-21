@@ -1,7 +1,6 @@
 export interface IAutorizacionRequest {
   observaciones: string;
   responsableRef: string;
-  solicitanteRef: string;
   tituloProyecto: string;
   entidadRef: string;
   horasDedicacion: number;
@@ -9,5 +8,4 @@ export interface IAutorizacionRequest {
   datosEntidad: string;
   datosConvocatoria: string;
   convocatoriaId: number;
-  estadoId: number;
 }

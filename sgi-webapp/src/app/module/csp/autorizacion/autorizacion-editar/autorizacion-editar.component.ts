@@ -6,7 +6,6 @@ import { ActionComponent } from '@core/component/action.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
-import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,7 +43,6 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
   textoPresentar = MSG_BUTTON_PRESENTAR;
   textoCambioEstado = MSG_BUTTON_CAMBIO_ESTADO;
   disablePresentar$: Subject<boolean> = new BehaviorSubject<boolean>(true);
-  private presentable = false;
   disableCambioEstado = false;
 
   constructor(
@@ -53,23 +51,18 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
     router: Router,
     route: ActivatedRoute,
     public actionService: AutorizacionActionService,
-    private autorizacionService: AutorizacionService,
     private matDialog: MatDialog,
     dialogService: DialogService,
-    private readonly translate: TranslateService) {
+    private readonly translate: TranslateService
+  ) {
     super(router, route, actionService, dialogService);
 
-    this.subscriptions.push(
-      this.autorizacionService.presentable(this.actionService.id).subscribe(
-        presentable => {
-          this.presentable = presentable;
-          this.disablePresentar$.next(!presentable);
-        }
-      )
-    );
+    this.disablePresentar$.next(!this.actionService.presentable);
+
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
         this.disableCambioEstado = status.changes || status.errors;
+        this.disablePresentar$.next(!this.actionService.presentable || status.changes || status.errors);
       }
     ));
   }
@@ -143,7 +136,9 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
 
   presentar(): void {
     this.actionService.presentar().subscribe(
-      () => { },
+      () => {
+        // This is intentional
+      },
       (error) => {
         this.logger.error(error);
         if (error instanceof HttpProblem) {

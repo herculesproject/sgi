@@ -8,13 +8,13 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { AutorizacionCrearComponent } from './autorizacion-crear/autorizacion-crear.component';
+import { AutorizacionDataResolver, AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
 import { AutorizacionEditarComponent } from './autorizacion-editar/autorizacion-editar.component';
 import { AutorizacionDatosGeneralesComponent } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.component';
 import { AutorizacionHistoricoEstadosComponent } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.component';
 import { AutorizacionListadoComponent } from './autorizacion-listado/autorizacion-listado.component';
 import { AUTORIZACION_ROUTE_NAMES } from './autorizacion-route-names';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
-
 
 const AUTORIZACION_TITLE_KEY = marker('csp.autorizacion-proyecto-externo');
 const MSG_NEW_TITLE = marker('title.new.entity');
@@ -59,6 +59,9 @@ const routes: SgiRoutes = [
     component: AutorizacionEditarComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
+    resolve: {
+      [AUTORIZACION_DATA_KEY]: AutorizacionDataResolver
+    },
     data: {
       title: AUTORIZACION_TITLE_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,

@@ -14,11 +14,17 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
 import { AutorizacionDatosGeneralesFragment } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment';
 import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
 
 const MSG_REGISTRAR = marker('msg.csp.autorizacion.presentar');
+
+export interface IAutorizacionData {
+  presentable: boolean,
+  isInvestigador: boolean
+}
 
 @Injectable()
 export class AutorizacionActionService extends
@@ -30,9 +36,9 @@ export class AutorizacionActionService extends
   };
 
   private datosGenerales: AutorizacionDatosGeneralesFragment;
-
   private historicoEstados: AutorizacionHistoricoEstadosFragment;
 
+  private readonly data: IAutorizacionData;
   public readonly id: number;
 
   get estado(): Estado {
@@ -44,17 +50,21 @@ export class AutorizacionActionService extends
   }
 
   get isInvestigador(): boolean {
-    return this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
+    return this.data.isInvestigador;
+  }
+
+  get presentable(): boolean {
+    return this.data.presentable;
   }
 
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
-    convocatoriaService: ConvocatoriaService,
     private autorizacionService: AutorizacionService,
     personaService: PersonaService,
     empresaService: EmpresaService,
     estadoAutorizacionService: EstadoAutorizacionService,
+    convocatoriaService: ConvocatoriaService,
     public authService: SgiAuthService,
     public dialogService: DialogService,
   ) {
@@ -62,11 +72,12 @@ export class AutorizacionActionService extends
     this.id = Number(route.snapshot.paramMap.get(AUTORIZACION_ROUTE_PARAMS.ID));
     if (this.id) {
       this.enableEdit();
+      this.data = route.snapshot.data[AUTORIZACION_DATA_KEY];
     }
 
     this.dialogService = dialogService;
     this.datosGenerales = new AutorizacionDatosGeneralesFragment(
-      logger, this.id, autorizacionService, personaService, empresaService, estadoAutorizacionService, authService, convocatoriaService);
+      logger, this.id, autorizacionService, personaService, empresaService, estadoAutorizacionService, convocatoriaService, authService);
     this.historicoEstados = new AutorizacionHistoricoEstadosFragment(this.id, autorizacionService, false);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
@@ -110,7 +121,6 @@ export class AutorizacionActionService extends
       );
     }
   }
-
 
   /**
    * Acción de presentacion de una autorizacion
