@@ -72,74 +72,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   ): Observable<IDatoEconomico[]>;
 
   protected buildRows(datosEconomicos: IDatoEconomico[]): Observable<RowTreeDesglose<IDesglose>[]> {
-    return from(datosEconomicos).pipe(
-      concatMap((datoEconomico: IDesglose) => {
-        if (this.configuracion?.validacionGastos) {
-          const options: SgiRestFindOptions = {
-            filter: new RSQLSgiRestFilter('gastoRef', SgiRestFilterOperator.EQUALS, datoEconomico.id)
-          };
-          return this.gastoProyectoService.findAll(options).pipe(
-            map(response => {
-              if (response.items.length) {
-                datoEconomico.proyecto = this.proyectosMap.get(response.items[0].proyectoId.toString());
-                datoEconomico.conceptoGasto = response.items[0].conceptoGasto;
-              }
-              else {
-                datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-                datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
-              }
-              return datoEconomico;
-            }),
-          );
-        } else {
-          const options: SgiRestFindOptions = {
-            filter: new RSQLSgiRestFilter('codigoEconomicoRef', SgiRestFilterOperator.EQUALS, datoEconomico.codigoEconomico.id)
-              .and(
-                new RSQLSgiRestFilter(
-                  new RSQLSgiRestFilter(
-                    'fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo)
-                  ).and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo))
-                ).or(
-                  new RSQLSgiRestFilter(
-                    'fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo)
-                  )
-                    .and('fechaFin', SgiRestFilterOperator.IS_NULL, '')
-                ).or(
-                  new RSQLSgiRestFilter('fechaInicio', SgiRestFilterOperator.IS_NULL, '')
-                    .and('fechaFin', SgiRestFilterOperator.IS_NULL, '')
-                )
-              )
-              .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.IN, this.proyectosRelacionados.map(({ id }) => id.toString()))
-          };
-          return this.proyectoConceptoGastoCodigoEcService.findAll(options).pipe(
-            mergeMap(({ items }) => {
-              if (items.length === 1) {
-                const proyectoConceptoGasto = this.proyectoConceptoGastosMap.get(items[0].proyectoConceptoGasto.id.toString());
-                if (!proyectoConceptoGasto) {
-                  return this.proyectoConceptoGastoService.findById(items[0].proyectoConceptoGasto.id).pipe(
-                    map(proyectoConceptoGastoFetched => {
-                      this.proyectoConceptoGastosMap.set(proyectoConceptoGastoFetched.id.toString(), proyectoConceptoGastoFetched);
-                      datoEconomico.proyecto = this.proyectosMap.get(proyectoConceptoGastoFetched.proyectoId.toString());
-                      datoEconomico.conceptoGasto = proyectoConceptoGastoFetched.conceptoGasto;
-                      return datoEconomico;
-                    })
-                  );
-                }
-                datoEconomico.proyecto = this.proyectosMap.get(proyectoConceptoGasto.proyectoId.toString());
-                datoEconomico.conceptoGasto = proyectoConceptoGasto.conceptoGasto;
-                return of(datoEconomico);
-              } else {
-                datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-                datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
-                return of(datoEconomico);
-              }
-            })
-          );
-        }
-      }),
-      map(final => of(final))
-    ).pipe(
-      combineAll(),
+    return this.fillDatosEconomicos(datosEconomicos).pipe(
       map(values => {
         const root: RowTreeDesglose<IDesglose>[] = [];
         const mapTree = new Map<string, RowTreeDesglose<IDesglose>>();
@@ -209,7 +142,78 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         return root;
       })
     );
+  }
 
+  protected fillDatosEconomicos(datosEconomicos: IDatoEconomico[]): Observable<IDesglose[]> {
+    return from(datosEconomicos).pipe(
+      concatMap((datoEconomico: IDesglose) => {
+        if (this.configuracion?.validacionGastos) {
+          const options: SgiRestFindOptions = {
+            filter: new RSQLSgiRestFilter('gastoRef', SgiRestFilterOperator.EQUALS, datoEconomico.id)
+          };
+          return this.gastoProyectoService.findAll(options).pipe(
+            map(response => {
+              if (response.items.length) {
+                datoEconomico.proyecto = this.proyectosMap.get(response.items[0].proyectoId.toString());
+                datoEconomico.conceptoGasto = response.items[0].conceptoGasto;
+              }
+              else {
+                datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
+                datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+              }
+              return datoEconomico;
+            }),
+          );
+        } else {
+          const options: SgiRestFindOptions = {
+            filter: new RSQLSgiRestFilter('codigoEconomicoRef', SgiRestFilterOperator.EQUALS, datoEconomico.codigoEconomico.id)
+              .and(
+                new RSQLSgiRestFilter(
+                  new RSQLSgiRestFilter(
+                    'fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo)
+                  ).and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo))
+                ).or(
+                  new RSQLSgiRestFilter(
+                    'fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(datoEconomico.fechaDevengo)
+                  )
+                    .and('fechaFin', SgiRestFilterOperator.IS_NULL, '')
+                ).or(
+                  new RSQLSgiRestFilter('fechaInicio', SgiRestFilterOperator.IS_NULL, '')
+                    .and('fechaFin', SgiRestFilterOperator.IS_NULL, '')
+                )
+              )
+              .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.IN, this.proyectosRelacionados.map(({ id }) => id.toString()))
+          };
+          return this.proyectoConceptoGastoCodigoEcService.findAll(options).pipe(
+            mergeMap(({ items }) => {
+              if (items.length === 1) {
+                const proyectoConceptoGasto = this.proyectoConceptoGastosMap.get(items[0].proyectoConceptoGasto.id.toString());
+                if (!proyectoConceptoGasto) {
+                  return this.proyectoConceptoGastoService.findById(items[0].proyectoConceptoGasto.id).pipe(
+                    map(proyectoConceptoGastoFetched => {
+                      this.proyectoConceptoGastosMap.set(proyectoConceptoGastoFetched.id.toString(), proyectoConceptoGastoFetched);
+                      datoEconomico.proyecto = this.proyectosMap.get(proyectoConceptoGastoFetched.proyectoId.toString());
+                      datoEconomico.conceptoGasto = proyectoConceptoGastoFetched.conceptoGasto;
+                      return datoEconomico;
+                    })
+                  );
+                }
+                datoEconomico.proyecto = this.proyectosMap.get(proyectoConceptoGasto.proyectoId.toString());
+                datoEconomico.conceptoGasto = proyectoConceptoGasto.conceptoGasto;
+                return of(datoEconomico);
+              } else {
+                datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
+                datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+                return of(datoEconomico);
+              }
+            })
+          );
+        }
+      }),
+      map(final => of(final))
+    ).pipe(
+      combineAll()
+    );
   }
 
   public loadDataExport(): Observable<IDesgloseEconomicoExportData> {
@@ -233,9 +237,9 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     };
     return of(exportData).pipe(
       switchMap((exportDataResult) => {
-        return this.getDatosEconomicos(anualidades, devengoRange, contabilizacionRange, pagoRange, false).pipe(
+        return this.getDatosEconomicosToDesglose(anualidades, devengoRange, contabilizacionRange, pagoRange, false).pipe(
           map(data => {
-            this.sortRowsDesglose(data as IDesglose[]);
+            this.sortRowsDesglose(data);
             exportDataResult.data = data;
             return exportDataResult;
           })
@@ -250,6 +254,17 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         );
       })
     );
+  }
+
+  public getDatosEconomicosToDesglose(
+    anualidades: string[],
+    devengosRange?: any,
+    contabilizacionRange?: any,
+    pagosRange?: any,
+    reducida?: boolean
+  ): Observable<IDesglose[]> {
+    return this.getDatosEconomicos(anualidades, devengosRange, contabilizacionRange, pagosRange, false).pipe(
+      switchMap(response => this.fillDatosEconomicos(response)));
   }
 
   public loadDesglose(): void {

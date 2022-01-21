@@ -52,7 +52,7 @@ export class PersonalContratadoExportService
       const codigoEconomico = item.codigoEconomico?.id + (item.codigoEconomico?.nombre ? ' - ' + item.codigoEconomico.nombre : '');
       row.elements.push(codigoEconomico);
       const fechaDevengo = this.isExcelOrCsv(reportConfig.outputType)
-        ? LuxonUtils.toBackend(item.fechaDevengo, true) ?? ''
+        ? LuxonUtils.toBackend(item.fechaDevengo) ?? ''
         : (this.luxonDatePipe.transform(item.fechaDevengo, 'shortDate') ?? '');
       row.elements.push(fechaDevengo);
 
@@ -114,7 +114,7 @@ export class PersonalContratadoExportService
       {
         title: this.translate.instant(FECHA_DEVENGO_KEY),
         name: 'fechaDevengo',
-        type: ColumnType.STRING
+        type: ColumnType.DATE
       }
     ];
 
