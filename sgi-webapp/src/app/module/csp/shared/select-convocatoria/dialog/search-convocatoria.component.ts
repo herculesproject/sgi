@@ -17,6 +17,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -234,6 +235,13 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
 
   closeModal(convocatoria?: IConvocatoria): void {
     this.dialogRef.close(convocatoria);
+  }
+
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    FormGroupUtil.clean(this.formGroup);
   }
 
   openCreate(): void {
