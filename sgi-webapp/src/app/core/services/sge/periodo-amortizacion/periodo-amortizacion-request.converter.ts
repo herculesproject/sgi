@@ -44,15 +44,15 @@ class PeriodoAmortizacionRequestConverter extends SgiBaseConverter<IPeriodoAmort
     return {
       id: value.id.toString(),
       proyectoId: value.proyectoSGE.id,
-      anualidad: value.proyectoAnualidad.anio.toString(),
+      anualidad: value.proyectoAnualidad?.anio.toString(),
       empresaRef: value.proyectoEntidadFinanciadora.empresa.id,
       tipoFinanciacion: {
-        id: value.proyectoEntidadFinanciadora.tipoFinanciacion.id.toString(),
-        nombre: value.proyectoEntidadFinanciadora.tipoFinanciacion.nombre
+        id: value.proyectoEntidadFinanciadora?.tipoFinanciacion?.id.toString(),
+        nombre: value.proyectoEntidadFinanciadora?.tipoFinanciacion?.nombre
       },
       fuenteFinanciacion: {
-        id: value.proyectoEntidadFinanciadora.fuenteFinanciacion.id.toString(),
-        nombre: value.proyectoEntidadFinanciadora.fuenteFinanciacion.nombre
+        id: value.proyectoEntidadFinanciadora?.fuenteFinanciacion?.id.toString(),
+        nombre: value.proyectoEntidadFinanciadora?.fuenteFinanciacion?.nombre
       },
       fecha: LuxonUtils.toBackend(value.fechaLimiteAmortizacion),
       importe: value.importe
