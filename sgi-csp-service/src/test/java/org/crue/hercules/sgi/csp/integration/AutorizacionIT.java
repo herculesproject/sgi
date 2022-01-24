@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.AutorizacionController;
 import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
+import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,9 @@ class AutorizacionIT extends BaseIT {
   private static final String PATH_PRESENTABLE = "/presentable";
   private static final String PATH_CAMBIAR_ESTADO = "/cambiar-estado";
   private static final String PATH_VINCULACIONES_NOTIFICACIONES_PROYECTOS_EXTERNOS = "/vinculacionesnotificacionesproyectosexternos";
+  private static final String PATH_ESTADOS = "/estados";
+  private static final String PATH_CERTIFICADOS = "/certificados";
+  private static final String PATH_HAS_CERTIFICADO_AUTORIZACION_VISIBLE = "/hascertificadoautorizacionvisible";
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles)
       throws Exception {
@@ -254,14 +258,13 @@ class AutorizacionIT extends BaseIT {
   @Test
   void findAll_WithPagingSortingAndFiltering_ReturnsAutorizacionSubList() throws Exception {
     String[] roles = { "CSP-AUT-E", "CSP-AUT-B", "CSP-AUT-INV-C", "CSP-AUT-INV-ER", "CSP-AUT-INV-BR" };
-    // first page, 3 elements per page sorted by nombre desc
+
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
     String filter = "";
 
-    // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
     final ResponseEntity<List<AutorizacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -355,6 +358,141 @@ class AutorizacionIT extends BaseIT {
     AutorizacionOutput autorizacion = response.getBody();
 
     Assertions.assertThat(autorizacion).isNull();
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllEstadoAutorizacion_WithPagingSortingAndFiltering_ReturnsEstadoAutorizacionSubList() throws Exception {
+    String[] roles = { "CSP-AUT-E", "CSP-AUT-B", "CSP-AUT-INV-C", "CSP-AUT-INV-ER", "CSP-AUT-INV-BR" };
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,asc";
+    String filter = "id==1;id>=4;id<=5";
+
+    Long autorizacionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADOS)
+        .queryParam("s", sort).queryParam("q", filter)
+        .buildAndExpand(autorizacionId).toUri();
+    final ResponseEntity<List<EstadoAutorizacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<EstadoAutorizacion>>() {
+        });
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<EstadoAutorizacion> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0)).as("get(0)").isNotNull();
+    Assertions.assertThat(responseData.get(1)).as("get(1)").isNotNull();
+    Assertions.assertThat(responseData.get(2)).as("get(2)").isNotNull();
+
+    Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.get(1).getId()).as("get(1).getId()").isEqualTo(4L);
+    Assertions.assertThat(responseData.get(2).getId()).as("get(2).getId()").isEqualTo(5L);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql",
+    "classpath:scripts/certificado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllCertificadoAutorizacion_WithPagingSorting_ReturnsCertificadoAutorizacionSubList()
+      throws Exception {
+    String[] roles = { "CSP-AUT-E", "CSP-AUT-B", "CSP-AUT-INV-C", "CSP-AUT-INV-ER", "CSP-AUT-INV-BR" };
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,asc";
+
+    Long autorizacionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CERTIFICADOS)
+        .queryParam("s", sort)
+        .buildAndExpand(autorizacionId).toUri();
+
+    final ResponseEntity<List<CertificadoAutorizacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<CertificadoAutorizacion>>() {
+        });
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<CertificadoAutorizacion> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0)).as("get(0)").isNotNull();
+    Assertions.assertThat(responseData.get(1)).as("get(1)").isNotNull();
+    Assertions.assertThat(responseData.get(2)).as("get(2)").isNotNull();
+
+    Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.get(1).getId()).as("get(1).getId()").isEqualTo(2L);
+    Assertions.assertThat(responseData.get(2).getId()).as("get(2).getId()").isEqualTo(3L);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql",
+    "classpath:scripts/certificado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void hasCertificadoAutorizacionVisible_ReturnsStatusCode200()
+      throws Exception {
+    String[] roles = { "CSP-AUT-E" };
+
+    Long autorizacionId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HAS_CERTIFICADO_AUTORIZACION_VISIBLE)
+        .buildAndExpand(autorizacionId).toUri();
+
+    final ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.HEAD,
+        buildRequest(null, null, roles), Void.class);
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
   private AutorizacionInput buildMockAutorizacion(Long id) {

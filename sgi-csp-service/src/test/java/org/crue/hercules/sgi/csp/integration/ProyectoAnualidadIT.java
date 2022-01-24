@@ -7,8 +7,11 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.ProyectoAnualidadController;
+import org.crue.hercules.sgi.csp.dto.AnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadInput;
+import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadNotificacionSge;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
+import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,6 +29,9 @@ class ProyectoAnualidadIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = ProyectoAnualidadController.MAPPING;
+  private static final String PATH_PARTIDAS_RESUMEN = "/partidas-resumen";
+  private static final String PATH_NOTIFICACIONES_SGE = "/notificaciones-sge";
+  private static final String PATH_NOTIFICA_SGE = "/notificarsge";
 
   private HttpEntity<ProyectoAnualidadInput> buildRequest(HttpHeaders headers,
       ProyectoAnualidadInput entity, String... roles) throws Exception {
@@ -176,6 +182,97 @@ class ProyectoAnualidadIT extends BaseIT {
     Assertions.assertThat(proyectoAnualidadOutput.getAnio()).as("getAnio()")
         .isEqualTo(2023);
 
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off    
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/concepto_gasto.sql",
+      "classpath:scripts/proyecto_anualidad.sql",
+      "classpath:scripts/proyecto_partida.sql",
+      "classpath:scripts/anualidad_gasto.sql"
+    // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void getPartidasResumen_ReturnsAnualidadResumenList() throws Exception {
+    String[] roles = { "CSP-PRO-V" };
+
+    Long proyectoAnualidadId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARTIDAS_RESUMEN)
+        .buildAndExpand(proyectoAnualidadId).toUri();
+
+    final ResponseEntity<List<AnualidadResumen>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null, roles), new ParameterizedTypeReference<List<AnualidadResumen>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+    Assertions.assertThat(response.getBody().size()).isEqualTo(1);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off    
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/concepto_gasto.sql",
+      "classpath:scripts/proyecto_anualidad.sql",
+      "classpath:scripts/proyecto_partida.sql",
+      "classpath:scripts/anualidad_gasto.sql"
+    // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllNotificacionesSge_WithFiltering_ReturnsProyectoAnualidadNotificacionSgeList() throws Exception {
+    String roles = "CSP-EJEC-E";
+    String filter = "";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_NOTIFICACIONES_SGE).queryParam("q", filter)
+        .build(false).toUri();
+
+    final ResponseEntity<List<ProyectoAnualidadNotificacionSge>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null, roles), new ParameterizedTypeReference<List<ProyectoAnualidadNotificacionSge>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off    
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/proyecto_anualidad.sql"
+    // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void notificarSge_ReturnsProyectoAnualidad() throws Exception {
+    String roles = "CSP-EJEC-E";
+
+    Long proyectoAnualidadId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_NOTIFICA_SGE)
+        .buildAndExpand(proyectoAnualidadId).toUri();
+
+    final ResponseEntity<ProyectoAnualidad> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequest(null, null, roles), ProyectoAnualidad.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+    Assertions.assertThat(response.getBody().getId()).isEqualTo(proyectoAnualidadId);
+    Assertions.assertThat(response.getBody().getEnviadoSge()).isTrue();
   }
 
   ProyectoAnualidadInput buildMockProyectoAnualidadInput() {

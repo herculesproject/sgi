@@ -27,9 +27,11 @@ import lombok.extern.slf4j.Slf4j;
  * ProyectoConceptoGastoCodigoEcController
  */
 @RestController
-@RequestMapping("/proyectoconceptogastocodigosec")
+@RequestMapping(ProyectoConceptoGastoCodigoEcController.MAPPING)
 @Slf4j
 public class ProyectoConceptoGastoCodigoEcController {
+
+  public static final String MAPPING = "/proyectoconceptogastocodigosec";
 
   /** ProyectoConceptoGastoCodigoEc service */
   private final ProyectoConceptoGastoCodigoEcService service;

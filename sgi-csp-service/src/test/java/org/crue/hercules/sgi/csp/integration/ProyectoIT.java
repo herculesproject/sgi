@@ -291,7 +291,7 @@ public class ProyectoIT extends BaseIT {
    })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
     String[] roles = {"CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-MOD-V"};
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
@@ -336,7 +336,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R", "CSP-PRO-INV-VR" };
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
@@ -388,7 +388,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoHito_WithPagingSortingAndFiltering_ReturnsProyectoHitoSubList() throws Exception {
+  void findAllProyectoHito_WithPagingSortingAndFiltering_ReturnsProyectoHitoSubList() throws Exception {
     String roles = "CSP-PRO-E";
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -436,7 +436,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoHitos_Returns200() throws Exception {
+  void hasProyectoHitos_Returns200() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 1L;
@@ -465,7 +465,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoHitos_ReturnsEmptyHitos() throws Exception {
+  void hasProyectoHitos_ReturnsEmptyHitos() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 2L;
@@ -499,7 +499,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoFase_WithPagingSortingAndFiltering_ReturnsProyectoFaseSubList() throws Exception {
+  void findAllProyectoFase_WithPagingSortingAndFiltering_ReturnsProyectoFaseSubList() throws Exception {
     String roles = "CSP-PRO-E";
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -547,7 +547,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoFases_Returns200() throws Exception {
+  void hasProyectoFases_Returns200() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 1L;
@@ -576,7 +576,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoFases_ReturnsEmptyFases() throws Exception {
+  void hasProyectoFases_ReturnsEmptyFases() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 2L;
@@ -609,7 +609,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoPaqueteTrabajo_WithPagingSortingAndFiltering_ReturnsProyectoPaqueteTrabajoSubList()
+  void findAllProyectoPaqueteTrabajo_WithPagingSortingAndFiltering_ReturnsProyectoPaqueteTrabajoSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -653,7 +653,7 @@ public class ProyectoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoSocio_WithPagingSortingAndFiltering_ReturnsProyectoSocioSubList() throws Exception {
+  void findAllProyectoSocio_WithPagingSortingAndFiltering_ReturnsProyectoSocioSubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -699,7 +699,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasAnyProyectoSocio_Returns200() throws Exception {
+  void hasAnyProyectoSocio_Returns200() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
@@ -727,7 +727,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasAnyProyectoSocio_ReturnsEmptyProyectoSocio() throws Exception {
+  void hasAnyProyectoSocio_ReturnsEmptyProyectoSocio() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
@@ -755,7 +755,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasAnyProyectoSocioWithRolCoordinador_Returns200() throws Exception {
+  void hasAnyProyectoSocioWithRolCoordinador_Returns200() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
@@ -784,7 +784,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasAnyProyectoSocioWithRolCoordinador_ReturnsEmptyProyectoSocioWithRolCoordinador() throws Exception {
+  void hasAnyProyectoSocioWithRolCoordinador_ReturnsEmptyProyectoSocioWithRolCoordinador() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
@@ -814,7 +814,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsProyectoSocioPeriodoPagoByProyectoSocioId_Returns200() throws Exception {
+  void existsProyectoSocioPeriodoPagoByProyectoSocioId_Returns200() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
@@ -844,7 +844,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsProyectoSocioPeriodoPagoByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoPago() throws Exception {
+  void existsProyectoSocioPeriodoPagoByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoPago() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
@@ -874,7 +874,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_Returns200() throws Exception {
+  void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_Returns200() throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
@@ -904,7 +904,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoJustificacion()
+  void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoJustificacion()
       throws Exception {
     String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
 
@@ -938,7 +938,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEntidadGestora_WithPagingSortingAndFiltering_ReturnsProyectoEntidadGestoraSubList()
+  void findAllProyectoEntidadGestora_WithPagingSortingAndFiltering_ReturnsProyectoEntidadGestoraSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     HttpHeaders headers = new HttpHeaders();
@@ -986,7 +986,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEntidadGestora_ReturnEmptySubList()
+  void findAllProyectoEntidadGestora_ReturnEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     Long proyectoId = 2L;
@@ -1022,7 +1022,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEquipo_WithPagingSortingAndFiltering_ReturnsProyectoEquipoSubList() throws Exception {
+  void findAllProyectoEquipo_WithPagingSortingAndFiltering_ReturnsProyectoEquipoSubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -1068,7 +1068,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEquipo_ReturnsEmptySubList() throws Exception {
+  void findAllProyectoEquipo_ReturnsEmptySubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     Long proyectoId = 3L;
 
@@ -1101,7 +1101,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoProrroga_WithPagingSortingAndFiltering_ReturnsProyectoProrrogaSubList() throws Exception {
+  void findAllProyectoProrroga_WithPagingSortingAndFiltering_ReturnsProyectoProrrogaSubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -1148,7 +1148,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoProrroga_ReturnsEmptySubList() throws Exception {
+  void findAllProyectoProrroga_ReturnsEmptySubList() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     Long proyectoId = 2L;
 
@@ -1175,7 +1175,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoProrrogas_ReturnsDoNotGetProyectoProrrogas() throws Exception {
+  void hasProyectoProrrogas_ReturnsDoNotGetProyectoProrrogas() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 2L;
@@ -1202,7 +1202,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoProrrogas_Returns200() throws Exception {
+  void hasProyectoProrrogas_Returns200() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 1L;
@@ -1236,7 +1236,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllEstadoProyecto_WithPagingSortingAndFiltering_ReturnsProyectoEntidadFinanciadoraSubList()
+  void findAllEstadoProyecto_WithPagingSortingAndFiltering_ReturnsProyectoEntidadFinanciadoraSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1285,7 +1285,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllEstadoProyecto_ReturnsEmptyEntidadFinanciadoraSubList()
+  void findAllEstadoProyecto_ReturnsEmptyEntidadFinanciadoraSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
@@ -1325,7 +1325,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsProyectoEntidadFinanciadoraSubList()
+  void findAllProyectoEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsProyectoEntidadFinanciadoraSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     HttpHeaders headers = new HttpHeaders();
@@ -1379,7 +1379,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoEntidadFinanciadora_ReturnsEmptySubList()
+  void findAllProyectoEntidadFinanciadora_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     Long proyectoId = 2L;
@@ -1416,7 +1416,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllDocumentos_WithPagingSortingAndFiltering_ReturnsDocumentosSubList()
+  void findAllDocumentos_WithPagingSortingAndFiltering_ReturnsDocumentosSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1465,7 +1465,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllDocumentos_ReturnsEmptySubList()
+  void findAllDocumentos_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     Long proyectoId = 2L;
@@ -1495,7 +1495,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectoDocumento_Returns200() throws Exception {
+  void hasProyectoDocumento_Returns200() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 1L;
@@ -1532,7 +1532,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoPeriodoSeguimiento_WithPagingSortingAndFiltering_ReturnsProyectoPeriodoSeguimientoSubList()
+  void findAllProyectoPeriodoSeguimiento_WithPagingSortingAndFiltering_ReturnsProyectoPeriodoSeguimientoSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1583,7 +1583,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoPeriodoSeguimiento_ReturnsEmptySubList()
+  void findAllProyectoPeriodoSeguimiento_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     Long proyectoId = 6L;
@@ -1616,7 +1616,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoClasificaciones_WithPagingSortingAndFiltering_ReturnsProyectoClasificacionesSubList()
+  void findAllProyectoClasificaciones_WithPagingSortingAndFiltering_ReturnsProyectoClasificacionesSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1663,7 +1663,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoClasificaciones_ReturnsEmptySubList()
+  void findAllProyectoClasificaciones_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     Long proyectoId = 2L;
@@ -1695,7 +1695,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllByProyectoId_WithPagingSortingAndFiltering_ReturnsProyectoAreaConocimientoSubList()
+  void findAllByProyectoId_WithPagingSortingAndFiltering_ReturnsProyectoAreaConocimientoSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1745,7 +1745,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllByProyectoId_ReturnsEmptySubList()
+  void findAllByProyectoId_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     Long proyectoId = 2L;
@@ -1778,7 +1778,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoProyectosSge_WithPagingSortingAndFiltering_ReturnsProyectoProyectoSgeSubList()
+  void findAllProyectoProyectosSge_WithPagingSortingAndFiltering_ReturnsProyectoProyectoSgeSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     HttpHeaders headers = new HttpHeaders();
@@ -1824,7 +1824,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoProyectosSge_ReturnsEmptyList()
+  void findAllProyectoProyectosSge_ReturnsEmptyList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
 
@@ -1853,7 +1853,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectosSge_Returns200() throws Exception {
+  void hasProyectosSge_Returns200() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 1L;
@@ -1880,7 +1880,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void hasProyectosSge_ReturnsEmptyProyectosSge() throws Exception {
+  void hasProyectosSge_ReturnsEmptyProyectosSge() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
     Long proyectoId = 4L;
@@ -1912,7 +1912,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoAnualidadResumen_WithPagingSortingAndFiltering_ReturnsProyectoAnualidadResumenSubList()
+  void findAllProyectoAnualidadResumen_WithPagingSortingAndFiltering_ReturnsProyectoAnualidadResumenSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -1955,7 +1955,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoAnualidadResumen_ReturnsEmptyList()
+  void findAllProyectoAnualidadResumen_ReturnsEmptyList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
@@ -1993,7 +1993,7 @@ public class ProyectoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoPartida_WithPagingSortingAndFiltering_ReturnsProyectoPartidaSubList()
+  void findAllProyectoPartida_WithPagingSortingAndFiltering_ReturnsProyectoPartidaSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -2045,7 +2045,7 @@ public class ProyectoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllProyectoPartida_WithPagingSortingAndFiltering_ReturnsEmptyList()
+  void findAllProyectoPartida_WithPagingSortingAndFiltering_ReturnsEmptyList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -2084,7 +2084,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllResponsablesEconomicosByProyecto_WithPagingSortingAndFiltering_ReturnsResponsablesEconomicosByProyectoSubList()
+  void findAllResponsablesEconomicosByProyecto_WithPagingSortingAndFiltering_ReturnsResponsablesEconomicosByProyectoSubList()
       throws Exception {
     String[] roles = { "CSP-PRO-E" };
     HttpHeaders headers = new HttpHeaders();
@@ -2137,7 +2137,7 @@ public class ProyectoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findIds_WithPagingSortingAndFiltering_ReturnsEmptySubList()
+  void findIds_WithPagingSortingAndFiltering_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V" };
     HttpHeaders headers = new HttpHeaders();
