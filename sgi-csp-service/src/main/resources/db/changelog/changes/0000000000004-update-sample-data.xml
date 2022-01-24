@@ -51,14 +51,14 @@
 
   <changeSet context="dev" author="master" id="0000000000004-proyecto_equipo">
     <update tableName="proyecto_equipo">
-      <column name="fecha_fin" value="2021-09-01T21:59:59" />
+      <column name="fecha_fin" valueDate="2021-09-01T21:59:59" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueNumeric="1" />
       </whereParams>
     </update>
     <update tableName="proyecto_equipo">
-      <column name="fecha_inicio" value="2021-09-01T22:00:00" />
+      <column name="fecha_inicio" valueDate="2021-09-01T22:00:00" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueNumeric="7" />
