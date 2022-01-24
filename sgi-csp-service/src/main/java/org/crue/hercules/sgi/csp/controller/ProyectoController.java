@@ -1000,7 +1000,7 @@ public class ProyectoController {
    * @return el listado de {@link ProyectoConceptoGasto} permitidos.
    */
   @GetMapping("/{id}/proyectoconceptosgasto/permitidos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
   public ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosPermitidos(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosPermitidos(Long id, Pageable paging) - start");
@@ -1023,7 +1023,7 @@ public class ProyectoController {
    * @return el listado de {@link ProyectoConceptoGasto} no permitidos.
    */
   @GetMapping("/{id}/proyectoconceptosgasto/nopermitidos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
   public ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosNoPermitidos(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosNoPermitidos(Long id, Pageable paging) - start");
@@ -1081,7 +1081,7 @@ public class ProyectoController {
    * @return Lista de {@link ProyectoResponsableEconomico} correspondiente al id
    */
   @GetMapping("/{id}/proyectoresponsableseconomicos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   public ResponseEntity<Page<ProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosByProyecto(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -1135,7 +1135,7 @@ public class ProyectoController {
    *         {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoperiodojustificacion")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   public ResponseEntity<Page<ProyectoPeriodoJustificacion>> findAllPeriodoJustificacionByProyectoId(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
