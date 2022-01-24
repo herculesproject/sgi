@@ -252,8 +252,14 @@
   <changeSet author="user (generated)" id="0000000000004-28">
     <addForeignKeyConstraint baseColumnNames="proyecto_anualidad_id" baseTableName="proyecto_periodo_amortizacion" constraintName="FK_PROYECTOPERIODOAMORTIZACION_PROYECTOANUALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_anualidad" validate="true" />
   </changeSet>
+
   <changeSet author="user (generated)" id="0000000000004-29">
     <addForeignKeyConstraint baseColumnNames="proyecto_entidad_financiadora_id" baseTableName="proyecto_periodo_amortizacion" constraintName="FK_PROYECTOPERIODOAMORTIZACION_PROYECTOENTIDADFINANCIADORA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_entidad_financiadora" validate="true" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000004-30">
+    <modifyDataType tableName="convocatoria" columnName="titulo" newDataType="VARCHAR(1000)" />
+  </changeSet>
+
 
 </databaseChangeLog>
