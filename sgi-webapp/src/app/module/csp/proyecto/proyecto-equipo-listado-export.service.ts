@@ -121,7 +121,7 @@ export class ProyectoEquipoListadoExportService extends AbstractTableExportFillS
     const columns: ISgiColumnReport[] = [];
 
     const maxNumEquipos = Math.max(...proyectos.map(p => p.equipo?.length));
-    const titleInvestigador = this.translate.instant(INVESTIGADOR_KEY);
+    const titleInvestigador = this.translate.instant(EQUIPO_KEY) + ' - ' + this.translate.instant(INVESTIGADOR_KEY);
     for (let i = 0; i < maxNumEquipos; i++) {
       const idInvestigador: string = String(i + 1);
       const columnNombreInvestigador: ISgiColumnReport = {
