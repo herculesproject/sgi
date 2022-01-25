@@ -4,4 +4,6 @@ DELETE FROM test.tipo_caducidad;
 DELETE FROM test.tipo_procedimiento;
 DELETE FROM test.tipo_proteccion;
 DELETE FROM test.tramo_reparto;
+DELETE FROM test.via_proteccion;
+DELETE FROM test.sector_aplicacion;
 
