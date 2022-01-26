@@ -98,7 +98,6 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-
   }
 
   ngOnInit(): void {

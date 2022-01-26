@@ -19,6 +19,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   public investigadorRequired: boolean;
   public entidadRequired: boolean;
   public isInvestigador: boolean;
+  private isVisor: boolean;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -34,6 +35,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     this.setComplete(true);
     this.autorizacion = {} as IAutorizacion;
     this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
+    this.isVisor = this.authService.hasAnyAuthority(['CSP-AUT-V']);
   }
 
   protected buildFormGroup(): FormGroup {
@@ -268,7 +270,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   private disableNotEditableFieldsEstado(formgroup: FormGroup, autorizacion: IAutorizacion): void {
     if (autorizacion?.estado?.estado
       && (autorizacion?.estado?.estado !== Estado.BORRADOR && this.isInvestigador)
-      || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA)) {
+      || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA) || this.isVisor) {
       formgroup.controls.tituloProyecto.disable();
       formgroup.controls.convocatoria.disable({ emitEvent: false });
       formgroup.controls.datosConvocatoria.disable({ emitEvent: false });

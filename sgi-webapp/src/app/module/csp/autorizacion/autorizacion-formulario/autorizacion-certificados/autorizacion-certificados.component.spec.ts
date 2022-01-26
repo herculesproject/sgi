@@ -1,54 +1,53 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
-import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
-import { SolicitudActionService } from '../../solicitud/solicitud.action.service';
-import { AutorizacionListadoComponent } from './autorizacion-listado.component';
+import { AutorizacionActionService } from '../../autorizacion.action.service';
+import { AutorizacionCertificadosComponent } from './autorizacion-certificados.component';
 
 
-describe('AutorizacionListadoComponent', () => {
-  let component: AutorizacionListadoComponent;
-  let fixture: ComponentFixture<AutorizacionListadoComponent>;
+describe('AutorizacionCertificadosComponent', () => {
+  let component: AutorizacionCertificadosComponent;
+  let fixture: ComponentFixture<AutorizacionCertificadosComponent>;
+  const routeData = {} as ICertificadoAutorizacion;
+
+  const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AutorizacionListadoComponent,
-        FooterCrearComponent
-      ],
+      declarations: [AutorizacionCertificadosComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
         LoggerTestingModule,
+        FlexModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        SgpSharedModule,
-        SharedModule,
-
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        SolicitudActionService,
-        SgiAuthService
+        AutorizacionActionService,
+        SgiAuthService,
+        { provide: ActivatedRoute, useValue: routeMock }
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AutorizacionListadoComponent);
+    fixture = TestBed.createComponent(AutorizacionCertificadosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -57,3 +56,4 @@ describe('AutorizacionListadoComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

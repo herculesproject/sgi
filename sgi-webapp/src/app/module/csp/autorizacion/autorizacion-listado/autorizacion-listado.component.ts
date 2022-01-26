@@ -11,8 +11,10 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
+import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,8 +22,9 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_LOAD = marker('error.load');
@@ -36,6 +39,8 @@ export interface IAutorizacionListado {
   fechaEstadoBorrador: DateTime;
   entidadPaticipacionNombre: string;
   hasCertificadoVisible: boolean;
+  proyectoId: number;
+  notificacionId: number;
 }
 
 @Component({
@@ -45,6 +50,7 @@ export interface IAutorizacionListado {
 })
 export class AutorizacionListadoComponent extends AbstractTablePaginationComponent<IAutorizacionListado> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
+  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -55,6 +61,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   textoErrorDelete: string;
   mapCanBeDeleted: Map<number, boolean> = new Map();
   isInvestigador: boolean;
+  isVisor: boolean;
+  columnasGestor: string[];
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -66,7 +74,9 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     private autorizacionService: AutorizacionService,
     private estadoAutorizacionService: EstadoAutorizacionService,
     private empresaService: EmpresaService,
+    private personaService: PersonaService,
     private dialogService: DialogService,
+    private notificacionProyectoExternoCVNService: NotificacionProyectoExternoCvnService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
   ) {
@@ -91,10 +101,11 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       fechaSolicitudInicio: new FormControl(null),
       fechaSolicitudFin: new FormControl(null),
       estado: new FormControl(null),
+      solicitante: new FormControl(null),
     });
     this.filter = this.createFilter();
-
     this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
+    this.isVisor = this.authService.hasAnyAuthority(['CSP-AUT-V']);
 
   }
 
@@ -182,10 +193,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
             if (autorizacionListado.autorizacion.estado.id) {
               return this.estadoAutorizacionService.findById(autorizacionListado.autorizacion.estado.id).pipe(
                 map(estadoAutorizacion => {
+                  autorizacionListado.estadoAutorizacion = estadoAutorizacion;
                   if (estadoAutorizacion.estado === Estado.BORRADOR) {
                     autorizacionListado.fechaEstadoBorrador = estadoAutorizacion.fecha;
                   }
-                  autorizacionListado.estadoAutorizacion = estadoAutorizacion;
                   return autorizacionListado;
                 })
               );
@@ -209,6 +220,41 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                 map((empresa) => {
                   autorizacionListado.entidadPaticipacionNombre = empresa?.nombre;
                   return autorizacionListado;
+                }),
+                catchError((error) => {
+                  this.logger.error(error);
+                  return EMPTY;
+                }));
+            } else {
+              autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
+              return of(autorizacionListado);
+            }
+          }),
+          mergeMap(autorizacionListado => {
+            if (autorizacionListado?.autorizacion?.id) {
+              return this.autorizacionService.findNotificacionProyectoExterno(autorizacionListado?.autorizacion?.id).pipe(
+                map((notificacion) => {
+                  if (notificacion) {
+                    autorizacionListado.notificacionId = notificacion.id;
+                    autorizacionListado.proyectoId = notificacion.proyecto?.id;
+                  }
+                  return autorizacionListado;
+                }));
+            } else {
+              autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
+              return of(autorizacionListado);
+            }
+          }),
+          mergeMap(autorizacionListado => {
+            if (autorizacionListado?.autorizacion?.solicitante?.id) {
+              return this.personaService.findById(autorizacionListado?.autorizacion?.solicitante?.id).pipe(
+                map((persona) => {
+                  autorizacionListado.autorizacion.solicitante = persona;
+                  return autorizacionListado;
+                }),
+                catchError((error) => {
+                  this.logger.error(error);
+                  return EMPTY;
                 }));
             } else {
               autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
@@ -229,6 +275,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       'fechaSolicitud', 'tituloProyecto', 'entidadParticipacion', 'estado',
       'fechaEstado', 'acciones'
     ];
+    this.columnasGestor = [
+      'fechaSolicitud', 'solicitante', 'tituloProyecto', 'entidadParticipacion', 'estado',
+      'fechaEstado', 'acciones'
+    ];
   }
 
   protected loadTable(reset?: boolean): void {
@@ -240,7 +290,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     return new RSQLSgiRestFilter(
       'estado.fecha', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudInicio.value))
       .and('estado.fecha', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudFin.value))
-      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
+      .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id);
   }
 
   onClearFilters() {
@@ -248,6 +299,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     this.formGroup.controls.fechaSolicitudInicio.setValue(null);
     this.formGroup.controls.fechaSolicitudFin.setValue(null);
     this.formGroup.controls.estado.setValue(null);
+    this.formGroup.controls.solicitante.setValue(null);
     this.onSearch();
   }
 
@@ -275,6 +327,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
         }
       );
     this.suscripciones.push(subcription);
+  }
+
+  downloadFile(value: IAutorizacionListado): void {
+
   }
 
 }

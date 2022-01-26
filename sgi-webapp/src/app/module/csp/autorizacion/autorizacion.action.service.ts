@@ -5,9 +5,11 @@ import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { Estado } from '@core/models/csp/estado-autorizacion';
 import { ActionService } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { CertificadoAutorizacionService } from '@core/services/csp/certificado-autorizacion/certificado-autorizacion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { DialogService } from '@core/services/dialog.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -15,6 +17,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
+import { AutorizacionCertificadosFragment } from './autorizacion-formulario/autorizacion-certificados/autorizacicon-certificados.fragment';
 import { AutorizacionDatosGeneralesFragment } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment';
 import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
@@ -32,11 +35,13 @@ export class AutorizacionActionService extends
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
-    HISTORICO_ESTADOS: 'historico-estados'
+    HISTORICO_ESTADOS: 'historico-estados',
+    CERTIFICADOS: 'certificados'
   };
 
   private datosGenerales: AutorizacionDatosGeneralesFragment;
   private historicoEstados: AutorizacionHistoricoEstadosFragment;
+  private certificados: AutorizacionCertificadosFragment
 
   private readonly data: IAutorizacionData;
   public readonly id: number;
@@ -61,10 +66,12 @@ export class AutorizacionActionService extends
     logger: NGXLogger,
     route: ActivatedRoute,
     private autorizacionService: AutorizacionService,
+    certificadoAutorizacionService: CertificadoAutorizacionService,
     personaService: PersonaService,
     empresaService: EmpresaService,
     estadoAutorizacionService: EstadoAutorizacionService,
     convocatoriaService: ConvocatoriaService,
+    documentoService: DocumentoService,
     public authService: SgiAuthService,
     public dialogService: DialogService,
   ) {
@@ -79,10 +86,11 @@ export class AutorizacionActionService extends
     this.datosGenerales = new AutorizacionDatosGeneralesFragment(
       logger, this.id, autorizacionService, personaService, empresaService, estadoAutorizacionService, convocatoriaService, authService);
     this.historicoEstados = new AutorizacionHistoricoEstadosFragment(this.id, autorizacionService, false);
+    this.certificados = new AutorizacionCertificadosFragment(this.id, certificadoAutorizacionService, autorizacionService, estadoAutorizacionService, documentoService)
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
-
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstados);
+    this.addFragment(this.FRAGMENT.CERTIFICADOS, this.certificados);
 
     this.datosGenerales.initialize();
   }

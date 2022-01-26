@@ -4,8 +4,9 @@ import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
+import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, RSQLSgiRestSort, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ICertificadoAutorizacionResponse } from '../certificado-autorizacion/certificado-autorizacion-response';
@@ -14,6 +15,8 @@ import { IConvocatoriaTituloResponse } from '../convocatoria/convocatoria-titulo
 import { CONVOCATORIA_TITULO_RESPONSE_CONVERTER } from '../convocatoria/convocatoria-titulo-response.converter';
 import { IEstadoAutorizacionResponse } from '../estado-autorizacion/estado-autorizacion-response';
 import { ESTADO_AUTORIZACION_RESPONSE_CONVERTER } from '../estado-autorizacion/estado-autorizacion-response.converter';
+import { INotificacionProyectoExternoCVNResponse } from '../notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn-response';
+import { NOTIFICACION_PROYECTO_EXTERNO_CVN_RESPONSE_CONVERTER } from '../notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn-response.converter';
 import { IAutorizacionRequest } from './autorizacion-request';
 import { AUTORIZACION_REQUEST_CONVERTER } from './autorizacion-request.converter';
 import { IAutorizacionResponse } from './autorizacion-response';
@@ -116,7 +119,7 @@ export class AutorizacionService extends _AutorizacionMixinBase {
   }
 
   /**
-   * Recupera listado de historico estado
+   * Recupera listado de certificados de autorizacion
    * @param id autorizacion
    * @param options opciones de búsqueda.
    */
@@ -167,4 +170,17 @@ export class AutorizacionService extends _AutorizacionMixinBase {
     );
   }
 
+  findCertificadoAutorizacionVisible(id: number, options?: SgiRestFindOptions):
+    Observable<ICertificadoAutorizacion> {
+    return this.http.get<ICertificadoAutorizacionResponse>(`${this.endpointUrl}/${id}/certificadoautorizacionvisible`).pipe(
+      map(response => CERTIFICADO_AUTORIZACION_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  findNotificacionProyectoExterno(id: number, options?: SgiRestFindOptions):
+    Observable<INotificacionProyectoExternoCVN> {
+    return this.http.get<INotificacionProyectoExternoCVNResponse>(`${this.endpointUrl}/${id}/notificacionproyecto`).pipe(
+      map(response => NOTIFICACION_PROYECTO_EXTERNO_CVN_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
 }
