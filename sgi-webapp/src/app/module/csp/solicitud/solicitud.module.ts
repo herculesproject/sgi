@@ -14,7 +14,7 @@ import { CambioEstadoModalComponent } from './modals/cambio-estado-modal/cambio-
 import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
 import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 import { SolicitiudHitosModalComponent } from './modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
-import { SolicitudListadoModalComponent } from './modals/solicitud-listado-modal/solicitud-listado-modal.component';
+import { SolicitudListadoExportModalComponent } from './modals/solicitud-listado-modal/solicitud-listado-export-modal.component';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
@@ -35,7 +35,7 @@ import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-form
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
-import { SolicitudListadoService } from './solicitud-listado.service';
+import { SolicitudListadoExportService } from './solicitud-listado-export.service';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
 
@@ -44,7 +44,7 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudCrearComponent,
     SolicitudEditarComponent,
     SolicitudListadoComponent,
-    SolicitudListadoModalComponent,
+    SolicitudListadoExportModalComponent,
     SolicitudDatosGeneralesComponent,
     SolicitudModalidadEntidadConvocanteModalComponent,
     SolicitudHistoricoEstadosComponent,
@@ -84,7 +84,7 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
   providers: [
     SolicitudDataResolver,
     SolicitudCrearGuard,
-    SolicitudListadoService
+    SolicitudListadoExportService
   ]
 })
 export class SolicitudModule { }

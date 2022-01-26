@@ -11,17 +11,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SolicitudListadoService } from '../../solicitud-listado.service';
-import { ISolicitudListadoModalData, SolicitudListadoModalComponent } from './solicitud-listado-modal.component';
+import { SolicitudListadoExportService } from '../../solicitud-listado-export.service';
+import { ISolicitudListadoDataExportModalData, SolicitudListadoExportModalComponent } from './solicitud-listado-export-modal.component';
 
-describe('SolicitudListadoModalComponent', () => {
-  let component: SolicitudListadoModalComponent;
-  let fixture: ComponentFixture<SolicitudListadoModalComponent>;
+describe('SolicitudListadoExportModalComponent', () => {
+  let component: SolicitudListadoExportModalComponent;
+  let fixture: ComponentFixture<SolicitudListadoExportModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SolicitudListadoModalComponent
+        SolicitudListadoExportModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -39,16 +39,16 @@ describe('SolicitudListadoModalComponent', () => {
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: TestUtils.buildDialogActionMatDialogRef() },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ISolicitudListadoModalData },
+        { provide: MAT_DIALOG_DATA, useValue: {} as ISolicitudListadoDataExportModalData },
         SgiAuthService,
-        SolicitudListadoService
+        SolicitudListadoExportService
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudListadoModalComponent);
+    fixture = TestBed.createComponent(SolicitudListadoExportModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

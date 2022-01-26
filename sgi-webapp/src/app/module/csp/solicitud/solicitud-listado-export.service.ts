@@ -16,11 +16,24 @@ import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { map, switchMap, takeLast } from 'rxjs/operators';
-import { ISolicitudListado } from './solicitud-listado/solicitud-listado.component';
+import { SolicitudModalidadEntidadConvocanteListado } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
+import { ISolicitudListadoData } from './solicitud-listado/solicitud-listado.component';
 
 
-interface ISolicitudReportData extends ISolicitudListado {
+interface ISolicitudReportData extends ISolicitudListadoData {
+  entidadesConvocantes: SolicitudModalidadEntidadConvocanteListado[];
   proyecto: ISolicitudProyecto;
+}
+
+export interface ISolicitudReportOptions extends IReportOptions {
+  showSolicitudEntidadesConvocantes: boolean;
+  showSolicitudProyectoFichaGeneral: boolean;
+  showSolicitudProyectoAreasConocimiento: boolean;
+  showSolicitudProyectoClasificaciones: boolean;
+  showSolicitudProyectoEquipo: boolean;
+  showSolicitudProyectoResponsableEconomico: boolean;
+  showSolicitudProyectoSocios: boolean;
+  showSolicitudProyectoEntidadesFinanciadoras: boolean;
 }
 
 const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo');
@@ -32,7 +45,7 @@ const TITULO_KEY = marker('csp.solicitud.titulo-listado');
 const FECHA_ESTADO_KEY = marker('csp.solicitud.estado-solicitud.fecha');
 
 @Injectable()
-export class SolicitudListadoService extends AbstractTableExportService<ISolicitudReportData, IReportOptions> {
+export class SolicitudListadoExportService extends AbstractTableExportService<ISolicitudReportData, IReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
