@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
+import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -160,7 +162,7 @@ public class AutorizacionController {
    *         presentada
    */
   @RequestMapping(path = "/{id}/presentable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
   public ResponseEntity<AutorizacionOutput> presentable(@PathVariable Long id) {
     log.debug("presentable(Long id) - start");
     boolean returnValue = service.presentable(id);
@@ -309,9 +311,46 @@ public class AutorizacionController {
   public ResponseEntity<Void> hasCertificadoAutorizacionVisible(@PathVariable Long id) {
     log.debug("hasCertificadoAutorizacionVisible(Long id) - start");
     boolean returnValue = certificadoAutorizacionService.hasCertificadoAutorizacionVisible(id);
-
     log.debug("hasCertificadoAutorizacionVisible(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping(path = "/{id}/certificadoautorizacionvisible")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-ER')")
+  public ResponseEntity<CertificadoAutorizacionOutput> findCertificadoAutorizacionVisible(@PathVariable Long id) {
+    log.debug("findCertificadoAutorizacionVisible(Long id) - start");
+    CertificadoAutorizacion returnValue = certificadoAutorizacionService.findCertificadoAutorizacionVisible(id);
+    if (returnValue == null) {
+      log.debug("findCertificadoAutorizacionVisible(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+      log.debug("findCertificadoAutorizacionVisible(Long id) - end");
+      return new ResponseEntity<>(convert(returnValue), HttpStatus.OK);
+    }
+  }
+
+  /**
+   * Devuelve una
+   * {@link NotificacionProyectoExternoCVN} Asociada a la autorizacion facilitada.
+   * 
+   * @param id id de la autorizacion
+   * @return la {@link NotificacionProyectoExternoCVN}
+   */
+  @GetMapping("/{id}/notificacionproyecto")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-V', 'CSP-CVPR-E','CSP-AUT-INV-ER','CSP-AUT-INV-C')")
+  public ResponseEntity<NotificacionProyectoExternoCVNOutput> findNotificacionProyectoExternoCVNByAutorizacionId(
+      @PathVariable Long id) {
+    log.debug("findNotificacionProyectoExternoCVNByAutorizacionId(@PathVariable Long id) - start");
+    NotificacionProyectoExternoCVN returnValue = notificacionProyectoExternoService
+        .findByAutorizacionId(id);
+
+    if (returnValue == null) {
+      log.debug("findNotificacionProyectoExternoCVNByAutorizacionId(@PathVariable Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+      log.debug("findNotificacionProyectoExternoCVNByAutorizacionId(@PathVariable Long id) - end");
+      return new ResponseEntity<>(convert(returnValue), HttpStatus.OK);
+    }
   }
 
   /**
@@ -363,4 +402,11 @@ public class AutorizacionController {
     return modelMapper.map(convocatoria, ConvocatoriaTituloOutput.class);
   }
 
+  private CertificadoAutorizacionOutput convert(CertificadoAutorizacion certificadoAutorizacion) {
+    return modelMapper.map(certificadoAutorizacion, CertificadoAutorizacionOutput.class);
+  }
+
+  private NotificacionProyectoExternoCVNOutput convert(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) {
+    return modelMapper.map(notificacionProyectoExternoCVN, NotificacionProyectoExternoCVNOutput.class);
+  }
 }

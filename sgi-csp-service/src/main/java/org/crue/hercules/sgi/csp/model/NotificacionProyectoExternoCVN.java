@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -133,13 +133,13 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
   private String urlDocumentoAcreditacion;
 
   // Relation mappings for JPA metamodel generation only
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "autorizacion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_NOTIFICACIONPROYECTOEXTERNOCVN_AUTORIZACION"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Autorizacion autorizacion = null;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_NOTIFICACIONPROYECTOEXTERNOCVN_PROYECTO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)

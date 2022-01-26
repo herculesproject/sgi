@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +18,14 @@ public interface NotificacionProyectoExternoCVNRepository extends JpaRepository<
    * @return true si existe, false si no existe.
    */
   boolean existsByAutorizacionId(Long autorizacionId);
+
+  /**
+   * Devuelve la {@link NotificacionProyectoExternoCVN} asociada a la
+   * {@link Autorizacion}.
+   * 
+   * @param autorizacionId id del {@link Autorizacion}.
+   * @return optional conteniendo la {@link NotificacionProyectoExternoCVN}.
+   */
+  Optional<NotificacionProyectoExternoCVN> findByAutorizacionId(Long autorizacionId);
+
 }

@@ -1,16 +1,12 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.EstadoAutorizacionNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
-import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;

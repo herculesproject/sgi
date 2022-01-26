@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import org.crue.hercules.sgi.csp.exceptions.NotificacionProyectoExternoCVNNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.repository.NotificacionProyectoExternoCVNRepository;
@@ -43,6 +44,20 @@ public class NotificacionProyectoExternoCVNService {
 
     Page<NotificacionProyectoExternoCVN> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve la {@link NotificacionProyectoExternoCVN} asociada a la
+   * {@link Autorizacion}.
+   * 
+   * @param id id del {@link Autorizacion}.
+   * @return el {@link NotificacionProyectoExternoCVN}.
+   */
+  public NotificacionProyectoExternoCVN findByAutorizacionId(Long id) {
+    log.debug("findByAutorizacionId(Long id) - start");
+    NotificacionProyectoExternoCVN returnValue = repository.findByAutorizacionId(id).orElse(null);
+    log.debug("findByAutorizacionId(Long id) - end");
     return returnValue;
   }
 

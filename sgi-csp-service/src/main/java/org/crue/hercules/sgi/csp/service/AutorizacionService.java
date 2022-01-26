@@ -72,7 +72,7 @@ public class AutorizacionService {
     EstadoAutorizacion estadoAutorizacion = addEstadoAutorizacion(autorizacion, EstadoAutorizacion.Estado.BORRADOR,
         null);
 
-    autorizacion.setEstadoId(estadoAutorizacion.getId());
+    autorizacion.setEstado(estadoAutorizacion);
 
     Autorizacion returnValue = repository.save(autorizacion);
 
@@ -193,10 +193,8 @@ public class AutorizacionService {
 
     estadoAutorizacion.setAutorizacionId(autorizacion.getId());
 
-    Optional<EstadoAutorizacion> estadoActual = estadoAutorizacionRepository.findById(autorizacion.getEstadoId());
-
     // El nuevo estado es diferente al estado actual de del Autorizacion
-    if (estadoAutorizacion.getEstado().equals(estadoActual.get().getEstado())) {
+    if (estadoAutorizacion.getEstado().equals(autorizacion.getEstado())) {
       throw new IllegalArgumentException("La Autorizacion ya se encuentra en el estado al que se quiere modificar.");
     }
 
@@ -205,7 +203,7 @@ public class AutorizacionService {
     // Se cambia el estado del proyecto
     estadoAutorizacion.setFecha(fechaActual);
     estadoAutorizacion = estadoAutorizacionRepository.save(estadoAutorizacion);
-    autorizacion.setEstadoId(estadoAutorizacion.getId());
+    autorizacion.setEstado(estadoAutorizacion);
 
     Autorizacion returnValue = repository.save(autorizacion);
 
@@ -230,11 +228,8 @@ public class AutorizacionService {
     estadoAutorizacion.setAutorizacionId(autorizacion.getId());
     estadoAutorizacion.setEstado(Estado.PRESENTADA);
 
-    EstadoAutorizacion estadoActual = estadoAutorizacionRepository.findById(autorizacion.getEstadoId())
-        .orElseThrow(() -> new EstadoAutorizacionNotFoundException(autorizacion.getEstadoId()));
-
     // El nuevo estado es diferente al estado actual de del Autorizacion
-    if (estadoAutorizacion.getEstado().equals(estadoActual.getEstado())) {
+    if (estadoAutorizacion.getEstado().equals(autorizacion.getEstado().getEstado())) {
       throw new AlreadyInEstadoAutorizacionException();
     }
     Instant fechaActual = Instant.now();
@@ -242,7 +237,7 @@ public class AutorizacionService {
     // Se cambia el estado del proyecto
     estadoAutorizacion.setFecha(fechaActual);
     estadoAutorizacion = estadoAutorizacionRepository.save(estadoAutorizacion);
-    autorizacion.setEstadoId(estadoAutorizacion.getId());
+    autorizacion.setEstado(estadoAutorizacion);
 
     Autorizacion returnValue = repository.save(autorizacion);
 
@@ -270,10 +265,7 @@ public class AutorizacionService {
         .orElseThrow(() -> new AutorizacionNotFoundException(id));
     checkUserHasAuthorityEditAutorizacion(autorizacion);
 
-    EstadoAutorizacion estado = estadoAutorizacionRepository.findById(autorizacion.getEstadoId())
-        .orElseThrow(() -> new EstadoAutorizacionNotFoundException(autorizacion.getEstadoId()));
-
-    if (estado.getEstado() == Estado.BORRADOR) {
+    if (autorizacion.getEstado().getEstado() == Estado.BORRADOR) {
       return true;
     }
     log.debug("presentable(Long id) - end");
