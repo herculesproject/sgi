@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
-import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
 import org.modelmapper.ModelMapper;
@@ -47,7 +46,8 @@ public class CertificadoAutorizacionController {
   /**
    * Crea nuevo {@link CertificadoAutorizacion}
    * 
-   * @param autorizacion {@link CertificadoAutorizacion} que se quiere crear.
+   * @param certificadoAutorizacion {@link CertificadoAutorizacion} que se quiere
+   *                                crear.
    * @return Nuevo {@link CertificadoAutorizacion}creado.
    */
 
