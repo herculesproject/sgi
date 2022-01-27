@@ -1627,7 +1627,6 @@
   "msg.csp.solicitud-proyecto.unmodifiable-due-periodos-socios-dependencies.info": "Para poder modificar este valor debe eliminar los datos de los apartados Periodos de pago y periodos de justificación de todos los socios",
   "msg.csp.solicitud-proyecto.unmodifiable-due-socios-dependencies.info": "Para poder modificar este valor debe eliminar los datos del apartado socios",
   "msg.csp.solicitud-socio-colaborador.relations.delete": "Existe información de detalle vinculada a este socio, ¿desea continuar?",
-  "msg.csp.solicitud.autoevaluacion-etica-completada": "Es obligatorio contestar a todas las preguntas de la autoevaluación ética",
   "msg.csp.solicitud.crear.proyecto": "Se ha creado correctamente el proyecto a partir de la solicitud",
   "msg.csp.solicitud.documentos-requeridos": "La solicitud no tiene toda la documentación requerida",
   "msg.csp.solicitud.solicitante-miembro-equipo": "El solicitante de la solicitud debe ser miembro del equipo",

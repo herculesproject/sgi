@@ -22,7 +22,6 @@ const MSG_ERROR = marker('error.update.entity');
 const SOLICITUD_KEY = marker('csp.solicitud');
 const MSG_BUTTON_CAMBIO_ESTADO = marker('csp.solicitud.cambio-estado');
 const MSG_CAMBIO_ESTADO_SUCCESS = marker('msg.csp.cambio-estado.success');
-const MSG_CAMBIO_ESTADO_ERROR = marker('error.csp.solicitud.cambio-estado');
 
 @Component({
   selector: 'sgi-solicitud-editar',
@@ -161,8 +160,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
       hasRequiredDocumentos: this.actionService.hasRequiredDocumentos,
       solicitud: this.actionService.solicitud,
       solicitudProyecto: this.actionService.solicitudProyecto,
-      isSolicitanteInSolicitudEquipo: this.actionService.isSolicitanteInSolicitudEquipo,
-      isAutoevaluacionEticaFullFilled: this.actionService.isAutoevaluacionEticaFullfilled
+      isSolicitanteInSolicitudEquipo: this.actionService.isSolicitanteInSolicitudEquipo
     };
     const config = {
       panelClass: 'sgi-dialog-container',
