@@ -158,7 +158,7 @@ export class SolicitudActionService extends ActionService {
   }
 
   get solicitudProyecto(): ISolicitudProyecto {
-    return this.proyectoDatos.getValue();
+    return this.isFormularioSolicitudProyecto() ? this.proyectoDatos.getValue() : undefined;
   }
 
   get isSolicitanteInSolicitudEquipo(): boolean {

@@ -89,7 +89,7 @@ export class SolicitudDocumentosFragment extends Fragment {
 
   private nodeLookup = new Map<string, NodeDocumentoSolicitud>();
 
-  private tiposDocumentosIdsRequired: string[];
+  private tiposDocumentosIdsRequired: string[] = [];
 
   get hasRequiredDocumentos(): boolean {
     return this.tiposDocumentosIdsRequired.every(tipoRequeridoId =>
