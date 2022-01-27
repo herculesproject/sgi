@@ -149,7 +149,7 @@ public class ConfigService {
   /**
    * Find {@link Config}
    *
-   * @param pageable pagging info
+   * @param pageable paging info
    * @param query    RSQL expression with the restrictions to apply in the search
    * @return {@link Config} pagged and filtered
    */
