@@ -18,7 +18,7 @@ public interface CustomAutorizacionRepository {
    * recibida.
    * 
    * @param specification condiciones que deben cumplir.
-   * @return lista de ids de {@link Proyecto}.
+   * @return lista de ids de {@link Autorizacion}.
    */
   List<Long> findIds(Specification<Autorizacion> specification);
 }
