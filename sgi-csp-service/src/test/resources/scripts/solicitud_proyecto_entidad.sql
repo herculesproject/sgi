@@ -10,9 +10,10 @@
     "classpath:scripts/solicitud.sql",
     "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud_proyecto.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
     "classpath:scripts/fuente_financiacion.sql",
     "classpath:scripts/tipo_financiacion.sql",
-    "classpath:scripts/convocatoria_entidad_financiera.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
     "classpath:scripts/convocatoria_entidad_gestora.sql"
     // @formatter:on
   }
