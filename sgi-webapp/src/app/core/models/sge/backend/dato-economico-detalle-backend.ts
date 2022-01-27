@@ -1,7 +1,6 @@
-import { DateTime } from 'luxon';
-import { IDocumento } from './documento';
+import { IDocumento } from '../documento';
 
-export interface IDatoEconomicoDetalle {
+export interface IDatoEconomicoDetalleBackend {
   id: string;
   proyectoId: string;
   partidaPresupuestaria: string;
@@ -13,5 +12,5 @@ export interface IDatoEconomicoDetalle {
     valor: string;
   }[];
   clasificacionSGE: any;
-  fechaDevengo: DateTime;
+  fechaDevengo: string;
 }
