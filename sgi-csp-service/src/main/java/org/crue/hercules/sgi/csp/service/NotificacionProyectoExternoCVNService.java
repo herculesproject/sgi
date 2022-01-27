@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.exceptions.NotificacionProyectoExternoCVNNotFoundException;
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.NotificacionProyectoExternoCVNRepository;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -45,6 +47,27 @@ public class NotificacionProyectoExternoCVNService {
     Page<NotificacionProyectoExternoCVN> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
+
+  }
+
+  /**
+   * Guarda la entidad {@link NotificacionProyectoExternoCVN}.
+   *
+   * @param notificacionProyectoExternoCVN la entidad
+   *                                       {@link NotificacionProyectoExternoCVN}
+   *                                       a guardar.
+   * @return proyecto la entidad {@link NotificacionProyectoExternoCVN}
+   *         persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) {
+    log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - start");
+
+    // Crea la notificacion proyecto externo CVN
+    NotificacionProyectoExternoCVN returnValue = repository.save(notificacionProyectoExternoCVN);
+
+    log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - end");
+    return returnValue;
   }
 
   /**
@@ -71,4 +94,17 @@ public class NotificacionProyectoExternoCVNService {
   public boolean existsByAutorizacionId(Long autorizacionId) {
     return repository.existsByAutorizacionId(autorizacionId);
   }
+
+  /**
+   * 
+   * Recupera una lista de objetos {@link NotificacionProyectoExternoCVN} de un
+   * {@link Proyecto}
+   * 
+   * @param proyectoId Identificador del {@link Proyecto}
+   * @return lista de {@link NotificacionProyectoExternoCVN}
+   */
+  public List<NotificacionProyectoExternoCVN> findByProyectoId(Long proyectoId) {
+    return this.repository.findByProyectoId(proyectoId);
+  }
+
 }

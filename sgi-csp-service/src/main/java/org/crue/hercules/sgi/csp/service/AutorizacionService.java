@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
@@ -11,6 +12,8 @@ import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion.Estado;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
+import org.crue.hercules.sgi.csp.repository.custom.CustomAutorizacionRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.AutorizacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.service.impl.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -40,7 +43,8 @@ public class AutorizacionService {
   private final AutorizacionRepository repository;
   private final EstadoAutorizacionRepository estadoAutorizacionRepository;
 
-  public AutorizacionService(AutorizacionRepository repository,
+  public AutorizacionService(
+      AutorizacionRepository repository,
       EstadoAutorizacionRepository estadoAutorizacionRepository) {
     this.repository = repository;
     this.estadoAutorizacionRepository = estadoAutorizacionRepository;
@@ -117,7 +121,13 @@ public class AutorizacionService {
     }).orElseThrow(() -> new AutorizacionNotFoundException(autorizacionActualizar.getId()));
   }
 
-  public Autorizacion findById(long id) {
+  /**
+   * Obtiene una entidad {@link Autorizacion} por id.
+   * 
+   * @param id Identificador de la entidad {@link Autorizacion}.
+   * @return Autorizacion la entidad {@link Autorizacion}.
+   */
+  public Autorizacion findById(Long id) {
     log.debug("findById(Long id) - start");
     final Autorizacion returnValue = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
     checkUserHasAuthorityViewAutorizacion(returnValue);
@@ -365,4 +375,21 @@ public class AutorizacionService {
     }
   }
 
+  /**
+   * Obtiene todos los ids de {@link Autorizacion} que cumplan las condiciones
+   * indicadas en la query.
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Autorizacion}.
+   */
+  public List<Long> findIds(String query) {
+    log.debug("findIds(String query) - start");
+
+    List<Long> returnValue = repository.findIds(SgiRSQLJPASupport.toSpecification(query,
+        AutorizacionPredicateResolver.getInstance()));
+
+    log.debug("findIds(String query) - end");
+
+    return returnValue;
+  }
 }

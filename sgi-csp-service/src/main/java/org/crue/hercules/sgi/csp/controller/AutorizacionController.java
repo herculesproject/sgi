@@ -193,6 +193,28 @@ public class AutorizacionController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Obtiene los ids de {@link Autorizacion} que cumplan las condiciones indicadas
+   * en el filtro de búsqueda
+   * 
+   * @param query filtro de búsqueda.
+   * @return lista de ids de {@link Autorizacion}.
+   */
+  @GetMapping("/modificadas-ids")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-V')")
+  public ResponseEntity<List<Long>> findIds(@RequestParam(name = "q", required = false) String query) {
+    log.debug("findIds(String query) - start");
+
+    List<Long> returnValue = service.findIds(query);
+
+    if (returnValue.isEmpty()) {
+      log.debug("findIds(String query) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findIds(String query) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-B','CSP-AUT-INV-BR')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)

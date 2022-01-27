@@ -1,12 +1,28 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
   <changeSet author="user (generated)" id="0000000000005-1">
     <addForeignKeyConstraint baseColumnNames="estado_id" baseTableName="autorizacion" constraintName="FK_AUTORIZACION_AUTORIZACIONESTADO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_autorizacion" validate="true" />
   </changeSet>
+
   <changeSet author="user (generated)" id="0000000000005-2">
     <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="autorizacion" constraintName="FK_AUTORIZACION_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
+
   <changeSet author="user (generated)" id="0000000000005-3">
     <addForeignKeyConstraint baseColumnNames="autorizacion_id" baseTableName="certificado_autorizacion" constraintName="FK_CERTIFICADOAUTORIZACION_AUTORIZACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="autorizacion" validate="true" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000005-4">
+    <addColumn tableName="notificacion_cvn_entidad_financiadora">
+      <column name="notificacion_proyecto_externo_cvn_id" type="bigint">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000005-5">
+    <addForeignKeyConstraint baseColumnNames="notificacion_proyecto_externo_cvn_id" baseTableName="notificacion_cvn_entidad_financiadora" constraintName="FK_NOTIFICACIONCVNENTIDADFINANCIADORA_NOTIFICACIONPROYECTOEXTERNOCVN" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="notificacion_proyecto_externo_cvn" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

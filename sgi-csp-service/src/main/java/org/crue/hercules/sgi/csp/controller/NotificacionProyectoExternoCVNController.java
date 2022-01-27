@@ -3,6 +3,9 @@ package org.crue.hercules.sgi.csp.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
+import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNInput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
@@ -15,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,6 +69,27 @@ public class NotificacionProyectoExternoCVNController {
 
     log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(convert(page), HttpStatus.OK);
+
+  }
+
+  /**
+   * Crea nuevo {@link NotificacionProyectoExternoCVN}
+   * 
+   * @param notificacionProyectoExternoCVN {@link NotificacionProyectoExternoCVN}
+   *                                       que se quiere crear.
+   * @return Nuevo {@link NotificacionProyectoExternoCVN} creado.
+   */
+  @PostMapping
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-C')")
+  public ResponseEntity<NotificacionProyectoExternoCVN> create(
+      @Valid @RequestBody NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVN) {
+    log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - start");
+
+    service.create(convert(notificacionProyectoExternoCVN));
+
+    log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - end");
+
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   private Page<NotificacionProyectoExternoCVNOutput> convert(Page<NotificacionProyectoExternoCVN> page) {
@@ -76,5 +102,18 @@ public class NotificacionProyectoExternoCVNController {
 
   private NotificacionProyectoExternoCVNOutput convert(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) {
     return modelMapper.map(notificacionProyectoExternoCVN, NotificacionProyectoExternoCVNOutput.class);
+  }
+
+  private NotificacionProyectoExternoCVN convert(Long id,
+      NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVNInput) {
+    NotificacionProyectoExternoCVN notificacionProyectoExternoCVN = modelMapper.map(
+        notificacionProyectoExternoCVNInput, NotificacionProyectoExternoCVN.class);
+    notificacionProyectoExternoCVN.setId(id);
+    return notificacionProyectoExternoCVN;
+  }
+
+  private NotificacionProyectoExternoCVN convert(
+      NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVNInput) {
+    return convert(null, notificacionProyectoExternoCVNInput);
   }
 }

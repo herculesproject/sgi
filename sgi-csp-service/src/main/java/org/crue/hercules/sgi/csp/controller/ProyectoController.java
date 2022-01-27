@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
+import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAgrupacionGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
@@ -43,6 +45,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
+import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoAgrupacionGastoService;
 import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
@@ -178,6 +181,9 @@ public class ProyectoController {
   /** ProyectoPalabraClaveService */
   private final ProyectoPalabraClaveService proyectoPalabraClaveService;
 
+  /** ProyectoNotificacionesProyecto service */
+  private final NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -208,6 +214,7 @@ public class ProyectoController {
    * @param proyectoPeriodoJustificacionService               {@link ProyectoPeriodoJustificacionService}.
    * @param anualidadGastoService                             {@link AnualidadGastoService}
    * @param proyectoPalabraClaveService                       {@link ProyectoPalabraClaveService}
+   * @param notificacionProyectoExternoCVNService             {@link NotificacionProyectoExternoCVNService}
    */
   public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
       ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
@@ -226,7 +233,8 @@ public class ProyectoController {
       ProyectoResponsableEconomicoService proyectoResponsableEconomicoService,
       ProyectoAgrupacionGastoService proyectoAgrupacionGastoService,
       ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService,
-      AnualidadGastoService anualidadGastoService, ProyectoPalabraClaveService proyectoPalabraClaveService) {
+      AnualidadGastoService anualidadGastoService, ProyectoPalabraClaveService proyectoPalabraClaveService,
+      NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService) {
     this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
@@ -254,6 +262,7 @@ public class ProyectoController {
     this.proyectoPeriodoJustificacionService = proyectoPeriodoJustificacionService;
     this.anualidadGastoService = anualidadGastoService;
     this.proyectoPalabraClaveService = proyectoPalabraClaveService;
+    this.notificacionProyectoExternoCVNService = notificacionProyectoExternoCVNService;
   }
 
   /**
@@ -1386,6 +1395,26 @@ public class ProyectoController {
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
+  /**
+   * Devuelve una lista de {@link NotificacionProyectoExternoCVN}
+   * 
+   * @param id Identificador del {@link Proyecto}.
+   * @return el listado de entidades {@link NotificacionProyectoExternoCVN} del
+   *         {@link Proyecto}.
+   */
+  @GetMapping("/{id}/notificacionesproyectos")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  public ResponseEntity<List<NotificacionProyectoExternoCVNOutput>> findAllNotificacionProyectoExternoCVN(
+      @PathVariable Long id) {
+
+    List<NotificacionProyectoExternoCVNOutput> notificacionProyectoExternoCVN = convert(
+        notificacionProyectoExternoCVNService.findByProyectoId(id));
+
+    return notificacionProyectoExternoCVN.isEmpty() ? ResponseEntity.noContent().build()
+        : ResponseEntity.ok(
+            notificacionProyectoExternoCVN);
+  }
+
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
     List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
         .map((proyectoPalabraClave) -> convert(proyectoPalabraClave))
@@ -1413,6 +1442,16 @@ public class ProyectoController {
     ProyectoPalabraClave entity = modelMapper.map(input, ProyectoPalabraClave.class);
     entity.setProyectoId(proyectoId);
     return entity;
+  }
+
+  private NotificacionProyectoExternoCVNOutput convert(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) {
+    return modelMapper.map(notificacionProyectoExternoCVN, NotificacionProyectoExternoCVNOutput.class);
+  }
+
+  private List<NotificacionProyectoExternoCVNOutput> convert(List<NotificacionProyectoExternoCVN> list) {
+    return list.stream()
+        .map((element) -> convert(element))
+        .collect(Collectors.toList());
   }
 
 }

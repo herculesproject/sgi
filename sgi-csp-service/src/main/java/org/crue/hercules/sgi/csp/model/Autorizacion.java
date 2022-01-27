@@ -105,4 +105,5 @@ public class Autorizacion extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Convocatoria convocatoria = null;
+
 }
