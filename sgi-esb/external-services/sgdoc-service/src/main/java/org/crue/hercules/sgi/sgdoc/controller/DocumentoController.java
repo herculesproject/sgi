@@ -124,12 +124,11 @@ public class DocumentoController {
   public ResponseEntity<Resource> findDocumentoArchivo(@PathVariable String id) {
     log.debug("findDocumentoArchivo(String id) - start");
 
-    Documento documento = service.findById(id);
     Archivo archivo = service.findArchivoByDocumentoId(id);
     ByteArrayResource archivoByte = new ByteArrayResource(archivo.getArchivo());
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", documento.getTipo());
+    headers.add("Content-Type", archivo.getDocumento().getTipo());
 
     log.debug("findDocumentoArchivo(String id) - end");
     return new ResponseEntity<>(archivoByte, headers, HttpStatus.OK);

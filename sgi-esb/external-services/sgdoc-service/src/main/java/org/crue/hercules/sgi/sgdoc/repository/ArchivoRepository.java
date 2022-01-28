@@ -15,13 +15,13 @@ public interface ArchivoRepository extends JpaRepository<Archivo, String>, JpaSp
    * @param documentoRef Identificador del {@link Documento}
    * @return el {@link Archivo} del {@link Documento}
    */
-  Optional<Archivo> findByDocumentoRef(String documentoRef);
+  Optional<Archivo> findByDocumentoDocumentoRef(String documentoRef);
 
   /**
    * Elimina un archivo por el documentoRef
    * 
    * @param documentoRef Identificador del {@link Documento}
    */
-  void deleteByDocumentoRef(String documentoRef);
+  void deleteByDocumentoDocumentoRef(String documentoRef);
 
 }

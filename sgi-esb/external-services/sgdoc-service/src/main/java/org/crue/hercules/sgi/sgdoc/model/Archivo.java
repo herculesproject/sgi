@@ -47,13 +47,9 @@ public class Archivo implements Serializable {
   @Column(name = "archivo", columnDefinition = "blob")
   private byte[] archivo;
 
-  @Column(name = "documento_ref", nullable = false)
-  @NotNull
-  private String documentoRef;
-
-  // Relation mappings for JPA metamodel generation only
   @OneToOne
-  @JoinColumn(name = "documento_ref", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_ARCHIVO_DOCUMENTO"))
-  private final Documento documento = null;
+  @NotNull
+  @JoinColumn(name = "documento_ref", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCHIVO_DOCUMENTO"))
+  private Documento documento;
 
 }

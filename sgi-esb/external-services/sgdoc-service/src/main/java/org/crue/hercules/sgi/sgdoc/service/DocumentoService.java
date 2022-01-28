@@ -3,8 +3,10 @@ package org.crue.hercules.sgi.sgdoc.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.crue.hercules.sgi.framework.exception.NotFoundException;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.sgdoc.exceptions.ArchivoNotFoundException;
 import org.crue.hercules.sgi.sgdoc.exceptions.DocumentoNotFoundException;
 import org.crue.hercules.sgi.sgdoc.model.Archivo;
 import org.crue.hercules.sgi.sgdoc.model.Documento;
@@ -24,6 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class DocumentoService {
+
+  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
+  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
+  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
+  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
+  private static final String MESSAGE_KEY_DOCUMENTO_REF = "documentoRef";
 
   /** Documento repository */
   private final DocumentoRepository repository;
@@ -45,13 +53,19 @@ public class DocumentoService {
   @Transactional
   public Documento create(Documento documento, Archivo archivo) {
     log.debug("create(Documento documento) - start");
-    Assert.isNull(documento.getDocumentoRef(), "DocumentoRef tiene que ser null para crear una nueva documento");
+
+    Assert.isNull(documento.getDocumentoRef(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_DOCUMENTO_REF))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Documento.class))
+            .build());
 
     documento.setDocumentoRef(UUID.randomUUID().toString());
 
     Documento returnValue = repository.save(documento);
 
-    archivo.setDocumentoRef(returnValue.getDocumentoRef());
+    archivo.setDocumento(returnValue);
     archivoRepository.save(archivo);
 
     log.debug("create(Documento documento) - end");
@@ -68,13 +82,18 @@ public class DocumentoService {
   public void delete(String id) {
     log.debug("delete(String id) - start");
 
-    Assert.notNull(id, "id no puede ser null para eliminar un Documento");
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_DOCUMENTO_REF))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Documento.class))
+            .build());
 
     if (!repository.existsById(id)) {
-      throw new NotFoundException(id);
+      throw new DocumentoNotFoundException(id);
     }
 
-    archivoRepository.deleteByDocumentoRef(id);
+    archivoRepository.deleteByDocumentoDocumentoRef(id);
     repository.deleteById(id);
     log.debug("delete(String id) - end");
   }
@@ -101,6 +120,14 @@ public class DocumentoService {
    */
   public Documento findById(String id) {
     log.debug("findById(String id) - start");
+
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_DOCUMENTO_REF))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Documento.class))
+            .build());
+
     Documento returnValue = repository.findById(id).orElseThrow(() -> new DocumentoNotFoundException(id));
     log.debug("findById(String id) - end");
     return returnValue;
@@ -133,8 +160,8 @@ public class DocumentoService {
    */
   public Archivo findArchivoByDocumentoId(String documentoId) {
     log.debug("findArchivoByDocumentoId(String documentoId) - start");
-    Archivo returnValue = archivoRepository.findByDocumentoRef(documentoId)
-        .orElseThrow(() -> new DocumentoNotFoundException(documentoId));
+    Archivo returnValue = archivoRepository.findByDocumentoDocumentoRef(documentoId)
+        .orElseThrow(() -> new ArchivoNotFoundException(documentoId));
     log.debug("findArchivoByDocumentoId(String documentoId) - end");
     return returnValue;
   }
