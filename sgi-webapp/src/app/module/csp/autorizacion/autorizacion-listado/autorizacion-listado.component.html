@@ -134,13 +134,13 @@
             </button>
           </ng-container>
 
-          <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-V'">
+          <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-CVPR-E']">
             <button *ngIf="element.proyectoId" mat-button matTooltip="{{'btn.autorizacion.ver-proyecto' | translate}}"
               [routerLink]="['../..', CSP_ROUTE_NAMES.PROYECTO, element.proyectoId?.toString()]">
               <mat-icon color="primary">work</mat-icon>
             </button>
           </ng-container>
-          <ng-container *sgiHasAuthorityForAnyUO="'CSP-CVPR-V'">
+          <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-CVPR-V', 'CSP-CVPR-E']">
             <button *ngIf="element.notificacionId" mat-button
               matTooltip="{{'btn.autorizacion.ver-notificacion' | translate}}"
               [routerLink]="['../..', CSP_ROUTE_NAMES.NOTIFICACION_CVN, element.notificacionId?.toString()]">
