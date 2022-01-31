@@ -273,7 +273,8 @@ public class AutorizacionService {
 
     Autorizacion autorizacion = repository.findById(id)
         .orElseThrow(() -> new AutorizacionNotFoundException(id));
-    checkUserHasAuthorityEditAutorizacion(autorizacion);
+
+    checkUserHasAuthorityViewAutorizacion(autorizacion);
 
     if (autorizacion.getEstado().getEstado() == Estado.BORRADOR) {
       return true;
