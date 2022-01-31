@@ -496,7 +496,7 @@ public class ConvocatoriaController {
    */
   @RequestMapping(path = "/{id}/convocatoriahitos", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E')")
-  public ResponseEntity<?> hasConvocatoriaHitos(@PathVariable Long id) {
+  public ResponseEntity<Void> hasConvocatoriaHitos(@PathVariable Long id) {
     log.debug("Convocatoria hasConvocatoriaHitos(Long id) - start");
     if (convocatoriaHitoService.existsByConvocatoriaId(id)) {
       log.debug("Convocatoria hasConvocatoriaHitos(Long id) - end");
@@ -646,7 +646,7 @@ public class ConvocatoriaController {
    */
   @RequestMapping(path = "/{id}/convocatoriafases", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E')")
-  public ResponseEntity<?> hasConvocatoriaFases(@PathVariable Long id) {
+  public ResponseEntity<Void> hasConvocatoriaFases(@PathVariable Long id) {
     log.debug("Convocatoria hasConvocatoriaFases(Long id) - start");
     if (convocatoriaFaseService.existsByConvocatoriaId(id)) {
       log.debug("Convocatoria hasConvocatoriaFases(Long id) - end");
@@ -1018,7 +1018,7 @@ public class ConvocatoriaController {
    */
   @RequestMapping(path = "/{id}/tramitable", method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthority('CSP-SOL-INV-C')")
-  public ResponseEntity<Convocatoria> tramitable(@PathVariable Long id) {
+  public ResponseEntity<Void> tramitable(@PathVariable Long id) {
     log.debug("registrable(Long id) - start");
     boolean returnValue = service.tramitable(id);
     log.debug("registrable(Long id) - end");
@@ -1047,7 +1047,7 @@ public class ConvocatoriaController {
    */
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E','CSP-CON-V')")
   @RequestMapping(path = "/{id}/proyectosreferenced", method = RequestMethod.HEAD)
-  public ResponseEntity<Object> hasProyectosReferenced(@PathVariable Long id) {
+  public ResponseEntity<Void> hasProyectosReferenced(@PathVariable Long id) {
 
     return this.service.hasAnyProyectoReferenced(id) ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
   }
@@ -1264,8 +1264,8 @@ public class ConvocatoriaController {
     return modelMapper.map(convocatoriaPalabraClave, ConvocatoriaPalabraClaveOutput.class);
   }
 
-
-  private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(List<ConvocatoriaPalabraClaveInput> inputs) {
+  private List<ConvocatoriaPalabraClave> convertConvocatoriaPalabraClaveInputs(
+      List<ConvocatoriaPalabraClaveInput> inputs) {
     return inputs.stream().map(input -> convert(null, input)).collect(Collectors.toList());
   }
 

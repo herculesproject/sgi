@@ -45,7 +45,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de Proyecto.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoIT extends BaseIT {
+class ProyectoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -93,7 +93,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsProyecto() throws Exception {
+  void create_ReturnsProyecto() throws Exception {
     String roles = "CSP-PRO-C";
     Proyecto proyecto = generarMockProyecto(null);
 
@@ -122,7 +122,7 @@ public class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsProyectoBySolicitud() throws Exception {
+  void create_ReturnsProyectoBySolicitud() throws Exception {
     String roles = "CSP-PRO-C";
     Proyecto proyecto = generarMockProyecto(null);
 
@@ -146,7 +146,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql" 
       // @formatter:on
@@ -180,7 +182,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql",
       // @formatter:on
@@ -207,7 +211,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql"
       // @formatter:on
@@ -234,7 +240,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql"
       // @formatter:on
@@ -257,7 +265,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql",
     // @formatter:on
@@ -284,7 +294,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql",
     // @formatter:off
@@ -329,7 +341,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql" 
     // @formatter:on
@@ -380,6 +394,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", 
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql", 
       "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_hito.sql", 
@@ -428,7 +444,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/tipo_hito.sql",
     "classpath:scripts/proyecto_hito.sql",
@@ -457,7 +475,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/tipo_hito.sql",
     "classpath:scripts/proyecto_hito.sql",
@@ -491,6 +511,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", 
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql", 
       "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", 
@@ -539,7 +561,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/modelo_tipo_fase.sql",
     "classpath:scripts/proyecto_fase.sql"
@@ -568,7 +592,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/modelo_tipo_fase.sql",
     "classpath:scripts/proyecto_fase.sql"
@@ -601,7 +627,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/proyecto_paquete_trabajo.sql"
@@ -692,6 +720,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",  
@@ -720,6 +750,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",  
@@ -748,6 +780,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",  
@@ -777,6 +811,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",  
@@ -806,6 +842,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",
@@ -836,6 +874,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",
@@ -866,6 +906,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",
@@ -896,6 +938,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/rol_socio.sql",
     "classpath:scripts/proyecto_socio.sql",
@@ -931,6 +975,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/proyecto_entidad_gestora.sql"
@@ -979,6 +1025,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/proyecto_entidad_gestora.sql"
@@ -1013,7 +1061,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/rol_proyecto.sql",
@@ -1059,7 +1109,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/rol_proyecto.sql",
@@ -1093,7 +1145,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/proyecto_prorroga.sql"
@@ -1140,7 +1194,9 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql", 
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/estado_proyecto.sql", 
       "classpath:scripts/proyecto_prorroga.sql"
@@ -1169,6 +1225,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/proyecto_prorroga.sql"
     // @formatter:on
@@ -1196,6 +1254,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/proyecto_prorroga.sql"
     // @formatter:on
@@ -1229,7 +1289,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/modelo_tipo_finalidad.sql", 
     "classpath:scripts/tipo_regimen_concurrencia.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql",
     // @formatter:on
@@ -1277,8 +1338,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql", 
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/modelo_tipo_finalidad.sql", 
-    "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql",
     // @formatter:on
@@ -1313,8 +1375,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql", 
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/modelo_tipo_finalidad.sql", 
-    "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql", 
     "classpath:scripts/tipo_origen_fuente_financiacion.sql",
@@ -1367,8 +1430,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql", 
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/modelo_tipo_finalidad.sql", 
-    "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql", 
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql", 
     "classpath:scripts/tipo_origen_fuente_financiacion.sql",
@@ -1410,6 +1474,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/proyecto_documento.sql"
     // @formatter:on
@@ -1459,6 +1525,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/proyecto_documento.sql"
     // @formatter:on
@@ -1487,6 +1555,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql", 
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql", 
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/tipo_documento.sql",
       "classpath:scripts/tipo_fase.sql",
@@ -1526,6 +1596,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/proyecto_periodo_seguimiento.sql"
     // @formatter:on
@@ -1577,6 +1649,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/proyecto_periodo_seguimiento.sql"
     // @formatter:on
@@ -1609,7 +1683,9 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql",  
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",  
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_clasificacion.sql", 
     // @formatter:on
@@ -1657,6 +1733,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",  
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_clasificacion.sql", 
     // @formatter:on
@@ -1689,6 +1767,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",  
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_area.sql", 
     // @formatter:on
@@ -1739,6 +1819,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",  
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_area.sql", 
     // @formatter:on
@@ -1772,6 +1854,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_proyecto_sge.sql",
     // @formatter:on
@@ -1818,6 +1902,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_proyecto_sge.sql",
     // @formatter:on
@@ -1847,6 +1933,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_proyecto_sge.sql",
     // @formatter:on
@@ -1874,6 +1962,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_proyecto_sge.sql",
     // @formatter:on
@@ -1906,6 +1996,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/proyecto_anualidad.sql",
     // @formatter:on
@@ -1949,6 +2041,8 @@ public class ProyectoIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/proyecto_anualidad.sql",
     // @formatter:on
@@ -1983,9 +2077,9 @@ public class ProyectoIT extends BaseIT {
        "classpath:scripts/modelo_unidad.sql",
        "classpath:scripts/tipo_finalidad.sql",
        "classpath:scripts/tipo_ambito_geografico.sql",
-       "classpath:scripts/proyecto.sql",
        "classpath:scripts/tipo_regimen_concurrencia.sql",
        "classpath:scripts/convocatoria.sql",
+       "classpath:scripts/proyecto.sql",
        "classpath:scripts/convocatoria_partida.sql",
        "classpath:scripts/proyecto_partida.sql",
     // @formatter:on
@@ -2035,14 +2129,13 @@ public class ProyectoIT extends BaseIT {
        "classpath:scripts/modelo_unidad.sql",
        "classpath:scripts/tipo_finalidad.sql",
        "classpath:scripts/tipo_ambito_geografico.sql",
-       "classpath:scripts/proyecto.sql",
        "classpath:scripts/tipo_regimen_concurrencia.sql",
        "classpath:scripts/convocatoria.sql",
+       "classpath:scripts/proyecto.sql",
        "classpath:scripts/convocatoria_partida.sql",
        "classpath:scripts/proyecto_partida.sql",
     // @formatter:on
   })
-
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void findAllProyectoPartida_WithPagingSortingAndFiltering_ReturnsEmptyList()
@@ -2078,6 +2171,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_responsable_economico.sql", 
     // @formatter:on
@@ -2130,6 +2225,8 @@ public class ProyectoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/proyecto_responsable_economico.sql", 
     // @formatter:on

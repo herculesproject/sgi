@@ -30,9 +30,11 @@ import lombok.extern.slf4j.Slf4j;
  * CertificadoAutorizacionController
  */
 @RestController
-@RequestMapping("/certificadosautorizaciones")
+@RequestMapping(CertificadoAutorizacionController.REQUEST_MAPPING)
 @Slf4j
 public class CertificadoAutorizacionController {
+
+  public static final String REQUEST_MAPPING = "/certificadosautorizaciones";
 
   private ModelMapper modelMapper;
 

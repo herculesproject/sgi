@@ -27,7 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ProyectoResponsableEconomico.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoResponsableEconomicoIT extends BaseIT {
+class ProyectoResponsableEconomicoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = ProyectoResponsableEconomicoController.MAPPING;
@@ -54,6 +54,8 @@ public class ProyectoResponsableEconomicoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql",
     "classpath:scripts/proyecto_responsable_economico.sql"
@@ -87,6 +89,8 @@ public class ProyectoResponsableEconomicoIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
     "classpath:scripts/estado_proyecto.sql",
     "classpath:scripts/proyecto_responsable_economico.sql"

@@ -41,9 +41,9 @@ class ProyectoPartidaIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/proyecto.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/convocatoria_partida.sql"
     // @formatter:on  
   })
@@ -81,9 +81,9 @@ class ProyectoPartidaIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/proyecto.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/convocatoria_partida.sql",
     "classpath:scripts/proyecto_partida.sql"
     // @formatter:on  
@@ -123,9 +123,9 @@ class ProyectoPartidaIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/proyecto.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/convocatoria_partida.sql",
     "classpath:scripts/proyecto_partida.sql"
     // @formatter:on  
@@ -148,9 +148,9 @@ class ProyectoPartidaIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/proyecto.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/convocatoria_partida.sql",
     "classpath:scripts/proyecto_partida.sql"
     // @formatter:on  
@@ -173,9 +173,9 @@ class ProyectoPartidaIT extends BaseIT {
     "classpath:scripts/modelo_unidad.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/proyecto.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/convocatoria_partida.sql",
     "classpath:scripts/proyecto_partida.sql"
     // @formatter:on  
