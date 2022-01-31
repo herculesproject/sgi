@@ -58,8 +58,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
           if (convocatoria) {
             form.controls.datosConvocatoria.disable();
             form.controls.datosConvocatoria.setValue(null);
-          } else {
-            form.controls.datosConvocatoria.setValue(null);
+          } else if (!this.isVisor) {
             form.controls.datosConvocatoria.enable();
           }
         }
@@ -233,6 +232,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
 
     entidadParticipaControl.updateValueAndValidity({ emitEvent: false });
     datosEntidadControl.updateValueAndValidity({ emitEvent: false });
+
     this.entidadRequired = entidadParticipa;
   }
 
