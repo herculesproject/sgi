@@ -51,4 +51,12 @@ public class EstadoAutorizacionService {
     return returnValue;
   }
 
+  public EstadoAutorizacion findFirstEstadoByAutorizacion(Long autorizacionId) {
+    log.debug("findFirstEstadoByAutorizacion(Long autorizacionId) - start");
+
+    EstadoAutorizacion returnValue = repository.findFirstByAutorizacionIdOrderByIdAsc(autorizacionId).get(0);
+    log.debug("findFirstEstadoByAutorizacion(Long autorizacionId) - end");
+    return returnValue;
+  }
+
 }

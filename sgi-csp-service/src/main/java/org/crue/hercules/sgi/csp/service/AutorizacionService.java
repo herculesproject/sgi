@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
@@ -187,7 +188,7 @@ public class AutorizacionService {
    * Se hace el cambio de estado de un Autorizacion.
    *
    * @param id                 Identificador de {@link Autorizacion}.
-   * @param estadoAutorizacion el {@link EstadoAutorizacion} al que cambiar.
+   * @param estadoAutorizacion el {@link EstadoAutorizacionOutput} al que cambiar.
    * @return {@link Autorizacion} actualizado.
    */
   @Transactional

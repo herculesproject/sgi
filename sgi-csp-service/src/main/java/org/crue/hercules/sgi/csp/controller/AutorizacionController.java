@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionInput;
+import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
@@ -127,10 +129,11 @@ public class AutorizacionController {
 
   @PatchMapping("/{id}/cambiar-estado")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-INV-ER')")
-  public AutorizacionOutput cambiarEstado(@PathVariable Long id, @RequestBody EstadoAutorizacion estadoAutorizacion) {
+  public AutorizacionOutput cambiarEstado(@PathVariable Long id,
+      @RequestBody EstadoAutorizacionInput estadoAutorizacion) {
     log.debug("cambiarEstado(Long id) - start");
 
-    AutorizacionOutput returnValue = convert(service.cambiarEstado(id, estadoAutorizacion));
+    AutorizacionOutput returnValue = convert(service.cambiarEstado(id, convert(estadoAutorizacion)));
 
     log.debug("cambiarEstado(Long id) - end");
     return returnValue;
@@ -267,20 +270,21 @@ public class AutorizacionController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link EstadoAutorizacion} de la
+   * Devuelve una lista paginada y filtrada de {@link EstadoAutorizacionOutput} de
+   * la
    * {@link Autorizacion}.
    * 
    * @param id     Identificador de {@link Autorizacion}.
    * @param paging pageable.
-   * @return el listado de entidades {@link EstadoAutorizacion} paginados y
+   * @return el listado de entidades {@link EstadoAutorizacionOutput} paginados y
    *         filtrados.
    */
   @GetMapping("/{id}/estados")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
-  public ResponseEntity<Page<EstadoAutorizacion>> findAllEstadoAutorizacion(@PathVariable Long id,
+  public ResponseEntity<Page<EstadoAutorizacionOutput>> findAllEstadoAutorizacion(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - start");
-    Page<EstadoAutorizacion> page = estadoAutorizacionService.findAllByAutorizacion(id, paging);
+    Page<EstadoAutorizacionOutput> page = convertEstados(estadoAutorizacionService.findAllByAutorizacion(id, paging));
 
     if (page.isEmpty()) {
       log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
@@ -299,22 +303,22 @@ public class AutorizacionController {
    * 
    * @param id     Identificador de {@link Autorizacion}.
    * @param paging pageable.
-   * @return el listado de entidades {@link EstadoAutorizacion} paginados y
+   * @return el listado de entidades {@link CertificadoAutorizacion} paginados y
    *         filtrados.
    */
   @GetMapping("/{id}/certificados")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
   public ResponseEntity<Page<CertificadoAutorizacion>> findAllCertificadoAutorizacion(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - start");
+    log.debug("findAllCertificadoAutorizacion(Long id, Pageable paging) - start");
     Page<CertificadoAutorizacion> page = certificadoAutorizacionService.findAllByAutorizacion(id, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+      log.debug("findAllCertificadoAutorizacion(Long id, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllEstadoAutorizacion(Long id, Pageable paging) - end");
+    log.debug("findAllCertificadoAutorizacion(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
@@ -399,6 +403,22 @@ public class AutorizacionController {
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
+  @GetMapping("/{id}/firstestado")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
+  public ResponseEntity<EstadoAutorizacionOutput> findFirstEstado(@PathVariable Long id) {
+    log.debug("findFirstEstado(Long id) - start");
+
+    EstadoAutorizacionOutput returnValue = convert(estadoAutorizacionService.findFirstEstadoByAutorizacion(id));
+
+    if (returnValue == null) {
+      log.debug("findFirstEstado(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findFirstEstado(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   private AutorizacionOutput convert(Autorizacion autorizacion) {
     return modelMapper.map(autorizacion, AutorizacionOutput.class);
   }
@@ -430,5 +450,26 @@ public class AutorizacionController {
 
   private NotificacionProyectoExternoCVNOutput convert(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) {
     return modelMapper.map(notificacionProyectoExternoCVN, NotificacionProyectoExternoCVNOutput.class);
+  }
+
+  private Page<EstadoAutorizacionOutput> convertEstados(Page<EstadoAutorizacion> page) {
+    List<EstadoAutorizacionOutput> content = page.getContent().stream()
+        .map(this::convert).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  private EstadoAutorizacionOutput convert(EstadoAutorizacion estado) {
+    return modelMapper.map(estado, EstadoAutorizacionOutput.class);
+  }
+
+  private EstadoAutorizacion convert(EstadoAutorizacionInput estadoInput) {
+    return convert(null, estadoInput);
+  }
+
+  private EstadoAutorizacion convert(Long id, EstadoAutorizacionInput estadoInput) {
+    EstadoAutorizacion estado = modelMapper.map(estadoInput, EstadoAutorizacion.class);
+    estado.setId(id);
+    return estado;
   }
 }
