@@ -50,13 +50,15 @@
     <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     <jslt.version>0.1.11</jslt.version>
     <json-path.version>2.6.0</json-path.version>
+    <liquibase-hibernate5.version>3.8</liquibase-hibernate5.version>
+    <liquibase.version>3.8.9</liquibase.version>
     <lombok.version>1.18.20</lombok.version> <!-- Update Lombok to be JDK 16 compatible -->
-    <modelmapper.version>2.3.5</modelmapper.version>
+    <modelmapper.version>2.3.9</modelmapper.version>
     <rsql-jpa-spring-boot-starter.version>5.0.9</rsql-jpa-spring-boot-starter.version>
     <spel-scriptengine.version>1.0.0</spel-scriptengine.version>
     <wiremock-jre8.version>2.31.0</wiremock-jre8.version>
     <!-- Plugin versions (not defined in parent pom) -->
-    <liquibase-maven-plugin.version>4.5.0</liquibase-maven-plugin.version>
+    <liquibase-maven-plugin.version>3.8.9</liquibase-maven-plugin.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     <!-- Test execution modifiers -->
@@ -314,7 +316,7 @@
             <dependency>
               <groupId>org.liquibase.ext</groupId>
               <artifactId>liquibase-hibernate5</artifactId>
-              <version>${liquibase-maven-plugin.version}</version>
+              <version>${liquibase-hibernate5.version}</version>
               <exclusions>
                 <exclusion>
                   <groupId>org.hibernate</groupId>
