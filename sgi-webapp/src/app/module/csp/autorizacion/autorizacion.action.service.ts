@@ -17,7 +17,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
-import { AutorizacionCertificadosFragment } from './autorizacion-formulario/autorizacion-certificados/autorizacicon-certificados.fragment';
+import { AutorizacionCertificadosFragment } from './autorizacion-formulario/autorizacion-certificados/autorizacion-certificados.fragment';
 import { AutorizacionDatosGeneralesFragment } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment';
 import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';

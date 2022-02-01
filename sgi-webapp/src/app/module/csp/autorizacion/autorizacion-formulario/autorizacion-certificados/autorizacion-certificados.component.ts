@@ -16,10 +16,9 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { AreaConocimientoModalComponent } from 'src/app/esb/sgo/shared/area-conocimiento-modal/area-conocimiento-modal.component';
 import { AutorizacionActionService } from '../../autorizacion.action.service';
 import { AutorizacionCertificadoModalComponent, ICertificadoAutorizacionModalData } from '../autorizacion-certificado-modal/autorizacion-certificado-modal.component';
-import { AutorizacionCertificadosFragment } from './autorizacicon-certificados.fragment';
+import { AutorizacionCertificadosFragment } from './autorizacion-certificados.fragment';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
