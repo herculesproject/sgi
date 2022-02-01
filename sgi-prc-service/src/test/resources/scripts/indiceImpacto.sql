@@ -1,0 +1,2 @@
+INSERT INTO test.indice_impacto (id, produccion_cientifica_id, anio, tipo_fuente_impacto, numero_revistas, otra_fuente_impacto, posicion_publicacion, tipo_ranking, revista_25) VALUES(1, 1, 2022, '000', 3.00, 'otraFuenteImpacto', 1.0, 'CLASE1', false);
+INSERT INTO test.indice_impacto (id, produccion_cientifica_id, anio, tipo_fuente_impacto, numero_revistas, otra_fuente_impacto, posicion_publicacion, tipo_ranking, revista_25) VALUES(2, 1, 2022, 'MIAR', 3.00, 'otraFuenteImpacto', 2.0, 'CLASE2', false);
