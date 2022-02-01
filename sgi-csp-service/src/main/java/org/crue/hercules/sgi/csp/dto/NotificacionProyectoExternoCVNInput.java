@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -43,8 +44,13 @@ public class NotificacionProyectoExternoCVNInput implements Serializable {
   private Integer importeTotal;
   private String nombrePrograma;
   private Integer porcentajeSubvencion;
-  private String proeyctoCVNId;
+
+  @NotNull
+  private String proyectoCVNId;
   private String responsableRef;
+
+  @NotNull
   private String solicitanteRef;
   private String urlDocumentoAcreditacion;
+  private List<NotificacionCVNEntidadFinanciadoraInput> notificacionesEntidadFinanciadoras;
 }

@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
@@ -11,15 +10,12 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;

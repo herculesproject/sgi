@@ -1,8 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionInput;
@@ -10,8 +7,6 @@ import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -108,10 +103,4 @@ public class CertificadoAutorizacionController {
     return certificadoAutorizacion;
   }
 
-  private Page<CertificadoAutorizacionOutput> convert(Page<CertificadoAutorizacion> page) {
-    List<CertificadoAutorizacionOutput> content = page.getContent().stream()
-        .map(this::convert).collect(Collectors.toList());
-
-    return new PageImpl(content, page.getPageable(), page.getTotalElements());
-  }
 }

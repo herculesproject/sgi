@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;

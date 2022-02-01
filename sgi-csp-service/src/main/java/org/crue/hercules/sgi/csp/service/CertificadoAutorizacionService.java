@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.CertificadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
@@ -8,7 +7,6 @@ import org.crue.hercules.sgi.csp.repository.CertificadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.CertificadoAutorizacionSpecifications;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

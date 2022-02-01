@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
@@ -52,8 +53,9 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
   private Long id;
 
   /** Titulo */
-  @Column(name = "titulo", length = NotificacionProyectoExternoCVN.MAX_LENGTH, nullable = true)
+  @Column(name = "titulo", length = NotificacionProyectoExternoCVN.MAX_LENGTH, nullable = false)
   @Size(max = NotificacionProyectoExternoCVN.MAX_LENGTH)
+  @NotNull
   private String titulo;
 
   /** Autorizacion */
@@ -94,10 +96,12 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
 
   /** Fecha Inicio */
   @Column(name = "fecha_inicio")
+  @NotNull
   private Instant fechaInicio;
 
   /** Fecha Fin */
   @Column(name = "fecha_fin")
+  @NotNull
   private Instant fechaFin;
 
   /** Grado Contribucion */
@@ -119,15 +123,17 @@ public class NotificacionProyectoExternoCVN extends BaseEntity {
   private Integer porcentajeSubvencion;
 
   /** Proyecto CVN id */
-  @Column(name = "proyecto_cvn_id", nullable = true)
-  private String proeyctoCVNId;
+  @Column(name = "proyecto_cvn_id", nullable = false)
+  @NotNull
+  private String proyectoCVNId;
 
   /** Responsable Ref */
   @Column(name = "responsable_ref", nullable = true)
   private String responsableRef;
 
   /** Solicitante Ref */
-  @Column(name = "solicitante_ref", nullable = true)
+  @NotNull
+  @Column(name = "solicitante_ref", nullable = false)
   private String solicitanteRef;
 
   /** Url Documento acreditacion */

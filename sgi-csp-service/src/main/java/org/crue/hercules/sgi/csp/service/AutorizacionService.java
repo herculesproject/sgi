@@ -2,17 +2,14 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.EstadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion.Estado;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
-import org.crue.hercules.sgi.csp.repository.custom.CustomAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AutorizacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.service.impl.AlreadyInEstadoAutorizacionException;

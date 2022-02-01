@@ -12,15 +12,13 @@ import javax.persistence.criteria.Root;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.Autorizacion_;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
-import org.crue.hercules.sgi.csp.model.EstadoAutorizacion_;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion.Estado;
-import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
+import org.crue.hercules.sgi.csp.model.EstadoAutorizacion_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import io.github.perplexhub.rsql.RSQLOperators;
-import liquibase.pro.packaged.cb;
 
 public class AutorizacionPredicateResolver implements SgiRSQLPredicateResolver<Autorizacion> {
   private enum Property {

@@ -5,9 +5,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.NotificacionCVNEntidadFinanciadoraInput;
+import org.crue.hercules.sgi.csp.dto.NotificacionCVNEntidadFinanciadoraOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNInput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
+import org.crue.hercules.sgi.csp.model.NotificacionCVNEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
+import org.crue.hercules.sgi.csp.service.NotificacionCVNEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
@@ -18,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +42,30 @@ public class NotificacionProyectoExternoCVNController {
   private ModelMapper modelMapper;
 
   private final NotificacionProyectoExternoCVNService service;
+  private final NotificacionCVNEntidadFinanciadoraService notificacionCVNEntidadFinanciadoraService;
 
   public NotificacionProyectoExternoCVNController(
       NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService,
+      NotificacionCVNEntidadFinanciadoraService notificacionCVNEntidadFinanciadoraService,
       ModelMapper modelMapper) {
     this.service = notificacionProyectoExternoCVNService;
+    this.notificacionCVNEntidadFinanciadoraService = notificacionCVNEntidadFinanciadoraService;
     this.modelMapper = modelMapper;
+  }
+
+  /**
+   * Devuelve el {@link NotificacionProyectoExternoCVN} con el id indicado.
+   * 
+   * @param id Identificador de {@link NotificacionProyectoExternoCVN}.
+   * @return {@link NotificacionProyectoExternoCVN} correspondiente al id
+   */
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-V', 'CSP-CVPR-E')")
+  public NotificacionProyectoExternoCVNOutput findById(@PathVariable Long id) {
+    log.debug("Autorizacion findById(Long id) - start");
+    NotificacionProyectoExternoCVNOutput returnValue = convert(service.findById(id));
+    log.debug("Autorizacion findById(Long id) - end");
+    return returnValue;
   }
 
   /**
@@ -80,21 +103,50 @@ public class NotificacionProyectoExternoCVNController {
    * @return Nuevo {@link NotificacionProyectoExternoCVN} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-E')")
   public ResponseEntity<NotificacionProyectoExternoCVN> create(
       @Valid @RequestBody NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVN) {
     log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - start");
 
-    service.create(convert(notificacionProyectoExternoCVN));
+    service.create(convert(notificacionProyectoExternoCVN),
+        convert(null, notificacionProyectoExternoCVN.getNotificacionesEntidadFinanciadoras()));
 
     log.debug("create(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN) - end");
 
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada
+   * {@link NotificacionCVNEntidadFinanciadora} pertenecientes a la
+   * {@link NotificacionProyectoExternoCVN}.
+   *
+   * @param id     Identificador de {@link NotificacionProyectoExternoCVN}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link NotificacionProyectoExternoCVN}
+   *         activas paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/{id}/notificacionescvnentidadfinanciadora")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-E' , 'CSP-CVPR-V')")
+  public ResponseEntity<Page<NotificacionCVNEntidadFinanciadoraOutput>> findAllNotificacionCVNEntidadFinanciadora(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllNotificacionCVNEntidadFinanciadoraAll(Long id,Pageable paging) - start");
+    Page<NotificacionCVNEntidadFinanciadoraOutput> page = convertPageEntidadFinancidaoraOutput(
+        notificacionCVNEntidadFinanciadoraService
+            .findAllByNotificacionProyectoExternoCvnId(id, paging));
+
+    if (page.isEmpty()) {
+      log.debug("findAllNotificacionCVNEntidadFinanciadora(Long id,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllNotificacionCVNEntidadFinanciadora(Long id,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
   private Page<NotificacionProyectoExternoCVNOutput> convert(Page<NotificacionProyectoExternoCVN> page) {
     List<NotificacionProyectoExternoCVNOutput> content = page.getContent().stream()
-        .map((notificacionProyectoExternoCVN) -> convert(notificacionProyectoExternoCVN))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -115,5 +167,30 @@ public class NotificacionProyectoExternoCVNController {
   private NotificacionProyectoExternoCVN convert(
       NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVNInput) {
     return convert(null, notificacionProyectoExternoCVNInput);
+  }
+
+  private NotificacionCVNEntidadFinanciadora convert(Long id, NotificacionCVNEntidadFinanciadoraInput input) {
+    NotificacionCVNEntidadFinanciadora entity = modelMapper.map(input, NotificacionCVNEntidadFinanciadora.class);
+    entity.setId(id);
+    return entity;
+  }
+
+  private List<NotificacionCVNEntidadFinanciadora> convert(Long notificacionId,
+      List<NotificacionCVNEntidadFinanciadoraInput> inputs) {
+
+    return inputs.stream().map(input -> convert(notificacionId, input)).collect(Collectors.toList());
+  }
+
+  private NotificacionCVNEntidadFinanciadoraOutput convert(
+      NotificacionCVNEntidadFinanciadora notificacionCVNEntidadFinanciadora) {
+    return modelMapper.map(notificacionCVNEntidadFinanciadora, NotificacionCVNEntidadFinanciadoraOutput.class);
+  }
+
+  private Page<NotificacionCVNEntidadFinanciadoraOutput> convertPageEntidadFinancidaoraOutput(
+      Page<NotificacionCVNEntidadFinanciadora> page) {
+    List<NotificacionCVNEntidadFinanciadoraOutput> content = page.getContent().stream()
+        .map(this::convert).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 }

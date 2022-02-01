@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.service;
 import org.crue.hercules.sgi.csp.exceptions.EstadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
-import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class EstadoAutorizacionService {
   private final EstadoAutorizacionRepository repository;
-  private final AutorizacionRepository autorizacionRepository;
 
-  public EstadoAutorizacionService(EstadoAutorizacionRepository repository,
-      AutorizacionRepository autorizacionRepository) {
+  public EstadoAutorizacionService(EstadoAutorizacionRepository repository) {
     this.repository = repository;
-    this.autorizacionRepository = autorizacionRepository;
   }
 
   public EstadoAutorizacion findById(Long id) {
