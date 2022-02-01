@@ -183,4 +183,12 @@ export class AutorizacionService extends _AutorizacionMixinBase {
       map(response => NOTIFICACION_PROYECTO_EXTERNO_CVN_RESPONSE_CONVERTER.toTarget(response))
     );
   }
+
+  findFirstEstado(id: number): Observable<IEstadoAutorizacion> {
+    return this.http.get<IEstadoAutorizacionResponse>(
+      `${this.endpointUrl}/${id}/firstestado`
+    ).pipe(
+      map(response => ESTADO_AUTORIZACION_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
 }

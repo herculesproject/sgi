@@ -36,11 +36,12 @@ const AUTORIZACION_KEY = marker('csp.autorizacion');
 export interface IAutorizacionListado {
   autorizacion: IAutorizacion;
   estadoAutorizacion: IEstadoAutorizacion;
-  fechaEstadoBorrador: DateTime;
+  fechaEstado: DateTime;
   entidadPaticipacionNombre: string;
   hasCertificadoVisible: boolean;
   proyectoId: number;
   notificacionId: number;
+  fechaFirstEstado: DateTime;
 }
 
 @Component({
@@ -169,9 +170,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
           return {
             autorizacion,
             estadoAutorizacion: {} as IEstadoAutorizacion,
-            fechaEstadoBorrador: null,
+            fechaEstado: null,
             entidadPaticipacionNombre: null,
             hasCertificadoVisible: null,
+            fechaFirstEstado: null,
           } as IAutorizacionListado;
         });
         return {
@@ -194,9 +196,19 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
               return this.estadoAutorizacionService.findById(autorizacionListado.autorizacion.estado.id).pipe(
                 map(estadoAutorizacion => {
                   autorizacionListado.estadoAutorizacion = estadoAutorizacion;
-                  if (estadoAutorizacion.estado === Estado.BORRADOR) {
-                    autorizacionListado.fechaEstadoBorrador = estadoAutorizacion.fecha;
-                  }
+                  autorizacionListado.fechaEstado = estadoAutorizacion.fecha;
+
+                  return autorizacionListado;
+                })
+              );
+            }
+            return of(autorizacionListado);
+          }),
+          mergeMap(autorizacionListado => {
+            if (autorizacionListado.autorizacion.id) {
+              return this.autorizacionService.findFirstEstado(autorizacionListado.autorizacion.id).pipe(
+                map(firstEstado => {
+                  autorizacionListado.fechaFirstEstado = firstEstado.fecha;
                   return autorizacionListado;
                 })
               );

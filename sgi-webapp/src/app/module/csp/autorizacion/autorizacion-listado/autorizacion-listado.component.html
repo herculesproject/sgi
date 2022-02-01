@@ -68,7 +68,8 @@
       <!-- Fecha Solicitud -->
       <ng-container matColumnDef="fechaSolicitud">
         <th mat-header-cell *matHeaderCellDef> {{'csp.autorizacion.fecha-solicitud' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.estadoAutorizacion?.fecha | luxon:'shortDate'}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.fechaFirstEstado | luxon:'shortDate'}}
+        </td>
       </ng-container>
 
       <!-- Solicitante Column -->
@@ -99,7 +100,7 @@
       <!-- fechaEstado Column -->
       <ng-container matColumnDef="fechaEstado">
         <th mat-header-cell *matHeaderCellDef> {{'csp.autorizacion.fecha-estado' | translate}} </th>
-        <td mat-cell *matCellDef="let element">{{element.fechaEstadoBorrador | luxon:'shortDate'}}</td>
+        <td mat-cell *matCellDef="let element">{{element.fechaEstado | luxon:'shortDate'}}</td>
       </ng-container>
 
       <!-- Acciones Column -->

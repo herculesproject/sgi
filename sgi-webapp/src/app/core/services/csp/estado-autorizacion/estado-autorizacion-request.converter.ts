@@ -16,7 +16,7 @@ class EstadoAutorizacionRequestConverter
         id: value.autorizacionId
       } as IAutorizacion,
       comentario: value.comentario,
-      fecha: LuxonUtils.fromBackend(value.fecha),
+      fecha: undefined,
       estado: value.estado
     };
   }
@@ -28,7 +28,6 @@ class EstadoAutorizacionRequestConverter
     return {
       autorizacionId: value.autorizacion?.id,
       comentario: value.comentario,
-      fecha: LuxonUtils.toBackend(value.fecha),
       estado: value.estado
     };
   }
