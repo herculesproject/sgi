@@ -26,6 +26,8 @@ const INVESTIGADOR_EMAIL_KEY = marker('csp.proyecto-socio.equipo.email');
 const INVESTIGADOR_ROL_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto');
 const INVESTIGADOR_FECHA_INICIO_KEY = marker('csp.proyecto-socio.equipo.fecha-inicio');
 const INVESTIGADOR_FECHA_FIN_KEY = marker('csp.proyecto-socio.equipo.fecha-fin');
+const INVESTIGADOR_FECHA_INICIO_PARTICIPACION_KEY = marker('csp.proyecto-socio.equipo.fecha-inicio-participacion');
+const INVESTIGADOR_FECHA_FIN_PARTICIPACION_KEY = marker('csp.proyecto-socio.equipo.fecha-fin-participacion');
 
 const EQUIPO_FIELD = 'equipo';
 const INVESTIGADOR_NOMBRE_FIELD = 'nombreInvestigador';
@@ -150,13 +152,13 @@ export class ProyectoEquipoListadoExportService extends AbstractTableExportFillS
       columns.push(columnRolInvestigador);
       const columnFechaInicioInvestigador: ISgiColumnReport = {
         name: INVESTIGADOR_FECHA_INICIO_FIELD + idInvestigador,
-        title: titleInvestigador + idInvestigador + ': ' + this.translate.instant(INVESTIGADOR_FECHA_INICIO_KEY),
+        title: titleInvestigador + idInvestigador + ': ' + this.translate.instant(INVESTIGADOR_FECHA_INICIO_PARTICIPACION_KEY),
         type: ColumnType.DATE,
       };
       columns.push(columnFechaInicioInvestigador);
       const columnFechaFinInvestigador: ISgiColumnReport = {
         name: INVESTIGADOR_FECHA_FIN_FIELD + idInvestigador,
-        title: titleInvestigador + idInvestigador + ': ' + this.translate.instant(INVESTIGADOR_FECHA_FIN_KEY),
+        title: titleInvestigador + idInvestigador + ': ' + this.translate.instant(INVESTIGADOR_FECHA_FIN_PARTICIPACION_KEY),
         type: ColumnType.DATE,
       };
       columns.push(columnFechaFinInvestigador);

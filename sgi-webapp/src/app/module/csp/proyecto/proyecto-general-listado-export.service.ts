@@ -1,3 +1,4 @@
+import { PercentPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
@@ -49,7 +50,8 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     private readonly proyectoService: ProyectoService,
     private readonly contextoProyectoService: ContextoProyectoService,
     private readonly unidadGestionService: UnidadGestionService,
-    private readonly areaTematicaService: AreaTematicaService
+    private readonly areaTematicaService: AreaTematicaService,
+    private readonly percentPipe: PercentPipe,
   ) {
     super(translate);
   }
@@ -206,7 +208,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
       {
         title: this.translate.instant(PORCENTAJE_IVA_KEY),
         name: 'porcentajeIVA',
-        type: ColumnType.NUMBER
+        type: ColumnType.STRING
       },
       {
         title: this.translate.instant(CAUSA_EXENCION_IVA_KEY),
@@ -241,14 +243,18 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFin));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFinDefinitiva));
-    elementsRow.push(proyecto.confidencial ? this.getI18nBooleanYesNo(proyecto.confidencial) : '');
+    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.confidencial) ? this.getI18nBooleanYesNo(proyecto.confidencial) : '');
     elementsRow.push(proyecto.clasificacionCVN ? this.translate.instant(CLASIFICACION_CVN_MAP.get(proyecto.clasificacionCVN)) : '');
-    elementsRow.push(proyecto.coordinado ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
-    elementsRow.push(proyecto.coordinadorExterno ? this.getI18nBooleanYesNo(proyecto.coordinadorExterno) : '');
-    elementsRow.push(proyecto.colaborativo ? this.getI18nBooleanYesNo(proyecto.colaborativo) : '');
-    elementsRow.push(proyecto.iva?.iva);
+    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinado) ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
+    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinadorExterno) ? this.getI18nBooleanYesNo(proyecto.coordinadorExterno) : '');
+    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.colaborativo) ? this.getI18nBooleanYesNo(proyecto.colaborativo) : '');
+    elementsRow.push(this.percentPipe.transform(proyecto.iva?.iva / 100));
     elementsRow.push(proyecto.causaExencion ? this.translate.instant(CAUSA_EXENCION_MAP.get(proyecto.causaExencion)) : '');
     elementsRow.push(proyecto.contextoProyecto?.areaTematica?.nombre);
     return elementsRow;
+  }
+
+  private notIsNullAndNotUndefined(value): boolean {
+    return value !== null && value !== undefined;
   }
 }

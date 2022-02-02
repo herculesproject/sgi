@@ -159,14 +159,14 @@ export class ProyectoSocioListadoExportService extends AbstractTableExportFillSe
       const columnFechaInicioSocio: ISgiColumnReport = {
         name: SOCIO_FECHA_INICIO_FIELD + idSocio,
         title: titleSocio + idSocio + ': ' + this.translate.instant(SOCIO_FECHA_INICIO_KEY),
-        type: ColumnType.STRING,
+        type: ColumnType.DATE,
       };
       columns.push(columnFechaInicioSocio);
 
       const columnFechaFinSocio: ISgiColumnReport = {
         name: SOCIO_FECHA_FIN_FIELD + idSocio,
         title: titleSocio + idSocio + ': ' + this.translate.instant(SOCIO_FECHA_FIN_KEY),
-        type: ColumnType.STRING,
+        type: ColumnType.DATE,
       };
       columns.push(columnFechaFinSocio);
 
