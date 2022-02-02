@@ -342,17 +342,14 @@ public class AutorizacionController {
   }
 
   @GetMapping(path = "/{id}/certificadoautorizacionvisible")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
   public ResponseEntity<CertificadoAutorizacionOutput> findCertificadoAutorizacionVisible(@PathVariable Long id) {
     log.debug("findCertificadoAutorizacionVisible(Long id) - start");
     CertificadoAutorizacion returnValue = certificadoAutorizacionService.findCertificadoAutorizacionVisible(id);
-    if (returnValue == null) {
-      log.debug("findCertificadoAutorizacionVisible(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    } else {
-      log.debug("findCertificadoAutorizacionVisible(Long id) - end");
-      return new ResponseEntity<>(convert(returnValue), HttpStatus.OK);
-    }
+
+    log.debug("findCertificadoAutorizacionVisible(Long id) - end");
+    return returnValue != null ? new ResponseEntity<>(convert(returnValue), HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
