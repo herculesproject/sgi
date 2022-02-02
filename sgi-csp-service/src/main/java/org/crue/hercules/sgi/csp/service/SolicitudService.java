@@ -210,7 +210,7 @@ public class SolicitudService {
 
       Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
 
-      Assert.isTrue(this.hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+      Assert.isTrue(this.hasPermisosEdicion(solicitud),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
@@ -249,7 +249,7 @@ public class SolicitudService {
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
-      if (solicitud.getActivo()) {
+      if (Boolean.TRUE.equals(solicitud.getActivo())) {
         // Si esta activo no se hace nada
         return solicitud;
       }
@@ -290,7 +290,7 @@ public class SolicitudService {
             "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
       }
 
-      if (!solicitud.getActivo()) {
+      if (Boolean.FALSE.equals(solicitud.getActivo())) {
         // Si no esta activo no se hace nada
         return solicitud;
       }
@@ -313,16 +313,14 @@ public class SolicitudService {
     log.debug("findById(Long id) - start");
     final Solicitud returnValue = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    if (!(hasAuthorityViewInvestigador(returnValue) || hasAuthorityViewUnidadGestion(returnValue))) {
-      throw new UserNotAuthorizedToAccessSolicitudException();
-    }
+    checkUserHasAuthorityViewSolicitud(returnValue);
 
     String authorityVisualizar = "CSP-SOL-V";
 
     Assert
         .isTrue(
             SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C")
-                || hasPermisosEdicion(returnValue.getUnidadGestionRef())
+                || hasPermisosEdicion(returnValue)
                 || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar) || SgiSecurityContextHolder
                     .hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
             "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
@@ -434,7 +432,7 @@ public class SolicitudService {
     // VALIDACIONES
 
     // Permisos
-    if (!hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
+    if (!hasPermisosEdicion(solicitud)) {
       throw new UserNotAuthorizedToModifySolicitudException();
     }
 
@@ -758,33 +756,23 @@ public class SolicitudService {
     log.debug("modificable(Long id) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    if (!this.hasPermisosEdicion(solicitud)) {
+      return false;
+    }
+
     boolean existsProyecto = proyectoRepository.existsBySolicitudId(id);
 
     // Administrador y gestor:
     // solicitud no activa
-    // no tiene el usuario permisos de edición para la UO de la solicitud
     // tiene proyecto asociado
     // NO se permite modificar
-    if (!solicitud.getActivo() || !this.hasPermisosEdicion(solicitud.getUnidadGestionRef()) || existsProyecto) {
+    if (Boolean.FALSE.equals(solicitud.getActivo()) || existsProyecto) {
       return false;
     }
 
     log.debug("modificable(Long id) - end");
     return true;
-  }
-
-  /**
-   * Comprueba si el usuario logueado tiene los permisos globales de edición o el
-   * de la unidad de gestión de la solicitud.
-   * 
-   * @param unidadGestionRef Unidad de gestión de la solicitud
-   * @return <code>true</code> si tiene el permiso de edición; <code>false</code>
-   *         caso contrario.
-   */
-  private boolean hasPermisosEdicion(String unidadGestionRef) {
-    String authority = "CSP-SOL-E";
-    return SgiSecurityContextHolder.hasAuthority(authority) || SgiSecurityContextHolder
-        .hasAnyAuthorityForUO(new String[] { "CSP-SOL-E", "CSP-SOL-INV-ER" }, unidadGestionRef);
   }
 
   /**
@@ -846,18 +834,50 @@ public class SolicitudService {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
   }
 
+  private boolean hasAuthorityEditUnidadGestion(String unidadGestion) {
+    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", unidadGestion);
+  }
+
   private boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER")
         && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
+  }
+
+  private boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {
+    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", solicitud.getUnidadGestionRef())
+        || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef());
   }
 
   private String getAuthenticationPersonaRef() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
-  private boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {
-    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", solicitud.getUnidadGestionRef())
-        || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef());
+  /**
+   * Comprueba si el usuario logueado tiene permiso para ver la {@link Solicitud}
+   * 
+   * @param solicitud la {@link Solicitud}
+   * 
+   * @throws {@link UserNotAuthorizedToAccessSolicitudException}
+   */
+  private void checkUserHasAuthorityViewSolicitud(Solicitud solicitud) {
+    if (!(hasAuthorityViewInvestigador(solicitud) || hasAuthorityViewUnidadGestion(solicitud))) {
+      throw new UserNotAuthorizedToAccessSolicitudException();
+    }
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene los permisos globales de edición, el
+   * de la unidad de gestión de la solicitud o si es tiene el permiso de
+   * investigador y es el creador de la solicitud.
+   * 
+   * @param solicitud La solicitud
+   * @return <code>true</code> si tiene el permiso de edición; <code>false</code>
+   *         caso contrario.
+   */
+  private boolean hasPermisosEdicion(Solicitud solicitud) {
+    return hasAuthorityEditUnidadGestion(solicitud.getUnidadGestionRef())
+        || (hasAuthorityEditInvestigador() && solicitud.getCreadorRef().equals(
+            getAuthenticationPersonaRef()));
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
