@@ -5,6 +5,7 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { Estado, ESTADO_MAP, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -13,6 +14,7 @@ import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacio
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
 import { DialogService } from '@core/services/dialog.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -22,7 +24,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, Observable, of } from 'rxjs';
+import { EMPTY, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
@@ -32,13 +34,14 @@ const MSG_DELETE = marker('msg.delete.entity');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
+const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 export interface IAutorizacionListado {
   autorizacion: IAutorizacion;
   estadoAutorizacion: IEstadoAutorizacion;
   fechaEstado: DateTime;
   entidadPaticipacionNombre: string;
-  hasCertificadoVisible: boolean;
+  certificadoVisible: ICertificadoAutorizacion;
   proyectoId: number;
   notificacionId: number;
   fechaFirstEstado: DateTime;
@@ -53,6 +56,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   ROUTE_NAMES = ROUTE_NAMES;
   CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
 
+  private subscriptions: Subscription[] = [];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   autorizaciones$: Observable<IAutorizacionListado[]>;
@@ -77,6 +81,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     private empresaService: EmpresaService,
     private personaService: PersonaService,
     private dialogService: DialogService,
+    private documentoService: DocumentoService,
     private notificacionProyectoExternoCVNService: NotificacionProyectoExternoCvnService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
@@ -172,7 +177,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
             estadoAutorizacion: {} as IEstadoAutorizacion,
             fechaEstado: null,
             entidadPaticipacionNombre: null,
-            hasCertificadoVisible: null,
+            certificadoVisible: null,
             fechaFirstEstado: null,
           } as IAutorizacionListado;
         });
@@ -217,9 +222,9 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
           }),
           mergeMap(autorizacionListado => {
             if (autorizacionListado.autorizacion.id) {
-              return this.autorizacionService.hasCertificadoAutorizacionVisible(autorizacionListado.autorizacion.id).pipe(
-                map(exist => {
-                  autorizacionListado.hasCertificadoVisible = exist;
+              return this.autorizacionService.findCertificadoAutorizacionVisible(autorizacionListado.autorizacion.id).pipe(
+                map(certificado => {
+                  autorizacionListado.certificadoVisible = certificado;
                   return autorizacionListado;
                 })
               );
@@ -342,7 +347,14 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   }
 
   downloadFile(value: IAutorizacionListado): void {
-
+    this.subscriptions.push(this.documentoService.downloadFichero(value.certificadoVisible.documento.documentoRef).subscribe(
+      (data) => {
+        triggerDownloadToUser(data, value.certificadoVisible.documento.nombre);
+      },
+      () => {
+        this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
+      }
+    ));
   }
 
 }
