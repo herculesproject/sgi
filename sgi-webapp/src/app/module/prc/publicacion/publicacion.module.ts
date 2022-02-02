@@ -6,9 +6,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { PublicacionRoutingModule } from './publicacion-routing.module';
+import { PublicacionListadoComponent } from './publicacion-listado/publicacion-listado.component';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [PublicacionListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +19,8 @@ import { PublicacionRoutingModule } from './publicacion-routing.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    SgpSharedModule
   ]
 })
 export class PublicacionModule { }

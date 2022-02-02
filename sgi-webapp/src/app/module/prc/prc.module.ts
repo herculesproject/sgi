@@ -12,7 +12,7 @@ import { PrcRoutingModule } from './prc-routing.module';
 @NgModule({
   declarations: [
     PrcRootComponent,
-    PrcInicioComponent
+    PrcInicioComponent,
   ],
   imports: [
     SharedModule,
