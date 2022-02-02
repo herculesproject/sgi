@@ -24,7 +24,7 @@ import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection
 } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { from, merge, Observable, of } from 'rxjs';
+import { EMPTY, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 
@@ -165,6 +165,10 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
                         convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                         return convocatoriaListado;
                       }),
+                      catchError((error) => {
+                        this.logger.error(error);
+                        return EMPTY;
+                      })
                     );
                   }
                   return of(convocatoriaListado);
@@ -194,6 +198,10 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
                             convocatoriaListado.entidadConvocanteEmpresa = empresa;
                             return convocatoriaListado;
                           }),
+                          catchError((error) => {
+                            this.logger.error(error);
+                            return EMPTY;
+                          })
                         );
                       }
                       return of(convocatoriaListado);
