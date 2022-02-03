@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -178,7 +179,8 @@ public class NotificacionProyectoExternoCVNController {
   private List<NotificacionCVNEntidadFinanciadora> convert(Long notificacionId,
       List<NotificacionCVNEntidadFinanciadoraInput> inputs) {
 
-    return inputs.stream().map(input -> convert(notificacionId, input)).collect(Collectors.toList());
+    return inputs == null ? new LinkedList<>()
+        : inputs.stream().map(input -> convert(notificacionId, input)).collect(Collectors.toList());
   }
 
   private NotificacionCVNEntidadFinanciadoraOutput convert(

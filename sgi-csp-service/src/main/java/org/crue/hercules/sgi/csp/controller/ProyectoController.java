@@ -1233,7 +1233,7 @@ public class ProyectoController {
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
-  public ResponseEntity<Convocatoria> modificable(@PathVariable Long id) {
+  public ResponseEntity<Void> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable(id, new String[] { "CSP-PRO-E", "CSP-PRO-V" });
     log.debug("modificable(Long id) - end");
@@ -1417,7 +1417,7 @@ public class ProyectoController {
 
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
     List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
-        .map((proyectoPalabraClave) -> convert(proyectoPalabraClave))
+        .map(proyectoPalabraClave -> convert(proyectoPalabraClave))
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -1425,7 +1425,7 @@ public class ProyectoController {
 
   private List<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(List<ProyectoPalabraClave> list) {
     return list.stream()
-        .map((element) -> convert(element))
+        .map(this::convert)
         .collect(Collectors.toList());
   }
 
@@ -1441,6 +1441,7 @@ public class ProyectoController {
   private ProyectoPalabraClave convert(Long proyectoId, ProyectoPalabraClaveInput input) {
     ProyectoPalabraClave entity = modelMapper.map(input, ProyectoPalabraClave.class);
     entity.setProyectoId(proyectoId);
+    entity.setId(null);
     return entity;
   }
 
