@@ -36,6 +36,9 @@
     <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR']"
       [route]="[INV_ROUTE_NAMES.SOLICITUDES]" title="{{'csp.solicitud' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
     </sgi-menu-subitem>
+    <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'CSP-PRO-INV-VR'" [route]="[INV_ROUTE_NAMES.PROYECTOS]"
+      title="{{'menu.principal.inv.proyectos' | translate}}">
+    </sgi-menu-subitem>
     <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-INV-BR'] "
       title="{{'menu.csp.autorizaciones-proyectos-externos' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}"
       [route]="[INV_ROUTE_NAMES.AUTORIZACIONES]">

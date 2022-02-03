@@ -125,6 +125,15 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
+   * Devuelve una lista paginada y filtrada de todos los proyectos activos, que no estén en estado borrador 
+   * y en los que participe dentro del equipo el usuario logueado que se encuentren dentro de la unidad de gestión 
+   * @param options opciones de búsqueda.
+   */
+  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyecto>> {
+    return this.find<IProyectoBackend, IProyecto>(`${this.endpointUrl}/investigador`, options, PROYECTO_CONVERTER);
+  }
+
+  /**
    * Recupera los paquete trabajo de un proyecto
    * @param idProyecto Identificador del proyecto.
    * @returns Listado de paquete trabajo.

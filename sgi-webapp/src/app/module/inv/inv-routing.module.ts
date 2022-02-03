@@ -17,6 +17,7 @@ const MSG_MEMORIAS_TITLE = marker('menu.principal.inv.memorias');
 const MSG_CHECKLIST_TITLE = marker('menu.principal.inv.checklist');
 const MSG_ACTAS_TITLE = marker('eti.acta');
 const MSG_CONVOCATORIAS_TITLE = marker('menu.principal.inv.convocatorias');
+const MSG_PROYECTOS_TITLE = marker('menu.principal.inv.proyectos');
 const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
 const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
 
@@ -131,6 +132,18 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_SOLICITUDES_TITLE,
           hasAnyAuthorityForAnyUO: ['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR'],
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.PROYECTOS,
+        loadChildren: () =>
+          import('../csp/proyecto/proyecto-inv.module').then(
+            (m) => m.ProyectoInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PROYECTOS_TITLE,
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-INV-VR'],
         }
       },
       {
