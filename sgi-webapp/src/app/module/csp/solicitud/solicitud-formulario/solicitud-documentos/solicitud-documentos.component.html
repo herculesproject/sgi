@@ -113,7 +113,7 @@
     <!-- FIN Visualizacion crear/editar/detalle -->
   </div>
 
-  <div class="separation-button" *ngIf="!formPart.readonly">
+  <div class="separation-button" *ngIf="!formPart.readonly || !formPart.addDocumentosDisabled">
     <button color="three" aria-label="Center Align" mat-button mat-raised-button (click)="switchToNew()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}

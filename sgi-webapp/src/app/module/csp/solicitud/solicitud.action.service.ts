@@ -73,6 +73,7 @@ export const SOLICITUD_ACTION_LINK_KEY = 'solicitud';
 
 export interface ISolicitudData {
   readonly: boolean;
+  estadoAndDocumentosReadonly: boolean;
   solicitud: ISolicitud;
   hasSolicitudProyecto: boolean;
   hasPopulatedPeriodosSocios: boolean;
@@ -177,6 +178,10 @@ export class SolicitudActionService extends ActionService {
     return this.data?.readonly ?? false;
   }
 
+  get estadoAndDocumentosReadonly(): boolean {
+    return this.data?.estadoAndDocumentosReadonly ?? false;
+  }
+
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
@@ -225,7 +230,7 @@ export class SolicitudActionService extends ActionService {
 
     this.addProyectoLink();
 
-    this.isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
+    this.isInvestigador = authService.hasAnyAuthority(['CSP-SOL-INV-BR', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER']);
     const idConvocatoria = history.state[CONVOCATORIA_ID_KEY];
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(
@@ -247,7 +252,7 @@ export class SolicitudActionService extends ActionService {
     }
 
     this.documentos = new SolicitudDocumentosFragment(logger, this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
-      configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly);
+      configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly, this.estadoAndDocumentosReadonly);
     this.areaConocimiento = new SolicitudProyectoAreaConocimientoFragment(this.data?.solicitud?.id,
       solicitudProyectoAreaConocimiento, solicitudService, areaConocimientoService, this.readonly);
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);

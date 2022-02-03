@@ -72,7 +72,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        this.disableCambioEstado = status.changes || status.errors || this.actionService.readonly;
+        this.disableCambioEstado = status.changes || status.errors || (this.actionService.readonly && this.actionService.estadoAndDocumentosReadonly);
       }
     ));
   }

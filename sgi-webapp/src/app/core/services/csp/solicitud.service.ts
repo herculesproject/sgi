@@ -602,4 +602,11 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       );
   }
 
+  modificableEstadoAndDocumentosByInvestigador(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificableestadoanddocumentosbyinvestigador`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

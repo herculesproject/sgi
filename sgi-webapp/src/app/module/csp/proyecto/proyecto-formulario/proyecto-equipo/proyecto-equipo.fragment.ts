@@ -507,7 +507,9 @@ export class ProyectoEquipoFragment extends Fragment {
               return ValidacionRequisitosEquipoIp.NO_CATEGORIA_PROFESIONAL;
             }
 
-          } else if (requisitosConvocatoria.requisitosIp && !requisitosConvocatoria.requisitosIp.vinculacionUniversidad) {
+          } else if (requisitosConvocatoria.requisitosIp
+            && typeof requisitosConvocatoria.requisitosIp.vinculacionUniversidad === 'boolean'
+            && !requisitosConvocatoria.requisitosIp.vinculacionUniversidad) {
             if (vinculaciones?.categoriaProfesional) {
               return ValidacionRequisitosEquipoIp.VINCULACION_UNIVERSIDAD;
             }
@@ -622,7 +624,9 @@ export class ProyectoEquipoFragment extends Fragment {
               return ValidacionRequisitosEquipoIp.NO_CATEGORIA_PROFESIONAL;
             }
 
-          } else if (requisitosConvocatoria.requisitosEquipo && !requisitosConvocatoria.requisitosEquipo.vinculacionUniversidad) {
+          } else if (requisitosConvocatoria.requisitosEquipo
+            && typeof requisitosConvocatoria.requisitosEquipo.vinculacionUniversidad === 'boolean'
+            && !requisitosConvocatoria.requisitosEquipo.vinculacionUniversidad) {
             if (vinculaciones?.categoriaProfesional) {
               return ValidacionRequisitosEquipoIp.VINCULACION_UNIVERSIDAD;
             }
