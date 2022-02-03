@@ -194,16 +194,50 @@ export class CambioEstadoModalComponent
   }
 
   private validateSolicitudProyecto(): Problem[] {
+    if (this.data.isInvestigador) {
+      return this.validateSolicitudProyectoInvestigador();
+    } else {
+      return this.validateSolicitudProyectoUnidadGestion();
+    }
+  }
+
+  private validateSolicitudProyectoUnidadGestion(): Problem[] {
+    return [
+      ...this.validateCoordinadoFilled(),
+      ...this.validateCoordinadorExternoFilled(),
+      ...this.validateSolicitanteInSolicitudEquipo()
+    ];
+  }
+
+  private validateSolicitudProyectoInvestigador(): Problem[] {
+    return [
+      ...this.validateSolicitanteInSolicitudEquipo()
+    ];
+  }
+
+  private validateCoordinadoFilled(): Problem[] {
     const problems: Problem[] = [];
 
     if (this.data.solicitudProyecto.coordinado === undefined || this.data.solicitudProyecto.coordinado === null) {
       problems.push(this.buildValidationProblem(this.msgSolicitudProyectoCoordinadoRequired));
     }
 
+    return problems;
+  }
+
+  private validateCoordinadorExternoFilled(): Problem[] {
+    const problems: Problem[] = [];
+
     if (!!this.data.solicitudProyecto.coordinado
       && (this.data.solicitudProyecto.coordinadorExterno === undefined || this.data.solicitudProyecto.coordinadorExterno === null)) {
       problems.push(this.buildValidationProblem(this.msgSolicitudProyectoCoordinadorExternoRequired));
     }
+
+    return problems;
+  }
+
+  private validateSolicitanteInSolicitudEquipo(): Problem[] {
+    const problems: Problem[] = [];
 
     if (!this.data.isSolicitanteInSolicitudEquipo) {
       problems.push(this.buildValidationProblem(this.msgSolicitudEquipoSolicitanteRequired));
