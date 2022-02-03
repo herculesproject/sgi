@@ -5,6 +5,8 @@ DELETE FROM test.tipo_procedimiento;
 DELETE FROM test.tramo_reparto;
 DELETE FROM test.via_proteccion;
 DELETE FROM test.sector_aplicacion;
+DELETE FROM test.periodo_titularidad;
 DELETE FROM test.invencion;
 DELETE FROM test.tipo_proteccion;
+
 
