@@ -1014,7 +1014,7 @@ public class SolicitudIT extends BaseIT {
   @Test
   void cambiarEstado_ReturnsSolicitud() throws Exception {
     Long solicitudId = 1L;
-    EstadoSolicitud estado = buildMockEstadoSolicitud(Estado.CONCEDIDA);
+    EstadoSolicitud estado = buildMockEstadoSolicitud(Estado.DESISTIDA);
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CAMBIAR_ESTADO,
@@ -1025,7 +1025,7 @@ public class SolicitudIT extends BaseIT {
     Solicitud solicitudActualizado = response.getBody();
     Assertions.assertThat(solicitudActualizado.getId()).as("getId()").isEqualTo(solicitudId);
     Assertions.assertThat(solicitudActualizado.getEstado().getEstado()).as("getEstado().getEstado()")
-        .isEqualTo(Estado.CONCEDIDA);
+        .isEqualTo(Estado.DESISTIDA);
 
   }
 

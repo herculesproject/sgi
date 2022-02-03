@@ -1165,6 +1165,25 @@ public class SolicitudController {
     return returnValue;
   }
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si el estado y los
+   * {@link SolicitudDocumento} de la {@link Solicitud}
+   * pueden ser modificados por un investigador.
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = "/{id}/modificableestadoanddocumentosbyinvestigador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
+  public ResponseEntity<Solicitud> modificableEstadoAndDocumentosByInvestigador(@PathVariable Long id) {
+    log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - start");
+    Boolean returnValue = service.modificableEstadoAndDocumentosByInvestigador(id);
+    log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - end");
+    return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
   private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {
     List<SolicitudPalabraClaveOutput> content = page.getContent().stream()
         .map(this::convert)
@@ -1185,8 +1204,8 @@ public class SolicitudController {
 
   private List<SolicitudPalabraClave> convertSolicitudPalabraClaveInputs(
       List<SolicitudPalabraClaveInput> inputs) {
-    
-        return inputs.stream().map(input -> convert(null, input)).collect(Collectors.toList());
+
+    return inputs.stream().map(input -> convert(null, input)).collect(Collectors.toList());
   }
 
   private SolicitudPalabraClave convert(Long id, SolicitudPalabraClaveInput input) {

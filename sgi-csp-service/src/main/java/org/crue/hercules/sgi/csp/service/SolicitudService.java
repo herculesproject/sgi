@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToChangeEstadoSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -38,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -206,7 +209,7 @@ public class SolicitudService {
     // comprobar si la solicitud es modificable
     Assert.isTrue(modificable(solicitud.getId()), "No se puede modificar la Solicitud");
 
-    return repository.findById(solicitud.getId()).map((data) -> {
+    return repository.findById(solicitud.getId()).map(data -> {
 
       Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
 
@@ -448,6 +451,10 @@ public class SolicitudService {
       validateCambioNoDesistidaRenunciada(solicitud);
     }
 
+    if (isUserInvestigador()) {
+      validateCambioEstadoInvestigador(solicitud.getEstado().getEstado(), estadoSolicitud.getEstado());
+    }
+
     // Se cambia el estado de la solicitud
     // Actualiza el estado actual de la solicitud con el nuevo estado
     estadoSolicitud = estadoSolicitudRepository.save(estadoSolicitud);
@@ -595,13 +602,13 @@ public class SolicitudService {
         "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - start");
 
     solicitudProyectoEquipoRepository.findAllBySolicitudProyectoId(solicitudProyectoId).stream()
-        .map((solicitudProyectoEquipo) -> {
+        .map(solicitudProyectoEquipo -> {
           log.debug("Copy SolicitudProyectoEquipo with id: {}", solicitudProyectoEquipo.getId());
           EquipoTrabajo.EquipoTrabajoBuilder equipoTrabajo = EquipoTrabajo.builder();
           equipoTrabajo.peticionEvaluacion(peticionEvaluacion);
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
           return equipoTrabajo.build();
-        }).distinct().forEach((equipoTrabajo) -> {
+        }).distinct().forEach(equipoTrabajo -> {
           ResponseEntity<EquipoTrabajo> responseEquipoTrabajo = restTemplate.exchange(
               restApiProperties.getEtiUrl() + "/peticionevaluaciones/" + peticionEvaluacion.getId()
                   + "/equipos-trabajo",
@@ -753,26 +760,102 @@ public class SolicitudService {
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   public boolean modificable(Long id) {
-    log.debug("modificable(Long id) - start");
-
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     if (!this.hasPermisosEdicion(solicitud)) {
       return false;
     }
 
-    boolean existsProyecto = proyectoRepository.existsBySolicitudId(id);
+    if (isUserInvestigador()) {
+      return modificableByInvestigador(solicitud);
+    } else {
+      return modificableByUnidadGestion(solicitud);
+    }
+  }
 
-    // Administrador y gestor:
-    // solicitud no activa
-    // tiene proyecto asociado
-    // NO se permite modificar
-    if (Boolean.FALSE.equals(solicitud.getActivo()) || existsProyecto) {
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada para cambiar el estado y añadir
+   * nuevos documentos.
+   *
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableEstadoAndDocumentos(Long id) {
+    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    if (!this.hasPermisosEdicion(solicitud)) {
       return false;
     }
 
-    log.debug("modificable(Long id) - end");
-    return true;
+    if (isUserInvestigador()) {
+      return modificableEstadoAndDocumentosByInvestigador(solicitud);
+    } else {
+      return modificableByUnidadGestion(solicitud);
+    }
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada para cambiar el estado y añadir
+   * nuevos documentos.
+   *
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableEstadoAndDocumentosByInvestigador(Long id) {
+    return modificableEstadoAndDocumentosByInvestigador(
+        repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id)));
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada para cambiar el estado y añadir
+   * nuevos documentos.
+   *
+   * @param solicitud La {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  private boolean modificableEstadoAndDocumentosByInvestigador(Solicitud solicitud) {
+    if (!this.hasPermisosEdicion(solicitud)) {
+      return false;
+    }
+
+    return Arrays.asList(
+        Estado.BORRADOR,
+        Estado.SUBSANACION,
+        Estado.EXCLUIDA_PROVISIONAL,
+        Estado.EXCLUIDA_DEFINITIVA,
+        Estado.DENEGADA_PROVISIONAL,
+        Estado.DENEGADA).contains(solicitud.getEstado().getEstado());
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada por un usuario investigador.
+   * No es modificable cuando el estado de la {@link Solicitud} es distinto de
+   * {@link EstadoSolicitud.Estado#BORRADOR}
+   *
+   * @param solicitud Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  private boolean modificableByInvestigador(Solicitud solicitud) {
+    return solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.BORRADOR);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada por un usuario de la unidad de gestion.
+   * No es modificable cuando no esta activa ni cuando tiene
+   * {@link Proyecto} asociados.
+   *
+   * @param solicitud Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  private boolean modificableByUnidadGestion(Solicitud solicitud) {
+    boolean hasProyectosAsociados = proyectoRepository.existsBySolicitudId(solicitud.getId());
+
+    return Boolean.TRUE.equals(solicitud.getActivo()) && !hasProyectosAsociados;
   }
 
   /**
@@ -789,7 +872,6 @@ public class SolicitudService {
 
     if (solicitud.getConvocatoriaId() != null
         && !hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())) {
-      log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
       throw new SolicitudWithoutRequeridedDocumentationException();
     }
 
@@ -798,12 +880,10 @@ public class SolicitudService {
 
       SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitud.getId()).orElse(null);
       if (solicitudProyecto == null) {
-        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
         throw new SolicitudProyectoNotFoundException(solicitud.getId());
       }
 
       if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
-        log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
         throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
       }
 
@@ -811,7 +891,6 @@ public class SolicitudService {
         // En caso de sea colaborativo y no tenga coordinador externo
         if (Boolean.TRUE.equals(solicitudProyecto.getColaborativo())
             && solicitudProyecto.getCoordinadorExterno() == null) {
-          log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
           throw new ColaborativoWithoutCoordinadorExternoException();
         }
 
@@ -820,7 +899,6 @@ public class SolicitudService {
               .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
 
           if (CollectionUtils.isEmpty(solicitudProyectoSocios)) {
-            log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
             throw new SolicitudProyectoWithoutSocioCoordinadorException();
           }
         }
@@ -828,6 +906,59 @@ public class SolicitudService {
 
     }
     log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+  }
+
+  /**
+   * Comprueba si el cambio de estado esta entre los permitidos para el
+   * investigador
+   * 
+   * @param estadoActual Estado actual de la {@link Solicitud}
+   * @param nuevoEstado  Nuevo estado al que se quiere cambiar la
+   *                     {@link Solicitud}
+   * 
+   * @throws {@link UserNotAuthorizedToChangeEstadoSolicitudException} si el
+   *                cambio de estado no esta permitido
+   */
+  private void validateCambioEstadoInvestigador(Estado estadoActual, Estado nuevoEstado) {
+    boolean isCambioEstadoValido;
+    switch (estadoActual) {
+      case BORRADOR:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.SOLICITADA) || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      case SUBSANACION:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.PRESENTADA_SUBSANACION)
+            || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      case EXCLUIDA_PROVISIONAL:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.ALEGACION_FASE_ADMISION)
+            || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      case EXCLUIDA_DEFINITIVA:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.RECURSO_FASE_ADMISION) || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      case DENEGADA_PROVISIONAL:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.ALEGACION_FASE_PROVISIONAL)
+            || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      case DENEGADA:
+        isCambioEstadoValido = nuevoEstado.equals(Estado.RECURSO_FASE_CONCESION)
+            || nuevoEstado.equals(Estado.DESISTIDA);
+        break;
+      default:
+        isCambioEstadoValido = false;
+    }
+
+    if (!isCambioEstadoValido) {
+      throw new UserNotAuthorizedToChangeEstadoSolicitudException(estadoActual, nuevoEstado);
+    }
+  }
+
+  private boolean hasAuthorityCreateInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-C");
+  }
+
+  private boolean hasAuthorityDeleteInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-BR");
   }
 
   private boolean hasAuthorityEditInvestigador() {
@@ -850,6 +981,10 @@ public class SolicitudService {
 
   private String getAuthenticationPersonaRef() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
+
+  private boolean isUserInvestigador() {
+    return hasAuthorityCreateInvestigador() || hasAuthorityDeleteInvestigador() || hasAuthorityEditInvestigador();
   }
 
   /**

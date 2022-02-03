@@ -53,6 +53,9 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
     // given: new SolicitudDocumento
     SolicitudDocumento newSolicitudDocumento = generarSolicitudDocumento(null, 1L, 1L);
 
+    BDDMockito.given(solicitudService.modificableEstadoAndDocumentos(ArgumentMatchers.anyLong()))
+        .willReturn(Boolean.TRUE);
+
     BDDMockito.given(solicitudDocumentoRepository.save(ArgumentMatchers.<SolicitudDocumento>any()))
         .willAnswer(new Answer<SolicitudDocumento>() {
           @Override
