@@ -47,6 +47,7 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <commons-email.version>1.5</commons-email.version>
     <greenmail.version>1.6.5</greenmail.version>
+    <httpclient5.version>5.1.3</httpclient5.version>
     <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     <jslt.version>0.1.11</jslt.version>
     <json-path.version>2.6.0</json-path.version>
@@ -123,6 +124,15 @@
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail-junit5</artifactId>
         <version>${greenmail.version}</version>
+      </dependency>
+      <!--
+        HttpClient - An efficient, up-to-date, and feature-rich package implementing the client side of the most recent HTTP standards and recommendations.
+        https://hc.apache.org/httpcomponents-client-5.1.x/index.html
+      -->
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${httpclient5.version}</version>
       </dependency>
       <!--
         JSLT - A complete query and transformation language for JSON.
