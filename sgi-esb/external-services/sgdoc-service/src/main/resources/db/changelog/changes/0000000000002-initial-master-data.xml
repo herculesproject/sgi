@@ -31,7 +31,6 @@
     <insert tableName="archivo">
       <column name="id" valueSequenceNext="archivo_seq" />
       <column name="documento_ref" value="sample-txt" />
-      <column name="archivo" value="" />
     </insert>
     <update tableName="archivo">
       <column name="archivo" valueBlobFile="sample-blob/sample.txt" />
@@ -44,7 +43,6 @@
     <insert tableName="archivo">
       <column name="id" valueSequenceNext="archivo_seq" />
       <column name="documento_ref" value="sample-pdf" />
-      <column name="archivo" value="" />
     </insert>
     <update tableName="archivo">
       <column name="archivo" valueBlobFile="sample-blob/sample.pdf" />
@@ -57,7 +55,6 @@
     <insert tableName="archivo">
       <column name="id" valueSequenceNext="archivo_seq" />
       <column name="documento_ref" value="sample-jpg" />
-      <column name="archivo" value="" />
     </insert>
     <update tableName="archivo">
       <column name="archivo" valueBlobFile="sample-blob/sample.jpg" />
