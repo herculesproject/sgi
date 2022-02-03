@@ -3,8 +3,11 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
@@ -14,6 +17,8 @@ import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextH
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -30,9 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeService {
 
   private final ProyectoProyectoSgeRepository repository;
+  private final ProyectoEquipoRepository proyectoEquipoRepository;
 
-  public ProyectoProyectoSgeServiceImpl(ProyectoProyectoSgeRepository proyectoProrrogaRepository) {
+  public ProyectoProyectoSgeServiceImpl(ProyectoProyectoSgeRepository proyectoProrrogaRepository,
+      ProyectoEquipoRepository proyectoEquipoRepository) {
     this.repository = proyectoProrrogaRepository;
+    this.proyectoEquipoRepository = proyectoEquipoRepository;
   }
 
   /**
@@ -130,6 +138,14 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
         .and(ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId));
 
     Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
+    if (SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-PRO-INV-VR")) {
+      List<ProyectoEquipo> equipos = proyectoEquipoRepository.findAllByProyectoId(proyectoId);
+      if (!equipos.isEmpty()) {
+        checkUserHasAuthorityInvestigador(equipos);
+      } else {
+        throw new UserNotAuthorizedToAccessProyectoException();
+      }
+    }
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
@@ -174,6 +190,27 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     boolean returnValue = repository.existsByProyectoId(proyectoId);
     log.debug("existsByProyecto(Long proyectoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si el usuario actual tiene permiso para ver el proyectoSGE
+   * 
+   * @throws {@link UserNotAuthorizedToAccessProyectoException}
+   */
+  private void checkUserHasAuthorityInvestigador(List<ProyectoEquipo> equipos) {
+    boolean usuarioPresente = equipos.stream()
+        .anyMatch(equipo -> equipo.getPersonaRef().equals(getUserPersonaRef()));
+    if (!usuarioPresente) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 
 }

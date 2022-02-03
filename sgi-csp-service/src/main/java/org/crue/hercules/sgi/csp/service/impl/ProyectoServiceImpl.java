@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -116,6 +117,8 @@ import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextH
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -566,6 +569,33 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Proyecto} activas, que no estén en estado
+   * borrador, en las que el usuario logueado está dentro del equipo,
+   * paginadas y filtradas
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Proyecto} activas paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<Proyecto> findAllActivosInvestigador(String query, Pageable paging) {
+    log.debug("findAllActivosInvestigador(String query, Pageable paging) - start");
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    Specification<Proyecto> specs = ProyectoSpecifications.distinct().and(ProyectoSpecifications.activos()
+        .and(ProyectoSpecifications.byInvestigadorId(authentication.getName())
+            .and(ProyectoSpecifications.byEstadoNotBorrador())
+            .and(SgiRSQLJPASupport.toSpecification(query,
+                ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)))));
+
+    Page<Proyecto> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllActivosInvestigador(String query, Pageable paging) - end");
     return returnValue;
   }
 

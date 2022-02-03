@@ -11,6 +11,7 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -21,9 +22,12 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -416,7 +420,38 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   public boolean existsByProyecto(Long proyectoId) {
     log.debug("existsByProyecto(Long proyectoId) - start");
     boolean returnValue = repository.existsByProyectoId(proyectoId);
+
+    if (SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-PRO-INV-VR")) {
+      List<ProyectoEquipo> equipos = proyectoEquipoRepository.findAllByProyectoId(proyectoId);
+      if (!equipos.isEmpty()) {
+        checkUserHasAuthorityInvestigador(equipos);
+      } else {
+        throw new UserNotAuthorizedToAccessProyectoException();
+      }
+    }
+
     log.debug("existsByProyecto(Long proyectoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si el usuario actual tiene permisos para ver información
+   * 
+   * @throws {@link UserNotAuthorizedToAccessProyectoException}
+   */
+  private void checkUserHasAuthorityInvestigador(List<ProyectoEquipo> equipos) {
+    boolean usuarioPresente = equipos.stream()
+        .anyMatch(equipo -> equipo.getPersonaRef().equals(getUserPersonaRef()));
+    if (!usuarioPresente) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 }

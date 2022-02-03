@@ -37,6 +37,8 @@ import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
@@ -54,7 +56,9 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     /* Prorrogado */
     PRORROGADO("prorrogado"),
     /* Fecha modificación */
-    FECHA_MODIFICACION("fechaModificacion");
+    FECHA_MODIFICACION("fechaModificacion"),
+    /* Con participación actual */
+    PARTICIPACION_ACTUAL("participacionActual");
 
     private String code;
 
@@ -221,6 +225,34 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
             fechaModificacion));
   }
 
+  private Predicate buildByParticipacionActual(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    ComparisonOperator operator = node.getOperator();
+    if (!operator.equals(RSQLOperators.EQUAL)) {
+      // Unsupported Operator
+      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
+    }
+    if (node.getArguments().size() != 1) {
+      // Bad number of arguments
+      throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
+    }
+
+    boolean participacionActual = Boolean.parseBoolean(node.getArguments().get(0));
+
+    if (participacionActual) {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      Instant fechaActual = Instant.now();
+      ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.INNER);
+      return cb.and(
+          cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio),
+              fechaActual),
+          cb.greaterThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaFin), fechaActual),
+          cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
+    } else {
+      return cb.equal(cb.literal("1"), cb.literal("1"));
+    }
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -231,18 +263,20 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
   public Predicate toPredicate(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     switch (Property.fromCode(node.getSelector())) {
-    case PLAN_INVESTIGACION:
-      return buildByPlanInvestigacion(node, root, query, criteriaBuilder);
-    case RESPONSABLE_PROYECTO:
-      return buildByResponsableEquipo(node, root, query, criteriaBuilder);
-    case FINALIZADO:
-      return buildByFinalizado(node, root, query, criteriaBuilder);
-    case PRORROGADO:
-      return buildByProrrogado(node, root, query, criteriaBuilder);
-    case FECHA_MODIFICACION:
-      return buildByFechaModificacion(node, root, query, criteriaBuilder);
-    default:
-      return null;
+      case PLAN_INVESTIGACION:
+        return buildByPlanInvestigacion(node, root, query, criteriaBuilder);
+      case RESPONSABLE_PROYECTO:
+        return buildByResponsableEquipo(node, root, query, criteriaBuilder);
+      case FINALIZADO:
+        return buildByFinalizado(node, root, query, criteriaBuilder);
+      case PRORROGADO:
+        return buildByProrrogado(node, root, query, criteriaBuilder);
+      case FECHA_MODIFICACION:
+        return buildByFechaModificacion(node, root, query, criteriaBuilder);
+      case PARTICIPACION_ACTUAL:
+        return buildByParticipacionActual(node, root, query, criteriaBuilder);
+      default:
+        return null;
     }
   }
 }

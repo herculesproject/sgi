@@ -727,7 +727,7 @@ public class ProyectoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}/proyecto-prorrogas", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E','CSP-PRO-INV-VR' )")
   public ResponseEntity<Proyecto> hasProyectoProrrogas(@PathVariable Long id) {
     log.debug("hasProyectoProrrogas(Long id) - start");
     boolean returnValue = false;
@@ -907,7 +907,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectossge")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E', 'CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E', 'CSP-PRO-MOD-V','CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoProyectoSge>> findAllProyectoProyectosSge(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - start");
@@ -1454,4 +1454,29 @@ public class ProyectoController {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada {@link Proyecto} activas que se
+   * encuentren dentro de la unidad de gestión del usuario logueado con perfil
+   * investigador
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Proyecto} activas paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/investigador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<Page<Proyecto>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
+
+    Page<Proyecto> page = service.findAllActivosInvestigador(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllInvestigador(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }
