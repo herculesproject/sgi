@@ -12,9 +12,14 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { NotificacionCvnEntidadParticipacionPipe } from './pipes/notificacion-cvn-entidad-participacion.pipe';
 import { NotificacionCvnResponsablePipe } from './pipes/notificacion-cvn-responsable.pipe';
+import { NotificacionCvnAsociarAutorizacionModalComponent } from './notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
 
 @NgModule({
-  declarations: [NotificacionCvnListadoComponent, NotificacionCvnEntidadParticipacionPipe, NotificacionCvnResponsablePipe],
+  declarations: [
+    NotificacionCvnListadoComponent,
+    NotificacionCvnEntidadParticipacionPipe,
+    NotificacionCvnResponsablePipe,
+    NotificacionCvnAsociarAutorizacionModalComponent],
   imports: [
     CommonModule,
     SharedModule,

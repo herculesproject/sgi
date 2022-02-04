@@ -206,4 +206,18 @@ export class AutorizacionService extends _AutorizacionMixinBase {
       map(response => DOCUMENTO_CONVERTER.toTarget(response))
     );
   }
+
+  /**
+   * Devuelve el listado de autorizaciones con el solicitante dado
+   *
+   * @param solicitanteRef referencia del solicitante
+   * @param options opciones de búsqueda.
+   */
+  findAllAutorizadasWithoutNotificacionBySolicitanteRef(solicitanteRef: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<IAutorizacion>> {
+    return this.find<IAutorizacionResponse, IAutorizacion>(
+      `${this.endpointUrl}/solicitante/${solicitanteRef}`,
+      options,
+      AUTORIZACION_RESPONSE_CONVERTER);
+  }
+
 }

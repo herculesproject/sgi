@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
@@ -9,12 +11,16 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult, SgiRestFilter, RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { NotificacionCvnAsociarAutorizacionModalComponent } from '../notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
 
 const MSG_ERROR_LOAD = marker('error.load');
+const MSG_ASOCIAR_SUCCESS = marker('msg.asociar.entity.success');
+const AUTORIZACION_KEY = marker('csp.autorizacion');
 
 @Component({
   selector: 'sgi-notificacion-cvn-listado',
@@ -26,13 +32,18 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   notificaciones$: Observable<INotificacionProyectoExternoCVN[]>;
 
+  textoAsociarSuccess: string;
+  msgParamAutorizacionEntity = {};
+
   TIPO_COLECTIVO = TipoColectivo;
 
   constructor(
     protected readonly snackBarService: SnackBarService,
     private readonly notificacionProyectoExternoCvnService: NotificacionProyectoExternoCvnService,
     private readonly personaService: PersonaService,
-    private readonly empresaService: EmpresaService
+    private matDialog: MatDialog,
+    private readonly empresaService: EmpresaService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR_LOAD);
     this.initFlexProperties();
@@ -40,7 +51,29 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.initFormGroup();
+  }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ASOCIAR_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoAsociarSuccess = value);
+
+    this.translate.get(
+      AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAutorizacionEntity = { entity: value });
+
   }
 
   private initFormGroup(): void {
@@ -143,5 +176,27 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     this.fxLayoutProperties.gap = '1%';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+  }
+
+  /**
+   * Abre un modal para añadir o actualizar
+   *
+   * @param data notificacionProyectoExternoCvn
+   */
+  openModal(data: INotificacionProyectoExternoCVN): void {
+    const config: MatDialogConfig<INotificacionProyectoExternoCVN> = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    const dialogRef = this.matDialog.open(NotificacionCvnAsociarAutorizacionModalComponent, config);
+    dialogRef.afterClosed().pipe(
+      filter(result => !!result),
+      switchMap((result: INotificacionProyectoExternoCVN) =>
+        this.notificacionProyectoExternoCvnService.update(result.id, result).pipe(
+          map(() => result)
+        ))
+    ).subscribe(result => {
+      this.snackBarService.showSuccess(data ? this.textoAsociarSuccess : null);
+    });
   }
 }
