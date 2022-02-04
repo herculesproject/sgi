@@ -1,12 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DOCUMENTO_CONVERTER } from '@core/converters/sgdoc/documento.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
+import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, RSQLSgiRestSort, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ICertificadoAutorizacionResponse } from '../certificado-autorizacion/certificado-autorizacion-response';
@@ -189,6 +192,18 @@ export class AutorizacionService extends _AutorizacionMixinBase {
       `${this.endpointUrl}/${id}/firstestado`
     ).pipe(
       map(response => ESTADO_AUTORIZACION_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Obtiene el documento de autorización
+   * @param idAutorizacion identificador de la autorización
+   */
+  getInformeAutorizacion(idAutorizacion: number): Observable<IDocumento> {
+    return this.http.get<IDocumentoBackend>(
+      `${this.endpointUrl}/${idAutorizacion}/documento`
+    ).pipe(
+      map(response => DOCUMENTO_CONVERTER.toTarget(response))
     );
   }
 }

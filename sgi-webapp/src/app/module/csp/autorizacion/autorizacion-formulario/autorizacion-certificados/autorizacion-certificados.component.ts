@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -20,13 +21,8 @@ import { AutorizacionActionService } from '../../autorizacion.action.service';
 import { AutorizacionCertificadoModalComponent, ICertificadoAutorizacionModalData } from '../autorizacion-certificado-modal/autorizacion-certificado-modal.component';
 import { AutorizacionCertificadosFragment } from './autorizacion-certificados.fragment';
 
-const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
-const MSG_ERROR_LOAD = marker('error.load');
 const MSG_DELETE = marker('msg.delete.entity');
-const MSG_ERROR_DELETE = marker('error.delete.entity');
-const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
-const AUTORIZACION_KEY = marker('csp.autorizacion');
 const CERTIFICADO_KEY = marker('csp.certificado-autorizacion');
 
 @Component({
@@ -112,7 +108,7 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
   openModal(value?: StatusWrapper<ICertificadoAutorizacion>): void {
     const data = {
       id: value?.value?.id,
-      autorizacion: value?.value?.autorizacion,
+      autorizacion: value?.value?.autorizacion ?? { id: this.formPart.getKey() } as IAutorizacion,
       nombre: value?.value?.nombre,
       documento: value?.value?.documento,
       visible: value?.value?.visible,

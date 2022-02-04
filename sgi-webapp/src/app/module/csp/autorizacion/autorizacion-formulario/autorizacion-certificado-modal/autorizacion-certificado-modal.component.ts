@@ -10,22 +10,19 @@ import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 const MSG_ACEPTAR = marker('btn.ok');
-const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
 const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
 const MSG_UPLOAD_ERROR = marker('error.file.upload');
-const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 const CERTIFICADO_AUTORIZACION_KEY = marker('csp.certificado-autorizacion');
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
-const CERTIFICADO_AUTORIZACION_NOMBRE_KEY = marker('csp.certificado-autorizacion.nombre');
 const CERTIFICADO_AUTORIZACION_DOCUMENTO_KEY = marker('csp.certificado-autorizacion.documento');
 const CERTIFICADO_AUTORIZACION_PUBLICO_KEY = marker('csp.certificado-autorizacion.publico');
 
@@ -54,6 +51,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
   title: string;
 
   uploading = false;
+  documentoAutorizacion: IDocumento;
 
   msgParamTipoEntidadRelacionada = {};
   msgParamEntidadRelacionada = {};
@@ -76,6 +74,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     private readonly translate: TranslateService,
     private autorizacionService: AutorizacionService,
     readonly sgiAuthService: SgiAuthService,
+    private readonly documentoService: DocumentoService
   ) {
     super(snackBarService, matDialogRef, null);
   }
@@ -89,9 +88,17 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
 
   saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
-      this.uploader.uploadSelection().subscribe(
-        () => this.matDialogRef.close(this.getDatosForm())
-      );
+      if (this.formGroup.controls.generadoAutomatico) {
+        if (this.documentoAutorizacion && this.documentoAutorizacion.documentoRef) {
+          this.matDialogRef.close(this.getDatosForm());
+        } else {
+          this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
+        }
+      } else {
+        this.uploader.uploadSelection().subscribe(
+          () => this.matDialogRef.close(this.getDatosForm())
+        );
+      }
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
@@ -106,13 +113,25 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
   }
 
   protected getFormGroup(): FormGroup {
-    return new FormGroup({
+    const form = new FormGroup({
       nombre: new FormControl(this.data.nombre),
       publico: new FormControl(this.data.visible, [Validators.required,
       this.buildValidadorHasSomeOtherCertificadoAutorizacionVisible(this.data?.hasSomeOtherCertificadoAutorizacionVisible)]),
       documento: new FormControl(this.data.documento, Validators.required),
       generadoAutomatico: new FormControl(null),
     });
+
+    this.subscriptions.push(
+      form.controls.generadoAutomatico.valueChanges.subscribe(
+        (value) => {
+          if (value) {
+            this.generarInforme(this.data?.autorizacion?.id);
+          }
+        }
+      )
+    );
+
+    return form;
   }
 
   private setupI18N(): void {
@@ -168,6 +187,30 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
         this.snackBarService.showError(MSG_UPLOAD_ERROR);
         this.uploading = false;
         break;
+    }
+  }
+
+  private generarInforme(idAutorizacion: number): void {
+    this.autorizacionService.getInformeAutorizacion(idAutorizacion).subscribe(
+      (documentoInfo: IDocumento) => {
+        this.documentoAutorizacion = documentoInfo;
+        this.formGroup.controls.documento.setValue(documentoInfo);
+      });
+  }
+
+  /**
+   * Visualiza el informe de autorización.
+   * @param documentoRef referencia del documento
+   */
+  visualizarInforme(): void {
+    if (this.documentoAutorizacion?.documentoRef) {
+      this.documentoService.getInfoFichero(this.documentoAutorizacion?.documentoRef).pipe(
+        switchMap((documentoInfo: IDocumento) => {
+          return this.documentoService.downloadFichero(documentoInfo.documentoRef);
+        })
+      ).subscribe(response => {
+        triggerDownloadToUser(response, this.documentoAutorizacion.nombre);
+      });
     }
   }
 }

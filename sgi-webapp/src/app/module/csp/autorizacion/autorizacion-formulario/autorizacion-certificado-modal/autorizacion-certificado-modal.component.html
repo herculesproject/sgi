@@ -8,8 +8,8 @@
   <form [formGroup]="formGroup">
     <!-- Generado automatico -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign" *ngIf="!this.data?.id">
-      <mat-radio-group class="radio-inline" name="generado_automatico" formControlName="generadoAutomatico">
-        <mat-radio-button color="primary" class="radio" [value]="true" [checked]="true" name="generadoAutomaticoSi">
+      <mat-radio-group class="radio-inline" name="generado_automatico" formControlName="generadoAutomatico" required>
+        <mat-radio-button color="primary" class="radio" [value]="true" name="generadoAutomaticoSi">
           {{'csp.certificado-autorizacion.generadoAutomatico' | translate}}
         </mat-radio-button>
         <mat-radio-button color="primary" class="radio" [value]="false" name="generadoAutomaticoNo">
@@ -32,11 +32,25 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field class="input-form">
+        <mat-form-field class="input-form" *ngIf="!formGroup.controls.generadoAutomatico.value">
           <mat-label>{{'csp.certificado-autorizacion.documento' | translate}}</mat-label>
           <sgi-file-upload #uploader placeholder="{{'csp.certificado-autorizacion.documento' | translate}}"
             formControlName="documento" required autoUpload="false" (uploadEventChange)="onUploadProgress($event)">
           </sgi-file-upload>
+          <mat-error *ngIf="formGroup.controls.documento.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamDocumentoEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form" *ngIf="formGroup.controls.generadoAutomatico.value">
+          <mat-label>{{'csp.certificado-autorizacion.documento' | translate}}</mat-label>
+          <input matInput formControlName="documento" id="nombreDocumento"
+            placeholder="{{'csp.certificado-autorizacion.documento' | translate}}"
+            [value]="this.documentoAutorizacion?.nombre" required readonly>
+          <button *ngIf="formGroup.controls.generadoAutomatico.value" mat-button color="primary"
+            matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}" id="btnDownload"
+            (click)="visualizarInforme()">
+            <mat-icon color="primary">arrow_downward</mat-icon>
+          </button>
           <mat-error *ngIf="formGroup.controls.documento.errors?.required">
             {{ 'error.required.entity' | translate:msgParamDocumentoEntity}}
           </mat-error>
