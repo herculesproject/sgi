@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
@@ -414,6 +415,21 @@ public class AutorizacionController {
 
     log.debug("findFirstEstado(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene el documento de una {@link Autorizacion}
+   * 
+   * @param idAutorizacion identificador {@link Autorizacion}
+   * @return el documento de la {@link Autorizacion}
+   */
+  @GetMapping("/{idAutorizacion}/documento")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-INV-C', 'CSP-AUT-INV-ER','CSP-AUT-V')")
+  public ResponseEntity<DocumentoOutput> documentoAutorizacion(@PathVariable Long idAutorizacion) {
+    log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion) - start");
+    DocumentoOutput documento = service.generarDocumentoAutorizacion(idAutorizacion);
+    log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion) - end");
+    return new ResponseEntity<>(documento, HttpStatus.OK);
   }
 
   private AutorizacionOutput convert(Autorizacion autorizacion) {

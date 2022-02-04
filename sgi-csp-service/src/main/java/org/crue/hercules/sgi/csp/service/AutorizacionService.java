@@ -1,8 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
@@ -18,6 +21,8 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,14 +43,28 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 public class AutorizacionService {
+  /** Autorizacion repository */
   private final AutorizacionRepository repository;
+  /** EstadoAutorizacion repository */
   private final EstadoAutorizacionRepository estadoAutorizacionRepository;
+  /** Report service */
+  private final ReportService reportService;
+  /** SGDOC service */
+  private final SgdocService sgdocService;
+  /** SGI properties */
+  SgiConfigProperties sgiConfigProperties;
+
+  private static final String TITULO_INFORME_AUTORIZACION = "SGI_certificadoAutorizacionProyectoExterno_";
 
   public AutorizacionService(
       AutorizacionRepository repository,
-      EstadoAutorizacionRepository estadoAutorizacionRepository) {
+      EstadoAutorizacionRepository estadoAutorizacionRepository, ReportService reportService,
+      SgdocService sgdocService, SgiConfigProperties sgiConfigProperties) {
     this.repository = repository;
     this.estadoAutorizacionRepository = estadoAutorizacionRepository;
+    this.reportService = reportService;
+    this.sgdocService = sgdocService;
+    this.sgiConfigProperties = sgiConfigProperties;
   }
 
   /**
@@ -390,5 +409,21 @@ public class AutorizacionService {
     log.debug("findIds(String query) - end");
 
     return returnValue;
+  }
+
+  /**
+   * Obtiene el informe de una {@link Autorizacion}
+   * 
+   * @param idAutorizacion identificador {@link Autorizacion}
+   * @return El documento del informe de la {@link Autorizacion}
+   */
+  public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion) {
+    Resource informePdf = reportService.getInformeAutorizacion(idAutorizacion);
+    // Se sube el informe a sgdoc
+    String pattern = String.format("yyyyMMddHH:mm:ss");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
+        .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
+    String fileName = TITULO_INFORME_AUTORIZACION + idAutorizacion + formatter.format(Instant.now()) + ".pdf";
+    return sgdocService.uploadInforme(fileName, informePdf);
   }
 }

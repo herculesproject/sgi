@@ -9,6 +9,8 @@ sgi:
   rest:
     api:
       eti-url: "http://sgi-eti-service:4280"
+      rep-url: "http://sgi-rep-service:4287"
+      sgdoc-url: "http://sgi-esb:8080/sgdoc"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -166,6 +168,8 @@ sgi:
   rest:
     api:
       eti-url: "http://sgi-eti:8080"
+      rep-url: "http://sgi-rep:8080"
+      sgdoc-url: "http://sgi.ic.corp.treelogic.com"
 spring:
   profiles: prod
   datasource:
