@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.Optional;
-
 import org.crue.hercules.sgi.csp.exceptions.CertificadoAutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
@@ -12,8 +10,6 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -70,7 +66,7 @@ public class CertificadoAutorizacionService {
   @Transactional
   public CertificadoAutorizacion update(CertificadoAutorizacion certificadoActualizar) {
     log.debug("update(Autorizacion autorizacionActualizar- start");
-    return repository.findById(certificadoActualizar.getId()).map((data) -> {
+    return repository.findById(certificadoActualizar.getId()).map(data -> {
 
       data.setDocumentoRef(certificadoActualizar.getDocumentoRef());
       data.setVisible(certificadoActualizar.getVisible());
@@ -133,7 +129,7 @@ public class CertificadoAutorizacionService {
             autorizacionId)
         .and(CertificadoAutorizacionSpecifications.visibles());
 
-    boolean returnValue = repository.count(specs) > 0 ? true : false;
+    boolean returnValue = repository.count(specs) > 0;
     log.debug(
         "hasCertificadoAutorizacionVisible(Long autorizacionId) - end");
     return returnValue;

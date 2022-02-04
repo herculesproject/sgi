@@ -25,4 +25,10 @@
     <addForeignKeyConstraint baseColumnNames="notificacion_proyecto_externo_cvn_id" baseTableName="notificacion_cvn_entidad_financiadora" constraintName="FK_NOTIFICACIONCVNENTIDADFINANCIADORA_NOTIFICACIONPROYECTOEXTERNOCVN" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="notificacion_proyecto_externo_cvn" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000005-6">
+    <addColumn tableName="autorizacion">
+      <column name="notificacion_proyecto_externo_cvn_id" type="bigint" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

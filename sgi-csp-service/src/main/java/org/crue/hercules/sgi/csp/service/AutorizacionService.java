@@ -43,6 +43,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 public class AutorizacionService {
+  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
+  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
+  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
+  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
+  private static final String MESSAGE_KEY_ID = "id";
+
   /** Autorizacion repository */
   private final AutorizacionRepository repository;
   /** EstadoAutorizacion repository */
@@ -79,9 +85,10 @@ public class AutorizacionService {
 
     Assert.isNull(autorizacion.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "isNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Autorizacion.class))
+            .build());
 
     // Asigna al usuario actual como solicitante de la autorizacion
     autorizacion.setSolicitanteRef(getUserPersonaRef());
@@ -114,9 +121,10 @@ public class AutorizacionService {
 
     Assert.notNull(autorizacionActualizar.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Autorizacion.class))
+            .build());
 
     return repository.findById(autorizacionActualizar.getId()).map(data -> {
 
@@ -181,6 +189,31 @@ public class AutorizacionService {
   }
 
   /**
+   * Obtiene todas las entidades {@link Autorizacion} del solicitante indicado
+   * que esten en estado autorizadas y sin ninguna notificacion asociada
+   * 
+   *
+   * @param solicitanteRef referencia del solicitante
+   * @param query          información del filtro.
+   * @param paging         información de paginación.
+   * @return el listado de entidades {@link Autorizacion} paginadas y filtradas.
+   */
+  public Page<Autorizacion> findAllAutorizadasWithoutNotificacionBySolicitanteRef(String solicitanteRef, String query,
+      Pageable paging) {
+    log.debug(
+        "findAllAutorizadasWithoutNotificacionBySolicitanteRef(String solicitanteRef, String query, Pageable paging) - start");
+    Specification<Autorizacion> specs = AutorizacionSpecifications.bySolicitante(solicitanteRef)
+        .and(AutorizacionSpecifications.byEstado(Estado.AUTORIZADA))
+        .and(AutorizacionSpecifications.withoutNotificacionProyectoExternoCVN())
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<Autorizacion> returnValue = repository.findAll(specs, paging);
+    log.debug(
+        "findAllAutorizadasWithoutNotificacionBySolicitanteRef(String solicitanteRef, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
    * Elimina la {@link Autorizacion}.
    *
    * @param id Id del {@link Autorizacion}.
@@ -191,9 +224,10 @@ public class AutorizacionService {
 
     Assert.notNull(id,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Autorizacion.class))
+            .build());
 
     final Autorizacion returnValue = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
     checkUserHasAuthorityDeleteAutorizacion(returnValue);
@@ -221,8 +255,8 @@ public class AutorizacionService {
     estadoAutorizacion.setAutorizacionId(autorizacion.getId());
 
     // El nuevo estado es diferente al estado actual de del Autorizacion
-    if (estadoAutorizacion.getEstado().equals(autorizacion.getEstado())) {
-      throw new IllegalArgumentException("La Autorizacion ya se encuentra en el estado al que se quiere modificar.");
+    if (estadoAutorizacion.getEstado().equals(autorizacion.getEstado().getEstado())) {
+      throw new AlreadyInEstadoAutorizacionException();
     }
 
     Instant fechaActual = Instant.now();
@@ -284,9 +318,10 @@ public class AutorizacionService {
 
     Assert.notNull(id,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(Autorizacion.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Autorizacion.class))
+            .build());
 
     Autorizacion autorizacion = repository.findById(id)
         .orElseThrow(() -> new AutorizacionNotFoundException(id));

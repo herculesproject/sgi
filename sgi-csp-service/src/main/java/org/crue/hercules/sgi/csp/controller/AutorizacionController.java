@@ -255,6 +255,30 @@ public class AutorizacionController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link Autorizacion} cuyo
+   * solicicitante sea el indicado
+   * 
+   * @param solicitanteRef identificador del solicitante de al autorizacion
+   * @param query          filtro de búsqueda.
+   * @param paging         {@link Pageable}.
+   * @return el listado de entidades {@link Autorizacion} cuyo solicicitante sea
+   *         el indicado paginadas y filtradas.
+   */
+  @GetMapping("/solicitante/{solicitanteRef}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-E')")
+  public ResponseEntity<Page<AutorizacionOutput>> findAllAutorizadasWithoutNotificacionBySolicitanteRef(
+      @PathVariable String solicitanteRef,
+      @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllAutorizadasWithoutNotificacionBySolicitanteRef(String query, Pageable paging) - start");
+    Page<AutorizacionOutput> page = convert(
+        service.findAllAutorizadasWithoutNotificacionBySolicitanteRef(solicitanteRef, query, paging));
+
+    log.debug("findAllAutorizadasWithoutNotificacionBySolicitanteRef(String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Comprueba si existen datos vinculados a {@link Autorizacion} de
    * {@link NotificacionProyectoExternoCVN}
    *

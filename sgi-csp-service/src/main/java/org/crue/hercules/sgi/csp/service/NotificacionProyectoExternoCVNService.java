@@ -30,6 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class NotificacionProyectoExternoCVNService {
+  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
+  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
+  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
+  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
+  private static final String MESSAGE_KEY_ID = "id";
 
   private final NotificacionProyectoExternoCVNRepository repository;
   private final NotificacionCVNEntidadFinanciadoraRepository notificacionCVNEntidadFinanciadoraRepository;
@@ -94,9 +99,11 @@ public class NotificacionProyectoExternoCVNService {
 
     Assert.isNull(notificacionProyectoExternoCVN.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "isNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
+            .build());
 
     if (notificacionProyectoExternoCVN.getResponsableRef() != null) {
       notificacionProyectoExternoCVN.setDatosResponsable(null);
@@ -124,6 +131,40 @@ public class NotificacionProyectoExternoCVNService {
       notificacionEntidadFinanciadora.setNotificacionProyectoExternoCvnId(notificacionProyectoExternoCvnId);
       notificacionCVNEntidadFinanciadoraRepository.save(notificacionEntidadFinanciadora);
     });
+  }
+
+  /**
+   * Actualiza la entidad {@link NotificacionProyectoExternoCVN}.
+   *
+   * @param notificacionProyectoExternoCVNActualizar la entidad
+   *                                                 {@link NotificacionProyectoExternoCVN}
+   *                                                 a guardar.
+   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN update(
+      NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
+    log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
+
+    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
+            .build());
+
+    return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
+
+      data.setAutorizacionId(notificacionProyectoExternoCVNActualizar.getAutorizacionId());
+      data.setProyectoId(notificacionProyectoExternoCVNActualizar.getProyectoId());
+
+      NotificacionProyectoExternoCVN returnValue = repository.save(data);
+
+      log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - end");
+      return returnValue;
+    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
+        notificacionProyectoExternoCVNActualizar.getId()));
   }
 
   /**

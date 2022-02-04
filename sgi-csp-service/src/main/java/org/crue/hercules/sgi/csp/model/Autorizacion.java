@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -105,5 +106,10 @@ public class Autorizacion extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Convocatoria convocatoria = null;
+
+  @OneToOne(mappedBy = "autorizacion")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final NotificacionProyectoExternoCVN notificacionProyectoExternoCvn = null;
 
 }

@@ -63,7 +63,7 @@
       <column name="titulo" value="Notificación 1 sin Entidad y Solicitante" />
       <column name="fecha_inicio" valueDate="2021-10-17T14:00:00" />
       <column name="fecha_fin" valueDate="2022-01-21T14:00:00" />
-      <column name="solicitante_ref" value="74439415" />
+      <column name="solicitante_ref" value="22932567" />
       <column name="proyecto_cvn_id" value="00004" />
       <column name="datos_responsable" value="Responsable 1" />
       <column name="datos_entidad_participacion" value="Brécol S.L." />

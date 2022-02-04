@@ -17,13 +17,14 @@ import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,6 +67,29 @@ public class NotificacionProyectoExternoCVNController {
     log.debug("Autorizacion findById(Long id) - start");
     NotificacionProyectoExternoCVNOutput returnValue = convert(service.findById(id));
     log.debug("Autorizacion findById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza {@link NotificacionProyectoExternoCVN}.
+   * 
+   * @param notificacionProyectoExternoCVN {@link NotificacionProyectoExternoCVN}
+   *                                       a actualizar.
+   * @param id                             Identificador
+   *                                       {@link NotificacionProyectoExternoCVN}
+   *                                       a
+   *                                       actualizar.
+   * @return {@link NotificacionProyectoExternoCVN} actualizado
+   */
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CVPR-E')")
+  public NotificacionProyectoExternoCVNOutput update(
+      @Valid @RequestBody NotificacionProyectoExternoCVNInput notificacionProyectoExternoCVN,
+      @PathVariable Long id) {
+    log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN, Long id) - start");
+    NotificacionProyectoExternoCVNOutput returnValue = convert(service.update(convert(id,
+        notificacionProyectoExternoCVN)));
+    log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVN, Long id) - end");
     return returnValue;
   }
 
