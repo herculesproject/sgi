@@ -232,9 +232,14 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
-      .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
-      .and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value?.toString());
+
+    if (controls.fechaPublicacionDesde.value) {
+      filter.and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
+    }
+    if (controls.fechaPublicacionHasta.value) {
+      filter.and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
+    }
     if (this.data.unidadesGestion?.length) {
       filter.and('unidadGestionRef', SgiRestFilterOperator.IN, this.data.unidadesGestion);
     }
@@ -250,6 +255,7 @@ export class SearchConvocatoriaModalComponent implements OnInit, AfterViewInit {
    */
   onClearFilters(): void {
     FormGroupUtil.clean(this.formGroup);
+    this.buscarConvocatorias(true);
   }
 
   openCreate(): void {
