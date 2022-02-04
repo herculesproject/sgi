@@ -461,6 +461,19 @@
           </configuration>
         </plugin>
         <!--
+          Maven Resources Plugin - handles the copying of project resources to the output directory.
+          https://maven.apache.org/plugins/maven-resources-plugin/
+        -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <configuration>
+            <nonFilteredFileExtensions>
+              <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+            </nonFilteredFileExtensions>
+          </configuration>
+        </plugin>
+        <!--
           Maven Source Plugin - Creates a jar archive of the source files of the current project.
           https://maven.apache.org/plugins/maven-source-plugin/
         -->
