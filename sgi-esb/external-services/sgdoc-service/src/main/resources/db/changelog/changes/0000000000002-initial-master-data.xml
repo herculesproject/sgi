@@ -4,7 +4,7 @@
     <insert tableName="documento">
       <column name="documento_ref" value="sample-txt" />
       <column name="autor_ref" type="admin"/>
-      <column name="fecha_creacion"  valueDate="current_timestamp()" />
+      <column name="fecha_creacion" valueDate="current_timestamp()" />
       <column name="nombre" value="sample.txt"/>
       <column name="tipo" value="text/plain"/>
       <column name="version" valueNumeric="1"/>
@@ -12,7 +12,7 @@
     <insert tableName="documento">
       <column name="documento_ref" value="sample-pdf" />
       <column name="autor_ref" type="admin"/>
-      <column name="fecha_creacion"  valueDate="current_timestamp()" />
+      <column name="fecha_creacion" valueDate="current_timestamp()" />
       <column name="nombre" value="sample.pdf"/>
       <column name="tipo" value="application/pdf"/>
       <column name="version" valueNumeric="1"/>
@@ -20,7 +20,7 @@
     <insert tableName="documento">
       <column name="documento_ref" value="sample-jpg" />
       <column name="autor_ref" type="admin"/>
-      <column name="fecha_creacion"  valueDate="current_timestamp()" />
+      <column name="fecha_creacion" valueDate="current_timestamp()" />
       <column name="nombre" value="sample.jpg"/>
       <column name="tipo" value="image/jpeg"/>
       <column name="version" valueNumeric="1"/>
