@@ -372,12 +372,6 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     requisitosConvocatoria: RequisitosConvocatoria
   ): Observable<ValidacionRequisitosEquipoIp> {
 
-    if (requisitosConvocatoria.requisitosEquipo?.sexo?.id) {
-      if (solicitudProyectoEquipo.persona.sexo?.id !== requisitosConvocatoria.requisitosEquipo.sexo.id) {
-        return of(ValidacionRequisitosEquipoIp.SEXO);
-      }
-    }
-
     if (requisitosConvocatoria.requisitosEquipo?.edadMaxima) {
       return this.datosPersonalesService.findByPersonaId(solicitudProyectoEquipo.persona.id).pipe(
         map(datosPersonales => {
@@ -445,6 +439,28 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     } else {
       return of(null);
     }
+  }
+
+  private validateRequisitosEquipoGlobales(
+    requisitosConvocatoria: RequisitosConvocatoria
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    const miembrosEquipoNoPrincipales = this.proyectoEquipos$.value
+      .filter(miembro => !miembro.value.solicitudProyectoEquipo.rolProyecto.rolPrincipal)
+      .map(miembroWraper => miembroWraper.value.solicitudProyectoEquipo);
+
+    if (requisitosConvocatoria.requisitosEquipo?.sexo?.id && requisitosConvocatoria.requisitosEquipo?.ratioSexo) {
+      const numMiembrosSexo = miembrosEquipoNoPrincipales.filter(miembroEquipo =>
+        miembroEquipo.persona.sexo?.id === requisitosConvocatoria.requisitosEquipo.sexo.id
+      ).length;
+
+      const ratioSexo = numMiembrosSexo / miembrosEquipoNoPrincipales.length * 100
+      if (ratioSexo < requisitosConvocatoria.requisitosEquipo.ratioSexo) {
+        return of(ValidacionRequisitosEquipoIp.RATIO_SEXO);
+      }
+    }
+
+    return of(null);
   }
 
   private validateRequisitosIp(
@@ -588,6 +604,25 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     }
   }
 
+  private validateRequisitosIpGlobales(
+    requisitosConvocatoria: RequisitosConvocatoria
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    const miembrosEquipoPrincipales = this.proyectoEquipos$.value
+      .filter(miembro => miembro.value.solicitudProyectoEquipo.rolProyecto.rolPrincipal)
+      .map(miembroWraper => miembroWraper.value.solicitudProyectoEquipo);
+
+    if (requisitosConvocatoria.requisitosIp?.numMaximoIP) {
+      const numIps = miembrosEquipoPrincipales.length;
+
+      if (numIps < requisitosConvocatoria.requisitosIp?.numMaximoIP) {
+        return of(ValidacionRequisitosEquipoIp.NUM_MAX_IP);
+      }
+    }
+
+    return of(null);
+  }
+
   private validateRequisitosConvocatoria(
     solicitudProyectoEquipo: ISolicitudProyectoEquipo,
     convocatoriaId: number
@@ -610,7 +645,24 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
       rolProyecto: { rolPrincipal: true } as IRolProyecto,
     } as ISolicitudProyectoEquipo;
     return this.validateRequisitosConvocatoria(solicitudProyectoEquipo, convocatoriaId);
+  }
 
+  public validateRequisitosConvocatoriaGlobales(
+    convocatoriaId: number
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    return this.getRequisitosConvocatoria(convocatoriaId).pipe(
+      switchMap(() => {
+        return this.validateRequisitosEquipoGlobales(this.requisitosConvocatoria);
+      }),
+      switchMap(response => {
+        if (!response) {
+          return this.validateRequisitosIpGlobales(this.requisitosConvocatoria);
+        }
+
+        return of(response);
+      })
+    )
   }
 
 }

@@ -45,7 +45,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_ROUTE_NAMES } from '../proyecto/proyecto-route-names';
 import { CONVOCATORIA_ID_KEY } from './solicitud-crear/solicitud-crear.guard';
@@ -443,16 +443,23 @@ export class SolicitudActionService extends ActionService {
         return this.equipoProyecto.validateRequisitosConvocatoriaSolicitante(this.solicitante, this.convocatoriaId).pipe(
           switchMap((response) => {
             if (response) {
-              return this.translate.get(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(response)).pipe(
-                switchMap((value) => {
-                  return this.translate.get(
-                    MSG_SAVE_REQUISITOS_INVESTIGADOR,
-                    { mask: value }
-                  );
-                }),
-                switchMap((value) => {
-                  return this.dialogService.showConfirmation(value);
-                }),
+              const errorValidacion = this.translate.instant(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(response));
+              const msgErrorValidacion = this.translate.instant(MSG_SAVE_REQUISITOS_INVESTIGADOR, { mask: errorValidacion });
+              return of(msgErrorValidacion);
+            }
+            return this.equipoProyecto.validateRequisitosConvocatoriaGlobales(this.convocatoriaId).pipe(
+              map(errorValidacion => {
+                if (errorValidacion) {
+                  return this.translate.instant(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(errorValidacion));
+                }
+
+                return null;
+              })
+            );
+          }),
+          switchMap((msgErrorValidacion: string) => {
+            if (msgErrorValidacion) {
+              return this.dialogService.showConfirmation(msgErrorValidacion).pipe(
                 switchMap((aceptado) => {
                   if (aceptado) {
                     return this.saveOrUpdateSolicitud();

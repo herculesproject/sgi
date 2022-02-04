@@ -1073,6 +1073,8 @@
   "csp.validacion-requisitos-equipo-ip.FECHA_OBTENCION_NIVEL_ACADEMICO_MIN": "La fecha de obtención del nivel académico es inferior la fecha mínima",
   "csp.validacion-requisitos-equipo-ip.NO_CATEGORIA_PROFESIONAL": "No tiene la categoría profesional requerida",
   "csp.validacion-requisitos-equipo-ip.NO_NIVEL_ACADEMICO": "No tiene el nivel académico requerido",
+  "csp.validacion-requisitos-equipo-ip.NUM_MAX_IP": "Se superan el número de IPs establecidos por la convocatoria, ¿desea continuar incluyendo esta distribución de roles en el equipo?",
+  "csp.validacion-requisitos-equipo-ip.RATIO_SEXO": "No se cumple el ratio por sexo establecido por la convocatoria, ¿desea continuar incluyendo este equipo de proyecto?",
   "csp.validacion-requisitos-equipo-ip.SEXO": "No tiene el sexo requerido",
   "csp.validacion-requisitos-equipo-ip.VINCULACION_UNIVERSIDAD": "Tiene una vinculación con la universidad",
   "error.after.fecha-fin": "La fecha de fin debe ser posterior a la fecha de inicio",

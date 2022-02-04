@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-requisitos-equipo-ip';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -41,6 +42,7 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { DialogService } from '@core/services/dialog.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
@@ -60,7 +62,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
@@ -179,6 +181,10 @@ export class ProyectoActionService extends ActionService {
     return this.fichaGeneral.getValue();
   }
 
+  get convocatoriaId(): number {
+    return this.fichaGeneral.getValue().convocatoriaId;
+  }
+
   get modeloEjecucionId(): number {
     return this.proyecto?.modeloEjecucion?.id;
   }
@@ -244,7 +250,7 @@ export class ProyectoActionService extends ActionService {
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
     proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
-    translate: TranslateService,
+    private translate: TranslateService,
     proyectoAnualidadService: ProyectoAnualidadService,
     proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
     datosAcademicosService: DatosAcademicosService,
@@ -259,7 +265,8 @@ export class ProyectoActionService extends ActionService {
     facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
     palabraClaveService: PalabraClaveService,
     proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
-    periodoAmortizacionService: PeriodoAmortizacionService
+    periodoAmortizacionService: PeriodoAmortizacionService,
+    private dialogService: DialogService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -496,8 +503,38 @@ export class ProyectoActionService extends ActionService {
     if (this.hasErrors()) {
       return throwError('Errores');
     }
+
+    if (!this.isEdit() || !!!this.convocatoriaId) {
+      return this.saveOrUpdateProyecto();
+    }
+
+    return this.proyectoEquipo.validateRequisitosConvocatoriaGlobales(this.convocatoriaId).pipe(
+      map(errorValidacion => {
+        if (errorValidacion) {
+          return this.translate.instant(VALIDACION_REQUISITOS_EQUIPO_IP_MAP.get(errorValidacion));
+        }
+
+        return null;
+      }),
+      switchMap((msgErrorValidacion: string) => {
+        if (msgErrorValidacion) {
+          return this.dialogService.showConfirmation(msgErrorValidacion).pipe(
+            switchMap((aceptado) => {
+              if (aceptado) {
+                return this.saveOrUpdateProyecto();
+              }
+            })
+          );
+        }
+        return this.saveOrUpdateProyecto();
+      })
+    );
+  }
+
+  private saveOrUpdateProyecto(): Observable<void> {
+    let cascade = of(void 0);
+
     if (this.isEdit()) {
-      let cascade = of(void 0);
       if (this.prorrogas?.hasChanges()) {
         cascade = cascade.pipe(
           switchMap(() => this.prorrogas.saveOrUpdate().pipe(tap(() => this.prorrogas.refreshInitialState(true))))
@@ -508,12 +545,25 @@ export class ProyectoActionService extends ActionService {
           switchMap(() => this.proyectosSge.saveOrUpdate().pipe(tap(() => this.proyectosSge.refreshInitialState(true))))
         );
       }
-      return cascade.pipe(
-        switchMap(() => super.saveOrUpdate())
-      );
     } else {
-      return super.saveOrUpdate();
+      if (this.fichaGeneral?.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.fichaGeneral.saveOrUpdate().pipe(
+            tap((key) => {
+              this.fichaGeneral.refreshInitialState(true);
+              if (typeof key === 'string' || typeof key === 'number') {
+                this.onKeyChange(key);
+              }
+            })
+          )
+          )
+        );
+      }
     }
+
+    return cascade.pipe(
+      switchMap(() => super.saveOrUpdate())
+    );
   }
 
   private onProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<IProyectoSocio>[]): void {
