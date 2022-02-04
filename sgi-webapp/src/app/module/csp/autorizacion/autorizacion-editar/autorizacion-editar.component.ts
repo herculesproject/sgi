@@ -110,31 +110,39 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
     ).subscribe((value) => this.textoEditarError = value);
   }
 
-  saveOrUpdate(): void {
-    this.actionService.saveOrUpdate().subscribe(
-      () => {
-        // This is intentional
-      },
-      (error) => {
-        this.logger.error(error);
-        if (error instanceof HttpProblem) {
-          if (!!!error.managed) {
-            this.snackBarService.showError(error);
+  saveOrUpdate(action: 'save' | 'presentar' | 'cambiar-estado'): void {
+    if (action === 'presentar') {
+      this.presentar();
+    }
+    else if (action === 'cambiar-estado') {
+      this.openCambioEstado();
+    }
+    else {
+      this.actionService.saveOrUpdate().subscribe(
+        () => {
+          // This is intentional
+        },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            if (!!!error.managed) {
+              this.snackBarService.showError(error);
+            }
           }
+          else {
+            this.snackBarService.showError(this.textoEditarError);
+          }
+        },
+        () => {
+          this.snackBarService.showSuccess(this.textoEditarSuccess);
+          const autorizacionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
+          this.router.navigate([`../${autorizacionId}`], { relativeTo: this.activatedRoute });
         }
-        else {
-          this.snackBarService.showError(this.textoEditarError);
-        }
-      },
-      () => {
-        this.snackBarService.showSuccess(this.textoEditarSuccess);
-        const autorizacionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
-        this.router.navigate([`../${autorizacionId}`], { relativeTo: this.activatedRoute });
-      }
-    );
+      );
+    }
   }
 
-  presentar(): void {
+  private presentar(): void {
     this.actionService.presentar().subscribe(
       () => {
         // This is intentional
@@ -158,7 +166,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
   /**
    * Apertura de modal cambio de estado para insertar comentario
    */
-  openCambioEstado(): void {
+  private openCambioEstado(): void {
     const data: AutorizacionCambioEstadoModalComponentData = {
       estadoActual: this.actionService.estado,
       autorizacion: this.actionService.autorizacion,

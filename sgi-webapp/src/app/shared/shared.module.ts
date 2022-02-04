@@ -7,12 +7,13 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionDialogComponent } from './action-dialog/action-dialog.component';
 import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
-import { ActionFooterMessageComponent } from './action-footer/action-footer-message/action-footer-message.component';
+import { ActionFooterMessageComponent } from './action-footer-message/action-footer-message.component';
 import { ActionFooterComponent } from './action-footer/action-footer.component';
 import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
 import { ActionFragmentMenuGroupComponent } from './action-fragment-menu-group/action-fragment-menu-group.component';
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 import { ActionComponent } from './action/action.component';
+import { ActionEmptyFooterComponent } from './action-empty-footer/action-empty-footer.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogContentComponent } from './dialog-content/dialog-content.component';
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
@@ -78,7 +79,8 @@ import { SelectComponent } from './select/select.component';
     ActionDialogComponent,
     ExportDialogComponent,
     PalabraClaveComponent,
-    FormAutocompleteOffDirective
+    FormAutocompleteOffDirective,
+    ActionEmptyFooterComponent
   ],
   imports: [
     CommonModule,
@@ -102,7 +104,6 @@ import { SelectComponent } from './select/select.component';
     IconChangesComponent,
     IconErrorsComponent,
     IconProblemsComponent,
-    ActionFooterMessageComponent,
     LuxonDatePipe,
     SelectBooleanComponent,
     SelectComponent,
@@ -120,7 +121,8 @@ import { SelectComponent } from './select/select.component';
     ActionDialogComponent,
     ExportDialogComponent,
     PalabraClaveComponent,
-    FormAutocompleteOffDirective
+    FormAutocompleteOffDirective,
+    ActionEmptyFooterComponent
   ]
 })
 export class SharedModule { }

@@ -115,24 +115,29 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
     ).subscribe((value) => this.textoEditarError = value);
   }
 
-  saveOrUpdate(): void {
-    this.actionService.saveOrUpdate().subscribe(
-      () => { },
-      (error) => {
-        this.logger.error(error);
-        if (error instanceof HttpProblem) {
-          if (!!!error.managed) {
-            this.snackBarService.showError(error);
+  saveOrUpdate(action: 'save' | 'cambiar-estado'): void {
+    if (action === 'cambiar-estado') {
+      this.openCambioEstado();
+    }
+    else {
+      this.actionService.saveOrUpdate().subscribe(
+        () => { },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            if (!!!error.managed) {
+              this.snackBarService.showError(error);
+            }
           }
+          else {
+            this.snackBarService.showError(this.textoEditarError);
+          }
+        },
+        () => {
+          this.snackBarService.showSuccess(this.textoEditarSuccess);
         }
-        else {
-          this.snackBarService.showError(this.textoEditarError);
-        }
-      },
-      () => {
-        this.snackBarService.showSuccess(this.textoEditarSuccess);
-      }
-    );
+      );
+    }
   }
 
   hasEstadoCambio(...estadosSolicitud: Estado[]): boolean {
@@ -150,7 +155,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   /**
    * Apertura de modal cambio de estado para insertar comentario
    */
-  openCambioEstado(): void {
+  private openCambioEstado(): void {
     const data: SolicitudCambioEstadoModalComponentData = {
       estadoActual: this.actionService.estado,
       estadoNuevo: null,
