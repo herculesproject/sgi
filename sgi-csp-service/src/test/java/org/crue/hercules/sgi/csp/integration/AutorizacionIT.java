@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
@@ -61,6 +62,7 @@ class AutorizacionIT extends BaseIT {
   private static final String PATH_MODIFICADAS_IDS = "/modificadas-ids";
   private static final String PATH_CERTIFICADO_AUTORIZACION_VISIBLE = "/certificadoautorizacionvisible";
   private static final String PATH_NOTIFICACION_PROYECTO = "/notificacionproyecto";
+  private static final String PATH_FIRST_ESTADO = "/firstestado";
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles)
       throws Exception {
@@ -663,6 +665,35 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(response.getBody()).isNotNull();
     Assertions.assertThat(response.getBody().getId()).isEqualTo(1L);
 
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFirstEstado_ReturnsEstadoAutorizacionOutput() throws Exception {
+    String roles = "CSP-AUT-INV-ER";
+    Long autorizacionId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FIRST_ESTADO)
+        .buildAndExpand(autorizacionId).toUri();
+
+    final ResponseEntity<EstadoAutorizacionOutput> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null, roles), EstadoAutorizacionOutput.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+    Assertions.assertThat(response.getBody().getId()).isEqualTo(1L);
   }
 
   private AutorizacionInput buildMockAutorizacion(Long id) {
