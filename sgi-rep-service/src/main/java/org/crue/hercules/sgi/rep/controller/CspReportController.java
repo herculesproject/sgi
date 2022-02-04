@@ -38,7 +38,7 @@ public class CspReportController {
    * Devuelve un informe de autorización para participar en proyectos de
    * investigación
    *
-   * @param idProyecto identificador del proyecto
+   * @param idAutorizacion identificador de la Autorización
    * @return Resource
    */
   @GetMapping("/autorizacion-proyecto-externo/{idAutorizacion}")
