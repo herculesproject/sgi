@@ -22,4 +22,4 @@
 INSERT INTO test.solicitud_proyecto_entidad
 (id, solicitud_proyecto_id, convocatoria_entidad_financiadora_id, convocatoria_entidad_gestora_id, solicitud_proyecto_entidad_financiadora_ajena_id)
 VALUES
-(1, 1, 1, 1, NULL);
+(1, 1, 1, 1, 1);

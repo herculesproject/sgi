@@ -126,6 +126,7 @@ class SolicitudProyectoIT extends BaseIT {
     "classpath:scripts/convocatoria_entidad_financiadora.sql",
     "classpath:scripts/convocatoria_entidad_gestora.sql",
     "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/solicitud_proyecto_entidad_financiadora_ajena.sql",
     "classpath:scripts/solicitud_proyecto_entidad.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on

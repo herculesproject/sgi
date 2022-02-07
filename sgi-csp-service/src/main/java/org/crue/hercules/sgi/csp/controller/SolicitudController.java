@@ -1176,7 +1176,7 @@ public class SolicitudController {
    */
   @RequestMapping(path = "/{id}/modificableestadoanddocumentosbyinvestigador", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
-  public ResponseEntity<Solicitud> modificableEstadoAndDocumentosByInvestigador(@PathVariable Long id) {
+  public ResponseEntity<Void> modificableEstadoAndDocumentosByInvestigador(@PathVariable Long id) {
     log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - start");
     Boolean returnValue = service.modificableEstadoAndDocumentosByInvestigador(id);
     log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - end");

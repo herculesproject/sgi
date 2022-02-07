@@ -98,6 +98,7 @@ DELETE FROM test.estado_autorizacion;
 DELETE FROM test.certificado_autorizacion;
 DELETE FROM test.autorizacion;
 DELETE FROM test.convocatoria_palabra_clave;
+DELETE FROM test.convocatoria_entidad_convocante;
 DELETE FROM test.convocatoria;
 DELETE FROM test.fuente_financiacion;
 DELETE FROM test.modelo_tipo_enlace;
