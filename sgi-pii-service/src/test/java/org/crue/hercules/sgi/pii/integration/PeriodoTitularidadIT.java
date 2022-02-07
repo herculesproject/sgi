@@ -60,8 +60,7 @@ public class PeriodoTitularidadIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    // String filter = "fechaInicio=ge=2019-01-15";
-    String filter = "";
+    String filter = "fechaInicio=ge=2020-01-01T00:00:00Z";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
