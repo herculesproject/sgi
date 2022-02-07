@@ -205,6 +205,47 @@ class NotificacionProyectoExternoCVNIT extends BaseIT {
     Assertions.assertThat(response.getBody().getId()).isEqualTo(notificacionId);
   }
 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/notificacion_proyecto_externo_cvn.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_ReturnsNotificacionProyectoExternoCVNOutput() throws Exception {
+    String roles = "CSP-CVPR-E";
+    Long notificacionId = 1L;
+    NotificacionProyectoExternoCVNInput toUpdate = buildMockNotificacionProyectoExternoCVN();
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
+        .buildAndExpand(notificacionId).toUri();
+
+    final ResponseEntity<NotificacionProyectoExternoCVNOutput> response = restTemplate.exchange(uri, HttpMethod.PUT,
+        buildRequest(null, toUpdate, roles), NotificacionProyectoExternoCVNOutput.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+    Assertions.assertThat(response.getBody().getId()).isEqualTo(notificacionId);
+
+    NotificacionProyectoExternoCVNOutput updated = response.getBody();
+    Assertions.assertThat(updated.getAutorizacionId()).isEqualTo(updated.getAutorizacionId());
+    Assertions.assertThat(updated.getEntidadParticipacionRef()).isEqualTo(updated.getEntidadParticipacionRef());
+    Assertions.assertThat(updated.getFechaFin()).isEqualTo(updated.getFechaFin());
+    Assertions.assertThat(updated.getFechaInicio()).isEqualTo(updated.getFechaInicio());
+    Assertions.assertThat(updated.getResponsableRef()).isEqualTo(updated.getResponsableRef());
+    Assertions.assertThat(updated.getSolicitanteRef()).isEqualTo(updated.getSolicitanteRef());
+    Assertions.assertThat(updated.getProyectoCVNId()).isEqualTo(updated.getProyectoCVNId());
+    Assertions.assertThat(updated.getTitulo()).isEqualTo(updated.getTitulo());
+  }
+
   private NotificacionProyectoExternoCVNInput buildMockNotificacionProyectoExternoCVN() {
     return NotificacionProyectoExternoCVNInput.builder()
         .autorizacionId(1L)
