@@ -169,7 +169,7 @@ sgi:
     api:
       eti-url: "http://sgi-eti-service:8080"
       rep-url: "http://sgi-rep-service:8080"
-      sgdoc-url: "http://sgi.ic.corp.treelogic.com"
+      sgdoc-url: "http://sgi-sgi-esb:8080/sgdoc"
 spring:
   profiles: prod
   datasource:
