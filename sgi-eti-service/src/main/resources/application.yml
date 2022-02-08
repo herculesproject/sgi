@@ -200,7 +200,7 @@ logging:
 sgi:
   rest:
     api:
-      rep-url: "http://sgi-rep:8080"
+      rep-url: "http://sgi-rep-service:8080"
       sgdoc-url: "http://sgi.ic.corp.treelogic.com"
 spring:
   profiles: prod
