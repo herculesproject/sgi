@@ -178,8 +178,8 @@ sgi:
       eti-url: "http://sgi-eti-service:8080"
       pii-url: "http://sgi-pii-service:8080"
       rel-url: "http://sgi-rel-service:8080"
-      sgemp-url: "http://sgi.ic.corp.treelogic.com"         
-      sgp-url: "http://sgi.ic.corp.treelogic.com"         
+      sgemp-url: "http://sgi-esb:8080/sgemp"
+      sgp-url: "http://sgi-esb:8080/sgp"
       tp-url: "http://sgi-tp-service:8080"
       usr-url: "http://sgi-usr-service:8080"
 spring:
