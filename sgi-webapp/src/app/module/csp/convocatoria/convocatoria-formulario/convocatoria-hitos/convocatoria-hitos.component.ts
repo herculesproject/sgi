@@ -107,7 +107,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaHito>): void {
     const data: ConvocatoriaHitosModalComponentData = {
-      hitos: this.dataSource.data.map(hito => hito.value),
+      hitos: this.dataSource.data.filter(existing => existing !== wrapper).map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly,

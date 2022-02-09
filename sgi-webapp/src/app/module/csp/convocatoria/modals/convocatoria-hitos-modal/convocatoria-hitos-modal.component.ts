@@ -123,15 +123,13 @@ export class ConvocatoriaHitosModalComponent extends
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
     let fechas: DateTime[] = [];
-    if (tipoHito) {
-      const convocatoriasHitos = this.data.hitos.filter(hito =>
-        hito.tipoHito.id === tipoHito.id &&
-        this.data.hito.fecha &&
-        !hito.fecha.equals(this.data.hito.fecha));
-      fechas = convocatoriasHitos.map(hito => hito.fecha);
-    }
+
+    const convocatoriasHitos = this.data.hitos.filter(hito =>
+      hito.tipoHito.id === tipoHito?.id);
+    fechas = convocatoriasHitos.map(hito => hito.fecha);
+
     this.formGroup.setValidators([
-      TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
+      TipoHitoValidator.notInDate('fechaInicio', fechas)
     ]);
   }
 
