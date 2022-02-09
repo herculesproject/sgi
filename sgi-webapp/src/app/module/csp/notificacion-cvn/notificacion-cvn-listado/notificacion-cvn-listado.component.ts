@@ -12,15 +12,17 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult, SgiRestFilter, RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
-import { NotificacionCvnAsociarAutorizacionModalComponent } from '../notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
+import { NotificacionCvnAsociarAutorizacionModalComponent } from '../modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
+import { NotificacionCvnAsociarProyectoModalComponent } from '../modals/notificacion-cvn-asociar-proyecto-modal/notificacion-cvn-asociar-proyecto-modal.component';
 
 const MSG_ERROR_LOAD = marker('error.load');
 const MSG_ASOCIAR_SUCCESS = marker('msg.asociar.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
+const PROYECTO_KEY = marker('csp.proyecto');
 
 @Component({
   selector: 'sgi-notificacion-cvn-listado',
@@ -32,8 +34,10 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   notificaciones$: Observable<INotificacionProyectoExternoCVN[]>;
 
-  textoAsociarSuccess: string;
+  textoAsociarAutorizacionSuccess: string;
+  textoAsociarProyectoSuccess: string;
   msgParamAutorizacionEntity = {};
+  msgParamProyectoEntity = {};
 
   TIPO_COLECTIVO = TipoColectivo;
 
@@ -67,13 +71,29 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
           { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
-    ).subscribe((value) => this.textoAsociarSuccess = value);
+    ).subscribe((value) => this.textoAsociarAutorizacionSuccess = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ASOCIAR_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoAsociarProyectoSuccess = value);
 
     this.translate.get(
       AUTORIZACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamAutorizacionEntity = { entity: value });
 
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamProyectoEntity = { entity: value });
   }
 
   private initFormGroup(): void {
@@ -178,25 +198,30 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     this.fxLayoutProperties.xs = 'column';
   }
 
-  /**
-   * Abre un modal para añadir o actualizar
-   *
-   * @param data notificacionProyectoExternoCvn
-   */
-  openModal(data: INotificacionProyectoExternoCVN): void {
+
+  openModalAsociarAutorizacion(data: INotificacionProyectoExternoCVN): void {
     const config: MatDialogConfig<INotificacionProyectoExternoCVN> = {
       panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(NotificacionCvnAsociarAutorizacionModalComponent, config);
     dialogRef.afterClosed().pipe(
-      filter(result => !!result),
-      switchMap((result: INotificacionProyectoExternoCVN) =>
-        this.notificacionProyectoExternoCvnService.update(result.id, result).pipe(
-          map(() => result)
-        ))
-    ).subscribe(result => {
-      this.snackBarService.showSuccess(data ? this.textoAsociarSuccess : null);
+      filter(result => !!result)
+    ).subscribe(() => {
+      this.snackBarService.showSuccess(this.textoAsociarAutorizacionSuccess);
+    });
+  }
+
+  openModalAsociarProyecto(data: INotificacionProyectoExternoCVN): void {
+    const config: MatDialogConfig<INotificacionProyectoExternoCVN> = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    const dialogRef = this.matDialog.open(NotificacionCvnAsociarProyectoModalComponent, config);
+    dialogRef.afterClosed().pipe(
+      filter(result => !!result)
+    ).subscribe(() => {
+      this.snackBarService.showSuccess(this.textoAsociarProyectoSuccess);
     });
   }
 }

@@ -1,34 +1,30 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { SelectValue } from '@core/component/select-common/select-common.component';
+import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, from, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
-
+import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 const AUTORIZACION_KEY = marker('csp.autorizacion');
-
 
 @Component({
   selector: 'sgi-notificacion-cvn-asociar-autorizacion-modal',
   templateUrl: './notificacion-cvn-asociar-autorizacion-modal.component.html',
   styleUrls: ['./notificacion-cvn-asociar-autorizacion-modal.component.scss']
 })
-export class NotificacionCvnAsociarAutorizacionModalComponent extends
-  BaseModalComponent<INotificacionProyectoExternoCVN,
-  NotificacionCvnAsociarAutorizacionModalComponent> implements OnInit {
+export class NotificacionCvnAsociarAutorizacionModalComponent extends DialogActionComponent<INotificacionProyectoExternoCVN, INotificacionProyectoExternoCVN> {
 
   autorizaciones$: Observable<IAutorizacion[]>;
   empresa: IEmpresa;
@@ -50,9 +46,10 @@ export class NotificacionCvnAsociarAutorizacionModalComponent extends
     @Inject(MAT_DIALOG_DATA) public data: INotificacionProyectoExternoCVN,
     protected snackBarService: SnackBarService,
     private autorizacionService: AutorizacionService,
+    private notificacionProyectoExternoCvnService: NotificacionProyectoExternoCvnService,
     private empresaService: EmpresaService,
     private readonly translate: TranslateService) {
-    super(snackBarService, matDialogRef, null);
+    super(matDialogRef, true);
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -97,20 +94,27 @@ export class NotificacionCvnAsociarAutorizacionModalComponent extends
       );
   }
 
-  private setupI18N(): void {
-
-    this.translate.get(
-      AUTORIZACION_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamAutorizacionEntity = { entity: value });
-  }
-  protected getDatosForm(): INotificacionProyectoExternoCVN {
+  protected getValue(): INotificacionProyectoExternoCVN {
     this.data.autorizacion = this.formGroup.controls.autorizacion.value;
     return this.data;
   }
-  protected getFormGroup(): FormGroup {
+
+  protected buildFormGroup(): FormGroup {
     return new FormGroup({
       autorizacion: new FormControl(null, Validators.required)
     });
   }
+
+  protected saveOrUpdate(): Observable<INotificacionProyectoExternoCVN> {
+    const notificacionProyectoExternoCvn = this.getValue();
+    return this.notificacionProyectoExternoCvnService.asociarAutorizacion(notificacionProyectoExternoCvn.id, notificacionProyectoExternoCvn);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAutorizacionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR, ...MSG_PARAMS.GENDER.FEMALE });
+  }
+
 }

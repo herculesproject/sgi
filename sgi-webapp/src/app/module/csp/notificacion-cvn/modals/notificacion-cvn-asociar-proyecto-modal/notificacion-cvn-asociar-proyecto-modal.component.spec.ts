@@ -5,23 +5,21 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { CspSharedModule } from '../../shared/csp-shared.module';
-import { NotificacionCvnAsociarAutorizacionModalComponent } from './notificacion-cvn-asociar-autorizacion-modal.component';
+import { CspSharedModule } from '../../../shared/csp-shared.module';
+import { NotificacionCvnAsociarProyectoModalComponent } from './notificacion-cvn-asociar-proyecto-modal.component';
 
-describe('NotificacionCvnAsociarModalComponent', () => {
-  let component: NotificacionCvnAsociarAutorizacionModalComponent;
-  let fixture: ComponentFixture<NotificacionCvnAsociarAutorizacionModalComponent>;
+describe('NotificacionCvnAsociarProyectoModalComponent', () => {
+  let component: NotificacionCvnAsociarProyectoModalComponent;
+  let fixture: ComponentFixture<NotificacionCvnAsociarProyectoModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        NotificacionCvnAsociarAutorizacionModalComponent
+        NotificacionCvnAsociarProyectoModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -33,21 +31,18 @@ describe('NotificacionCvnAsociarModalComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        CspSharedModule,
-        SgiAuthModule
+        CspSharedModule
       ],
       providers: [
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as INotificacionProyectoExternoCVN },
+        { provide: MatDialogRef, useValue: TestUtils.buildDialogActionMatDialogRef() },
         { provide: MAT_DIALOG_DATA, useValue: {} as INotificacionProyectoExternoCVN },
-        SgiAuthService
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotificacionCvnAsociarAutorizacionModalComponent);
+    fixture = TestBed.createComponent(NotificacionCvnAsociarProyectoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
