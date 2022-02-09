@@ -24,7 +24,7 @@ const MSG_SUCCESS_PRESENTAR = marker('msg.csp.autorizacion.presentar.success');
 const MSG_ERROR_PRESENTAR = marker('error.csp.autorizacion.presentar');
 const MSG_BUTTON_PRESENTAR = marker('csp.autorizacion.presentar');
 const MSG_CAMBIO_ESTADO_SUCCESS = marker('msg.csp.cambio-estado.success');
-const MSG_BUTTON_CAMBIO_ESTADO = marker('csp.solicitud.cambio-estado');
+const MSG_BUTTON_CAMBIO_ESTADO = marker('btn.cambiar-estado');
 
 @Component({
   selector: 'sgi-autorizacion-editar',

@@ -6,7 +6,7 @@ import { ActionComponent } from '@core/component/action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
-import { Estado } from '@core/models/csp/estado-solicitud';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,7 +20,7 @@ const MSG_BUTTON_EDIT = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
 const SOLICITUD_KEY = marker('csp.solicitud');
-const MSG_BUTTON_CAMBIO_ESTADO = marker('csp.solicitud.cambio-estado');
+const MSG_BUTTON_CAMBIO_ESTADO = marker('btn.cambiar-estado.entity');
 const MSG_CAMBIO_ESTADO_SUCCESS = marker('msg.csp.cambio-estado.success');
 
 @Component({
@@ -37,12 +37,16 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   textoCrear: string;
   textoEditarSuccess: string;
   textoEditarError: string;
-  textoCambioEstado = MSG_BUTTON_CAMBIO_ESTADO;
+  textoCambioEstado: string;
 
   disableCambioEstado = false;
 
-  get Estado() {
-    return Estado;
+  get estadoActual() {
+    return this.actionService?.estado;
+  }
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
   }
 
   get FormularioSolicitud() {
@@ -113,6 +117,18 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
       })
     ).subscribe((value) => this.textoEditarError = value);
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap(value =>
+        this.translate.get(
+          MSG_BUTTON_CAMBIO_ESTADO,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        )
+      )
+    ).subscribe((value) => this.textoCambioEstado = value);
   }
 
   saveOrUpdate(action: 'save' | 'cambiar-estado'): void {
