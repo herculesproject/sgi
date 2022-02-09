@@ -134,40 +134,6 @@ public class NotificacionProyectoExternoCVNService {
   }
 
   /**
-   * Actualiza la entidad {@link NotificacionProyectoExternoCVN}.
-   *
-   * @param notificacionProyectoExternoCVNActualizar la entidad
-   *                                                 {@link NotificacionProyectoExternoCVN}
-   *                                                 a guardar.
-   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
-   */
-  @Transactional
-  public NotificacionProyectoExternoCVN update(
-      NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
-    log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
-
-    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
-                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
-            .build());
-
-    return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
-
-      data.setAutorizacionId(notificacionProyectoExternoCVNActualizar.getAutorizacionId());
-      data.setProyectoId(notificacionProyectoExternoCVNActualizar.getProyectoId());
-
-      NotificacionProyectoExternoCVN returnValue = repository.save(data);
-
-      log.debug("update(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - end");
-      return returnValue;
-    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
-        notificacionProyectoExternoCVNActualizar.getId()));
-  }
-
-  /**
    * Devuelve la {@link NotificacionProyectoExternoCVN} asociada a la
    * {@link Autorizacion}.
    * 
@@ -202,6 +168,74 @@ public class NotificacionProyectoExternoCVNService {
    */
   public List<NotificacionProyectoExternoCVN> findByProyectoId(Long proyectoId) {
     return this.repository.findByProyectoId(proyectoId);
+  }
+
+  /**
+   * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
+   * {@link Proyecto} asociado.
+   *
+   * @param notificacionProyectoExternoCVNActualizar la entidad
+   *                                                 {@link NotificacionProyectoExternoCVN}
+   *                                                 a guardar.
+   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN asociarAutorizacion(
+      NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
+    log.debug("asociarAutorizacion(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
+
+    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
+            .build());
+
+    return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
+
+      data.setAutorizacionId(notificacionProyectoExternoCVNActualizar.getAutorizacionId());
+
+      NotificacionProyectoExternoCVN returnValue = repository.save(data);
+
+      log.debug("asociarAutorizacion(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - end");
+      return returnValue;
+    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
+        notificacionProyectoExternoCVNActualizar.getId()));
+  }
+
+  /**
+   * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
+   * {@link Autorizacion} asociado.
+   *
+   * @param notificacionProyectoExternoCVNActualizar la entidad
+   *                                                 {@link NotificacionProyectoExternoCVN}
+   *                                                 a guardar.
+   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN asociarProyecto(
+      NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
+    log.debug("asociarProyecto(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
+
+    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
+            .build());
+
+    return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
+
+      data.setProyectoId(notificacionProyectoExternoCVNActualizar.getProyectoId());
+
+      NotificacionProyectoExternoCVN returnValue = repository.save(data);
+
+      log.debug("asociarProyecto(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - end");
+      return returnValue;
+    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
+        notificacionProyectoExternoCVNActualizar.getId()));
   }
 
 }

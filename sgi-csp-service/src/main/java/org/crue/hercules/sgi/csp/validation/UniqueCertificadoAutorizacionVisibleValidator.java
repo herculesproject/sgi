@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.validation;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -36,13 +37,11 @@ public class UniqueCertificadoAutorizacionVisibleValidator
     Specification<CertificadoAutorizacion> specs = CertificadoAutorizacionSpecifications.visibles()
         .and(CertificadoAutorizacionSpecifications.byAutorizacionId(value.getAutorizacionId()));
 
-    specs = specs.and((root, query, cb) -> {
-      return cb.equal(root.get(CertificadoAutorizacion_.visible), true);
-    });
+    specs = specs.and((root, query, cb) -> cb.equal(root.get(CertificadoAutorizacion_.visible), true));
 
     List<CertificadoAutorizacion> certificadosAutorizacion = this.certificadoAutorizacionRepository.findAll(specs);
     boolean isMoreThanOneVisible = certificadosAutorizacion.stream()
-        .anyMatch(certificado -> certificado.getId() != certificado.getId());
+        .anyMatch(certificado -> !Objects.equals(value.getId(), certificado.getId()));
 
     if (isMoreThanOneVisible) {
       addEntityMessageParameter(context);
