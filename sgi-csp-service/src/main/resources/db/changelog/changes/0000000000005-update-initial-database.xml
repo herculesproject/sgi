@@ -26,12 +26,6 @@
   </changeSet>
 
   <changeSet author="user (generated)" id="0000000000005-6">
-    <addColumn tableName="autorizacion">
-      <column name="notificacion_proyecto_externo_cvn_id" type="bigint" />
-    </addColumn>
-  </changeSet>
-
-  <changeSet author="user (generated)" id="0000000000005-7">
     <dropNotNullConstraint columnDataType="boolean" columnName="contrato" tableName="modelo_ejecucion" />
     <dropNotNullConstraint columnDataType="boolean" columnName="externo" tableName="modelo_ejecucion" />
   </changeSet>
