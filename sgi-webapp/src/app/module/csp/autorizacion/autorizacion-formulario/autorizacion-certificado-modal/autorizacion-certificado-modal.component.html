@@ -44,8 +44,7 @@
         <mat-form-field class="input-form" *ngIf="formGroup.controls.generadoAutomatico.value">
           <mat-label>{{'csp.certificado-autorizacion.documento' | translate}}</mat-label>
           <input matInput formControlName="documento" id="nombreDocumento"
-            placeholder="{{'csp.certificado-autorizacion.documento' | translate}}"
-            [value]="this.documentoAutorizacion?.nombre" required readonly>
+            placeholder="{{'csp.certificado-autorizacion.documento' | translate}}" required readonly>
           <button *ngIf="formGroup.controls.generadoAutomatico.value" mat-button color="primary"
             matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}" id="btnDownload"
             (click)="visualizarInforme()">

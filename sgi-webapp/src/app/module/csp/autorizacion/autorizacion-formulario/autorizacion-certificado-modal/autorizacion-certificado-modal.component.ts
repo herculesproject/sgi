@@ -88,7 +88,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
 
   saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
-      if (this.formGroup.controls.generadoAutomatico) {
+      if (this.formGroup.controls.generadoAutomatico.value) {
         if (this.documentoAutorizacion && this.documentoAutorizacion.documentoRef) {
           this.matDialogRef.close(this.getDatosForm());
         } else {
@@ -107,7 +107,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
   protected getDatosForm(): ICertificadoAutorizacion {
     this.data.nombre = this.formGroup.controls.nombre.value;
     this.data.visible = this.formGroup.controls.publico.value;
-    this.data.documento = this.formGroup.controls.documento.value;
+    this.data.documento = this.formGroup.controls.generadoAutomatico.value ? this.documentoAutorizacion : this.formGroup.controls.documento.value;
 
     return this.data;
   }
@@ -124,8 +124,11 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     this.subscriptions.push(
       form.controls.generadoAutomatico.valueChanges.subscribe(
         (value) => {
-          if (value) {
+          form.controls.documento.setValue(null);
+          if (value && !this.documentoAutorizacion?.documentoRef) {
             this.generarInforme(this.data?.autorizacion?.id);
+          } else if (value) {
+            form.controls.documento.setValue(this.documentoAutorizacion?.nombre);
           }
         }
       )
@@ -194,7 +197,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     this.autorizacionService.getInformeAutorizacion(idAutorizacion).subscribe(
       (documentoInfo: IDocumento) => {
         this.documentoAutorizacion = documentoInfo;
-        this.formGroup.controls.documento.setValue(documentoInfo);
+        this.formGroup.controls.documento.setValue(documentoInfo?.nombre);
       });
   }
 
