@@ -178,9 +178,9 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
 
   protected initColumns(): void {
     if (this.authService.hasAuthority('CSP-ME-R')) {
-      this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+      this.columnas = ['nombre', 'descripcion', 'externo', 'contrato', 'activo', 'acciones'];
     } else {
-      this.columnas = ['nombre', 'descripcion', 'acciones'];
+      this.columnas = ['nombre', 'descripcion', 'externo', 'contrato', 'acciones'];
     }
 
   }

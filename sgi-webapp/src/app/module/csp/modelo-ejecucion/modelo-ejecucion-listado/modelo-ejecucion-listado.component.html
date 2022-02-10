@@ -55,6 +55,24 @@
         <td mat-cell *matCellDef="let modeloEjecucion">{{modeloEjecucion.descripcion}}</td>
       </ng-container>
 
+      <!-- Externo -->
+      <ng-container matColumnDef="externo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.modelo-ejecucion.externo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let modeloEjecucion">
+          {{(modeloEjecucion.externo ? 'label.si' : 'label.no') | translate}}
+        </td>
+      </ng-container>
+
+      <!-- Contrato/Convenio -->
+      <ng-container matColumnDef="contrato">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.modelo-ejecucion.contrato' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let modeloEjecucion">
+          {{(modeloEjecucion.contrato ? 'label.si' : 'label.no') | translate}}
+        </td>
+      </ng-container>
+
       <!-- Activo -->
       <ng-container matColumnDef="activo" *sgiHasAuthorityForAnyUO="'CSP-ME-R'">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.activo' | translate}}
