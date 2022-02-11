@@ -6,6 +6,17 @@ server:
       enabled: false
 sgi:
   time-zone: "Europe/Madrid"
+  # If set all emails are sent to this instead of real recipient list
+  rest:
+    api:
+      csp-url: "http://sgi-csp-service:4281"
+      eti-url: "http://sgi-eti-service:4280"
+      pii-url: "http://sgi-pii-service:4283"
+      rel-url: "http://sgi-rel-service:4284"
+      rep-url: "http://sgi-rep-service:4287"
+      sgdoc-url: "http://sgi-esb:8080/sgdoc"
+      tp-url: "http://sgi-tp-service:4286"
+      usr-url: "http://sgi-usr-service:4282"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -15,6 +26,7 @@ spring:
     initialization-mode: always
     # We use a H2 in file database with PostgreSQL compatibility mode
     url: "jdbc:h2:./target/db/com;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
+    #url: "jdbc:h2:./target/db/com;DATABASE_TO_UPPER=TRUE;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
     driver-class-name: org.h2.Driver
     username: com
     password: com
@@ -36,6 +48,8 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
         '[default_schema]': ${spring.datasource.username}
+        # Enable nationalized character data as the default
+        #'[use_nationalized_character_data]': true
         jdbc:
           # see: https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
           '[time_zone]': UTC
@@ -85,9 +99,17 @@ spring:
             provider: keycloak
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: "openid,profile"
+          com-service:
+            authorization-grant-type: client_credentials
+            client-id: com-service
+            client-name: SGI (service login)
+            client-secret: e2247ddf-8197-4583-87d8-c4a7d0c5d076
+            provider: keycloak
+            scope: sgi-sgdoc
         provider:
           keycloak:
             issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            token-uri: ${spring.security.oauth2.client.provider.keycloak.issuer-uri}/protocol/openid-connect/token
             user-name-attribute: user_ref_id
       resourceserver:
         jwt:
@@ -95,28 +117,31 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.client.provider.keycloak.issuer-uri}/protocol/openid-connect/certs
           user-name-claim: user_ref_id
 ---
+sgi:
+  fake-email-recipients: "sgi@hercules.org"
+  disable-email-send: true
 spring:
   profiles: dev
   liquibase:
     # Set Liquibase contexts same as spring profiles
     contexts: dev
-#  # H2 console
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#      settings:
-#        web-allow-others: true
-#  security:
-#    oauth2:
-#      # Enable login page if JWT not provided (enable only for development)
-#      enable-login: true
-#    # Disable CSRF (disable only for development)
-#    csrf:
-#      enable: false
-#    # Disable X-Frame-Options (disable only for development)
-#    frameoptions:
-#      enable: false
+  # H2 console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  security:
+    oauth2:
+      # Enable login page if JWT not provided (enable only for development)
+      enable-login: true
+    # Disable CSRF (disable only for development)
+    csrf:
+      enable: false
+    # Disable X-Frame-Options (disable only for development)
+    frameoptions:
+      enable: false
 logging:
   level:
     org:
@@ -135,6 +160,9 @@ logging:
             JdbcTemplate: DEBUG
             StatementCreatorUtils: TRACE
 ---
+sgi:
+  fake-email-recipients: "sgi@hercules.org"
+  disable-email-send: true
 spring:
   profiles: dev-oracle
   datasource:
@@ -175,6 +203,17 @@ logging:
             JdbcTemplate: DEBUG
             StatementCreatorUtils: TRACE
 ---
+sgi:
+  rest:
+    api:
+      csp-url: "http://sgi-csp-service:8080"
+      eti-url: "http://sgi-eti-service:8080"
+      pii-url: "http://sgi-pii-service:8080"
+      rel-url: "http://sgi-rel-service:8080"
+      rep-url: "http://sgi-rep-service:8080"
+      sgdoc-url: "http://sgi-esb:8080/sgdoc"
+      tp-url: "http://sgi-tp-service:8080"
+      usr-url: "http://sgi-eti-service:8080"
 spring:
   profiles: prod
   datasource:

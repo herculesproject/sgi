@@ -37,15 +37,15 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = { "spring.mail.host=127.0.0.1",
     "spring.mail.port=3465", // default protocol port + 3000 as offset
     "spring.mail.protocol=smtps",
-    "spring.mail.username=" + EmailServiceTest.SENDER_NAME,
-    "spring.mail.password=" + EmailServiceTest.SENDER_PASSWORD,
+    "spring.mail.username=" + EmailSenderServiceTest.SENDER_NAME,
+    "spring.mail.password=" + EmailSenderServiceTest.SENDER_PASSWORD,
     "spring.mail.properties.mail.smtp.auth=true",
     "spring.mail.properties.mail.smtp.startttls.enabled=true",
-    "spring.mail.properties.mail.from.email=" + EmailServiceTest.SENDER_EMAIL,
-    "spring.mail.properties.mail.from.name=" + EmailServiceTest.SENDER_NAME,
+    "spring.mail.properties.mail.from.email=" + EmailSenderServiceTest.SENDER_EMAIL,
+    "spring.mail.properties.mail.from.name=" + EmailSenderServiceTest.SENDER_NAME,
     "spring.mail.properties.mail.from.copy=true" })
-@Import({ MailSenderAutoConfiguration.class, EmailService.class })
-class EmailServiceTest extends BaseServiceTest {
+@Import({ MailSenderAutoConfiguration.class, EmailSenderService.class })
+class EmailSenderServiceTest extends BaseServiceTest {
   public static final String SENDER_EMAIL = "from@demo.local";
   public static final String SENDER_NAME = "Sender";
   public static final String SENDER_PASSWORD = "password";
@@ -75,7 +75,7 @@ class EmailServiceTest extends BaseServiceTest {
       .withPerMethodLifecycle(false);
 
   @Autowired
-  private EmailService service;
+  private EmailSenderService service;
 
   @Test
   void sendSimpleMessageTest() throws Exception {
@@ -134,7 +134,7 @@ class EmailServiceTest extends BaseServiceTest {
       Assertions.assertThat(attachment0.getContentType()).isEqualTo(attachment1.getContentType());
       Assertions.assertThat(IOUtils.contentEquals(attachment0.getInputStream(), attachment1.getInputStream())).isTrue();
     }
-    // "to" is mpty
+    // "to" is empty
     Address[] tos = receivedMessages[0].getRecipients(RecipientType.TO);
     Assertions.assertThat(tos).isNullOrEmpty();
     // sender is in "cc" (receiver is in "bcc")

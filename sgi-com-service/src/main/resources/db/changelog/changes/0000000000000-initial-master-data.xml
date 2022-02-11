@@ -1,2 +1,160 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"></databaseChangeLog>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="0000000000000-param">
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="GENERIC_SUBJECT" />
+      <column name="description" value="Asunto genérico" />
+      <column name="type" value="STRING" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="GENERIC_CONTENT_TEXT" />
+      <column name="description" value="Contenido textual genérico" />
+      <column name="type" value="STRING" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="GENERIC_CONTENT_HTML" />
+      <column name="description" value="Contenido HTML genérico" />
+      <column name="type" value="STRING" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-subject_tpl">
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="GENERIC_SUBJECT" />
+      <column name="description" value="Plantilla de asunto genérico" />
+      <column name="tpl" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/GENERIC_SUBJECT.ftl" />
+      <where>name='GENERIC_SUBJECT'</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-subjecttpl_param">
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='GENERIC_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_SUBJECT')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-content_tpl">
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="GENERIC_CONTENT" />
+      <column name="description" value="Plantilla de contenido genérico (texto + HTML)" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/GENERIC_CONTENT_text.ftl" />
+      <where>name='GENERIC_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/GENERIC_CONTENT_html.ftl" />
+      <where>name='GENERIC_CONTENT'</where>
+    </update>
+
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="GENERIC_CONTENT_TEXT" />
+      <column name="description" value="Plantilla de contenido genérico (solo texto)" />
+      <column name="tpl_text" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/GENERIC_CONTENT_text.ftl" />
+      <where>name='GENERIC_CONTENT_TEXT'</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-contenttpl_param">
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='GENERIC_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_TEXT')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='GENERIC_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_HTML')" />
+    </insert>
+
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='GENERIC_CONTENT_TEXT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_TEXT')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-email_tpl">
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="GENERIC_EMAIL" />
+      <column name="description" value="Email genérico (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="GENERIC_EMAIL_TEXT" />
+      <column name="description" value="Email genérico (solo texto)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-emailtpl_subjecttpl">
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='GENERIC_SUBJECT')" />
+    </insert>
+
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL_TEXT')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='GENERIC_SUBJECT')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000000-emailtpl_contenttpl">
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='GENERIC_CONTENT')" />
+    </insert>
+
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL_TEXT')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='GENERIC_CONTENT_TEXT')" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>
