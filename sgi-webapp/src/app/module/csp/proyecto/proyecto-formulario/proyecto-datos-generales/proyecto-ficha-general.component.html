@@ -160,11 +160,13 @@
       <!-- Proyectos Relacionados -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order" *ngIf="formPart.isEdit()">
-        <mat-form-field class="input-form">
-          <mat-label>{{'csp.proyecto.proyectos-relacionados' | translate}}</mat-label>
-          <input type="text" placeholder="{{'csp.proyecto.proyectos-relacionados' | translate}}" matInput
-            formControlName="proyectosRelacionados" readonly>
-        </mat-form-field>
+        <ng-container *sgiHasAnyAuthorityForAnyUO="['REL-V', 'REL-E']">
+          <mat-form-field class="input-form">
+            <mat-label>{{'csp.proyecto.proyectos-relacionados' | translate}}</mat-label>
+            <input type="text" placeholder="{{'csp.proyecto.proyectos-relacionados' | translate}}" matInput
+              formControlName="proyectosRelacionados" readonly>
+          </mat-form-field>
+        </ng-container>
       </div>
 
     </div>

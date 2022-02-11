@@ -140,6 +140,10 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_JUSTIFICACION)">
       </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-INV-VR']"
+      [route]="[PROYECTO_ROUTE_NAMES.FICHA_GENERAL]" [title]="'label.ficha-general' | translate"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.FICHA_GENERAL)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">

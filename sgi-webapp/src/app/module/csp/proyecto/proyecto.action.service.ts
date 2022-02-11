@@ -103,6 +103,7 @@ export interface IProyectoData {
   disableCoordinadorExterno: boolean;
   hasAnyProyectoSocioCoordinador: boolean;
   isVisor: boolean;
+  isInvestigador: boolean;
 }
 
 @Injectable()
@@ -168,6 +169,7 @@ export class ProyectoActionService extends ActionService {
 
   private readonly data: IProyectoData;
 
+  public readonly isInvestigador: boolean;
   public readonly showPaquetesTrabajo$: Subject<boolean> = new BehaviorSubject(false);
   public readonly disableAddSocios$ = new BehaviorSubject<boolean>(false);
   private readonly hasFases$ = new BehaviorSubject<boolean>(false);
@@ -289,8 +291,10 @@ export class ProyectoActionService extends ActionService {
       this.data?.disableCoordinadorExterno,
       this.data?.hasAnyProyectoSocioCoordinador,
       this.data?.isVisor,
+      this.data?.isInvestigador,
       relacionService,
-      palabraClaveService
+      palabraClaveService,
+      sgiAuthService
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -393,7 +397,7 @@ export class ProyectoActionService extends ActionService {
       }));
 
       // Sincronización de las vinculaciones sobre modelo de ejecución
-      if (this.isEdit() && !this.readonly) {
+      if (this.isEdit() && !this.readonly && !this.data?.isInvestigador) {
         // Checks on init
         this.subscriptions.push(
           proyectoService.hasProyectoFases(id).subscribe(value => this.hasFases$.next(value))

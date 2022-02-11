@@ -25,6 +25,7 @@ import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
@@ -94,8 +95,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     public disableCoordinadorExterno: boolean,
     private hasAnyProyectoSocioCoordinador: boolean,
     public isVisor: boolean,
+    public isInvestigador: boolean,
     private relacionService: RelacionService,
-    private readonly palabraClaveService: PalabraClaveService
+    private readonly palabraClaveService: PalabraClaveService,
+    public authService: SgiAuthService,
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -263,7 +266,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         ]
       });
 
-    if (this.isVisor) {
+    if (this.isVisor || this.isInvestigador) {
       form.disable();
     }
 
@@ -361,33 +364,35 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         )
       );
 
-      this.subscriptions.push(
-        this.vinculacionesModeloEjecucion$.subscribe(
-          value => {
-            if (value) {
-              form.controls.unidadGestion.disable();
-              form.controls.modeloEjecucion.disable();
+      if (!this.isInvestigador) {
+        this.subscriptions.push(
+          this.vinculacionesModeloEjecucion$.subscribe(
+            value => {
+              if (value) {
+                form.controls.unidadGestion.disable();
+                form.controls.modeloEjecucion.disable();
+              }
+              else if (!this.isVisor) {
+                form.controls.unidadGestion.enable();
+                form.controls.modeloEjecucion.enable();
+              }
             }
-            else if (!this.isVisor) {
-              form.controls.unidadGestion.enable();
-              form.controls.modeloEjecucion.enable();
-            }
-          }
-        ),
-        this.vinculacionesProyectosSge$.subscribe(
-          value => {
-            this.vinculacionesProyectosSge = value;
-            form.controls.iva.updateValueAndValidity();
+          ),
+          this.vinculacionesProyectosSge$.subscribe(
+            value => {
+              this.vinculacionesProyectosSge = value;
+              form.controls.iva.updateValueAndValidity();
 
-            if (value) {
-              form.controls.causaExencion.disable();
+              if (value) {
+                form.controls.causaExencion.disable();
+              }
+              else if (!this.isVisor) {
+                form.controls.causaExencion.enable();
+              }
             }
-            else if (!this.isVisor) {
-              form.controls.causaExencion.enable();
-            }
-          }
-        )
-      );
+          )
+        );
+      }
 
       this.subscribeToOnCoordinadoChangeHandler(form.controls.coordinado as FormControl);
 
@@ -406,10 +411,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       form.disable();
     }
 
-    this.subscriptions.push(
-      this.getCodigosExternosProyectosRelacionados().subscribe(codigos => {
-        form.controls?.proyectosRelacionados.setValue(codigos.map(codigo => codigo).join(', '));
-      }));
+    if (this.authService.hasAnyAuthorityForAnyUO(['REL-V', 'REL-E'])) {
+      this.subscriptions.push(
+        this.getCodigosExternosProyectosRelacionados().subscribe(codigos => {
+          form.controls?.proyectosRelacionados.setValue(codigos.map(codigo => codigo).join(', '));
+        }));
+    }
 
     return form;
   }
@@ -629,7 +636,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
       // Enable fields
-      if (!this.isVisor) {
+      if (!this.isVisor && !this.isInvestigador) {
         this.getFormGroup().controls.unidadGestion.enable();
         this.getFormGroup().controls.convocatoriaExterna.enable();
       }
@@ -768,7 +775,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private disableCoordinadoFormControl(value: boolean) {
     if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
       this.getFormGroup()?.controls.coordinado.disable({ emitEvent: false });
-    } else if (!this.isVisor) {
+    } else if (!this.isVisor && !this.isInvestigador) {
       this.getFormGroup()?.controls.coordinado.enable({ emitEvent: false });
     }
   }
@@ -797,7 +804,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     }
     if ((value && this.getFormGroup()?.controls?.coordinado.value) || this.readonly) {
       this.getFormGroup()?.controls.coordinado.disable();
-    } else if (!this.isVisor) {
+    } else if (!this.isVisor && !this.isInvestigador) {
       this.getFormGroup()?.controls.coordinado.enable();
       this.hasPopulatedSocios$.next(false);
     }
