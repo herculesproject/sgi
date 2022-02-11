@@ -1,28 +1,52 @@
 import { Injectable } from '@angular/core';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
+import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
+import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
+import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
+import { ISolicitudProyectoAreaConocimiento } from '@core/models/csp/solicitud-proyecto-area-conocimiento';
+import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
+import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
+import { ISolicitudProyectoResponsableEconomico } from '@core/models/csp/solicitud-proyecto-responsable-economico';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, zip } from 'rxjs';
-import { map, switchMap, takeLast } from 'rxjs/operators';
-import { SolicitudModalidadEntidadConvocanteListado } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
+import { merge, Observable, of, zip } from 'rxjs';
+import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
+import { SolicitudEntidadConvocanteListadoExportService } from './solicitud-entidad-convocante-listado-export.service';
+import { SolicitudDatosGenerales } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
+import { SolicitudProyectoClasificacionListado } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.fragment';
+import { SolicitudGeneralListadoExportService } from './solicitud-general-listado-export.service';
 import { ISolicitudListadoData } from './solicitud-listado/solicitud-listado.component';
+import { SolicitudProyectoAreaConocimientoListadoExportService } from './solicitud-proyecto-area-conocimiento-listado-export.service';
+import { SolicitudProyectoClasificacionListadoExportService } from './solicitud-proyecto-clasificacion-listado-export.service';
+import { SolicitudProyectoEntidadFinanciadoraListadoExportService } from './solicitud-proyecto-entidad-financiadora-listado-export.service';
+import { SolicitudProyectoEquipoListadoExportService } from './solicitud-proyecto-equipo-listado-export.service';
+import { SolicitudProyectoFichaGeneralListadoExportService } from './solicitud-proyecto-ficha-general-listado-export.service';
+import { SolicitudProyectoResponsableEconomicoListadoExportService } from './solicitud-proyecto-responsable-economico-listado-export.service';
+import { SolicitudProyectoSocioListadoExportService } from './solicitud-proyecto-socio-listado-export.service';
 
 
-interface ISolicitudReportData extends ISolicitudListadoData {
-  entidadesConvocantes: SolicitudModalidadEntidadConvocanteListado[];
-  proyecto: ISolicitudProyecto;
+export interface ISolicitudReportData extends ISolicitudListadoData {
+  solicitud?: SolicitudDatosGenerales;
+  entidadesConvocantes?: IConvocatoriaEntidadConvocante[];
+  proyecto?: ISolicitudProyecto;
+  contextoProyecto?: IProyectoContexto;
+  areasConocimiento?: ISolicitudProyectoAreaConocimiento[];
+  clasificaciones?: SolicitudProyectoClasificacionListado[];
+  equipo?: ISolicitudProyectoEquipo[];
+  responsablesEconomicos?: ISolicitudProyectoResponsableEconomico[];
+  socios?: ISolicitudProyectoSocio[];
+  entidadesFinanciadoras?: ISolicitudProyectoEntidadFinanciadoraAjena[];
+  entidadesFinanciadorasConvocatoria?: IConvocatoriaEntidadFinanciadora[];
+  modalidades?: ISolicitudModalidad[];
 }
 
 export interface ISolicitudReportOptions extends IReportOptions {
@@ -36,14 +60,6 @@ export interface ISolicitudReportOptions extends IReportOptions {
   showSolicitudProyectoEntidadesFinanciadoras: boolean;
 }
 
-const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo');
-const CODIGO_EXTERNO_KEY = marker('csp.solicitud.codigo-externo');
-const REFERENCIA_KEY = marker('csp.solicitud.referencia-convocatoria');
-const SOLICITANTE_KEY = marker('csp.solicitud.solicitante');
-const ESTADO_KEY = marker('csp.solicitud.estado');
-const TITULO_KEY = marker('csp.solicitud.titulo-listado');
-const FECHA_ESTADO_KEY = marker('csp.solicitud.estado-solicitud.fecha');
-
 @Injectable()
 export class SolicitudListadoExportService extends AbstractTableExportService<ISolicitudReportData, IReportOptions> {
 
@@ -53,55 +69,70 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
     protected readonly translate: TranslateService,
     private readonly solicitudService: SolicitudService,
     protected reportService: ReportService,
-    private convocatoriaService: ConvocatoriaService,
-    private personaService: PersonaService
+    private readonly solicitudGeneralListadoExportService: SolicitudGeneralListadoExportService,
+    private readonly solicitudEntidadConvocanteListadoExportService: SolicitudEntidadConvocanteListadoExportService,
+    private readonly solicitudProyectoFichaGeneralListadoExportService: SolicitudProyectoFichaGeneralListadoExportService,
+    private readonly solicitudProyectoAreaConocimientoListadoExportService: SolicitudProyectoAreaConocimientoListadoExportService,
+    private readonly solicitudProyectoClasificacionListadoExportService: SolicitudProyectoClasificacionListadoExportService,
+    private readonly solicitudProyectoEquipoListadoExportService: SolicitudProyectoEquipoListadoExportService,
+    private readonly solicitudProyectoResponsableEconomicoListadoExportService: SolicitudProyectoResponsableEconomicoListadoExportService,
+    private readonly solicitudProyectoSocioListadoExportService: SolicitudProyectoSocioListadoExportService,
+    private readonly solicitudProyectoEntidadFinanciadoraListadoExportService: SolicitudProyectoEntidadFinanciadoraListadoExportService
   ) {
     super(reportService);
   }
 
-  protected getRows(solicitudes: ISolicitudReportData[], reportConfig: IReportConfig<IReportOptions>): Observable<ISgiRowReport[]> {
+  protected getRows(solicitudes: ISolicitudReportData[], reportConfig: IReportConfig<ISolicitudReportOptions>): Observable<ISgiRowReport[]> {
     const requestsRow: Observable<ISgiRowReport>[] = [];
 
-    solicitudes.forEach(solicitud => {
-      requestsRow.push(this.getRowsInner(solicitud, reportConfig));
+    solicitudes.forEach((solicitud, index) => {
+      requestsRow.push(this.getRowsInner(solicitudes, index, reportConfig));
     });
     return zip(...requestsRow);
   }
 
-  private getRowsInner(solicitud: ISolicitudReportData, reportConfig: IReportConfig<IReportOptions>): Observable<ISgiRowReport> {
+  private getRowsInner(
+    solicitudes: ISolicitudReportData[],
+    index: number,
+    reportConfig: IReportConfig<ISolicitudReportOptions>
+  ): Observable<ISgiRowReport> {
     const rowReport: ISgiRowReport = {
       elements: []
     };
 
     return of(rowReport).pipe(
       map((row) => {
-        row.elements.push(solicitud.codigoRegistroInterno);
-        row.elements.push(solicitud.codigoExterno);
-        row.elements.push(solicitud.convocatoria ? solicitud.convocatoria.codigo : solicitud.convocatoriaExterna);
-        row.elements.push(solicitud.solicitante?.nombre + ' ' + solicitud.solicitante?.apellidos);
+        row.elements.push(...this.solicitudGeneralListadoExportService.fillRows(solicitudes, index, reportConfig));
+        if (reportConfig.reportOptions?.showSolicitudEntidadesConvocantes) {
+          row.elements.push(...this.solicitudEntidadConvocanteListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoFichaGeneral) {
+          row.elements.push(...this.solicitudProyectoFichaGeneralListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoAreasConocimiento) {
+          row.elements.push(...this.solicitudProyectoAreaConocimientoListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoClasificaciones) {
+          row.elements.push(...this.solicitudProyectoClasificacionListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoEquipo) {
+          row.elements.push(...this.solicitudProyectoEquipoListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoResponsableEconomico) {
+          row.elements.push(...this.solicitudProyectoResponsableEconomicoListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoSocios) {
+          row.elements.push(...this.solicitudProyectoSocioListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
+        if (reportConfig.reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
+          row.elements.push(...this.solicitudProyectoEntidadFinanciadoraListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
         return row;
-      }),
-      switchMap((row) => {
-        return this.getEstadoByMap(solicitud.estado?.estado).pipe(
-          map(estadoTranslate => {
-            row.elements.push(estadoTranslate);
-            return row;
-          })
-        );
-      }),
-      map((row) => {
-        row.elements.push(solicitud.titulo);
-        row.elements.push(LuxonUtils.toBackend(solicitud.estado?.fechaEstado));
-        return row;
-      }),
+      })
     );
   }
 
-  private getEstadoByMap(estado: Estado): Observable<string> {
-    return this.translate.get(ESTADO_MAP.get(estado));
-  }
-
-  protected getDataReport(reportConfig: IReportConfig<IReportOptions>): Observable<ISolicitudReportData[]> {
+  protected getDataReport(reportConfig: IReportConfig<ISolicitudReportOptions>): Observable<ISolicitudReportData[]> {
     const findOptions = reportConfig.reportOptions?.findOptions;
     findOptions.page.index = 0;
     findOptions.page.size = undefined;
@@ -128,70 +159,171 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
     );
   }
 
-  private getDataReportInner(solicitudListado: ISolicitudReportData, reportOptions: IReportOptions): Observable<ISolicitudReportData> {
-    return of(solicitudListado).pipe(
-      switchMap((solicitud) => {
-        if (solicitud.convocatoriaId) {
-
-          return this.convocatoriaService.findById(solicitud.convocatoriaId).pipe(
-            map(convocatoria => {
-              solicitud.convocatoria = convocatoria;
-              return solicitud;
-            }));
-        } else {
-          return of(solicitud);
-        }
-      }),
-      switchMap((solicitud) => {
-        return this.personaService.findById(solicitud.solicitante.id).pipe(
-          map(persona => {
-            solicitud.solicitante = persona;
-            return solicitud;
-          })
-        );
-      })
-    );
+  private getDataReportInner(solicitudData: ISolicitudReportData, reportOptions: ISolicitudReportOptions): Observable<ISolicitudReportData> {
+    return merge(
+      this.getDataReportListadoGeneral(solicitudData),
+      this.getDataReportEntidadesConvocantes(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoFichaGeneral(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoAreasConocimiento(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoClasificaciones(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoEquipo(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoResponsableEconomico(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoSocio(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoEntidadFinanciadora(solicitudData, reportOptions),
+      this.getDataReportSolicitudProyectoEntidadFinanciadoraConv(solicitudData, reportOptions)
+    ).pipe(
+      takeLast(1),
+      catchError((err) => {
+        this.logger.error(err);
+        throw err;
+      }));
   }
 
-  protected getColumns(resultados: ISolicitudReportData[], reportConfig: IReportConfig<IReportOptions>):
+  private getDataReportListadoGeneral(
+    solicitudData: ISolicitudReportData
+  ): Observable<ISolicitudReportData> {
+    return this.solicitudGeneralListadoExportService.getData(solicitudData)
+      .pipe(tap({ error: (err) => this.logger.error(err) }));
+  }
+
+  private getDataReportEntidadesConvocantes(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudEntidadesConvocantes) {
+      return this.solicitudEntidadConvocanteListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoFichaGeneral(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoFichaGeneral) {
+      return this.solicitudProyectoFichaGeneralListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoAreasConocimiento(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoAreasConocimiento) {
+      return this.solicitudProyectoAreaConocimientoListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoClasificaciones(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoClasificaciones) {
+      return this.solicitudProyectoClasificacionListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoEquipo(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoEquipo) {
+      return this.solicitudProyectoEquipoListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoResponsableEconomico(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoResponsableEconomico) {
+      return this.solicitudProyectoResponsableEconomicoListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoSocio(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoSocios) {
+      return this.solicitudProyectoSocioListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoEntidadFinanciadora(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
+      return this.solicitudProyectoEntidadFinanciadoraListadoExportService.getData(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  private getDataReportSolicitudProyectoEntidadFinanciadoraConv(
+    solicitudData: ISolicitudReportData,
+    reportOptions: ISolicitudReportOptions
+  ): Observable<ISolicitudReportData> {
+    if (reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
+      return this.solicitudProyectoEntidadFinanciadoraListadoExportService.getDataConv(solicitudData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(solicitudData);
+    }
+  }
+
+  protected getColumns(resultados: ISolicitudReportData[], reportConfig: IReportConfig<ISolicitudReportOptions>):
     Observable<ISgiColumnReport[]> {
-    const columns: ISgiColumnReport[] = [
-      {
-        title: this.translate.instant(CODIGO_INTERNO_KEY),
-        name: 'codigoRegistroInterno',
-        type: ColumnType.STRING,
-      },
-      {
-        title: this.translate.instant(CODIGO_EXTERNO_KEY),
-        name: 'codigoExterno',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(REFERENCIA_KEY),
-        name: 'referencia',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(SOLICITANTE_KEY),
-        name: 'solicitante',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(ESTADO_KEY),
-        name: 'estado',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(TITULO_KEY),
-        name: 'titulo',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(FECHA_ESTADO_KEY),
-        name: 'fechaEstado',
-        type: ColumnType.DATE
-      }
-    ];
+    const columns: ISgiColumnReport[] = [];
+
+    columns.push(... this.solicitudGeneralListadoExportService.fillColumns(resultados, reportConfig));
+
+    if (reportConfig.reportOptions?.showSolicitudEntidadesConvocantes) {
+      columns.push(... this.solicitudEntidadConvocanteListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoFichaGeneral) {
+      columns.push(... this.solicitudProyectoFichaGeneralListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoAreasConocimiento) {
+      columns.push(... this.solicitudProyectoAreaConocimientoListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoClasificaciones) {
+      columns.push(... this.solicitudProyectoClasificacionListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoEquipo) {
+      columns.push(... this.solicitudProyectoEquipoListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoResponsableEconomico) {
+      columns.push(... this.solicitudProyectoResponsableEconomicoListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoSocios) {
+      columns.push(... this.solicitudProyectoSocioListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
+      columns.push(... this.solicitudProyectoEntidadFinanciadoraListadoExportService.fillColumns(resultados, reportConfig));
+    }
     return of(columns);
   }
 

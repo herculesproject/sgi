@@ -31,7 +31,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
-import { ISolicitudListadoDataExportModalData, SolicitudListadoExportModalComponent } from '../modals/solicitud-listado-modal/solicitud-listado-export-modal.component';
+import { ISolicitudListadoDataExportModalData, SolicitudListadoExportModalComponent } from '../modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
