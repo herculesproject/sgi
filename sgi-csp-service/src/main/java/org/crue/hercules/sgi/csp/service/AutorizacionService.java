@@ -7,6 +7,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
+import org.crue.hercules.sgi.csp.exceptions.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
@@ -16,7 +17,6 @@ import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AutorizacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
-import org.crue.hercules.sgi.csp.service.impl.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -455,7 +455,7 @@ public class AutorizacionService {
   public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion) {
     Resource informePdf = reportService.getInformeAutorizacion(idAutorizacion);
     // Se sube el informe a sgdoc
-    String pattern = String.format("yyyyMMddHH:mm:ss");
+    String pattern = "yyyyMMddHH:mm:ss";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
         .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
     String fileName = TITULO_INFORME_AUTORIZACION + idAutorizacion + formatter.format(Instant.now()) + ".pdf";

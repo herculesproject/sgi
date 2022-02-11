@@ -1,10 +1,10 @@
-package org.crue.hercules.sgi.csp.service.impl;
+package org.crue.hercules.sgi.csp.exceptions;
 
 import java.net.URI;
 
+import org.crue.hercules.sgi.framework.problem.Problem;
 import org.crue.hercules.sgi.framework.problem.exception.ProblemException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
-import org.crue.hercules.sgi.framework.problem.Problem;
 import org.springframework.http.HttpStatus;
 
 public class AlreadyInEstadoAutorizacionException extends ProblemException {
