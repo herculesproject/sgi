@@ -4,21 +4,25 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,18 +47,21 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   private final ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository;
   private final ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
   private final ProyectoRepository proyectoRepository;
+  private final ProyectoEquipoRepository proyectoEquipoRepository;
 
   public ProyectoSocioServiceImpl(ProyectoSocioRepository repository, ProyectoSocioEquipoRepository equipoRepository,
       ProyectoSocioPeriodoPagoRepository periodoPagoRepository,
       ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository,
       ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository,
-      ProyectoRepository proyectoRepository) {
+      ProyectoRepository proyectoRepository,
+      ProyectoEquipoRepository proyectoEquipoRepository) {
     this.repository = repository;
     this.equipoRepository = equipoRepository;
     this.periodoPagoRepository = periodoPagoRepository;
     this.documentoRepository = documentoRepository;
     this.periodoJustificacionRepository = periodoJustificacionRepository;
     this.proyectoRepository = proyectoRepository;
+    this.proyectoEquipoRepository = proyectoEquipoRepository;
   }
 
   /**
@@ -277,18 +284,27 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean hasAnyProyectoSocioWithRolCoordinador(Long proyectoId) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
 
     return repository.existsByProyectoIdAndRolSocioCoordinador(proyectoId, true);
   }
 
   @Override
   public boolean hasAnyProyectoSocioWithProyectoId(Long proyectoId) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
 
     return repository.existsByProyectoId(proyectoId);
   }
 
   @Override
   public boolean existsProyectoSocioPeriodoPagoByProyectoSocioId(Long proyectoId) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
 
     return !this.repository.findByProyectoId(proyectoId).stream()
         .filter(proyectoSocio -> this.periodoPagoRepository.existsByProyectoSocioId(proyectoSocio.getId()))
@@ -298,9 +314,25 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   @Override
   public boolean existsProyectoSocioPeriodoJustificacionByProyectoSocioId(Long proyectoId) {
 
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
+
     return !this.repository.findByProyectoId(proyectoId).stream()
         .filter(proyectoSocio -> this.periodoJustificacionRepository.existsByProyectoSocioId(proyectoSocio.getId()))
         .collect(Collectors.toList()).isEmpty();
+  }
+
+  /*
+   * Comprueba si el usuario actual está presente en el equipo
+   * 
+   * @throws {@link UserNotAuthorizedToAccessProyectoException}
+   */
+  private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.proyectoEquipoRepository
+        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroProyectoEquipo > 0;
   }
 
 }

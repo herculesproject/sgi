@@ -19,15 +19,14 @@ import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -216,6 +215,11 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   @Override
   public Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
+
     Specification<ProyectoProrroga> specs = ProyectoProrrogaSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -421,13 +425,8 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     log.debug("existsByProyecto(Long proyectoId) - start");
     boolean returnValue = repository.existsByProyectoId(proyectoId);
 
-    if (SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-PRO-INV-VR")) {
-      List<ProyectoEquipo> equipos = proyectoEquipoRepository.findAllByProyectoId(proyectoId);
-      if (!equipos.isEmpty()) {
-        checkUserHasAuthorityInvestigador(equipos);
-      } else {
-        throw new UserNotAuthorizedToAccessProyectoException();
-      }
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
     }
 
     log.debug("existsByProyecto(Long proyectoId) - end");
@@ -435,23 +434,15 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   }
 
   /**
-   * Comprueba si el usuario actual tiene permisos para ver información
+   * Comprueba si el usuario actual está presente en el equipo
    * 
    * @throws {@link UserNotAuthorizedToAccessProyectoException}
    */
-  private void checkUserHasAuthorityInvestigador(List<ProyectoEquipo> equipos) {
-    boolean usuarioPresente = equipos.stream()
-        .anyMatch(equipo -> equipo.getPersonaRef().equals(getUserPersonaRef()));
-    if (!usuarioPresente) {
-      throw new UserNotAuthorizedToAccessProyectoException();
-    }
+  private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.proyectoEquipoRepository
+        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroProyectoEquipo > 0;
   }
 
-  /**
-   * Recupera el personaRef del usuario actual
-   */
-  private String getUserPersonaRef() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication.getName();
-  }
 }

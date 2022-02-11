@@ -30,6 +30,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 public class ProyectoEquipoServiceTest extends BaseServiceTest {
 
@@ -263,6 +264,7 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllByProyecto_WithPaging_ReturnsPage() {
     // given: One hundred ProyectoEquipo
     Long proyectoId = 1L;

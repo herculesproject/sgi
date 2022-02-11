@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
@@ -46,13 +47,15 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
   private ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
   @Mock
   private ProyectoRepository proyectoRepository;
+  @Mock
+  private ProyectoEquipoRepository proyectoEquipoRepository;
 
   private ProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoSocioServiceImpl(repository, equipoRepository, periodoPagoRepository, documentoRepository,
-        periodoJustificacionRepository, proyectoRepository);
+        periodoJustificacionRepository, proyectoRepository, proyectoEquipoRepository);
   }
 
   @Test

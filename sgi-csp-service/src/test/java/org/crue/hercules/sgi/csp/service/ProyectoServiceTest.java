@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoIVARepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
@@ -167,6 +168,9 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   @Mock
   private EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+  @Mock
+  private ProyectoEquipoRepository proyectoEquipoRepository;
+
   ProyectoFacturacionService proyectoFacturacionService;
 
   @Autowired
@@ -192,7 +196,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
         proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService, convocatoriaConceptoGastoCodigoEcRepository,
         solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService, validator,
         convocatoriaPeriodoJustificacionRepository, proyectoPeriodoJustificacionRepository,
-        estadoProyectoPeriodoJustificacionRepository, proyectoFacturacionService);
+        estadoProyectoPeriodoJustificacionRepository, proyectoFacturacionService, proyectoEquipoRepository);
   }
 
   @Test

@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -183,10 +185,16 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
    */
   public Page<ProyectoEquipo> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+
     Specification<ProyectoEquipo> specs = ProyectoEquipoSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
+
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
+
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
@@ -236,6 +244,18 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     List<ProyectoEquipo> returnValue = repository.findAllByProyectoId(proyectoId);
     log.debug("findAllByProyectoId(Long proyectoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si el usuario actual está presente en el equipo
+   * 
+   * @throws {@link UserNotAuthorizedToAccessProyectoException}
+   */
+  private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.repository
+        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroProyectoEquipo > 0;
   }
 
 }

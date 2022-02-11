@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.util;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 
 public class ProyectoHelper {
@@ -16,8 +18,21 @@ public class ProyectoHelper {
     // TODO buscar una manera de obtener proyectos de una invencion eliminando
     // "CSP-PRO-MOD-V".
     Assert.isTrue(
-        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" },
+        SgiSecurityContextHolder.hasAnyAuthorityForUO(
+            new String[] { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V", "CSP-PRO-INV-VR" },
             proyecto.getUnidadGestionRef()),
         "El proyecto no pertenece a una Unidad de Gestión gestionable por el usuario");
+  }
+
+  public static boolean hasUserAuthorityInvestigador() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-PRO-INV-VR");
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  public static String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 }

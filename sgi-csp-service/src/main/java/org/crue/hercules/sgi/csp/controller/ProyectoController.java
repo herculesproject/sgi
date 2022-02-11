@@ -337,7 +337,7 @@ public class ProyectoController {
    * @return Proyecto {@link Proyecto} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V', 'CSP-PRO-INV-VR')")
   public Proyecto findById(@PathVariable Long id) {
     log.debug("Proyecto findById(Long id) - start");
 
@@ -671,7 +671,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoequipos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoEquipo>> findAllProyectoEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEquipo(Long id, String query, Pageable paging) - start");
@@ -704,7 +704,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyecto-prorrogas")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoProrroga>> findAllProyectoProrroga(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoProrroga(Long id, String query, Pageable paging) - start");
@@ -1162,7 +1162,7 @@ public class ProyectoController {
   }
 
   @RequestMapping(path = "/{proyectoId}/proyectosocios", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V','CSP-PRO-INV-VR')")
   public ResponseEntity<Object> hasAnyProyectoSocio(@PathVariable(required = true) Long proyectoId) {
 
     return this.proyectoSocioService.hasAnyProyectoSocioWithProyectoId(proyectoId) ? ResponseEntity.ok().build()
@@ -1170,7 +1170,7 @@ public class ProyectoController {
   }
 
   @RequestMapping(path = "/{proyectoId}/proyectosocios/coordinador", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Object> hasAnyProyectoSocioWithRolCoordinador(@PathVariable(required = true) Long proyectoId) {
 
     return this.proyectoSocioService.hasAnyProyectoSocioWithRolCoordinador(proyectoId) ? ResponseEntity.ok().build()
@@ -1178,7 +1178,7 @@ public class ProyectoController {
   }
 
   @RequestMapping(path = "/{proyectoId}/proyectosocios/periodospago", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Object> existsProyectoSocioPeriodoPagoByProyectoSocioId(
       @PathVariable(required = true) Long proyectoId) {
 
@@ -1188,7 +1188,7 @@ public class ProyectoController {
   }
 
   @RequestMapping(path = "/{proyectoId}/proyectosocios/periodosjustificacion", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Object> existsProyectoSocioPeriodoJustificacionByProyectoSocioId(
       @PathVariable(required = true) Long proyectoId) {
 
@@ -1232,10 +1232,10 @@ public class ProyectoController {
    *         modificación
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Void> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
-    boolean returnValue = service.modificable(id, new String[] { "CSP-PRO-E", "CSP-PRO-V" });
+    boolean returnValue = service.modificable(id, new String[] { "CSP-PRO-E", "CSP-PRO-V", "CSP-PRO-INV-VR" });
     log.debug("modificable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
@@ -1356,7 +1356,7 @@ public class ProyectoController {
    *         {@link Proyecto}
    */
   @GetMapping("/{proyectoId}/palabrasclave")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-INV-VR')")
   public Page<ProyectoPalabraClaveOutput> findPalabrasClave(@PathVariable Long proyectoId,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findPalabrasClave(@PathVariable Long proyectoId, String query, Pageable paging) - start");

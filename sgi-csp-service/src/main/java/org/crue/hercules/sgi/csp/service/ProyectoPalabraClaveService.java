@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPalabraClave;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPalabraClaveRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPalabraClaveSpecifications;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -29,9 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoPalabraClaveService {
 
   private final ProyectoPalabraClaveRepository repository;
+  private final ProyectoEquipoRepository proyectoEquipoRepository;
 
-  public ProyectoPalabraClaveService(ProyectoPalabraClaveRepository proyectoPalabraClaveRepository) {
+  public ProyectoPalabraClaveService(ProyectoPalabraClaveRepository proyectoPalabraClaveRepository,
+      ProyectoEquipoRepository proyectoEquipoRepository) {
     this.repository = proyectoPalabraClaveRepository;
+    this.proyectoEquipoRepository = proyectoEquipoRepository;
   }
 
   /**
@@ -46,6 +53,10 @@ public class ProyectoPalabraClaveService {
    */
   public Page<ProyectoPalabraClave> findByProyectoId(Long proyectoId, String query, Pageable pageable) {
     log.debug("findByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
+
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
 
     Specification<ProyectoPalabraClave> specs = ProyectoPalabraClaveSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
@@ -94,4 +105,17 @@ public class ProyectoPalabraClaveService {
     log.debug("updatePalabrasClave(Long proyectoId, List<ProyectoPalabraClave> palabrasClave) - end");
     return returnValue;
   }
+
+  /**
+   * Comprueba si el usuario actual está presente en el equipo
+   * 
+   * @throws {@link UserNotAuthorizedToAccessProyectoException}
+   */
+  private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.proyectoEquipoRepository
+        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroProyectoEquipo > 0;
+  }
+
 }

@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -72,6 +73,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoIVARepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
@@ -91,6 +93,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
@@ -188,6 +191,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
   private final ProyectoFacturacionService proyectoFacturacionService;
+  private final ProyectoEquipoRepository proyectoEquipoRepository;
 
   public ProyectoServiceImpl(SgiConfigProperties sgiConfigProperties, ProyectoRepository repository,
       EstadoProyectoRepository estadoProyectoRepository, ModeloUnidadRepository modeloUnidadRepository,
@@ -230,7 +234,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository,
-      ProyectoFacturacionService proyectoFacturacionService) {
+      ProyectoFacturacionService proyectoFacturacionService,
+      ProyectoEquipoRepository proyectoEquipoRepository) {
 
     this.sgiConfigProperties = sgiConfigProperties;
     this.repository = repository;
@@ -282,6 +287,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
     this.estadoProyectoPeriodoJustificacionRepository = estadoProyectoPeriodoJustificacionRepository;
     this.proyectoFacturacionService = proyectoFacturacionService;
+    this.proyectoEquipoRepository = proyectoEquipoRepository;
   }
 
   /**
@@ -538,6 +544,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("findById(Long id) - start");
     final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
     ProyectoHelper.checkCanRead(returnValue);
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(id)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -1807,5 +1816,19 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Override
   public List<Long> findIdsBySolicitudId(Long solicitudId) {
     return this.repository.findIds(ProyectoSpecifications.bySolicitudId(solicitudId));
+  }
+
+	private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.proyectoEquipoRepository.count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+      .and(ProyectoEquipoSpecifications.byPersonaRef(getUserPersonaRef())));
+	  return numeroProyectoEquipo>0;
+	}
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 }

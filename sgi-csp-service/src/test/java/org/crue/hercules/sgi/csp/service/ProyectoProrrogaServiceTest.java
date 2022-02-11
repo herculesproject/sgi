@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ProyectoProrrogaServiceTest
@@ -591,6 +592,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllByProyecto_ReturnsPage() {
     // given: Una lista con 37 ProyectoProrroga para la Proyecto
     Long proyectoId = 1L;
