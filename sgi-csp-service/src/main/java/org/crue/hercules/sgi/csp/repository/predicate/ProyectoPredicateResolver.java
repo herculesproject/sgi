@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -213,16 +214,14 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     ListJoin<ProyectoAnualidad, AnualidadGasto> joinAnualidadGasto = joinAnualidad
         .join(ProyectoAnualidad_.anualidadesGasto, JoinType.LEFT);
 
-    return cb.or(cb.greaterThanOrEqualTo(root.get(Proyecto_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinContexto.get(ContextoProyecto_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinEntidadGestora.get(ProyectoEntidadGestora_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinAnualidad.get(ProyectoAnualidad_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinAnualidadGasto.get(AnualidadGasto_.lastModifiedDate), fechaModificacion),
-        cb.greaterThanOrEqualTo(joinEntidadConvocante.get(ProyectoEntidadConvocante_.lastModifiedDate),
-            fechaModificacion),
-        cb.greaterThanOrEqualTo(joinEntidadFinanciadora.get(ProyectoEntidadFinanciadora_.lastModifiedDate),
-            fechaModificacion));
+    return cb.or(cb.greaterThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinContexto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEquipos.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEntidadGestora.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinAnualidad.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinAnualidadGasto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEntidadConvocante.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEntidadFinanciadora.get(Auditable_.lastModifiedDate), fechaModificacion));
   }
 
   private Predicate buildByParticipacionActual(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,

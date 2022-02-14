@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.dto;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NotificacionCVNEntidadFinanciadoraInput {
+public class NotificacionCVNEntidadFinanciadoraInput implements Serializable {
 
   private String datosEntidadFinanciadora;
 
