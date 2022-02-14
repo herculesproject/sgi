@@ -6,6 +6,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProyectoEquipoSpecifications {
@@ -73,4 +75,19 @@ public class ProyectoEquipoSpecifications {
     };
 
   }
+
+  /**
+   * {@link ProyectoEquipo} con {@link RolProyecto} con valor de rolPrincipal
+   * pasado por parámetro.
+   * 
+   * @param rolPrincipal valor de rolPrincipal de la {@link RolProyecto}.
+   * @return specification para obtener los {@link ProyectoEquipo} con
+   *         {@link RolProyecto} con el rolPrincipal indicado.
+   */
+  public static Specification<ProyectoEquipo> byRolPrincipal(Boolean rolPrincipal) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ProyectoEquipo_.rolProyecto).get(RolProyecto_.rolPrincipal), rolPrincipal);
+    };
+  }
+
 }

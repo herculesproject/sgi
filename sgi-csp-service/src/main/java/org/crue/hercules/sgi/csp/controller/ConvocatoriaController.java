@@ -354,7 +354,7 @@ public class ConvocatoriaController {
    * @return Convocatoria {@link Convocatoria} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public Convocatoria findById(@PathVariable Long id) {
     log.debug("Convocatoria findById(Long id) - start");
     Convocatoria returnValue = service.findById(id);

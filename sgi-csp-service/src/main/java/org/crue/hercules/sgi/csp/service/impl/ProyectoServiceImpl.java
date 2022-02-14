@@ -79,6 +79,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionReposito
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
@@ -94,6 +95,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
@@ -192,6 +194,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
   private final ProyectoFacturacionService proyectoFacturacionService;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   public ProyectoServiceImpl(SgiConfigProperties sgiConfigProperties, ProyectoRepository repository,
       EstadoProyectoRepository estadoProyectoRepository, ModeloUnidadRepository modeloUnidadRepository,
@@ -235,7 +238,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository,
       ProyectoFacturacionService proyectoFacturacionService,
-      ProyectoEquipoRepository proyectoEquipoRepository) {
+      ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
 
     this.sgiConfigProperties = sgiConfigProperties;
     this.repository = repository;
@@ -288,6 +292,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.estadoProyectoPeriodoJustificacionRepository = estadoProyectoPeriodoJustificacionRepository;
     this.proyectoFacturacionService = proyectoFacturacionService;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -544,7 +549,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("findById(Long id) - start");
     final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
     ProyectoHelper.checkCanRead(returnValue);
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(id)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(id)
+        && !checkUserIsResponsableEconomico(id)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
     log.debug("findById(Long id) - end");
@@ -1820,8 +1826,14 @@ public class ProyectoServiceImpl implements ProyectoService {
 
 	private boolean checkUserPresentInEquipos(Long proyectoId) {
     Long numeroProyectoEquipo = this.proyectoEquipoRepository.count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
-      .and(ProyectoEquipoSpecifications.byPersonaRef(getUserPersonaRef())));
+      .and(ProyectoEquipoSpecifications.byPersonaRef(getUserPersonaRef()).and(ProyectoEquipoSpecifications.byRolPrincipal(true))));
 	  return numeroProyectoEquipo>0;
+	}
+
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository.count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+      .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(getUserPersonaRef())));
+	  return numeroResponsableEconomico>0;
 	}
 
   /**
