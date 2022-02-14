@@ -1,6 +1,10 @@
 package org.crue.hercules.sgi.csp.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +12,20 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
+import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput.Formly;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.EstadoSolicitudNotUpdatedException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -40,6 +51,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.client.RestTemplate;
 
@@ -323,6 +337,45 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(solicitud.getUnidadGestionRef());
     Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo").isEqualTo(solicitud.getActivo());
   }
+  
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void update_WithFoundedSolicitudConvocatoriaIdNull_ReturnsSolicitud() {
+    // given: Un nuevo Solicitud con las observaciones actualizadas
+    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+    Solicitud solicitudoObservacionesActualizadas = generarMockSolicitud(1L, 1L, null);
+    solicitudoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    solicitud.setConvocatoriaId(null);
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el Solicitud
+    Solicitud solicitudActualizada = service.update(solicitudoObservacionesActualizadas);
+
+    // then: El Solicitud se actualiza correctamente.
+    Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
+    Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(solicitud.getId());
+    Assertions.assertThat(solicitudActualizada.getTitulo()).as("getTitulo()").isEqualTo(solicitud.getTitulo());
+    Assertions.assertThat(solicitudActualizada.getCodigoExterno()).as("getCodigoExterno()")
+        .isEqualTo(solicitud.getCodigoExterno());
+    Assertions.assertThat(solicitudActualizada.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
+    Assertions.assertThat(solicitudActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(solicitudActualizada.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
+    Assertions.assertThat(solicitudActualizada.getCreadorRef()).as("getCreadorRef()").isNotNull();
+    Assertions.assertThat(solicitudActualizada.getSolicitanteRef()).as("getSolicitanteRef()")
+        .isEqualTo(solicitud.getSolicitanteRef());
+    Assertions.assertThat(solicitudActualizada.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(solicitud.getObservaciones());
+    Assertions.assertThat(solicitudActualizada.getConvocatoriaExterna()).as("getConvocatoriaExterna()")
+        .isEqualTo(solicitudoObservacionesActualizadas.getConvocatoriaExterna());
+    Assertions.assertThat(solicitudActualizada.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(solicitud.getUnidadGestionRef());
+    Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo").isEqualTo(solicitud.getActivo());
+  }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
@@ -415,10 +468,34 @@ public class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo()").isEqualTo(false);
   }
+  
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-BR" })
+  void disable_WithAuthorityInvAndSolicitudCreatorRefDistinctToCurrentUser_ThrowsIllegalArgumentException() {
+
+    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
+
+    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class).hasMessage("El usuario no es el creador de la Solicitud");
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  void disable_WithNotAuthorityInvAndNotAuthorityCSP_SOL_B_ThrowsIllegalArgumentException() {
+
+    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
+
+    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class).hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+
+  }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
-  public void disable_WithIdNotExist_ThrowsSolicitudNotFoundException() {
+  void disable_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un id de un Solicitud que no existe
     Long idNoExiste = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
@@ -429,7 +506,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
-  public void findById_ReturnsSoliciud() {
+  void findById_ReturnsSoliciud() {
     // given: Un Solicitud con el id buscado
     Long idBuscado = 1L;
     Solicitud solicitudBuscada = generarMockSolicitud(idBuscado, 1L, null);
@@ -456,7 +533,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
-  public void findById_WithIdNotExist_ThrowsProgramaNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProgramaNotFoundException() throws Exception {
     // given: Ningun Solicitud con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -468,7 +545,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
-  public void findAll_ReturnsPage() {
+  void findAll_ReturnsPage() {
     // given: Una lista con 37 Solicitud
     List<Solicitud> solicitudes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -547,6 +624,133 @@ public class SolicitudServiceTest extends BaseServiceTest {
       Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
+ 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V_1" })
+  void findAllTodos_WithUO1_ReturnsPage() {
+    // given: Una lista con 37 Solicitud
+    List<Solicitud> solicitudes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudes.add(generarMockSolicitud(i, 1L, null));
+    }
+
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<Solicitud>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Solicitud>>() {
+          @Override
+          public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > solicitudes.size() ? solicitudes.size() : toIndex;
+            List<Solicitud> content = solicitudes.subList(fromIndex, toIndex);
+            Page<Solicitud> page = new PageImpl<>(content, pageable, solicitudes.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Solicitud> page = service.findAllTodosRestringidos(null, paging);
+
+    // then: Devuelve la pagina 3 con los Programa del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      Solicitud solicitud = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+    }
+  }
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @Test
+  void cambiarEstado_WithSameEstado_ThrowsEstadoSolicitudNotUpdatedException() {
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
+    EstadoSolicitud newEstado = EstadoSolicitud.builder()
+    .estado(Estado.BORRADOR)
+    .build();
+
+    BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
+
+    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(EstadoSolicitudNotUpdatedException.class);
+  }
+
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @Test
+  void cambiarEstado_WithNotEstadoDesistidaNeitherRenunciada_ReturnsSolicitud() {
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
+    EstadoSolicitud newEstado = EstadoSolicitud.builder()
+    .estado(Estado.ADMITIDA_DEFINITIVA)
+    .build();
+    SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
+    PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
+
+    //@formatter:off
+    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(ChecklistOutput.builder()
+                                                                .fechaCreacion(Instant.now())
+                                                                .id(1L)
+                                                                .personaRef("user")
+                                                                .formly(Formly.builder()
+                                                                  .id(1L)
+                                                                  .esquema("<div></div>")
+                                                                  .build())
+                                                                .respuesta("respuesta mocked from server true")
+                                                                .build());
+    //@formatter:on
+    BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
+
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(solicitudProyectoRepository.save(ArgumentMatchers.<SolicitudProyecto>any())).willReturn(solicitudProyecto);
+    
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
+
+    Solicitud solicitudChanged = this.service.cambiarEstado(solicitudId, newEstado);
+
+    Assertions.assertThat(solicitudChanged).isNotNull();
+  }
+
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @Test
+  void cambiarEstado_WithChecklistNullAndEstadoDenegada_ReturnsSolicitud() {
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
+    EstadoSolicitud newEstado = EstadoSolicitud.builder()
+    .estado(Estado.DENEGADA)
+    .build();
+    SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
+    solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
+    PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
+
+    //@formatter:off
+    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
+    //@formatter:on
+    BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
+
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
+    
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
+
+    Solicitud solicitudChanged = this.service.cambiarEstado(solicitudId, newEstado);
+
+    Assertions.assertThat(solicitudChanged).isNotNull();
+  }
 
   /**
    * Función que devuelve un objeto Solicitud
@@ -621,6 +825,25 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // @formatter:on
 
     return configuracionSolicitud;
+  }
+
+  private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId) {
+
+    return SolicitudProyecto.builder()
+      .id(solicitudProyectoId)
+      .acronimo("acronimo-" + solicitudProyectoId)
+      .colaborativo(Boolean.TRUE)
+      .tipoPresupuesto(TipoPresupuesto.GLOBAL)
+      .checklistRef("checklist-001")
+      .build();
+  }
+
+  private PeticionEvaluacion buildMockPeticionEvaluacion(Long id, Long checklistId){
+    return PeticionEvaluacion.builder()
+    .id(id)
+    .activo(Boolean.TRUE)
+    .checklistId(checklistId)
+    .build();
   }
 
 }
