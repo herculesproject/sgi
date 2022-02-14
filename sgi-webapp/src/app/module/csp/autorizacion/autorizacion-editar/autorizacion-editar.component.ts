@@ -61,7 +61,8 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        this.disableCambioEstado = status.changes || status.errors;
+        this.disableCambioEstado = (
+          this.actionService.habilitarCambioEstado || status.changes || status.errors);
         this.disablePresentar$.next(!this.actionService.presentable || status.changes || status.errors);
       }
     ));
@@ -135,8 +136,6 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
         },
         () => {
           this.snackBarService.showSuccess(this.textoEditarSuccess);
-          const autorizacionId = this.actionService.getFragment(this.actionService.FRAGMENT.DATOS_GENERALES).getKey();
-          this.router.navigate([`../${autorizacionId}`], { relativeTo: this.activatedRoute });
         }
       );
     }

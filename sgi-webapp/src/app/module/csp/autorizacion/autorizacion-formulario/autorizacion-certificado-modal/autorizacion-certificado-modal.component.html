@@ -7,7 +7,8 @@
 <mat-dialog-content>
   <form [formGroup]="formGroup">
     <!-- Generado automatico -->
-    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign" *ngIf="!this.data?.id">
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+      *ngIf="!this.data?.certificado?.id">
       <mat-radio-group class="radio-inline" name="generado_automatico" formControlName="generadoAutomatico" required>
         <mat-radio-button color="primary" class="radio" [value]="true" name="generadoAutomaticoSi">
           {{'csp.certificado-autorizacion.generadoAutomatico' | translate}}
@@ -43,14 +44,14 @@
         </mat-form-field>
         <mat-form-field class="input-form" *ngIf="formGroup.controls.generadoAutomatico.value">
           <mat-label>{{'csp.certificado-autorizacion.documento' | translate}}</mat-label>
-          <input matInput formControlName="documento" id="nombreDocumento"
+          <input matInput formControlName="documentoAuto" id="documentoAuto"
             placeholder="{{'csp.certificado-autorizacion.documento' | translate}}" required readonly>
           <button *ngIf="formGroup.controls.generadoAutomatico.value" mat-button color="primary"
             matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}" id="btnDownload"
             (click)="visualizarInforme()">
             <mat-icon color="primary">arrow_downward</mat-icon>
           </button>
-          <mat-error *ngIf="formGroup.controls.documento.errors?.required">
+          <mat-error *ngIf="formGroup.controls.documentoAuto.errors?.required">
             {{ 'error.required.entity' | translate:msgParamDocumentoEntity}}
           </mat-error>
         </mat-form-field>

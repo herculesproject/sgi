@@ -6,13 +6,13 @@
       <!-- Nombre -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef> {{'csp.certificado-autorizacion.nombre' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.value.nombre}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.value.certificado.nombre}}</td>
       </ng-container>
 
       <!-- Público -->
       <ng-container matColumnDef="publico">
         <th mat-header-cell *matHeaderCellDef> {{'csp.certificado-autorizacion.publico' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{(element.value.visible ? 'label.si' : 'label.no') |
+        <td mat-cell *matCellDef="let element"> {{(element.value.certificado.visible ? 'label.si' : 'label.no') |
           translate}}</td>
       </ng-container>
 
@@ -30,9 +30,9 @@
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
           </ng-container>
-          <ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-AUT-E'">
             <button mat-button color="primary" matTooltip="{{'btn.csp.certificado-autorizacion.descargar' | translate}}"
-              (click)="downloadFile(element.value)">
+              (click)="downloadFile(element.value?.certificado)">
               <mat-icon color="primary">arrow_downward</mat-icon>
             </button>
           </ng-container>
@@ -48,7 +48,8 @@
   </div>
   <div class="separation-button" *sgiHasAuthorityForAnyUO="'CSP-AUT-E'">
     <!-- Botón añadir Certificados -->
-    <button color="three" mat-button mat-raised-button (click)="openModal()">
+    <button color="three" mat-button mat-raised-button (click)="openModal()"
+      *ngIf="actionService.estado == Estado.AUTORIZADA">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

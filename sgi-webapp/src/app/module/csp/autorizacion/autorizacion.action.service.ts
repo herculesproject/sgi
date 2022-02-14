@@ -25,8 +25,9 @@ import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
 const MSG_REGISTRAR = marker('msg.csp.autorizacion.presentar');
 
 export interface IAutorizacionData {
-  presentable: boolean,
-  isInvestigador: boolean
+  presentable: boolean;
+  isInvestigador: boolean;
+  autorizacion: IAutorizacion;
 }
 
 @Injectable()
@@ -41,7 +42,7 @@ export class AutorizacionActionService extends
 
   private datosGenerales: AutorizacionDatosGeneralesFragment;
   private historicoEstados: AutorizacionHistoricoEstadosFragment;
-  private certificados: AutorizacionCertificadosFragment
+  private certificados: AutorizacionCertificadosFragment;
 
   private readonly data: IAutorizacionData;
   public readonly id: number;
@@ -52,6 +53,13 @@ export class AutorizacionActionService extends
 
   get autorizacion(): IAutorizacion {
     return this.datosGenerales.getValue();
+  }
+
+  get habilitarCambioEstado(): boolean {
+    const autorizacion = this.data.autorizacion;
+    return (autorizacion?.tituloProyecto == null
+      || autorizacion?.responsable == null
+      || autorizacion?.entidad == null);
   }
 
   get isInvestigador(): boolean {

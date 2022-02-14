@@ -19,6 +19,7 @@ import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-up
 import { switchMap } from 'rxjs/operators';
 
 const MSG_ACEPTAR = marker('btn.ok');
+const MGS_ANADIR = marker('btn.add');
 const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
 const MSG_UPLOAD_ERROR = marker('error.file.upload');
 const CERTIFICADO_AUTORIZACION_KEY = marker('csp.certificado-autorizacion');
@@ -27,12 +28,9 @@ const CERTIFICADO_AUTORIZACION_DOCUMENTO_KEY = marker('csp.certificado-autorizac
 const CERTIFICADO_AUTORIZACION_PUBLICO_KEY = marker('csp.certificado-autorizacion.publico');
 
 export interface ICertificadoAutorizacionModalData {
-  id: number;
-  autorizacion: IAutorizacion;
-  nombre: string;
-  documento: IDocumento;
-  visible: boolean;
+  certificado: ICertificadoAutorizacion;
   hasSomeOtherCertificadoAutorizacionVisible: boolean;
+  generadoAutomatico: boolean;
 }
 
 @Component({
@@ -40,7 +38,8 @@ export interface ICertificadoAutorizacionModalData {
   templateUrl: './autorizacion-certificado-modal.component.html',
   styleUrls: ['./autorizacion-certificado-modal.component.scss']
 })
-export class AutorizacionCertificadoModalComponent extends BaseModalComponent<ICertificadoAutorizacion, AutorizacionCertificadoModalComponent>
+export class AutorizacionCertificadoModalComponent extends
+  BaseModalComponent<ICertificadoAutorizacionModalData, AutorizacionCertificadoModalComponent>
   implements OnInit {
 
   fxLayoutProperties: FxLayoutProperties;
@@ -84,12 +83,20 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     this.initFlexProperties();
     this.setupI18N();
 
+    if (!this.data.certificado) {
+      this.data.certificado = {} as ICertificadoAutorizacion;
+    }
+
+    if (this.data?.certificado?.id) {
+      this.formGroup.controls.documento.disable();
+      this.formGroup.controls.documentoAuto.disable();
+    }
   }
 
   saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
       if (this.formGroup.controls.generadoAutomatico.value) {
-        if (this.documentoAutorizacion && this.documentoAutorizacion.documentoRef) {
+        if (this.formGroup.controls.documentoAuto.value) {
           this.matDialogRef.close(this.getDatosForm());
         } else {
           this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
@@ -104,31 +111,48 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     }
   }
 
-  protected getDatosForm(): ICertificadoAutorizacion {
-    this.data.nombre = this.formGroup.controls.nombre.value;
-    this.data.visible = this.formGroup.controls.publico.value;
-    this.data.documento = this.formGroup.controls.generadoAutomatico.value ? this.documentoAutorizacion : this.formGroup.controls.documento.value;
-
+  protected getDatosForm(): ICertificadoAutorizacionModalData {
+    this.data.certificado.nombre = this.formGroup.controls.nombre.value;
+    this.data.certificado.visible = this.formGroup.controls.publico.value;
+    this.data.certificado.documento = this.formGroup.controls.generadoAutomatico.value
+      ? this.getDocumentoAuto() : this.formGroup.controls.documento.value;
+    this.data.generadoAutomatico = this.formGroup.controls.generadoAutomatico.value;
     return this.data;
+  }
+
+  private getDocumentoAuto(): IDocumento {
+    return this.documentoAutorizacion ?? this.data.certificado.documento;
   }
 
   protected getFormGroup(): FormGroup {
     const form = new FormGroup({
-      nombre: new FormControl(this.data.nombre),
-      publico: new FormControl(this.data.visible, [Validators.required,
+      nombre: new FormControl(this.data?.certificado?.nombre),
+      publico: new FormControl(this.data?.certificado?.visible, [Validators.required,
       this.buildValidadorHasSomeOtherCertificadoAutorizacionVisible(this.data?.hasSomeOtherCertificadoAutorizacionVisible)]),
-      documento: new FormControl(this.data.documento, Validators.required),
+      documento: new FormControl(this.data?.certificado?.documento, Validators.required),
+      documentoAuto: new FormControl(this.data?.certificado?.documento?.nombre, Validators.required),
       generadoAutomatico: new FormControl(null),
     });
+    form.controls.generadoAutomatico.setValue(this.data.generadoAutomatico, { emitEvent: false });
+    if (this.data.generadoAutomatico) {
+      form.controls.documento.disable();
+    } else {
+      form.controls.documentoAuto.disable();
+    }
 
     this.subscriptions.push(
       form.controls.generadoAutomatico.valueChanges.subscribe(
         (value) => {
           form.controls.documento.setValue(null);
-          if (value && !this.documentoAutorizacion?.documentoRef) {
-            this.generarInforme(this.data?.autorizacion?.id);
-          } else if (value) {
-            form.controls.documento.setValue(this.documentoAutorizacion?.nombre);
+          if (value) {
+            form.controls.documentoAuto.enable();
+            form.controls.documento.disable();
+            if (!this.documentoAutorizacion?.documentoRef) {
+              this.generarInforme(this.data?.certificado?.autorizacion?.id);
+            }
+          } else {
+            form.controls.documento.enable();
+            form.controls.documentoAuto.disable();
           }
         }
       )
@@ -151,7 +175,11 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
       CERTIFICADO_AUTORIZACION_PUBLICO_KEY,
     ).subscribe((value) => this.msgParamPublicoEntity = { field: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
-    this.textSaveOrUpdate = MSG_ACEPTAR;
+    if (this.data?.certificado?.id) {
+      this.textSaveOrUpdate = MSG_ACEPTAR;
+    } else {
+      this.textSaveOrUpdate = MGS_ANADIR;
+    }
   }
 
   private initFlexProperties(): void {
@@ -197,7 +225,7 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
     this.autorizacionService.getInformeAutorizacion(idAutorizacion).subscribe(
       (documentoInfo: IDocumento) => {
         this.documentoAutorizacion = documentoInfo;
-        this.formGroup.controls.documento.setValue(documentoInfo?.nombre);
+        this.formGroup.controls.documentoAuto.setValue(documentoInfo?.nombre);
       });
   }
 
@@ -206,13 +234,14 @@ export class AutorizacionCertificadoModalComponent extends BaseModalComponent<IC
    * @param documentoRef referencia del documento
    */
   visualizarInforme(): void {
-    if (this.documentoAutorizacion?.documentoRef) {
-      this.documentoService.getInfoFichero(this.documentoAutorizacion?.documentoRef).pipe(
+    const documento = this.getDocumentoAuto();
+    if (documento?.documentoRef) {
+      this.documentoService.getInfoFichero(documento.documentoRef).pipe(
         switchMap((documentoInfo: IDocumento) => {
           return this.documentoService.downloadFichero(documentoInfo.documentoRef);
         })
       ).subscribe(response => {
-        triggerDownloadToUser(response, this.documentoAutorizacion.nombre);
+        triggerDownloadToUser(response, documento.nombre);
       });
     }
   }

@@ -94,7 +94,7 @@
   "csp.certificado-autorizacion": "Certificado Autorización",
   "csp.certificado-autorizacion.documento": "Documento",
   "csp.certificado-autorizacion.generadoAutomatico": "Generar Certificado Automático",
-  "csp.certificado-autorizacion.generadoManual": "Generar Certificado Manual",
+  "csp.certificado-autorizacion.generadoManual": "Añadir Certificado Manual",
   "csp.certificado-autorizacion.nombre": "Nombre",
   "csp.certificado-autorizacion.publico": "Público",
   "csp.clasificacion-cvn.AYUDAS": "Ayudas y becas",

@@ -8,6 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
+import { Estado } from '@core/models/csp/estado-autorizacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -19,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AutorizacionActionService } from '../../autorizacion.action.service';
 import { AutorizacionCertificadoModalComponent, ICertificadoAutorizacionModalData } from '../autorizacion-certificado-modal/autorizacion-certificado-modal.component';
-import { AutorizacionCertificadosFragment } from './autorizacion-certificados.fragment';
+import { AutorizacionCertificadosFragment, CertificadoAutorizacionListado } from './autorizacion-certificados.fragment';
 
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 const MSG_DELETE = marker('msg.delete.entity');
@@ -40,7 +41,7 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
   displayedColumns = ['nombre', 'publico', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
-  dataSource = new MatTableDataSource<StatusWrapper<ICertificadoAutorizacion>>();
+  dataSource = new MatTableDataSource<StatusWrapper<CertificadoAutorizacionListado>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -48,8 +49,12 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
   textoDelete: string;
   textoCrear: string;
 
+  get Estado() {
+    return Estado;
+  }
+
   constructor(
-    protected actionService: AutorizacionActionService,
+    public actionService: AutorizacionActionService,
     private readonly translate: TranslateService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
@@ -66,12 +71,12 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<ICertificadoAutorizacion>, property: string) => {
+      (wrapper: StatusWrapper<CertificadoAutorizacionListado>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.nombre;
+            return wrapper.value.certificado.nombre;
           case 'publico':
-            return wrapper.value.visible;
+            return wrapper.value.certificado.visible;
           default:
             return wrapper[property];
         }
@@ -105,15 +110,17 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
   /**
    * Apertura de modal de Cetificados Autorizacion
    */
-  openModal(value?: StatusWrapper<ICertificadoAutorizacion>): void {
+  openModal(value?: StatusWrapper<CertificadoAutorizacionListado>): void {
     const data = {
-      id: value?.value?.id,
-      autorizacion: value?.value?.autorizacion ?? { id: this.formPart.getKey() } as IAutorizacion,
-      nombre: value?.value?.nombre,
-      documento: value?.value?.documento,
-      visible: value?.value?.visible,
+      certificado: value?.value.certificado ??
+        {
+          autorizacion: {
+            id: this.formPart.getKey()
+          } as IAutorizacion
+        } as ICertificadoAutorizacion,
       hasSomeOtherCertificadoAutorizacionVisible: this.formPart.certificadosAutorizacion$.value.some(certificado =>
-        certificado.value.visible && !value?.value?.visible),
+        certificado.value.certificado.visible && !value?.value?.certificado.visible),
+      generadoAutomatico: value?.value.generadoAutomatico,
     } as ICertificadoAutorizacionModalData;
     const config = {
       panelClass: 'sgi-dialog-container',
@@ -121,12 +128,18 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
     };
     const dialogRef = this.matDialog.open(AutorizacionCertificadoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (certificado: ICertificadoAutorizacion) => {
-        if (certificado) {
-          if (value) {
-            this.formPart.updateCertificado(new StatusWrapper<ICertificadoAutorizacion>(certificado));
+      (data: ICertificadoAutorizacionModalData) => {
+        if (data) {
+          const certificadoAutorizacionListado = {
+            certificado: data.certificado,
+            generadoAutomatico: data.generadoAutomatico
+          } as CertificadoAutorizacionListado;
+          if (data.certificado.id) {
+            this.formPart.updateCertificado(new StatusWrapper<CertificadoAutorizacionListado>(certificadoAutorizacionListado));
+          } else if (value) {
+            this.formPart.createCertificado(new StatusWrapper<CertificadoAutorizacionListado>(certificadoAutorizacionListado));
           } else {
-            this.formPart.addCertificado(certificado);
+            this.formPart.addCertificado(certificadoAutorizacionListado);
           }
         }
       }
@@ -144,7 +157,7 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
     ));
   }
 
-  deleteCertificado(wrapper: StatusWrapper<ICertificadoAutorizacion>): void {
+  deleteCertificado(wrapper: StatusWrapper<CertificadoAutorizacionListado>): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
