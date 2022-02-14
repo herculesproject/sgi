@@ -295,7 +295,7 @@ public class SolicitudController {
    * @return Solicitud {@link Solicitud} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V', 'CSP-SOL-INV-C')")
   public Solicitud findById(@PathVariable Long id) {
     log.debug("Solicitud findById(Long id) - start");
 
