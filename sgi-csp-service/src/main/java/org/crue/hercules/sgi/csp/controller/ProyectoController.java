@@ -1325,7 +1325,7 @@ public class ProyectoController {
    * @param id Identificador del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectosfacturacion")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoFacturacionOutput>> findAllProyectoFacturacion(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
 
