@@ -34,13 +34,13 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -590,7 +590,7 @@ public class SolicitudService {
   }
 
   /**
-   * Copia todos los miembros del equipo de una {@link Solicitud} a un Equipo de
+   * Copia todos los miembros del equipo de una {@link Solicitud} a un Equipo d
    * Trabajo de una Petición de Evaluación Ética
    *
    * @param proyecto entidad {@link Proyecto}
@@ -743,11 +743,7 @@ public class SolicitudService {
     }
 
     // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
-    if (!solicitudProyectoRepository.existsById(solicitud.getId())) {
-      return false;
-    }
-
-    return true;
+    return solicitudProyectoRepository.existsById(solicitud.getId());
   }
 
   /**
