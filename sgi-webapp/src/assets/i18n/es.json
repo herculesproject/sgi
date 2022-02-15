@@ -1548,7 +1548,7 @@
   "menu.csp.ejecucion-economica.facturas-justificantes.viajes-dietas": "Viajes y Dietas",
   "menu.csp.ejecucion-economica.validacion-gastos": "Validación de gastos",
   "menu.csp.notificacion-presupuesto-sge": "Notificación Presupuestos SGE",
-  "menu.csp.participacion-proyectos-externos": "Participacion Proyecto{count,plural,=0{} one{} other{s}} Externo{count,plural,=0{} one{} other{s}}",
+  "menu.csp.participacion-proyectos-externos": "Participación Proyecto{count,plural,=0{} one{} other{s}} Externo{count,plural,=0{} one{} other{s}}",
   "menu.csp.proyectos.calendario-facturacion": "Calendario Facturación",
   "menu.csp.proyectos.configuracion-economica": "Configuración económica",
   "menu.csp.proyectos.configuracion-economica.consulta-presupuesto": "Consulta Presupuesto",
