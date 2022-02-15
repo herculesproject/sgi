@@ -24,7 +24,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, Observable, of, Subscription } from 'rxjs';
+import { EMPTY, forkJoin, from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
@@ -347,14 +347,18 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   }
 
   downloadFile(value: IAutorizacionListado): void {
-    this.subscriptions.push(this.documentoService.downloadFichero(value.certificadoVisible.documento.documentoRef).subscribe(
-      (data) => {
-        triggerDownloadToUser(data, value.certificadoVisible.documento.nombre);
-      },
-      () => {
-        this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
-      }
-    ));
+    this.subscriptions.push(
+      forkJoin({
+        documento: this.documentoService.getInfoFichero(value.certificadoVisible.documento.documentoRef),
+        fichero: this.documentoService.downloadFichero(value.certificadoVisible.documento.documentoRef),
+      }).subscribe(
+        ({ documento, fichero }) => {
+          triggerDownloadToUser(fichero, documento.nombre);
+        },
+        () => {
+          this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
+        }
+      ));
   }
 
 }
