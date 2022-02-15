@@ -18,7 +18,8 @@ const REFERENCIA_KEY = marker('csp.solicitud.referencia-convocatoria.no-registra
 const CONVOCATORIA_SGI_KEY = marker('csp.solicitud.convocatoria-sgi');
 const SOLICITANTE_KEY = marker('csp.solicitud.solicitante');
 const NOMBRE_KEY = marker('sgp.nombre');
-const EMAIL_KEY = marker('sgp.email')
+const APELLIDOS_KEY = marker('sgp.apellidos');
+const EMAIL_KEY = marker('sgp.email');
 const ESTADO_KEY = marker('csp.solicitud.estado');
 const TITULO_KEY = marker('csp.solicitud.titulo-listado');
 const FECHA_ESTADO_KEY = marker('csp.solicitud.estado-solicitud.fecha');
@@ -36,25 +37,24 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
   }
 
   public getData(solicitudData: ISolicitudReportData): Observable<ISolicitudReportData> {
-    if (solicitudData.convocatoriaId) {
-
-      return this.convocatoriaService.findById(solicitudData.convocatoriaId).pipe(
-        map(convocatoria => {
-          solicitudData.convocatoria = convocatoria;
-          return solicitudData;
-        }),
-        switchMap(() => {
-          return this.personaService.findById(solicitudData.solicitante.id).pipe(
-            map(persona => {
-              solicitudData.solicitante = persona;
+    return this.personaService.findById(solicitudData.solicitante.id).pipe(
+      map(persona => {
+        solicitudData.solicitante = persona;
+        return solicitudData;
+      }),
+      switchMap(() => {
+        if (solicitudData.convocatoriaId) {
+          return this.convocatoriaService.findById(solicitudData.convocatoriaId).pipe(
+            map(convocatoria => {
+              solicitudData.convocatoria = convocatoria;
               return solicitudData;
             })
           );
-        })
-      );
-    } else {
-      return of(solicitudData);
-    }
+        } else {
+          return of(solicitudData);
+        }
+      })
+    );
   }
 
   public fillColumns(
@@ -83,6 +83,12 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
       {
         title: this.translate.instant(SOLICITANTE_KEY) + ' ' + this.translate.instant(NOMBRE_KEY),
         name: 'nombreSolicitante',
+        type: ColumnType.STRING,
+        format: '#'
+      },
+      {
+        title: this.translate.instant(SOLICITANTE_KEY) + ' ' + this.translate.instant(APELLIDOS_KEY),
+        name: 'apellidosSolicitante',
         type: ColumnType.STRING,
         format: '#'
       },
@@ -124,13 +130,14 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
 
     const elementsRow: any[] = [];
     elementsRow.push(solicitud.titulo);
-    elementsRow.push(solicitud.codigoRegistroInterno ?? ' ');
-    elementsRow.push(solicitud.codigoExterno ?? ' ');
-    elementsRow.push(solicitud.solicitante?.nombre ? (solicitud.solicitante?.nombre + ' ' + solicitud.solicitante?.apellidos) : '');
+    elementsRow.push(solicitud.codigoRegistroInterno ?? '');
+    elementsRow.push(solicitud.codigoExterno ?? '');
+    elementsRow.push(solicitud.solicitante?.nombre ?? '');
+    elementsRow.push(solicitud.solicitante?.apellidos ?? '');
     elementsRow.push(solicitud.solicitante?.emails ? solicitud.solicitante?.emails[0].email : '');
-    elementsRow.push(solicitud.convocatoria?.titulo ?? ' ');
-    elementsRow.push(solicitud.convocatoriaExterna ?? ' ');
-    elementsRow.push(solicitud.estado?.estado ?? ' ');
+    elementsRow.push(solicitud.convocatoria?.titulo ?? '');
+    elementsRow.push(solicitud.convocatoriaExterna ?? '');
+    elementsRow.push(solicitud.estado?.estado ?? '');
     elementsRow.push(LuxonUtils.toBackend(solicitud.estado?.fechaEstado));
     return elementsRow;
   }

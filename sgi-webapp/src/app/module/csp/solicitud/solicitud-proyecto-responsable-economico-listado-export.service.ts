@@ -18,7 +18,8 @@ import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-lista
 const RESPONSABLE_ECONOMICO_KEY = marker('csp.solicitud-proyecto-responsable-economico');
 const INVESTIGADOR_KEY = marker('csp.solicitud-proyecto-responsable-economico');
 const INVESTIGADOR_SHORT_KEY = marker('csp.proyecto-resp-economico');
-const INVESTIGADOR_NOMBRE_KEY = marker('csp.solicitud-proyecto-responsable-economico.nombre-apellidos');
+const INVESTIGADOR_NOMBRE_APELLIDOS_KEY = marker('csp.solicitud-proyecto-responsable-economico.nombre-apellidos');
+const INVESTIGADOR_NOMBRE_KEY = marker('sgp.nombre');
 const INVESTIGADOR_APELLIDOS_KEY = marker('csp.solicitud-proyecto-responsable-economico.apellidos');
 const INVESTIGADOR_EMAIL_KEY = marker('csp.solicitud-proyecto-responsable-economico.email');
 const INVESTIGADOR_FECHA_INICIO_KEY = marker('csp.solicitud-proyecto-responsable-economico.mes-inicial');
@@ -95,7 +96,7 @@ export class SolicitudProyectoResponsableEconomicoListadoExportService
       type: ColumnType.STRING
     });
     const titleI18n = this.translate.instant(PROYECTO_KEY) + ': ' + this.translate.instant(RESPONSABLE_ECONOMICO_KEY) +
-      ' (' + this.translate.instant(INVESTIGADOR_NOMBRE_KEY) +
+      ' (' + this.translate.instant(INVESTIGADOR_NOMBRE_APELLIDOS_KEY) +
       ' - ' + this.translate.instant(INVESTIGADOR_EMAIL_KEY) +
       ' - ' + this.translate.instant(INVESTIGADOR_FECHA_INICIO_KEY) +
       ' - ' + this.translate.instant(INVESTIGADOR_FECHA_FIN_KEY) +
