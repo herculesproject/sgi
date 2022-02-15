@@ -62,7 +62,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
         this.disableCambioEstado = (
-          this.actionService.habilitarCambioEstado || status.changes || status.errors);
+          this.actionService.enableCambioDeEstado.value || status.changes || status.errors);
         this.disablePresentar$.next(!this.actionService.presentable || status.changes || status.errors);
       }
     ));

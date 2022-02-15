@@ -9,7 +9,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizacion> {
@@ -20,6 +20,8 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   public entidadRequired: boolean;
   public isInvestigador: boolean;
   private isVisor: boolean;
+
+  readonly enableCambioDeEstado$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -191,6 +193,9 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return observable$.pipe(
       map(value => {
         this.autorizacion.id = value.id;
+        this.enableCambioDeEstado$.next(!value.tituloProyecto
+          || !value.responsable
+          || !value.entidad);
         return this.autorizacion.id;
       })
     );

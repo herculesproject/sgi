@@ -55,11 +55,8 @@ export class AutorizacionActionService extends
     return this.datosGenerales.getValue();
   }
 
-  get habilitarCambioEstado(): boolean {
-    const autorizacion = this.data.autorizacion;
-    return (autorizacion?.tituloProyecto == null
-      || autorizacion?.responsable == null
-      || autorizacion?.entidad == null);
+  get enableCambioDeEstado() {
+    return this.datosGenerales.enableCambioDeEstado$;
   }
 
   get isInvestigador(): boolean {
