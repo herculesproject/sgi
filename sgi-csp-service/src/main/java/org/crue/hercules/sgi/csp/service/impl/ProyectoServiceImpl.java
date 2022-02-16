@@ -603,10 +603,11 @@ public class ProyectoServiceImpl implements ProyectoService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     Specification<Proyecto> specs = ProyectoSpecifications.distinct().and(ProyectoSpecifications.activos()
-        .and(ProyectoSpecifications.byInvestigadorId(authentication.getName())
-            .and(ProyectoSpecifications.byEstadoNotBorrador())
-            .and(SgiRSQLJPASupport.toSpecification(query,
-                ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)))));
+        .and((ProyectoSpecifications.byInvestigadorId(authentication.getName()))
+            .or(ProyectoSpecifications.byResponsableEconomicoId(authentication.getName())))
+        .and(ProyectoSpecifications.byEstadoNotBorrador())
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository))));
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
     log.debug("findAllActivosInvestigador(String query, Pageable paging) - end");

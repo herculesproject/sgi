@@ -13,6 +13,8 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.jpa.domain.Specification;
@@ -117,6 +119,23 @@ public class ProyectoSpecifications {
       queryEquipo.select(subqRoot.get(ProyectoEquipo_.proyecto).get(Proyecto_.id))
           .where(cb.equal(subqRoot.get(ProyectoEquipo_.personaRef), investigadorId));
       return root.get(Proyecto_.id).in(queryEquipo);
+    };
+  }
+
+  /**
+   * Filtro de {@link Proyecto} por id de investigador que sea responsable
+   * económico
+   * 
+   * @param investigadorId identificador del investigador
+   * @return lista de {@link Proyecto}
+   */
+  public static Specification<Proyecto> byResponsableEconomicoId(String investigadorId) {
+    return (root, query, cb) -> {
+      Subquery<Long> queryResponsableEconomico = query.subquery(Long.class);
+      Root<ProyectoResponsableEconomico> subqRoot = queryResponsableEconomico.from(ProyectoResponsableEconomico.class);
+      queryResponsableEconomico.select(subqRoot.get(ProyectoResponsableEconomico_.proyecto).get(Proyecto_.id))
+          .where(cb.equal(subqRoot.get(ProyectoResponsableEconomico_.personaRef), investigadorId));
+      return root.get(Proyecto_.id).in(queryResponsableEconomico);
     };
   }
 

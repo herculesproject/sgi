@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoEquipoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,12 +40,13 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoRepository proyectoRepository;
   @Mock
+  private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   private ProyectoEquipoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ProyectoEquipoServiceImpl(repository, proyectoRepository);
+    service = new ProyectoEquipoServiceImpl(repository, proyectoRepository, proyectoResponsableEconomicoRepository);
   }
 
   @Test

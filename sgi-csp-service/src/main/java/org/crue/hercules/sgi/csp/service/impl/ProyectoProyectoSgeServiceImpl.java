@@ -5,20 +5,21 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -36,11 +37,14 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
 
   private final ProyectoProyectoSgeRepository repository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   public ProyectoProyectoSgeServiceImpl(ProyectoProyectoSgeRepository proyectoProrrogaRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository) {
+      ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
     this.repository = proyectoProrrogaRepository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -138,13 +142,9 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
         .and(ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId));
 
     Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
-    if (SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-PRO-INV-VR")) {
-      List<ProyectoEquipo> equipos = proyectoEquipoRepository.findAllByProyectoId(proyectoId);
-      if (!equipos.isEmpty()) {
-        checkUserHasAuthorityInvestigador(equipos);
-      } else {
-        throw new UserNotAuthorizedToAccessProyectoException();
-      }
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
+      throw new UserNotAuthorizedToAccessProyectoException();
     }
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
@@ -193,24 +193,22 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   }
 
   /**
-   * Comprueba si el usuario actual tiene permiso para ver el proyectoSGE
+   * Comprueba si el usuario actual está presente en el equipo
    * 
    * @throws {@link UserNotAuthorizedToAccessProyectoException}
    */
-  private void checkUserHasAuthorityInvestigador(List<ProyectoEquipo> equipos) {
-    boolean usuarioPresente = equipos.stream()
-        .anyMatch(equipo -> equipo.getPersonaRef().equals(getUserPersonaRef()));
-    if (!usuarioPresente) {
-      throw new UserNotAuthorizedToAccessProyectoException();
-    }
+  private boolean checkUserPresentInEquipos(Long proyectoId) {
+    Long numeroProyectoEquipo = this.proyectoEquipoRepository
+        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroProyectoEquipo > 0;
   }
 
-  /**
-   * Recupera el personaRef del usuario actual
-   */
-  private String getUserPersonaRef() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication.getName();
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 
 }

@@ -4,7 +4,9 @@ import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoExc
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoIVARepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoIVAService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.springframework.data.domain.Page;
@@ -24,10 +26,13 @@ public class ProyectoIVAServiceImpl implements ProyectoIVAService {
 
   private final ProyectoIVARepository repository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
-  public ProyectoIVAServiceImpl(ProyectoIVARepository repository, ProyectoEquipoRepository proyectoEquipoRepository) {
+  public ProyectoIVAServiceImpl(ProyectoIVARepository repository, ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
     this.repository = repository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -52,7 +57,8 @@ public class ProyectoIVAServiceImpl implements ProyectoIVAService {
   public Page<ProyectoIVA> findAllByProyectoIdOrderByIdDesc(Long proyectoId, Pageable pageable) {
     log.debug("findAllByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -72,5 +78,12 @@ public class ProyectoIVAServiceImpl implements ProyectoIVAService {
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
     return numeroProyectoEquipo > 0;
+  }
+
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 }

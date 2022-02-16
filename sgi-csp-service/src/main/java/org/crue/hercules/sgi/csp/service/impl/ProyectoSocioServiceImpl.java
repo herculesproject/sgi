@@ -14,12 +14,14 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocument
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
@@ -48,13 +50,15 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   private final ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   public ProyectoSocioServiceImpl(ProyectoSocioRepository repository, ProyectoSocioEquipoRepository equipoRepository,
       ProyectoSocioPeriodoPagoRepository periodoPagoRepository,
       ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository,
       ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository,
       ProyectoRepository proyectoRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository) {
+      ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
     this.repository = repository;
     this.equipoRepository = equipoRepository;
     this.periodoPagoRepository = periodoPagoRepository;
@@ -62,6 +66,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
     this.periodoJustificacionRepository = periodoJustificacionRepository;
     this.proyectoRepository = proyectoRepository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -284,7 +289,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean hasAnyProyectoSocioWithRolCoordinador(Long proyectoId) {
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId) && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -293,7 +298,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean hasAnyProyectoSocioWithProyectoId(Long proyectoId) {
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId) && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -302,7 +307,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean existsProyectoSocioPeriodoPagoByProyectoSocioId(Long proyectoId) {
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId) && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -314,7 +319,8 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   @Override
   public boolean existsProyectoSocioPeriodoJustificacionByProyectoSocioId(Long proyectoId) {
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -333,6 +339,13 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
     return numeroProyectoEquipo > 0;
+  }
+
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 
 }

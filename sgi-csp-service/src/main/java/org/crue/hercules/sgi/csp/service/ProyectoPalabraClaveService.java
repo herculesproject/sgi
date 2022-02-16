@@ -9,8 +9,10 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPalabraClave;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPalabraClaveRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPalabraClaveSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -34,11 +36,14 @@ public class ProyectoPalabraClaveService {
 
   private final ProyectoPalabraClaveRepository repository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   public ProyectoPalabraClaveService(ProyectoPalabraClaveRepository proyectoPalabraClaveRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository) {
+      ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
     this.repository = proyectoPalabraClaveRepository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -54,7 +59,8 @@ public class ProyectoPalabraClaveService {
   public Page<ProyectoPalabraClave> findByProyectoId(Long proyectoId, String query, Pageable pageable) {
     log.debug("findByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -116,6 +122,13 @@ public class ProyectoPalabraClaveService {
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
     return numeroProyectoEquipo > 0;
+  }
+
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 
 }

@@ -15,9 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
-import org.crue.hercules.sgi.csp.model.AnualidadGasto_;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
-import org.crue.hercules.sgi.csp.model.ContextoProyecto_;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
@@ -25,13 +23,13 @@ import org.crue.hercules.sgi.csp.model.ProyectoAnualidad_;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante_;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
-import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora_;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
-import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora_;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga_;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
+import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
@@ -241,12 +239,34 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     if (participacionActual) {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       Instant fechaActual = Instant.now();
-      ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.INNER);
-      return cb.and(
+      ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.LEFT);
+      Predicate participaEquipoConFechaFin = cb.and(
           cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio),
               fechaActual),
           cb.greaterThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaFin), fechaActual),
           cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
+      Predicate participaEquipoSinFechaFin = cb.and(
+          cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio),
+              fechaActual),
+          cb.isNull(joinEquipos.get(ProyectoEquipo_.fechaFin)),
+          cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
+
+      ListJoin<Proyecto, ProyectoResponsableEconomico> joinResponsableEconomico = root
+          .join(Proyecto_.responsablesEconomicos, JoinType.LEFT);
+      Predicate participaResponsableEconomicoConFechafin = cb.and(
+          cb.lessThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio),
+              fechaActual),
+          cb.greaterThanOrEqualTo(joinResponsableEconomico.get(
+              ProyectoResponsableEconomico_.fechaFin), fechaActual),
+          cb.equal(joinResponsableEconomico.get(ProyectoResponsableEconomico_.personaRef), authentication.getName()));
+      Predicate participaResponsableEconomicoSinFechafin = cb.and(
+          cb.lessThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio),
+              fechaActual),
+          cb.isNull(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaFin)),
+          cb.equal(joinResponsableEconomico.get(ProyectoResponsableEconomico_.personaRef), authentication.getName()));
+
+      return cb.or(participaEquipoConFechaFin, participaEquipoSinFechaFin, participaResponsableEconomicoConFechafin,
+          participaResponsableEconomicoSinFechafin);
     } else {
       return cb.equal(cb.literal("1"), cb.literal("1"));
     }

@@ -19,8 +19,10 @@ import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -45,14 +47,17 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   private final ProyectoRepository proyectoRepository;
   private final ProrrogaDocumentoRepository prorrogaDocumentoRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   public ProyectoProrrogaServiceImpl(ProyectoProrrogaRepository proyectoProrrogaRepository,
       ProyectoRepository proyectoRepository, ProrrogaDocumentoRepository prorrogaDocumentoRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository) {
+      ProyectoEquipoRepository proyectoEquipoRepository,
+      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
     this.repository = proyectoProrrogaRepository;
     this.proyectoRepository = proyectoRepository;
     this.prorrogaDocumentoRepository = prorrogaDocumentoRepository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
+    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
   }
 
   /**
@@ -216,7 +221,8 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   public Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -425,7 +431,8 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     log.debug("existsByProyecto(Long proyectoId) - start");
     boolean returnValue = repository.existsByProyectoId(proyectoId);
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -443,6 +450,13 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
     return numeroProyectoEquipo > 0;
+  }
+
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 
 }
