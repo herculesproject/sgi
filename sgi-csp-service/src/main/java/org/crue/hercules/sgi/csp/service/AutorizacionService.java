@@ -77,7 +77,7 @@ public class AutorizacionService {
    * Guarda la entidad {@link Autorizacion}.
    * 
    * @param autorizacion la entidad {@link Autorizacion} a guardar.
-   * @return Convocatoria la entidad {@link Autorizacion} persistida.
+   * @return la entidad {@link Autorizacion} persistida.
    */
   @Transactional
   public Autorizacion create(Autorizacion autorizacion) {
@@ -128,7 +128,6 @@ public class AutorizacionService {
 
     return repository.findById(autorizacionActualizar.getId()).map(data -> {
 
-      data.setId(autorizacionActualizar.getId());
       data.setObservaciones(autorizacionActualizar.getObservaciones());
       data.setResponsableRef(autorizacionActualizar.getResponsableRef());
       data.setTituloProyecto(autorizacionActualizar.getTituloProyecto());
@@ -150,7 +149,7 @@ public class AutorizacionService {
    * Obtiene una entidad {@link Autorizacion} por id.
    * 
    * @param id Identificador de la entidad {@link Autorizacion}.
-   * @return Autorizacion la entidad {@link Autorizacion}.
+   * @return la entidad {@link Autorizacion}.
    */
   public Autorizacion findById(Long id) {
     log.debug("findById(Long id) - start");
@@ -160,6 +159,14 @@ public class AutorizacionService {
     return returnValue;
   }
 
+  /**
+   * Obtener todas las entidades {@link Autorizacion} paginadas y/o filtradas.
+   *
+   * @param paging la información de la paginación.
+   * @param query  la información del filtro.
+   * @return la lista de entidades {@link Autorizacion} paginadas y/o
+   *         filtradas.
+   */
   public Page<Autorizacion> findAll(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
     Specification<Autorizacion> specs = SgiRSQLJPASupport.toSpecification(query);

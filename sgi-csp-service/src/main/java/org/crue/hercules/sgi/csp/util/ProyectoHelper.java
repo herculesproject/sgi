@@ -30,6 +30,8 @@ public class ProyectoHelper {
 
   /**
    * Recupera el personaRef del usuario actual
+   * 
+   * @return el personaRef del usuario actual
    */
   public static String getUserPersonaRef() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

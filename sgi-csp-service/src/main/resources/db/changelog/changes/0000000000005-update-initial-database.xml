@@ -30,4 +30,140 @@
     <dropNotNullConstraint columnDataType="boolean" columnName="externo" tableName="modelo_ejecucion" />
   </changeSet>
 
+
+  <changeSet author="user (generated)" id="0000000000005-7">
+    <createSequence incrementBy="1" sequenceName="grupo_especial_investigacion_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-8">
+    <createSequence incrementBy="1" sequenceName="grupo_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-9">
+    <createSequence incrementBy="1" sequenceName="grupo_tipo_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-10">
+    <createSequence incrementBy="1" sequenceName="grupo_equipo_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-11">
+    <createTable tableName="grupo">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="codigo" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_especial_investigacion_id" type="BIGINT" />
+      <column name="fecha_fin" type="TIMESTAMP" />
+      <column name="fecha_inicio" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="proyecto_sge_ref" type="VARCHAR(50)" />
+      <column name="solicitud_id" type="BIGINT" />
+      <column name="grupo_tipo_id" type="BIGINT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-12">
+    <createTable tableName="grupo_especial_investigacion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_especial_investigacionPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column defaultValueBoolean="false" name="especial_investigacion" type="BOOLEAN" />
+      <column name="fecha_fin" type="TIMESTAMP" />
+      <column name="fecha_inicio" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-13">
+    <createTable tableName="grupo_tipo">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_tipoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="fecha_fin" type="TIMESTAMP" />
+      <column name="fecha_inicio" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-14">
+    <createTable tableName="grupo_equipo">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_equipoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="dedicacion" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_fin" type="TIMESTAMP" />
+      <column name="fecha_inicio" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="participacion" type="DECIMAL(19, 2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="persona_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="rol_proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-15">
+    <addForeignKeyConstraint baseColumnNames="autorizacion_id" baseTableName="estado_autorizacion" constraintName="FK_ESTADOAUTORIZACION_AUTORIZACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="autorizacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-16">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_especial_investigacion" constraintName="FK_GRUPOESPECIALINVESTIGACION_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-17">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_tipo" constraintName="FK_GRUPOTIPO_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-18">
+    <addForeignKeyConstraint baseColumnNames="grupo_especial_investigacion_id" baseTableName="grupo" constraintName="FK_GRUPO_GRUPOESPECIALINVESTIGACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_especial_investigacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-19">
+    <addForeignKeyConstraint baseColumnNames="grupo_tipo_id" baseTableName="grupo" constraintName="FK_GRUPO_GRUPOTIPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_tipo" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-20">
+    <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="grupo" constraintName="FK_GRUPO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-21">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_equipo" constraintName="FK_GRUPOEQUIPO_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-22">
+    <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="grupo_equipo" constraintName="FK_GRUPOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>
