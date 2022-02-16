@@ -782,7 +782,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private disableCoordinadorExternoFormControl(value: boolean): void {
 
-    if (value || this.readonly) {
+    if (value || this.readonly || this.isInvestigador) {
       this.getFormGroup()?.controls.coordinadorExterno.disable({ emitEvent: false });
     } else {
       this.getFormGroup()?.controls.coordinadorExterno.enable({ emitEvent: false });

@@ -276,10 +276,10 @@ export class ProyectoActionService extends ActionService {
 
     if (this.data && id) {
       this.enableEdit();
-      if (this.data.proyecto?.solicitudId) {
+      if (this.data.proyecto?.solicitudId && !this.data.isInvestigador) {
         this.addSolicitudLink(this.data.proyecto.solicitudId);
       }
-      if (this.data.proyecto?.convocatoriaId) {
+      if (this.data.proyecto?.convocatoriaId && !this.data.isInvestigador) {
         this.addConvocatoriaLink(this.data.proyecto.convocatoriaId);
       }
     }
