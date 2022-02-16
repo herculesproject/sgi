@@ -6,6 +6,7 @@ import { ActionComponent } from '@core/component/action.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
+import { ActionStatus } from '@core/services/action-service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,6 +45,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
   textoCambioEstado = MSG_BUTTON_CAMBIO_ESTADO;
   disablePresentar$: Subject<boolean> = new BehaviorSubject<boolean>(true);
   disableCambioEstado = false;
+  status: ActionStatus;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -59,13 +61,22 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
 
     this.disablePresentar$.next(!this.actionService.presentable);
 
-    this.subscriptions.push(this.actionService.status$.subscribe(
-      status => {
-        this.disableCambioEstado = (
-          this.actionService.enableCambioDeEstado.value || status.changes || status.errors);
-        this.disablePresentar$.next(!this.actionService.presentable || status.changes || status.errors);
-      }
-    ));
+    this.subscriptions.push(
+      this.actionService.status$.subscribe(
+        status => {
+          this.status = status;
+          this.disableCambioEstado = (this.actionService.disableCambioEstado$.value || status.changes || status.errors);
+          this.disablePresentar$.next(!this.actionService.presentable || status.changes || status.errors);
+        }
+      )
+    );
+    this.subscriptions.push(
+      this.actionService.disableCambioEstado$.subscribe(
+        disableCambioDeEstado => {
+          this.disableCambioEstado = (disableCambioDeEstado || this.status.changes || this.status.errors);
+        }
+      )
+    );
   }
 
   ngOnInit(): void {

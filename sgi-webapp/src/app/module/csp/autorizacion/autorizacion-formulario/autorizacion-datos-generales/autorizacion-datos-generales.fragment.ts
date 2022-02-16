@@ -21,7 +21,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   public isInvestigador: boolean;
   private isVisor: boolean;
 
-  readonly enableCambioDeEstado$ = new BehaviorSubject<boolean>(false);
+  readonly disableCambioEstado$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -113,6 +113,9 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return this.autorizacionService.findById(key as number).pipe(
       switchMap((autorizacion) => {
         this.autorizacion = autorizacion;
+        this.disableCambioEstado$.next(!autorizacion.tituloProyecto
+          || !autorizacion.responsable
+          || !autorizacion.entidad);
         if (autorizacion.responsable?.id) {
           return this.personaService.findById(autorizacion.responsable?.id).pipe(
             map(responsable => {
@@ -126,7 +129,8 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       }),
       switchMap(autorizacion => {
         if (autorizacion.convocatoria?.id) {
-          const convocatoria$ = this.isInvestigador ? this.autorizacionService.findConvocatoria(autorizacion.id) : this.convocatoriaService.findById(autorizacion.convocatoria.id);
+          const convocatoria$ = this.isInvestigador ?
+            this.autorizacionService.findConvocatoria(autorizacion.id) : this.convocatoriaService.findById(autorizacion.convocatoria.id);
           return convocatoria$.pipe(
             map(convocatoria => {
               autorizacion.convocatoria = convocatoria;
@@ -193,7 +197,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return observable$.pipe(
       map(value => {
         this.autorizacion.id = value.id;
-        this.enableCambioDeEstado$.next(!value.tituloProyecto
+        this.disableCambioEstado$.next(!value.tituloProyecto
           || !value.responsable
           || !value.entidad);
         return this.autorizacion.id;

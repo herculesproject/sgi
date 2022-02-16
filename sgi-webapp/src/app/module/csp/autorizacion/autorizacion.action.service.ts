@@ -55,8 +55,8 @@ export class AutorizacionActionService extends
     return this.datosGenerales.getValue();
   }
 
-  get enableCambioDeEstado() {
-    return this.datosGenerales.enableCambioDeEstado$;
+  get disableCambioEstado$() {
+    return this.datosGenerales.disableCambioEstado$;
   }
 
   get isInvestigador(): boolean {
