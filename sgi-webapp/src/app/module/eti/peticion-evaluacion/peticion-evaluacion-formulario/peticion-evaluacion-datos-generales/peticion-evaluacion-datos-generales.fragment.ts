@@ -83,8 +83,8 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       }),
       switchMap((value) => {
         if (value.solicitudConvocatoriaRef) {
-          return this.solicitudService.findById(Number(value.solicitudConvocatoriaRef)).pipe(map(solicitud => {
-            value.solicitudConvocatoriaRef = solicitud.codigoRegistroInterno;
+          return this.solicitudService.getCodigoRegistroInterno(Number(value.solicitudConvocatoriaRef)).pipe(map(codigoRegistroInterno => {
+            value.solicitudConvocatoriaRef = codigoRegistroInterno;
             return value;
           }));
         } else {
