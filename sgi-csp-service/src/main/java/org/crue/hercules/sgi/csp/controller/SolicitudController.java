@@ -60,6 +60,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -295,7 +296,7 @@ public class SolicitudController {
    * @return Solicitud {@link Solicitud} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V', 'CSP-SOL-INV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C')")
   public Solicitud findById(@PathVariable Long id) {
     log.debug("Solicitud findById(Long id) - start");
 
@@ -1182,6 +1183,23 @@ public class SolicitudController {
     log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - end");
     return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve el código de registro interno de la {@link Solicitud} con el id
+   * indicado.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return Código registro interno de la {@link Solicitud} correspondiente al id
+   */
+  @GetMapping("/{id}/codigo-registro-interno")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-ETI-V')")
+  public String getCodigoRegistroInterno(@PathVariable Long id) {
+    log.debug("Solicitud getCodigoRegistroInterno(Long id) - start");
+    String codigoRegistroInterno = service.getCodigoRegistroInterno(id);
+    log.debug("Solicitud getCodigoRegistroInterno(Long id) - end");
+
+    return JSONObject.quote(codigoRegistroInterno);
   }
 
   private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {

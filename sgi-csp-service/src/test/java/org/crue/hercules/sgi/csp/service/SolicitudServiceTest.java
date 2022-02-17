@@ -349,7 +349,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(solicitud.getUnidadGestionRef());
     Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo").isEqualTo(solicitud.getActivo());
   }
-  
+
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithFoundedSolicitudConvocatoriaIdNull_ReturnsSolicitud() {
@@ -480,7 +480,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo()").isEqualTo(false);
   }
-  
+
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-BR" })
   void disable_WithAuthorityInvAndSolicitudCreatorRefDistinctToCurrentUser_ThrowsIllegalArgumentException() {
@@ -489,7 +489,8 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class).hasMessage("El usuario no es el creador de la Solicitud");
+    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El usuario no es el creador de la Solicitud");
 
   }
 
@@ -501,7 +502,8 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class).hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+    Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
   }
 
@@ -636,7 +638,7 @@ class SolicitudServiceTest extends BaseServiceTest {
       Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
- 
+
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V_1" })
   void findAllTodos_WithUO1_ReturnsPage() {
@@ -677,18 +679,20 @@ class SolicitudServiceTest extends BaseServiceTest {
       Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithSameEstado_ThrowsEstadoSolicitudNotUpdatedException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.BORRADOR)
-    .build();
+        .estado(Estado.BORRADOR)
+        .build();
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(EstadoSolicitudNotUpdatedException.class);
+    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(EstadoSolicitudNotUpdatedException.class);
   }
 
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
@@ -697,11 +701,11 @@ class SolicitudServiceTest extends BaseServiceTest {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.ADMITIDA_DEFINITIVA)
-    .build();
+        .estado(Estado.ADMITIDA_DEFINITIVA)
+        .build();
     SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
-    List<SolicitudProyectoEquipo>equipos = Arrays.asList(buildMockSolicitudProyectoEquipo(1L, 1, 9));
+    List<SolicitudProyectoEquipo> equipos = Arrays.asList(buildMockSolicitudProyectoEquipo(1L, 1, 9));
 
     //@formatter:off
     ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(ChecklistOutput.builder()
@@ -718,13 +722,20 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
-    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
-    BDDMockito.given(solicitudProyectoRepository.save(ArgumentMatchers.<SolicitudProyecto>any())).willReturn(solicitudProyecto);
-    
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
+        .willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(solicitudProyectoRepository.save(ArgumentMatchers.<SolicitudProyecto>any()))
+        .willReturn(solicitudProyecto);
 
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
+        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito
+        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any()))
+        .willReturn(ResponseEntity.ok(peticionEvaluacion));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -741,8 +752,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.DENEGADA)
-    .build();
+        .estado(Estado.DENEGADA)
+        .build();
     SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
     solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
@@ -753,12 +764,18 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
-    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
-    
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
+        .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
+        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito
+        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
+        .willReturn(ResponseEntity.ok(peticionEvaluacion));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -766,21 +783,22 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(solicitudChanged).isNotNull();
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithChecklistNullAndEstadoConcedidaAndDocumentosRequeridosSolicitudNotEmpty_ReturnsSolicitud() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
     solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
-    List<SolicitudDocumento>solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<SolicitudDocumento> solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
 
     //@formatter:off
     ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
@@ -788,18 +806,27 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
-    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
-    
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
+        .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
+        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito
+        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
+        .willReturn(ResponseEntity.ok(peticionEvaluacion));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
 
-    BDDMockito.given(solicitudDocumentoRepository.findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong())).willReturn(solicitudDocumentos);
+    BDDMockito.given(solicitudDocumentoRepository
+        .findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong()))
+        .willReturn(solicitudDocumentos);
 
     Solicitud solicitudChanged = this.service.cambiarEstado(solicitudId, newEstado);
 
@@ -812,8 +839,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(solicitudId);
     solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
@@ -824,12 +851,18 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
-    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId())).willReturn(Optional.of(solicitudProyecto));
-    
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(), ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+    BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
+        .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(), ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString())).willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
+    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
+        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+
+    BDDMockito
+        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
+            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
+        .willReturn(ResponseEntity.ok(peticionEvaluacion));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -837,26 +870,29 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(solicitudChanged).isNotNull();
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithoutDocumentoRequerido_ThrowsSolicitudWithoutRequeridedDocumentationException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
 
     //@formatter:off
     ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
     //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
-    
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
-    
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(SolicitudWithoutRequeridedDocumentationException.class);
+
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
+
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(SolicitudWithoutRequeridedDocumentationException.class);
   }
 
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
@@ -865,121 +901,149 @@ class SolicitudServiceTest extends BaseServiceTest {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
-    List<SolicitudDocumento>solicitudDocumentos = new LinkedList<>();
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<SolicitudDocumento> solicitudDocumentos = new LinkedList<>();
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
-    
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
-    
-    BDDMockito.given(solicitudDocumentoRepository.findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong())).willReturn(solicitudDocumentos);
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(SolicitudWithoutRequeridedDocumentationException.class);
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
+
+    BDDMockito.given(solicitudDocumentoRepository
+        .findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong()))
+        .willReturn(solicitudDocumentos);
+
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(SolicitudWithoutRequeridedDocumentationException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithDocumentoRequerido_ThrowsMissingInvestigadorPrincipalInSolicitudProyectoEquipoException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
-    List<SolicitudDocumento>solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<SolicitudDocumento> solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
-    
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
-    
-    BDDMockito.given(solicitudDocumentoRepository.findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong())).willReturn(solicitudDocumentos);
 
-    BDDMockito.given(solicitudProyectoRepository.findById(anyLong())).willReturn(Optional.of(SolicitudProyecto.builder().id(1L).build()));
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
 
-    BDDMockito.given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString())).willReturn(new LinkedList<>());
+    BDDMockito.given(solicitudDocumentoRepository
+        .findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong()))
+        .willReturn(solicitudDocumentos);
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(MissingInvestigadorPrincipalInSolicitudProyectoEquipoException.class);
+    BDDMockito.given(solicitudProyectoRepository.findById(anyLong()))
+        .willReturn(Optional.of(SolicitudProyecto.builder().id(1L).build()));
+
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(new LinkedList<>());
+
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(MissingInvestigadorPrincipalInSolicitudProyectoEquipoException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithDocumentoRequerido_ThrowsColaborativoWithoutCoordinadorExternoException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
-    List<SolicitudDocumento>solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<SolicitudDocumento> solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
-    
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
-    
-    BDDMockito.given(solicitudDocumentoRepository.findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong())).willReturn(solicitudDocumentos);
-    //@formatter: off
-    BDDMockito.given(solicitudProyectoRepository.findById(anyLong())).willReturn(Optional.of(SolicitudProyecto.builder()
-      .id(1L)
-      .colaborativo(Boolean.TRUE)
-      .build()));
-    //@formatter: on
-    BDDMockito.given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString())).willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(ColaborativoWithoutCoordinadorExternoException.class);
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
+
+    BDDMockito.given(solicitudDocumentoRepository
+        .findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong()))
+        .willReturn(solicitudDocumentos);
+    // @formatter: off
+    BDDMockito.given(solicitudProyectoRepository.findById(anyLong())).willReturn(Optional.of(SolicitudProyecto.builder()
+        .id(1L)
+        .colaborativo(Boolean.TRUE)
+        .build()));
+    // @formatter: on
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
+
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(ColaborativoWithoutCoordinadorExternoException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithDocumentoRequerido_ThrowsSolicitudProyectoWithoutSocioCoordinadorException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     TipoDocumento tipoDocumento = buildMockTipoDocumento(1L);
-    List<DocumentoRequeridoSolicitud>documentos = Arrays.asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
-    List<SolicitudDocumento>solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
+    List<DocumentoRequeridoSolicitud> documentos = Arrays
+        .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
+    List<SolicitudDocumento> solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
-    
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
-    
-    BDDMockito.given(solicitudDocumentoRepository.findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong())).willReturn(solicitudDocumentos);
-    //@formatter: off
-    BDDMockito.given(solicitudProyectoRepository.findById(anyLong())).willReturn(Optional.of(SolicitudProyecto.builder()
-      .id(1L)
-      .colaborativo(Boolean.TRUE)
-      .coordinadorExterno(Boolean.TRUE)
-      .build()));
-    //@formatter: on
-    BDDMockito.given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString())).willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(SolicitudProyectoWithoutSocioCoordinadorException.class);
+    BDDMockito.given(documentoRequeridoSolicitudRepository
+        .findAll(ArgumentMatchers.<Specification<DocumentoRequeridoSolicitud>>any())).willReturn(documentos);
+
+    BDDMockito.given(solicitudDocumentoRepository
+        .findAllByTipoDocumentoIdInAndSolicitudId(ArgumentMatchers.<List<Long>>any(), anyLong()))
+        .willReturn(solicitudDocumentos);
+    // @formatter: off
+    BDDMockito.given(solicitudProyectoRepository.findById(anyLong())).willReturn(Optional.of(SolicitudProyecto.builder()
+        .id(1L)
+        .colaborativo(Boolean.TRUE)
+        .coordinadorExterno(Boolean.TRUE)
+        .build()));
+    // @formatter: on
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
+
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(SolicitudProyectoWithoutSocioCoordinadorException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithEstadoSubsanacion_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setEstado(EstadoSolicitud.builder()
-    .estado(Estado.SUBSANACION).build());
+        .estado(Estado.SUBSANACION).build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
@@ -988,70 +1052,74 @@ class SolicitudServiceTest extends BaseServiceTest {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setEstado(EstadoSolicitud.builder()
-    .estado(Estado.EXCLUIDA_PROVISIONAL).build());
+        .estado(Estado.EXCLUIDA_PROVISIONAL).build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithExcluidaDefinitiva_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setEstado(EstadoSolicitud.builder()
-    .estado(Estado.EXCLUIDA_DEFINITIVA).build());
+        .estado(Estado.EXCLUIDA_DEFINITIVA).build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
- 
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithDenegadaProvisional_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setEstado(EstadoSolicitud.builder()
-    .estado(Estado.DENEGADA_PROVISIONAL).build());
+        .estado(Estado.DENEGADA_PROVISIONAL).build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
-  
+
   @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
   @Test
   void cambiarEstado_WithDenegada_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     EstadoSolicitud newEstado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     solicitud.setEstado(EstadoSolicitud.builder()
-    .estado(Estado.DENEGADA).build());
+        .estado(Estado.DENEGADA).build());
 
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
-    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado)).isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(solicitudId, newEstado))
+        .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
   @Test
-  void isPosibleCrearProyecto_WithEstadoSolicitudConcedidoAndSolicitudProyecctoExist_ReturnTrue(){
+  void isPosibleCrearProyecto_WithEstadoSolicitudConcedidoAndSolicitudProyecctoExist_ReturnTrue() {
     Long solicitudId = 1L;
     EstadoSolicitud estado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     solicitud.setEstado(estado);
@@ -1065,13 +1133,13 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(response).isTrue();
 
   }
-  
+
   @Test
-  void isPosibleCrearProyecto_WithEstadoSolicitudConcedidoAndSolicitudProyecctoNotExist_ReturnTrue(){
+  void isPosibleCrearProyecto_WithEstadoSolicitudConcedidoAndSolicitudProyecctoNotExist_ReturnTrue() {
     Long solicitudId = 1L;
     EstadoSolicitud estado = EstadoSolicitud.builder()
-    .estado(Estado.CONCEDIDA)
-    .build();
+        .estado(Estado.CONCEDIDA)
+        .build();
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     solicitud.setEstado(estado);
@@ -1084,6 +1152,19 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(response).isFalse();
 
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-ETI-V" })
+  void getCodigoRegistroInterno_WithIdExist_ReturnsCodigoRegistroInterno() throws Exception {
+    // given: Ningun Solicitud con el id buscado
+    Long idBuscado = 1L;
+    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
+
+    // when: Buscamos el Solicitud por su id
+    // then: lanza un SolicitudNotFoundException
+    Assertions.assertThatThrownBy(() -> service.getCodigoRegistroInterno(idBuscado))
+        .isInstanceOf(SolicitudNotFoundException.class);
   }
 
   /**
@@ -1164,44 +1245,44 @@ class SolicitudServiceTest extends BaseServiceTest {
   private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId) {
 
     return SolicitudProyecto.builder()
-      .id(solicitudProyectoId)
-      .acronimo("acronimo-" + solicitudProyectoId)
-      .colaborativo(Boolean.TRUE)
-      .tipoPresupuesto(TipoPresupuesto.GLOBAL)
-      .checklistRef("checklist-001")
-      .build();
+        .id(solicitudProyectoId)
+        .acronimo("acronimo-" + solicitudProyectoId)
+        .colaborativo(Boolean.TRUE)
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL)
+        .checklistRef("checklist-001")
+        .build();
   }
 
-  private PeticionEvaluacion buildMockPeticionEvaluacion(Long id, Long checklistId){
+  private PeticionEvaluacion buildMockPeticionEvaluacion(Long id, Long checklistId) {
     return PeticionEvaluacion.builder()
-    .id(id)
-    .activo(Boolean.TRUE)
-    .checklistId(checklistId)
-    .build();
+        .id(id)
+        .activo(Boolean.TRUE)
+        .checklistId(checklistId)
+        .build();
   }
 
   private SolicitudProyectoEquipo buildMockSolicitudProyectoEquipo(Long id, int mesInicio, int mesFin) {
     return SolicitudProyectoEquipo.builder()
-    .id(id)
-    .mesFin(mesFin)
-    .mesInicio(mesInicio)
-    .build();
+        .id(id)
+        .mesFin(mesFin)
+        .mesInicio(mesInicio)
+        .build();
   }
 
   private DocumentoRequeridoSolicitud buildMockDocumentoRequeridoSolicitud(Long id, TipoDocumento tipoDocumento) {
     return DocumentoRequeridoSolicitud.builder()
-    .id(id)
-    .configuracionSolicitudId(1L)
-    .observaciones("Testing")
-    .tipoDocumento(tipoDocumento)
-    .build();
+        .id(id)
+        .configuracionSolicitudId(1L)
+        .observaciones("Testing")
+        .tipoDocumento(tipoDocumento)
+        .build();
   }
 
   private TipoDocumento buildMockTipoDocumento(Long id) {
     return TipoDocumento.builder()
-      .activo(Boolean.TRUE)
-      .id(id)
-      .descripcion("testion")
-    .build();
+        .activo(Boolean.TRUE)
+        .id(id)
+        .descripcion("testion")
+        .build();
   }
 }

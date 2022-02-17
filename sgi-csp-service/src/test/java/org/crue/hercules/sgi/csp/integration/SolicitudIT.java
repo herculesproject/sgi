@@ -46,6 +46,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 /**
  * Test de integracion de Solicitud.
@@ -93,7 +94,7 @@ class SolicitudIT extends BaseIT {
   private static final String PATH_MODIFICABLE_ESTADO_AND_DOCUMENTOS_BY_INVESTIGADOR = "/modificableestadoanddocumentosbyinvestigador";
 
   private static final String[] DEFAULT_ROLES = { "AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B",
-      "CSP-SOL-R" };
+      "CSP-SOL-R", "CSP-SOL-ETI-V" };
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -1889,6 +1890,31 @@ class SolicitudIT extends BaseIT {
         Void.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/estado_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getCodigoRegistroInterno_ReturnsCodigoRegistroInterno() throws Exception {
+    Long idSolicitud = 1L;
+
+    final ResponseEntity<String> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/codigo-registro-interno",
+        HttpMethod.GET, buildRequest(null, null, DEFAULT_ROLES), String.class, idSolicitud);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    String codigoRegistroInterno = response.getBody();
+    Assertions.assertThat(codigoRegistroInterno).isEqualTo(JSONObject.quote("SGI_SLC1202011061027"));
   }
 
   /**

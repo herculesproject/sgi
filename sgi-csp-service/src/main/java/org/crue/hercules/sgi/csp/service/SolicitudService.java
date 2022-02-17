@@ -590,6 +590,20 @@ public class SolicitudService {
   }
 
   /**
+   * Obtiene el código de registro interno de la {@link Solicitud} por id.
+   * 
+   * @param id Identificador de la entidad {@link Solicitud}.
+   * @return Código de registro interno de la entidad {@link Solicitud}.
+   */
+  public String getCodigoRegistroInterno(Long id) {
+    log.debug("getCodigoRegistroInterno(Long id) - start");
+    final String returnValue = repository.findById(id).map(sol -> sol.getCodigoRegistroInterno())
+        .orElseThrow(() -> new SolicitudNotFoundException(id));
+    log.debug("getCodigoRegistroInterno(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Copia todos los miembros del equipo de una {@link Solicitud} a un Equipo d
    * Trabajo de una Petición de Evaluación Ética
    *
