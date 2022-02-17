@@ -6,6 +6,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
+import org.springframework.util.StringUtils;
 
 @Converter(autoApply = true)
 public class EpigrafeCVNConverter implements AttributeConverter<EpigrafeCVN, String> {
@@ -20,7 +21,7 @@ public class EpigrafeCVNConverter implements AttributeConverter<EpigrafeCVN, Str
 
   @Override
   public EpigrafeCVN convertToEntityAttribute(String internValue) {
-    if (internValue == null) {
+    if (!StringUtils.hasText(internValue)) {
       return null;
     }
 

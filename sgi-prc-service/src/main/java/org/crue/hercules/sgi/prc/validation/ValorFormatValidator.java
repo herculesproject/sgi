@@ -8,6 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.CampoProduccionCientificaInput;
+import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo.TipoFormato;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionCampoRepository;
@@ -15,6 +16,7 @@ import org.hibernate.validator.constraintvalidation.HibernateConstraintValidator
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 public class ValorFormatValidator implements ConstraintValidator<ValorFormat, CampoProduccionCientificaInput> {
 
@@ -31,35 +33,49 @@ public class ValorFormatValidator implements ConstraintValidator<ValorFormat, Ca
       return true;
     }
 
-    ConfiguracionCampo configuracionCampo = repository.findByCodigoCVN(value.getCodigoCVN()).orElse(null);
-    if (Objects.isNull(configuracionCampo)) {
-      return true;
-    }
+    try {
+      ConfiguracionCampo configuracionCampo = repository
+          .findByCodigoCVN(CodigoCVN.getByInternValue(value.getCodigoCVN()))
+          .orElse(null);
+      if (Objects.isNull(configuracionCampo)) {
+        return true;
+      }
 
-    boolean isValid = isValidValorFormat(configuracionCampo.getTipoFormato(), value);
-    if (!isValid) {
-      addEntityMessageParameter(value, configuracionCampo.getTipoFormato(), context);
+      boolean isValid = isValidValorFormat(configuracionCampo.getTipoFormato(), value);
+      if (!isValid) {
+        addEntityMessageParameter(value, configuracionCampo.getTipoFormato(), context);
+      }
+      return isValid;
+    } catch (Exception e) {
+      addEntityMessageParameter(value, null, context);
+      return false;
     }
-    return isValid;
   }
 
   private boolean isValidValorFormat(TipoFormato tipoFormato, CampoProduccionCientificaInput value) {
     String valor = value.getValores().get(0);
-    switch (tipoFormato) {
-      case FECHA:
-        try {
-          Instant.parse(valor);
+    if (StringUtils.hasText(valor)) {
+      switch (tipoFormato) {
+        case FECHA:
+          try {
+            if (valor.matches("^(\\d{4})-(\\d{2})-(\\d{2})$")) {
+              valor = valor + "T00:00:00Z";
+            }
+            Instant.parse(valor);
+            return true;
+          } catch (Exception e) {
+            return false;
+          }
+        case NUMERO:
+          return NumberUtils.isCreatable(valor) && valor.length() <= 18;
+        case BOOLEANO:
+          return valor.equalsIgnoreCase("true") || valor.equalsIgnoreCase("false");
+        default:
           return true;
-        } catch (Exception e) {
-          return false;
-        }
-      case NUMERO:
-        return NumberUtils.isCreatable(valor) && valor.length() <= 18;
-      case BOOLEANO:
-        return valor.equalsIgnoreCase("true") || valor.equalsIgnoreCase("false");
-      default:
-        return true;
+      }
     }
+    return true;
+
   }
 
   private void addEntityMessageParameter(CampoProduccionCientificaInput value, TipoFormato tipoFormato,
@@ -67,7 +83,7 @@ public class ValorFormatValidator implements ConstraintValidator<ValorFormat, Ca
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-    hibernateContext.addMessageParameter("codigoCVN", value.getCodigoCVN().getInternValue());
+    hibernateContext.addMessageParameter("codigoCVN", value.getCodigoCVN());
     hibernateContext.addMessageParameter("value", value.getValores().get(0));
     hibernateContext.addMessageParameter("format", null != tipoFormato ? tipoFormato : "");
     // Disable default message to allow binding the message to a property

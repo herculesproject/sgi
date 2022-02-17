@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.framework.validation.AbstractEntityValidator;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -30,6 +31,8 @@ public abstract class AbstractEntityFieldsValidator<A extends Annotation, T> ext
 
   /** The entity field name that this validatos can validate */
   private String[] fieldsNames;
+
+  public static final String NULL_VALUE_DEFAULT = "null";
 
   @Override
   public void initialize(A constraintAnnotation) {
@@ -65,7 +68,7 @@ public abstract class AbstractEntityFieldsValidator<A extends Annotation, T> ext
    */
   protected Object getFieldValue(Object value, String fieldName) {
     BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(value);
-    return wrapper.getPropertyValue(fieldName);
+    return ObjectUtils.defaultIfNull(wrapper.getPropertyValue(fieldName), NULL_VALUE_DEFAULT);
   }
 
   /**

@@ -10,3 +10,5 @@ INSERT INTO test.autor (id, produccion_cientifica_id, orcid_id, orden, firma, pe
 INSERT INTO test.autor (id, produccion_cientifica_id, orcid_id, orden, firma, persona_ref, nombre, apellidos, fecha_inicio, fecha_fin) VALUES(7, 3, 'orcid_id3_1', 1, NULL, 'persona_ref3_1', NULL, NULL, NULL, NULL);
 INSERT INTO test.autor (id, produccion_cientifica_id, orcid_id, orden, firma, persona_ref, nombre, apellidos, fecha_inicio, fecha_fin) VALUES(8, 3, 'orcid_id3_2', 2, NULL, 'persona_ref3_2', NULL, NULL, NULL, NULL);
 INSERT INTO test.autor (id, produccion_cientifica_id, orcid_id, orden, firma, persona_ref, nombre, apellidos, fecha_inicio, fecha_fin) VALUES(9, 3, 'orcid_id3_3', 3, NULL, 'persona_ref3_3', NULL, NULL, NULL, NULL);
+
+ALTER SEQUENCE test.autor_seq RESTART WITH 100;

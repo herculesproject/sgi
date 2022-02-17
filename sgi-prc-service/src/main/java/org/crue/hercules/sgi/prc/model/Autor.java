@@ -56,7 +56,7 @@ public class Autor extends BaseEntity {
   @Column(name = "apellidos", length = APELLIDOS_LENGTH, nullable = true)
   private String apellidos;
 
-  @Column(name = "orden", nullable = false)
+  @Column(name = "orden", nullable = true)
   private Integer orden;
 
   @Column(name = "orcid_id", length = ORCID_ID_LENGTH, nullable = true)

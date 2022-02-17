@@ -6,21 +6,24 @@ import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionIn
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AutorInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.CampoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.IndiceImpactoInput;
-import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.ProyectoInput;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class ProduccionCientificaApiFullOutput extends ProduccionCientificaApiOutput {
 
   private List<CampoProduccionCientificaInput> campos;
   private List<AutorInput> autores;
   private List<IndiceImpactoInput> indicesImpacto;
   private List<AcreditacionInput> acreditaciones;
-  private List<ProyectoInput> proyectos;
+  private List<Long> proyectos;
 
 }

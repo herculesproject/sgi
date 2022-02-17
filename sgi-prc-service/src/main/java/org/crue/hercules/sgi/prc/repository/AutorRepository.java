@@ -18,4 +18,6 @@ public interface AutorRepository
 
   List<Autor> findAllByProduccionCientificaId(Long produccionCientificaId);
 
+  List<Autor> findAllByProduccionCientificaIdAndPersonaRefIsNotNull(Long produccionCientificaId);
+
 }

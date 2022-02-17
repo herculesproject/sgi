@@ -19,16 +19,22 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
+import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
+import org.crue.hercules.sgi.prc.model.ConfiguracionCampo_;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
+import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
+import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.model.ValorCampo_;
@@ -272,5 +278,68 @@ public class CustomProduccionCientificaRepositoryImpl implements CustomProduccio
                     index -> cq.getSelection().getCompoundSelectionItems().get(index).getAlias().equals(selectionName))
                 .findFirst()
                 .getAsInt());
+  }
+
+  /**
+   * Devuelve una lista de ids de {@link ProduccionCientifica} de un
+   * {@link EpigrafeCVN} que cumplan las condiciones de baremación.
+   * 
+   * @param baremacionInput fechaInicio Fecha inicio de baremación en formato UTC,
+   *                        fechaFin Fecha fin de baremación en formato UTC,
+   *                        epigrafeCVN {@link EpigrafeCVN} a filtrar,
+   *                        codigoCVN {@link CodigoCVN} a filtrar
+   * @return lista de ids de {@link ProduccionCientifica}
+   */
+  @Override
+  public List<Long> findAllByBaremacion(BaremacionInput baremacionInput) {
+    log.debug("findAllByBaremacion(BaremacionInput baremacionInput) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+    // Define FROM clause
+    Root<ProduccionCientifica> root = cq.from(ProduccionCientifica.class);
+
+    Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(
+        ProduccionCientifica_.estado, JoinType.INNER);
+
+    Join<ProduccionCientifica, CampoProduccionCientifica> joinCampos = root.join(
+        ProduccionCientifica_.campos, JoinType.LEFT);
+    Join<CampoProduccionCientifica, ValorCampo> joinValores = joinCampos.join(
+        CampoProduccionCientifica_.valoresCampos, JoinType.LEFT);
+
+    cq.select(root.get(ProduccionCientifica_.id)).distinct(true);
+
+    Predicate predicateEpigrafe = cb.equal(root.get(ProduccionCientifica_.epigrafeCVN),
+        baremacionInput.getEpigrafeCVN());
+
+    Predicate predicateEstado = cb.or(
+        cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.VALIDADO),
+        cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado),
+            TipoEstadoProduccion.VALIDADO_PARCIALMENTE));
+
+    Subquery<CodigoCVN> queryConfiguracionCampo = cq.subquery(CodigoCVN.class);
+    Root<ConfiguracionCampo> rootConfiguracionCampo = queryConfiguracionCampo.from(ConfiguracionCampo.class);
+    Predicate existsConfiguracionCampoFecha = cb.equal(queryConfiguracionCampo
+        .select(rootConfiguracionCampo.get(ConfiguracionCampo_.codigoCVN))
+        .where(cb.equal(rootConfiguracionCampo.get(ConfiguracionCampo_.epigrafeCVN), baremacionInput.getEpigrafeCVN()),
+            cb.isTrue(rootConfiguracionCampo.get(ConfiguracionCampo_.fechaReferenciaInicio))),
+        joinCampos.get(CampoProduccionCientifica_.codigoCVN));
+
+    Predicate predicateValorFecha = cb.between(joinValores.get(ValorCampo_.valor), baremacionInput.getFechaInicio(),
+        baremacionInput.getFechaFin());
+
+    Predicate predicateFinal = cb.and(predicateEpigrafe, predicateEstado, existsConfiguracionCampoFecha,
+        predicateValorFecha);
+
+    cq.where(predicateFinal);
+
+    List<Long> result = entityManager.createQuery(cq).getResultList();
+
+    log.debug("findAllByBaremacion(BaremacionInput baremacionInput) - end");
+
+    return result;
   }
 }

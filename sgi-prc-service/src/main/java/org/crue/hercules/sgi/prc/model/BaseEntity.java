@@ -37,11 +37,12 @@ public class BaseEntity extends Auditable implements Serializable {
   public static final int NOMBRE_CONVOCATORIA_LENGTH = 100;
   public static final int PARTIDA_PRESUPUESTARIA_LENGTH = 50;
   public static final int TIPO_CUANTIA_LENGTH = 50;
-  public static final int TIPO_BAREMO_LENGTH = 50;
+  public static final int TIPO_BAREMO_LENGTH = 80;
   public static final int TIPO_FUENTE_LENGTH = 50;
   public static final int TIPO_PUNTOS_LENGTH = 50;
   public static final int VALOR_MAPEO_TIPOS = 100;
   public static final int NOMBRE_CONF_BAREMOS_LENGTH = 100;
+  public static final int CUARTIL_LENGTH = 2;
 
   /** Serial version. */
   private static final long serialVersionUID = 1L;

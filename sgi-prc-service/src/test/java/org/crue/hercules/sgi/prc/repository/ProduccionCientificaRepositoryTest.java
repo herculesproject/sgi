@@ -26,7 +26,8 @@ public class ProduccionCientificaRepositoryTest extends BaseRepositoryTest {
     produccionCientifica = repository.save(produccionCientifica);
 
     // when: se busca el ProduccionCientifica idRef
-    ProduccionCientifica produccionCientificaSearched = repository.findByProduccionCientificaRef(idRefSearch).get();
+    ProduccionCientifica produccionCientificaSearched = repository
+        .findByProduccionCientificaRefAndConvocatoriaBaremacionIdIsNull(idRefSearch).get();
 
     // then: Se recupera el ProduccionCientifica con el idRef buscado
     Assertions.assertThat(produccionCientificaSearched.getId()).as("getId").isNotNull();

@@ -49,7 +49,7 @@ public class Baremo extends BaseEntity {
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
   public enum TipoCuantia {
-    CUANTIA,
+    PUNTOS,
     RANGO;
   }
 
@@ -67,9 +67,6 @@ public class Baremo extends BaseEntity {
   @Column(name = "puntos", nullable = true)
   private BigDecimal puntos;
 
-  @Column(name = "puntuacion_maxima", nullable = true)
-  private BigDecimal puntuacionMaxima;
-
   @Column(name = "cuantia", nullable = true)
   private BigDecimal cuantia;
 
@@ -83,9 +80,7 @@ public class Baremo extends BaseEntity {
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "configuracion_baremo_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_BAREMO_CONFIGURACIONBAREMO"))
-  @Getter(AccessLevel.NONE)
-  @Setter(AccessLevel.NONE)
-  private final ConfiguracionBaremo configuracionBaremo = null;
+  private ConfiguracionBaremo configuracionBaremo;
 
   @Column(name = "convocatoria_baremacion_id", nullable = true)
   private Long convocatoriaBaremacionId;

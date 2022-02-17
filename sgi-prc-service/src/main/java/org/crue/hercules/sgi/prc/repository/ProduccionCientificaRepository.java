@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.prc.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.custom.CustomProduccionCientificaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,12 +21,23 @@ public interface ProduccionCientificaRepository
 
   /**
    * Obtiene la entidad {@link ProduccionCientifica} con el
-   * produccionCientificaRef indicado
+   * produccionCientificaRef indicado y ConvocatoriaBaremacionId es nulo
    *
    * @param produccionCientificaRef el produccionCientificaRef de
    *                                {@link ProduccionCientifica}.
    * @return el {@link ProduccionCientifica} con el produccionCientificaRef
    *         indicado
    */
-  Optional<ProduccionCientifica> findByProduccionCientificaRef(String produccionCientificaRef);
+  Optional<ProduccionCientifica> findByProduccionCientificaRefAndConvocatoriaBaremacionIdIsNull(
+      String produccionCientificaRef);
+
+  /**
+   * Obtiene las entidades {@link ProduccionCientifica} con el
+   * ConvocatoriaBaremacionId indicado
+   * 
+   * @param convocatoriaBaremacionId Id de {@link ConvocatoriaBaremacion}
+   * @return lista de {@link ProduccionCientifica}
+   */
+  List<ProduccionCientifica> findByConvocatoriaBaremacionId(Long convocatoriaBaremacionId);
+
 }

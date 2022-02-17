@@ -77,7 +77,8 @@ public class ProduccionCientificaApiController {
    */
   @PutMapping("/{produccionCientificaRef}")
   @PreAuthorize("isAuthenticated()")
-  public ProduccionCientificaApiFullOutput update(@Valid @RequestBody ProduccionCientificaApiInput produccionCientifica,
+  public ProduccionCientificaApiFullOutput update(
+      @Valid @RequestBody ProduccionCientificaApiInput produccionCientifica,
       @PathVariable String produccionCientificaRef) {
     log.debug("update(ProduccionCientifica produccionCientifica, String  produccionCientificaRef) - start");
     ProduccionCientificaApiFullOutput returnValue = service.update(produccionCientifica, produccionCientificaRef);

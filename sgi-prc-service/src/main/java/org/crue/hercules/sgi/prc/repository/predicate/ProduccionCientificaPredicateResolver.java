@@ -20,6 +20,9 @@ import org.crue.hercules.sgi.prc.model.Autor_;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
+import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
+import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoFuente;
+import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo_;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica_;
@@ -244,7 +247,8 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
     return cb.and(cb.exists(queryInvestigador));
   }
 
-  private Predicate buildByFechaEstado(ComparisonNode node, Root<ProduccionCientifica> root, CriteriaBuilder cb) {
+  private Predicate buildByFechaEstado(ComparisonNode node, Root<ProduccionCientifica> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
       // Unsupported Operator
@@ -260,8 +264,14 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
     Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(
         ProduccionCientifica_.estado, JoinType.LEFT);
 
+    Root<ConfiguracionBaremo> rootConfiguracionBaremo = query.from(ConfiguracionBaremo.class);
+
     return cb.and(
         cb.greaterThanOrEqualTo(joinEstado.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.epigrafeCVN),
+            root.get(ProduccionCientifica_.epigrafeCVN)),
+        cb.or(cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.tipoFuente), TipoFuente.CVN),
+            cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.tipoFuente), TipoFuente.CVN_OTRO_SISTEMA)),
         cb.or(
             cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.VALIDADO),
             cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.RECHAZADO)));
@@ -335,7 +345,7 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
         case ISBN:
           return buildByISBN(node, root, query, criteriaBuilder);
         case FECHA_ESTADO:
-          return buildByFechaEstado(node, root, criteriaBuilder);
+          return buildByFechaEstado(node, root, query, criteriaBuilder);
         default:
           return null;
       }

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
@@ -20,7 +21,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = ConfiguracionCampo.TABLE_NAME)
+@Table(name = ConfiguracionCampo.TABLE_NAME, uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "codigo_cvn" }, name = "UK_CONFIGURACIONCAMPO_CODIGOCVN") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.prc.exceptions;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
-import org.crue.hercules.sgi.prc.model.IndiceImpacto.TipoFuenteImpacto;
+import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 
 /**
  * TipoFuenteImpactoNotFoundException

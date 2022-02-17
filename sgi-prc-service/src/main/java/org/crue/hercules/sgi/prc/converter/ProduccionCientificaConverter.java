@@ -7,14 +7,12 @@ import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AutorInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.IndiceImpactoInput;
-import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.ProyectoInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaResumen;
 import org.crue.hercules.sgi.prc.model.Acreditacion;
 import org.crue.hercules.sgi.prc.model.Autor;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,12 +45,16 @@ public class ProduccionCientificaConverter {
   public List<ProduccionCientificaApiOutput> convertProduccionCientificaEstadoResumen(
       List<ProduccionCientificaResumen> list) {
     return list.stream()
-        .map(produccionCientifica -> convertProduccionCientificaEstadoResumen(produccionCientifica))
+        .map(this::convertProduccionCientificaEstadoResumen)
         .collect(Collectors.toList());
   }
 
   public ProduccionCientificaApiFullOutput convert(ProduccionCientifica produccionCientifica) {
-    return modelMapper.map(produccionCientifica, ProduccionCientificaApiFullOutput.class);
+    ProduccionCientificaApiFullOutput output = modelMapper.map(produccionCientifica,
+        ProduccionCientificaApiFullOutput.class);
+    output.setIdRef(produccionCientifica.getProduccionCientificaRef());
+    output.setEpigrafeCVN(produccionCientifica.getEpigrafeCVN().getInternValue());
+    return output;
   }
 
   public AutorInput convertAutor(Autor autor) {
@@ -63,12 +65,9 @@ public class ProduccionCientificaConverter {
     return modelMapper.map(acreditacion, AcreditacionInput.class);
   }
 
-  public ProyectoInput convertProyecto(Proyecto proyecto) {
-    return modelMapper.map(proyecto, ProyectoInput.class);
-  }
-
   public IndiceImpactoInput convertIndiceImpacto(IndiceImpacto indiceImpacto) {
-    return modelMapper.map(indiceImpacto, IndiceImpactoInput.class);
+    IndiceImpactoInput output = modelMapper.map(indiceImpacto, IndiceImpactoInput.class);
+    output.setFuenteImpacto(indiceImpacto.getFuenteImpacto().getInternValue());
+    return output;
   }
-
 }

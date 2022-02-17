@@ -33,7 +33,15 @@ public class UniqueFieldsValuesValidator extends AbstractEntityFieldsValidator<U
 
       AtomicInteger fieldIndex = new AtomicInteger();
       String queryCountFilters = Stream.of(fieldsNames)
-          .map(fieldName -> fieldName + "=?" + (fieldIndex.getAndIncrement() + 1))
+          .map(fieldName -> {
+            Object fieldValueByName = getFieldValue(value, fieldName);
+            if (!fieldValueByName.equals(NULL_VALUE_DEFAULT)) {
+              fieldName += "=?" + (fieldIndex.getAndIncrement() + 1);
+            } else {
+              fieldName += " is null";
+            }
+            return fieldName;
+          })
           .collect(Collectors.joining(" AND "));
 
       Query query = entityManager
@@ -41,8 +49,12 @@ public class UniqueFieldsValuesValidator extends AbstractEntityFieldsValidator<U
 
       AtomicInteger parameterIndex = new AtomicInteger();
       Stream.of(fieldsNames)
-          .forEach(
-              fieldName -> query.setParameter(parameterIndex.getAndIncrement() + 1, getFieldValue(value, fieldName)));
+          .forEach(fieldName -> {
+            Object fieldValueByName = getFieldValue(value, fieldName);
+            if (!fieldValueByName.equals(NULL_VALUE_DEFAULT)) {
+              query.setParameter(parameterIndex.getAndIncrement() + 1, getFieldValue(value, fieldName));
+            }
+          });
 
       Long count = (Long) query.getSingleResult();
 

@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.crue.hercules.sgi.prc.exceptions.EpigrafeCVNNotFoundException;
 import org.crue.hercules.sgi.prc.model.BaseEntity.Create;
@@ -31,17 +30,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = ProduccionCientifica.TABLE_NAME, uniqueConstraints = {
-    @UniqueConstraint(columnNames = {
-        "produccion_cientifica_ref",
-        "epigrafe_cvn" }, name = "UK_PRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICAREF_EPIGRAFECVN") })
+@Table(name = ProduccionCientifica.TABLE_NAME)
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @UniqueFieldsValues(groups = { Create.class, Update.class }, entityClass = ProduccionCientifica.class, fieldsNames = {
-    ProduccionCientifica_.PRODUCCION_CIENTIFICA_REF })
+    ProduccionCientifica_.PRODUCCION_CIENTIFICA_REF, ProduccionCientifica_.EPIGRAFE_CV_N,
+    ProduccionCientifica_.CONVOCATORIA_BAREMACION_ID })
 public class ProduccionCientifica extends BaseEntity {
 
   protected static final String TABLE_NAME = "produccion_cientifica";

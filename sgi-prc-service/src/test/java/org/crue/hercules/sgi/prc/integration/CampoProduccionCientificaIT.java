@@ -52,7 +52,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsCampoProduccionCientifica() throws Exception {
+  void create_ReturnsCampoProduccionCientifica() throws Exception {
     CampoProduccionCientificaInput campoProduccionCientifica = generarMockCampoProduccionCientificaInput();
 
     final ResponseEntity<CampoProduccionCientificaOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
@@ -74,7 +74,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsUniqueException() throws Exception {
+  void create_ReturnsUniqueException() throws Exception {
     CampoProduccionCientificaInput campoProduccionCientifica = generarMockCampoProduccionCientificaInput();
     campoProduccionCientifica.setCodigoCVN(CodigoCVN.E060_010_010_030);
 
@@ -95,7 +95,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsCampoProduccionCientifica() throws Exception {
+  void update_ReturnsCampoProduccionCientifica() throws Exception {
     CampoProduccionCientificaInput campoProduccionCientifica = generarMockCampoProduccionCientificaInput();
     campoProduccionCientifica.setProduccionCientificaId(1L);
     campoProduccionCientifica.setCodigo(CodigoCVN.E060_010_010_070.getInternValue());
@@ -122,7 +122,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void deleteById_Return204() throws Exception {
+  void deleteById_Return204() throws Exception {
     Long toDeleteId = 1L;
     // when: exists by id
     final ResponseEntity<Void> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -139,7 +139,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsCampoProduccionCientifica() throws Exception {
+  void findById_ReturnsCampoProduccionCientifica() throws Exception {
     Long idCampoProduccionCientifica = 1L;
 
     final ResponseEntity<CampoProduccionCientificaOutput> response = restTemplate.exchange(
@@ -162,11 +162,11 @@ public class CampoProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsCampoProduccionCientificaSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsCampoProduccionCientificaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id,desc";
+    String sort = "id,asc";
     String filter = "";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH)
@@ -181,18 +181,17 @@ public class CampoProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<CampoProduccionCientificaOutput> campoProduccionesCientificas = response.getBody();
-    Assertions.assertThat(campoProduccionesCientificas.size()).isEqualTo(10);
+    Assertions.assertThat(campoProduccionesCientificas).hasSize(10);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("13");
 
     Assertions.assertThat(campoProduccionesCientificas.get(0).getId()).as("get(0).getId())")
-        .isEqualTo(13L);
+        .isEqualTo(1L);
     Assertions.assertThat(campoProduccionesCientificas.get(1).getId()).as("get(1).getId())")
-        .isEqualTo(12L);
+        .isEqualTo(2L);
     Assertions.assertThat(campoProduccionesCientificas.get(2).getId()).as("get(2).getId())")
-        .isEqualTo(11L);
+        .isEqualTo(3L);
   }
 
   private CampoProduccionCientificaInput generarMockCampoProduccionCientificaInput() {

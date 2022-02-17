@@ -41,7 +41,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = ProduccionCientificaController.MAPPING;
 
-  public void findAll_ReturnsPage() throws Exception {
+  void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 ProduccionCientifica
     List<ProduccionCientifica> produccionCientificas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -99,7 +99,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void findById_WithExistingId_ReturnsProduccionCientifica() throws Exception {
+  void findById_WithExistingId_ReturnsProduccionCientifica() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -120,7 +120,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = {})
-  public void findById_WithNoExistingId_Returns404() throws Exception {
+  void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

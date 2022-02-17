@@ -4,7 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +24,7 @@ import javax.validation.Validator;
 import org.apache.commons.collections4.ListUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.converter.ProduccionCientificaConverter;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput.TipoEstadoProduccionCientifica;
@@ -28,26 +34,31 @@ import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionIn
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AutorInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.CampoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.IndiceImpactoInput;
-import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.ProyectoInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiOutput;
+import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.Acreditacion;
 import org.crue.hercules.sgi.prc.model.Autor;
 import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
+import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoFuente;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo.TipoFormato;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
+import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.repository.AcreditacionRepository;
+import org.crue.hercules.sgi.prc.repository.AliasEnumeradoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorRepository;
 import org.crue.hercules.sgi.prc.repository.CampoProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.ConfiguracionBaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionCampoRepository;
 import org.crue.hercules.sgi.prc.repository.EstadoProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
@@ -55,12 +66,16 @@ import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
 import org.crue.hercules.sgi.prc.repository.predicate.ProduccionCientificaPredicateResolver;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.crue.hercules.sgi.prc.repository.specification.ConfiguracionBaremoSpecifications;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -68,6 +83,7 @@ import lombok.extern.slf4j.Slf4j;
  * del CVN.
  */
 @Service
+@RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
 @Validated
@@ -85,35 +101,10 @@ public class ProduccionCientificaApiService {
   private final IndiceImpactoRepository indiceImpactoRepository;
   private final ProyectoRepository proyectoRepository;
   private final ConfiguracionCampoRepository configuracionCampoRepository;
+  private final ConfiguracionBaremoRepository configuracionBaremoRepository;
+  private final AliasEnumeradoRepository aliasEnumeradoRepository;
   private final ProduccionCientificaConverter produccionCientificaConverter;
-
-  @Autowired
-  public ProduccionCientificaApiService(
-      Validator validator,
-      ProduccionCientificaRepository produccionCientificaRepository,
-      EstadoProduccionCientificaRepository estadoProduccionCientificaRepository,
-      CampoProduccionCientificaRepository campoProduccionCientificaRepository,
-      ValorCampoRepository valorCampoRepository,
-      AutorRepository autorRepository,
-      AutorGrupoRepository autorGrupoRepository,
-      AcreditacionRepository acreditacionRepository,
-      IndiceImpactoRepository indiceImpactoRepository,
-      ProyectoRepository proyectoRepository,
-      ConfiguracionCampoRepository configuracionCampoRepository,
-      ProduccionCientificaConverter converter) {
-    this.validator = validator;
-    this.produccionCientificaRepository = produccionCientificaRepository;
-    this.estadoProduccionCientificaRepository = estadoProduccionCientificaRepository;
-    this.campoProduccionCientificaRepository = campoProduccionCientificaRepository;
-    this.valorCampoRepository = valorCampoRepository;
-    this.autorRepository = autorRepository;
-    this.autorGrupoRepository = autorGrupoRepository;
-    this.acreditacionRepository = acreditacionRepository;
-    this.indiceImpactoRepository = indiceImpactoRepository;
-    this.proyectoRepository = proyectoRepository;
-    this.configuracionCampoRepository = configuracionCampoRepository;
-    this.produccionCientificaConverter = converter;
-  }
+  private final SgiConfigProperties sgiConfigProperties;
 
   /**
    * Guardar un nuevo {@link ProduccionCientifica} y sus entidades relacionadas
@@ -130,8 +121,8 @@ public class ProduccionCientificaApiService {
     log.debug("create(ProduccionCientificaApiCreateInput produccionCientificaApiInput) - start");
 
     ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
-        .epigrafeCVN(produccionCientificaApiInput.getEpigrafeCVN())
-        .produccionCientificaRef(produccionCientificaApiInput.getProduccionCientificaRef())
+        .epigrafeCVN(EpigrafeCVN.getByInternValue(produccionCientificaApiInput.getEpigrafeCVN()))
+        .produccionCientificaRef(produccionCientificaApiInput.getIdRef())
         .build();
 
     validateProduccionCientifica(produccionCientifica, BaseEntity.Create.class);
@@ -155,7 +146,7 @@ public class ProduccionCientificaApiService {
         produccionCientificaApiInput.getIndicesImpacto());
     List<AcreditacionInput> acreditaciones = addAcreditaciones(produccionCientificaCreate.getId(),
         produccionCientificaApiInput.getAcreditaciones());
-    List<ProyectoInput> proyectos = addProyectos(produccionCientificaCreate.getId(),
+    List<Long> proyectos = addProyectos(produccionCientificaCreate.getId(),
         produccionCientificaApiInput.getProyectos());
 
     ProduccionCientificaApiFullOutput output = produccionCientificaConverter.convert(produccionCientificaUpdate);
@@ -193,7 +184,7 @@ public class ProduccionCientificaApiService {
     log.debug("update(produccionCientificaApiInput, produccionCientificaRef) - start");
 
     ProduccionCientifica produccionCientificaUpdate = produccionCientificaRepository
-        .findByProduccionCientificaRef(produccionCientificaRef)
+        .findByProduccionCientificaRefAndConvocatoriaBaremacionIdIsNull(produccionCientificaRef)
         .orElseThrow(() -> new ProduccionCientificaNotFoundException(produccionCientificaRef));
 
     validateProduccionCientificaUpdate(produccionCientificaUpdate);
@@ -215,7 +206,7 @@ public class ProduccionCientificaApiService {
     List<AcreditacionInput> acreditaciones = updateAcreditaciones(produccionCientificaApiInput.getAcreditaciones(),
         produccionCientificaId);
 
-    List<ProyectoInput> proyectos = updateProyectos(produccionCientificaApiInput.getProyectos(),
+    List<Long> proyectos = updateProyectos(produccionCientificaApiInput.getProyectos(),
         produccionCientificaId);
 
     ProduccionCientificaApiFullOutput output = produccionCientificaConverter.convert(produccionCientificaUpdate);
@@ -237,17 +228,6 @@ public class ProduccionCientificaApiService {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder()
             .key("org.crue.hercules.sgi.prc.exceptions.EstadoNotValidProduccionCientificaException.message").build());
-
-    validateConfiguracionBaremoIsNull(produccionCientificaUpdate);
-  }
-
-  private void validateConfiguracionBaremoIsNull(ProduccionCientifica produccionCientificaUpdate) {
-    Assert.isNull(
-        produccionCientificaUpdate.getConvocatoriaBaremacionId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(
-            "org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionIdNotNullProduccionCientificaException.message")
-            .build());
   }
 
   private void updateEstado(ProduccionCientificaApiInput produccionCientificaApiInput,
@@ -274,7 +254,8 @@ public class ProduccionCientificaApiService {
       Long produccionCientificaId) {
     return ListUtils.emptyIfNull(produccionCientificaApiInput.getCampos()).stream()
         .anyMatch(campoInput -> campoProduccionCientificaRepository
-            .findByCodigoCVNAndProduccionCientificaId(campoInput.getCodigoCVN(), produccionCientificaId)
+            .findByCodigoCVNAndProduccionCientificaId(
+                CodigoCVN.getByInternValue(campoInput.getCodigoCVN()), produccionCientificaId)
             .map(campoSearch -> hasValidacionAdicional(campoSearch.getCodigoCVN())
                 && !valoresCampoEqualsValoresCampoInput(campoSearch, campoInput))
             .orElse(false));
@@ -296,7 +277,7 @@ public class ProduccionCientificaApiService {
     for (int i = 0; i < valores.size(); i++) {
       ValorCampo valorCampo = valores.get(i);
       String valorString = campoInput.getValores().get(i);
-      if (!valorCampoEqualsValorInput(valorCampo, valorString, tipoFormato)) {
+      if (!valorCampoEqualsValorInput(valorCampo, valorString, tipoFormato, campo.getCodigoCVN())) {
         return false;
       }
     }
@@ -318,18 +299,51 @@ public class ProduccionCientificaApiService {
         Objects.equals(autor.getApellidos(), autorInput.getApellidos());
   }
 
-  private boolean valorCampoEqualsValorInput(ValorCampo valorCampo, String valorCampoUpdate, TipoFormato tipoFormato) {
-    String valorCampoUpdateFormated = formatValorByTipoFormato(valorCampoUpdate, tipoFormato);
+  private boolean valorCampoEqualsValorInput(ValorCampo valorCampo, String valorCampoUpdate, TipoFormato tipoFormato,
+      CodigoCVN codigoCVN) {
+    String valorCampoUpdateFormated = formatValorByTipoFormato(valorCampoUpdate, tipoFormato, codigoCVN);
     return Objects.equals(valorCampoUpdateFormated, valorCampo.getValor());
   }
 
-  private String formatValorByTipoFormato(String valor, TipoFormato tipoFormato) {
-    if (null != tipoFormato && tipoFormato.equals(TipoFormato.NUMERO)) {
-      BigDecimal bd = new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP);
-      DecimalFormat df = new DecimalFormat("000000000000000.00");
-      return df.format(bd.doubleValue());
+  private String formatValorByTipoFormato(final String valor, TipoFormato tipoFormato, CodigoCVN codigoCVN) {
+    if (null != tipoFormato) {
+      switch (tipoFormato) {
+        case FECHA:
+          if (valor.matches("^(\\d{4})-(\\d{2})-(\\d{2})$")) {
+            return formatDateStringISO(valor);
+          } else {
+            return valor;
+          }
+        case NUMERO:
+          String valorParse = StringUtils.hasText(valor) ? valor : "0";
+          BigDecimal bd = new BigDecimal(valorParse).setScale(2, RoundingMode.HALF_UP);
+          DecimalFormat df = new DecimalFormat("000000000000000.00");
+          return df.format(bd.doubleValue());
+        case ENUMERADO:
+          return aliasEnumeradoRepository.findByCodigoCVN(codigoCVN)
+              .map(alias -> alias.getPrefijoEnumerado() + "." + valor).orElse(valor);
+        default:
+          return valor;
+      }
     }
     return valor;
+  }
+
+  private String formatDateStringISO(String value) {
+    String result = "";
+    if (StringUtils.hasText(value)) {
+      try {
+        ZoneId zoneId = sgiConfigProperties.getTimeZone().toZoneId();
+        DateTimeFormatter dfDateTimeOut = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
+
+        Instant instant = LocalDate.parse(value).atStartOfDay(zoneId).toInstant();
+
+        result = dfDateTimeOut.format(instant);
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      }
+    }
+    return result;
   }
 
   private boolean hasValidacionAdicional(CodigoCVN codigoCVN) {
@@ -355,7 +369,9 @@ public class ProduccionCientificaApiService {
 
     ListUtils.emptyIfNull(campos).stream().forEach(campoInput -> {
       CampoProduccionCientifica campo = campoProduccionCientificaRepository
-          .findByCodigoCVNAndProduccionCientificaId(campoInput.getCodigoCVN(), produccionCientificaId).orElse(null);
+          .findByCodigoCVNAndProduccionCientificaId(
+              CodigoCVN.getByInternValue(campoInput.getCodigoCVN()), produccionCientificaId)
+          .orElse(null);
 
       if (null != campo) {
         if (!valoresCampoEqualsValoresCampoInput(campo, campoInput)) {
@@ -378,7 +394,7 @@ public class ProduccionCientificaApiService {
     valorCampoRepository.deleteInBulkByCampoProduccionCientificaId(campo.getId());
     List<String> valoresSave = addValoresCampos(campo, campoInput.getValores());
 
-    campoUpdate.setCodigo(campo.getCodigoCVN().getInternValue());
+    campoUpdate.setCodigoCVN(campo.getCodigoCVN().getInternValue());
     campoUpdate.setValores(valoresSave);
     return campoUpdate;
   }
@@ -423,7 +439,7 @@ public class ProduccionCientificaApiService {
     return addIndicesImpacto(produccionCientificaId, indicesImpacto);
   }
 
-  private List<ProyectoInput> updateProyectos(List<ProyectoInput> proyectos, Long produccionCientificaId) {
+  private List<Long> updateProyectos(List<Long> proyectos, Long produccionCientificaId) {
     proyectoRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
 
     return addProyectos(produccionCientificaId, proyectos);
@@ -447,7 +463,7 @@ public class ProduccionCientificaApiService {
     ListUtils.emptyIfNull(camposInput).stream().forEach(campo -> {
       CampoProduccionCientifica campoProduccionCientifica = CampoProduccionCientifica.builder()
           .produccionCientificaId(idProduccionCientifica)
-          .codigoCVN(campo.getCodigoCVN())
+          .codigoCVN(CodigoCVN.getByInternValue(campo.getCodigoCVN()))
           .build();
 
       campoProduccionCientifica = campoProduccionCientificaRepository.save(campoProduccionCientifica);
@@ -455,7 +471,7 @@ public class ProduccionCientificaApiService {
       List<String> valores = addValoresCampos(campoProduccionCientifica, campo.getValores());
 
       CampoProduccionCientificaInput campoInput = new CampoProduccionCientificaInput();
-      campoInput.setCodigo(campoProduccionCientifica.getCodigoCVN().getInternValue());
+      campoInput.setCodigoCVN(campoProduccionCientifica.getCodigoCVN().getInternValue());
       campoInput.setValores(valores);
       campos.add(campoInput);
     });
@@ -475,7 +491,7 @@ public class ProduccionCientificaApiService {
       ValorCampo valorCampoNew = ValorCampo.builder()
           .campoProduccionCientificaId(campo.getId())
           .orden(fieldIndex.getAndIncrement() + 1)
-          .valor(formatValorByTipoFormato(valor, tipoFormato))
+          .valor(formatValorByTipoFormato(valor, tipoFormato, campo.getCodigoCVN()))
           .build();
 
       Set<ConstraintViolation<ValorCampo>> result = validator.validate(valorCampoNew, BaseEntity.Create.class);
@@ -526,7 +542,9 @@ public class ProduccionCientificaApiService {
     ListUtils.emptyIfNull(indicesImpacto).stream().forEach(indiceImpacto -> {
       IndiceImpacto indiceImpactoNew = IndiceImpacto.builder()
           .produccionCientificaId(idProduccionCientifica)
-          .fuenteImpacto(indiceImpacto.getFuenteImpacto())
+          .posicionPublicacion(indiceImpacto.getPosicionPublicacion())
+          .indice(indiceImpacto.getIndice())
+          .fuenteImpacto(TipoFuenteImpacto.getByInternValue(indiceImpacto.getFuenteImpacto()))
           .ranking(indiceImpacto.getRanking())
           .anio(indiceImpacto.getAnio())
           .otraFuenteImpacto(indiceImpacto.getOtraFuenteImpacto())
@@ -570,15 +588,12 @@ public class ProduccionCientificaApiService {
     return acreditacionesSave;
   }
 
-  private List<ProyectoInput> addProyectos(Long idProduccionCientifica,
-      List<ProyectoInput> proyectos) {
-    List<ProyectoInput> proyectosSave = new ArrayList<>();
-
+  private List<Long> addProyectos(Long idProduccionCientifica, List<Long> proyectos) {
     ListUtils.emptyIfNull(proyectos).stream().forEach(proyecto -> {
 
       Proyecto proyectoNew = Proyecto.builder()
           .produccionCientificaId(idProduccionCientifica)
-          .proyectoRef(proyecto.getProyectoRef())
+          .proyectoRef(proyecto)
           .build();
 
       Set<ConstraintViolation<Proyecto>> result = validator.validate(proyectoNew, BaseEntity.Create.class);
@@ -587,23 +602,18 @@ public class ProduccionCientificaApiService {
       }
 
       proyectoNew = proyectoRepository.save(proyectoNew);
-      proyectosSave.add(produccionCientificaConverter.convertProyecto(proyectoNew));
     });
 
-    return proyectosSave;
+    return proyectos;
   }
 
   @Transactional
   public void delete(String produccionCientificaRef) {
     ProduccionCientifica produccionCientifica = produccionCientificaRepository
-        .findByProduccionCientificaRef(produccionCientificaRef)
+        .findByProduccionCientificaRefAndConvocatoriaBaremacionIdIsNull(produccionCientificaRef)
         .orElseThrow(() -> new ProduccionCientificaNotFoundException(produccionCientificaRef));
 
-    validateConfiguracionBaremoIsNull(produccionCientifica);
-
-    // TODO Falta validar que el epigrafeCVN sea uno de los que llegan por el CVN
-    // (en la
-    // tabla ConfiguracionBaremo el tipo de Fuente es CVN o CVN_OTRO_SISTEMA)
+    validationDelete(produccionCientifica);
 
     Long produccionCientificaId = produccionCientifica.getId();
 
@@ -615,6 +625,21 @@ public class ProduccionCientificaApiService {
     produccionCientificaRepository.updateEstadoNull(produccionCientificaId);
     estadoProduccionCientificaRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
     produccionCientificaRepository.deleteById(produccionCientificaId);
+  }
+
+  private void validationDelete(ProduccionCientifica produccionCientifica) {
+
+    Specification<ConfiguracionBaremo> specs = ConfiguracionBaremoSpecifications
+        .byEpigrafeCVN(produccionCientifica.getEpigrafeCVN())
+        .and(
+            ConfiguracionBaremoSpecifications.tipoFuenteIn(Arrays.asList(TipoFuente.CVN, TipoFuente.CVN_OTRO_SISTEMA)));
+
+    Assert.isTrue(
+        !configuracionBaremoRepository.findAll(specs, PageRequest.of(0, 1)).isEmpty(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(
+            "org.crue.hercules.sgi.prc.exceptions.EpigrafeCVNNotFromCVNProduccionCientificaDeleteException.message")
+            .build());
   }
 
   public List<ProduccionCientificaApiOutput> findByEstadoValidadoOrRechazadoByFechaModificacion(String query) {

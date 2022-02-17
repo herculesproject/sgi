@@ -73,9 +73,12 @@
         <createSequence incrementBy="1" sequenceName="tabla_indice_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-25">
-        <createSequence incrementBy="1" sequenceName="valor_campo_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="tipo_fuente_impacto_cuartil_seq" startValue="1"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-26">
+        <createSequence incrementBy="1" sequenceName="valor_campo_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-27">
         <createTable tableName="acreditacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="acreditacionPK"/>
@@ -91,7 +94,7 @@
             <column name="url" type="VARCHAR(1000)"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-27">
+    <changeSet author="user (generated)" id="0000000000000-28">
         <createTable tableName="alias_enumerado">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="alias_enumeradoPK"/>
@@ -108,7 +111,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-28">
+    <changeSet author="user (generated)" id="0000000000000-29">
         <createTable tableName="autor">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="autorPK"/>
@@ -126,16 +129,14 @@
             </column>
             <column name="nombre" type="VARCHAR(50)"/>
             <column name="orcid_id" type="VARCHAR(100)"/>
-            <column name="orden" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="orden" type="INT"/>
             <column name="persona_ref" type="VARCHAR(50)"/>
             <column name="produccion_cientifica_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-29">
+    <changeSet author="user (generated)" id="0000000000000-30">
         <createTable tableName="autor_grupo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="autor_grupoPK"/>
@@ -153,7 +154,7 @@
             <column name="grupo_ref" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-30">
+    <changeSet author="user (generated)" id="0000000000000-31">
         <createTable tableName="baremo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="baremoPK"/>
@@ -169,11 +170,10 @@
             <column name="cuantia" type="DECIMAL(19, 2)"/>
             <column name="peso" type="INT"/>
             <column name="puntos" type="DECIMAL(19, 2)"/>
-            <column name="puntuacion_maxima" type="DECIMAL(19, 2)"/>
             <column name="tipo_cuantia" type="VARCHAR(50)"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-31">
+    <changeSet author="user (generated)" id="0000000000000-32">
         <createTable tableName="campo_produccion_cientifica">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="campo_produccion_cientificaPK"/>
@@ -190,7 +190,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-32">
+    <changeSet author="user (generated)" id="0000000000000-33">
         <createTable tableName="config">
             <column name="name" type="VARCHAR(50)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="configPK"/>
@@ -205,7 +205,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-33">
+    <changeSet author="user (generated)" id="0000000000000-34">
         <createTable tableName="configuracion_baremo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="configuracion_baremoPK"/>
@@ -224,7 +224,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="prioridad" type="INT"/>
-            <column name="tipo_baremo" type="VARCHAR(50)">
+            <column name="tipo_baremo" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
             <column name="tipo_fuente" type="VARCHAR(50)"/>
@@ -232,7 +232,7 @@
             <column name="configuracion_baremo_padre_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-34">
+    <changeSet author="user (generated)" id="0000000000000-35">
         <createTable tableName="configuracion_campo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="configuracion_campoPK"/>
@@ -261,7 +261,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-35">
+    <changeSet author="user (generated)" id="0000000000000-36">
         <createTable tableName="convocatoria_baremacion">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_baremacionPK"/>
@@ -292,7 +292,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-36">
+    <changeSet author="user (generated)" id="0000000000000-37">
         <createTable tableName="editorial_prestigio">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="editorial_prestigioPK"/>
@@ -313,7 +313,7 @@
             <column name="tabla_indice_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-37">
+    <changeSet author="user (generated)" id="0000000000000-38">
         <createTable tableName="estado_produccion_cientifica">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="estado_produccion_cientificaPK"/>
@@ -334,7 +334,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-38">
+    <changeSet author="user (generated)" id="0000000000000-39">
         <createTable tableName="indice_experimentalidad">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="indice_experimentalidadPK"/>
@@ -354,7 +354,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-39">
+    <changeSet author="user (generated)" id="0000000000000-40">
         <createTable tableName="indice_impacto">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="indice_impactoPK"/>
@@ -363,12 +363,11 @@
             <column name="creation_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
-            <column name="anio" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="anio" type="INT"/>
             <column name="tipo_fuente_impacto" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="indice" type="DECIMAL(19, 2)"/>
             <column name="numero_revistas" type="DECIMAL(19, 2)"/>
             <column name="otra_fuente_impacto" type="VARCHAR(1000)"/>
             <column name="posicion_publicacion" type="DECIMAL(19, 2)"/>
@@ -379,7 +378,7 @@
             <column defaultValueBoolean="false" name="revista_25" type="BOOLEAN"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-40">
+    <changeSet author="user (generated)" id="0000000000000-41">
         <createTable tableName="mapeo_tipos">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="mapeo_tiposPK"/>
@@ -399,7 +398,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-41">
+    <changeSet author="user (generated)" id="0000000000000-42">
         <createTable tableName="modulador">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="moduladorPK"/>
@@ -426,7 +425,7 @@
             <column name="valor5" type="DECIMAL(19, 2)"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-42">
+    <changeSet author="user (generated)" id="0000000000000-43">
         <createTable tableName="produccion_cientifica">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="produccion_cientificaPK"/>
@@ -445,7 +444,7 @@
             <column name="estado_produccion_cientifica_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-43">
+    <changeSet author="user (generated)" id="0000000000000-44">
         <createTable tableName="proyecto">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="proyectoPK"/>
@@ -462,7 +461,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-44">
+    <changeSet author="user (generated)" id="0000000000000-45">
         <createTable tableName="puntuacion_baremo_item">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="puntuacion_baremo_itemPK"/>
@@ -482,7 +481,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-45">
+    <changeSet author="user (generated)" id="0000000000000-46">
         <createTable tableName="puntuacion_grupo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="puntuacion_grupoPK"/>
@@ -500,7 +499,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-46">
+    <changeSet author="user (generated)" id="0000000000000-47">
         <createTable tableName="puntuacion_grupo_investigador">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="puntuacion_grupo_investigadorPK"/>
@@ -520,7 +519,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-47">
+    <changeSet author="user (generated)" id="0000000000000-48">
         <createTable tableName="puntuacion_item_investigador">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="puntuacion_item_investigadorPK"/>
@@ -535,13 +534,15 @@
             <column name="persona_ref" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="produccion_cientifica_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="puntos" type="DECIMAL(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="produccion_cientifica_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-48">
+    <changeSet author="user (generated)" id="0000000000000-49">
         <createTable tableName="rango">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="rangoPK"/>
@@ -568,7 +569,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-49">
+    <changeSet author="user (generated)" id="0000000000000-50">
         <createTable tableName="tabla_editorial">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tabla_editorialPK"/>
@@ -586,7 +587,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-50">
+    <changeSet author="user (generated)" id="0000000000000-51">
         <createTable tableName="tabla_indice">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tabla_indicePK"/>
@@ -604,7 +605,25 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-51">
+    <changeSet author="user (generated)" id="0000000000000-52">
+        <createTable tableName="tipo_fuente_impacto_cuartil">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fuente_impacto_cuartilPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="anio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cuartil" type="VARCHAR(2)"/>
+            <column name="tipo_fuente_impacto" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-53">
         <createTable tableName="valor_campo">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="valor_campoPK"/>
@@ -624,103 +643,109 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-52">
-        <addUniqueConstraint columnNames="configuracion_baremo_id, convocatoria_baremacion_id" constraintName="UK_BAREMO_CONFIGURACIONBAREMOID_CONVOCATORIABAREMACIONID" tableName="baremo"/>
-    </changeSet>
-    <changeSet author="user (generated)" id="0000000000000-53">
-        <addUniqueConstraint columnNames="codigo_cvn, produccion_cientifica_id" constraintName="UK_CAMPOPRODUCCIONCIENTIFICA_CODIGOCVN_PRODUCCIONCIENTIFICAID" tableName="campo_produccion_cientifica"/>
-    </changeSet>
     <changeSet author="user (generated)" id="0000000000000-54">
-        <addUniqueConstraint columnNames="area_ref, tabla_editorial_id" constraintName="UK_EDITORIALPRESTIGIO_AREAREF_TABLAEDITORIALID" tableName="editorial_prestigio"/>
+        <addUniqueConstraint columnNames="codigo_cvn" constraintName="UK_ALIASENUMERADO_CODIGOCVN" tableName="alias_enumerado"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-55">
-        <addUniqueConstraint columnNames="departamento_ref, tabla_indice_id" constraintName="UK_INDICEEXPERIMENTALIDAD_DEPARTAMENTOREF_TABLAINDICEID" tableName="indice_experimentalidad"/>
+        <addUniqueConstraint columnNames="configuracion_baremo_id, convocatoria_baremacion_id" constraintName="UK_BAREMO_CONFIGURACIONBAREMOID_CONVOCATORIABAREMACIONID" tableName="baremo"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-56">
-        <addUniqueConstraint columnNames="tipo, area_ref, convocatoria_baremacion_id" constraintName="UK_MODULADOR_TIPO_AREAREF_CONVOCATORIABAREMACIONID" tableName="modulador"/>
+        <addUniqueConstraint columnNames="codigo_cvn, produccion_cientifica_id" constraintName="UK_CAMPOPRODUCCIONCIENTIFICA_CODIGOCVN_PRODUCCIONCIENTIFICAID" tableName="campo_produccion_cientifica"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-57">
-        <addUniqueConstraint columnNames="produccion_cientifica_ref, epigrafe_cvn" constraintName="UK_PRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICAREF_EPIGRAFECVN" tableName="produccion_cientifica"/>
+        <addUniqueConstraint columnNames="codigo_cvn" constraintName="UK_CONFIGURACIONCAMPO_CODIGOCVN" tableName="configuracion_campo"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-58">
-        <addUniqueConstraint columnNames="proyecto_ref, produccion_cientifica_id" constraintName="UK_PROYECTO_PROYECTOREF_PRODUCCIONCIENTIFICAID" tableName="proyecto"/>
+        <addUniqueConstraint columnNames="area_ref, tabla_editorial_id" constraintName="UK_EDITORIALPRESTIGIO_AREAREF_TABLAEDITORIALID" tableName="editorial_prestigio"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-59">
-        <addUniqueConstraint columnNames="baremo_id, produccion_cientifica_id" constraintName="UK_PUNTUACIONBAREMOITEM_BAREMOID_PRODUCCIONCIENTIFICAID" tableName="puntuacion_baremo_item"/>
+        <addUniqueConstraint columnNames="departamento_ref, tabla_indice_id" constraintName="UK_INDICEEXPERIMENTALIDAD_DEPARTAMENTOREF_TABLAINDICEID" tableName="indice_experimentalidad"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-60">
-        <addUniqueConstraint columnNames="persona_ref, puntuacion_grupo_id" constraintName="UK_PUNTUACIONGRUPOINVESTIGADOR_PERSONAREF_PUNTUACIONGRUPOID" tableName="puntuacion_grupo_investigador"/>
+        <addUniqueConstraint columnNames="tipo, area_ref, convocatoria_baremacion_id" constraintName="UK_MODULADOR_TIPO_AREAREF_CONVOCATORIABAREMACIONID" tableName="modulador"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-61">
-        <addUniqueConstraint columnNames="grupo_ref, convocatoria_baremacion_id" constraintName="UK_PUNTUACIONGRUPO_GRUPOREF_CONVOCATORIABAREMACIONID" tableName="puntuacion_grupo"/>
+        <addUniqueConstraint columnNames="proyecto_ref, produccion_cientifica_id" constraintName="UK_PROYECTO_PROYECTOREF_PRODUCCIONCIENTIFICAID" tableName="proyecto"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-62">
-        <addUniqueConstraint columnNames="persona_ref, produccion_cientifica_id" constraintName="UK_PUNTUACIONITEMINVESTIGADOR_PERSONAREF_PRODUCCIONCIENTIFICAID" tableName="puntuacion_item_investigador"/>
+        <addUniqueConstraint columnNames="baremo_id, produccion_cientifica_id" constraintName="UK_PUNTUACIONBAREMOITEM_BAREMOID_PRODUCCIONCIENTIFICAID" tableName="puntuacion_baremo_item"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-63">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="acreditacion" constraintName="FK_ACREDITACION_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addUniqueConstraint columnNames="persona_ref, puntuacion_grupo_id" constraintName="UK_PUNTUACIONGRUPOINVESTIGADOR_PERSONAREF_PUNTUACIONGRUPOID" tableName="puntuacion_grupo_investigador"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-64">
-        <addForeignKeyConstraint baseColumnNames="autor_id" baseTableName="autor_grupo" constraintName="FK_AUTORGRUPO_AUTOR" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="autor" validate="true"/>
+        <addUniqueConstraint columnNames="grupo_ref, convocatoria_baremacion_id" constraintName="UK_PUNTUACIONGRUPO_GRUPOREF_CONVOCATORIABAREMACIONID" tableName="puntuacion_grupo"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-65">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="autor" constraintName="FK_AUTOR_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addUniqueConstraint columnNames="persona_ref, produccion_cientifica_id" constraintName="UK_PUNTUACIONITEMINVESTIGADOR_PERSONAREF_PRODUCCIONCIENTIFICAID" tableName="puntuacion_item_investigador"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-66">
-        <addForeignKeyConstraint baseColumnNames="configuracion_baremo_id" baseTableName="baremo" constraintName="FK_BAREMO_CONFIGURACIONBAREMO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_baremo" validate="true"/>
+        <addUniqueConstraint columnNames="tipo_fuente_impacto, cuartil, anio" constraintName="UK_TIPOFUENTEIMPACTOCUARTIL_TIPOFUENTE_CUARTIL_ANIO" tableName="tipo_fuente_impacto_cuartil"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-67">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="baremo" constraintName="FK_BAREMO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="acreditacion" constraintName="FK_ACREDITACION_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-68">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="campo_produccion_cientifica" constraintName="FK_CAMPOPRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="autor_id" baseTableName="autor_grupo" constraintName="FK_AUTORGRUPO_AUTOR" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="autor" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-69">
-        <addForeignKeyConstraint baseColumnNames="configuracion_baremo_padre_id" baseTableName="configuracion_baremo" constraintName="FK_CONFIGURACIONBAREMO_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_baremo" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="autor" constraintName="FK_AUTOR_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-70">
-        <addForeignKeyConstraint baseColumnNames="tabla_indice_id" baseTableName="editorial_prestigio" constraintName="FK_EDITORIALPRESTIGIO_TABLAEDITORIAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tabla_editorial" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="configuracion_baremo_id" baseTableName="baremo" constraintName="FK_BAREMO_CONFIGURACIONBAREMO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_baremo" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-71">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="estado_produccion_cientifica" constraintName="FK_ESTADOPRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="baremo" constraintName="FK_BAREMO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-72">
-        <addForeignKeyConstraint baseColumnNames="tabla_indice_id" baseTableName="indice_experimentalidad" constraintName="FK_INDICEEXPERIMENTALIDAD_TABLAINDICE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tabla_indice" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="campo_produccion_cientifica" constraintName="FK_CAMPOPRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-73">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="indice_impacto" constraintName="FK_INDICEIMPACTO_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="configuracion_baremo_padre_id" baseTableName="configuracion_baremo" constraintName="FK_CONFIGURACIONBAREMO_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="configuracion_baremo" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-74">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="modulador" constraintName="FK_MODULADOR_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tabla_indice_id" baseTableName="editorial_prestigio" constraintName="FK_EDITORIALPRESTIGIO_TABLAEDITORIAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tabla_editorial" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-75">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="produccion_cientifica" constraintName="FK_PRODUCCIONCIENTIFICA_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="estado_produccion_cientifica" constraintName="FK_ESTADOPRODUCCIONCIENTIFICA_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-76">
-        <addForeignKeyConstraint baseColumnNames="estado_produccion_cientifica_id" baseTableName="produccion_cientifica" constraintName="FK_PRODUCCIONCIENTIFICA_ESTADOPRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tabla_indice_id" baseTableName="indice_experimentalidad" constraintName="FK_INDICEEXPERIMENTALIDAD_TABLAINDICE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tabla_indice" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-77">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="proyecto" constraintName="FK_PROYECTO_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="indice_impacto" constraintName="FK_INDICEIMPACTO_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-78">
-        <addForeignKeyConstraint baseColumnNames="baremo_id" baseTableName="puntuacion_baremo_item" constraintName="FK_PUNTUACIONBAREMOITEM_BAREMO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="baremo" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="modulador" constraintName="FK_MODULADOR_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-79">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="puntuacion_baremo_item" constraintName="FK_PUNTUACIONBAREMOITEM_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="produccion_cientifica" constraintName="FK_PRODUCCIONCIENTIFICA_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-80">
-        <addForeignKeyConstraint baseColumnNames="puntuacion_grupo_id" baseTableName="puntuacion_grupo_investigador" constraintName="FK_PUNTUACIONGRUPOINVESTIGADOR_PUNTUACIONGRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="puntuacion_grupo" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="estado_produccion_cientifica_id" baseTableName="produccion_cientifica" constraintName="FK_PRODUCCIONCIENTIFICA_ESTADOPRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-81">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="puntuacion_grupo" constraintName="FK_PUNTUACIONGRUPO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="proyecto" constraintName="FK_PROYECTO_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-82">
-        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="puntuacion_item_investigador" constraintName="FK_PUNTUACIONITEMINVESTIGADOR_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="baremo_id" baseTableName="puntuacion_baremo_item" constraintName="FK_PUNTUACIONBAREMOITEM_BAREMO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="baremo" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-83">
-        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="rango" constraintName="FK_RANGO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="puntuacion_baremo_item" constraintName="FK_PUNTUACIONBAREMOITEM_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
     </changeSet>
     <changeSet author="user (generated)" id="0000000000000-84">
+        <addForeignKeyConstraint baseColumnNames="puntuacion_grupo_id" baseTableName="puntuacion_grupo_investigador" constraintName="FK_PUNTUACIONGRUPOINVESTIGADOR_PUNTUACIONGRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="puntuacion_grupo" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-85">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="puntuacion_grupo" constraintName="FK_PUNTUACIONGRUPO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-86">
+        <addForeignKeyConstraint baseColumnNames="produccion_cientifica_id" baseTableName="puntuacion_item_investigador" constraintName="FK_PUNTUACIONITEMINVESTIGADOR_PRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produccion_cientifica" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-87">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_baremacion_id" baseTableName="rango" constraintName="FK_RANGO_CONVOCATORIABAREMACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_baremacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="0000000000000-88">
         <addForeignKeyConstraint baseColumnNames="campo_produccion_cientifica_id" baseTableName="valor_campo" constraintName="FK_VALORCAMPO_CAMPOPRODUCCIONCIENTIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="campo_produccion_cientifica" validate="true"/>
     </changeSet>
 </databaseChangeLog>

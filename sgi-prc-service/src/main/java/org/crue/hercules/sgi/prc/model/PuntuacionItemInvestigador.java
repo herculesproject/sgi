@@ -61,6 +61,10 @@ public class PuntuacionItemInvestigador extends BaseEntity {
   @Column(name = "puntos", nullable = false)
   private BigDecimal puntos;
 
+  /** ProduccionCientifica Id */
+  @Column(name = "produccion_cientifica_id", nullable = false)
+  private Long produccionCientificaId;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "produccion_cientifica_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PUNTUACIONITEMINVESTIGADOR_PRODUCCIONCIENTIFICA"))

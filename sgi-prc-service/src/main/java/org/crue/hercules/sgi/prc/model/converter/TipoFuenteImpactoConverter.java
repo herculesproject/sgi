@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import org.crue.hercules.sgi.prc.model.IndiceImpacto.TipoFuenteImpacto;
+import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 
 @Converter(autoApply = true)
 public class TipoFuenteImpactoConverter implements AttributeConverter<TipoFuenteImpacto, String> {

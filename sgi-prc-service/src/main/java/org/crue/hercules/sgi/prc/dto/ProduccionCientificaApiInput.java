@@ -9,32 +9,29 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.crue.hercules.sgi.prc.model.Acreditacion_;
 import org.crue.hercules.sgi.prc.model.Autor_;
 import org.crue.hercules.sgi.prc.model.BaseEntity;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
-import org.crue.hercules.sgi.prc.model.IndiceImpacto.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto.TipoRanking;
-import org.crue.hercules.sgi.prc.model.Proyecto_;
 import org.crue.hercules.sgi.prc.validation.FirmaOrPersonaRefOrNombreAndApellidosAutor;
 import org.crue.hercules.sgi.prc.validation.UniqueElementsByFields;
 import org.crue.hercules.sgi.prc.validation.UrlOrDocumentoRefAcreditacion;
 import org.crue.hercules.sgi.prc.validation.ValorFormat;
 import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class ProduccionCientificaApiInput implements Serializable {
 
   @Valid
@@ -58,40 +55,25 @@ public class ProduccionCientificaApiInput implements Serializable {
   @UniqueElementsByFields(fieldsNames = Acreditacion_.URL)
   private List<AcreditacionInput> acreditaciones;
 
-  @Valid
-  @UniqueElementsByFields(fieldsNames = Proyecto_.PROYECTO_REF)
-  private List<ProyectoInput> proyectos;
+  @UniqueElements
+  private List<@NotNull Long> proyectos;
 
   @Data
   @EqualsAndHashCode(callSuper = false)
   @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
   @ValorFormat
   public static class CampoProduccionCientificaInput implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotEmpty
     @Size(max = BaseEntity.CAMPO_CVN_LENGTH)
-    private String codigo;
+    private String codigoCVN;
 
     @NotEmpty
     @UniqueElements
-    private List<String> valores;
-
-    @JsonIgnore
-    private CodigoCVN codigoCVN;
-
-    public void setCodigo(String codigo) {
-      this.codigo = codigo;
-      if (StringUtils.hasText(codigo)) {
-        this.codigoCVN = CodigoCVN.getByInternValue(codigo);
-      }
-    }
-
-    public void setCodigoCVN(CodigoCVN codigoCVN) {
-      if (null != codigoCVN) {
-        this.codigo = codigoCVN.getInternValue();
-      }
-    }
+    private List<@NotNull String> valores;
   }
 
   @Data
@@ -118,29 +100,28 @@ public class ProduccionCientificaApiInput implements Serializable {
     @NotNull
     private Integer orden;
 
-    @NotEmpty
+    @Size(max = BaseEntity.ORCID_ID_LENGTH)
     private String orcidId;
 
     private Boolean ip;
-
   }
 
   @Data
   @EqualsAndHashCode(callSuper = false)
   @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
   public static class IndiceImpactoInput implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotEmpty
     @Size(max = BaseEntity.TIPO_FUENTE_IMPACTO_LENGTH)
-    private String tipoFuenteImpacto;
+    private String fuenteImpacto;
 
-    @JsonIgnore
-    private TipoFuenteImpacto fuenteImpacto;
+    private BigDecimal indice;
 
     private TipoRanking ranking;
 
-    @NotNull
     private Integer anio;
 
     @Size(max = BaseEntity.OTRA_FUENTE_IMPACTO_LENGTH)
@@ -151,19 +132,6 @@ public class ProduccionCientificaApiInput implements Serializable {
     private BigDecimal numeroRevistas;
 
     private Boolean revista25;
-
-    public void setTipoFuenteImpacto(String tipoFuenteImpacto) {
-      this.tipoFuenteImpacto = tipoFuenteImpacto;
-      if (StringUtils.hasText(tipoFuenteImpacto)) {
-        this.fuenteImpacto = TipoFuenteImpacto.getByInternValue(tipoFuenteImpacto);
-      }
-    }
-
-    public void setFuenteImpacto(TipoFuenteImpacto fuenteImpacto) {
-      if (null != fuenteImpacto) {
-        this.tipoFuenteImpacto = fuenteImpacto.getInternValue();
-      }
-    }
   }
 
   @Data
@@ -180,17 +148,5 @@ public class ProduccionCientificaApiInput implements Serializable {
 
     @Size(max = BaseEntity.URL_LENGTH)
     private String url;
-  }
-
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Builder
-  public static class ProyectoInput implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @NotNull
-    private Long proyectoRef;
   }
 }

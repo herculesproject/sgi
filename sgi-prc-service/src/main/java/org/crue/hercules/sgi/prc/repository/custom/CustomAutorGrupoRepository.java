@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 
 public interface CustomAutorGrupoRepository {
   /**
-   * Elimina todos los {@link AutorGrupo} cuyo produccionCientificaId coincide con
+   * Elimina todos los {@link AutorGrupo} cuyo autorID coincide con
    * el indicado.
    * 
    * @param autorId el identificador de la {@link Autor}
