@@ -100,7 +100,7 @@ public class ProyectoPalabraClaveService {
     repository.deleteInBulkByProyectoId(proyectoId);
 
     List<ProyectoPalabraClave> returnValue = new ArrayList<>();
-    if (palabrasClave != null && !palabrasClave.isEmpty()) {
+    if (!palabrasClave.isEmpty()) {
       // Eliminamos duplicados de la nueva lista
       List<ProyectoPalabraClave> uniquePalabrasClave = palabrasClave.stream().distinct()
           .collect(Collectors.toList());

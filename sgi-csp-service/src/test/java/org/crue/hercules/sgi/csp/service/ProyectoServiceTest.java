@@ -1,9 +1,12 @@
 package org.crue.hercules.sgi.csp.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+
 import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,9 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
@@ -205,7 +211,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_ReturnsProyecto() {
+  void create_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
 
@@ -249,7 +255,57 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void createWithConvocatoria_ReturnsProyecto() {
+  void create_WithProyectoIVA_ReturnsProyecto() {
+    // given: Un nuevo Proyecto
+    ProyectoIVA proyectoIVA = buildMockProyectoIVA(1L, 11);
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setIva(proyectoIVA);
+
+    BDDMockito.given(proyectoIVARepository.save(ArgumentMatchers.<ProyectoIVA>any())).willReturn(proyectoIVA);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoCreado = invocation.getArgument(0);
+      if (proyectoCreado.getId() == null) {
+        proyectoCreado.setId(1L);
+      }
+
+      return proyectoCreado;
+    });
+
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
+          estadoProyectoCreado.setId(1L);
+          return estadoProyectoCreado;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    // when: Creamos el Proyecto
+    Proyecto proyectoCreado = service.create(proyecto);
+
+    // then: El Proyecto se crea correctamente
+    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoCreado.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+    Assertions.assertThat(proyectoCreado.getIva()).isNotNull();
+
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void createWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setConvocatoriaId(1L);
@@ -296,7 +352,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void createWithConvocatoriaAndConvocatoriaAreaTematica_ReturnsProyecto() {
+  void createWithConvocatoriaAndConvocatoriaAreaTematica_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setConvocatoriaId(1L);
@@ -343,7 +399,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
+  void create_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setConvocatoriaId(1L);
@@ -358,7 +414,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_WithId_ThrowsIllegalArgumentException() {
+  void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto que ya tiene id
     Proyecto proyecto = generarMockProyecto(1L);
 
@@ -370,7 +426,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_UGI" })
-  public void create_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
+  void create_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setUnidadGestionRef(null);
@@ -383,7 +439,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
+  void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
 
@@ -399,7 +455,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
+  void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setTimesheet(false);
@@ -421,7 +477,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
+  void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setTipoHorasAnuales(null);
@@ -443,7 +499,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-E_2" })
-  public void update_ReturnsProyecto() {
+  void update_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
@@ -477,7 +533,119 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-E_2" })
-  public void updateWithConvocatoria_ReturnsProyecto() {
+  void update_WithFechaFinDefinitivaPopulatedFirstTime_ReturnsProyecto() {
+    // given: Un nuevo Proyecto con las observaciones actualizadas
+    Proyecto proyecto = generarMockProyecto(1L);
+    Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
+    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+    proyecto.setFechaFinDefinitiva(null);
+    proyectoObservacionesActualizadas.setFechaFinDefinitiva(Instant.now().plusSeconds(3600000));
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+    List<ProyectoEquipo> equipos = Arrays.asList(
+        buildMockProyectoEquipo(1L, 1L, Instant.now().plusSeconds(5600000), Instant.now().plusSeconds(4600000)));
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(proyectoEquipoService.findAllByProyectoId(anyLong())).willReturn(equipos);
+
+    // when: Actualizamos el Proyecto
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas);
+
+    // then: El Proyecto se actualiza correctamente.
+    Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(proyecto.getId());
+    Assertions.assertThat(proyectoActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoActualizada.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_WithProyectoActualizarEstadoIdNotEqualToDBproyectoEstadoId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto con las observaciones actualizadas
+    Proyecto proyecto = generarMockProyecto(1L);
+    Proyecto proyectoObservacionesActualizadas = generarMockProyecto(2L);
+    proyecto.getEstado().setId(2L);
+    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    Assertions.assertThatThrownBy(() -> service.update(proyectoObservacionesActualizadas))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Existen campos del proyecto modificados que no se pueden modificar");
+
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_SetProyectoIvaAndCausaExesion_ReturnsProyecto() {
+    // given: Un nuevo Proyecto con las observaciones actualizadas
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setIva(buildMockProyectoIVA(1L, 11));
+    Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
+    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+    proyectoObservacionesActualizadas.setIva(this.buildMockProyectoIVA(2L, 0));
+    proyectoObservacionesActualizadas.setCausaExencion(CausaExencion.NO_SUJETO);
+
+    ProyectoIVA newProyectoIVA = buildMockProyectoIVA(2L, 0);
+    newProyectoIVA.setFechaFin(Instant.now().plusSeconds(45000));
+    newProyectoIVA.setFechaInicio(Instant.now());
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    BDDMockito.given(this.proyectoIVARepository.save(ArgumentMatchers.<ProyectoIVA>any())).willReturn(newProyectoIVA);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el Proyecto
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas);
+
+    // then: El Proyecto se actualiza correctamente.
+    Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(proyecto.getId());
+    Assertions.assertThat(proyectoActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoActualizada.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+    Assertions.assertThat(proyectoActualizada.getIva().getIva()).isEqualTo(newProyectoIVA.getIva());
+    Assertions.assertThat(proyectoActualizada.getCausaExencion()).isEqualTo(CausaExencion.NO_SUJETO);
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void updateWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Long convocatoriaId = 1L;
     Proyecto proyecto = generarMockProyecto(1L);
@@ -768,7 +936,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void findAllTodos_ReturnsPage() {
+  void findAllTodos_ReturnsPage() {
     // given: Una lista con 37 Proyecto
     List<Proyecto> proyectos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -805,6 +973,25 @@ public class ProyectoServiceTest extends BaseServiceTest {
       Proyecto proyecto = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
     }
+  }
+
+  @WithMockUser(authorities = { "CSP-PRO-V" })
+  @Test
+  void findAllActivosInvestigador_ReturnsProyectoPage() {
+
+    List<Proyecto> proyectos = Arrays.asList(generarMockProyecto(1L));
+    Page<Proyecto> proyectosPage = new PageImpl<>(proyectos);
+    String query = "";
+    Pageable paging = PageRequest.of(0, 10);
+
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<Proyecto>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(proyectosPage);
+
+    Page<Proyecto> pageResult = this.service.findAllActivosInvestigador(query, paging);
+
+    Assertions.assertThat(pageResult).isNotNull();
+    Assertions.assertThat(pageResult.getContent()).isEqualTo(proyectos);
   }
 
   /**
@@ -865,4 +1052,21 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
     return estadoProyecto;
   }
+
+  private ProyectoIVA buildMockProyectoIVA(Long id, int iva) {
+    return ProyectoIVA.builder()
+        .id(id)
+        .iva(iva)
+        .build();
+  }
+
+  private ProyectoEquipo buildMockProyectoEquipo(Long id, Long proyectoId, Instant fechaInicio, Instant fechaFin) {
+    return ProyectoEquipo.builder()
+        .id(id)
+        .proyectoId(proyectoId)
+        .fechaInicio(fechaInicio)
+        .fechaFin(fechaFin)
+        .build();
+  }
+
 }

@@ -356,10 +356,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     this.validarDatos(proyectoActualizar);
 
-    return repository.findById(proyectoActualizar.getId()).map((data) -> {
+    return repository.findById(proyectoActualizar.getId()).map(data -> {
       ProyectoHelper.checkCanRead(data);
       Assert.isTrue(
-          proyectoActualizar.getEstado().getId() == data.getEstado().getId()
+          proyectoActualizar.getEstado().getId().equals(data.getEstado().getId())
               && ((proyectoActualizar.getConvocatoriaId() == null && data.getConvocatoriaId() == null)
                   || (proyectoActualizar.getConvocatoriaId() != null && data.getConvocatoriaId() != null
                       && proyectoActualizar.getConvocatoriaId().equals(data.getConvocatoriaId())))
@@ -390,7 +390,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       if ((proyectoActualizar.getIva() != null && data.getIva() == null)
           || (proyectoActualizar.getIva() != null && data.getIva() != null)
-              && (proyectoActualizar.getIva().getIva() != data.getIva().getIva())) {
+              && (!proyectoActualizar.getIva().getIva().equals(data.getIva().getIva()))) {
         ProyectoIVA proyectoIVA = updateProyectoIVA(data, proyectoActualizar);
         data.setIva(proyectoIVA);
       }
@@ -495,7 +495,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-R", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
-      if (proyecto.getActivo()) {
+      if (proyecto.getActivo().booleanValue()) {
         // Si esta activo no se hace nada
         return proyecto;
       }
@@ -525,7 +525,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-B", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
-      if (!proyecto.getActivo()) {
+      if (!proyecto.getActivo().booleanValue()) {
         // Si no esta activo no se hace nada
         return proyecto;
       }
@@ -735,7 +735,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     // porcentaje de IVA sea mayor que cero
     if (newProyectoIVA.getIva() != null && newProyectoIVA.getIva().equals(0)) {
       Boolean hasProyectosSgeVinculados = proyectoProyectoSGERepository.existsByProyectoId(proyectoGuardado.getId());
-      if (hasProyectosSgeVinculados) {
+      if (hasProyectosSgeVinculados.booleanValue()) {
         throw new ProyectoIVAException();
       }
     }
@@ -745,7 +745,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     if (oldProyectoIVA != null && oldProyectoIVA.getIva() != null) {
       oldProyectoIVA.setFechaFin(Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).withHour(23)
           .withMinute(59).withSecond(59).toInstant());
-      oldProyectoIVA = proyectoIVARepository.save(oldProyectoIVA);
+      proyectoIVARepository.save(oldProyectoIVA);
     }
 
     log.debug("updateProyectoIVA(Proyecto data, Proyecto proyectoActualizado) - end");
