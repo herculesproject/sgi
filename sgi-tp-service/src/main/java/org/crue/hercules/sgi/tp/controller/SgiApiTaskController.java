@@ -44,7 +44,7 @@ public class SgiApiTaskController {
   public static final String MAPPING = PATH_SEPARATOR + "sgiapitasks";
   public static final String PATH_CRON = PATH_SEPARATOR + "cron";
   public static final String PATH_INSTANT = PATH_SEPARATOR + "instant";
-  public static final String PATH_SINGLE = PATH_SEPARATOR + "{i}";
+  public static final String PATH_SINGLE = PATH_SEPARATOR + "{id}";
 
   private BeanMethodTaskService beanMethodTaskService;
 
