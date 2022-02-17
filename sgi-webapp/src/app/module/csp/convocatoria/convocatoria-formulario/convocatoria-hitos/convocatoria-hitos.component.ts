@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -111,11 +111,14 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly,
-      canEdit: this.formPart.canEdit
+      canEdit: this.formPart.canEdit,
+      unidadGestionId: this.actionService.unidadGestionId,
+      tituloConvocatoria: this.actionService.titulo
     };
-    const config = {
+    const config: MatDialogConfig = {
       panelClass: 'sgi-dialog-container',
-      data
+      minWidth: '60vw',
+      data,
     };
     const dialogRef = this.matDialog.open(ConvocatoriaHitosModalComponent, config);
     dialogRef.afterClosed().subscribe(

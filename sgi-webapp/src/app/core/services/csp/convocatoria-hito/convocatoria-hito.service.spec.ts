@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConvocatoriaHitoService } from './convocatoria-hito.service';
 
-
 describe('ConvocatoriaHito.Service', () => {
   let service: ConvocatoriaHitoService;
 

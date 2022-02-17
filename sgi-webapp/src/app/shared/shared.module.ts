@@ -15,6 +15,7 @@ import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/act
 import { ActionComponent } from './action/action.component';
 import { ActionEmptyFooterComponent } from './action-empty-footer/action-empty-footer.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { SelectEmailRecipientsComponent } from './select-email-recipients/select-email-recipients.component';
 import { DialogContentComponent } from './dialog-content/dialog-content.component';
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
@@ -80,7 +81,8 @@ import { SelectComponent } from './select/select.component';
     ExportDialogComponent,
     PalabraClaveComponent,
     FormAutocompleteOffDirective,
-    ActionEmptyFooterComponent
+    ActionEmptyFooterComponent,
+    SelectEmailRecipientsComponent
   ],
   imports: [
     CommonModule,
@@ -122,7 +124,8 @@ import { SelectComponent } from './select/select.component';
     ExportDialogComponent,
     PalabraClaveComponent,
     FormAutocompleteOffDirective,
-    ActionEmptyFooterComponent
+    ActionEmptyFooterComponent,
+    SelectEmailRecipientsComponent
   ]
 })
 export class SharedModule { }

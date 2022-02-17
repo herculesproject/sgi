@@ -97,5 +97,32 @@
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
+  },
+  "/api/cnf": {
+    "target": "http://sgi-cnf-service:4288",
+    "pathRewrite": {
+      "^/api/cnf": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/com": {
+    "target": "http://sgi-com-service:4286",
+    "pathRewrite": {
+      "^/api/com": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/tp": {
+    "target": "http://sgi-tp-service:4285",
+    "pathRewrite": {
+      "^/api/tp": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
   }
 }
