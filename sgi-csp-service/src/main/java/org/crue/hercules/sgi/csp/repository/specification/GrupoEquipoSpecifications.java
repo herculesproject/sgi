@@ -1,22 +1,14 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo_;
-import org.crue.hercules.sgi.csp.model.Grupo_;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class GrupoEquipoSpecifications {
+
+  private GrupoEquipoSpecifications() {
+  }
 
   /**
    * {@link GrupoEquipo} del {@link Grupo} con el id indicado.
@@ -26,58 +18,7 @@ public class GrupoEquipoSpecifications {
    *         {@link Grupo} con el id indicado.
    */
   public static Specification<GrupoEquipo> byGrupoId(Long grupoId) {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(GrupoEquipo_.grupoId), grupoId);
-    };
-  }
-
-  /**
-   * {@link GrupoEquipo} que son investigador o investigadores principales del
-   * {@link Grupo} con el id indicado.
-   * 
-   * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag "principal" a
-   * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
-   * recupera el que tenga el mayor porcentaje de dedicación al grupo (campo
-   * "participación").
-   * Y en caso de que varios coincidan se devuelven todos los que coincidan.
-   * 
-   * @param grupoId identificador del {@link Grupo}.
-   * @param fecha   fecha en la que se busca el investigador principal.
-   * @return specification para obtener los {@link GrupoEquipo} del
-   *         {@link Grupo} con el id indicado.
-   */
-  public static Specification<GrupoEquipo> investigadoresPrincipales(Long grupoId, Instant fecha) {
-    return (root, query, cb) -> {
-      Subquery<BigDecimal> queryMaxParticipacion = query.subquery(BigDecimal.class);
-      Root<GrupoEquipo> subqRoot = queryMaxParticipacion.from(GrupoEquipo.class);
-
-      queryMaxParticipacion.select(cb.max(subqRoot.get(GrupoEquipo_.participacion)))
-          .where(getPredicateRolPrincipalFecha(subqRoot, cb, grupoId, fecha));
-
-      return cb.and(
-          getPredicateRolPrincipalFecha(root, cb, grupoId, fecha),
-          cb.equal(root.get(GrupoEquipo_.participacion), queryMaxParticipacion));
-    };
-  }
-
-  private static Predicate getPredicateRolPrincipalFecha(Root<GrupoEquipo> root, CriteriaBuilder cb, Long grupoId,
-      Instant fecha) {
-    Predicate grupoEquals = cb.equal(root.get(GrupoEquipo_.grupoId), grupoId);
-    Predicate rolPrincipal = cb.equal(root.get(GrupoEquipo_.rol).get(RolProyecto_.rolPrincipal), true);
-    Predicate greaterThanFechaInicio = cb.lessThanOrEqualTo(root.get(GrupoEquipo_.fechaInicio), fecha);
-    Predicate lowerThanFechaFin = cb.or(cb.isNull(root.get(GrupoEquipo_.fechaFin)),
-        cb.greaterThanOrEqualTo(root.get(GrupoEquipo_.fechaFin), fecha));
-
-    Predicate fechaLowerThanFechaInicioGrupo = cb.greaterThan(root.get(GrupoEquipo_.grupo).get(Grupo_.fechaInicio),
-        fecha);
-    Predicate fechaGreaterThanFechaFinGrupo = cb.lessThan(root.get(GrupoEquipo_.grupo).get(Grupo_.fechaFin), fecha);
-
-    return cb.and(
-        grupoEquals,
-        rolPrincipal,
-        cb.or(fechaLowerThanFechaInicioGrupo, greaterThanFechaInicio),
-        cb.or(fechaGreaterThanFechaFinGrupo, lowerThanFechaFin));
+    return (root, query, cb) -> cb.equal(root.get(GrupoEquipo_.grupoId), grupoId);
   }
 
 }

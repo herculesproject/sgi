@@ -50,6 +50,7 @@ public class GrupoController {
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
   public static final String PATH_GRUPO_EQUIPO = PATH_ID + "/miembrosequipo";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + "/investigadoresprincipales";
+  public static final String PATH_TODOS = "/todos";
 
   private ModelMapper modelMapper;
 
@@ -132,12 +133,30 @@ public class GrupoController {
    * @return el listado de entidades {@link Grupo} paginadas y
    *         filtradas.
    */
-  @GetMapping()
+  @GetMapping(PATH_TODOS)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-B', 'CSP-GIN-E', 'CSP-GIN-R', 'CSP-GIN-V')")
   public ResponseEntity<Page<GrupoOutput>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
     Page<GrupoOutput> page = convert(service.findAll(query, paging));
+    log.debug("findAll(String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Grupo} activos.
+   *
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Grupo} paginadas y
+   *         filtradas.
+   */
+  @GetMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V')")
+  public ResponseEntity<Page<GrupoOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Page<GrupoOutput> page = convert(service.findActivos(query, paging));
     log.debug("findAll(String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
@@ -193,7 +212,7 @@ public class GrupoController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada DE investigadores principales del
+   * Devuelve una lista paginada y filtrada de investigadores principales del
    * {@link Grupo} en el momento actual.
    *
    * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
@@ -203,21 +222,18 @@ public class GrupoController {
    * "participación").
    * Y en caso de que varios coincidan se devuelven todos los que coincidan.
    * 
-   * @param id     Identificador del {@link GrupoEquipo}.
-   * @param query  filtro de búsqueda.
-   * @param paging pageable.
-   * @return el listado de entidades {@link GrupoEquipo} paginadas y
-   *         filtradas del {@link Grupo}.
+   * @param id Identificador del {@link GrupoEquipo}.
+   * @return la lista de personaRef de losinvestigadores principales del
+   *         {@link Grupo} en el momento actual.
    */
   @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
-  public ResponseEntity<Page<GrupoEquipoOutput>> findInvestigadoresPrincipales(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findInvestigadoresPrincipales(Long id, String query, Pageable paging) - start");
-    Page<GrupoEquipoOutput> page = convertMiembrosEquipo(
-        grupoEquipoService.findInvestigadoresPrincipales(id, query, paging));
-    log.debug("findInvestigadoresPrincipales(Long id, String query, Pageable paging) - end");
-    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
+  public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipales(@PathVariable Long id) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
+    List<String> returnValue = grupoEquipoService.findPersonaRefInvestigadoresPrincipales(id);
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
   private GrupoOutput convert(Grupo grupo) {

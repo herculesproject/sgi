@@ -5,15 +5,14 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 public class GrupoService {
-  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
-  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
-  private static final String MESSAGE_KEY_ID = "id";
 
   private final GrupoRepository repository;
 
@@ -48,7 +42,7 @@ public class GrupoService {
   public Grupo create(Grupo grupo) {
     log.debug("create(Grupo grupo) - start");
 
-    assertIdGrupoIsNull(grupo.getId());
+    AssertHelper.idIsNull(grupo.getId(), Grupo.class);
     Grupo returnValue = repository.save(grupo);
 
     log.debug("create(Grupo grupo) - end");
@@ -66,7 +60,7 @@ public class GrupoService {
   public Grupo update(@Valid Grupo grupoActualizar) {
     log.debug("update(Grupo grupoActualizar) - start");
 
-    assertIdGrupoNotNull(grupoActualizar.getId());
+    AssertHelper.idNotNull(grupoActualizar.getId(), Grupo.class);
 
     return repository.findById(grupoActualizar.getId()).map(data -> {
       data.setNombre(grupoActualizar.getNombre());
@@ -93,7 +87,7 @@ public class GrupoService {
   public Grupo findById(Long id) {
     log.debug("findById(Long id) - start");
 
-    assertIdGrupoNotNull(id);
+    AssertHelper.idNotNull(id, Grupo.class);
     final Grupo returnValue = repository.findById(id).orElseThrow(() -> new GrupoNotFoundException(id));
 
     log.debug("findById(Long id) - end");
@@ -109,7 +103,7 @@ public class GrupoService {
   public boolean existsById(Long id) {
     log.debug("existsById(Long id)  - start");
 
-    assertIdGrupoNotNull(id);
+    AssertHelper.idNotNull(id, Grupo.class);
     final boolean exists = repository.existsById(id);
 
     log.debug("existsById(Long id)  - end");
@@ -135,6 +129,25 @@ public class GrupoService {
   }
 
   /**
+   * Obtener todas las entidades {@link Grupo} activas paginadas y/o filtradas.
+   *
+   * @param paging la información de la paginación.
+   * @param query  la información del filtro.
+   * @return la lista de entidades {@link Grupo} activas paginadas y/o
+   *         filtradas.
+   */
+  public Page<Grupo> findActivos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+
+    Specification<Grupo> specs = GrupoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    Page<Grupo> returnValue = repository.findAll(specs, paging);
+
+    log.debug("findAll(String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
    * Desactiva el {@link Grupo}.
    *
    * @param id Id del {@link Grupo}.
@@ -144,7 +157,7 @@ public class GrupoService {
   public Grupo desactivar(Long id) {
     log.debug("desactivar(Long id) - start");
 
-    assertIdGrupoNotNull(id);
+    AssertHelper.idNotNull(id, Grupo.class);
 
     return repository.findById(id).map(grupo -> {
       if (Boolean.FALSE.equals(grupo.getActivo())) {
@@ -170,7 +183,7 @@ public class GrupoService {
   public Grupo activar(Long id) {
     log.debug("activar(Long id) - start");
 
-    assertIdGrupoNotNull(id);
+    AssertHelper.idNotNull(id, Grupo.class);
 
     return repository.findById(id).map(grupo -> {
       if (Boolean.TRUE.equals(grupo.getActivo())) {
@@ -184,34 +197,6 @@ public class GrupoService {
       log.debug("activar(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new GrupoNotFoundException(id));
-  }
-
-  /**
-   * Comprueba que el id no sea null
-   * 
-   * @param id Id del {@link Grupo}.
-   */
-  private void assertIdGrupoIsNull(Long id) {
-    Assert.isNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Grupo.class))
-            .build());
-  }
-
-  /**
-   * Comprueba que el id no sea null
-   * 
-   * @param id Id del {@link Grupo}.
-   */
-  private void assertIdGrupoNotNull(Long id) {
-    Assert.notNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Grupo.class))
-            .build());
   }
 
 }

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -11,15 +12,13 @@ import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoSpecifications;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 public class GrupoEquipoService {
-  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
-  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
-  private static final String MESSAGE_KEY_ID = "id";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final GrupoEquipoRepository repository;
@@ -57,7 +51,7 @@ public class GrupoEquipoService {
   public GrupoEquipo create(GrupoEquipo grupoEquipo) {
     log.debug("create(GrupoEquipo grupoEquipo) - start");
 
-    assertIdGrupoEquipoIsNull(grupoEquipo.getId());
+    AssertHelper.idIsNull(grupoEquipo.getId(), GrupoEquipo.class);
     GrupoEquipo returnValue = repository.save(grupoEquipo);
 
     log.debug("create(GrupoEquipo grupoEquipo) - end");
@@ -75,7 +69,7 @@ public class GrupoEquipoService {
   public GrupoEquipo update(@Valid GrupoEquipo grupoEquipoActualizar) {
     log.debug("update(GrupoEquipo grupoEquipoActualizar) - start");
 
-    assertIdGrupoEquipoNotNull(grupoEquipoActualizar.getId());
+    AssertHelper.idNotNull(grupoEquipoActualizar.getId(), GrupoEquipo.class);
 
     return repository.findById(grupoEquipoActualizar.getId()).map(data -> {
       data.setFechaInicio(grupoEquipoActualizar.getFechaInicio());
@@ -100,7 +94,7 @@ public class GrupoEquipoService {
   public GrupoEquipo findById(Long id) {
     log.debug("findById(Long id) - start");
 
-    assertIdGrupoEquipoNotNull(id);
+    AssertHelper.idNotNull(id, GrupoEquipo.class);
     final GrupoEquipo returnValue = repository.findById(id).orElseThrow(() -> new GrupoEquipoNotFoundException(id));
 
     log.debug("findById(Long id) - end");
@@ -116,7 +110,7 @@ public class GrupoEquipoService {
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    assertIdGrupoEquipoNotNull(id);
+    AssertHelper.idNotNull(id, GrupoEquipo.class);
 
     if (!repository.existsById(id)) {
       throw new GrupoEquipoNotFoundException(id);
@@ -138,6 +132,7 @@ public class GrupoEquipoService {
    */
   public Page<GrupoEquipo> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
+    AssertHelper.idNotNull(grupoId, Grupo.class);
     Specification<GrupoEquipo> specs = GrupoEquipoSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -147,8 +142,8 @@ public class GrupoEquipoService {
   }
 
   /**
-   * Obtiene el investigador o investigadores principales del {@link Grupo} en el
-   * momento actual.
+   * Obtiene los personaRef del investigador o investigadores principales del
+   * {@link Grupo} en el momento actual.
    * 
    * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
    * tiene el {@link RolProyecto} con el flag "principal" a
@@ -158,49 +153,18 @@ public class GrupoEquipoService {
    * Y en caso de que varios coincidan se devuelven todos los que coincidan.
    *
    * @param grupoId Identificador de la entidad {@link Grupo}.
-   * @param paging  la información de la paginación.
-   * @param query   la información del filtro.
-   * @return la lista de entidades {@link GrupoEquipo} paginadas y/o
-   *         filtradas.
+   * @return la lista de personaRef de los investigadores principales del
+   *         {@link Grupo} en el momento actual.
    */
-  public Page<GrupoEquipo> findInvestigadoresPrincipales(Long grupoId, String query, Pageable paging) {
-    log.debug("findInvestigadoresPrincipales(Long grupoId, String query, Pageable paging) - start");
+  public List<String> findPersonaRefInvestigadoresPrincipales(Long grupoId) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId) - start");
+
+    AssertHelper.idNotNull(grupoId, Grupo.class);
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+    List<String> returnValue = repository.findPersonaRefInvestigadoresPrincipales(grupoId, fechaActual);
 
-    Specification<GrupoEquipo> specs = GrupoEquipoSpecifications.investigadoresPrincipales(grupoId, fechaActual)
-        .and(SgiRSQLJPASupport.toSpecification(query));
-
-    Page<GrupoEquipo> returnValue = repository.findAll(specs, paging);
-    log.debug("findInvestigadoresPrincipales(Long grupoId, String query, Pageable paging) - end");
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba que el id no sea null
-   * 
-   * @param id Id del {@link GrupoEquipo}.
-   */
-  private void assertIdGrupoEquipoIsNull(Long id) {
-    Assert.isNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(GrupoEquipo.class))
-            .build());
-  }
-
-  /**
-   * Comprueba que el id no sea null
-   * 
-   * @param id Id del {@link GrupoEquipo}.
-   */
-  private void assertIdGrupoEquipoNotNull(Long id) {
-    Assert.notNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(GrupoEquipo.class))
-            .build());
   }
 
 }
