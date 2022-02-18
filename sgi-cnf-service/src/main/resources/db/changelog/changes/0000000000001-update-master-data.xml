@@ -21,5 +21,21 @@
       <column name="description" value="Destinatarios defecto CSP Convocatoria Hito - UGI" />
       <column name="value" value="[&quot;convocatoria.hitos.ugi@sgi.es&quot;]" />
     </insert>
+
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-gasto-destinatarios-1" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion de justificacion de gastos - OTRI" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-gasto-destinatarios-2" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion de justificacion de gastos - OPE" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-gasto-destinatarios-3" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion de justificacion de gastos - UGI" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
