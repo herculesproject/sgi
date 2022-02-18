@@ -166,4 +166,41 @@
     <addForeignKeyConstraint baseColumnNames="rol_proyecto_id" baseTableName="grupo_equipo" constraintName="FK_GRUPOEQUIPO_ROLPROYECTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rol_proyecto" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000005-23">
+    <createSequence incrementBy="1" sequenceName="convocatoria_hito_aviso_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-24">
+    <createTable tableName="convocatoria_hito_aviso">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_hito_avisoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="comunicado_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_proyecto" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_solicitud" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="tarea_programada_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-25">
+    <addColumn tableName="convocatoria_hito">
+      <column name="convocatoria_hito_aviso_id" type="bigint" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-26">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_hito_aviso_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_CONVOCATORIAHITOAVISO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_hito_aviso" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-27">
+    <dropColumn columnName="genera_aviso" tableName="convocatoria_hito" />
+  </changeSet>
 </databaseChangeLog>

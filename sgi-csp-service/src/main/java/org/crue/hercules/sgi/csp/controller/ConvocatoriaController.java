@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
@@ -473,10 +474,10 @@ public class ConvocatoriaController {
    */
   @GetMapping("/{id}/convocatoriahitos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
-  public ResponseEntity<Page<ConvocatoriaHito>> findAllConvocatoriaHito(@PathVariable Long id,
+  public ResponseEntity<Page<ConvocatoriaHitoOutput>> findAllConvocatoriaHito(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaHito(Long id, String query, Pageable paging) - start");
-    Page<ConvocatoriaHito> page = convocatoriaHitoService.findAllByConvocatoria(id, query, paging);
+    Page<ConvocatoriaHitoOutput> page = this.convert(convocatoriaHitoService.findAllByConvocatoria(id, query, paging));
 
     if (page.isEmpty()) {
       log.debug("findAllConvocatoriaHito(Long id, String query, Pageable paging) - end");
@@ -1273,5 +1274,16 @@ public class ConvocatoriaController {
     ConvocatoriaPalabraClave entity = modelMapper.map(input, ConvocatoriaPalabraClave.class);
     entity.setId(id);
     return entity;
+  }
+
+  private ConvocatoriaHitoOutput convert(ConvocatoriaHito convocatoriaHito) {
+    return modelMapper.map(convocatoriaHito, ConvocatoriaHitoOutput.class);
+  }
+
+  private Page<ConvocatoriaHitoOutput> convert(Page<ConvocatoriaHito> page) {
+    List<ConvocatoriaHitoOutput> content = page.getContent().stream()
+        .map(this::convert).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 }

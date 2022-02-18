@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.repository.specification;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
@@ -74,6 +75,29 @@ public class ProyectoEquipoSpecifications {
       return cb.equal(root.get(ProyectoEquipo_.id), id).not();
     };
 
+  }
+
+  /**
+   * {@link ProyectoEquipo} de un {@link Proyecto} activo relacionado con una
+   * {@link Convocatoria} que son IPs activos
+   * 
+   * @param convocatoriaId Id de la {@link Convocatoria}
+   * @return specification
+   */
+  public static Specification<ProyectoEquipo> byProyectoActivoAndProyectoConvocatoriaIdWithIpsActivos(
+      Long convocatoriaId) {
+    return (root, query, cb) -> {
+      Instant now = Instant.now();
+      return cb.and(
+          cb.equal(root.get(ProyectoEquipo_.proyecto).get(Proyecto_.convocatoriaId), convocatoriaId),
+          cb.isTrue(root.get(ProyectoEquipo_.proyecto).get(Proyecto_.activo)),
+          cb.isTrue(root.get(ProyectoEquipo_.rolProyecto).get(RolProyecto_.rolPrincipal)),
+          cb.or(
+              cb.isNull(root.get(ProyectoEquipo_.fechaFin)),
+              cb.and(
+                  cb.greaterThanOrEqualTo(root.get(ProyectoEquipo_.fechaInicio), now),
+                  cb.lessThanOrEqualTo(root.get(ProyectoEquipo_.fechaFin), now))));
+    };
   }
 
   /**
