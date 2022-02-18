@@ -49,6 +49,19 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
+   * Muestra activos y no activos
+   *
+   * @param options opciones de búsqueda.
+   */
+  findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupo>> {
+    return this.find<IGrupoResponse, IGrupo>(
+      `${this.endpointUrl}/todos`,
+      options,
+      GRUPO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
    * Comprueba si existe el grupo
    *
    * @param id Identificador del grupo
@@ -100,12 +113,8 @@ export class GrupoService extends _GrupoMixinBase {
    * @param id Identificador del grupo
    * @param options opciones de búsqueda.
    */
-  findInvestigadoresPrincipales(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoEquipo>> {
-    return this.find<IGrupoEquipoResponse, IGrupoEquipo>(
-      `${this.endpointUrl}/${id}/investigadoresprincipales`,
-      options,
-      GRUPO_EQUIPO_RESPONSE_CONVERTER
-    );
+  findPersonaRefInvestigadoresPrincipales(id: number): Observable<string[]> {
+    return this.get<string[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`);
   }
 
 }

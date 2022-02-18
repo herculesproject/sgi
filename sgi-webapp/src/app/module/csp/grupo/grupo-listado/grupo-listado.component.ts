@@ -32,7 +32,7 @@ const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const GRUPO_KEY = marker('csp.grupo');
 
-export interface GrupoListado extends IGrupo {
+interface IGrupoListado extends IGrupo {
   investigadoresPrincipales: IPersona[]
 }
 
@@ -41,12 +41,12 @@ export interface GrupoListado extends IGrupo {
   templateUrl: './grupo-listado.component.html',
   styleUrls: ['./grupo-listado.component.scss']
 })
-export class GrupoListadoComponent extends AbstractTablePaginationComponent<GrupoListado> implements OnInit {
+export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGrupoListado> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
 
-  grupos$: Observable<GrupoListado[]>;
-  colectivosBusqueda: Observable<string[]>;
+  grupos$: Observable<IGrupoListado[]>;
+  colectivosBusqueda: string[];
   isInvestigador: boolean;
   isVisor: boolean;
 
@@ -80,21 +80,21 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<Grup
     super.ngOnInit();
     this.setupI18N();
     this.buildFormGroup();
-    this.initColectivosBusqueda();
+    this.loadColectivosBusqueda();
     this.filter = this.createFilter();
     this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-VR']);
     this.isVisor = this.authService.hasAnyAuthority(['CSP-GIN-V']);
   }
 
-  protected createObservable(reset?: boolean): Observable<SgiRestListResult<GrupoListado>> {
-    const gruposInvestigacion$ = this.grupoService.findAll(this.getFindOptions(reset));
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IGrupoListado>> {
+    const gruposInvestigacion$ = this.grupoService.findTodos(this.getFindOptions(reset));
     return gruposInvestigacion$.pipe(
       map(result => {
         return {
           page: result.page,
           total: result.total,
-          items: result.items.map((grupo) => grupo as GrupoListado)
-        } as SgiRestListResult<GrupoListado>;
+          items: result.items.map((grupo) => grupo as IGrupoListado)
+        } as SgiRestListResult<IGrupoListado>;
       }),
       switchMap(response =>
         from(response.items).pipe(
@@ -133,7 +133,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<Grup
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value);
   }
 
-  activate(grupo: GrupoListado): void {
+  activate(grupo: IGrupoListado): void {
     const subcription = this.dialogService.showConfirmation(this.textoReactivar).pipe(
       filter(accept => !!accept),
       switchMap(() => this.grupoService.activar(grupo.id))
@@ -154,7 +154,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<Grup
     this.suscripciones.push(subcription);
   }
 
-  deactivate(grupo: GrupoListado): void {
+  deactivate(grupo: IGrupoListado): void {
     const subcription = this.dialogService.showConfirmation(this.textoDesactivar).pipe(
       filter(accept => !!accept),
       switchMap(() => this.grupoService.desactivar(grupo.id))
@@ -189,10 +189,10 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<Grup
     });
   }
 
-  private fillInvestigadorPrincipal(grupo: GrupoListado): Observable<GrupoListado> {
-    return this.grupoService.findInvestigadoresPrincipales(grupo.id).pipe(
-      filter(investigadoresPrincipales => investigadoresPrincipales.items.length > 0),
-      switchMap(investigadoresPrincipales => this.personaService.findAllByIdIn(investigadoresPrincipales.items.map(investigador => investigador.persona.id))),
+  private fillInvestigadorPrincipal(grupo: IGrupoListado): Observable<IGrupoListado> {
+    return this.grupoService.findPersonaRefInvestigadoresPrincipales(grupo.id).pipe(
+      filter(investigadoresPrincipales => !!investigadoresPrincipales),
+      switchMap(investigadoresPrincipales => this.personaService.findAllByIdIn(investigadoresPrincipales)),
       map(investigadoresPrincipales => {
         grupo.investigadoresPrincipales = investigadoresPrincipales.items;
         return grupo;
@@ -204,8 +204,12 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<Grup
     )
   }
 
-  private initColectivosBusqueda(): void {
-    this.colectivosBusqueda = this.rolProyectoColectivoService.findColectivosActivos();
+  private loadColectivosBusqueda(): void {
+    this.suscripciones.push(
+      this.rolProyectoColectivoService.findColectivosActivos().subscribe(colectivos => {
+        this.colectivosBusqueda = colectivos
+      })
+    );
   }
 
   private setupI18N(): void {

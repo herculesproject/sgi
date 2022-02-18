@@ -19,6 +19,8 @@ import { SelectConceptoGastoComponent } from './select-concepto-gasto/select-con
 import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
 import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
 import { SelectFuenteFinanciacionComponent } from './select-fuente-financiacion/select-fuente-financiacion.component';
+import { SearchGrupoModalComponent } from './select-grupo/dialog/search-grupo.component';
+import { SelectGrupoComponent } from './select-grupo/select-grupo.component';
 import { SelectModeloEjecucionComponent } from './select-modelo-ejecucion/select-modelo-ejecucion.component';
 import { SelectProgramaComponent } from './select-programa/select-programa.component';
 import { SearchProyectoModalComponent } from './select-proyecto/dialog/search-proyecto.component';
@@ -58,7 +60,9 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoDocumentoComponent,
     SelectTipoHitoComponent,
     SelectConceptoGastoComponent,
-    SelectTipoFinanciacionComponent
+    SelectTipoFinanciacionComponent,
+    SelectGrupoComponent,
+    SearchGrupoModalComponent
   ],
   imports: [
     SharedModule,
@@ -93,7 +97,8 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoDocumentoComponent,
     SelectTipoHitoComponent,
     SelectConceptoGastoComponent,
-    SelectTipoFinanciacionComponent
+    SelectTipoFinanciacionComponent,
+    SelectGrupoComponent
   ]
 })
 export class CspSharedModule { }
