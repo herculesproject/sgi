@@ -6,7 +6,6 @@ server:
       enabled: false
 sgi:
   time-zone: "Europe/Madrid"
-  # If set all emails are sent to this instead of real recipient list
   rest:
     api:
       csp-url: "http://sgi-csp-service:4281"
@@ -26,7 +25,6 @@ spring:
     initialization-mode: always
     # We use a H2 in file database with PostgreSQL compatibility mode
     url: "jdbc:h2:./target/db/com;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
-    #url: "jdbc:h2:./target/db/com;DATABASE_TO_UPPER=TRUE;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
     driver-class-name: org.h2.Driver
     username: com
     password: com
@@ -48,8 +46,6 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
         '[default_schema]': ${spring.datasource.username}
-        # Enable nationalized character data as the default
-        #'[use_nationalized_character_data]': true
         jdbc:
           # see: https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
           '[time_zone]': UTC
@@ -118,30 +114,32 @@ spring:
           user-name-claim: user_ref_id
 ---
 sgi:
+  # If set all emails are sent to this instead of real recipient list
   fake-email-recipients: "sgi@hercules.org"
+  # If set to true no email is sent
   disable-email-send: true
 spring:
   profiles: dev
   liquibase:
     # Set Liquibase contexts same as spring profiles
     contexts: dev
-  # H2 console
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
-  security:
-    oauth2:
-      # Enable login page if JWT not provided (enable only for development)
-      enable-login: true
-    # Disable CSRF (disable only for development)
-    csrf:
-      enable: false
-    # Disable X-Frame-Options (disable only for development)
-    frameoptions:
-      enable: false
+#  # H2 console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#      settings:
+#        web-allow-others: true
+#  security:
+#    oauth2:
+#      # Enable login page if JWT not provided (enable only for development)
+#      enable-login: true
+#    # Disable CSRF (disable only for development)
+#    csrf:
+#      enable: false
+#    # Disable X-Frame-Options (disable only for development)
+#    frameoptions:
+#      enable: false
 logging:
   level:
     org:
@@ -161,7 +159,9 @@ logging:
             StatementCreatorUtils: TRACE
 ---
 sgi:
+  # If set all emails are sent to this instead of real recipient list
   fake-email-recipients: "sgi@hercules.org"
+  # If set to true no email is sent
   disable-email-send: true
 spring:
   profiles: dev-oracle

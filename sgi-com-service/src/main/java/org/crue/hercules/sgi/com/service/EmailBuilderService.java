@@ -29,6 +29,10 @@ import org.crue.hercules.sgi.com.model.Recipient;
 import org.crue.hercules.sgi.com.repository.AttachmentRepository;
 import org.crue.hercules.sgi.com.repository.EmailParamRepository;
 import org.crue.hercules.sgi.com.repository.RecipientRepository;
+import org.crue.hercules.sgi.com.service.sgi.SgiApiDocumentRefsService;
+import org.crue.hercules.sgi.com.service.sgi.SgiApiEmailParamsService;
+import org.crue.hercules.sgi.com.service.sgi.SgiApiInternetAddressesService;
+import org.crue.hercules.sgi.com.service.sgi.sgdoc.SgiApiSgdocService;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.stereotype.Service;
@@ -47,12 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 @Slf4j
-public class EmailBuilderService {
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
-  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String MESSAGE_KEY_EMAIL = "email";
-
+public class EmailBuilderService extends BaseService {
   private final RecipientRepository recipientRepository;
   private final AttachmentRepository attachmentRepository;
   private final EmailParamRepository emailParamRepository;
@@ -88,18 +87,24 @@ public class EmailBuilderService {
 
   public EmailData build(Email email) {
     log.debug("build(Email email) - start");
-
     Assert.notNull(
         email,
-        // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class,
             PROBLEM_MESSAGE_NOTNULL)
             .parameter(
                 PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(
                     MESSAGE_KEY_EMAIL))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Email.class)).build());
-
     EmailTpl template = email.getEmailTpl();
+    Assert.notNull(
+        template,
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(
+                MESSAGE_KEY_EMAIL_TPL))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(
+                Email.class))
+            .build());
+
     List<InternetAddress> internetAddresses = getRecipients(email);
     List<DataSource> attachments = getAttachments(email);
     HashMap<String, Object> params = getParams(email);
@@ -232,7 +237,11 @@ public class EmailBuilderService {
     Object value = null;
     switch (param.getParam().getType()) {
       case STRING:
-        value = (String) param.getValue();
+        value = param.getValue();
+        break;
+      case JSON:
+        // TODO check json correctness
+        value = param.getValue();
         break;
       default:
         throw new UnknownParamTypeException(param.getParam().getType().name());

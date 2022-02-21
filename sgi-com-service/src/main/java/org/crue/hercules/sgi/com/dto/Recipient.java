@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Email recipient.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

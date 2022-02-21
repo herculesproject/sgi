@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.com.repository.EmailTplRepository;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import freemarker.template.Configuration;
@@ -53,20 +54,20 @@ public class FreemarkerEmailTemplateProcessor {
 
       if (ObjectUtils.isNotEmpty(emailTpl.getSubjectTpl())) {
         Template subjectTemplate = freemarkerCfg.getTemplate(
-            name + FreemarkerDatabaseEmailTemplateLoader.PATH_SUBJECT);
+            name + FreemarkerDatabaseEmailTemplateLoader.PATH_SUBJECT, LocaleContextHolder.getLocale());
         builder.subject(FreeMarkerTemplateUtils.processTemplateIntoString(subjectTemplate,
             params));
       }
       if (ObjectUtils.isNotEmpty(emailTpl.getContentTpl())) {
         if (ObjectUtils.isNotEmpty(emailTpl.getContentTpl().getTplText())) {
           Template textContentTemplate = freemarkerCfg.getTemplate(
-              name + FreemarkerDatabaseEmailTemplateLoader.PATH_CONTENT_TEXT);
+              name + FreemarkerDatabaseEmailTemplateLoader.PATH_CONTENT_TEXT, LocaleContextHolder.getLocale());
           builder.contentText(FreeMarkerTemplateUtils.processTemplateIntoString(textContentTemplate,
               params));
         }
         if (ObjectUtils.isNotEmpty(emailTpl.getContentTpl().getTplHtml())) {
           Template htmlContentTemplate = freemarkerCfg.getTemplate(
-              name + FreemarkerDatabaseEmailTemplateLoader.PATH_CONTENT_HTML);
+              name + FreemarkerDatabaseEmailTemplateLoader.PATH_CONTENT_HTML, LocaleContextHolder.getLocale());
           builder.contentHtml(FreeMarkerTemplateUtils.processTemplateIntoString(
               htmlContentTemplate,
               params));

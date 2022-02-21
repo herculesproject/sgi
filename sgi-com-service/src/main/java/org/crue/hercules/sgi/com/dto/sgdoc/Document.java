@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.com.dto;
+package org.crue.hercules.sgi.com.dto.sgdoc;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

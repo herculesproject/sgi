@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.com.service;
+package org.crue.hercules.sgi.com.service.sgi;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,7 +8,11 @@ import org.crue.hercules.sgi.com.config.RestApiProperties;
 import org.crue.hercules.sgi.com.enums.ServiceType;
 import org.crue.hercules.sgi.com.exceptions.UnknownServiceTypeException;
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class SgiApiBaseService {
   public static final String CLIENT_REGISTRATION_ID = "com-service";
   private final RestApiProperties restApiProperties;
+  private final RestTemplate restTemplate;
 
-  protected SgiApiBaseService(RestApiProperties restApiProperties) {
+  protected SgiApiBaseService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
     this.restApiProperties = restApiProperties;
+    this.restTemplate = restTemplate;
   }
 
   protected URI buildUri(
@@ -64,10 +70,15 @@ public abstract class SgiApiBaseService {
     return mergedURL;
   }
 
-  protected HttpEntity<Void> buildHttpEntityRequest() {
-    log.debug("buildHttpEntityRequest() - start");
+  protected <T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod) {
+    log.info("Calling SGI API endpoint: {}", endPoint);
     HttpEntity<Void> request = new HttpEntityBuilder<Void>().withClientAuthorization(CLIENT_REGISTRATION_ID).build();
-    log.debug("buildHttpEntityRequest() - end");
-    return request;
+
+    ResponseEntity<T> response = restTemplate.exchange(endPoint, httpMethod, request,
+        new ParameterizedTypeReference<T>() {
+        });
+
+    log.info("Endpoint response: {}", response);
+    return response;
   }
 }

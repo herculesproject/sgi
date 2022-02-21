@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import org.crue.hercules.sgi.com.dto.Document;
+import org.crue.hercules.sgi.com.dto.sgdoc.Document;
 import org.springframework.core.io.Resource;
 
 public class DocumentDataSource implements DataSource {
@@ -37,5 +37,5 @@ public class DocumentDataSource implements DataSource {
   public String getName() {
     return document.getNombre();
   }
-  
+
 }

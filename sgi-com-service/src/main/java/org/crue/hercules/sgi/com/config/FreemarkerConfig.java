@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
+/**
+ * Freemarker is used a the default template engine for the email templates.
+ */
 @Configuration
 public class FreemarkerConfig {
 
@@ -18,8 +21,7 @@ public class FreemarkerConfig {
     FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
     bean.setPreTemplateLoaders(freemarkerDatabaseTemplateLoader);
     Properties freemarkerProperties = new Properties();
-    freemarkerProperties.setProperty(freemarker.template.Configuration.LOCALIZED_LOOKUP_KEY,
-        "false");
+    // Configure the Freemarket default time zone as the app configured time zone
     freemarkerProperties.setProperty(freemarker.core.Configurable.TIME_ZONE_KEY,
         sgiConfigProperties.getTimeZone().getID());
     bean.setFreemarkerSettings(freemarkerProperties);
@@ -28,6 +30,7 @@ public class FreemarkerConfig {
 
   @Bean
   public FreemarkerDatabaseEmailTemplateLoader getFreemarkerDatabaseTemplateLoader(EmailTplRepository repository) {
+    // The Email templates will be loaded from the database
     return new FreemarkerDatabaseEmailTemplateLoader(repository);
   }
 

@@ -54,22 +54,13 @@ import org.springframework.validation.annotation.Validated;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Service for {@link Service}.
+ * Service for {@link Email}.
  */
 @Service
 @Transactional(readOnly = true)
 @Validated
 @Slf4j
-public class EmailService {
-  private static final String PROBLEM_MESSAGE_NULL = "null";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
-  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String PROBLEM_MESSAGE_PARAMETER_RELATED = "entity";
-  private static final String PROBLEM_MESSAGE_NORELATEDENTYTY = "org.crue.hercules.sgi.com.exceptions.NoRelatedEntitiesException.message";
-  private static final String MESSAGE_KEY_ID = "id";
-  private static final String MESSAGE_KEY_EMAIL_ID = "emailId";
-
+public class EmailService extends BaseService {
   private final Validator validator;
   private final EmailRepository repository;
   private final EmailTplRepository emailTplRepository;

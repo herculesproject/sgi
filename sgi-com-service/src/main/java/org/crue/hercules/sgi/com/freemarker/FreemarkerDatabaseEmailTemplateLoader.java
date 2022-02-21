@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.com.model.EmailTpl;
@@ -34,6 +36,9 @@ public class FreemarkerDatabaseEmailTemplateLoader implements TemplateLoader {
   public static final String PATH_SUBJECT = PATH_PREFIX + "subject";
   public static final String PATH_CONTENT_TEXT = PATH_PREFIX + "content/text";
   public static final String PATH_CONTENT_HTML = PATH_PREFIX + "content/html";
+  public static final String LOCALE_PREFIX = "_";
+
+  protected static final List<String> VALID_PATHS = Arrays.asList(PATH_SUBJECT, PATH_CONTENT_TEXT, PATH_CONTENT_HTML);
 
   private EmailTplRepository repository;
 
@@ -60,20 +65,16 @@ public class FreemarkerDatabaseEmailTemplateLoader implements TemplateLoader {
             .build());
     String emailTplName = getTplName(name);
     String tplPath = getTplPath(name);
-    switch (tplPath) {
-      case PATH_SUBJECT:
-      case PATH_CONTENT_TEXT:
-      case PATH_CONTENT_HTML:
-        break;
-      default:
-        return null;
+    String localePath = getLocalePath(name);
+    if (!VALID_PATHS.contains(tplPath)) {
+      return null;
     }
 
     Optional<EmailTpl> emailTpl = repository.findByName(
-        emailTplName);
+        emailTplName.concat(Optional.ofNullable(localePath).orElse("")));
     EmailTplTemplateSource returnValue = null;
     if (emailTpl.isPresent()) {
-      returnValue = new EmailTplTemplateSource(emailTplName, tplPath, emailTpl.get());
+      returnValue = new EmailTplTemplateSource(emailTplName, tplPath, localePath, emailTpl.get());
     }
     log.debug(
         "findTemplateSource(String name) - end");
@@ -153,11 +154,41 @@ public class FreemarkerDatabaseEmailTemplateLoader implements TemplateLoader {
   }
 
   private String getTplName(String name) {
-    return name.substring(0, name.indexOf(PATH_PREFIX));
+    int idx = name.indexOf(PATH_PREFIX);
+    if (idx == -1) {
+      return name;
+    }
+    return name.substring(0, idx);
   }
 
   private String getTplPath(String name) {
-    return name.substring(name.indexOf(PATH_PREFIX));
+    int idx = name.indexOf(PATH_PREFIX);
+    if (idx == -1) {
+      return null;
+    }
+    String tplPath = name.substring(idx);
+
+    idx = tplPath.indexOf(LOCALE_PREFIX);
+    if (idx != -1) {
+      tplPath = tplPath.substring(0, idx);
+    }
+
+    return tplPath;
+  }
+
+  private String getLocalePath(String name) {
+    int idx = name.indexOf(PATH_PREFIX);
+    if (idx == -1) {
+      return null;
+    }
+    String tplPath = name.substring(idx);
+
+    idx = tplPath.indexOf(LOCALE_PREFIX);
+    if (idx == -1) {
+      return null;
+    }
+
+    return tplPath.substring(idx);
   }
 
   @Data
@@ -167,6 +198,7 @@ public class FreemarkerDatabaseEmailTemplateLoader implements TemplateLoader {
   public static class EmailTplTemplateSource {
     private String name;
     private String path;
+    private String localePath;
     private EmailTpl emailTpl;
   }
 }

@@ -23,9 +23,12 @@ import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Utility class for DTO from/to Entity conversion.
  */
+@Slf4j
 public class TypeConverter {
   private static ModelMapper modelMapper = new ModelMapper();
   static {
@@ -84,7 +87,10 @@ public class TypeConverter {
    * @return the converted {@link Email}
    */
   public static Email convert(EmailInput input) {
-    return convert(null, input);
+    log.debug("convert(EmailInput input) - start");
+    Email returnValue = convert(null, input);
+    log.debug("convert(EmailInput input) - end");
+    return returnValue;
   }
 
   /**
@@ -95,6 +101,7 @@ public class TypeConverter {
    * @return the converted {@link Email}
    */
   public static Email convert(Long id, EmailInput input) {
+    log.debug("convert(Long id, EmailInput input) - start");
     Email returnValue = modelMapper.map(input, Email.class);
     returnValue.setId(id);
     EmailAttachmentDeferrable emailAttachmentDeferrable = returnValue.getDeferrableAttachments();
@@ -109,6 +116,7 @@ public class TypeConverter {
     if (ObjectUtils.isNotEmpty(emailParamDeferrable)) {
       emailParamDeferrable.setId(id);
     }
+    log.debug("convert(Long id, EmailInput input) - end");
     return returnValue;
   }
 
@@ -119,7 +127,10 @@ public class TypeConverter {
    * @return the converted {@link EmailOutput}
    */
   public static EmailOutput convert(Email email) {
-    return modelMapper.map(email, EmailOutput.class);
+    log.debug("convert(Email email) - start");
+    EmailOutput returnValue = modelMapper.map(email, EmailOutput.class);
+    log.debug("convert(Email email) - end");
+    return returnValue;
   }
 
   /**
@@ -131,7 +142,10 @@ public class TypeConverter {
    * @return the converted {@link Status}
    */
   public static Status convert(org.crue.hercules.sgi.com.model.Status status) {
-    return modelMapper.map(status, Status.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Status status) - start");
+    Status returnValue = modelMapper.map(status, Status.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Status status) - end");
+    return returnValue;
   }
 
   /**
@@ -143,7 +157,10 @@ public class TypeConverter {
    * @return the converted {@link Param}
    */
   public static Param convert(org.crue.hercules.sgi.com.model.Param param) {
-    return modelMapper.map(param, Param.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Param param) - start");
+    Param returnValue = modelMapper.map(param, Param.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Param param) - end");
+    return returnValue;
   }
 
   /**
@@ -155,9 +172,12 @@ public class TypeConverter {
    * @return the converted {@link Page} of {@link Param}
    */
   public static Page<Param> convertParamPage(Page<org.crue.hercules.sgi.com.model.Param> page) {
+    log.debug("convertParamPage(Page<org.crue.hercules.sgi.com.model.Param> page) - start");
     List<Param> content = page.getContent().stream().map(TypeConverter::convert)
         .collect(Collectors.toList());
-    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+    Page<Param> returnValue = new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+    log.debug("convertParamPage(Page<org.crue.hercules.sgi.com.model.Param> page) - end");
+    return returnValue;
   }
 
   public static List<org.crue.hercules.sgi.com.model.Recipient> convertRecipients(List<Recipient> recipients) {
@@ -166,74 +186,116 @@ public class TypeConverter {
 
   public static List<org.crue.hercules.sgi.com.model.Recipient> convertRecipients(Long emailId,
       List<Recipient> recipients) {
+    log.debug("convertRecipients(Long emailId, List<Recipient> recipients) - start");
     if (CollectionUtils.isEmpty(recipients)) {
       return Collections.emptyList();
     }
-    return recipients.stream().map(r -> convert(emailId, r))
+    List<org.crue.hercules.sgi.com.model.Recipient> returnValue = recipients.stream().map(r -> convert(emailId, r))
         .collect(Collectors.toList());
+    log.debug("convertRecipients(Long emailId, List<Recipient> recipients) - end");
+    return returnValue;
   }
 
   public static org.crue.hercules.sgi.com.model.Recipient convert(Recipient recipient) {
-    return convert(null, recipient);
+    log.debug("convert(Recipient recipient) - start");
+    org.crue.hercules.sgi.com.model.Recipient returnValue = convert(null, recipient);
+    log.debug("convert(Recipient recipient) - end");
+    return returnValue;
   }
 
   public static org.crue.hercules.sgi.com.model.Recipient convert(Long emailId, Recipient recipient) {
+    log.debug("convert(Long emailId, Recipient recipient) - start");
     org.crue.hercules.sgi.com.model.Recipient returnValue = modelMapper.map(recipient,
         org.crue.hercules.sgi.com.model.Recipient.class);
     returnValue.setEmailId(emailId);
+    log.debug("convert(Long emailId, Recipient recipient) - end");
     return returnValue;
   }
 
   public static List<Recipient> convertRecipientEntities(List<org.crue.hercules.sgi.com.model.Recipient> recipients) {
+    log.debug("convertRecipientEntities(List<org.crue.hercules.sgi.com.model.Recipient> recipients) - start");
+    List<Recipient> returnValue = null;
     if (CollectionUtils.isEmpty(recipients)) {
-      return Collections.emptyList();
+      returnValue = Collections.emptyList();
+    } else {
+      returnValue = recipients.stream().map(TypeConverter::convert)
+          .collect(Collectors.toList());
     }
-    return recipients.stream().map(TypeConverter::convert)
-        .collect(Collectors.toList());
+    log.debug("convertRecipientEntities(List<org.crue.hercules.sgi.com.model.Recipient> recipients) - end");
+    return returnValue;
   }
 
   public static Recipient convert(org.crue.hercules.sgi.com.model.Recipient recipient) {
-    return modelMapper.map(recipient, Recipient.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Recipient recipient) - start");
+    Recipient returnValue = modelMapper.map(recipient, Recipient.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.Recipient recipient) - end");
+    return returnValue;
   }
 
   public static List<Attachment> convertAttachments(List<String> attachments) {
-    return convertAttachments(null, attachments);
+    log.debug("convertAttachments(List<String> attachments) - start");
+    List<Attachment> returnValue = convertAttachments(null, attachments);
+    log.debug("convertAttachments(List<String> attachments) - end");
+    return returnValue;
   }
 
   public static List<Attachment> convertAttachments(Long emailId, List<String> attachments) {
+    log.debug("convertAttachments(Long emailId, List<String> attachments) - start");
+    List<Attachment> returnValue = null;
     if (CollectionUtils.isEmpty(attachments)) {
-      return Collections.emptyList();
+      returnValue = Collections.emptyList();
+    } else {
+      returnValue = attachments.stream().map(a -> convert(emailId, a))
+          .collect(Collectors.toList());
     }
-    return attachments.stream().map(a -> convert(emailId, a))
-        .collect(Collectors.toList());
+    log.debug("convertAttachments(Long emailId, List<String> attachments) - start");
+    return returnValue;
   }
 
   public static Attachment convert(String attachment) {
-    return convert(null, attachment);
+    log.debug("convert(String attachment) - start");
+    Attachment returnValue = convert(null, attachment);
+    log.debug("convert(String attachment) - end");
+    return returnValue;
   }
 
   public static Attachment convert(Long emailId, String attachment) {
-    return Attachment.builder().emailId(emailId).documentRef(attachment).build();
+    log.debug("convert(Long emailId, String attachment) - start");
+    Attachment returnValue = Attachment.builder().emailId(emailId).documentRef(attachment).build();
+    log.debug("convert(Long emailId, String attachment) - end");
+    return returnValue;
   }
 
   public static List<org.crue.hercules.sgi.com.model.EmailParam> convertEmailParams(List<EmailParam> params) {
-    return convertEmailParams(null, params);
+    log.debug("convertEmailParams(List<EmailParam> params) - start");
+    List<org.crue.hercules.sgi.com.model.EmailParam> returnValue = convertEmailParams(null, params);
+    log.debug("convertEmailParams(List<EmailParam> params) - end");
+    return returnValue;
   }
 
   public static List<org.crue.hercules.sgi.com.model.EmailParam> convertEmailParams(Long emailId,
       List<EmailParam> params) {
+    log.debug("convertEmailParams(Long emailId, List<EmailParam> params) - start");
+    List<org.crue.hercules.sgi.com.model.EmailParam> retunValue = null;
     if (CollectionUtils.isEmpty(params)) {
-      return Collections.emptyList();
+      retunValue = Collections.emptyList();
+    } else {
+      retunValue = params.stream().map(p -> convert(emailId, p))
+          .collect(Collectors.toList());
     }
-    return params.stream().map(p -> convert(emailId, p))
-        .collect(Collectors.toList());
+    log.debug("convertEmailParams(Long emailId, List<EmailParam> params) - end");
+    return retunValue;
   }
 
   public static org.crue.hercules.sgi.com.model.EmailParam convert(EmailParam param) {
-    return convert(null, param);
+    log.debug("convert(EmailParam param) - start");
+    org.crue.hercules.sgi.com.model.EmailParam returnValue = convert(null, param);
+    log.debug("convert(EmailParam param) - end");
+    return returnValue;
   }
 
   public static org.crue.hercules.sgi.com.model.EmailParam convert(Long emailId, EmailParam param) {
+    log.debug("convert(Long emailId, EmailParam param) - start");
     org.crue.hercules.sgi.com.model.EmailParam returnValue = modelMapper.map(param,
         org.crue.hercules.sgi.com.model.EmailParam.class);
     EmailParamPK pk = returnValue.getPk();
@@ -241,30 +303,47 @@ public class TypeConverter {
       pk = EmailParamPK.builder().emailId(emailId).build();
     }
     returnValue.setPk(pk);
+    log.debug("convert(Long emailId, EmailParam param) - end");
     return returnValue;
   }
 
   public static List<EmailParam> convertEmailParamEntities(List<org.crue.hercules.sgi.com.model.EmailParam> params) {
+    log.debug("convertEmailParamEntities(List<org.crue.hercules.sgi.com.model.EmailParam> params) - start");
+    List<EmailParam> returnValue = null;
     if (CollectionUtils.isEmpty(params)) {
-      return Collections.emptyList();
+      returnValue = Collections.emptyList();
+    } else {
+      returnValue = params.stream().map(TypeConverter::convert)
+          .collect(Collectors.toList());
     }
-    return params.stream().map(TypeConverter::convert)
-        .collect(Collectors.toList());
+    log.debug("convertEmailParamEntities(List<org.crue.hercules.sgi.com.model.EmailParam> params) - end");
+    return returnValue;
   }
 
   public static EmailParam convert(org.crue.hercules.sgi.com.model.EmailParam param) {
-    return modelMapper.map(param, EmailParam.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.EmailParam param) - start");
+    EmailParam returnValue = modelMapper.map(param, EmailParam.class);
+    log.debug("convert(org.crue.hercules.sgi.com.model.EmailParam param) - end");
+    return returnValue;
   }
 
   public static List<String> convertAttachmentEntities(List<Attachment> attachments) {
+    log.debug("convertAttachmentEntities(List<Attachment> attachments) - start");
+    List<String> returnValue = null;
     if (CollectionUtils.isEmpty(attachments)) {
-      return Collections.emptyList();
+      returnValue = Collections.emptyList();
+    } else {
+      returnValue = attachments.stream().map(TypeConverter::convert)
+          .collect(Collectors.toList());
     }
-    return attachments.stream().map(TypeConverter::convert)
-        .collect(Collectors.toList());
+    log.debug("convertAttachmentEntities(List<Attachment> attachments) - end");
+    return returnValue;
   }
 
   public static String convert(Attachment attachment) {
-    return attachment.getDocumentRef();
+    log.debug("convert(Attachment attachment) - start");
+    String returnValue = attachment.getDocumentRef();
+    log.debug("convert(Attachment attachment) - end");
+    return returnValue;
   }
 }
