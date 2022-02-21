@@ -35,6 +35,14 @@
       <column name="autorizacion_id" valueNumeric="1" />
       <column name="responsable_ref" value="23302408" />
       <column name="entidad_participacion_ref" value="00132245" />
+      <column name="responsable_ref" value="33870580" />
+      <column name="url_documento_acreditacion" value="https://www.um.es/documents/1073494/10194030/Acronimos.pdf/088d4eec-ffab-488b-b9db-941e9af55508"></column>
+      <column name="cod_externo" value="PCGFOPE1" />
+      <column name="ambito_geografico" value="Propio" />
+      <column name="grado_contribucion" value="Total" />
+      <column name="nombre_programa" value="Nombre del programa" />
+      <column name="porcentaje_subvencion" valueNumeric="73" />
+      <column name="importe_total" valueNumeric="900" />
     </insert>
 
     <insert tableName="notificacion_proyecto_externo_cvn">
@@ -45,6 +53,7 @@
       <column name="solicitante_ref" value="33870580" />
       <column name="proyecto_cvn_id" value="00002" />
       <column name="responsable_ref" value="23302408" />
+      <column name="documento_ref" value="sample-pdf" />
       <column name="entidad_participacion_ref" value="00132245" />
     </insert>
     <insert tableName="notificacion_proyecto_externo_cvn">
@@ -215,6 +224,24 @@
       <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
       <column name="dedicacion" value="PARCIAL" />
       <column name="participacion" valueNumeric="80" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000005-notificacion_cvn_entidad_financiadora">
+    <insert tableName="notificacion_cvn_entidad_financiadora">
+      <column name="id" valueSequenceNext="notificacion_cvn_entidad_financiadora_seq" />
+      <column name="entidad_financiadora_ref" value="U0011919" />
+      <column name="notificacion_proyecto_externo_cvn_id" valueNumeric="6" />
+    </insert>
+    <insert tableName="notificacion_cvn_entidad_financiadora">
+      <column name="id" valueSequenceNext="notificacion_cvn_entidad_financiadora_seq" />
+      <column name="entidad_financiadora_ref" value="U0011919" />
+      <column name="notificacion_proyecto_externo_cvn_id" valueNumeric="6" />
+    </insert>
+    <insert tableName="notificacion_cvn_entidad_financiadora">
+      <column name="id" valueSequenceNext="notificacion_cvn_entidad_financiadora_seq" />
+      <column name="datos_entidad_financiadora" value="Datos de la entidad" />
+      <column name="notificacion_proyecto_externo_cvn_id" valueNumeric="6" />
     </insert>
   </changeSet>
 
