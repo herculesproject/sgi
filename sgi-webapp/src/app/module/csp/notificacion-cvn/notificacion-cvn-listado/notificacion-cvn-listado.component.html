@@ -138,22 +138,38 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let notificacion">
           <ng-container>
-            <a mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[notificacion.id]">
-              <mat-icon color="primary">visibility</mat-icon>
+            <a mat-icon-button color="primary" matTooltip="{{'btn.view' | translate}}" [routerLink]="[notificacion.id]">
+              <mat-icon>visibility</mat-icon>
             </a>
           </ng-container>
           <ng-container *ngIf="!notificacion.autorizacion?.id">
-            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-button
+            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-icon-button color="primary"
               matTooltip="{{'msg.asociar.entity' | translate:msgParamAutorizacionEntity}}"
               (click)="openModalAsociarAutorizacion(notificacion)">
-              <mat-icon color="primary">add_alert</mat-icon>
+              <mat-icon>add_alert</mat-icon>
             </button>
           </ng-container>
           <ng-container *ngIf="!notificacion.proyecto?.id">
-            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-button
+            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-icon-button color="primary"
               matTooltip="{{'msg.asociar.entity' | translate:msgParamProyectoEntity}}"
               (click)="openModalAsociarProyecto(notificacion)">
-              <mat-icon color="primary">work</mat-icon>
+              <mat-icon>next_week</mat-icon>
+            </button>
+          </ng-container>
+
+          <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']">
+            <button *ngIf="notificacion.proyecto?.id" mat-icon-button color="primary"
+              matTooltip="{{'btn.view.entity' | translate:msgParamProyectoEntity}}"
+              [routerLink]="['../..', CSP_ROUTE_NAMES.PROYECTO, notificacion.proyecto?.id?.toString()]">
+              <mat-icon>work</mat-icon>
+            </button>
+          </ng-container>
+
+          <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-AUT-V','CSP-AUT-E']">
+            <button *ngIf="notificacion.autorizacion.id" mat-icon-button color="primary"
+              matTooltip="{{'btn.view.entity' | translate:msgParamAutorizacionEntity}}"
+              [routerLink]="['../..', CSP_ROUTE_NAMES.AUTORIZACION, notificacion.autorizacion?.id?.toString()]">
+              <mat-icon>verified_user</mat-icon>
             </button>
           </ng-container>
         </td>

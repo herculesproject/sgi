@@ -16,6 +16,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { NotificacionCvnAsociarAutorizacionModalComponent } from '../modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
 import { NotificacionCvnAsociarProyectoModalComponent } from '../modals/notificacion-cvn-asociar-proyecto-modal/notificacion-cvn-asociar-proyecto-modal.component';
 
@@ -41,6 +42,8 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   TIPO_COLECTIVO = TipoColectivo;
 
+  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
+
   constructor(
     protected readonly snackBarService: SnackBarService,
     private readonly notificacionProyectoExternoCvnService: NotificacionProyectoExternoCvnService,
@@ -58,7 +61,6 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     this.setupI18N();
     this.initFormGroup();
   }
-
 
   private setupI18N(): void {
     this.translate.get(

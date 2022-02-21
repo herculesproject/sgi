@@ -2,8 +2,6 @@
   "btn.add": "Añadir",
   "btn.add.entity": "Añadir {entity}",
   "btn.autorizacion.descargar-certificado": "Descargar Certificado",
-  "btn.autorizacion.ver-notificacion": "Ver Notificacion",
-  "btn.autorizacion.ver-proyecto": "Ver Proyecto",
   "btn.before": "Anterior",
   "btn.cambiar-estado": "Cambiar estado",
   "btn.cambiar-estado.entity": "Cambiar estado {entity}",

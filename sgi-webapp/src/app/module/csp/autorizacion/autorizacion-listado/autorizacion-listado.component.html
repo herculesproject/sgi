@@ -131,21 +131,22 @@
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-AUT-INV-ER'">
             <button *ngIf="(element.certificadoVisible)" mat-button color="primary"
               matTooltip="{{'btn.autorizacion.descargar-certificado' | translate}}" (click)="downloadFile(element)">
-              <mat-icon color="primary">arrow_downward</mat-icon>
+              <mat-icon>arrow_downward</mat-icon>
             </button>
           </ng-container>
 
           <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-CVPR-E']">
-            <button *ngIf="element.proyectoId" mat-button matTooltip="{{'btn.autorizacion.ver-proyecto' | translate}}"
+            <button *ngIf="element.proyectoId" mat-button color="primary"
+              matTooltip="{{'btn.view.entity' | translate:msgParamProyectoEntity}}"
               [routerLink]="['../..', CSP_ROUTE_NAMES.PROYECTO, element.proyectoId?.toString()]">
-              <mat-icon color="primary">work</mat-icon>
+              <mat-icon>work</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-CVPR-V', 'CSP-CVPR-E']">
-            <button *ngIf="element.notificacionId" mat-button
-              matTooltip="{{'btn.autorizacion.ver-notificacion' | translate}}"
+            <button *ngIf="element.notificacionId" mat-button color="primary"
+              matTooltip="{{'btn.view.entity' | translate:msgParamNotificacionEntity}}"
               [routerLink]="['../..', CSP_ROUTE_NAMES.NOTIFICACION_CVN, element.notificacionId?.toString()]">
-              <mat-icon color="primary">notifications</mat-icon>
+              <mat-icon>notifications</mat-icon>
             </button>
           </ng-container>
 

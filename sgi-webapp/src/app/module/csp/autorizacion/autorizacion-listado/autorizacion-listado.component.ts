@@ -34,6 +34,8 @@ const MSG_DELETE = marker('msg.delete.entity');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
+const NOTIFICACION_KEY = marker('csp.notificacion-cvn');
+const PROYECTO_KEY = marker('csp.proyecto');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 export interface IAutorizacionListado {
@@ -68,6 +70,9 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   isInvestigador: boolean;
   isVisor: boolean;
   columnasGestor: string[];
+
+  msgParamNotificacionEntity = {};
+  msgParamProyectoEntity = {};
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -116,6 +121,16 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   }
 
   private setupI18N(): void {
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamProyectoEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      NOTIFICACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamNotificacionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       AUTORIZACION_KEY,
