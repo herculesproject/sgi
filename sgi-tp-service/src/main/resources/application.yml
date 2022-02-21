@@ -5,6 +5,8 @@ server:
       # Disble the default error page displayed in browsers in case of a server error
       enabled: false
 sgi:
+  # Set default application locale
+  locale: "es_ES"
   time-zone: "Europe/Madrid"
   rest:
     api:
