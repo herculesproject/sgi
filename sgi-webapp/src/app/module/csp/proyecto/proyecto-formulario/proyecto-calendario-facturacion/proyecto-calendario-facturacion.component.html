@@ -111,7 +111,7 @@
                 <mat-icon color="primary">add_alert</mat-icon>
               </button>
             </ng-container>
-            <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+            <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-INV-VR']">
               <button *ngIf="canShowValidarIP(element.value.estadoValidacionIP?.estado)" mat-icon-button
                 matTooltip="{{'csp.proyecto-calendario-facturacion.validar-ip' | translate}}"
                 (click)="openModal(DIALOG_ACTION.VALIDAR_IP, element.value,i)">
