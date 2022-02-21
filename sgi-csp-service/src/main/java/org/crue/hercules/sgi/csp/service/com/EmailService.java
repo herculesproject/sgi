@@ -1,15 +1,21 @@
 package org.crue.hercules.sgi.csp.service.com;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
+import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.EmailParam;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.com.ServiceType;
+import org.crue.hercules.sgi.csp.dto.com.Status;
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +28,26 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class EmailService {
+  public static final String CLIENT_REGISTRATION_ID = "csp-service";
 
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_NAME = "GENERIC_EMAIL_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT = "GENERIC_SUBJECT";
 
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO = "CSP_COM_INICIO_PRESENTACION_GASTO";
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO
+      + "_DATA";
+
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
 
   private final RestTemplate restTemplate;
   private final String baseUrl;
+  private final ObjectMapper objectMapper;
 
-  public EmailService(RestTemplate restTemplate, RestApiProperties restApiProperties) {
+  public EmailService(RestTemplate restTemplate, RestApiProperties restApiProperties, ObjectMapper objectMapper) {
     this.restTemplate = restTemplate;
     this.baseUrl = restApiProperties.getComUrl() + "/emails";
+    this.objectMapper = objectMapper;
   }
 
   /**
@@ -186,4 +199,58 @@ public class EmailService {
     log.debug("updateConvocatoriaHitoEmail({}, {}, {}, {}) - end", id, convocatoriaHitoId, subject, content,
         recipients);
   }
+
+  /**
+   * Crea un email en el modulo COM para el aviso de inicio del per&iacute;odo de
+   * presentaci&oacute;n de justificaci&oacute;n de gastos
+   * 
+   * @param data       informaci&oacute;n a incluir en el email
+   * @param recipients lista de destinatarios
+   * @return EmailOutput informaci&oacute;n del email creado
+   * @throws JsonProcessingException en caso de que se produzca un error
+   *                                 convirtiendo data a JSON
+   */
+  public EmailOutput createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data,
+      List<Recipient> recipients) throws JsonProcessingException {
+    log.debug(
+        "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - start");
+    EmailInput emailRequest = EmailInput.builder().template(
+        TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO).recipients(recipients)
+        .build();
+    emailRequest.setParams(Arrays.asList(
+        new EmailParam(TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM, objectMapper.writeValueAsString(data))));
+
+    EmailOutput emailResponse = restTemplate.exchange(
+        baseUrl, HttpMethod.POST,
+        new HttpEntityBuilder<>(
+            emailRequest).withClientAuthorization(
+                CLIENT_REGISTRATION_ID).build(),
+        EmailOutput.class).getBody();
+    log.debug(
+        "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - end");
+    return emailResponse;
+  }
+
+  /**
+   * Invoca el env&iacute;o de un email en el modulo COM
+   * 
+   * @param id identificador de email a enviar
+   * @return Status el estado del env&iacute;o
+   */
+  public Status sendEmail(Long id) {
+    log.debug("sendEmail(Long id) - start");
+    String endPoint = baseUrl + "/" + id + "/send";
+    log.info("Calling SGI API endpoint: {}", endPoint);
+    ResponseEntity<Status> response = restTemplate.exchange(
+        endPoint,
+        HttpMethod.GET,
+        new HttpEntityBuilder<>().withClientAuthorization(
+            CLIENT_REGISTRATION_ID).build(),
+        Status.class);
+    log.info("Endpoint response: {}", response);
+    Status returnValue = response.getBody();
+    log.debug("sendEmail(Long id) - end");
+    return returnValue;
+  }
+
 }
