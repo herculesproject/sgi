@@ -11,9 +11,11 @@ import org.crue.hercules.sgi.csp.repository.EstadoValidacionIPRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoFacturacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoFacturacionSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -38,6 +40,7 @@ public class ProyectoFacturacionService {
   private final EstadoValidacionIPRepository estadoValidacionIPRepository;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
+  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   /**
    * Busca todos los objetos de tipo {@link ProyectoFacturacion} cuyo proyectoId
@@ -48,7 +51,8 @@ public class ProyectoFacturacionService {
    * @return pagina de {@link ProyectoFacturacion}
    */
   public Page<ProyectoFacturacion> findByProyectoId(Long proyectoId, Pageable paging) {
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)) {
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
+        && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
     }
 
@@ -90,8 +94,14 @@ public class ProyectoFacturacionService {
   public ProyectoFacturacion update(ProyectoFacturacion toUpdate) {
 
     Assert.isTrue(
-        SgiSecurityContextHolder.hasAuthorityForUO(ALLOWED_ROLE, getUnidadGestionRef(toUpdate.getProyectoId())),
+        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-E", "CSP-PRO-INV-VR" },
+            getUnidadGestionRef(toUpdate.getProyectoId())),
         USER_NOT_ALLOWED_MESSAGE);
+
+    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(toUpdate.getProyectoId())
+        && !checkUserIsResponsableEconomico(toUpdate.getProyectoId())) {
+      throw new UserNotAuthorizedToAccessProyectoException();
+    }
 
     ProyectoFacturacion beforeUpdate = this.proyectoFacturacionRepository.findById(toUpdate.getId())
         .orElseThrow(() -> new ProyectoFacturacionNotFoundException(toUpdate.getId()));
@@ -167,14 +177,22 @@ public class ProyectoFacturacionService {
 
   /**
    * Comprueba si el usuario actual está presente en el equipo
-   * 
-   * @throws {@link UserNotAuthorizedToAccessProyectoException}
    */
   private boolean checkUserPresentInEquipos(Long proyectoId) {
     Long numeroProyectoEquipo = this.proyectoEquipoRepository
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
     return numeroProyectoEquipo > 0;
+  }
+
+  /**
+   * Comprueba si el usuario actual es el responsable económico del proyecto
+   */
+  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
+    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
+    return numeroResponsableEconomico > 0;
   }
 
 }
