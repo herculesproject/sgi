@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { INotificacionCVNEntidadFinanciadora } from '@core/models/csp/notificacion-cvn-entidad-financiadora';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { INotificacionCVNEntidadFinanciadoraRequest } from '../notificacion-cvn-entidad-financiadora/notificacion-cvn-entidad-financiadora-request';
+import { NOTIFICACION_CVN_ENTIDAD_FINANCIADORA_REQUEST_CONVERTER } from '../notificacion-cvn-entidad-financiadora/notificacion-cvn-entidad-financiadora-request.converter';
 import { NOTIFICACION_PROYECTO_EXTERNO_CVN_ASOCIAR_AUTORIZACION_REQUEST_CONVERTER } from './notificacion-proyecto-externo-cvn-asociar-autorizacion-request.converter';
 import { NOTIFICACION_PROYECTO_EXTERNO_CVN_ASOCIAR_PROYECTO_REQUEST_CONVERTER } from './notificacion-proyecto-externo-cvn-asociar-proyecto-request.converter';
 import { INotificacionProyectoExternoCVNRequest } from './notificacion-proyecto-externo-cvn-request';
@@ -58,5 +61,16 @@ export class NotificacionProyectoExternoCvnService extends _INotificacionProyect
       map((response => NOTIFICACION_PROYECTO_EXTERNO_CVN_RESPONSE_CONVERTER.toTarget(response)))
     );
   }
+
+  findAllNotificacionesCvnEntidadFinanciadoraByNotificacionId(notificacionId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<INotificacionCVNEntidadFinanciadora>> {
+    return this.find<INotificacionCVNEntidadFinanciadoraRequest, INotificacionCVNEntidadFinanciadora>(
+      `${this.endpointUrl}/${notificacionId}/notificacionescvnentidadfinanciadora`,
+      options,
+      NOTIFICACION_CVN_ENTIDAD_FINANCIADORA_REQUEST_CONVERTER
+    );
+  }
+
+
 
 }

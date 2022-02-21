@@ -14,6 +14,9 @@ import { NotificacionCvnEntidadParticipacionPipe } from './pipes/notificacion-cv
 import { NotificacionCvnResponsablePipe } from './pipes/notificacion-cvn-responsable.pipe';
 import { NotificacionCvnAsociarAutorizacionModalComponent } from './modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
 import { NotificacionCvnAsociarProyectoModalComponent } from './modals/notificacion-cvn-asociar-proyecto-modal/notificacion-cvn-asociar-proyecto-modal.component';
+import { NotificacionCvnDatosGeneralesComponent } from './notificacion-cvn-formulario/notificacion-cvn-datos-generales/notificacion-cvn-datos-generales.component';
+import { NotificacionCvnEditarComponent } from './notificacion-cvn-editar/notificacion-cvn-editar.component';
+import { NotificacionCvnDataResolver } from './notificacion-cvn-data.resolver';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import { NotificacionCvnAsociarProyectoModalComponent } from './modals/notificac
     NotificacionCvnEntidadParticipacionPipe,
     NotificacionCvnResponsablePipe,
     NotificacionCvnAsociarAutorizacionModalComponent,
-    NotificacionCvnAsociarProyectoModalComponent
+    NotificacionCvnAsociarProyectoModalComponent,
+    NotificacionCvnDatosGeneralesComponent,
+    NotificacionCvnEditarComponent
   ],
   imports: [
     CommonModule,
@@ -35,6 +40,9 @@ import { NotificacionCvnAsociarProyectoModalComponent } from './modals/notificac
     NotificacionCvnRoutingModule,
     SgpSharedModule,
     SgempSharedModule,
+  ],
+  providers: [
+    NotificacionCvnDataResolver
   ]
 })
 export class NotificacionCvnModule { }

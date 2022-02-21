@@ -19,7 +19,7 @@ class INotificacionProyectoExternoCvnAsociarAutorizacionRequestConverter
       codExterno: undefined,
       datosEntidadParticipacion: undefined,
       datosResponsable: undefined,
-      documentoRef: undefined,
+      documento: undefined,
       entidadParticipacion: undefined,
       fechaInicio: undefined,
       fechaFin: undefined,

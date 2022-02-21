@@ -14,7 +14,7 @@
           </mat-form-field>
         </div>
 
-        <!-- Titúlo -->
+        <!-- Título -->
         <div class="col" fxFlex="49%" fxFlex.sm="99%">
           <mat-form-field>
             <mat-label>{{'csp.notificacion-cvn.titulo' | translate}}</mat-label>
@@ -137,6 +137,11 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let notificacion">
+          <ng-container>
+            <a mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[notificacion.id]">
+              <mat-icon color="primary">visibility</mat-icon>
+            </a>
+          </ng-container>
           <ng-container *ngIf="!notificacion.autorizacion?.id">
             <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-button
               matTooltip="{{'msg.asociar.entity' | translate:msgParamAutorizacionEntity}}"
