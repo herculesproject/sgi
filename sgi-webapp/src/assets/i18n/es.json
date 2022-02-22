@@ -429,7 +429,7 @@
   "csp.notificacion-cvn.asociar-proyecto.seleccionar": "Seleccione el proyecto",
   "csp.notificacion-cvn.asociar-proyecto.vincular": "Buscar proyecto existente",
   "csp.notificacion-cvn.asociar.entity": "Asociar {entity} a Notificación CVN",
-  "csp.notificacion-cvn.codigo-externo": "Código Externo",
+  "csp.notificacion-cvn.codigo-externo": "Referencia en Entidad Convocante",
   "csp.notificacion-cvn.entidad-participacion": "Entidad de participación",
   "csp.notificacion-cvn.entidades-financiadoras": "Entidades Financiadoras",
   "csp.notificacion-cvn.fecha-fin": "Fecha fin",
