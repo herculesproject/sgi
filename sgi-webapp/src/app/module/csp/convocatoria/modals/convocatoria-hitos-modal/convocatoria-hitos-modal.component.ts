@@ -89,7 +89,7 @@ export class ConvocatoriaHitosModalComponent extends
     const suscription = this.formGroup.get('tipoHito').valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.subscriptions.push(suscription);
 
-    this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
+    this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.pipe(startWith(this.data.hito?.fecha)).subscribe(
       (value) => {
         this.validarFecha(value);
         this.createValidatorDate(this.formGroup.get('tipoHito').value);
@@ -97,17 +97,6 @@ export class ConvocatoriaHitosModalComponent extends
 
     this.textSaveOrUpdate = this.data.hito?.id ? MSG_ACEPTAR : MSG_ANADIR;
 
-    this.subscriptions.push(this.formGroup.get('aviso.fechaEnvio').valueChanges.subscribe(
-      (value) => {
-        if (!!this.data.hito?.id && !!value && DateTime.now() >= value) {
-          if (this.formGroup.get('generaAviso').enabled) {
-            this.formGroup.get('generaAviso').disable();
-          }
-          if (this.formGroup.get('aviso').enabled) {
-            this.formGroup.get('aviso').disable();
-          }
-        }
-      }));
 
     this.formGroup.get('generaAviso').valueChanges.pipe(startWith(!!this.data.hito?.aviso), pairwise()).subscribe(
       ([oldValue, newValue]: [boolean, boolean]) => {
@@ -142,8 +131,27 @@ export class ConvocatoriaHitosModalComponent extends
         (tareaProgramada) => {
           this.data.hito.aviso.task = tareaProgramada;
           this.formGroup.get('aviso.fechaEnvio').setValue(tareaProgramada.instant);
+          this.lockAviso(tareaProgramada.instant);
         }
       );
+    }
+    else {
+      this.lockAviso(this.data.hito?.aviso?.task?.instant);
+    }
+  }
+
+  private lockAviso(dateRef: DateTime): void {
+    // Si no hay fecha de referencia no hacemos nada
+    if (!!!dateRef) {
+      return;
+    }
+    if (!!this.data.hito?.id && DateTime.now() >= dateRef) {
+      if (this.formGroup.get('generaAviso').enabled) {
+        this.formGroup.get('generaAviso').disable();
+      }
+      if (this.formGroup.get('aviso').enabled) {
+        this.formGroup.get('aviso').disable();
+      }
     }
   }
 
@@ -156,7 +164,7 @@ export class ConvocatoriaHitosModalComponent extends
     );
     this.emailTplService.processConvocatoriaHitoTemplate(
       this.data.tituloConvocatoria,
-      this.formGroup.get('fechaInicio').value,
+      this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('tipoHito').value?.nombre ?? ''
     ).subscribe(
       (template) => {
@@ -254,7 +262,7 @@ export class ConvocatoriaHitosModalComponent extends
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamAsuntoEntity = {
       entity: value,
-      ...MSG_PARAMS.GENDER.FEMALE,
+      ...MSG_PARAMS.GENDER.MALE,
       ...MSG_PARAMS.CARDINALIRY.SINGULAR
     });
     this.translate.get(
@@ -304,7 +312,10 @@ export class ConvocatoriaHitosModalComponent extends
         control.disable();
       }
     } else {
-      if (control.disabled) {
+      if (control.disabled &&
+        (!!!this.data.hito?.aviso?.task?.instant ||
+          (!!this.data.hito?.aviso?.task?.instant && DateTime.now() <= this.data.hito.aviso.task.instant))
+      ) {
         control.enable();
       }
     }

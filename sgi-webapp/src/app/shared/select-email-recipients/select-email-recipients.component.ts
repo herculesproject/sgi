@@ -353,7 +353,10 @@ export class SelectEmailRecipientsComponent implements
         this.emailInput.nativeElement.focus();
         if (returnValue) {
           this.clearSearch();
-          this.propagateChanges([...this.value, this.personaToRecipient(returnValue)]);
+          const recipient = this.personaToRecipient(returnValue);
+          if (!this.value.some((element) => element.address === recipient.address)) {
+            this.propagateChanges([...this.value, recipient]);
+          }
         }
         else if (this.emailInputCtrl.value) {
           this.emailInputAuto.openPanel();
@@ -437,8 +440,8 @@ export class SelectEmailRecipientsComponent implements
   _selected(event: MatAutocompleteSelectedEvent): void {
     if (!this.value.some((element) => element.address === event.option.value.address)) {
       this.propagateChanges([...this.value, event.option.value]);
-      this.clearSearch();
     }
+    this.clearSearch();
   }
 
   private propagateChanges(value: IRecipient[]) {
