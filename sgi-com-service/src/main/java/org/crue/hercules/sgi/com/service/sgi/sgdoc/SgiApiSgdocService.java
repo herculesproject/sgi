@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.com.dto.sgdoc.Document;
 import org.crue.hercules.sgi.com.enums.ServiceType;
 import org.crue.hercules.sgi.com.model.DocumentDataSource;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiBaseService;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -32,13 +33,15 @@ public class SgiApiSgdocService extends SgiApiBaseService {
     URI mergedURL = buildUri(serviceType, relativeUrl);
 
     final Document document = super.<Document>callEndpoint(mergedURL
-        .toString(), httpMethod).getBody();
+        .toString(), httpMethod, new ParameterizedTypeReference<Document>() {
+        }).getBody();
 
     String resourceRelativeUrl = "/documentos/" + documentRef + "/archivo";
     URI resourceMergedURL = buildUri(ServiceType.SGDOC, resourceRelativeUrl);
 
     final Resource resource = super.<Resource>callEndpoint(resourceMergedURL
-        .toString(), httpMethod).getBody();
+        .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+        }).getBody();
 
     DataSource returnValue = new DocumentDataSource(document, resource);
     log.debug("call(String documentRef) - end");

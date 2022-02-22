@@ -70,13 +70,13 @@ public abstract class SgiApiBaseService {
     return mergedURL;
   }
 
-  protected <T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod) {
+  protected <T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod,
+      ParameterizedTypeReference<T> returnType) {
     log.info("Calling SGI API endpoint: {}", endPoint);
     HttpEntity<Void> request = new HttpEntityBuilder<Void>().withClientAuthorization(CLIENT_REGISTRATION_ID).build();
 
     ResponseEntity<T> response = restTemplate.exchange(endPoint, httpMethod, request,
-        new ParameterizedTypeReference<T>() {
-        });
+        returnType);
 
     log.info("Endpoint response: {}", response);
     return response;
