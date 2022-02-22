@@ -44,6 +44,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -390,7 +391,9 @@ public class ConvocatoriaHitoService {
                 .byProyectoActivoAndProyectoConvocatoriaIdWithIpsActivos(hito.getConvocatoriaId()))
             .stream().map(ProyectoEquipo::getPersonaRef).collect(Collectors.toList()));
       }
-      recipients = ComConverter.toRecipients(personaService.findAllByIdIn(solicitantes));
+      if (!CollectionUtils.isEmpty(solicitantes)) {
+        recipients = ComConverter.toRecipients(personaService.findAllByIdIn(solicitantes));
+      }
     }
 
     return recipients;
