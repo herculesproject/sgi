@@ -93,14 +93,15 @@ public class ProyectoFacturacionService {
   @Transactional
   public ProyectoFacturacion update(ProyectoFacturacion toUpdate) {
 
-    Assert.isTrue(
-        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-E", "CSP-PRO-INV-VR" },
-            getUnidadGestionRef(toUpdate.getProyectoId())),
-        USER_NOT_ALLOWED_MESSAGE);
-
     if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(toUpdate.getProyectoId())
         && !checkUserIsResponsableEconomico(toUpdate.getProyectoId())) {
       throw new UserNotAuthorizedToAccessProyectoException();
+    } else if (!ProyectoHelper.hasUserAuthorityInvestigador()) {
+      Assert.isTrue(
+          SgiSecurityContextHolder.hasAuthorityForUO(
+              ALLOWED_ROLE,
+              getUnidadGestionRef(toUpdate.getProyectoId())),
+          USER_NOT_ALLOWED_MESSAGE);
     }
 
     ProyectoFacturacion beforeUpdate = this.proyectoFacturacionRepository.findById(toUpdate.getId())
