@@ -34,6 +34,8 @@ const MSG_DELETE = marker('msg.delete.entity');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
+const AUTORIZACION_SOLICITUD_KEY = marker('csp.autorizacion-solicitud');
+const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const NOTIFICACION_KEY = marker('csp.notificacion-cvn');
 const PROYECTO_KEY = marker('csp.proyecto');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
@@ -133,7 +135,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     ).subscribe((value) => this.msgParamNotificacionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
-      AUTORIZACION_KEY,
+      AUTORIZACION_SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
