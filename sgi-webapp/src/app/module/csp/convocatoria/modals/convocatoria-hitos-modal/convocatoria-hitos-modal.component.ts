@@ -89,13 +89,17 @@ export class ConvocatoriaHitosModalComponent extends
     const suscription = this.formGroup.get('tipoHito').valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.subscriptions.push(suscription);
 
-    this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.pipe(startWith(this.data.hito?.fecha)).subscribe(
-      (value) => {
+    this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
+      (value: DateTime) => {
         this.validarFecha(value);
         this.createValidatorDate(this.formGroup.get('tipoHito').value);
       }));
 
     this.textSaveOrUpdate = this.data.hito?.id ? MSG_ACEPTAR : MSG_ANADIR;
+
+    if (!!!this.data.hito?.aviso) {
+      this.validarFecha(this.data.hito?.fecha);
+    }
 
 
     this.formGroup.get('generaAviso').valueChanges.pipe(startWith(!!this.data.hito?.aviso), pairwise()).subscribe(
