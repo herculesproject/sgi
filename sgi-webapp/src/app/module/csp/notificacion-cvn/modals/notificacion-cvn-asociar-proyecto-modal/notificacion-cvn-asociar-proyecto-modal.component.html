@@ -95,7 +95,7 @@
         <mat-form-field class="input-form" fxFlex>
           <mat-label>{{'csp.solicitud-proyecto.modelo-ejecucion' | translate}}</mat-label>
           <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
-            [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+            [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id" [externo]="true"
             [resetOnChange]="unidadGestionSel.selectionChange">
           </sgi-select-modelo-ejecucion>
           <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
