@@ -3,16 +3,19 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
+import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
@@ -24,6 +27,10 @@ const MSG_ERROR_LOAD = marker('error.load');
 const MSG_ASOCIAR_SUCCESS = marker('msg.asociar.entity.success');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
 const PROYECTO_KEY = marker('csp.proyecto');
+const MGS_DESASOCIAR_AUTORIZACION_KEY = marker('csp.notificacion-cvn.desasociar-autorizacion');
+const MGS_DESASOCIAR_PROYECTO_KEY = marker('csp.notificacion-cvn.desasociar-proyecto');
+const MSG_ERROR_DESASOCIAR = marker('error.desasociar.entity');
+const MSG_SUCCESS_DESASOCIAR = marker('msg.desasociar.entity.success');
 
 @Component({
   selector: 'sgi-notificacion-cvn-listado',
@@ -37,6 +44,12 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   textoAsociarAutorizacionSuccess: string;
   textoAsociarProyectoSuccess: string;
+  textoSuccessDesasociarAutorizacion: string;
+  textoSuccessDesasociarProyecto: string;
+  textoDesasociarAutorizacion: string;
+  textoDesasociarProyecto: string;
+  textoErrorDesasociarProyecto: string;
+  textoErrorDesasociarAutorizacion: string;
   msgParamAutorizacionEntity = {};
   msgParamProyectoEntity = {};
 
@@ -46,11 +59,13 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
 
   constructor(
     protected readonly snackBarService: SnackBarService,
+    protected readonly logger: NGXLogger,
     private readonly notificacionProyectoExternoCvnService: NotificacionProyectoExternoCvnService,
     private readonly personaService: PersonaService,
     private matDialog: MatDialog,
     private readonly empresaService: EmpresaService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private dialogService: DialogService,
   ) {
     super(snackBarService, MSG_ERROR_LOAD);
     this.initFlexProperties();
@@ -96,6 +111,65 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       PROYECTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamProyectoEntity = { entity: value });
+
+    this.translate.get(
+      AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DESASOCIAR,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessDesasociarAutorizacion = value);
+
+    this.translate.get(
+      AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DESASOCIAR,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorDesasociarAutorizacion = value);
+
+    this.translate.get(
+      MGS_DESASOCIAR_AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.textoDesasociarAutorizacion = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DESASOCIAR,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessDesasociarProyecto = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DESASOCIAR,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorDesasociarProyecto = value);
+
+    this.translate.get(
+      MGS_DESASOCIAR_PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.textoDesasociarProyecto = value);
+
   }
 
   private initFormGroup(): void {
@@ -225,5 +299,53 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     ).subscribe(() => {
       this.snackBarService.showSuccess(this.textoAsociarProyectoSuccess);
     });
+  }
+
+  desasociarAutorizacion(data: INotificacionProyectoExternoCVN) {
+    const subcription = this.dialogService.showConfirmation(this.textoDesasociarAutorizacion).pipe(
+      switchMap((accept) => {
+        if (accept) {
+          return this.notificacionProyectoExternoCvnService.asociarAutorizacion(data.id, {} as INotificacionProyectoExternoCVN);
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(this.textoSuccessDesasociarAutorizacion);
+          this.loadTable();
+        },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesasociarProyecto);
+          }
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
+  desasociarProyecto(data: INotificacionProyectoExternoCVN) {
+    const subcription = this.dialogService.showConfirmation(this.textoDesasociarProyecto).pipe(
+      switchMap((accept) => {
+        if (accept) {
+          return this.notificacionProyectoExternoCvnService.asociarProyecto(data.id, {} as INotificacionProyectoExternoCVN);
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(this.textoSuccessDesasociarProyecto);
+          this.loadTable();
+        },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorDesasociarAutorizacion);
+          }
+        }
+      );
+    this.suscripciones.push(subcription);
   }
 }

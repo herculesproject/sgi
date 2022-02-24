@@ -62,6 +62,15 @@ export class NotificacionProyectoExternoCvnService extends _INotificacionProyect
     );
   }
 
+
+  desasociarAutorizacion(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desasociarautorizacion`, null);
+  }
+
+  desasociarProyecto(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desasociarproyecto`, null);
+  }
+
   findAllNotificacionesCvnEntidadFinanciadoraByNotificacionId(notificacionId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<INotificacionCVNEntidadFinanciadora>> {
     return this.find<INotificacionCVNEntidadFinanciadoraRequest, INotificacionCVNEntidadFinanciadora>(

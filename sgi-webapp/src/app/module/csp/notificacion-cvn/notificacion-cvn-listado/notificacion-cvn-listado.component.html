@@ -149,6 +149,20 @@
               <mat-icon>add_alert</mat-icon>
             </button>
           </ng-container>
+          <ng-container *ngIf="notificacion.autorizacion?.id">
+            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-icon-button color="primary"
+              matTooltip="{{'msg.desasociar.entity' | translate:msgParamAutorizacionEntity}}"
+              (click)="desasociarAutorizacion(notificacion)">
+              <mat-icon>notifications_off</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="notificacion.proyecto?.id">
+            <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-icon-button color="primary"
+              matTooltip="{{'msg.desasociar.entity' | translate:msgParamProyectoEntity}}"
+              (click)="desasociarProyecto(notificacion)">
+              <mat-icon>work_off</mat-icon>
+            </button>
+          </ng-container>
           <ng-container *ngIf="!notificacion.proyecto?.id">
             <button *sgiHasAuthorityForAnyUO="'CSP-CVPR-E'" mat-icon-button color="primary"
               matTooltip="{{'msg.asociar.entity' | translate:msgParamProyectoEntity}}"
