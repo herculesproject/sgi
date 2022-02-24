@@ -237,6 +237,9 @@ public class AutorizacionService {
             .build());
 
     final Autorizacion returnValue = repository.findById(id).orElseThrow(() -> new AutorizacionNotFoundException(id));
+    returnValue.setEstado(null);
+    repository.save(returnValue);
+    this.estadoAutorizacionRepository.deleteByAutorizacionId(id);
     checkUserHasAuthorityDeleteAutorizacion(returnValue);
 
     repository.deleteById(id);

@@ -31,4 +31,6 @@ public interface EstadoAutorizacionRepository
    */
   List<EstadoAutorizacion> findFirstByAutorizacionIdOrderByIdAsc(Long autorizacionId);
 
+  void deleteByAutorizacionId(Long autorizacionId);
+
 }
