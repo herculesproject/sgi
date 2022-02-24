@@ -1,6 +1,4 @@
 import { IGrupo } from '@core/models/csp/grupo';
-import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
-import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -21,8 +19,9 @@ class GrupoRequestConverter
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : undefined,
       solicitud: value.solicitudId ? { id: value.solicitudId } as ISolicitud : undefined,
       codigo: value.codigo,
-      tipo: value.tipoId ? { id: value.tipoId } as IGrupoTipo : undefined,
-      especialInvestigacion: value.especialInvestigacionId ? { id: value.especialInvestigacionId } as IGrupoEspecialInvestigacion : undefined,
+      tipo: value.tipo,
+      especialInvestigacion: value.especialInvestigacion,
+      departamentoOrigenRef: value.departamentoOrigenRef,
       activo: undefined
     };
   }
@@ -38,8 +37,9 @@ class GrupoRequestConverter
       proyectoSgeRef: value.proyectoSge?.id,
       solicitudId: value.solicitud?.id,
       codigo: value.codigo,
-      tipoId: value.tipo?.id,
-      especialInvestigacionId: value.especialInvestigacion?.id
+      tipo: value.tipo,
+      especialInvestigacion: value.especialInvestigacion,
+      departamentoOrigenRef: value.departamentoOrigenRef
     };
   }
 }

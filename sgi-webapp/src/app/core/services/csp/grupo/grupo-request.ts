@@ -1,3 +1,5 @@
+import { Tipo } from "@core/models/csp/grupo-tipo";
+
 export interface IGrupoRequest {
   nombre: string;
   fechaInicio: string;
@@ -5,6 +7,7 @@ export interface IGrupoRequest {
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;
-  tipoId: number;
-  especialInvestigacionId: number;
+  tipo: Tipo;
+  especialInvestigacion: boolean;
+  departamentoOrigenRef: string;
 }

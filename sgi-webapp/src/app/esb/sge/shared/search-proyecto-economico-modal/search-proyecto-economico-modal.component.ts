@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
@@ -19,7 +20,8 @@ import { ACTION_MODAL_MODE, IProyectoEconomicoFormlyData, ProyectoEconomicoForml
 
 const MSG_LISTADO_ERROR = marker('error.load');
 const TIPO_PROYECTO_KEY = marker('sge.proyecto');
-export interface SearchProyectoEconomicoModalData {
+
+export interface SearchProyectoEconomicoModalData extends SearchModalData {
   selectedProyectos: IProyectoSge[];
   proyectoSgiId: number;
 }
@@ -30,10 +32,10 @@ interface ProyectoListado {
 }
 
 @Component({
-  templateUrl: './search-proyectos-economicos-modal.component.html',
-  styleUrls: ['./search-proyectos-economicos-modal.component.scss']
+  templateUrl: './search-proyecto-economico-modal.component.html',
+  styleUrls: ['./search-proyecto-economico-modal.component.scss']
 })
-export class SearchProyectosEconomicosModalComponent implements OnInit, AfterViewInit {
+export class SearchProyectoEconomicoModalComponent implements OnInit, AfterViewInit {
   formGroup: FormGroup;
 
   proyectos$: Observable<ProyectoListado[]>;
@@ -49,7 +51,7 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
 
   constructor(
     private readonly logger: NGXLogger,
-    public dialogRef: MatDialogRef<SearchProyectosEconomicosModalComponent>,
+    public dialogRef: MatDialogRef<SearchProyectoEconomicoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SearchProyectoEconomicoModalData,
     private proyectoService: ProyectoSgeService,
     protected snackBarService: SnackBarService,
@@ -60,7 +62,7 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      datosProyecto: new FormControl(''),
+      datosProyecto: new FormControl(this.data.searchTerm),
       fechaInicioDesde: new FormControl(null),
       fechaInicioHasta: new FormControl(null),
       fechaFinDesde: new FormControl(null),
@@ -86,6 +88,10 @@ export class SearchProyectosEconomicosModalComponent implements OnInit, AfterVie
     ).pipe(
       tap(() => this.search())
     ).subscribe();
+
+    if (this.data.searchTerm) {
+      this.search();
+    }
   }
 
   closeModal(proyecto?: IProyectoSge): void {

@@ -31,7 +31,7 @@ const _GrupoEquipoMixinBase:
   providedIn: 'root'
 })
 export class GrupoEquipoService extends _GrupoEquipoMixinBase {
-  private static readonly MAPPING = '/grupoequipos';
+  private static readonly MAPPING = '/gruposequipos';
 
   constructor(protected http: HttpClient) {
     super(

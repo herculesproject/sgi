@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import { IProyectoSge } from '../sge/proyecto-sge';
-import { IGrupoEspecialInvestigacion } from './grupo-especial-investigacion';
-import { IGrupoTipo } from './grupo-tipo';
+import { Tipo } from './grupo-tipo';
 import { ISolicitud } from './solicitud';
 
 export interface IGrupo {
@@ -12,7 +11,8 @@ export interface IGrupo {
   proyectoSge: IProyectoSge;
   solicitud: ISolicitud;
   codigo: string;
-  tipo: IGrupoTipo;
-  especialInvestigacion: IGrupoEspecialInvestigacion;
+  tipo: Tipo;
+  especialInvestigacion: boolean;
+  departamentoOrigenRef: string;
   activo: boolean;
 }

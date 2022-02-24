@@ -1,13 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
+import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
 import { GRUPO_EQUIPO_RESPONSE_CONVERTER } from '../grupo-equipo/grupo-equipo-response.converter';
+import { GRUPO_PALABRACLAVE_REQUEST_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-request.converter';
+import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra-clave-response';
+import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
 import { IGrupoRequest } from './grupo-request';
 import { GRUPO_REQUEST_CONVERTER } from './grupo-request.converter';
 import { IGrupoResponse } from './grupo-response';
@@ -115,6 +119,59 @@ export class GrupoService extends _GrupoMixinBase {
    */
   findPersonaRefInvestigadoresPrincipales(id: number): Observable<string[]> {
     return this.get<string[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`);
+  }
+
+  getNextCodigo(departamentoRef: string): Observable<string> {
+    const url = `${this.endpointUrl}/nextcodigo`;
+    let params = new HttpParams();
+    params = params.append('departamentoRef', departamentoRef);
+    return this.http.get<string>(url, { params });
+  }
+
+  /**
+   * Comprueba si el codigo es valido
+   *
+   * @param id Identificador del grupo
+   * @param
+   */
+  isDuplicatedCodigo(codigo: string, grupoId?: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/codigoduplicado`;
+    let params = new HttpParams();
+    params = params.append('codigo', codigo);
+
+    if (grupoId) {
+      params = params.append('grupoId', grupoId.toString());
+    }
+
+    return this.http.head(url, { params, observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera las Palabras Clave asociadas al grupo con el id indicado.
+   *
+   * @param id del grupo
+   */
+  findPalabrasClave(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoPalabraClave>> {
+    return this.find<IGrupoPalabraClaveResponse, IGrupoPalabraClave>(
+      `${this.endpointUrl}/${id}/palabrasclave`,
+      options,
+      GRUPO_PALABRACLAVE_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Actualiza las Palabras Clave  asociadas al grupo con el id indicado.
+   *
+   * @param id Identificador del grupo
+   * @param palabrasClave Palabras Clave a actualizar
+   */
+  updatePalabrasClave(id: number, palabrasClave: IGrupoPalabraClave[]): Observable<IGrupoPalabraClave[]> {
+    return this.http.patch<IGrupoPalabraClaveResponse[]>(`${this.endpointUrl}/${id}/palabrasclave`,
+      GRUPO_PALABRACLAVE_REQUEST_CONVERTER.fromTargetArray(palabrasClave)
+    ).pipe(
+      map((response => GRUPO_PALABRACLAVE_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
   }
 
 }

@@ -8,10 +8,7 @@ export interface IGrupoResponse {
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;
-  tipo: {
-    id: number;
-    tipo: Tipo;
-  };
-  especialInvestigacionId: number;
+  tipo: Tipo;
+  especialInvestigacion: boolean;
   activo: boolean;
 }
