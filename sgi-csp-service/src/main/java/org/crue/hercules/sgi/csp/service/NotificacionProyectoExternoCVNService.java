@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificacionProyectoExternoCVNService {
   private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
   private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
   private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
   private static final String MESSAGE_KEY_ID = "id";
 
@@ -203,9 +202,7 @@ public class NotificacionProyectoExternoCVNService {
    * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
    * {@link Proyecto} asociado.
    *
-   * @param notificacionProyectoExternoCVNActualizar la entidad
-   *                                                 {@link NotificacionProyectoExternoCVN}
-   *                                                 a guardar.
+   * @param id Id de la {@link NotificacionProyectoExternoCVN}.
    * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
    */
   @Transactional
@@ -257,9 +254,7 @@ public class NotificacionProyectoExternoCVNService {
    * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
    * {@link Autorizacion} asociado.
    *
-   * @param notificacionProyectoExternoCVNActualizar la entidad
-   *                                                 {@link NotificacionProyectoExternoCVN}
-   *                                                 a guardar.
+   * @param id Id de la {@link NotificacionProyectoExternoCVN}.
    * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
    */
   @Transactional
