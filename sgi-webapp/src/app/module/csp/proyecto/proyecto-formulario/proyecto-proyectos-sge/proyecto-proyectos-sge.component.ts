@@ -105,7 +105,8 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
       searchTerm: null,
       extended: true,
       selectedProyectos: this.dataSource.data.map((proyectoProyectoSge) => proyectoProyectoSge.value.proyectoSge),
-      proyectoSgiId: this.formPart.getKey() as number
+      proyectoSgiId: this.formPart.getKey() as number,
+      selectAndNotify: true
     };
 
     const config = {

@@ -24,6 +24,7 @@ const TIPO_PROYECTO_KEY = marker('sge.proyecto');
 export interface SearchProyectoEconomicoModalData extends SearchModalData {
   selectedProyectos: IProyectoSge[];
   proyectoSgiId: number;
+  selectAndNotify: boolean;
 }
 
 interface ProyectoListado {

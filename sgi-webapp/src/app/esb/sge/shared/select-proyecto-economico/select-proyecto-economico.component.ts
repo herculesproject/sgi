@@ -43,7 +43,10 @@ export class SelectProyectoEconomicoComponent extends SelectDialogComponent<Sear
   selectedProyectos: IProyectoSge[];
 
   @Input()
-  proyectoSgiId: number
+  proyectoSgiId: number;
+
+  @Input()
+  selectAndNotify: boolean;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -62,7 +65,8 @@ export class SelectProyectoEconomicoComponent extends SelectDialogComponent<Sear
     return {
       ...super.getDialogData(),
       selectedProyectos: this.selectedProyectos ?? [],
-      proyectoSgiId: this.proyectoSgiId
+      proyectoSgiId: this.proyectoSgiId,
+      selectAndNotify: this.selectAndNotify
     };
   }
 
