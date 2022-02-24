@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -30,15 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 @Validated
+@RequiredArgsConstructor
 public class GrupoEquipoService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final GrupoEquipoRepository repository;
-
-  public GrupoEquipoService(SgiConfigProperties sgiConfigProperties, GrupoEquipoRepository repository) {
-    this.sgiConfigProperties = sgiConfigProperties;
-    this.repository = repository;
-  }
 
   /**
    * Guarda la entidad {@link GrupoEquipo}.
@@ -47,7 +45,7 @@ public class GrupoEquipoService {
    * @return la entidad {@link GrupoEquipo} persistida.
    */
   @Transactional
-  @Validated({ GrupoEquipo.OnCrear.class })
+  @Validated({ BaseEntity.Create.class })
   public GrupoEquipo create(GrupoEquipo grupoEquipo) {
     log.debug("create(GrupoEquipo grupoEquipo) - start");
 
@@ -65,7 +63,7 @@ public class GrupoEquipoService {
    * @return {@link GrupoEquipo} actualizado.
    */
   @Transactional
-  @Validated({ GrupoEquipo.OnActualizar.class })
+  @Validated({ BaseEntity.Update.class })
   public GrupoEquipo update(@Valid GrupoEquipo grupoEquipoActualizar) {
     log.debug("update(GrupoEquipo grupoEquipoActualizar) - start");
 

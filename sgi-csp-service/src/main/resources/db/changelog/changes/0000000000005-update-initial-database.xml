@@ -67,6 +67,7 @@
         <constraints nullable="false" />
       </column>
       <column name="proyecto_sge_ref" type="VARCHAR(50)" />
+      <column name="departamento_origen_ref" type="VARCHAR(50)" />
       <column name="solicitud_id" type="BIGINT" />
       <column name="grupo_tipo_id" type="BIGINT" />
     </createTable>
@@ -203,4 +204,29 @@
   <changeSet author="user (generated)" id="0000000000005-27">
     <dropColumn columnName="genera_aviso" tableName="convocatoria_hito" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000005-28">
+    <createSequence incrementBy="1" sequenceName="grupo_palabra_clave_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-29">
+    <createTable tableName="grupo_palabra_clave">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_palabra_clavePK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="palabra_clave_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-30">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_palabra_clave" constraintName="FK_GRUPOPALABRACLAVE_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

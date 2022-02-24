@@ -98,6 +98,7 @@
       <column name="fecha_fin" valueDate="2022-01-01T22:59:59" />
       <column name="proyecto_sge_ref" value="34123" />
       <column name="codigo" value="U006-1" />
+      <column name="departamento_origen_ref" value="U006" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="grupo">
@@ -106,7 +107,8 @@
       <column name="fecha_inicio" valueDate="2022-02-14T23:00:00" />
       <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
       <column name="proyecto_sge_ref" value="33939" />
-      <column name="codigo" value="U006-2" />
+      <column name="codigo" value="E0B9-1" />
+      <column name="departamento_origen_ref" value="E0B9" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>

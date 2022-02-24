@@ -106,16 +106,4 @@ public class GrupoEquipo extends BaseEntity {
   @Setter(AccessLevel.NONE)
   private final Grupo grupo = null;
 
-  /**
-   * Interfaz para marcar validaciones en la actualizacion de la entidad.
-   */
-  public interface OnActualizar {
-  }
-
-  /**
-   * Interfaz para marcar validaciones en la creacion de la entidad.
-   */
-  public interface OnCrear {
-  }
-
 }

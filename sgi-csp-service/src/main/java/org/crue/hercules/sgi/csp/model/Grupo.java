@@ -19,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.model.Grupo.OnActualizar;
+import org.crue.hercules.sgi.csp.validation.UniqueCodigoGrupoActivo;
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
 import lombok.AccessLevel;
@@ -38,7 +38,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@ActivableIsActivo(entityClass = Grupo.class, groups = { OnActualizar.class })
+@ActivableIsActivo(entityClass = Grupo.class, groups = { BaseEntity.Update.class })
+@UniqueCodigoGrupoActivo(groups = { BaseEntity.Update.class, BaseEntity.Create.class,
+    BaseActivableEntity.OnActivar.class })
 public class Grupo extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "grupo";
@@ -47,6 +49,7 @@ public class Grupo extends BaseActivableEntity {
   public static final int NOMBRE_LENGTH = 250;
   public static final int DESCRIPCION_LENGTH = 250;
   public static final int PROYECTO_SGE_REF_LENGTH = 50;
+  public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
 
   /** Id */
@@ -76,6 +79,11 @@ public class Grupo extends BaseActivableEntity {
   @Size(max = Grupo.PROYECTO_SGE_REF_LENGTH)
   private String proyectoSgeRef;
 
+  /** Departamento origen */
+  @Column(name = "departamento_origen_ref", length = Grupo.DEPARTAMENTO_ORIGEN_REF_LENGTH, nullable = true)
+  @Size(max = Grupo.DEPARTAMENTO_ORIGEN_REF_LENGTH)
+  private String departamentoOrigenRef;
+
   /** Solicitud */
   @Column(name = "solicitud_id", nullable = true)
   private Long solicitudId;
@@ -91,8 +99,9 @@ public class Grupo extends BaseActivableEntity {
   private GrupoTipo tipo;
 
   /** Especial investigacion actual */
-  @Column(name = "grupo_especial_investigacion_id", nullable = true)
-  private Long especialInvestigacionId;
+  @OneToOne()
+  @JoinColumn(name = "grupo_especial_investigacion_id", nullable = true, foreignKey = @ForeignKey(name = "FK_GRUPO_GRUPOESPECIALINVESTIGACION"))
+  private GrupoEspecialInvestigacion especialInvestigacion;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
@@ -101,21 +110,9 @@ public class Grupo extends BaseActivableEntity {
   @Setter(AccessLevel.NONE)
   private final Solicitud solicitud = null;
 
-  @OneToOne()
-  @JoinColumn(name = "grupo_especial_investigacion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_GRUPO_GRUPOESPECIALINVESTIGACION"))
-  @Getter(AccessLevel.NONE)
-  @Setter(AccessLevel.NONE)
-  private final GrupoEspecialInvestigacion especialInvestigacion = null;
-
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final List<GrupoEquipo> miembrosEquipo = null;
-
-  /**
-   * Interfaz para marcar validaciones en la actualizacion de la entidad.
-   */
-  public interface OnActualizar {
-  }
 
 }
