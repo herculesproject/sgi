@@ -82,7 +82,7 @@ class ProyectoFacturacionIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-    // @formatter:off    
+  // @formatter:off    
       "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
@@ -91,7 +91,9 @@ class ProyectoFacturacionIT extends BaseIT {
       "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
       "classpath:scripts/tipo_facturacion.sql",
-      "classpath:scripts/proyecto_facturacion.sql"
+      "classpath:scripts/proyecto_facturacion.sql",
+      "classpath:scripts/estado_validacion_ip.sql",
+      "classpath:scripts/proyecto_facturacion_update_estado_validacion_ip.sql"
     // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -101,7 +103,8 @@ class ProyectoFacturacionIT extends BaseIT {
     ProyectoFacturacionInput toUpdate = buildMockProyectoFacturacionInput(proyectoFacturacionId);
     toUpdate.setComentario("updated");
     toUpdate.setEstadoValidacionIP(ProyectoFacturacionInput.EstadoValidacionIP.builder()
-        .estado(ProyectoFacturacionInput.TipoEstadoValidacion.NOTIFICADA)
+        .estado(ProyectoFacturacionInput.TipoEstadoValidacion.VALIDADA)
+        .comentario("estado validado")
         .build());
 
     final ResponseEntity<ProyectoFacturacionOutput> response = restTemplate.exchange(

@@ -113,7 +113,7 @@ public class ProyectoFacturacionService {
     beforeUpdate.setFechaEmision(toUpdate.getFechaEmision());
     beforeUpdate.setFechaConformidad(toUpdate.getFechaConformidad());
 
-    if (toUpdate.getEstadoValidacionIP().getId() == null) {
+    if (toUpdate.getEstadoValidacionIP().getEstado() != beforeUpdate.getEstadoValidacionIP().getEstado()) {
       beforeUpdate.setEstadoValidacionIP(persistEstadoValidacionIP(toUpdate.getEstadoValidacionIP(), toUpdate.getId()));
     }
 
