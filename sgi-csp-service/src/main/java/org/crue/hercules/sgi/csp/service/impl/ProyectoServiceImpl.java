@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -390,7 +391,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       if ((proyectoActualizar.getIva() != null && data.getIva() == null)
           || (proyectoActualizar.getIva() != null && data.getIva() != null)
-              && (!proyectoActualizar.getIva().getIva().equals(data.getIva().getIva()))) {
+              && (!Objects.equals(proyectoActualizar.getIva().getIva(), data.getIva().getIva()))) {
         ProyectoIVA proyectoIVA = updateProyectoIVA(data, proyectoActualizar);
         data.setIva(proyectoIVA);
       }
@@ -808,12 +809,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(proyecto.getConfidencial() != null,
           "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
-      Assert.isTrue(proyecto.getColaborativo() != null,
-          "El campo colaborativo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getCoordinadorExterno() != null,
-          "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
+      if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
+        Assert.isTrue(proyecto.getCoordinadorExterno() != null,
+            "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      }
       Assert.isTrue(
           proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO && proyecto.getTimesheet() != null,
           "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
