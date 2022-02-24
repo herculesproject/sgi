@@ -559,6 +559,21 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
+   * Obtiene una entidad {@link Proyecto} por id.
+   * Sin hacer comprobaciones de la Unidad de Gestión.
+   *
+   * @param id Identificador de la entidad {@link Proyecto}.
+   * @return Proyecto la entidad {@link Proyecto}.
+   */
+  @Override
+  public Proyecto findProyectoResumenById(Long id) {
+    log.debug("findById(Long id) - start");
+    final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
+    log.debug("findById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene todas las entidades {@link Proyecto} activas paginadas y filtradas.
    *
    * @param query  información del filtro.

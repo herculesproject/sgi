@@ -56,6 +56,15 @@ public interface ProyectoService {
   Proyecto findById(final Long id);
 
   /**
+   * Obtiene una entidad {@link Proyecto} por id.
+   * Sin hacer comprobaciones de la Unidad de Gestión.
+   * 
+   * @param id Identificador de la entidad {@link Proyecto}.
+   * @return Proyecto la entidad {@link Proyecto}.
+   */
+  Proyecto findProyectoResumenById(final Long id);
+
+  /**
    * Obtiene todas las entidades {@link Proyecto} activas paginadas y filtradas.
    *
    * @param query  información del filtro.
