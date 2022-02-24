@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
-import { Estado } from '@core/models/csp/estado-autorizacion';
+import { Estado, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { FormFragment } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -8,13 +8,18 @@ import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacio
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizacion> {
+export interface IAutorizacionDatosGeneralesData extends IAutorizacion {
+  fechaFirstEstado: DateTime
+}
 
-  private autorizacion: IAutorizacion;
+export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizacionDatosGeneralesData> {
+
+  private autorizacionData: IAutorizacionDatosGeneralesData;
 
   public investigadorRequired: boolean;
   public entidadRequired: boolean;
@@ -35,7 +40,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   ) {
     super(key, true);
     this.setComplete(true);
-    this.autorizacion = {} as IAutorizacion;
+    this.autorizacionData = {} as IAutorizacionDatosGeneralesData;
     this.isInvestigador = this.authService.hasAnyAuthority(['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR']);
     this.isVisor = this.authService.hasAnyAuthority(['CSP-AUT-V']);
   }
@@ -43,6 +48,8 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({ value: null, disabled: true }, Validators.required),
+      fechaSolicitud: new FormControl({ value: null, disabled: true }),
+      solicitante: new FormControl({ value: null, disabled: true }),
       tituloProyecto: new FormControl(null, [Validators.maxLength(250), Validators.required]),
       convocatoria: new FormControl(null),
       datosConvocatoria: new FormControl(null, Validators.maxLength(250)),
@@ -56,7 +63,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
 
     this.subscriptions.push(form.controls.convocatoria.valueChanges.subscribe(
       (convocatoria) => {
-        if (this.autorizacion?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
+        if (this.autorizacionData?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
           if (convocatoria) {
             form.controls.datosConvocatoria.disable();
             form.controls.datosConvocatoria.setValue(null);
@@ -93,126 +100,157 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return form;
   }
 
-  buildPatch(autorizacion: IAutorizacion): { [key: string]: any } {
-    this.autorizacion = autorizacion;
+  buildPatch(autorizacionData: IAutorizacionDatosGeneralesData): { [key: string]: any } {
+    this.autorizacionData = autorizacionData;
     return {
-      estado: autorizacion.estado?.estado,
-      tituloProyecto: autorizacion.tituloProyecto,
-      convocatoria: autorizacion.convocatoria,
-      datosConvocatoria: autorizacion.datosConvocatoria,
-      entidadParticipa: autorizacion.entidad,
-      datosEntidad: autorizacion.datosEntidad,
-      investigadorPrincipalProyecto: autorizacion.responsable,
-      datosIpProyecto: autorizacion.datosResponsable,
-      horasDedicacion: autorizacion.horasDedicacion,
-      observaciones: autorizacion.observaciones
+      estado: autorizacionData.estado?.estado,
+      fechaSolicitud: autorizacionData.fechaFirstEstado,
+      solicitante: autorizacionData.solicitante,
+      tituloProyecto: autorizacionData.tituloProyecto,
+      convocatoria: autorizacionData.convocatoria,
+      datosConvocatoria: autorizacionData.datosConvocatoria,
+      entidadParticipa: autorizacionData.entidad,
+      datosEntidad: autorizacionData.datosEntidad,
+      investigadorPrincipalProyecto: autorizacionData.responsable,
+      datosIpProyecto: autorizacionData.datosResponsable,
+      horasDedicacion: autorizacionData.horasDedicacion,
+      observaciones: autorizacionData.observaciones
     };
   }
 
-  protected initializer(key: string | number): Observable<IAutorizacion> {
+  protected initializer(key: string | number): Observable<IAutorizacionDatosGeneralesData> {
     return this.autorizacionService.findById(key as number).pipe(
-      switchMap((autorizacion) => {
-        this.autorizacion = autorizacion;
-        this.disableCambioEstado$.next(!autorizacion.tituloProyecto
-          || !autorizacion.responsable
-          || !autorizacion.entidad);
-        if (autorizacion.responsable?.id) {
-          return this.personaService.findById(autorizacion.responsable?.id).pipe(
+      map(autorizacion => autorizacion as IAutorizacionDatosGeneralesData),
+      switchMap((autorizacionData) => {
+        this.autorizacionData = autorizacionData;
+        this.disableCambioEstado$.next(!autorizacionData.tituloProyecto
+          || !autorizacionData.responsable
+          || !autorizacionData.entidad);
+        if (autorizacionData.responsable?.id) {
+          return this.personaService.findById(autorizacionData.responsable?.id).pipe(
             map(responsable => {
-              autorizacion.responsable = responsable;
-              return autorizacion;
+              autorizacionData.responsable = responsable;
+              return autorizacionData;
             })
           );
         } else {
-          return of(autorizacion);
+          return of(autorizacionData);
         }
       }),
-      switchMap(autorizacion => {
-        if (autorizacion.convocatoria?.id) {
+      switchMap(autorizacionData => {
+        if (autorizacionData.convocatoria?.id) {
           const convocatoria$ = this.isInvestigador ?
-            this.autorizacionService.findConvocatoria(autorizacion.id) : this.convocatoriaService.findById(autorizacion.convocatoria.id);
+            this.autorizacionService.findConvocatoria(autorizacionData.id) : this.convocatoriaService.findById(autorizacionData.convocatoria.id);
           return convocatoria$.pipe(
             map(convocatoria => {
-              autorizacion.convocatoria = convocatoria;
-              return autorizacion;
+              autorizacionData.convocatoria = convocatoria;
+              return autorizacionData;
             })
           );
         } else {
-          return of(autorizacion);
+          return of(autorizacionData);
         }
       }),
-      switchMap(autorizacion => {
-        if (autorizacion.entidad?.id) {
-          return this.empresaService.findById(autorizacion.entidad.id).pipe(
+      switchMap(autorizacionData => {
+        if (autorizacionData.entidad?.id) {
+          return this.empresaService.findById(autorizacionData.entidad.id).pipe(
             map(entidad => {
-              autorizacion.entidad = entidad;
-              return autorizacion;
+              autorizacionData.entidad = entidad;
+              return autorizacionData;
             })
           );
         } else {
-          return of(autorizacion);
+          return of(autorizacionData);
         }
       }),
-      switchMap(autorizacion => {
-        if (autorizacion.estado.id) {
-          return this.estadoAutorizacionService.findById(autorizacion.estado.id).pipe(
+      switchMap(autorizacionData => {
+        if (autorizacionData.estado.id) {
+          return this.estadoAutorizacionService.findById(autorizacionData.estado.id).pipe(
             map(estado => {
-              autorizacion.estado = estado;
+              autorizacionData.estado = estado;
               if (this.isEdit()) {
-                this.disableNotEditableFieldsEstado(this.getFormGroup(), this.autorizacion);
+                this.disableNotEditableFieldsEstado(this.getFormGroup(), this.autorizacionData);
               }
-              return autorizacion;
+              return autorizacionData;
             })
           );
         } else {
-          return of(autorizacion);
+          return of(autorizacionData);
         }
       }),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
-      })
+      }),
+      switchMap(autorizacionData => {
+        if (autorizacionData?.solicitante?.id) {
+          return this.personaService.findById(autorizacionData?.solicitante?.id).pipe(
+            map((persona) => {
+              autorizacionData.solicitante = persona;
+              return autorizacionData;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              return EMPTY;
+            }));
+        } else {
+          return of(autorizacionData);
+        }
+      }),
+      switchMap(autorizacionData => {
+        if (autorizacionData.id) {
+          return this.autorizacionService.findFirstEstado(autorizacionData.id).pipe(
+            map(firstEstado => {
+              autorizacionData.fechaFirstEstado = firstEstado.fecha;
+              return autorizacionData;
+            })
+          );
+        }
+        return of(autorizacionData);
+      }),
     );
   }
 
-  getValue(): IAutorizacion {
+  getValue(): IAutorizacionDatosGeneralesData {
     const form = this.getFormGroup().controls;
-    this.autorizacion.tituloProyecto = form.tituloProyecto.value;
-    this.autorizacion.convocatoria = form.convocatoria?.value;
-    this.autorizacion.datosConvocatoria = form.datosConvocatoria?.value;
-    this.autorizacion.entidad = form.entidadParticipa.value;
-    this.autorizacion.datosEntidad = form.datosEntidad.value;
-    this.autorizacion.responsable = form.investigadorPrincipalProyecto.value;
-    this.autorizacion.datosResponsable = form.datosIpProyecto.value;
-    this.autorizacion.horasDedicacion = form.horasDedicacion?.value;
-    this.autorizacion.observaciones = form.observaciones?.value;
+    this.autorizacionData.tituloProyecto = form.tituloProyecto.value;
+    this.autorizacionData.convocatoria = form.convocatoria?.value;
+    this.autorizacionData.datosConvocatoria = form.datosConvocatoria?.value;
+    this.autorizacionData.entidad = form.entidadParticipa.value;
+    this.autorizacionData.datosEntidad = form.datosEntidad.value;
+    this.autorizacionData.responsable = form.investigadorPrincipalProyecto.value;
+    this.autorizacionData.datosResponsable = form.datosIpProyecto.value;
+    this.autorizacionData.horasDedicacion = form.horasDedicacion?.value;
+    this.autorizacionData.observaciones = form.observaciones?.value;
+    this.autorizacionData.fechaFirstEstado = form.fechaSolicitud?.value;
 
-    return this.autorizacion;
+    return this.autorizacionData;
   }
 
   saveOrUpdate(): Observable<number> {
-    const autorizacion = this.getValue();
-    const observable$ = this.isEdit() ? this.update(autorizacion) :
-      this.create(autorizacion);
+    const autorizacionData = this.getValue();
+    const observable$ = this.isEdit() ? this.update(autorizacionData as IAutorizacion) :
+      this.create(autorizacionData as IAutorizacion);
     return observable$.pipe(
       map(value => {
-        this.autorizacion.id = value.id;
+        this.autorizacionData.id = value.id;
         this.disableCambioEstado$.next(!value.tituloProyecto
           || !value.responsable
           || !value.entidad);
-        return this.autorizacion.id;
+        return this.autorizacionData.id;
       })
     );
   }
 
   private create(autorizacion: IAutorizacion): Observable<IAutorizacion> {
     return this.autorizacionService.create(autorizacion).pipe(
-      tap(result => this.autorizacion = result));
+      tap(result => this.autorizacionData = result as IAutorizacionDatosGeneralesData));
   }
 
   private update(autorizacion: IAutorizacion): Observable<IAutorizacion> {
     return this.autorizacionService.update(autorizacion.id, autorizacion).pipe(
-      tap(result => this.autorizacion = result));
+      tap(result => { this.autorizacionData = result as IAutorizacionDatosGeneralesData }));//si recarga nada
+
   }
 
   private setConditionalValidatorsEntidad(form: FormGroup): void {
@@ -228,7 +266,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     } else {
       entidadParticipaControl.clearValidators();
       datosEntidadControl.enable({ emitEvent: false });
-      this.disableNotEditableFieldsEstado(form, this.autorizacion);
+      this.disableNotEditableFieldsEstado(form, this.autorizacionData);
     }
 
     const datosEntidad = datosEntidadControl.value;
@@ -258,7 +296,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     } else {
       investigadorPrincipalControl.clearValidators();
       datosInvestigadorPrincipalControl.enable({ emitEvent: false });
-      this.disableNotEditableFieldsEstado(form, this.autorizacion);
+      this.disableNotEditableFieldsEstado(form, this.autorizacionData);
     }
 
     const datosInvestigadorPrincipal = datosInvestigadorPrincipalControl.value;
@@ -276,7 +314,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
 
   }
 
-  private disableNotEditableFieldsEstado(formgroup: FormGroup, autorizacion: IAutorizacion): void {
+  private disableNotEditableFieldsEstado(formgroup: FormGroup, autorizacion: IAutorizacionDatosGeneralesData): void {
     if (autorizacion?.estado?.estado
       && (autorizacion?.estado?.estado !== Estado.BORRADOR && this.isInvestigador)
       || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA) || this.isVisor) {

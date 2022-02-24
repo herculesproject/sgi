@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { Observable, Subscription } from 'rxjs';
 import { AutorizacionActionService } from '../../autorizacion.action.service';
-import { AutorizacionDatosGeneralesFragment } from './autorizacion-datos-generales.fragment';
+import { AutorizacionDatosGeneralesFragment, IAutorizacionDatosGeneralesData } from './autorizacion-datos-generales.fragment';
 
 const AUTORIZACION_KEY = marker('csp.autorizacion');
 const AUTORIZACION_TITULO_PROYECTO_KEY = marker('csp.autorizacion.titulo-proyecto');
@@ -29,7 +29,7 @@ const AUTORIZACION_ESTADO_KEY = marker('csp.autorizacion.estado');
   templateUrl: './autorizacion-datos-generales.component.html',
   styleUrls: ['./autorizacion-datos-generales.component.scss']
 })
-export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<IAutorizacion> implements OnInit {
+export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<IAutorizacionDatosGeneralesData> implements OnInit {
   formPart: AutorizacionDatosGeneralesFragment;
 
   autorizaciones$: Observable<IAutorizacion[]>;

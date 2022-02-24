@@ -18,8 +18,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
 import { AutorizacionCertificadosFragment } from './autorizacion-formulario/autorizacion-certificados/autorizacion-certificados.fragment';
-import { AutorizacionDatosGeneralesFragment } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment';
-import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
+import { AutorizacionDatosGeneralesFragment, IAutorizacionDatosGeneralesData } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment'; import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
 
 const MSG_REGISTRAR = marker('msg.csp.autorizacion.presentar');
@@ -51,7 +50,7 @@ export class AutorizacionActionService extends
     return this.datosGenerales.getValue().estado?.estado;
   }
 
-  get autorizacion(): IAutorizacion {
+  get autorizacionData(): IAutorizacionDatosGeneralesData {
     return this.datosGenerales.getValue();
   }
 

@@ -192,7 +192,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
   private openCambioEstado(): void {
     const data: AutorizacionCambioEstadoModalComponentData = {
       estadoActual: this.actionService.estado,
-      autorizacion: this.actionService.autorizacion,
+      autorizacion: this.actionService.autorizacionData,
     };
     const config = {
       panelClass: 'sgi-dialog-container',
