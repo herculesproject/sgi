@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.NotificacionCVNEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.NotificacionProyectoExternoCVNRepository;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -184,13 +185,7 @@ public class NotificacionProyectoExternoCVNService {
       NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
     log.debug("asociarAutorizacion(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
 
-    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
-                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
-            .build());
+    AssertHelper.idNotNull(notificacionProyectoExternoCVNActualizar.getId(), NotificacionProyectoExternoCVN.class);
 
     return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
 
@@ -202,6 +197,32 @@ public class NotificacionProyectoExternoCVNService {
       return returnValue;
     }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
         notificacionProyectoExternoCVNActualizar.getId()));
+  }
+
+  /**
+   * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
+   * {@link Proyecto} asociado.
+   *
+   * @param notificacionProyectoExternoCVNActualizar la entidad
+   *                                                 {@link NotificacionProyectoExternoCVN}
+   *                                                 a guardar.
+   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN desasociarAutorizacion(Long id) {
+    log.debug("desasociarAutorizacion(Long id - start");
+
+    AssertHelper.idNotNull(id, NotificacionProyectoExternoCVN.class);
+
+    return repository.findById(id).map(data -> {
+
+      data.setAutorizacionId(null);
+
+      NotificacionProyectoExternoCVN returnValue = repository.save(data);
+
+      log.debug("desasociarAutorizacion(Long id - end");
+      return returnValue;
+    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(id));
   }
 
   /**
@@ -218,13 +239,7 @@ public class NotificacionProyectoExternoCVNService {
       NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar) {
     log.debug("asociarProyecto(NotificacionProyectoExternoCVN notificacionProyectoExternoCVNActualizar - start");
 
-    Assert.notNull(notificacionProyectoExternoCVNActualizar.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
-                ApplicationContextSupport.getMessage(NotificacionProyectoExternoCVN.class))
-            .build());
+    AssertHelper.idNotNull(notificacionProyectoExternoCVNActualizar.getId(), NotificacionProyectoExternoCVN.class);
 
     return repository.findById(notificacionProyectoExternoCVNActualizar.getId()).map(data -> {
 
@@ -236,6 +251,31 @@ public class NotificacionProyectoExternoCVNService {
       return returnValue;
     }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(
         notificacionProyectoExternoCVNActualizar.getId()));
+  }
+
+  /**
+   * Actualiza la entidad {@link NotificacionProyectoExternoCVN} actualizando el
+   * {@link Autorizacion} asociado.
+   *
+   * @param notificacionProyectoExternoCVNActualizar la entidad
+   *                                                 {@link NotificacionProyectoExternoCVN}
+   *                                                 a guardar.
+   * @return la entidad {@link NotificacionProyectoExternoCVN} persistida.
+   */
+  @Transactional
+  public NotificacionProyectoExternoCVN desasociarProyecto(Long id) {
+    log.debug("desasociarProyecto(Long id - start");
+
+    AssertHelper.idNotNull(id, NotificacionProyectoExternoCVN.class);
+    return repository.findById(id).map(data -> {
+
+      data.setProyectoId(null);
+
+      NotificacionProyectoExternoCVN returnValue = repository.save(data);
+
+      log.debug("desasociarProyecto(Long id - end");
+      return returnValue;
+    }).orElseThrow(() -> new NotificacionProyectoExternoCVNNotFoundException(id));
   }
 
 }

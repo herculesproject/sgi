@@ -176,6 +176,28 @@ public class NotificacionProyectoExternoCVNController {
   }
 
   /**
+   * Actualiza la {@link Autorizacion} de la
+   * {@link NotificacionProyectoExternoCVN}
+   * 
+   * @param id Identificador de
+   *           {@link NotificacionProyectoExternoCVN}.
+   * @return {@link NotificacionProyectoExternoCVN} con la {@link Autorizacion}
+   *         actualizada
+   */
+  @PatchMapping("/{id}/desasociarautorizacion")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CVPR-E')")
+  public NotificacionProyectoExternoCVNOutput desasociarAutorizacion(@PathVariable Long id) {
+    log.debug(
+        "desasociarAutorizacion(Long id) - start");
+
+    NotificacionProyectoExternoCVNOutput returnValue = convert(service.desasociarAutorizacion(id));
+
+    log.debug(
+        "desasociarAutorizacion(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Actualiza el {@link Proyecto} de la {@link NotificacionProyectoExternoCVN}
    * 
    * @param id              Identificador de
@@ -194,6 +216,27 @@ public class NotificacionProyectoExternoCVNController {
         service.asociarProyecto(convert(id, proyectoAsociar)));
 
     log.debug("asociarProyecto(Long id, NotificacionProyectoExternoCVNAsociarProyectoInput proyectoAsociar) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza el {@link Proyecto} de la {@link NotificacionProyectoExternoCVN}
+   * 
+   * @param id Identificador de
+   *           {@link NotificacionProyectoExternoCVN}.
+   * @return {@link NotificacionProyectoExternoCVN} con el {@link Proyecto}
+   *         actualizada
+   */
+  @PatchMapping("/{id}/desasociarproyecto")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CVPR-E')")
+  public NotificacionProyectoExternoCVNOutput desasociarProyecto(@PathVariable Long id) {
+    log.debug(
+        "desasociarProyecto(Long id, NotificacionProyectoExternoCVNAsociarProyectoInput proyectoAsociar) - start");
+
+    NotificacionProyectoExternoCVNOutput returnValue = convert(
+        service.desasociarProyecto(id));
+
+    log.debug("desasociarProyecto(Long id, NotificacionProyectoExternoCVNAsociarProyectoInput proyectoAsociar) - end");
     return returnValue;
   }
 
