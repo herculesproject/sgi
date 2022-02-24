@@ -15,4 +15,7 @@ public interface ProyectoPartidaRepository
 
   boolean existsByProyectoIdAndCodigoAndTipoPartida(Long proyectoId, String codigo, TipoPartida tipoPartida);
 
+  boolean existsByProyectoIdAndCodigoAndTipoPartidaAndIdNot(Long proyectoId, String codigo, TipoPartida tipoPartida,
+      Long id);
+
 }

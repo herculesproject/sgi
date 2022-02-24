@@ -27,9 +27,14 @@ public class UniqueCodigoTipoProyectoPartidaValidator
   @Override
   public boolean isValid(ProyectoPartida value, ConstraintValidatorContext context) {
 
-    boolean isValid = !this.proyectoPartidaRepository.existsByProyectoIdAndCodigoAndTipoPartida(
-        value.getProyectoId(),
-        value.getCodigo(), value.getTipoPartida());
+    boolean isValid = true;
+    if (value.getId() == null) {
+      isValid = !this.proyectoPartidaRepository.existsByProyectoIdAndCodigoAndTipoPartida(
+          value.getProyectoId(), value.getCodigo(), value.getTipoPartida());
+    } else {
+      isValid = !this.proyectoPartidaRepository.existsByProyectoIdAndCodigoAndTipoPartidaAndIdNot(
+          value.getProyectoId(), value.getCodigo(), value.getTipoPartida(), value.getId());
+    }
 
     if (!isValid) {
       this.addEntityMessageParameter(context);
