@@ -17,7 +17,7 @@ import org.crue.hercules.sgi.com.service.EmailBuilderService.EmailData;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiDocumentRefsService;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiEmailParamsService;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiInternetAddressesService;
-import org.crue.hercules.sgi.com.service.sgi.sgdoc.SgiApiSgdocService;
+import org.crue.hercules.sgi.com.service.sgi.SgiApiSgdocService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;

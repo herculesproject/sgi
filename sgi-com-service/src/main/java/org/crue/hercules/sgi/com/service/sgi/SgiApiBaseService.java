@@ -71,14 +71,20 @@ public abstract class SgiApiBaseService {
   }
 
   protected <T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod,
-      ParameterizedTypeReference<T> returnType) {
+      ParameterizedTypeReference<T> returnType, Object... uriVariables) {
+    return this.<Void, T>callEndpoint(endPoint, httpMethod, null, returnType, uriVariables);
+  }
+
+  protected <E, T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod, E entity,
+      ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     log.info("Calling SGI API endpoint: {}", endPoint);
-    HttpEntity<Void> request = new HttpEntityBuilder<Void>().withClientAuthorization(CLIENT_REGISTRATION_ID).build();
+    HttpEntity<E> request = new HttpEntityBuilder<E>().withEntity(entity)
+        .withClientAuthorization(CLIENT_REGISTRATION_ID).build();
 
     ResponseEntity<T> response = restTemplate.exchange(endPoint, httpMethod, request,
-        returnType);
+        returnType, uriVariables);
 
-    log.info("Endpoint response: {}", response);
+    log.debug("Endpoint response: {}", response);
     return response;
   }
 }

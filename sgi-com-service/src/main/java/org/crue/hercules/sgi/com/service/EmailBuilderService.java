@@ -32,7 +32,7 @@ import org.crue.hercules.sgi.com.repository.RecipientRepository;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiDocumentRefsService;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiEmailParamsService;
 import org.crue.hercules.sgi.com.service.sgi.SgiApiInternetAddressesService;
-import org.crue.hercules.sgi.com.service.sgi.sgdoc.SgiApiSgdocService;
+import org.crue.hercules.sgi.com.service.sgi.SgiApiSgdocService;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.stereotype.Service;
