@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.rep.service.sgi;
 
-import java.net.URI;
-
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
@@ -37,10 +35,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       String relativeUrl = "/personas/{personaRef}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      persona = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<PersonaDto>() {
+      persona = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<PersonaDto>() {
           }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -63,10 +61,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       String relativeUrl = "/datos-contacto/persona/{personaRef}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      datosContacto = super.<DatosContactoDto>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<DatosContactoDto>() {
+      datosContacto = super.<DatosContactoDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<DatosContactoDto>() {
           }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -89,10 +87,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       String relativeUrl = "/datos-academicos/persona/{personaRef}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      datosAcademicos = super.<DatosAcademicosDto>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<DatosAcademicosDto>() {
+      datosAcademicos = super.<DatosAcademicosDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<DatosAcademicosDto>() {
           }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -115,10 +113,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       String relativeUrl = "/vinculaciones/persona/{personaRef}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      vinculacion = super.<VinculacionDto>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<VinculacionDto>() {
+      vinculacion = super.<VinculacionDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<VinculacionDto>() {
           }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);

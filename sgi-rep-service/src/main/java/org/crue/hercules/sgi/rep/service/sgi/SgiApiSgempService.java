@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.rep.service.sgi;
 
-import java.net.URI;
-
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.sgemp.EmpresaDto;
 import org.crue.hercules.sgi.rep.enums.ServiceType;
@@ -27,10 +25,10 @@ public class SgiApiSgempService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGEMP;
       String relativeUrl = "/empresas/{id}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      dto = super.<EmpresaDto>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<EmpresaDto>() {
+      dto = super.<EmpresaDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<EmpresaDto>() {
           }, id).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
