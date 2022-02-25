@@ -22,8 +22,8 @@ import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
 import org.crue.hercules.sgi.prc.repository.TipoFuenteImpactoCuartilRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
-import org.crue.hercules.sgi.prc.service.csp.GrupoInvestigacionService;
-import org.crue.hercules.sgi.prc.service.sgp.PersonaService;
+import org.crue.hercules.sgi.prc.service.sgi.GrupoInvestigacionService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
   private final ModuladorRepository moduladorRepository;
   private final AutorRepository autorRepository;
   private final AutorGrupoRepository autorGrupoRepository;
-  private final PersonaService personaService;
+  private final SgiApiSgpService personaService;
   private final GrupoInvestigacionService grupoInvestigacionService;
 
   @Autowired
@@ -59,7 +59,7 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
       AutorGrupoRepository autorGrupoRepository,
       TipoFuenteImpactoCuartilRepository tipoFuenteImpactoCuartilRepository,
       ProduccionCientificaCloneService produccionCientificaCloneService,
-      PersonaService personaService,
+      SgiApiSgpService personaService,
       GrupoInvestigacionService grupoInvestigacionService,
       ModelMapper modelMapper,
       ModuladorRepository moduladorRepository) {

@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.prc.service.csp;
+package org.crue.hercules.sgi.prc.service.sgi;
 
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.springframework.stereotype.Service;

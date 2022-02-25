@@ -1,13 +1,14 @@
-package org.crue.hercules.sgi.prc.service.sgp;
+package org.crue.hercules.sgi.prc.service.sgi;
 
+import java.net.URI;
 import java.util.Optional;
 
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.prc.enums.ServiceType;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -16,15 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class PersonaService {
-  private static final String URL_API = "/personas";
+public class SgiApiSgpService extends SgiApiBaseService {
 
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
-
-  public PersonaService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+  public SgiApiSgpService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -39,16 +35,16 @@ public class PersonaService {
 
     if (StringUtils.hasText(personaRef)) {
       try {
-        StringBuilder url = new StringBuilder();
-        url.append(restApiProperties.getSgpUrl());
-        url.append(URL_API);
-        url.append("/");
-        url.append(personaRef);
+        ServiceType serviceType = ServiceType.SGP;
+        String relativeUrl = "/personas/{personaRef}";
+        HttpMethod httpMethod = HttpMethod.GET;
+        URI mergedURL = buildUri(serviceType, relativeUrl);
 
-        final ResponseEntity<PersonaDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
-            new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PersonaDto.class);
+        final PersonaDto response = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL
+            .toString(), httpMethod, new ParameterizedTypeReference<PersonaDto>() {
+            }, personaRef).getBody();
 
-        persona = Optional.of(response.getBody());
+        persona = Optional.of(response);
       } catch (Exception e) {
         log.error(e.getMessage(), e);
         throw new MicroserviceCallException();
