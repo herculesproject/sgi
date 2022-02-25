@@ -1,30 +1,27 @@
-package org.crue.hercules.sgi.rep.service.sgp;
+package org.crue.hercules.sgi.rep.service.sgi;
 
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import java.net.URI;
+
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.DatosAcademicosDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.VinculacionDto;
+import org.crue.hercules.sgi.rep.enums.ServiceType;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
-public class PersonaService {
-  private static final String URL_API = "/personas";
+public class SgiApiSgpService extends SgiApiBaseService {
 
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
-
-  public PersonaService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+  public SgiApiSgpService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -37,16 +34,14 @@ public class PersonaService {
     log.debug("findById(personaRef)- start");
     PersonaDto persona = null;
     try {
-      StringBuilder url = new StringBuilder();
-      url.append(restApiProperties.getSgpUrl());
-      url.append(URL_API);
-      url.append("/");
-      url.append(personaRef);
+      ServiceType serviceType = ServiceType.SGP;
+      String relativeUrl = "/personas/{personaRef}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<PersonaDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PersonaDto.class);
-
-      persona = response.getBody();
+      persona = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<PersonaDto>() {
+          }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -65,17 +60,14 @@ public class PersonaService {
     log.debug("findDatosContactoByPersonaId(personaRef)- start");
     DatosContactoDto datosContacto = null;
     try {
+      ServiceType serviceType = ServiceType.SGP;
+      String relativeUrl = "/datos-contacto/persona/{personaRef}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      StringBuilder url = new StringBuilder();
-      url.append(restApiProperties.getSgpUrl());
-      url.append("/datos-contacto/persona/");
-      url.append(personaRef);
-
-      final ResponseEntity<DatosContactoDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), DatosContactoDto.class);
-
-      datosContacto = response.getBody();
-
+      datosContacto = super.<DatosContactoDto>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<DatosContactoDto>() {
+          }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -94,17 +86,14 @@ public class PersonaService {
     log.debug("findDatosAcademicosByPersonaId(personaRef)- start");
     DatosAcademicosDto datosAcademicos = null;
     try {
+      ServiceType serviceType = ServiceType.SGP;
+      String relativeUrl = "/datos-academicos/persona/{personaRef}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      StringBuilder url = new StringBuilder();
-      url.append(restApiProperties.getSgpUrl());
-      url.append("/datos-academicos/persona/");
-      url.append(personaRef);
-
-      final ResponseEntity<DatosAcademicosDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), DatosAcademicosDto.class);
-
-      datosAcademicos = response.getBody();
-
+      datosAcademicos = super.<DatosAcademicosDto>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<DatosAcademicosDto>() {
+          }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -123,17 +112,14 @@ public class PersonaService {
     log.debug("findVinculacionByPersonaId(personaRef)- start");
     VinculacionDto vinculacion = null;
     try {
+      ServiceType serviceType = ServiceType.SGP;
+      String relativeUrl = "/vinculaciones/persona/{personaRef}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      StringBuilder url = new StringBuilder();
-      url.append(restApiProperties.getSgpUrl());
-      url.append("/vinculaciones/persona/");
-      url.append(personaRef);
-
-      final ResponseEntity<VinculacionDto> response = restTemplate.exchange(url.toString(), HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), VinculacionDto.class);
-
-      vinculacion = response.getBody();
-
+      vinculacion = super.<VinculacionDto>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<VinculacionDto>() {
+          }, personaRef).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();

@@ -15,8 +15,8 @@ import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.VinculacionDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
-import org.crue.hercules.sgi.rep.service.sgemp.EmpresaService;
-import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgempService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.TableDataFactory;
 import org.springframework.stereotype.Service;
@@ -32,15 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class AutorizacionProyectoExternoReportService extends SgiReportService {
 
-  private final PersonaService personaService;
+  private final SgiApiSgpService personaService;
   private final AutorizacionProyectoExternoService autorizacionProyectoExternoService;
   private final ConvocatoriaService convocatoriaService;
-  private final EmpresaService empresaService;
+  private final SgiApiSgempService empresaService;
 
   public AutorizacionProyectoExternoReportService(SgiConfigProperties sgiConfigProperties,
-      PersonaService personaService,
+      SgiApiSgpService personaService,
       AutorizacionProyectoExternoService autorizacionProyectoExternoService, ConvocatoriaService convocatoriaService,
-      EmpresaService empresaService) {
+      SgiApiSgempService empresaService) {
 
     super(sgiConfigProperties);
     this.personaService = personaService;
