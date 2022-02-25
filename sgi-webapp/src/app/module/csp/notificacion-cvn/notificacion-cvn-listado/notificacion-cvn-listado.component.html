@@ -73,7 +73,7 @@
         <div class="col" fxFlex="49%" fxFlex.sm="99%">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.notificacion-cvn.entidad-participacion' | translate}}</mat-label>
-            <sgi-select-empresa placeholder="{{'csp.notificacion-cvn.entidad-participacion'}}"
+            <sgi-select-empresa placeholder="{{'csp.notificacion-cvn.entidad-participacion' | translate}}"
               formControlName="entidadParticipacion">
             </sgi-select-empresa>
           </mat-form-field>
@@ -94,7 +94,7 @@
     </form>
 
 
-    <table mat-table [dataSource]="notificaciones$ | async" matSort matSortActive="id" matSortDirection="asc"
+    <table mat-table [dataSource]="notificaciones$ | async" matSort matSortActive="fechaInicio" matSortDirection="asc"
       matSortDisableClear>
 
       <!-- Investigador -->

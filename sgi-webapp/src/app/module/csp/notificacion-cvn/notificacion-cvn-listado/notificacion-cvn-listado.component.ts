@@ -17,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { NotificacionCvnAsociarAutorizacionModalComponent } from '../modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
@@ -187,9 +187,9 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<INotificacionProyectoExternoCVN>> {
     return this.notificacionProyectoExternoCvnService.findAll(this.getFindOptions(reset)).pipe(
       switchMap(notificaciones => from(notificaciones.items).pipe(
-        mergeMap(notificacion => this.fillNotificacionSolicitante(notificacion)),
-        mergeMap(notificacion => this.fillNotificacionEntidadParticipacion(notificacion)),
-        mergeMap(notificacion => this.fillNotificacionInvestigadorPrincipal(notificacion)),
+        concatMap(notificacion => this.fillNotificacionSolicitante(notificacion)),
+        concatMap(notificacion => this.fillNotificacionEntidadParticipacion(notificacion)),
+        concatMap(notificacion => this.fillNotificacionInvestigadorPrincipal(notificacion)),
         toArray(),
         map(items => {
           notificaciones.items = items;
