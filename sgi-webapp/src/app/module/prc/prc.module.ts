@@ -23,7 +23,6 @@ import { PrcRoutingModule } from './prc-routing.module';
     SgiAuthModule,
     ReactiveFormsModule,
     FormsModule
-  ],
-  providers: []
+  ]
 })
 export class PrcModule { }

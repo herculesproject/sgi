@@ -10,7 +10,7 @@ export interface IPublicacionResponse {
     estado: TipoEstadoProduccion;
     fecha: string;
     comentario: string;
-  }
+  };
   tituloPublicacion: string;
   tipoProduccion: TipoProduccion;
   fechaPublicacion: string;

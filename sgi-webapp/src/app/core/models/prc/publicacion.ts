@@ -1,5 +1,5 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DateTime } from 'luxon';
+import { CVN_TIPO_PRODUCCION } from 'src/app/module/prc/shared/cvn/literales-cvn';
 import { IProduccionCientifica } from './produccion-cientifica';
 
 export interface IPublicacion extends IProduccionCientifica {
@@ -7,7 +7,6 @@ export interface IPublicacion extends IProduccionCientifica {
   tipoProduccion: TipoProduccion;
   fechaPublicacion: DateTime;
 }
-
 
 export enum TipoProduccion {
   CAPITULO_LIBRO = '004',
@@ -30,21 +29,21 @@ export enum TipoProduccion {
 }
 
 export const TIPO_PRODUCCION_MAP: Map<TipoProduccion, string> = new Map([
-  [TipoProduccion.CAPITULO_LIBRO, marker('prc.publicacion.tipo-produccion.CAPITULO_LIBRO')],
-  [TipoProduccion.INFORME_CIENTIFICO, marker('prc.publicacion.tipo-produccion.INFORME_CIENTIFICO')],
-  [TipoProduccion.ARTICULO_CIENTIFICO, marker('prc.publicacion.tipo-produccion.ARTICULO_CIENTIFICO')],
-  [TipoProduccion.LIBRO_CIENTIFICO, marker('prc.publicacion.tipo-produccion.LIBRO_CIENTIFICO')],
-  [TipoProduccion.ARTICULOS_PRENSA, marker('prc.publicacion.tipo-produccion.ARTICULOS_PRENSA')],
-  [TipoProduccion.DICCIONARIO_COMUN, marker('prc.publicacion.tipo-produccion.DICCIONARIO_COMUN')],
-  [TipoProduccion.REVISTAS_DIFUSION_GENERAL, marker('prc.publicacion.tipo-produccion.REVISTAS_DIFUSION_GENERAL')],
-  [TipoProduccion.ARTICULO_ENCICLOPEDIA, marker('prc.publicacion.tipo-produccion.ARTICULO_ENCICLOPEDIA')],
-  [TipoProduccion.ARTICULO_DIVULGACION, marker('prc.publicacion.tipo-produccion.ARTICULO_DIVULGACION')],
-  [TipoProduccion.TRADUCCION, marker('prc.publicacion.tipo-produccion.TRADUCCION')],
-  [TipoProduccion.RESENA, marker('prc.publicacion.tipo-produccion.RESENA')],
-  [TipoProduccion.REVISION_BIBLIOGRAFICA, marker('prc.publicacion.tipo-produccion.REVISION_BIBLIOGRAFICA')],
-  [TipoProduccion.LIBRO_DIVULGACION, marker('prc.publicacion.tipo-produccion.LIBRO_DIVULGACION')],
-  [TipoProduccion.EDICION_CIENTIFICA, marker('prc.publicacion.tipo-produccion.EDICION_CIENTIFICA')],
-  [TipoProduccion.DICCIONARIO_CIENTIFICO, marker('prc.publicacion.tipo-produccion.DICCIONARIO_CIENTIFICO')],
-  [TipoProduccion.OTROS, marker('prc.publicacion.tipo-produccion.OTROS')],
-  [TipoProduccion.COMENTARIO_SISTEMATICO_NORMAS, marker('prc.publicacion.tipo-produccion.COMENTARIO_SISTEMATICO_NORMAS')]
+  [TipoProduccion.CAPITULO_LIBRO, CVN_TIPO_PRODUCCION.CAPITULO_LIBRO],
+  [TipoProduccion.INFORME_CIENTIFICO, CVN_TIPO_PRODUCCION.INFORME_CIENTIFICO],
+  [TipoProduccion.ARTICULO_CIENTIFICO, CVN_TIPO_PRODUCCION.ARTICULO_CIENTIFICO],
+  [TipoProduccion.LIBRO_CIENTIFICO, CVN_TIPO_PRODUCCION.LIBRO_CIENTIFICO],
+  [TipoProduccion.ARTICULOS_PRENSA, CVN_TIPO_PRODUCCION.ARTICULOS_PRENSA],
+  [TipoProduccion.DICCIONARIO_COMUN, CVN_TIPO_PRODUCCION.DICCIONARIO_COMUN],
+  [TipoProduccion.REVISTAS_DIFUSION_GENERAL, CVN_TIPO_PRODUCCION.REVISTAS_DIFUSION_GENERAL],
+  [TipoProduccion.ARTICULO_ENCICLOPEDIA, CVN_TIPO_PRODUCCION.ARTICULO_ENCICLOPEDIA],
+  [TipoProduccion.ARTICULO_DIVULGACION, CVN_TIPO_PRODUCCION.ARTICULO_DIVULGACION],
+  [TipoProduccion.TRADUCCION, CVN_TIPO_PRODUCCION.TRADUCCION],
+  [TipoProduccion.RESENA, CVN_TIPO_PRODUCCION.RESENA],
+  [TipoProduccion.REVISION_BIBLIOGRAFICA, CVN_TIPO_PRODUCCION.REVISION_BIBLIOGRAFICA],
+  [TipoProduccion.LIBRO_DIVULGACION, CVN_TIPO_PRODUCCION.LIBRO_DIVULGACION],
+  [TipoProduccion.EDICION_CIENTIFICA, CVN_TIPO_PRODUCCION.EDICION_CIENTIFICA],
+  [TipoProduccion.DICCIONARIO_CIENTIFICO, CVN_TIPO_PRODUCCION.DICCIONARIO_CIENTIFICO],
+  [TipoProduccion.OTROS, CVN_TIPO_PRODUCCION.OTROS],
+  [TipoProduccion.COMENTARIO_SISTEMATICO_NORMAS, CVN_TIPO_PRODUCCION.COMENTARIO_SISTEMATICO_NORMAS]
 ]);

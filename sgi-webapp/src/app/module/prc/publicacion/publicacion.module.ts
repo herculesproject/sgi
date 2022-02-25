@@ -8,9 +8,13 @@ import { SharedModule } from '@shared/shared.module';
 import { PublicacionRoutingModule } from './publicacion-routing.module';
 import { PublicacionListadoComponent } from './publicacion-listado/publicacion-listado.component';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { PublicacionDatosGeneralesComponent } from './publicacion-formulario/publicacion-datos-generales/publicacion-datos-generales.component';
+import { PublicacionEditarComponent } from './publicacion-editar/publicacion-editar.component';
+import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
+import { PrcSharedModule } from '../shared/prc-shared.module';
 
 @NgModule({
-  declarations: [PublicacionListadoComponent],
+  declarations: [PublicacionListadoComponent, PublicacionDatosGeneralesComponent, PublicacionEditarComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -20,7 +24,11 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
     TranslateModule,
     FormsModule,
     SgiAuthModule,
-    SgpSharedModule
+    SgpSharedModule,
+    PrcSharedModule
+  ],
+  providers: [
+    ProduccionCientificaResolver
   ]
 })
 export class PublicacionModule { }

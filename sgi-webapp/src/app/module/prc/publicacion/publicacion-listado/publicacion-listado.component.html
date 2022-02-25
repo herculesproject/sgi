@@ -8,6 +8,7 @@
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field class="input-form">
           <mat-label>{{'prc.publicacion.investigador' | translate}}</mat-label>
+          <!-- TODO añadir colectivo correspondiente cuándo se añada al enum de colectivos -->
           <sgi-select-persona placeholder="{{'prc.publicacion.investigador' | translate}}"
             formControlName="investigador"></sgi-select-persona>
         </mat-form-field>
@@ -107,7 +108,7 @@
       </ng-container>
 
       <!-- Título -->
-      <ng-container matColumnDef="titulo">
+      <ng-container matColumnDef="tituloPublicacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'prc.publicacion.titulo' | translate}}
         </th>
         <td mat-cell *matCellDef="let publicacion">{{publicacion.tituloPublicacion }}</td>

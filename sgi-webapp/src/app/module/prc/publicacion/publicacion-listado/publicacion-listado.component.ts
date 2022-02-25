@@ -62,7 +62,7 @@ export class PublicacionListadoComponent extends AbstractTablePaginationComponen
   }
 
   protected initColumns(): void {
-    this.columnas = ['fechaPublicacion', 'titulo', 'tipoProduccion', 'estado', 'acciones'];
+    this.columnas = ['fechaPublicacion', 'tituloPublicacion', 'tipoProduccion', 'estado', 'acciones'];
   }
 
   protected loadTable(reset?: boolean): void {
