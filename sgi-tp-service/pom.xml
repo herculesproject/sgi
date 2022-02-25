@@ -137,6 +137,14 @@
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator-annotation-processor</artifactId>
     </dependency>
+    <!--
+      HttpClient - An efficient, up-to-date, and feature-rich package implementing the client side of the most recent HTTP standards and recommendations.
+      https://hc.apache.org/httpcomponents-client-5.1.x/index.html
+    -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+    </dependency>
     <!-- 
       Jackson Databind - General data-binding functionality for Jackson: works on core streaming API
       https://github.com/FasterXML/jackson-databind
