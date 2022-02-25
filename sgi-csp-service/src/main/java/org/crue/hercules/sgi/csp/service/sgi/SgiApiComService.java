@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +66,7 @@ public class SgiApiComService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.COM;
     String relativeUrl = "/emails";
     HttpMethod httpMethod = HttpMethod.POST;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
@@ -77,8 +76,8 @@ public class SgiApiComService extends SgiApiBaseService {
     emailRequest.getParams()
         .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
 
-    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, emailRequest, new ParameterizedTypeReference<EmailOutput>() {
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, emailRequest,
+        new ParameterizedTypeReference<EmailOutput>() {
         }).getBody();
 
     log.debug("createGenericEmailText({}, {}, {}, {}) - end", subject, content, recipients, deferrableRecipients);
@@ -110,7 +109,7 @@ public class SgiApiComService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.COM;
     String relativeUrl = "/emails/{id}";
     HttpMethod httpMethod = HttpMethod.PUT;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
@@ -120,8 +119,8 @@ public class SgiApiComService extends SgiApiBaseService {
     emailRequest.getParams()
         .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
 
-    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, emailRequest, new ParameterizedTypeReference<EmailOutput>() {
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, emailRequest,
+        new ParameterizedTypeReference<EmailOutput>() {
         }, id).getBody();
     log.debug("updateGenericEmailText({}, {}, {}, {}, {}) - end", id, subject, content, recipients,
         deferrableRecipients);
@@ -141,11 +140,10 @@ public class SgiApiComService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.COM;
     String relativeUrl = "/emails/{id}";
     HttpMethod httpMethod = HttpMethod.DELETE;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    super.<Void>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<Void>() {
-        }, id);
+    super.<Void>callEndpoint(mergedURL, httpMethod, new ParameterizedTypeReference<Void>() {
+    }, id);
 
     log.debug("deleteEmail({}) - end", id);
   }
@@ -223,7 +221,7 @@ public class SgiApiComService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.COM;
     String relativeUrl = "/emails";
     HttpMethod httpMethod = HttpMethod.POST;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     EmailInput request = EmailInput.builder().template(
         TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO).recipients(recipients)
@@ -231,8 +229,8 @@ public class SgiApiComService extends SgiApiBaseService {
     request.setParams(Arrays.asList(
         new EmailParam(TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM, mapper.writeValueAsString(data))));
 
-    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, request, new ParameterizedTypeReference<EmailOutput>() {
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
+        new ParameterizedTypeReference<EmailOutput>() {
         }).getBody();
 
     log.debug(
@@ -251,11 +249,10 @@ public class SgiApiComService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.COM;
     String relativeUrl = "/emails/{id}/send";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final Status response = super.<Status>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<Status>() {
-        }, id).getBody();
+    final Status response = super.<Status>callEndpoint(mergedURL, httpMethod, new ParameterizedTypeReference<Status>() {
+    }, id).getBody();
 
     log.debug("sendEmail(Long id) - end");
     return response;

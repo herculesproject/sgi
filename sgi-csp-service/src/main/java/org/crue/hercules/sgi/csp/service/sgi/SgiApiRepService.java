@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
-
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.crue.hercules.sgi.csp.exceptions.rep.GetDataReportException;
@@ -52,10 +50,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/csp/autorizacion-proyecto-externo/{id}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idAutorizacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);

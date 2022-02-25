@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,10 +50,10 @@ public class SgiApiCnfService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.CNF;
     String relativeUrl = "/config/{name}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final ConfigOutput response = super.<ConfigOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<ConfigOutput>() {
+    final ConfigOutput response = super.<ConfigOutput>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<ConfigOutput>() {
         }, name).getBody();
 
     String returnValue = null;

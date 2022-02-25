@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +37,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.SGP;
     String relativeUrl = "/personas/{id}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PersonaOutput response = super.<PersonaOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<PersonaOutput>() {
+    final PersonaOutput response = super.<PersonaOutput>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<PersonaOutput>() {
         }, id).getBody();
 
     log.debug("findById({}) - end", id);
@@ -65,10 +64,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.SGP;
     String relativeUrl = "/personas?q=id=in=({" + in + "})";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final List<PersonaOutput> response = super.<List<PersonaOutput>>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<List<PersonaOutput>>() {
+    final List<PersonaOutput> response = super.<List<PersonaOutput>>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<List<PersonaOutput>>() {
         }).getBody();
 
     log.debug("findAllByIdIn({}) - end", ids);

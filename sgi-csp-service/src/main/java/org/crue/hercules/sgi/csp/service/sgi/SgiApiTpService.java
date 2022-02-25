@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
@@ -50,14 +49,13 @@ public class SgiApiTpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.TP;
     String relativeUrl = "/sgiapitasks";
     HttpMethod httpMethod = HttpMethod.POST;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     SgiApiInstantTaskInput taskRequest = SgiApiInstantTaskInput.builder().serviceType(type).httpMethod(method)
         .relativeUrl(url).description(description).instant(instant).build();
 
     final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskInput, SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
-        mergedURL
-            .toString(),
+        mergedURL,
         httpMethod, taskRequest, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
         }).getBody();
 
@@ -92,14 +90,13 @@ public class SgiApiTpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.TP;
     String relativeUrl = "/sgiapitasks/{id}";
     HttpMethod httpMethod = HttpMethod.PUT;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     SgiApiInstantTaskInput taskRequest = SgiApiInstantTaskInput.builder().serviceType(type).httpMethod(method)
         .relativeUrl(url).description(description).instant(instant).build();
 
     final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskInput, SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
-        mergedURL
-            .toString(),
+        mergedURL,
         httpMethod, taskRequest, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
         }, id).getBody();
 
@@ -120,13 +117,10 @@ public class SgiApiTpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.TP;
     String relativeUrl = "/sgiapitasks/{id}";
     HttpMethod httpMethod = HttpMethod.DELETE;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    super.<Void>callEndpointWithCurrentUserAuthorization(
-        mergedURL
-            .toString(),
-        httpMethod, new ParameterizedTypeReference<Void>() {
-        }, id);
+    super.<Void>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod, new ParameterizedTypeReference<Void>() {
+    }, id);
     log.debug("deleteTask({}) - end", id);
   }
 
@@ -141,11 +135,10 @@ public class SgiApiTpService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.TP;
     String relativeUrl = "/sgiapitasks/{id}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
     final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
-        mergedURL
-            .toString(),
+        mergedURL,
         httpMethod, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
         }, id).getBody();
 

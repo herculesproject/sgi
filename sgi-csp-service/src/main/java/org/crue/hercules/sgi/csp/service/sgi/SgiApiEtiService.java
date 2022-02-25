@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.net.URI;
-
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -27,10 +25,10 @@ public class SgiApiEtiService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.ETI;
     String relativeUrl = "/checklists/{checklistRef}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final ChecklistOutput response = super.<ChecklistOutput>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<ChecklistOutput>() {
+    final ChecklistOutput response = super.<ChecklistOutput>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<ChecklistOutput>() {
         }, checklistRef).getBody();
 
     log.debug("getCheckList(String checklistRef) - end");
@@ -42,10 +40,10 @@ public class SgiApiEtiService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.ETI;
     String relativeUrl = "/peticionevaluaciones";
     HttpMethod httpMethod = HttpMethod.POST;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL
-        .toString(), httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
+    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL,
+        httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
         }).getBody();
 
     log.debug("newPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion) - end");
@@ -57,10 +55,10 @@ public class SgiApiEtiService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.ETI;
     String relativeUrl = "/peticionevaluaciones/{peticionEvaluacionRef}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PeticionEvaluacion response = super.<PeticionEvaluacion>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<PeticionEvaluacion>() {
+    final PeticionEvaluacion response = super.<PeticionEvaluacion>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<PeticionEvaluacion>() {
         }, peticionEvaluacionRef).getBody();
 
     log.debug("getPeticionEvaluacion(String peticionEvaluacionRef) - end");
@@ -73,10 +71,10 @@ public class SgiApiEtiService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.ETI;
     String relativeUrl = "/peticionevaluaciones/{peticionEvaluacionRef}";
     HttpMethod httpMethod = HttpMethod.PUT;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL
-        .toString(), httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
+    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL,
+        httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
         }, peticionEvaluacionRef).getBody();
 
     log.debug("updatePeticionEvaluacion(String peticionEvaluacionRef, PeticionEvaluacion peticionEvaluacion) - end");
@@ -89,10 +87,10 @@ public class SgiApiEtiService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.ETI;
     String relativeUrl = "/peticionevaluaciones/{id}/equipos-trabajo";
     HttpMethod httpMethod = HttpMethod.POST;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final EquipoTrabajo response = super.<EquipoTrabajo, EquipoTrabajo>callEndpoint(mergedURL
-        .toString(), httpMethod, equipoTrabajo, new ParameterizedTypeReference<EquipoTrabajo>() {
+    final EquipoTrabajo response = super.<EquipoTrabajo, EquipoTrabajo>callEndpoint(mergedURL, httpMethod,
+        equipoTrabajo, new ParameterizedTypeReference<EquipoTrabajo>() {
         }, id).getBody();
 
     log.debug("newEquipoTrabajo(String peticionEvaluacionRef, EquipoTrabajo equipoTrabajo) - end");
