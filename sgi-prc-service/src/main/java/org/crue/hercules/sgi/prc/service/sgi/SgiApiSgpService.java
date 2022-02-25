@@ -38,10 +38,10 @@ public class SgiApiSgpService extends SgiApiBaseService {
         ServiceType serviceType = ServiceType.SGP;
         String relativeUrl = "/personas/{personaRef}";
         HttpMethod httpMethod = HttpMethod.GET;
-        URI mergedURL = buildUri(serviceType, relativeUrl);
+        String mergedURL = buildUri(serviceType, relativeUrl);
 
-        final PersonaDto response = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL
-            .toString(), httpMethod, new ParameterizedTypeReference<PersonaDto>() {
+        final PersonaDto response = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+            new ParameterizedTypeReference<PersonaDto>() {
             }, personaRef).getBody();
 
         persona = Optional.of(response);
