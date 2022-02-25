@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -7,10 +6,9 @@ import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ESTADO_MAP } from '@core/models/csp/estado-autorizacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { DialogService } from '@core/services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AutorizacionActionService } from '../../autorizacion.action.service';
 import { AutorizacionDatosGeneralesFragment, IAutorizacionDatosGeneralesData } from './autorizacion-datos-generales.fragment';
 
@@ -41,8 +39,6 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  private subscriptions = [] as Subscription[];
-
   msgParamAutorizacionEntity = {};
   msgParamTituloEntity = {};
   msgParamDatosConvocatoriaEntity = {};
@@ -61,8 +57,6 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
 
   constructor(
     protected actionService: AutorizacionActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
   ) {

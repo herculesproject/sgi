@@ -88,11 +88,11 @@ export class AutorizacionService extends _AutorizacionMixinBase {
    * @param id identificador de la autorizacion.
    * @param estadoAutorizacion Nuevo estado de la autorizacion.
    */
-  cambiarEstado(id: number, estadoAutorizacion: IEstadoAutorizacion): Observable<IEstadoAutorizacion> {
-    return this.http.patch<IEstadoAutorizacionResponse>(`${this.endpointUrl}/${id}/cambiar-estado`,
+  cambiarEstado(id: number, estadoAutorizacion: IEstadoAutorizacion): Observable<IAutorizacion> {
+    return this.http.patch<IAutorizacionResponse>(`${this.endpointUrl}/${id}/cambiar-estado`,
       ESTADO_AUTORIZACION_RESPONSE_CONVERTER.fromTarget(estadoAutorizacion)
     ).pipe(
-      map((response => ESTADO_AUTORIZACION_RESPONSE_CONVERTER.toTarget(response)))
+      map((response => AUTORIZACION_RESPONSE_CONVERTER.toTarget(response)))
     );
   }
 

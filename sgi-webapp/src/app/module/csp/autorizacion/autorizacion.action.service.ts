@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
-import { Estado } from '@core/models/csp/estado-autorizacion';
+import { Estado, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { ActionService } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { CertificadoAutorizacionService } from '@core/services/csp/certificado-autorizacion/certificado-autorizacion.service';
@@ -12,16 +13,19 @@ import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AUTORIZACION_DATA_KEY } from './autorizacion-data.resolver';
 import { AutorizacionCertificadosFragment } from './autorizacion-formulario/autorizacion-certificados/autorizacion-certificados.fragment';
 import { AutorizacionDatosGeneralesFragment, IAutorizacionDatosGeneralesData } from './autorizacion-formulario/autorizacion-datos-generales/autorizacion-datos-generales.fragment'; import { AutorizacionHistoricoEstadosFragment } from './autorizacion-formulario/autorizacion-historico-estados/autorizacion-historico-estados.fragment';
 import { AUTORIZACION_ROUTE_PARAMS } from './autorizacion-route-params';
+import { AutorizacionCambioEstadoModalComponentData, CambioEstadoModalComponent } from './cambio-estado-modal/cambio-estado-modal.component';
 
 const MSG_REGISTRAR = marker('msg.csp.autorizacion.presentar');
+const MSG_CAMBIO_ESTADO_SUCCESS = marker('msg.csp.cambio-estado.success');
 
 export interface IAutorizacionData {
   presentable: boolean;
@@ -42,6 +46,7 @@ export class AutorizacionActionService extends
   private datosGenerales: AutorizacionDatosGeneralesFragment;
   private historicoEstados: AutorizacionHistoricoEstadosFragment;
   private certificados: AutorizacionCertificadosFragment;
+
 
   private readonly data: IAutorizacionData;
   public readonly id: number;
@@ -78,6 +83,9 @@ export class AutorizacionActionService extends
     documentoService: DocumentoService,
     public authService: SgiAuthService,
     public dialogService: DialogService,
+    private matDialog: MatDialog,
+
+    protected readonly snackBarService: SnackBarService,
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(AUTORIZACION_ROUTE_PARAMS.ID));
@@ -144,6 +152,27 @@ export class AutorizacionActionService extends
           return this.autorizacionService.presentar(this.id);
         }
       })
+    );
+  }
+
+  openCambioEstado(): void {
+    const data: AutorizacionCambioEstadoModalComponentData = {
+      estadoActual: this.estado,
+      autorizacion: this.autorizacionData,
+    };
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    const dialogRef = this.matDialog.open(CambioEstadoModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (modalData: IEstadoAutorizacion) => {
+        if (modalData) {
+          this.snackBarService.showSuccess(MSG_CAMBIO_ESTADO_SUCCESS);
+          this.datosGenerales.estado$.next(modalData);
+          this.datosGenerales.refreshInitialState(true);
+        }
+      }
     );
   }
 }

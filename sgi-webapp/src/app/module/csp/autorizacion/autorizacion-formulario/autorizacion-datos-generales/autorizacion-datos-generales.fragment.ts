@@ -10,16 +10,16 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 export interface IAutorizacionDatosGeneralesData extends IAutorizacion {
-  fechaFirstEstado: DateTime
+  fechaFirstEstado: DateTime;
 }
 
 export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizacionDatosGeneralesData> {
 
-  private autorizacionData: IAutorizacionDatosGeneralesData;
+  public autorizacionData: IAutorizacionDatosGeneralesData;
 
   public investigadorRequired: boolean;
   public entidadRequired: boolean;
@@ -27,6 +27,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   private isVisor: boolean;
 
   readonly disableCambioEstado$ = new BehaviorSubject<boolean>(false);
+  readonly estado$ = new Subject<IEstadoAutorizacion>();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -70,6 +71,15 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
           } else if (!this.isVisor) {
             form.controls.datosConvocatoria.enable();
           }
+        }
+      }
+    ));
+
+    this.subscriptions.push(this.estado$.subscribe(
+      (estado) => {
+        if (estado) {
+          this.getFormGroup().controls.estado.setValue(estado.estado);
+          this.autorizacionData.estado = estado;
         }
       }
     ));

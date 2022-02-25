@@ -5,8 +5,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { ActionStatus } from '@core/services/action-service';
+import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +15,6 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AUTORIZACION_ROUTE_NAMES } from '../autorizacion-route-names';
 import { AutorizacionActionService } from '../autorizacion.action.service';
-import { AutorizacionCambioEstadoModalComponentData, CambioEstadoModalComponent } from '../cambio-estado-modal/cambio-estado-modal.component';
 
 const AUTORIZACION_KEY = marker('csp.autorizacion');
 const AUTORIZACION_SOLICITUD_KEY = marker('csp.autorizacion-solicitud');
@@ -25,7 +24,6 @@ const MSG_ERROR = marker('error.update.entity');
 const MSG_SUCCESS_PRESENTAR = marker('msg.csp.autorizacion.presentar.success');
 const MSG_ERROR_PRESENTAR = marker('error.csp.autorizacion.presentar');
 const MSG_BUTTON_PRESENTAR = marker('btn.presentar.entity');
-const MSG_CAMBIO_ESTADO_SUCCESS = marker('msg.csp.cambio-estado.success');
 const MSG_BUTTON_CAMBIO_ESTADO = marker('btn.cambiar-estado');
 
 @Component({
@@ -55,6 +53,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
     route: ActivatedRoute,
     public actionService: AutorizacionActionService,
     private matDialog: MatDialog,
+    private estadoAutorizacionService: EstadoAutorizacionService,
     dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
@@ -140,7 +139,7 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
       this.presentar();
     }
     else if (action === 'cambiar-estado') {
-      this.openCambioEstado();
+      this.actionService.openCambioEstado();
     }
     else {
       this.actionService.saveOrUpdate().subscribe(
@@ -182,29 +181,6 @@ export class AutorizacionEditarComponent extends ActionComponent implements OnIn
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS_PRESENTAR);
         this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-      }
-    );
-  }
-
-  /**
-   * Apertura de modal cambio de estado para insertar comentario
-   */
-  private openCambioEstado(): void {
-    const data: AutorizacionCambioEstadoModalComponentData = {
-      estadoActual: this.actionService.estado,
-      autorizacion: this.actionService.autorizacionData,
-    };
-    const config = {
-      panelClass: 'sgi-dialog-container',
-      data
-    };
-    const dialogRef = this.matDialog.open(CambioEstadoModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (modalData: IEstadoAutorizacion) => {
-        if (modalData) {
-          this.snackBarService.showSuccess(MSG_CAMBIO_ESTADO_SUCCESS);
-          this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-        }
       }
     );
   }
