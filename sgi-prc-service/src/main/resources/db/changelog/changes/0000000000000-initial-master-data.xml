@@ -788,9 +788,796 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-alias_enumerado">
+    <insert tableName="alias_enumerado">
+      <!-- 1 -->
+      <column name="id" valueSequenceNext="alias_enumerado_seq" />
+      <column name="codigo_cvn" value="060.010.020.080" />
+      <column name="prefijo_enumerado" value="AMBITO" />
+    </insert>
+    <insert tableName="alias_enumerado">
+      <!-- 2 -->
+      <column name="id" valueSequenceNext="alias_enumerado_seq" />
+      <column name="codigo_cvn" value="050.020.030.040" />
+      <column name="prefijo_enumerado" value="PAIS" />
+    </insert>
+    <insert tableName="alias_enumerado">
+      <!-- 3 -->
+      <column name="id" valueSequenceNext="alias_enumerado_seq" />
+      <column name="codigo_cvn" value="050.020.030.050" />
+      <column name="prefijo_enumerado" value="COMUNIDAD" />
+    </insert>
+    <insert tableName="alias_enumerado">
+      <!-- 4 -->
+      <column name="id" valueSequenceNext="alias_enumerado_seq" />
+      <column name="codigo_cvn" value="060.030.030.020" />
+      <column name="prefijo_enumerado" value="PAIS" />
+    </insert>
+    <insert tableName="alias_enumerado">
+      <!-- 5 -->
+      <column name="id" valueSequenceNext="alias_enumerado_seq" />
+      <column name="codigo_cvn" value="060.020.030.030" />
+      <column name="prefijo_enumerado" value="PAIS" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-configuracion_campo">
+    <insert tableName="configuracion_campo">
+      <!-- 1 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.010" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 3 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.030" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 4 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.120" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 5 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.140" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="true" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 6 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.160" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 7 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.170" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 8 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.190" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 9 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="030.040.000.200" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 10 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.010.010" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 11 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 12 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.010.270" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 13 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.010.290" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 14 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.010.410" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="true" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 15 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.020.010" />
+      <column name="epigrafe_cvn" value="050.020.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 16 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.020.180" />
+      <column name="epigrafe_cvn" value="050.020.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 17 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.020.200" />
+      <column name="epigrafe_cvn" value="050.020.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 18 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.010" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 19 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.020" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 20 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.040" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 21 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.050" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 22 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.090" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 23 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.100" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 24 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.110" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 25 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.020.030.120" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="true" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 26 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.030.010.020" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 27 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 28 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 29 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 30 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="050.030.010.320" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 31 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.010" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 32 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.030" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 33 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.070" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 34 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.080" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 35 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.090" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="true" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 36 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.100" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 37 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.140" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="true" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 38 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.160" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 39 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.210" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 40 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.300" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 41 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.390" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 42 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.400" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 43 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.010.410" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 44 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.010" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 45 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.030" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 46 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.050" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 47 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.080" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 48 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.100" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 49 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.190" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 50 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.320" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 51 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.370" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 52 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.380" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 53 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.010.020.390" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 54 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.020.030.010" />
+      <column name="epigrafe_cvn" value="060.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 55 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.020.030.020" />
+      <column name="epigrafe_cvn" value="060.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 56 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.020.030.030" />
+      <column name="epigrafe_cvn" value="060.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 57 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.020.030.110" />
+      <column name="epigrafe_cvn" value="060.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 58 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.020.030.160" />
+      <column name="epigrafe_cvn" value="060.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 59 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.030.030.010" />
+      <column name="epigrafe_cvn" value="060.030.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 60 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.030.030.020" />
+      <column name="epigrafe_cvn" value="060.030.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 61 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.030.030.140" />
+      <column name="epigrafe_cvn" value="060.030.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="true" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 62 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="060.030.070.010" />
+      <column name="epigrafe_cvn" value="060.030.070.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 63 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="PORCENTAJE_TITULARIDAD" />
+      <column name="epigrafe_cvn" value="050.030.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 64 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="CONVOCATORIA_EXCELENCIA" />
+      <column name="epigrafe_cvn" value="050.020.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 65 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="INDICE_NORMALIZADO" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="NUMERO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 66 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="TIPO_OBRA" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 67 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="MENCION_INDUSTRIAL" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 68 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="INTERNACIONAL" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 69 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="MENCION_INTERNACIONAL" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 70 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="COLECTIVA" />
+      <column name="epigrafe_cvn" value="050.020.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 71 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="INTERDISCIPLINAR" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 72 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="FECHA_FIN_CONTRATO" />
+      <column name="epigrafe_cvn" value="050.020.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="true" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 73 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="PUBLICACION_MUY_RELEVANTE" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 74 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="RESUMEN_REVISTA" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="BOOLEANO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 75 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="TIPO_OPEN_ACCESS" />
+      <column name="epigrafe_cvn" value="060.010.010.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="ENUMERADO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+    <insert tableName="configuracion_campo">
+      <!-- 76 -->
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="ISSN" />
+      <column name="epigrafe_cvn" value="060.030.030.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="false" />
+      <column name="tipo_formato" value="TEXTO" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
+  </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-configuracion_baremo">
+
     <insert tableName="configuracion_baremo">
-      <!-- 1-->
+      <!-- 1 -->
       <column name="id" valueSequenceNext="configuracion_baremo_seq" />
       <column name="activo" valueBoolean="true" />
       <column name="epigrafe_cvn" value="060.030.070.000" />

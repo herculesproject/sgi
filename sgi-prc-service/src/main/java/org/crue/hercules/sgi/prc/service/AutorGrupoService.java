@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.AutorGrupoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.AutorGrupoSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -167,6 +168,27 @@ public class AutorGrupoService {
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - start");
     final List<AutorGrupo> returnValue = repository.findAllByAutorId(autorId);
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link AutorGrupo} por su autorId
+   * paginadas y/o filtradas.
+   *
+   * @param autorId  el id de {@link Autor}.
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return listado de {@link AutorGrupo} paginadas y/o filtradas.
+   */
+  public Page<AutorGrupo> findAllByAutorId(Long autorId, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllByAutorId(Long autorId, String query, Pageable pageable) - start");
+    Specification<AutorGrupo> specs = AutorGrupoSpecifications.byAutorId(
+        autorId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    final Page<AutorGrupo> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByAutorId(Long autorId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

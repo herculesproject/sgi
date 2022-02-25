@@ -8,6 +8,8 @@ INSERT INTO test.estado_produccion_cientifica (id, produccion_cientifica_id, com
 INSERT INTO test.estado_produccion_cientifica (id, produccion_cientifica_id, comentario, estado, fecha, last_modified_date) VALUES(2, 2, NULL, 'PENDIENTE', '2022-01-20T21:59:59Z', '2022-01-20T21:59:59Z');
 INSERT INTO test.estado_produccion_cientifica (id, produccion_cientifica_id, comentario, estado, fecha, last_modified_date) VALUES(3, 3, NULL, 'PENDIENTE', '2022-01-20T21:59:59Z', '2022-01-20T21:59:59Z');
 
+ALTER SEQUENCE test.estado_produccion_cientifica_seq RESTART WITH 4;
+
 update test.produccion_cientifica set estado_produccion_cientifica_id = 1 where id=1;
 update test.produccion_cientifica set estado_produccion_cientifica_id = 2 where id=2;
 update test.produccion_cientifica set estado_produccion_cientifica_id = 3 where id=3;

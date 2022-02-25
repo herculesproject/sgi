@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.IndiceImpactoSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -99,6 +100,7 @@ public class IndiceImpactoService {
           indiceImpactoExistente.setRanking(indiceImpacto.getRanking());
           indiceImpactoExistente.setAnio(indiceImpacto.getAnio());
           indiceImpactoExistente.setOtraFuenteImpacto(indiceImpacto.getOtraFuenteImpacto());
+          indiceImpactoExistente.setIndice(indiceImpacto.getIndice());
           indiceImpactoExistente.setPosicionPublicacion(indiceImpacto.getPosicionPublicacion());
           indiceImpactoExistente.setNumeroRevistas(indiceImpacto.getNumeroRevistas());
           indiceImpactoExistente.setRevista25(indiceImpacto.getRevista25());
@@ -171,6 +173,27 @@ public class IndiceImpactoService {
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - start");
     final List<IndiceImpacto> returnValue = repository.findAllByProduccionCientificaId(produccionCientificaId);
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link IndiceImpacto} por su produccionCientificaId
+   * paginadas y/o filtradas.
+   *
+   * @param produccionCientificaId el id de {@link ProduccionCientifica}.
+   * @param query                  la información del filtro.
+   * @param pageable               la información de la paginación.
+   * @return listado de {@link IndiceImpacto} paginadas y/o filtradas.
+   */
+  public Page<IndiceImpacto> findAllByProduccionCientificaId(Long produccionCientificaId, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllByProduccionCientificaId(Long produccionCientificaId, String query, Pageable pageable) - start");
+    Specification<IndiceImpacto> specs = IndiceImpactoSpecifications.byProduccionCientificaId(
+        produccionCientificaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    final Page<IndiceImpacto> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByProduccionCientificaId(Long produccionCientificaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

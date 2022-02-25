@@ -81,7 +81,7 @@ public class IndiceImpacto extends BaseEntity {
   @Column(name = "anio", nullable = true)
   private Integer anio;
 
-  /** anio */
+  /** otraFuenteImpacto */
   @Column(name = "otra_fuente_impacto", length = OTRA_FUENTE_IMPACTO_LENGTH, nullable = true)
   private String otraFuenteImpacto;
 

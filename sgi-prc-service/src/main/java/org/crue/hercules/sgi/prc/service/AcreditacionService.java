@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.prc.model.Acreditacion;
 import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.AcreditacionRepository;
+import org.crue.hercules.sgi.prc.repository.specification.AcreditacionSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -119,6 +120,27 @@ public class AcreditacionService {
 
     Page<Acreditacion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link Acreditacion} por su produccionCientificaId
+   * paginadas y/o filtradas.
+   *
+   * @param produccionCientificaId el id de {@link ProduccionCientifica}.
+   * @param query                  la información del filtro.
+   * @param pageable               la información de la paginación.
+   * @return listado de {@link Acreditacion} paginadas y/o filtradas.
+   */
+  public Page<Acreditacion> findAllByProduccionCientificaId(Long produccionCientificaId, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllByProduccionCientificaId(Long prodduccionCientificaId, String query, Pageable pageable) - start");
+    Specification<Acreditacion> specs = AcreditacionSpecifications.byProduccionCientificaId(
+        produccionCientificaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    final Page<Acreditacion> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

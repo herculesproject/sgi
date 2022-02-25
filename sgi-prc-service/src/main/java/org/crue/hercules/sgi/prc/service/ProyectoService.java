@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.ProyectoSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -165,6 +166,27 @@ public class ProyectoService {
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - start");
     final List<Proyecto> returnValue = repository.findAllByProduccionCientificaId(produccionCientificaId);
     log.debug("findAllByProduccionCientificaId(Long prodduccionCientificaId)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link Proyecto} por su produccionCientificaId
+   * paginadas y/o filtradas.
+   *
+   * @param produccionCientificaId el id de {@link ProduccionCientifica}.
+   * @param query                  la información del filtro.
+   * @param pageable               la información de la paginación.
+   * @return listado de {@link Proyecto} paginadas y/o filtradas.
+   */
+  public Page<Proyecto> findAllByProduccionCientificaId(Long produccionCientificaId, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllByProduccionCientificaId(Long produccionCientificaId, String query, Pageable pageable) - start");
+    Specification<Proyecto> specs = ProyectoSpecifications.byProduccionCientificaId(
+        produccionCientificaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    final Page<Proyecto> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByProduccionCientificaId(Long produccionCientificaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

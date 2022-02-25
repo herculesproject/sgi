@@ -10,12 +10,15 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class IndiceImpactoSpecifications {
 
+  private IndiceImpactoSpecifications() {
+  }
+
   /**
    * {@link IndiceImpacto} de la {@link ProduccionCientifica} con el id indicado.
    * 
-   * @param id identificador del {@link ProduccionCientifica}.
-   * @return specification para obtener los {@link IndiceImpacto} de la
-   *         {@link ProduccionCientifica} con el id indicado.
+   * @param id identificador de la {@link ProduccionCientifica}.
+   * @return specification para obtener las {@link IndiceImpacto} de
+   *         la {@link ProduccionCientifica} con el id indicado.
    */
   public static Specification<IndiceImpacto> byProduccionCientificaId(Long id) {
     return (root, query, cb) -> {
