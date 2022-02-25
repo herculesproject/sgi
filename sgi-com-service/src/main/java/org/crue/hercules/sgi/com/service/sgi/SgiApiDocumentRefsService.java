@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.com.service.sgi;
 
-import java.net.URI;
 import java.util.List;
 
 import org.crue.hercules.sgi.com.config.RestApiProperties;
@@ -24,10 +23,9 @@ public class SgiApiDocumentRefsService extends SgiApiBaseService {
       ServiceType serviceType, String relativeUrl,
       HttpMethod httpMethod) {
     log.debug("call(ServiceType serviceType, String relativeUrl, HttpMethod httpMethod) - start");
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final List<String> response = super.<List<String>>callEndpoint(mergedURL
-        .toString(), httpMethod,
+    final List<String> response = super.<List<String>>callEndpoint(mergedURL, httpMethod,
         new ParameterizedTypeReference<List<String>>() {
         }).getBody();
 

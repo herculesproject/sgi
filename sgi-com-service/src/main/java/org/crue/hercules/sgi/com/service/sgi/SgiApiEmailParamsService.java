@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.com.service.sgi;
 
-import java.net.URI;
 import java.util.List;
 
 import org.crue.hercules.sgi.com.config.RestApiProperties;
@@ -25,10 +24,10 @@ public class SgiApiEmailParamsService extends SgiApiBaseService {
       ServiceType serviceType, String relativeUrl,
       HttpMethod httpMethod) {
     log.debug("call(ServiceType serviceType, String relativeUrl, HttpMethod httpMethod) - start");
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final List<EmailParam> response = super.<List<EmailParam>>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<List<EmailParam>>() {
+    final List<EmailParam> response = super.<List<EmailParam>>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<List<EmailParam>>() {
         }).getBody();
 
     log.debug("call(ServiceType serviceType, String relativeUrl, HttpMethod httpMethod) - end");

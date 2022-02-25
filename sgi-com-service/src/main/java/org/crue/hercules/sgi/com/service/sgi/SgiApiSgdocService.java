@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.com.service.sgi;
 
-import java.net.URI;
-
 import javax.activation.DataSource;
 
 import org.crue.hercules.sgi.com.config.RestApiProperties;
@@ -29,17 +27,17 @@ public class SgiApiSgdocService extends SgiApiBaseService {
     ServiceType serviceType = ServiceType.SGDOC;
     String relativeUrl = "/documentos/{documentRef}";
     HttpMethod httpMethod = HttpMethod.GET;
-    URI mergedURL = buildUri(serviceType, relativeUrl);
+    String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final Document document = super.<Document>callEndpoint(mergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<Document>() {
+    final Document document = super.<Document>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<Document>() {
         }, documentRef).getBody();
 
     String resourceRelativeUrl = relativeUrl + "/archivo";
-    URI resourceMergedURL = buildUri(ServiceType.SGDOC, resourceRelativeUrl);
+    String resourceMergedURL = buildUri(ServiceType.SGDOC, resourceRelativeUrl);
 
-    final Resource resource = super.<Resource>callEndpoint(resourceMergedURL
-        .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+    final Resource resource = super.<Resource>callEndpoint(resourceMergedURL, httpMethod,
+        new ParameterizedTypeReference<Resource>() {
         }, documentRef).getBody();
 
     DataSource returnValue = new DocumentDataSource(document, resource);
