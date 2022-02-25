@@ -1,35 +1,29 @@
-package org.crue.hercules.sgi.csp.service.tp;
+package org.crue.hercules.sgi.csp.service.sgi;
 
+import java.net.URI;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
-import org.crue.hercules.sgi.csp.dto.tp.ServiceType;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskInput;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.crue.hercules.sgi.csp.enums.ServiceType;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
-public class SgiApiTaskService {
-
-  private static final String PATH_INSTANT = "/instant";
+public class SgiApiTpService extends SgiApiBaseService {
 
   private static final String SEND_EMAIL_URL_FORMAT = "/emails/%s/send";
   private static final String SEND_EMAIL_DEFAULT_DESCRIPTION = "Task for send email ";
 
-  private final RestTemplate restTemplate;
-  private final String baseUri;
-
-  public SgiApiTaskService(RestTemplate restTemplate, RestApiProperties restApiProperties) {
-    this.restTemplate = restTemplate;
-    this.baseUri = restApiProperties.getTpUrl() + "/sgiapitasks";
+  public SgiApiTpService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -53,17 +47,22 @@ public class SgiApiTaskService {
     Assert.notNull(description, "description is required");
     Assert.notNull(instant, "Instant is required");
 
+    ServiceType serviceType = ServiceType.TP;
+    String relativeUrl = "/sgiapitasks";
+    HttpMethod httpMethod = HttpMethod.POST;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
     SgiApiInstantTaskInput taskRequest = SgiApiInstantTaskInput.builder().serviceType(type).httpMethod(method)
         .relativeUrl(url).description(description).instant(instant).build();
 
-    ResponseEntity<SgiApiInstantTaskOutput> task = restTemplate.exchange(
-        baseUri + PATH_INSTANT, HttpMethod.POST,
-        new HttpEntityBuilder<>(
-            taskRequest).withCurrentUserAuthorization().build(),
-        SgiApiInstantTaskOutput.class);
+    final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskInput, SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
+        mergedURL
+            .toString(),
+        httpMethod, taskRequest, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
+        }).getBody();
 
     log.debug("createInstantTask({}, {}, {}, {}, {}) - end", type, method, url, description);
-    return task.getBody();
+    return response;
   }
 
   /**
@@ -90,17 +89,22 @@ public class SgiApiTaskService {
     Assert.notNull(description, "description is required");
     Assert.notNull(instant, "Instant is required");
 
+    ServiceType serviceType = ServiceType.TP;
+    String relativeUrl = "/sgiapitasks/{id}";
+    HttpMethod httpMethod = HttpMethod.PUT;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
     SgiApiInstantTaskInput taskRequest = SgiApiInstantTaskInput.builder().serviceType(type).httpMethod(method)
         .relativeUrl(url).description(description).instant(instant).build();
 
-    ResponseEntity<SgiApiInstantTaskOutput> task = restTemplate.exchange(
-        baseUri + PATH_INSTANT + "/" + id,
-        HttpMethod.PUT,
-        new HttpEntityBuilder<>(
-            taskRequest).withCurrentUserAuthorization().build(),
-        SgiApiInstantTaskOutput.class);
+    final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskInput, SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
+        mergedURL
+            .toString(),
+        httpMethod, taskRequest, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
+        }, id).getBody();
+
     log.debug("updateInstantTask({}, {}, {}, {}, {}, {}) - end", id, type, method, url, description, instant);
-    return task.getBody();
+    return response;
   }
 
   /**
@@ -113,11 +117,16 @@ public class SgiApiTaskService {
 
     Assert.notNull(id, "ID is required");
 
-    restTemplate.exchange(
-        baseUri + "/" + id,
-        HttpMethod.DELETE,
-        new HttpEntityBuilder<>().withCurrentUserAuthorization().build(),
-        Void.class);
+    ServiceType serviceType = ServiceType.TP;
+    String relativeUrl = "/sgiapitasks/{id}";
+    HttpMethod httpMethod = HttpMethod.DELETE;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    super.<Void>callEndpointWithCurrentUserAuthorization(
+        mergedURL
+            .toString(),
+        httpMethod, new ParameterizedTypeReference<Void>() {
+        }, id);
     log.debug("deleteTask({}) - end", id);
   }
 
@@ -129,14 +138,19 @@ public class SgiApiTaskService {
    */
   public SgiApiInstantTaskOutput findInstantTaskById(Long id) {
     log.debug("findInstantTaskById({}) - start", id);
-    ResponseEntity<SgiApiInstantTaskOutput> task = restTemplate.exchange(
-        baseUri + "/" + id,
-        HttpMethod.GET,
-        new HttpEntityBuilder<>().withCurrentUserAuthorization().build(),
-        SgiApiInstantTaskOutput.class);
+    ServiceType serviceType = ServiceType.TP;
+    String relativeUrl = "/sgiapitasks/{id}";
+    HttpMethod httpMethod = HttpMethod.GET;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    final SgiApiInstantTaskOutput response = super.<SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(
+        mergedURL
+            .toString(),
+        httpMethod, new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
+        }, id).getBody();
 
     log.debug("findInstantTaskById({}) - end", id);
-    return task.getBody();
+    return response;
   }
 
   /**

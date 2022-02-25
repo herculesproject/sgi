@@ -1,18 +1,18 @@
-package org.crue.hercules.sgi.csp.service;
+package org.crue.hercules.sgi.csp.service.sgi;
+
+import java.net.URI;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
+import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.crue.hercules.sgi.csp.exceptions.rep.GetDataReportException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,25 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Service de llamada a microservicio de reporting
  */
-@Service
+@Component
 @Slf4j
-@Transactional(readOnly = true)
-@Validated
-public class ReportService {
-
-  private static final String URL_API = "/report/csp";
+public class SgiApiRepService extends SgiApiBaseService {
 
   private static final String ID = "id";
   private static final String ENTITY = "entity";
   private static final String FIELD = "field";
   private static final String NOT_NULL = "notNull";
 
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
-
-  public ReportService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+  public SgiApiRepService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -48,7 +40,7 @@ public class ReportService {
    * @return Resource informe
    */
   public Resource getInformeAutorizacion(Long idAutorizacion) {
-    log.debug("getInformeAutorizacion(idActa)- start");
+    log.debug("getInformeAutorizacion(Long idAutorizacion)- start");
     Assert.notNull(
         idAutorizacion,
         // Defer message resolution untill is needed
@@ -57,19 +49,20 @@ public class ReportService {
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Autorizacion.class)).build());
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/csp/autorizacion-proyecto-externo/{id}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/autorizacion-proyecto-externo/" + idAutorizacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idAutorizacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
     }
 
-    log.debug("getInformeAutorizacion(idActa)- end");
+    log.debug("getInformeAutorizacion(Long idAutorizacion) - end");
     return informe;
   }
-
 }

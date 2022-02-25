@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.dto.com;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Recipient {
+public class Recipient implements Serializable {
 
   /** Id */
   private String name;

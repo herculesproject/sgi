@@ -20,8 +20,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
-import org.crue.hercules.sgi.csp.service.cnf.ConfigService;
-import org.crue.hercules.sgi.csp.service.com.EmailService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,14 +33,14 @@ public class ComunicadosService {
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
-  private final ConfigService configService;
-  private final EmailService emailService;
+  private final SgiApiCnfService configService;
+  private final SgiApiComService emailService;
 
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
-      ConfigService configService, EmailService emailService) {
+      SgiApiCnfService configService, SgiApiComService emailService) {
     log.debug(
         "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - start");
     this.sgiConfigProperties = sgiConfigProperties;

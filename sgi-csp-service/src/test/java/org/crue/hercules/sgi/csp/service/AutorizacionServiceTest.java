@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiRepService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -26,14 +27,14 @@ import java.util.TimeZone;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class AutorizacionServiceTest extends BaseServiceTest{
-  
+class AutorizacionServiceTest extends BaseServiceTest {
+
   @Mock
   private AutorizacionRepository autorizacionRepository;
   @Mock
   private EstadoAutorizacionRepository estadoAutorizacionRepository;
   @Mock
-  private ReportService reportService;
+  private SgiApiRepService reportService;
   @Mock
   private SgdocService sgdocService;
   @Mock
@@ -44,30 +45,33 @@ class AutorizacionServiceTest extends BaseServiceTest{
   @BeforeEach
   public void setup() {
     this.autorizacionService = new AutorizacionService(
-      autorizacionRepository,
-      estadoAutorizacionRepository,
-      reportService,
-      sgdocService,
-      sgiConfigProperties);
+        autorizacionRepository,
+        estadoAutorizacionRepository,
+        reportService,
+        sgdocService,
+        sgiConfigProperties);
   }
 
   @Test
   void create_WithAutorizacionIdNotNull_ThrowsIllegalArgumentException() {
     Autorizacion autorizacion = this.buildMockAutorizacion(1L, null);
 
-    Assertions.assertThatThrownBy(() -> this.autorizacionService.create(autorizacion)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.autorizacionService.create(autorizacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void update_WithAutorizacionIdNull_ThrowsIllegalArgumentException() {
     Autorizacion autorizacion = this.buildMockAutorizacion(null, null);
 
-    Assertions.assertThatThrownBy(() -> this.autorizacionService.update(autorizacion)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.autorizacionService.update(autorizacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void delete_WithAutorizacionIdNull_ThrowsIllegalArgumentException() {
-    Assertions.assertThatThrownBy(() -> this.autorizacionService.delete(null)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.autorizacionService.delete(null))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @WithMockUser(authorities = { "CSP-AUT-E" })
@@ -75,17 +79,20 @@ class AutorizacionServiceTest extends BaseServiceTest{
   void cambiarEstado_WithSameEstado_ThrowsAlreadyInEstadoAutorizacionException() {
     Long autorizacionId = 1L;
     Long newEstadoId = 1L;
-    EstadoAutorizacion newEstado = this.buildMockEstadoAutorizacion(newEstadoId, autorizacionId, EstadoAutorizacion.Estado.AUTORIZADA);
+    EstadoAutorizacion newEstado = this.buildMockEstadoAutorizacion(newEstadoId, autorizacionId,
+        EstadoAutorizacion.Estado.AUTORIZADA);
     Autorizacion autorizacion = this.buildMockAutorizacion(autorizacionId, newEstado);
 
     BDDMockito.given(this.autorizacionRepository.findById(anyLong())).willReturn(Optional.of(autorizacion));
 
-    Assertions.assertThatThrownBy(() -> this.autorizacionService.cambiarEstado(autorizacionId, newEstado)).isInstanceOf(AlreadyInEstadoAutorizacionException.class);
+    Assertions.assertThatThrownBy(() -> this.autorizacionService.cambiarEstado(autorizacionId, newEstado))
+        .isInstanceOf(AlreadyInEstadoAutorizacionException.class);
   }
 
   @Test
   void presentable_WithAutorizacionIdNull_ThrowsIllegalArgumentException() {
-    Assertions.assertThatThrownBy(() -> this.autorizacionService.presentable(null)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.autorizacionService.presentable(null))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -94,18 +101,19 @@ class AutorizacionServiceTest extends BaseServiceTest{
     final Resource docFile = new ClassPathResource("application.yml");
 
     final DocumentoOutput expectedDocumento = DocumentoOutput.builder()
-    .archivo(IOUtils.toByteArray(docFile.getInputStream()))
-    .documentoRef("application.yml")
-    .autorRef("user")
-    .fechaCreacion(LocalDateTime.now())
-    .nombre("application.yml")
-    .build();
+        .archivo(IOUtils.toByteArray(docFile.getInputStream()))
+        .documentoRef("application.yml")
+        .autorRef("user")
+        .fechaCreacion(LocalDateTime.now())
+        .nombre("application.yml")
+        .build();
 
     BDDMockito.given(this.reportService.getInformeAutorizacion(anyLong())).willReturn(docFile);
 
     BDDMockito.given(this.sgiConfigProperties.getTimeZone()).willReturn(TimeZone.getDefault());
 
-    BDDMockito.given(this.sgdocService.uploadInforme(anyString(), ArgumentMatchers.<Resource>any())).willReturn(expectedDocumento);
+    BDDMockito.given(this.sgdocService.uploadInforme(anyString(), ArgumentMatchers.<Resource>any()))
+        .willReturn(expectedDocumento);
 
     DocumentoOutput documento = autorizacionService.generarDocumentoAutorizacion(1L);
 
@@ -118,18 +126,19 @@ class AutorizacionServiceTest extends BaseServiceTest{
 
   }
 
-  private EstadoAutorizacion buildMockEstadoAutorizacion(Long id, Long autorizacionId, EstadoAutorizacion.Estado estado) {
+  private EstadoAutorizacion buildMockEstadoAutorizacion(Long id, Long autorizacionId,
+      EstadoAutorizacion.Estado estado) {
     return EstadoAutorizacion.builder()
-    .id(id)
-    .autorizacionId(autorizacionId)
-    .estado(estado)
-    .build();
+        .id(id)
+        .autorizacionId(autorizacionId)
+        .estado(estado)
+        .build();
   }
 
   private Autorizacion buildMockAutorizacion(Long id, EstadoAutorizacion estado) {
     return Autorizacion.builder()
-    .id(id)
-    .estado(estado)
-    .build();
+        .id(id)
+        .estado(estado)
+        .build();
   }
 }

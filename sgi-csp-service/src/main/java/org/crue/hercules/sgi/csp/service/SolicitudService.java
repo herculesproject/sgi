@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -56,14 +55,12 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -71,7 +68,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,8 +81,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SolicitudService {
 
   private final SgiConfigProperties sgiConfigProperties;
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
+  private final SgiApiEtiService sgiApiEtiService;
   private final SolicitudRepository repository;
   private final EstadoSolicitudRepository estadoSolicitudRepository;
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
@@ -100,8 +95,9 @@ public class SolicitudService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
 
-  public SolicitudService(SgiConfigProperties sgiConfigProperties, RestApiProperties restApiProperties,
-      RestTemplate restTemplate, SolicitudRepository repository, EstadoSolicitudRepository estadoSolicitudRepository,
+  public SolicitudService(SgiConfigProperties sgiConfigProperties,
+      SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
+      EstadoSolicitudRepository estadoSolicitudRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository, ProyectoRepository proyectoRepository,
       SolicitudProyectoRepository solicitudProyectoRepository,
       DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
@@ -112,8 +108,7 @@ public class SolicitudService {
       ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository) {
     this.sgiConfigProperties = sgiConfigProperties;
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+    this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
     this.estadoSolicitudRepository = estadoSolicitudRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
@@ -473,11 +468,7 @@ public class SolicitudService {
           // Y "peticionEvaluacionRef" tenga valor null (no se ha creado todavía la
           // petición de evaluación en ética)
           if (peticionEvaluacionRef == null) {
-            final ResponseEntity<ChecklistOutput> responseChecklistOutput = restTemplate.exchange(
-                restApiProperties.getEtiUrl() + "/checklists/{id}", HttpMethod.GET,
-                new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), ChecklistOutput.class, idChecklist);
-
-            ChecklistOutput checklistOutput = responseChecklistOutput.getBody();
+            ChecklistOutput checklistOutput = sgiApiEtiService.getCheckList(idChecklist);
             // En el caso que que en la Pestaña de Autoevaluación ética exista una respuesta
             // afirmativa a una sola de las preguntas del formulario
             if (checklistOutput != null && checklistOutput.getRespuesta() != null
@@ -505,13 +496,9 @@ public class SolicitudService {
                   .resumen(solicitudProyecto.getResultadosPrevistos()).objetivos(solicitudProyecto.getObjetivos())
                   .build();
 
-              ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacion = restTemplate.exchange(
-                  restApiProperties.getEtiUrl() + "/peticionevaluaciones", HttpMethod.POST,
-                  new HttpEntityBuilder<>(peticionEvaluacionRequest).withCurrentUserAuthorization().build(),
-                  PeticionEvaluacion.class);
-
               // Guardar el PeticionEvaluacion.id
-              PeticionEvaluacion peticionEvaluacion = responsePeticionEvaluacion.getBody();
+              PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(
+                  peticionEvaluacionRequest);
               if (peticionEvaluacion != null) {
                 solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
                 solicitudProyecto = solicitudProyectoRepository.save(solicitudProyecto);
@@ -533,19 +520,13 @@ public class SolicitudService {
               case DENEGADA:
                 // Se debe recuperar la petición de ética y cambiar el valor del
                 // campo "estadoFinanciacion" a "Denegado"
-                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                    peticionEvaluacionRef);
-
-                PeticionEvaluacion peticionEvaluacionDenegada = responsePeticionEvaluacionDenegada.getBody();
+                PeticionEvaluacion peticionEvaluacionDenegada = sgiApiEtiService
+                    .getPeticionEvaluacion(peticionEvaluacionRef);
                 if (peticionEvaluacionDenegada != null) {
                   peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
 
-                  responsePeticionEvaluacionDenegada = restTemplate.exchange(
-                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      new HttpEntityBuilder<>(peticionEvaluacionDenegada).withCurrentUserAuthorization().build(),
-                      PeticionEvaluacion.class, peticionEvaluacionRef);
+                  sgiApiEtiService
+                      .updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacionDenegada);
                 } else {
                   // throw exception
                   throw new GetPeticionEvaluacionException();
@@ -557,19 +538,13 @@ public class SolicitudService {
               case CONCEDIDA:
                 // Se debe recuperar la petición de ética y cambiar el valor del
                 // campo "estadoFinanciacion" a "Concedido"
-                ResponseEntity<PeticionEvaluacion> responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                    restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.GET,
-                    new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), PeticionEvaluacion.class,
-                    peticionEvaluacionRef);
-
-                PeticionEvaluacion peticionEvaluacionConcedida = responsePeticionEvaluacionConcedida.getBody();
+                PeticionEvaluacion peticionEvaluacionConcedida = sgiApiEtiService
+                    .getPeticionEvaluacion(peticionEvaluacionRef);
                 if (peticionEvaluacionConcedida != null) {
                   peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
 
-                  responsePeticionEvaluacionConcedida = restTemplate.exchange(
-                      restApiProperties.getEtiUrl() + "/peticionevaluaciones/{id}", HttpMethod.PUT,
-                      new HttpEntityBuilder<>(peticionEvaluacionConcedida).withCurrentUserAuthorization().build(),
-                      PeticionEvaluacion.class, peticionEvaluacionRef);
+                  sgiApiEtiService
+                      .updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacionConcedida);
                 } else {
                   // throw exception
                   throw new GetPeticionEvaluacionException();
@@ -623,15 +598,7 @@ public class SolicitudService {
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
           return equipoTrabajo.build();
         }).distinct().forEach(equipoTrabajo -> {
-          ResponseEntity<EquipoTrabajo> responseEquipoTrabajo = restTemplate.exchange(
-              restApiProperties.getEtiUrl() + "/peticionevaluaciones/" + peticionEvaluacion.getId()
-                  + "/equipos-trabajo",
-              HttpMethod.POST, new HttpEntityBuilder<>(equipoTrabajo).withCurrentUserAuthorization().build(),
-              EquipoTrabajo.class);
-          if (responseEquipoTrabajo == null) {
-            // throw exception
-            throw new GetPeticionEvaluacionException();
-          }
+          sgiApiEtiService.newEquipoTrabajo(peticionEvaluacion.getId(), equipoTrabajo);
         });
     log.debug(
         "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - end");

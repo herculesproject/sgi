@@ -1,5 +1,6 @@
-package org.crue.hercules.sgi.csp.service.cnf;
+package org.crue.hercules.sgi.csp.service.sgi;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,25 +10,20 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.cnf.ConfigOutput;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
-public class ConfigService {
-  /** The URL path delimiter */
-  public static final String PATH_DELIMITER = "/";
-  /** The controller base path mapping */
-  public static final String MAPPING_CONFIG = PATH_DELIMITER + "config";
-
+public class SgiApiCnfService extends SgiApiBaseService {
   public static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
   public static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
   public static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
@@ -35,18 +31,11 @@ public class ConfigService {
 
   public static final String CLIENT_REGISTRATION_ID = "csp-service";
 
-  private final RestTemplate restTemplate;
   private final ObjectMapper mapper;
-  private final String baseUrl;
 
-  public ConfigService(RestTemplate restTemplate, RestApiProperties restApiProperties, ObjectMapper mapper) {
-    log.debug(
-        "ConfigService(RestTemplate restTemplate, RestApiProperties restApiProperties, ObjectMapper mapper) - start");
-    this.restTemplate = restTemplate;
+  public SgiApiCnfService(RestApiProperties restApiProperties, RestTemplate restTemplate, ObjectMapper mapper) {
+    super(restApiProperties, restTemplate);
     this.mapper = mapper;
-    this.baseUrl = restApiProperties.getCnfUrl() + MAPPING_CONFIG;
-    log.debug(
-        "ConfigService(RestTemplate restTemplate, RestApiProperties restApiProperties, ObjectMapper mapper) - end");
   }
 
   public String findByName(String name) {
@@ -58,19 +47,19 @@ public class ConfigService {
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(
                 ConfigOutput.class))
             .build());
-    String endPoint = baseUrl + "/" + name;
-    log.info("Calling SGI API endpoint: {}", endPoint);
-    ResponseEntity<ConfigOutput> response = restTemplate.exchange(
-        endPoint, HttpMethod.GET,
-        new HttpEntityBuilder<>().withClientAuthorization(
-            CLIENT_REGISTRATION_ID).build(),
-        ConfigOutput.class);
-    log.info("Endpoint response: {}", response);
 
-    ConfigOutput configOutput = response.getBody();
+    ServiceType serviceType = ServiceType.CNF;
+    String relativeUrl = "/config/{name}";
+    HttpMethod httpMethod = HttpMethod.GET;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    final ConfigOutput response = super.<ConfigOutput>callEndpoint(mergedURL
+        .toString(), httpMethod, new ParameterizedTypeReference<ConfigOutput>() {
+        }, name).getBody();
+
     String returnValue = null;
-    if (configOutput != null) {
-      returnValue = configOutput.getValue();
+    if (response != null) {
+      returnValue = response.getValue();
     }
     log.debug("findByName(String name) - end");
     return returnValue;

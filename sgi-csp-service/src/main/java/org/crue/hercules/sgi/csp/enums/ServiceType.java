@@ -1,15 +1,15 @@
-package org.crue.hercules.sgi.csp.dto.com;
+package org.crue.hercules.sgi.csp.enums;
 
 /**
  * SGI service types
  */
 public enum ServiceType {
   CSP,
+  CNF,
+  COM,
   ETI,
-  PII,
-  REL,
   REP,
   SGDOC,
-  TP,
-  USR
+  SGP,
+  TP
 }

@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.dto.com;
 import java.io.Serializable;
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.springframework.http.HttpMethod;
 
 import lombok.AllArgsConstructor;

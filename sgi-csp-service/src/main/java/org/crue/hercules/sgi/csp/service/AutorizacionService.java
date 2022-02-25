@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AutorizacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -54,7 +55,7 @@ public class AutorizacionService {
   /** EstadoAutorizacion repository */
   private final EstadoAutorizacionRepository estadoAutorizacionRepository;
   /** Report service */
-  private final ReportService reportService;
+  private final SgiApiRepService reportService;
   /** SGDOC service */
   private final SgdocService sgdocService;
   /** SGI properties */
@@ -64,7 +65,8 @@ public class AutorizacionService {
 
   public AutorizacionService(
       AutorizacionRepository repository,
-      EstadoAutorizacionRepository estadoAutorizacionRepository, ReportService reportService,
+      EstadoAutorizacionRepository estadoAutorizacionRepository,
+      SgiApiRepService reportService,
       SgdocService sgdocService, SgiConfigProperties sgiConfigProperties) {
     this.repository = repository;
     this.estadoAutorizacionRepository = estadoAutorizacionRepository;

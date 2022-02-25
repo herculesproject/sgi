@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput.Formly;
@@ -50,6 +49,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoReposito
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -63,11 +63,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * SolicitudServiceTest
@@ -111,10 +107,7 @@ class SolicitudServiceTest extends BaseServiceTest {
   ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
 
   @Mock
-  private RestApiProperties restApiProperties;
-
-  @Mock
-  private RestTemplate restTemplate;
+  private SgiApiEtiService sgiApiEtiService;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
@@ -123,7 +116,8 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudService(sgiConfigProperties, restApiProperties, restTemplate, repository,
+    service = new SolicitudService(sgiConfigProperties,
+        sgiApiEtiService, repository,
         estadoSolicitudRepository, configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
@@ -708,7 +702,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     List<SolicitudProyectoEquipo> equipos = Arrays.asList(buildMockSolicitudProyectoEquipo(1L, 1, 9));
 
     //@formatter:off
-    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(ChecklistOutput.builder()
+    ChecklistOutput responseChecklistOutput = ChecklistOutput.builder()
                                                                 .fechaCreacion(Instant.now())
                                                                 .id(1L)
                                                                 .personaRef("user")
@@ -717,7 +711,7 @@ class SolicitudServiceTest extends BaseServiceTest {
                                                                   .esquema("<div></div>")
                                                                   .build())
                                                                 .respuesta("respuesta mocked from server true")
-                                                                .build());
+                                                                .build();
     //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
@@ -727,15 +721,10 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(solicitudProyectoRepository.save(ArgumentMatchers.<SolicitudProyecto>any()))
         .willReturn(solicitudProyecto);
 
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
-        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
+    BDDMockito.given(sgiApiEtiService.getCheckList(anyString())).willReturn(responseChecklistOutput);
 
-    BDDMockito
-        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any()))
-        .willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(sgiApiEtiService.newPeticionEvaluacion(
+        ArgumentMatchers.<PeticionEvaluacion>any())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -758,24 +747,13 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
 
-    //@formatter:off
-    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
-    //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
-        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
-
-    BDDMockito
-        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
-        .willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -800,24 +778,13 @@ class SolicitudServiceTest extends BaseServiceTest {
         .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
     List<SolicitudDocumento> solicitudDocumentos = Arrays.asList(SolicitudDocumento.builder().build());
 
-    //@formatter:off
-    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
-    //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
-        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
-
-    BDDMockito
-        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
-        .willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -845,24 +812,13 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitudProyecto.setPeticionEvaluacionRef("pet-eva-0001");
     PeticionEvaluacion peticionEvaluacion = buildMockPeticionEvaluacion(1L, 1L);
 
-    //@formatter:off
-    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
-    //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any())).willReturn(newEstado);
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
 
-    BDDMockito.given(restApiProperties.getEtiUrl()).willReturn("http://localhost");
-    BDDMockito.given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-        ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<ChecklistOutput>>any(),
-        ArgumentMatchers.anyString())).willReturn(responseChecklistOutput);
-
-    BDDMockito
-        .given(restTemplate.exchange(anyString(), ArgumentMatchers.<HttpMethod>any(),
-            ArgumentMatchers.<HttpEntity<Object>>any(), ArgumentMatchers.<Class<PeticionEvaluacion>>any(), anyString()))
-        .willReturn(ResponseEntity.ok(peticionEvaluacion));
+    BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
 
@@ -883,9 +839,6 @@ class SolicitudServiceTest extends BaseServiceTest {
     List<DocumentoRequeridoSolicitud> documentos = Arrays
         .asList(buildMockDocumentoRequeridoSolicitud(1L, tipoDocumento));
 
-    //@formatter:off
-    ResponseEntity<ChecklistOutput> responseChecklistOutput = ResponseEntity.ok(null);
-    //@formatter:on
     BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(solicitud));
 
     BDDMockito.given(documentoRequeridoSolicitudRepository

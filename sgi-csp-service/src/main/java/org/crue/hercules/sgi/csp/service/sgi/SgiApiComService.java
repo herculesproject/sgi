@@ -1,5 +1,6 @@
-package org.crue.hercules.sgi.csp.service.com;
+package org.crue.hercules.sgi.csp.service.sgi;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,11 +15,10 @@ import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.EmailParam;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
-import org.crue.hercules.sgi.csp.dto.com.ServiceType;
 import org.crue.hercules.sgi.csp.dto.com.Status;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.crue.hercules.sgi.csp.enums.ServiceType;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
@@ -27,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class EmailService {
-  public static final String CLIENT_REGISTRATION_ID = "csp-service";
-
+public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_NAME = "GENERIC_EMAIL_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT = "GENERIC_SUBJECT";
@@ -40,14 +38,11 @@ public class EmailService {
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
 
-  private final RestTemplate restTemplate;
-  private final String baseUrl;
-  private final ObjectMapper objectMapper;
+  private final ObjectMapper mapper;
 
-  public EmailService(RestTemplate restTemplate, RestApiProperties restApiProperties, ObjectMapper objectMapper) {
-    this.restTemplate = restTemplate;
-    this.baseUrl = restApiProperties.getComUrl() + "/emails";
-    this.objectMapper = objectMapper;
+  public SgiApiComService(RestApiProperties restApiProperties, RestTemplate restTemplate, ObjectMapper mapper) {
+    super(restApiProperties, restTemplate);
+    this.mapper = mapper;
   }
 
   /**
@@ -69,6 +64,11 @@ public class EmailService {
     Assert.notEmpty(recipients, "At least one Recipient is required");
     Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
 
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails";
+    HttpMethod httpMethod = HttpMethod.POST;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
     emailRequest.setParams(new ArrayList<>());
@@ -77,13 +77,12 @@ public class EmailService {
     emailRequest.getParams()
         .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
 
-    ResponseEntity<EmailOutput> emailResponse = restTemplate.exchange(
-        baseUrl, HttpMethod.POST,
-        new HttpEntityBuilder<>(
-            emailRequest).withCurrentUserAuthorization().build(),
-        EmailOutput.class);
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
+        .toString(), httpMethod, emailRequest, new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
+
     log.debug("createGenericEmailText({}, {}, {}, {}) - end", subject, content, recipients, deferrableRecipients);
-    return emailResponse.getBody();
+    return response;
   }
 
   /**
@@ -108,6 +107,11 @@ public class EmailService {
     Assert.notEmpty(recipients, "At least one Recipient is required");
     Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
 
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails/{id}";
+    HttpMethod httpMethod = HttpMethod.PUT;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
     emailRequest.setParams(new ArrayList<>());
@@ -116,15 +120,12 @@ public class EmailService {
     emailRequest.getParams()
         .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
 
-    ResponseEntity<EmailOutput> emailResponse = restTemplate.exchange(
-        baseUrl + "/" + id, HttpMethod.PUT,
-        new HttpEntityBuilder<>(
-            emailRequest).withCurrentUserAuthorization().build(),
-        EmailOutput.class);
-
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
+        .toString(), httpMethod, emailRequest, new ParameterizedTypeReference<EmailOutput>() {
+        }, id).getBody();
     log.debug("updateGenericEmailText({}, {}, {}, {}, {}) - end", id, subject, content, recipients,
         deferrableRecipients);
-    return emailResponse.getBody();
+    return response;
   }
 
   /**
@@ -137,11 +138,15 @@ public class EmailService {
 
     Assert.notNull(id, "ID is required");
 
-    restTemplate.exchange(
-        baseUrl + "/" + id,
-        HttpMethod.DELETE,
-        new HttpEntityBuilder<>().withCurrentUserAuthorization().build(),
-        Void.class);
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails/{id}";
+    HttpMethod httpMethod = HttpMethod.DELETE;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    super.<Void>callEndpoint(mergedURL
+        .toString(), httpMethod, new ParameterizedTypeReference<Void>() {
+        }, id);
+
     log.debug("deleteEmail({}) - end", id);
   }
 
@@ -214,21 +219,25 @@ public class EmailService {
       List<Recipient> recipients) throws JsonProcessingException {
     log.debug(
         "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - start");
-    EmailInput emailRequest = EmailInput.builder().template(
+
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails";
+    HttpMethod httpMethod = HttpMethod.POST;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    EmailInput request = EmailInput.builder().template(
         TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO).recipients(recipients)
         .build();
-    emailRequest.setParams(Arrays.asList(
-        new EmailParam(TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM, objectMapper.writeValueAsString(data))));
+    request.setParams(Arrays.asList(
+        new EmailParam(TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM, mapper.writeValueAsString(data))));
 
-    EmailOutput emailResponse = restTemplate.exchange(
-        baseUrl, HttpMethod.POST,
-        new HttpEntityBuilder<>(
-            emailRequest).withClientAuthorization(
-                CLIENT_REGISTRATION_ID).build(),
-        EmailOutput.class).getBody();
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL
+        .toString(), httpMethod, request, new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
+
     log.debug(
         "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - end");
-    return emailResponse;
+    return response;
   }
 
   /**
@@ -239,18 +248,17 @@ public class EmailService {
    */
   public Status sendEmail(Long id) {
     log.debug("sendEmail(Long id) - start");
-    String endPoint = baseUrl + "/" + id + "/send";
-    log.info("Calling SGI API endpoint: {}", endPoint);
-    ResponseEntity<Status> response = restTemplate.exchange(
-        endPoint,
-        HttpMethod.GET,
-        new HttpEntityBuilder<>().withClientAuthorization(
-            CLIENT_REGISTRATION_ID).build(),
-        Status.class);
-    log.info("Endpoint response: {}", response);
-    Status returnValue = response.getBody();
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails/{id}/send";
+    HttpMethod httpMethod = HttpMethod.GET;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    final Status response = super.<Status>callEndpoint(mergedURL
+        .toString(), httpMethod, new ParameterizedTypeReference<Status>() {
+        }, id).getBody();
+
     log.debug("sendEmail(Long id) - end");
-    return returnValue;
+    return response;
   }
 
 }

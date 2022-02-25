@@ -33,9 +33,9 @@ import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaHitoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
-import org.crue.hercules.sgi.csp.service.com.EmailService;
-import org.crue.hercules.sgi.csp.service.sgp.PersonaService;
-import org.crue.hercules.sgi.csp.service.tp.SgiApiTaskService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -65,9 +65,9 @@ public class ConvocatoriaHitoService {
   private final ConvocatoriaHitoAvisoRepository convocatoriaHitoAvisoRepository;
   private final SolicitudRepository solicitudRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
-  private final EmailService emailService;
-  private final SgiApiTaskService sgiApiTaskService;
-  private final PersonaService personaService;
+  private final SgiApiComService emailService;
+  private final SgiApiTpService sgiApiTaskService;
+  private final SgiApiSgpService personaService;
 
   public ConvocatoriaHitoService(ConvocatoriaHitoRepository convocatoriaHitoRepository,
       ConvocatoriaRepository convocatoriaRepository, ModeloTipoHitoRepository modeloTipoHitoRepository,
@@ -75,9 +75,9 @@ public class ConvocatoriaHitoService {
       ConvocatoriaHitoAvisoRepository convocatoriaHitoAvisoRepository,
       SolicitudRepository solicitudRespository,
       ProyectoEquipoRepository proyectoEquipoRepository,
-      EmailService emailService,
-      SgiApiTaskService sgiApiTaskService,
-      PersonaService personaService) {
+      SgiApiComService emailService,
+      SgiApiTpService sgiApiTaskService,
+      SgiApiSgpService personaService) {
     this.repository = convocatoriaHitoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.modeloTipoHitoRepository = modeloTipoHitoRepository;

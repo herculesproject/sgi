@@ -1,31 +1,27 @@
-package org.crue.hercules.sgi.csp.service.sgp;
+package org.crue.hercules.sgi.csp.service.sgi;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
+import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
-public class PersonaService {
+public class SgiApiSgpService extends SgiApiBaseService {
 
-  private final RestTemplate restTemplate;
-  private final String baseUrl;
-
-  public PersonaService(RestTemplate restTemplate, RestApiProperties restApiProperties) {
-    this.restTemplate = restTemplate;
-    this.baseUrl = restApiProperties.getSgpUrl() + "/personas";
+  public SgiApiSgpService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -39,13 +35,17 @@ public class PersonaService {
 
     Assert.notNull(id, "ID is required");
 
-    ResponseEntity<PersonaOutput> personaResponse = restTemplate.exchange(
-        baseUrl + "/" + id, HttpMethod.GET,
-        new HttpEntityBuilder<>().withClientAuthorization("csp-service").build(),
-        PersonaOutput.class);
+    ServiceType serviceType = ServiceType.SGP;
+    String relativeUrl = "/personas/{id}";
+    HttpMethod httpMethod = HttpMethod.GET;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    final PersonaOutput response = super.<PersonaOutput>callEndpoint(mergedURL
+        .toString(), httpMethod, new ParameterizedTypeReference<PersonaOutput>() {
+        }, id).getBody();
 
     log.debug("findById({}) - end", id);
-    return personaResponse.getBody();
+    return response;
   }
 
   /**
@@ -62,15 +62,17 @@ public class PersonaService {
 
     String in = ids.stream().map(id -> StringUtils.wrap(id, "\"")).collect(Collectors.joining(","));
 
-    ResponseEntity<List<PersonaOutput>> personaResponse = restTemplate.exchange(
-        baseUrl + "/?q=id=in=(" + in + ")", HttpMethod.GET,
-        new HttpEntityBuilder<>().withClientAuthorization("csp-service").build(),
-        new ParameterizedTypeReference<List<PersonaOutput>>() {
-        });
+    ServiceType serviceType = ServiceType.SGP;
+    String relativeUrl = "/personas?q=id=in=({" + in + "})";
+    HttpMethod httpMethod = HttpMethod.GET;
+    URI mergedURL = buildUri(serviceType, relativeUrl);
+
+    final List<PersonaOutput> response = super.<List<PersonaOutput>>callEndpoint(mergedURL
+        .toString(), httpMethod, new ParameterizedTypeReference<List<PersonaOutput>>() {
+        }).getBody();
 
     log.debug("findAllByIdIn({}) - end", ids);
-
-    return personaResponse.getBody();
+    return response;
   }
 
 }
