@@ -61,10 +61,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-mxx/{idMemoria}/{idFormulario}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idMemoria, idFormulario).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -97,10 +97,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-evaluacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -130,10 +130,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-ficha-evaluador/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -163,10 +163,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-favorable-memoria/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -197,10 +197,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-favorable-ratificacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -231,10 +231,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-favorable-modificacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -263,10 +263,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-acta/{idActa}";
       HttpMethod httpMethod = HttpMethod.GET;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+          new ParameterizedTypeReference<Resource>() {
           }, idActa).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -301,10 +301,10 @@ public class SgiApiRepService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.REP;
       String relativeUrl = "/report/eti/informe-evaluacion-retrospectiva";
       HttpMethod httpMethod = HttpMethod.POST;
-      URI mergedURL = buildUri(serviceType, relativeUrl);
+      String mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = super.<InformeEvaluacionReportInput, Resource>callEndpointWithCurrentUserAuthorization(mergedURL
-          .toString(), httpMethod, input, new ParameterizedTypeReference<Resource>() {
+      informe = super.<InformeEvaluacionReportInput, Resource>callEndpointWithCurrentUserAuthorization(mergedURL,
+          httpMethod, input, new ParameterizedTypeReference<Resource>() {
           }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);

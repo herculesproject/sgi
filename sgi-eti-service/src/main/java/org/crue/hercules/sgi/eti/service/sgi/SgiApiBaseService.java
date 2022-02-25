@@ -27,7 +27,7 @@ public abstract class SgiApiBaseService {
     this.restTemplate = restTemplate;
   }
 
-  protected URI buildUri(
+  protected String buildUri(
       ServiceType serviceType, String relativeUrl) {
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - start");
     String serviceURL = null;
@@ -41,13 +41,8 @@ public abstract class SgiApiBaseService {
       default:
         throw new UnknownServiceTypeException(serviceType.name());
     }
-    URI mergedURL;
-    try {
-      mergedURL = new URIBuilder(serviceURL).appendPath(relativeUrl).build();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-      throw new IllegalArgumentException(e);
-    }
+    // TODO revisit implementation
+    String mergedURL = new StringBuilder(serviceURL).append(relativeUrl).toString();
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - end");
     return mergedURL;
   }
@@ -60,6 +55,7 @@ public abstract class SgiApiBaseService {
   protected <E, T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod, E entity,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     log.info("Calling SGI API endpoint: {}", endPoint);
+    log.debug("Endpoint uri variables: {} \\nRequest data: {}", (Object[]) uriVariables, entity);
     HttpEntity<E> request = new HttpEntityBuilder<E>().withEntity(entity)
         .withClientAuthorization(CLIENT_REGISTRATION_ID).build();
 
@@ -70,15 +66,45 @@ public abstract class SgiApiBaseService {
     return response;
   }
 
+  /**
+   * Call end point with current user authorization
+   * 
+   * @param <T>          Expected return type
+   * @param endPoint     The end point URL
+   * @param httpMethod   The HTTP method
+   * @param returnType   The parametrized expected return type
+   * @param uriVariables Variables to replace in the URI
+   * @return The API response
+   * 
+   * @deprecated Use b2b security
+   */
+  @Deprecated
   protected <T> ResponseEntity<T> callEndpointWithCurrentUserAuthorization(String endPoint, HttpMethod httpMethod,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     return this.<Void, T>callEndpointWithCurrentUserAuthorization(endPoint, httpMethod, null, returnType, uriVariables);
   }
 
+  /**
+   * Call end point with current user authorization
+   * 
+   * @param <E>          Type of the sent entity
+   * @param <T>          Data expected return type
+   * @param endPoint     The end point URL
+   * @param httpMethod   The HTTP method
+   * @param entity       The data to be sent
+   * @param returnType   The parametrized expected return type
+   * @param uriVariables Variables to replace in the URI
+   * @return The API response
+   * 
+   * @deprecated Use b2b security
+   */
+  // TODO Use b2b security and delete
+  @Deprecated
   protected <E, T> ResponseEntity<T> callEndpointWithCurrentUserAuthorization(String endPoint, HttpMethod httpMethod,
       E entity,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     log.info("Calling SGI API endpoint: {}", endPoint);
+    log.debug("Endpoint uri variables: {} \\nRequest data: {}", (Object[]) uriVariables, entity);
     HttpEntity<E> request = new HttpEntityBuilder<E>().withEntity(entity)
         .withCurrentUserAuthorization().build();
 
