@@ -22,6 +22,8 @@ En el mes de ${data.fecha?date.iso?string.MMMM} de ${data.fecha?date.iso?string.
 <#list data.proyectos as proyecto> 
 * ${proyecto.titulo}
   * Primer día para la presentación de la documentación de justificación ${proyecto.fechaInicio?datetime.iso?string.medium}
+  <#if proyecto.fechaFin??>
   * Último día para la presentación de la documentación de justificación ${proyecto.fechaFin?datetime.iso?string.medium}
+  </#if>
 
 </#list>

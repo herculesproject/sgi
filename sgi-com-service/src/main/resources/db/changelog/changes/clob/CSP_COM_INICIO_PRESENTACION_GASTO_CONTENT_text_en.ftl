@@ -22,6 +22,8 @@ In the month of ${data.fecha?date.iso?string.MMMM} of ${data.fecha?date.iso?stri
 <#list data.proyectos as proyecto>
 * ${proyecto.titulo}
    * First day for the presentation of the justification documentation ${proyecto.fechaInicio?datetime.iso?string.medium}
+  <#if proyecto.fechaFin??>
    * Last day for the presentation of the justification documentation ${proyecto.fechaFin?datetime.iso?string.medium}
+  </#if>
 
 </#list>

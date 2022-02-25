@@ -30,7 +30,9 @@
       <li><b><i><#outputformat "HTML">${proyecto.titulo?esc}</#outputformat></i></b>
         <ul>
           <li>Primer d&iacute;a para la presentaci&oacute;n de la documentaci&oacute;n de justificaci&oacute;n <b>${proyecto.fechaInicio?datetime.iso?string.medium}</b></li>
+          <#if proyecto.fechaFin??>
           <li>&Uacute;ltimo d&iacute;a para la presentaci&oacute;n de la documentaci&oacute;n de justificaci&oacute;n <b>${proyecto.fechaFin?datetime.iso?string.medium}</b></li>
+          </#if>
         </ul>
       </li>
     </#list>
