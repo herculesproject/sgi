@@ -51,8 +51,8 @@ import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.eti.service.ReportService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.beans.BeanUtils;
@@ -114,7 +114,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Informe service */
   private final InformeService informeService;
 
-  private final ReportService reportService;
+  private final SgiApiRepService reportService;
   private final SgdocService sgdocService;
 
   /** Tarea repository */
@@ -135,7 +135,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       InformeService informeService, PeticionEvaluacionRepository peticionEvaluacionRepository,
       ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
       RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
-      ConfiguracionService configuracionService, ReportService reportService, SgdocService sgdocService,
+      ConfiguracionService configuracionService, SgiApiRepService reportService, SgdocService sgdocService,
       BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;

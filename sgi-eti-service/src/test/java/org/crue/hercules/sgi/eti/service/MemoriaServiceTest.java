@@ -46,6 +46,7 @@ import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
   private InformeService informeService;
 
   @Mock
-  private ReportService reportService;
+  private SgiApiRepService reportService;
 
   @Mock
   private SgdocService sgdocService;

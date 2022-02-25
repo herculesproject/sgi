@@ -1,19 +1,20 @@
-package org.crue.hercules.sgi.eti.service;
+package org.crue.hercules.sgi.eti.service.sgi;
 
+import java.net.URI;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.dto.InformeEvaluacionReportInput;
+import org.crue.hercules.sgi.eti.enums.ServiceType;
 import org.crue.hercules.sgi.eti.exceptions.rep.GetDataReportException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -29,21 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 @Validated
-public class ReportService {
-
-  private static final String URL_API = "/report/eti";
+public class SgiApiRepService extends SgiApiBaseService {
 
   private static final String ID = "id";
   private static final String ENTITY = "entity";
   private static final String FIELD = "field";
   private static final String NOT_NULL = "notNull";
 
-  private final RestApiProperties restApiProperties;
-  private final RestTemplate restTemplate;
-
-  public ReportService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
-    this.restApiProperties = restApiProperties;
-    this.restTemplate = restTemplate;
+  public SgiApiRepService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
+    super(restApiProperties, restTemplate);
   }
 
   /**
@@ -63,12 +58,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-mxx/{idMemoria}/{idFormulario}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-mxx/" + idMemoria + "/" + idFormulario, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idMemoria, idFormulario).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -97,12 +94,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-evaluacion/{idEvaluacion}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-evaluacion/" + idEvaluacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -128,12 +127,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-ficha-evaluador/{idEvaluacion}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-ficha-evaluador/" + idEvaluacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -159,12 +160,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-favorable-memoria/{idEvaluacion}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-memoria/" + idEvaluacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -191,12 +194,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-favorable-ratificacion/{idEvaluacion}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-ratificacion/" + idEvaluacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -223,11 +228,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-favorable-modificacion/" + idEvaluacion, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-favorable-modificacion/{idEvaluacion}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -252,12 +260,14 @@ public class ReportService {
             .parameter(ENTITY, ApplicationContextSupport.getMessage(Acta.class)).build());
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-acta/{idActa}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-acta/" + idActa, HttpMethod.GET,
-          new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, new ParameterizedTypeReference<Resource>() {
+          }, idActa).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -288,12 +298,14 @@ public class ReportService {
 
     Resource informe = null;
     try {
+      ServiceType serviceType = ServiceType.REP;
+      String relativeUrl = "/report/eti/informe-evaluacion-retrospectiva";
+      HttpMethod httpMethod = HttpMethod.POST;
+      URI mergedURL = buildUri(serviceType, relativeUrl);
 
-      final ResponseEntity<Resource> response = restTemplate.exchange(
-          restApiProperties.getRepUrl() + URL_API + "/informe-evaluacion-retrospectiva", HttpMethod.POST,
-          new HttpEntityBuilder<>(input).withCurrentUserAuthorization().build(), Resource.class);
-
-      informe = response.getBody();
+      informe = super.<InformeEvaluacionReportInput, Resource>callEndpointWithCurrentUserAuthorization(mergedURL
+          .toString(), httpMethod, input, new ParameterizedTypeReference<Resource>() {
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
