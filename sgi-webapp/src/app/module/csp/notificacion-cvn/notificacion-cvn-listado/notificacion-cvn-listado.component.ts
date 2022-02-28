@@ -16,8 +16,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable, of } from 'rxjs';
-import { concatMap, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { catchError, concatMap, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { NotificacionCvnAsociarAutorizacionModalComponent } from '../modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
@@ -207,6 +207,10 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       map(solicitante => {
         notificacion.solicitante = solicitante;
         return notificacion;
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        return of(notificacion);
       })
     );
   }
@@ -219,7 +223,12 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       map(entidadParticipacion => {
         notificacion.entidadParticipacion = entidadParticipacion;
         return notificacion;
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        return of(notificacion);
       })
+
     );
   }
 
@@ -233,6 +242,10 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       map(responsable => {
         notificacion.responsable = responsable;
         return notificacion;
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        return of(notificacion);
       })
     );
   }
