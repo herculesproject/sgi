@@ -8,19 +8,18 @@
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field class="input-form">
           <mat-label>{{'prc.publicacion.investigador' | translate}}</mat-label>
-          <!-- TODO añadir colectivo correspondiente cuándo se añada al enum de colectivos -->
           <sgi-select-persona placeholder="{{'prc.publicacion.investigador' | translate}}"
-            formControlName="investigador"></sgi-select-persona>
+            [colectivos]="TIPO_COLECTIVO.AUTOR_PRC" formControlName="investigador"></sgi-select-persona>
         </mat-form-field>
       </div>
 
       <!-- Grupo investigación -->
-      <!-- TODO refactor to grupo investigacion select component -->
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field>
           <mat-label>{{'prc.publicacion.grupo-investigacion' | translate}}</mat-label>
-          <input matInput placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}"
+          <sgi-select-grupo placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}"
             formControlName="grupoInvestigacion">
+          </sgi-select-grupo>
         </mat-form-field>
       </div>
 

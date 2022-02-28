@@ -10,6 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiRestListResult, SgiRestFilter, RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 
 const MSG_ERROR = marker('error.load');
 
@@ -19,6 +20,7 @@ const MSG_ERROR = marker('error.load');
   styleUrls: ['./publicacion-listado.component.scss']
 })
 export class PublicacionListadoComponent extends AbstractTablePaginationComponent<IPublicacion> implements OnInit {
+  TIPO_COLECTIVO = TipoColectivo;
   fxLayoutProperties: FxLayoutProperties;
 
   publicaciones$: Observable<IPublicacion[]>;
@@ -72,15 +74,13 @@ export class PublicacionListadoComponent extends AbstractTablePaginationComponen
     const controls = this.formGroup.controls;
 
     return new RSQLSgiRestFilter('investigador', SgiRestFilterOperator.LIKE_ICASE, controls.investigador.value?.id)
-      // TODO add filter by grupo investigacion
-      // .and('grupoInvestigacion', SgiRestFilterOperator.EQUALS, controls.grupoInvestigacion.value)
+      .and('grupoInvestigacion', SgiRestFilterOperator.EQUALS, controls.grupoInvestigacion.value?.id?.toString())
       .and('isbn', SgiRestFilterOperator.LIKE_ICASE, controls.isbn.value)
       .and('tipoProduccion', SgiRestFilterOperator.LIKE_ICASE, controls.tipoProduccion.value)
       .and('tituloPublicacion', SgiRestFilterOperator.LIKE_ICASE, controls.tituloPublicacion.value)
       .and('fechaPublicacionDesde', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
       .and('fechaPublicacionHasta', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
-      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
-      ;
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
   }
 
   onClearFilters() {

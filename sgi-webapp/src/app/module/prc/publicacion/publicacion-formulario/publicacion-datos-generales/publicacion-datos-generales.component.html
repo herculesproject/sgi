@@ -42,11 +42,11 @@
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
       <!-- Identificadores digitales  -->
-      <sgi-cvn-field fxFlex="33%" fxFlex.sm="99%" [campoCVN]="'060.010.010.400'"
+      <sgi-cvn-field fxFlex="66%" fxFlex.sm="99%" [campoCVN]="'060.010.010.400'"
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
       <!-- Tipo identificadores digitales  -->
-      <sgi-cvn-field fxFlex="66%" fxFlex.sm="99%" [campoCVN]="'060.010.010.410'"
+      <sgi-cvn-field fxFlex="33%" fxFlex.sm="99%" [campoCVN]="'060.010.010.410'"
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
     </section>
@@ -74,11 +74,11 @@
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
       <!-- Internacional  -->
-      <sgi-cvn-field fxFlex="66%" fxFlex.sm="99%" [campoCVN]="'INTERNACIONAL'"
+      <sgi-cvn-field fxFlex="33%" fxFlex.sm="99%" [campoCVN]="'INTERNACIONAL'"
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
       <!-- Interdisciplinar  -->
-      <sgi-cvn-field fxFlex="33%" fxFlex.sm="99%" [campoCVN]="'INTERDISCIPLINAR'"
+      <sgi-cvn-field fxFlex="66%" fxFlex.sm="99%" [campoCVN]="'INTERDISCIPLINAR'"
         [campoProduccionCientificaMap]="camposMap" [getValoresCampoFn]="formPart.getValoresCampo$">
       </sgi-cvn-field>
     </section>
@@ -156,7 +156,7 @@
 
         <div class="mat-elevation-z4">
           <table aria-describedby="autores-description" mat-table [dataSource]="autorDataSource" matSort
-            matSortActive="firma" matSortDirection="asc" matSortDisableClear #sortAutor="matSort">
+            matSortActive="posicion" matSortDirection="asc" matSortDisableClear #sortAutor="matSort">
 
             <!-- Firma Column -->
             <ng-container matColumnDef="firma">

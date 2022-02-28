@@ -35,12 +35,12 @@ export enum Cuartil {
 }
 
 export enum TipoFuenteImpacto {
-  /** WOS */
-  E000 = '000',
-  /** JCR */
-  E010 = 'JCR',
+  /** WOS (JCR) */
+  WOS_JCR = '000',
+  /** SCOPUS (SJR) */
+  SCOPUS_SJR = '010',
   /** INRECS */
-  E020 = 'INRECS',
+  INRECS = '020',
   /** BCI */
   BCI = 'BCI',
   /** ICEE */
@@ -65,4 +65,21 @@ export enum TipoFuenteImpacto {
   OTHERS = 'OTHERS'
 }
 
-export const MSG_TIPO_FUENTE_IMPACTO_OTHERS = marker('prc.indice-impacto.tipo-fuente.OTHERS');
+export const TIPO_FUENTE_IMPACTO_TRANSLATOR_MAP = new Map(Object.entries(TipoFuenteImpacto).map(([key, value]) => [value.toString(), key]));
+
+export const TIPO_FUENTE_IMPACTO_MAP: Map<TipoFuenteImpacto, string> = new Map([
+  [TipoFuenteImpacto.WOS_JCR, marker('prc.indice-impacto.tipo-fuente-impacto.WOS_JCR')],
+  [TipoFuenteImpacto.SCOPUS_SJR, marker('prc.indice-impacto.tipo-fuente-impacto.SCOPUS_SJR')],
+  [TipoFuenteImpacto.INRECS, marker('prc.indice-impacto.tipo-fuente-impacto.INRECS')],
+  [TipoFuenteImpacto.BCI, marker('prc.indice-impacto.tipo-fuente-impacto.BCI')],
+  [TipoFuenteImpacto.ICEE, marker('prc.indice-impacto.tipo-fuente-impacto.ICEE')],
+  [TipoFuenteImpacto.DIALNET, marker('prc.indice-impacto.tipo-fuente-impacto.DIALNET')],
+  [TipoFuenteImpacto.CITEC, marker('prc.indice-impacto.tipo-fuente-impacto.CITEC')],
+  [TipoFuenteImpacto.SCIMAGO, marker('prc.indice-impacto.tipo-fuente-impacto.SCIMAGO')],
+  [TipoFuenteImpacto.ERIH, marker('prc.indice-impacto.tipo-fuente-impacto.ERIH')],
+  [TipoFuenteImpacto.MIAR, marker('prc.indice-impacto.tipo-fuente-impacto.MIAR')],
+  [TipoFuenteImpacto.FECYT, marker('prc.indice-impacto.tipo-fuente-impacto.FECYT')],
+  [TipoFuenteImpacto.GII_GRIN_SCIE, marker('prc.indice-impacto.tipo-fuente-impacto.GII_GRIN_SCIE')],
+  [TipoFuenteImpacto.CORE, marker('prc.indice-impacto.tipo-fuente-impacto.CORE')],
+  [TipoFuenteImpacto.OTHERS, marker('prc.indice-impacto.tipo-fuente-impacto.OTHERS')],
+]);

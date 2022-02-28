@@ -12,6 +12,7 @@ import { PublicacionDatosGeneralesComponent } from './publicacion-formulario/pub
 import { PublicacionEditarComponent } from './publicacion-editar/publicacion-editar.component';
 import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
 import { PrcSharedModule } from '../shared/prc-shared.module';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 
 @NgModule({
   declarations: [PublicacionListadoComponent, PublicacionDatosGeneralesComponent, PublicacionEditarComponent],
@@ -25,7 +26,8 @@ import { PrcSharedModule } from '../shared/prc-shared.module';
     FormsModule,
     SgiAuthModule,
     SgpSharedModule,
-    PrcSharedModule
+    PrcSharedModule,
+    CspSharedModule
   ],
   providers: [
     ProduccionCientificaResolver

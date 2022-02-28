@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Cuartil, IIndiceImpacto, MSG_TIPO_FUENTE_IMPACTO_OTHERS, TipoFuenteImpacto } from '@core/models/prc/indice-impacto';
+import {
+  Cuartil, IIndiceImpacto, TipoFuenteImpacto,
+  TIPO_FUENTE_IMPACTO_MAP, TIPO_FUENTE_IMPACTO_TRANSLATOR_MAP
+} from '@core/models/prc/indice-impacto';
 import { TranslateService } from '@ngx-translate/core';
 
 const Q1_CUARTIL_UPPER_LIMIT = 25;
@@ -35,18 +38,30 @@ export class IndiceImpactoTransformService {
       if (caltulatedCuartil > Q3_CUARTIL_UPPER_LIMIT) {
         return Cuartil.Q4;
       }
+    } else {
+      return '';
     }
   }
 
-  transformFuenteImpacto(indiceImpacto): string {
+  transformFuenteImpacto(indiceImpacto: IIndiceImpacto): string {
     if (!indiceImpacto) {
       return '';
     }
-    if (indiceImpacto.tipoFuenteImpacto === TipoFuenteImpacto.OTHERS) {
-      const othersMsg = this.translateService.instant(MSG_TIPO_FUENTE_IMPACTO_OTHERS);
-      return typeof indiceImpacto.otraFuenteImpacto === 'string' ?
-        othersMsg + ' - ' + indiceImpacto.otraFuenteImpacto : othersMsg;
+    /*
+      El back devuelve un String como fuente de impacto que está relacionado con el enum TipoFuenteImpacto
+      y es necesario obtener el valor correspondiente del enum para poder hacer la traducción.
+    */
+    const tipoFuenteImpactoEnumValue = TipoFuenteImpacto[TIPO_FUENTE_IMPACTO_TRANSLATOR_MAP.get(indiceImpacto.tipoFuenteImpacto)];
+    // Sino tiene una correspondencia con algún valor del enum no se puede traducir y se devuelve directamente el valor
+    if (!tipoFuenteImpactoEnumValue) {
+      return indiceImpacto.tipoFuenteImpacto;
     }
-    return indiceImpacto.tipoFuenteImpacto;
+    const tipoFuenteImpactoTranslated = this.translateService.instant(TIPO_FUENTE_IMPACTO_MAP.get(tipoFuenteImpactoEnumValue));
+    if (tipoFuenteImpactoEnumValue === TipoFuenteImpacto.OTHERS) {
+
+      return typeof indiceImpacto.otraFuenteImpacto === 'string' ?
+        tipoFuenteImpactoTranslated + ' - ' + indiceImpacto.otraFuenteImpacto : tipoFuenteImpactoTranslated;
+    }
+    return tipoFuenteImpactoTranslated;
   }
 }

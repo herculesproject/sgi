@@ -10,6 +10,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from 'src/app/module/csp/shared/csp-shared.module';
 
 import { PublicacionListadoComponent } from './publicacion-listado.component';
 
@@ -32,7 +33,8 @@ describe('PublicacionListadoComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         SharedModule,
-        SgpSharedModule
+        SgpSharedModule,
+        CspSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
