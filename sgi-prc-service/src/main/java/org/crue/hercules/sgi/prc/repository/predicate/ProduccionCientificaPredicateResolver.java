@@ -16,6 +16,8 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.crue.hercules.sgi.prc.model.Autor;
+import org.crue.hercules.sgi.prc.model.AutorGrupo;
+import org.crue.hercules.sgi.prc.model.AutorGrupo_;
 import org.crue.hercules.sgi.prc.model.Autor_;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
@@ -82,7 +84,9 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
     /* Fecha esstado */
     FECHA_ESTADO("fechaEstado"),
     /* ISSB/ISBN */
-    ISBN("isbn");
+    ISBN("isbn"),
+    /* Grupo investigación */
+    GRUPO_INVESTIGACION("grupoInvestigacion");
 
     private String code;
 
@@ -277,6 +281,46 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
             cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.RECHAZADO)));
   }
 
+  private Predicate buildByGrupoInvestigacion(ComparisonNode node, Root<ProduccionCientifica> root,
+      CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    ComparisonOperator operator = node.getOperator();
+    if (!operator.equals(RSQLOperators.EQUAL)) {
+      // Unsupported Operator
+      throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator + FOR + node.getSelector());
+    }
+    if (node.getArguments().size() != 1) {
+      // Bad number of arguments
+      throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
+    }
+
+    String grupoRef = node.getArguments().get(0);
+
+    Subquery<Long> queryGrupoInvestigador = getSubqueryAutorGrupo(cb, query, root.get(ProduccionCientifica_.id),
+        grupoRef);
+    return cb.and(cb.exists(queryGrupoInvestigador));
+  }
+
+  private Subquery<Long> getSubqueryAutorGrupo(CriteriaBuilder cb, CriteriaQuery<?> cq,
+      Path<Long> rootProduccionCientificaId, String grupoRef) {
+    List<Predicate> predicatesSubquery = new ArrayList<>();
+
+    Subquery<Long> queryAutorGrupo = cq.subquery(Long.class);
+    Root<AutorGrupo> subqRoot = queryAutorGrupo.from(AutorGrupo.class);
+
+    Join<AutorGrupo, Autor> joinAutor = subqRoot.join(AutorGrupo_.autor);
+
+    predicatesSubquery
+        .add(cb.and(cb.equal(joinAutor.get(Autor_.produccionCientificaId), rootProduccionCientificaId)));
+    predicatesSubquery
+        .add(cb.and(cb.equal(subqRoot.get(AutorGrupo_.grupoRef), grupoRef)));
+
+    queryAutorGrupo.select(subqRoot.get(AutorGrupo_.id))
+        .where(predicatesSubquery.toArray(new Predicate[] {}));
+
+    return queryAutorGrupo;
+  }
+
   private Subquery<String> buildSubqueryValorCampoProduccionCientifica(CriteriaBuilder cb, CriteriaQuery<?> cq,
       Path<Long> rootProduccionCientificaId, CodigoCVN codigoCVN, ComparisonOperator operator, String valor) {
     List<Predicate> predicatesSubquery = new ArrayList<>();
@@ -346,6 +390,8 @@ public class ProduccionCientificaPredicateResolver implements SgiRSQLPredicateRe
           return buildByISBN(node, root, query, criteriaBuilder);
         case FECHA_ESTADO:
           return buildByFechaEstado(node, root, query, criteriaBuilder);
+        case GRUPO_INVESTIGACION:
+          return buildByGrupoInvestigacion(node, root, query, criteriaBuilder);
         default:
           return null;
       }
