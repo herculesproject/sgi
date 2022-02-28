@@ -3,65 +3,28 @@
   <changeSet context="dev" author="master" id="0000000000002-documento">
     <insert tableName="documento">
       <column name="documento_ref" value="sample-txt" />
-      <column name="autor_ref" type="admin"/>
+      <column name="autor_ref" type="admin" />
       <column name="fecha_creacion" valueDate="current_timestamp()" />
-      <column name="nombre" value="sample.txt"/>
-      <column name="tipo" value="text/plain"/>
-      <column name="version" valueNumeric="1"/>
+      <column name="nombre" value="sample.txt" />
+      <column name="tipo" value="text/plain" />
+      <column name="version" valueNumeric="1" />
     </insert>
     <insert tableName="documento">
       <column name="documento_ref" value="sample-pdf" />
-      <column name="autor_ref" type="admin"/>
+      <column name="autor_ref" type="admin" />
       <column name="fecha_creacion" valueDate="current_timestamp()" />
-      <column name="nombre" value="sample.pdf"/>
-      <column name="tipo" value="application/pdf"/>
-      <column name="version" valueNumeric="1"/>
+      <column name="nombre" value="sample.pdf" />
+      <column name="tipo" value="application/pdf" />
+      <column name="version" valueNumeric="1" />
     </insert>
     <insert tableName="documento">
       <column name="documento_ref" value="sample-jpg" />
-      <column name="autor_ref" type="admin"/>
+      <column name="autor_ref" type="admin" />
       <column name="fecha_creacion" valueDate="current_timestamp()" />
-      <column name="nombre" value="sample.jpg"/>
-      <column name="tipo" value="image/jpeg"/>
-      <column name="version" valueNumeric="1"/>
+      <column name="nombre" value="sample.jpg" />
+      <column name="tipo" value="image/jpeg" />
+      <column name="version" valueNumeric="1" />
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000002-archivo">
-    <insert tableName="archivo">
-      <column name="id" valueSequenceNext="archivo_seq" />
-      <column name="documento_ref" value="sample-txt" />
-    </insert>
-    <update tableName="archivo">
-      <column name="archivo" valueBlobFile="sample-blob/sample.txt" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="id" valueComputed="(select max(id) from ${schemaPrefix}archivo)" />
-      </whereParams>
-    </update>
-
-    <insert tableName="archivo">
-      <column name="id" valueSequenceNext="archivo_seq" />
-      <column name="documento_ref" value="sample-pdf" />
-    </insert>
-    <update tableName="archivo">
-      <column name="archivo" valueBlobFile="sample-blob/sample.pdf" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="id" valueComputed="(select max(id) from ${schemaPrefix}archivo)" />
-      </whereParams>
-    </update>
-
-    <insert tableName="archivo">
-      <column name="id" valueSequenceNext="archivo_seq" />
-      <column name="documento_ref" value="sample-jpg" />
-    </insert>
-    <update tableName="archivo">
-      <column name="archivo" valueBlobFile="sample-blob/sample.jpg" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="id" valueComputed="(select max(id) from ${schemaPrefix}archivo)" />
-      </whereParams>
-    </update>
-  </changeSet>
 </databaseChangeLog>

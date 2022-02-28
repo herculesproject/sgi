@@ -4,11 +4,20 @@ server:
     whitelabel:
       # Disble the default error page displayed in browsers in case of a server error
       enabled: false
-
+sgi:
+  store:
+    # System path where store resources
+    path: "/tmp/store"
 spring:
   profiles:
     # Set spring-profile using maven
     active: @spring.profiles.active@
+  servlet:
+    multipart:
+      # Increase max file input size (Default: 128KB)
+      max-file-size: 10MB
+      # Increase max request size (Default: 128KB)
+      max-request-size: 10MB
   datasource:
     # Make sure database schema is created (schema.sql is executed): always/never
     initialization-mode: always

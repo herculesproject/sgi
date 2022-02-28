@@ -5,15 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.crue.hercules.sgi.sgdoc.model.Archivo;
 import org.crue.hercules.sgi.sgdoc.model.Documento;
 import org.crue.hercules.sgi.sgdoc.service.DocumentoService;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,17 +60,11 @@ public class DocumentoController {
     documento.setNombre(archivo.getOriginalFilename());
     documento.setFechaCreacion(LocalDateTime.now());
     documento.setAutorRef("anonymous");
-
-    Archivo archivoDocumento = null;
-    try {
-      archivoDocumento = Archivo.builder().archivo(archivo.getBytes()).build();
-    } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
     documento.setVersion(1);
+
     String[] contentType = (archivo.getContentType().split(";"));
     documento.setTipo(contentType[0]);
-    Documento documentoCreado = service.create(documento, archivoDocumento);
+    Documento documentoCreado = service.create(documento, archivo.getResource());
 
     log.debug("create(MultipartFile archivo) - end");
 
@@ -115,23 +108,30 @@ public class DocumentoController {
   }
 
   /**
-   * Devuelve el {@link Archivo} del {@link Documento} con el id indicado.
+   * Devuelve el {@link Resource} del {@link Documento} con el id indicado.
    * 
    * @param id Identificador de {@link Documento}.
-   * @return {@link Archivo} correspondiente al id del {@link Documento}.
+   * @return {@link Resource} correspondiente al id del {@link Documento}.
    */
   @GetMapping("/{id}/archivo")
   public ResponseEntity<Resource> findDocumentoArchivo(@PathVariable String id) {
     log.debug("findDocumentoArchivo(String id) - start");
 
-    Archivo archivo = service.findArchivoByDocumentoId(id);
-    ByteArrayResource archivoByte = new ByteArrayResource(archivo.getArchivo());
+    Documento documento = service.findById(id);
+
+    Resource resource = service.getDocumentoResource(documento);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", archivo.getDocumento().getTipo());
+
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + documento.getNombre() + "\"");
+    ResponseEntity<Resource> response = ResponseEntity.ok().headers(headers)
+        .contentType(
+            MediaType.parseMediaType(documento.getTipo()))
+        .body(resource);
 
     log.debug("findDocumentoArchivo(String id) - end");
-    return new ResponseEntity<>(archivoByte, headers, HttpStatus.OK);
+
+    return response;
   }
 
   /**

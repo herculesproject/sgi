@@ -1,18 +1,22 @@
 package org.crue.hercules.sgi.sgdoc.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.sgdoc.config.StoreProperties;
 import org.crue.hercules.sgi.sgdoc.exceptions.ArchivoNotFoundException;
 import org.crue.hercules.sgi.sgdoc.exceptions.DocumentoNotFoundException;
-import org.crue.hercules.sgi.sgdoc.model.Archivo;
 import org.crue.hercules.sgi.sgdoc.model.Documento;
-import org.crue.hercules.sgi.sgdoc.repository.ArchivoRepository;
 import org.crue.hercules.sgi.sgdoc.repository.DocumentoRepository;
 import org.crue.hercules.sgi.sgdoc.repository.specification.DocumentoSpecifications;
+import org.crue.hercules.sgi.sgdoc.utils.StoreUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,23 +39,23 @@ public class DocumentoService {
 
   /** Documento repository */
   private final DocumentoRepository repository;
-  /** Archivo repository */
-  private final ArchivoRepository archivoRepository;
+  /** Store Properties */
+  private final StoreProperties storeProperties;
 
-  public DocumentoService(DocumentoRepository repository, ArchivoRepository archivoRepository) {
+  public DocumentoService(DocumentoRepository repository, StoreProperties storeProperties) {
     this.repository = repository;
-    this.archivoRepository = archivoRepository;
+    this.storeProperties = storeProperties;
   }
 
   /**
    * Guarda la entidad {@link Documento}.
    *
    * @param documento la entidad {@link Documento} a guardar.
-   * @param archivo   el {@link Archivo} del {@link Documento}.
+   * @param file      el {@link Resource} del {@link Documento}.
    * @return la entidad {@link Documento} persistida.
    */
   @Transactional
-  public Documento create(Documento documento, Archivo archivo) {
+  public Documento create(Documento documento, Resource file) {
     log.debug("create(Documento documento) - start");
 
     Assert.isNull(documento.getDocumentoRef(),
@@ -65,8 +69,18 @@ public class DocumentoService {
 
     Documento returnValue = repository.save(documento);
 
-    archivo.setDocumento(returnValue);
-    archivoRepository.save(archivo);
+    try {
+      File fileStore = StoreUtils.getResource(storeProperties.getPath(), documento).getFile();
+
+      fileStore.getParentFile().mkdirs();
+      if (!fileStore.exists()) {
+        Files.copy(file.getInputStream(), fileStore.toPath());
+      } else {
+        throw new IllegalArgumentException("File exist!");
+      }
+    } catch (IOException io) {
+      throw new RuntimeException(io);
+    }
 
     log.debug("create(Documento documento) - end");
 
@@ -89,12 +103,19 @@ public class DocumentoService {
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(Documento.class))
             .build());
 
-    if (!repository.existsById(id)) {
-      throw new DocumentoNotFoundException(id);
+    Documento documento = repository.findById(id).orElseThrow(() -> new DocumentoNotFoundException(id));
+
+    repository.deleteById(id);
+
+    Resource file = StoreUtils.getResource(storeProperties.getPath(), documento);
+    if (file.exists() && !documento.getDocumentoRef().startsWith(StoreUtils.SAMPLE_DATA_PREFIX)) {
+      try {
+        file.getFile().delete();
+      } catch (IOException io) {
+        throw new RuntimeException(io);
+      }
     }
 
-    archivoRepository.deleteByDocumentoDocumentoRef(id);
-    repository.deleteById(id);
     log.debug("delete(String id) - end");
   }
 
@@ -153,17 +174,16 @@ public class DocumentoService {
   }
 
   /**
-   * Devuelve el {@link Archivo} del {@link Documento} con el id indicado.
+   * Devuelve el {@link Resource} del {@link Documento} con el id indicado.
    * 
-   * @param documentoId Identificador de {@link Documento}.
-   * @return {@link Archivo} correspondiente al id del {@link Documento}.
+   * @return {@link Resource} correspondiente al id del {@link Documento}.
    */
-  public Archivo findArchivoByDocumentoId(String documentoId) {
-    log.debug("findArchivoByDocumentoId(String documentoId) - start");
-    Archivo returnValue = archivoRepository.findByDocumentoDocumentoRef(documentoId)
-        .orElseThrow(() -> new ArchivoNotFoundException(documentoId));
-    log.debug("findArchivoByDocumentoId(String documentoId) - end");
-    return returnValue;
-  }
+  public Resource getDocumentoResource(Documento documento) {
+    Resource resource = StoreUtils.getResource(storeProperties.getPath(), documento);
 
+    if (!resource.exists()) {
+      throw new ArchivoNotFoundException(documento.getDocumentoRef());
+    }
+    return resource;
+  }
 }
