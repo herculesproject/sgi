@@ -45,6 +45,14 @@
 
     <!-- Formulario para Investigador-->
     <ng-container *ngIf="this.formPart.isInvestigador">
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFill
+          *ngIf="!formGroup.controls.convocatoria.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-convocatoria' | translate}}
+        </div>
+      </div>
       <!--Convocatoria-->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <mat-form-field fxFlex="50%">
@@ -54,12 +62,7 @@
           </sgi-select-convocatoria>
         </mat-form-field>
         <!-- Datos Convocatoria -->
-        <div
-          *ngIf="!formGroup.controls.convocatoria.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
-          class="info-message">
-          <mat-icon class="info-icon">info</mat-icon>
-          {{'csp.autorizacion.info-datos-convocatoria' | translate}}
-        </div>
+
 
         <mat-form-field fxFlex="50%">
           <mat-label>{{'csp.autorizacion.datos-convocatoria' | translate}}</mat-label>
@@ -69,6 +72,15 @@
             {{ 'error.maxlength.entity' | translate:msgParamDatosConvocatoriaEntity }}
           </mat-error>
         </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFill
+          *ngIf="!formGroup.controls.entidadParticipa.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-entidad' | translate}}
+        </div>
       </div>
 
       <!-- Entidad con la que participa -->
@@ -85,12 +97,6 @@
           </mat-error>
         </mat-form-field>
         <!-- Datos de la entidad con la que participa  -->
-        <div
-          *ngIf="!formGroup.controls.entidadParticipa.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
-          class="info-message">
-          <mat-icon class="info-icon">info</mat-icon>
-          {{'csp.autorizacion.info-datos-entidad' | translate}}
-        </div>
 
         <mat-form-field fxFlex="50%">
           <mat-label>{{'csp.autorizacion.datos-entidad' | translate}}</mat-label>
@@ -104,7 +110,14 @@
           </mat-error>
         </mat-form-field>
       </div>
-
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFill
+          *ngIf="!formGroup.controls.investigadorPrincipalProyecto.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-investigador'|translate}}
+        </div>
+      </div>
       <!-- Investigador Principal-->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <mat-form-field fxFlex="50%">
@@ -118,13 +131,6 @@
         </mat-form-field>
 
         <!-- Datos Ip Proyecto -->
-        <div
-          *ngIf="!formGroup.controls.investigadorPrincipalProyecto.value && (formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
-          class="info-message">
-          <mat-icon class="info-icon">info</mat-icon>
-          {{'csp.autorizacion.info-datos-investigador'|translate}}
-        </div>
-
         <mat-form-field fxFlex="50%">
           <mat-label>{{'csp.autorizacion.datos-ip-proyecto' | translate}}</mat-label>
           <input matInput formControlName="datosIpProyecto" type="text" id="datosIpProyecto"
@@ -139,14 +145,16 @@
         </mat-form-field>
       </div>
 
-      <!-- Horas dedicacion -->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
-
-        <div *ngIf="(formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())" class="info-message">
+        <div fxFill *ngIf="(formGroup.controls.estado.value == 'BORRADOR' || !this.formPart.isEdit())"
+          class="info-message">
           <mat-icon class="info-icon">info</mat-icon>
           {{'csp.autorizacion.info-horas-dedicacion' | translate}}
         </div>
+      </div>
 
+      <!-- Horas dedicacion -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <mat-form-field fxFlex="33%">
           <mat-label>{{'csp.autorizacion.horas-dedicacion' | translate}}</mat-label>
           <input matInput formControlName="horasDedicacion" type="number" id="horasDedicacion"
