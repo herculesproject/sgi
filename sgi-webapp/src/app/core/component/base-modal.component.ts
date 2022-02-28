@@ -34,7 +34,7 @@ export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
    */
   saveOrUpdate(): void {
     this.formGroup.markAllAsTouched();
-    if (this.formGroup.valid) {
+    if (this.formGroup.valid || this.formGroup.disabled) {
       this.matDialogRef.close(this.getDatosForm());
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
