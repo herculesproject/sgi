@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 import javax.validation.constraints.NotNull;
 
@@ -23,6 +24,8 @@ public class EstadoAutorizacionInput implements Serializable {
   private Long autorizacionId;
 
   private String comentario;
+
+  private Instant fecha;
 
   @NotNull
   private Estado estado;

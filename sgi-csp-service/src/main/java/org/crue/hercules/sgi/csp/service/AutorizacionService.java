@@ -271,10 +271,12 @@ public class AutorizacionService {
       throw new AlreadyInEstadoAutorizacionException();
     }
 
-    Instant fechaActual = Instant.now();
+    if (estadoAutorizacion.getFecha() == null) {
+      Instant fechaActual = Instant.now();
+      estadoAutorizacion.setFecha(fechaActual);
+    }
 
     // Se cambia el estado del proyecto
-    estadoAutorizacion.setFecha(fechaActual);
     estadoAutorizacion = estadoAutorizacionRepository.save(estadoAutorizacion);
     autorizacion.setEstado(estadoAutorizacion);
 
