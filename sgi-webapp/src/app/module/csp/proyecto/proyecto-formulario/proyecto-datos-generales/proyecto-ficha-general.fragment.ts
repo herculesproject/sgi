@@ -136,7 +136,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }),
       switchMap((proyecto) => {
         if (proyecto.convocatoriaId) {
-          return this.convocatoriaService.findById(proyecto.convocatoriaId).pipe(
+          const convocatoria$ = this.isInvestigador ?
+            this.service.findConvocatoria(proyecto.id) : this.convocatoriaService.findById(proyecto.convocatoriaId);
+          return convocatoria$.pipe(
             map(convocatoria => {
               proyecto.convocatoria = convocatoria;
               return proyecto;
@@ -496,7 +498,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.getFormGroup().controls.convocatoriaExterna.disable();
     }
 
-    if (proyecto.convocatoria) {
+    if (proyecto.convocatoria && !this.isInvestigador) {
       this.finalidadConvocatoria = proyecto.convocatoria.finalidad;
       this.ambitoGeograficoConvocatoria = proyecto.convocatoria.ambitoGeografico;
       this.modeloEjecucionConvocatoria = proyecto.convocatoria.modeloEjecucion;
