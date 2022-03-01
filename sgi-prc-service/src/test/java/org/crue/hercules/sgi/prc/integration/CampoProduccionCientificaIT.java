@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.CampoProduccionCientificaController;
 import org.crue.hercules.sgi.prc.dto.CampoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.CampoProduccionCientificaOutput;
+import org.crue.hercules.sgi.prc.dto.ValorCampoOutput;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,16 +30,17 @@ public class CampoProduccionCientificaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = CampoProduccionCientificaController.MAPPING;
+  private static final String PATH_VALORES = CampoProduccionCientificaController.PATH_VALORES;
 
   private HttpEntity<CampoProduccionCientificaInput> buildRequest(HttpHeaders headers,
-      CampoProduccionCientificaInput entity)
+      CampoProduccionCientificaInput entity, String... roles)
       throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
         String.format("bearer %s",
-            tokenBuilder.buildToken("user", "AUTH")));
+            tokenBuilder.buildToken("user", roles)));
 
     HttpEntity<CampoProduccionCientificaInput> request = new HttpEntity<>(entity, headers);
     return request;
@@ -163,6 +165,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void findAll_WithPagingSortingAndFiltering_ReturnsCampoProduccionCientificaSubList() throws Exception {
+    String[] roles = { "PRC-VAL-V" };
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -176,7 +179,7 @@ public class CampoProduccionCientificaIT extends BaseIT {
         .toUri();
 
     final ResponseEntity<List<CampoProduccionCientificaOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<CampoProduccionCientificaOutput>>() {
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<CampoProduccionCientificaOutput>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -199,6 +202,53 @@ public class CampoProduccionCientificaIT extends BaseIT {
     campoProduccionCientifica.setCodigo(CodigoCVN.E060_010_010_010.getInternValue());
     campoProduccionCientifica.setProduccionCientificaId(1L);
     return campoProduccionCientifica;
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+      "classpath:scripts/produccion_cientifica.sql",
+      "classpath:scripts/campo_produccion_cientifica.sql",
+      "classpath:scripts/valor_campo.sql",
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findValores_WithPagingAndSorting_ReturnsValorCampoOutputSubList()
+      throws Exception {
+    String[] roles = { "PRC-VAL-V" };
+    final Long campoProduccionCientificaId = 1L;
+    // first page, 3 elements per page sorted
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,asc";
+
+    // when: find ValorCampo
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_VALORES)
+        .queryParam("s", sort)
+        .buildAndExpand(campoProduccionCientificaId).toUri();
+
+    final ResponseEntity<List<ValorCampoOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET,
+        buildRequest(headers, null, roles),
+        new ParameterizedTypeReference<List<ValorCampoOutput>>() {
+        });
+
+    // given: ValorCampo data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ValorCampoOutput> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(1);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
+
+    Assertions.assertThat(responseData.get(0)).isNotNull();
+
+    Assertions.assertThat(responseData.get(0).getValor())
+        .as("get(0).getValor()")
+        .isEqualTo("Título de la publicación1");
   }
 
 }

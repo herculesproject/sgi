@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.ValorCampoSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -167,6 +168,29 @@ public class ValorCampoService {
     log.debug("findAllByCampoProduccionCientificaId(Long campoProduccionCientificaId)  - start");
     final List<ValorCampo> returnValue = repository.findAllByCampoProduccionCientificaId(campoProduccionCientificaId);
     log.debug("findAllByCampoProduccionCientificaId(Long campoProduccionCientificaId)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link ValorCampo} por su campoProduccionCientificaId
+   * paginadas y/o filtradas.
+   *
+   * @param campoProduccionCientificaId el id de
+   *                                    {@link CampoProduccionCientifica}.
+   * @param query                       la información del filtro.
+   * @param pageable                    la información de la paginación.
+   * @return listado de {@link ValorCampo} paginadas y/o filtradas.
+   */
+  public Page<ValorCampo> findAllByCampoProduccionCientificaId(Long campoProduccionCientificaId, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllByCampoProduccionCientificaId(Long campoProduccionCientificaId, String query, Pageable pageable) - start");
+    Specification<ValorCampo> specs = ValorCampoSpecifications.byCampoProduccionCientificaId(
+        campoProduccionCientificaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+    final Page<ValorCampo> returnValue = repository.findAll(specs, pageable);
+    log.debug(
+        "findAllByCampoProduccionCientificaId(Long campoProduccionCientificaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 
