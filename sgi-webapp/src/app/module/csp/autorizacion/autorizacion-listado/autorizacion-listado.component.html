@@ -62,13 +62,13 @@
       </div>
     </form>
 
-    <table mat-table [dataSource]="autorizaciones$ | async" matSort matSortActive="estado.fecha" matSortDirection="desc"
-      matSortDisableClear>
+    <table mat-table [dataSource]="autorizaciones$ | async" matSort matSortActive="fechaFirstEstado"
+      matSortDirection="desc" matSortDisableClear>
 
       <!-- Fecha Solicitud -->
-      <ng-container matColumnDef="fechaSolicitud">
+      <ng-container matColumnDef="fechaFirstEstado">
         <th mat-header-cell *matHeaderCellDef> {{'csp.autorizacion.fecha-solicitud' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.fechaFirstEstado | luxon:'shortDate'}}
+        <td mat-cell *matCellDef="let element"> {{element.autorizacion.fechaFirstEstado | luxon:'shortDate'}}
         </td>
       </ng-container>
 

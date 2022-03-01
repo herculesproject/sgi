@@ -4,9 +4,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
-import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { IAutorizacionWithFirstEstado } from '@core/models/csp/autorizacion-with-first-estado';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
-import { Estado, ESTADO_MAP, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
+import { ESTADO_MAP, IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -24,7 +24,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, forkJoin, from, merge, Observable, of, Subscription } from 'rxjs';
+import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
@@ -41,14 +41,13 @@ const PROYECTO_KEY = marker('csp.proyecto');
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 export interface IAutorizacionListado {
-  autorizacion: IAutorizacion;
+  autorizacion: IAutorizacionWithFirstEstado;
   estadoAutorizacion: IEstadoAutorizacion;
   fechaEstado: DateTime;
   entidadPaticipacionNombre: string;
   certificadoVisible: ICertificadoAutorizacion;
   proyectoId: number;
   notificacionId: number;
-  fechaFirstEstado: DateTime;
 }
 
 @Component({
@@ -194,8 +193,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
             estadoAutorizacion: {} as IEstadoAutorizacion,
             fechaEstado: null,
             entidadPaticipacionNombre: null,
-            certificadoVisible: null,
-            fechaFirstEstado: null,
+            certificadoVisible: null
           } as IAutorizacionListado;
         });
         return {
@@ -220,17 +218,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                   autorizacionListado.estadoAutorizacion = estadoAutorizacion;
                   autorizacionListado.fechaEstado = estadoAutorizacion.fecha;
 
-                  return autorizacionListado;
-                })
-              );
-            }
-            return of(autorizacionListado);
-          }),
-          mergeMap(autorizacionListado => {
-            if (autorizacionListado.autorizacion.id) {
-              return this.autorizacionService.findFirstEstado(autorizacionListado.autorizacion.id).pipe(
-                map(firstEstado => {
-                  autorizacionListado.fechaFirstEstado = firstEstado.fecha;
                   return autorizacionListado;
                 })
               );
@@ -306,11 +293,11 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
 
   protected initColumns(): void {
     this.columnas = [
-      'fechaSolicitud', 'tituloProyecto', 'entidadParticipacion', 'estado',
+      'fechaFirstEstado', 'tituloProyecto', 'entidadParticipacion', 'estado',
       'fechaEstado', 'acciones'
     ];
     this.columnasGestor = [
-      'fechaSolicitud', 'solicitante', 'tituloProyecto', 'entidadParticipacion', 'estado',
+      'fechaFirstEstado', 'solicitante', 'tituloProyecto', 'entidadParticipacion', 'estado',
       'fechaEstado', 'acciones'
     ];
   }

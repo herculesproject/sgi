@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DOCUMENTO_CONVERTER } from '@core/converters/sgdoc/documento.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
+import { IAutorizacionWithFirstEstado } from '@core/models/csp/autorizacion-with-first-estado';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
@@ -24,24 +25,23 @@ import { IAutorizacionRequest } from './autorizacion-request';
 import { AUTORIZACION_REQUEST_CONVERTER } from './autorizacion-request.converter';
 import { IAutorizacionResponse } from './autorizacion-response';
 import { AUTORIZACION_RESPONSE_CONVERTER } from './autorizacion-response.converter';
+import { AUTORIZACION_WITH_FIRST_ESTADO_RESPONSE_CONVERTER } from './autorizacion-with-first-estado-response.converter';
+import { IAutorizacionWithFirstEstadoResponse } from './autorizacionWithFirstEstadoResponse';
 
 // tslint:disable-next-line: variable-name
 const _AutorizacionMixinBase:
   CreateCtor<IAutorizacion, IAutorizacion, IAutorizacionRequest, IAutorizacionResponse> &
   UpdateCtor<number, IAutorizacion, IAutorizacion, IAutorizacionRequest, IAutorizacionResponse> &
   FindByIdCtor<number, IAutorizacion, IAutorizacionResponse> &
-  FindAllCtor<IAutorizacion, IAutorizacionResponse> &
-  typeof SgiRestBaseService = mixinFindAll(
-    mixinFindById(
-      mixinUpdate(
-        mixinCreate(
-          SgiRestBaseService,
-          AUTORIZACION_REQUEST_CONVERTER,
-          AUTORIZACION_RESPONSE_CONVERTER
-        ),
+  typeof SgiRestBaseService =
+  mixinFindById(
+    mixinUpdate(
+      mixinCreate(
+        SgiRestBaseService,
         AUTORIZACION_REQUEST_CONVERTER,
         AUTORIZACION_RESPONSE_CONVERTER
       ),
+      AUTORIZACION_REQUEST_CONVERTER,
       AUTORIZACION_RESPONSE_CONVERTER
     ),
     AUTORIZACION_RESPONSE_CONVERTER
@@ -153,11 +153,23 @@ export class AutorizacionService extends _AutorizacionMixinBase {
    *
    * @param options opciones de búsqueda.
    */
-  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAutorizacion>> {
-    return this.find<IAutorizacionResponse, IAutorizacion>(
+  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAutorizacionWithFirstEstado>> {
+    return this.find<IAutorizacionWithFirstEstadoResponse, IAutorizacionWithFirstEstado>(
       `${this.endpointUrl}/investigador`,
       options,
-      AUTORIZACION_RESPONSE_CONVERTER);
+      AUTORIZACION_WITH_FIRST_ESTADO_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Devuelve el listado de autorizaciones que puede ver un investigador
+   *
+   * @param options opciones de búsqueda.
+   */
+  findAll(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAutorizacionWithFirstEstado>> {
+    return this.find<IAutorizacionWithFirstEstadoResponse, IAutorizacionWithFirstEstado>(
+      `${this.endpointUrl}`,
+      options,
+      AUTORIZACION_WITH_FIRST_ESTADO_RESPONSE_CONVERTER);
   }
 
   /**
