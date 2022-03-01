@@ -47,7 +47,7 @@
     <div fxFlex>
       <!-- Aviso -->
       <div fxFlex>
-        <mat-checkbox color="primary" formControlName="generaAviso">
+        <mat-checkbox color="primary" formControlName="generaAviso" [disabled]="!data.canEdit">
           {{'csp.hito.aviso' | translate}}</mat-checkbox>
       </div>
     </div>
