@@ -5,7 +5,7 @@ import javax.validation.constraints.Email;
 /**
  * Exception to throw when there is any problem with the {@link Email} Content.
  */
-public class ContentException extends RuntimeException {
+public class ContentException extends Exception {
 
   public ContentException() {
   }

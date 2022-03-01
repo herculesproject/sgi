@@ -5,9 +5,10 @@ import javax.validation.constraints.Email;
 import org.crue.hercules.sgi.com.model.Param;
 
 /**
- * Exception to throw when there is any problem with some {@link Email} {@link Param}.
+ * Exception to throw when there is any problem with some {@link Email}
+ * {@link Param}.
  */
-public class ParamException extends RuntimeException {
+public class ParamException extends Exception {
 
   public ParamException() {
   }

@@ -13,8 +13,10 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl;
+import org.crue.hercules.sgi.com.exceptions.ContentException;
 import org.crue.hercules.sgi.com.exceptions.ParamException;
 import org.crue.hercules.sgi.com.exceptions.RecipientException;
+import org.crue.hercules.sgi.com.exceptions.SubjectException;
 import org.crue.hercules.sgi.com.exceptions.UnknownParamTypeException;
 import org.crue.hercules.sgi.com.freemarker.FreemarkerEmailTemplateProcessor;
 import org.crue.hercules.sgi.com.model.Attachment;
@@ -85,7 +87,7 @@ public class EmailBuilderService extends BaseService {
         "EmailBuilderService(FreemarkerEmailTemplateProcessor freemarkerEmailTemplateProcessor, RecipientRepository recipientRepository, AttachmentRepository attachmentRepository, EmailParamRepository emailParamRepository, SgiApiInternetAddressesService sgiApiInternetAddressesService, SgiApiDocumentRefsService sgiApiDocumentRefsService, SgiApiEmailParamsService sgiApiEmailParamsService, SgiApiSgdocService sgiApiSgdocService) - end");
   }
 
-  public EmailData build(Email email) {
+  public EmailData build(Email email) throws ContentException, RecipientException, ParamException, SubjectException {
     log.debug("build(Email email) - start");
     Assert.notNull(
         email,
@@ -121,10 +123,12 @@ public class EmailBuilderService extends BaseService {
     return returnValue;
   }
 
-  private List<InternetAddress> getRecipients(Email email) {
+  private List<InternetAddress> getRecipients(Email email) throws RecipientException {
     List<Recipient> recipients = recipientRepository.findByEmailId(email.getId());
-    List<InternetAddress> addresses = recipients.stream().map(this::convertRecipient)
-        .collect(Collectors.toList());
+    List<InternetAddress> addresses = new ArrayList<>();
+    for (Recipient recipient : recipients) {
+      addresses.add(convertRecipient(recipient));
+    }
 
     EmailRecipientDeferrable emailRecipientDeferrable = email.getDeferrableRecipients();
     if (ObjectUtils.isNotEmpty(emailRecipientDeferrable)) {
@@ -133,20 +137,20 @@ public class EmailBuilderService extends BaseService {
         deferredAddresses = sgiApiInternetAddressesService.call(emailRecipientDeferrable.getType(),
             emailRecipientDeferrable.getUrl(),
             emailRecipientDeferrable.getMethod());
-      } catch (RuntimeException e) {
-        e.printStackTrace();
+      } catch (Exception e) {
         throw new RecipientException(e);
       }
       if (CollectionUtils.isNotEmpty(deferredAddresses)) {
-        addresses.addAll(deferredAddresses.stream().map(this::convertRecipient)
-            .collect(Collectors.toList()));
+        for (org.crue.hercules.sgi.com.dto.Recipient recipient : deferredAddresses) {
+          addresses.add(convertRecipient(recipient));
+        }
       }
     }
 
     return addresses;
   }
 
-  private List<DataSource> getAttachments(Email email) {
+  private List<DataSource> getAttachments(Email email) throws ParamException {
     List<String> attachments = attachmentRepository.findByEmailId(email.getId()).stream()
         .map(Attachment::getDocumentRef).collect(Collectors.toList());
 
@@ -157,7 +161,7 @@ public class EmailBuilderService extends BaseService {
         deferredAttachments = sgiApiDocumentRefsService.call(emailAttachmentDeferrable.getType(),
             emailAttachmentDeferrable.getUrl(),
             emailAttachmentDeferrable.getMethod());
-      } catch (RuntimeException e) {
+      } catch (Exception e) {
         throw new ParamException(e);
       }
       attachments.addAll(deferredAttachments);
@@ -175,7 +179,7 @@ public class EmailBuilderService extends BaseService {
     return sgiApiSgdocService.call(documentRef);
   }
 
-  private HashMap<String, Object> getParams(Email email) {
+  private HashMap<String, Object> getParams(Email email) throws ParamException {
     List<EmailParam> params = emailParamRepository.findByPkEmailId(email.getId());
 
     EmailParamDeferrable emailParamDeferrable = email.getDeferrableParams();
@@ -185,7 +189,7 @@ public class EmailBuilderService extends BaseService {
         deferredParams = sgiApiEmailParamsService.call(emailParamDeferrable.getType(),
             emailParamDeferrable.getUrl(),
             emailParamDeferrable.getMethod());
-      } catch (RuntimeException e) {
+      } catch (Exception e) {
         throw new ParamException(e);
       }
       List<EmailParam> defferedEmailParams = convertParams(email.getEmailTpl(), deferredParams);
@@ -201,7 +205,7 @@ public class EmailBuilderService extends BaseService {
     return returnValue;
   }
 
-  private InternetAddress convertRecipient(Recipient recipient) {
+  private InternetAddress convertRecipient(Recipient recipient) throws RecipientException {
     if (recipient.getName() != null) {
       try {
         return new InternetAddress(recipient.getAddress(), recipient.getName());
@@ -212,12 +216,12 @@ public class EmailBuilderService extends BaseService {
     try {
       return new InternetAddress(recipient.getAddress());
     } catch (AddressException e) {
-      e.printStackTrace();
       throw new RecipientException(e);
     }
   }
 
-  private InternetAddress convertRecipient(org.crue.hercules.sgi.com.dto.Recipient recipient) {
+  private InternetAddress convertRecipient(org.crue.hercules.sgi.com.dto.Recipient recipient)
+      throws RecipientException {
     if (recipient.getName() != null) {
       try {
         return new InternetAddress(recipient.getAddress(), recipient.getName());
@@ -228,7 +232,6 @@ public class EmailBuilderService extends BaseService {
     try {
       return new InternetAddress(recipient.getAddress());
     } catch (AddressException e) {
-      e.printStackTrace();
       throw new RecipientException(e);
     }
   }

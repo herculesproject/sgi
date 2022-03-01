@@ -5,7 +5,7 @@ import org.crue.hercules.sgi.com.model.Email;
 /**
  * Exception to throw when there is any problem with the {@link Email} Subject.
  */
-public class SubjectException extends RuntimeException {
+public class SubjectException extends Exception {
 
   public SubjectException() {
   }

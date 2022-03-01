@@ -7,7 +7,7 @@ import org.crue.hercules.sgi.com.model.Recipient;
  * Exception to throw when there is any problem with some {@link Email}
  * {@link Recipient}.
  */
-public class RecipientException extends RuntimeException {
+public class RecipientException extends Exception {
 
   public RecipientException() {
   }

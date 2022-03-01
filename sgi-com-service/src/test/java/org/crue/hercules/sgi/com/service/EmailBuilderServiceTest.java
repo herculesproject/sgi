@@ -3,6 +3,10 @@ package org.crue.hercules.sgi.com.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.com.exceptions.ContentException;
+import org.crue.hercules.sgi.com.exceptions.ParamException;
+import org.crue.hercules.sgi.com.exceptions.RecipientException;
+import org.crue.hercules.sgi.com.exceptions.SubjectException;
 import org.crue.hercules.sgi.com.freemarker.FreemarkerDatabaseEmailTemplateLoader;
 import org.crue.hercules.sgi.com.freemarker.FreemarkerEmailTemplateProcessor;
 import org.crue.hercules.sgi.com.model.ContentTpl;
@@ -77,7 +81,7 @@ public class EmailBuilderServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void build_retunsEmailDTO() {
+  public void build_retunsEmailDTO() throws ContentException, RecipientException, ParamException, SubjectException {
     // given: an existing Email with template
     SubjectTpl subjectTpl = SubjectTpl.builder().tpl("Subject").build();
     ContentTpl contentTpl = ContentTpl.builder().tplText("Content").tplHtml("Content").build();

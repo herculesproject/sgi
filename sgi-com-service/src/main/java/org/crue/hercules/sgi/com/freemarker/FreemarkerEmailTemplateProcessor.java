@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl;
 import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl.ProcessedEmailTplBuilder;
 import org.crue.hercules.sgi.com.exceptions.ContentException;
+import org.crue.hercules.sgi.com.exceptions.SubjectException;
 import org.crue.hercules.sgi.com.model.EmailTpl;
 import org.crue.hercules.sgi.com.repository.EmailTplRepository;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
@@ -40,24 +41,27 @@ public class FreemarkerEmailTemplateProcessor {
         "FreemarkerEmailTemplateProcessor(EmailTplRepository repository, Configuration freemarkerCfg) - end");
   }
 
-  public ProcessedEmailTpl processTemplate(String name, Map<String, Object> params) {
+  public ProcessedEmailTpl processTemplate(String name, Map<String, Object> params)
+      throws ContentException, SubjectException {
     log.debug(
         "processTemplate(String name, Map<String, Object> params) - start");
+    EmailTpl emailTpl = repository.findByName(
+        name)
+        .orElseThrow(() -> new NotFoundException(ProblemMessage.builder().key(NotFoundException.class)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(EmailTpl.class))
+            .parameter(MESSAGE_KEY_ID, name).build()));
+    ProcessedEmailTplBuilder builder = ProcessedEmailTpl.builder();
     try {
-      EmailTpl emailTpl = repository.findByName(
-          name)
-          .orElseThrow(() -> new NotFoundException(ProblemMessage.builder().key(NotFoundException.class)
-              .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(EmailTpl.class))
-              .parameter(MESSAGE_KEY_ID, name).build()));
-
-      ProcessedEmailTplBuilder builder = ProcessedEmailTpl.builder();
-
       if (ObjectUtils.isNotEmpty(emailTpl.getSubjectTpl())) {
         Template subjectTemplate = freemarkerCfg.getTemplate(
             name + FreemarkerDatabaseEmailTemplateLoader.PATH_SUBJECT, LocaleContextHolder.getLocale());
         builder.subject(FreeMarkerTemplateUtils.processTemplateIntoString(subjectTemplate,
             params));
       }
+    } catch (IOException | TemplateException | RuntimeException e) {
+      throw new SubjectException(e);
+    }
+    try {
       if (ObjectUtils.isNotEmpty(emailTpl.getContentTpl())) {
         if (ObjectUtils.isNotEmpty(emailTpl.getContentTpl().getTplText())) {
           Template textContentTemplate = freemarkerCfg.getTemplate(
@@ -78,7 +82,6 @@ public class FreemarkerEmailTemplateProcessor {
           "processTemplate(String name, Map<String, Object> params) - end");
       return returnValue;
     } catch (IOException | TemplateException | RuntimeException e) {
-      e.printStackTrace();
       throw new ContentException(e);
     }
   }

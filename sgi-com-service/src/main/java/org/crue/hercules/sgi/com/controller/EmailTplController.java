@@ -6,6 +6,8 @@ import java.util.List;
 import org.crue.hercules.sgi.com.converter.TypeConverter;
 import org.crue.hercules.sgi.com.dto.Param;
 import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl;
+import org.crue.hercules.sgi.com.exceptions.ContentException;
+import org.crue.hercules.sgi.com.exceptions.SubjectException;
 import org.crue.hercules.sgi.com.freemarker.FreemarkerEmailTemplateProcessor;
 import org.crue.hercules.sgi.com.model.EmailTpl;
 import org.crue.hercules.sgi.com.service.ParamService;
@@ -60,10 +62,12 @@ public class EmailTplController {
    * @param name   {@link EmailTpl} name.
    * @param params the parameters to be replaced in the template
    * @return the processed template
+   * @throws SubjectException if there is a problem processing the subject
+   * @throws ContentException if there is a problem processing the content
    */
   @RequestMapping(value = "/{name}/process", method = { RequestMethod.GET, RequestMethod.POST })
   public ProcessedEmailTpl processTemplate(@PathVariable String name,
-      @RequestBody List<org.crue.hercules.sgi.com.dto.EmailParam> params) {
+      @RequestBody List<org.crue.hercules.sgi.com.dto.EmailParam> params) throws ContentException, SubjectException {
     log.debug(
         "processTemplate(@PathVariable String name, List<org.crue.hercules.sgi.com.dto.EmailParam> params) - start");
     HashMap<String, Object> paramsMap = new HashMap<>();
