@@ -59,6 +59,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRep
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -180,6 +181,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoEquipoRepository proyectoEquipoRepository;
 
+  private ProyectoHelper proyectoHelper;
   ProyectoFacturacionService proyectoFacturacionService;
 
   @Autowired
@@ -189,6 +191,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    proyectoHelper = new ProyectoHelper(proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
     service = new ProyectoServiceImpl(sgiConfigProperties, repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
         convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
@@ -205,8 +208,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
         proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService, convocatoriaConceptoGastoCodigoEcRepository,
         solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService, validator,
         convocatoriaPeriodoJustificacionRepository, proyectoPeriodoJustificacionRepository,
-        estadoProyectoPeriodoJustificacionRepository, proyectoFacturacionService, proyectoEquipoRepository,
-        proyectoResponsableEconomicoRepository);
+        estadoProyectoPeriodoJustificacionRepository, proyectoFacturacionService, this.proyectoHelper);
   }
 
   @Test

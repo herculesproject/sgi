@@ -39,8 +39,7 @@ public class ProyectoFacturacionService {
   private final ProyectoFacturacionRepository proyectoFacturacionRepository;
   private final EstadoValidacionIPRepository estadoValidacionIPRepository;
   private final ProyectoRepository proyectoRepository;
-  private final ProyectoEquipoRepository proyectoEquipoRepository;
-  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   /**
    * Busca todos los objetos de tipo {@link ProyectoFacturacion} cuyo proyectoId
@@ -51,11 +50,7 @@ public class ProyectoFacturacionService {
    * @return pagina de {@link ProyectoFacturacion}
    */
   public Page<ProyectoFacturacion> findByProyectoId(Long proyectoId, Pageable paging) {
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
-        && !checkUserIsResponsableEconomico(proyectoId)) {
-      throw new UserNotAuthorizedToAccessProyectoException();
-    }
-
+    proyectoHelper.checkCanAccessProyecto(proyectoId);
     return this.proyectoFacturacionRepository.findByProyectoId(proyectoId, paging);
   }
 
@@ -93,10 +88,11 @@ public class ProyectoFacturacionService {
   @Transactional
   public ProyectoFacturacion update(ProyectoFacturacion toUpdate) {
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(toUpdate.getProyectoId())
-        && !checkUserIsResponsableEconomico(toUpdate.getProyectoId())) {
+    if (proyectoHelper.hasUserAuthorityInvestigador()
+        && !proyectoHelper.checkUserPresentInEquipos(toUpdate.getProyectoId())
+        && !proyectoHelper.checkUserIsResponsableEconomico(toUpdate.getProyectoId())) {
       throw new UserNotAuthorizedToAccessProyectoException();
-    } else if (!ProyectoHelper.hasUserAuthorityInvestigador()) {
+    } else if (!proyectoHelper.hasUserAuthorityInvestigador()) {
       Assert.isTrue(
           SgiSecurityContextHolder.hasAuthorityForUO(
               ALLOWED_ROLE,
@@ -174,26 +170,6 @@ public class ProyectoFacturacionService {
 
     return proyectoFacturacionRepository.findAll(specs, pageable);
 
-  }
-
-  /**
-   * Comprueba si el usuario actual está presente en el equipo
-   */
-  private boolean checkUserPresentInEquipos(Long proyectoId) {
-    Long numeroProyectoEquipo = this.proyectoEquipoRepository
-        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroProyectoEquipo > 0;
-  }
-
-  /**
-   * Comprueba si el usuario actual es el responsable económico del proyecto
-   */
-  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
-    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
-        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroResponsableEconomico > 0;
   }
 
 }

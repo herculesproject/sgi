@@ -9,14 +9,11 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -39,13 +36,13 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
   private final ProyectoEquipoRepository repository;
   private final ProyectoRepository proyectoRepository;
-  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoEquipoServiceImpl(ProyectoEquipoRepository repository, ProyectoRepository proyectoRepository,
-      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
+      ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoRepository = proyectoRepository;
-    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -196,10 +193,7 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
 
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
-        && !checkUserIsResponsableEconomico(proyectoId)) {
-      throw new UserNotAuthorizedToAccessProyectoException();
-    }
+    proyectoHelper.checkCanAccessProyecto(proyectoId);
 
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
@@ -250,25 +244,6 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     List<ProyectoEquipo> returnValue = repository.findAllByProyectoId(proyectoId);
     log.debug("findAllByProyectoId(Long proyectoId) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba si el usuario actual está presente en el equipo
-   * 
-   * @throws {@link UserNotAuthorizedToAccessProyectoException}
-   */
-  private boolean checkUserPresentInEquipos(Long proyectoId) {
-    Long numeroProyectoEquipo = this.repository
-        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroProyectoEquipo > 0;
-  }
-
-  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
-    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
-        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroResponsableEconomico > 0;
   }
 
 }

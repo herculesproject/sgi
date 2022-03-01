@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
@@ -44,6 +45,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
@@ -184,6 +186,9 @@ public class ProyectoController {
   /** ProyectoNotificacionesProyecto service */
   private final NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService;
 
+  /** Convocatoria service */
+  private final ConvocatoriaService convocatoriaService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -215,6 +220,7 @@ public class ProyectoController {
    * @param anualidadGastoService                             {@link AnualidadGastoService}
    * @param proyectoPalabraClaveService                       {@link ProyectoPalabraClaveService}
    * @param notificacionProyectoExternoCVNService             {@link NotificacionProyectoExternoCVNService}
+   * @param convocatoriaService                               {@link ConvocatoriaService}
    */
   public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
       ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
@@ -234,7 +240,8 @@ public class ProyectoController {
       ProyectoAgrupacionGastoService proyectoAgrupacionGastoService,
       ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService,
       AnualidadGastoService anualidadGastoService, ProyectoPalabraClaveService proyectoPalabraClaveService,
-      NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService) {
+      NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService,
+      ConvocatoriaService convocatoriaService) {
     this.modelMapper = modelMapper;
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
@@ -263,6 +270,7 @@ public class ProyectoController {
     this.anualidadGastoService = anualidadGastoService;
     this.proyectoPalabraClaveService = proyectoPalabraClaveService;
     this.notificacionProyectoExternoCVNService = notificacionProyectoExternoCVNService;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -1415,6 +1423,57 @@ public class ProyectoController {
             notificacionProyectoExternoCVN);
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada {@link Proyecto} activas que se
+   * encuentren dentro de la unidad de gestión del usuario logueado con perfil
+   * investigador
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Proyecto} activas paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/investigador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<Page<Proyecto>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
+
+    Page<Proyecto> page = service.findAllActivosInvestigador(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllInvestigador(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve la {@link Convocatoria} asociada al {@link Proyecto} con el id
+   * indicado si el usuario tiene permisos de investigador.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return {@link Convocatoria}
+   */
+  @GetMapping("/{id}/convocatoria")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<ConvocatoriaTituloOutput> findConvocatoriaByProyectoIdAndUserIsInvestigador(
+      @PathVariable Long id) {
+    log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - start");
+
+    ConvocatoriaTituloOutput returnValue = convert(
+        convocatoriaService.findConvocatoriaByProyectoIdAndUserIsInvestigador(id));
+
+    if (returnValue == null) {
+      log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
     List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
         .map(proyectoPalabraClave -> convert(proyectoPalabraClave))
@@ -1455,29 +1514,7 @@ public class ProyectoController {
         .collect(Collectors.toList());
   }
 
-  /**
-   * Devuelve una lista paginada y filtrada {@link Proyecto} activas que se
-   * encuentren dentro de la unidad de gestión del usuario logueado con perfil
-   * investigador
-   * 
-   * @param query  filtro de búsqueda.
-   * @param paging {@link Pageable}.
-   * @return el listado de entidades {@link Proyecto} activas paginadas y
-   *         filtradas.
-   */
-  @GetMapping("/investigador")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-INV-VR')")
-  public ResponseEntity<Page<Proyecto>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllInvestigador(String query, Pageable paging) - start");
-
-    Page<Proyecto> page = service.findAllActivosInvestigador(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllInvestigador(String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAllInvestigador(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+  private ConvocatoriaTituloOutput convert(Convocatoria convocatoria) {
+    return modelMapper.map(convocatoria, ConvocatoriaTituloOutput.class);
   }
 }

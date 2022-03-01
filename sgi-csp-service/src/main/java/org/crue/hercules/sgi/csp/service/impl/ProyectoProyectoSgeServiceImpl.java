@@ -3,16 +3,11 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
-import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -36,15 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeService {
 
   private final ProyectoProyectoSgeRepository repository;
-  private final ProyectoEquipoRepository proyectoEquipoRepository;
-  private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoProyectoSgeServiceImpl(ProyectoProyectoSgeRepository proyectoProrrogaRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository,
-      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository) {
+      ProyectoHelper proyectoHelper) {
     this.repository = proyectoProrrogaRepository;
-    this.proyectoEquipoRepository = proyectoEquipoRepository;
-    this.proyectoResponsableEconomicoRepository = proyectoResponsableEconomicoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -142,10 +134,7 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
         .and(ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId));
 
     Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
-    if (ProyectoHelper.hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
-        && !checkUserIsResponsableEconomico(proyectoId)) {
-      throw new UserNotAuthorizedToAccessProyectoException();
-    }
+    proyectoHelper.checkCanAccessProyecto(proyectoId);
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
@@ -190,25 +179,6 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     boolean returnValue = repository.existsByProyectoId(proyectoId);
     log.debug("existsByProyecto(Long proyectoId) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba si el usuario actual está presente en el equipo
-   * 
-   * @throws {@link UserNotAuthorizedToAccessProyectoException}
-   */
-  private boolean checkUserPresentInEquipos(Long proyectoId) {
-    Long numeroProyectoEquipo = this.proyectoEquipoRepository
-        .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoEquipoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroProyectoEquipo > 0;
-  }
-
-  private boolean checkUserIsResponsableEconomico(Long proyectoId) {
-    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
-        .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(ProyectoHelper.getUserPersonaRef())));
-    return numeroResponsableEconomico > 0;
   }
 
 }

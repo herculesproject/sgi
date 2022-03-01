@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoProrrogaServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -47,13 +48,15 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
   private ProyectoEquipoRepository proyectoEquipoRepository;
   @Mock
   private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoProrrogaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoProrrogaServiceImpl(repository, proyectoRepository, prorrogaDocumentoRepository,
-        proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
+        proyectoEquipoRepository, proyectoHelper);
   }
 
   @Test

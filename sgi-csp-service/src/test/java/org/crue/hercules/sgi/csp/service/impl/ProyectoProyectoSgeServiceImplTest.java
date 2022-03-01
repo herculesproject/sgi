@@ -10,14 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
-import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
-import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.service.BaseServiceTest;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -39,12 +38,13 @@ class ProyectoProyectoSgeServiceImplTest extends BaseServiceTest {
   @Mock
   private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
+  private ProyectoHelper proyectoHelper;
   private ProyectoProyectoSgeService service;
 
   @BeforeEach
   public void setup() {
-    this.service = new ProyectoProyectoSgeServiceImpl(repository, proyectoEquipoRepository,
-        proyectoResponsableEconomicoRepository);
+    this.proyectoHelper = new ProyectoHelper(proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
+    this.service = new ProyectoProyectoSgeServiceImpl(repository, this.proyectoHelper);
   }
 
   @Test
@@ -101,11 +101,6 @@ class ProyectoProyectoSgeServiceImplTest extends BaseServiceTest {
   void findAllByProyecto_ThrowsUserNotAuthorizedToAccessProyectoException() {
     Long proyectoId = 1L;
     String query = StringUtils.EMPTY;
-
-    BDDMockito.given(this.proyectoResponsableEconomicoRepository
-        .count(ArgumentMatchers.<Specification<ProyectoResponsableEconomico>>any())).willReturn(0L);
-    BDDMockito.given(this.proyectoEquipoRepository.count(ArgumentMatchers.<Specification<ProyectoEquipo>>any()))
-        .willReturn(0L);
 
     Assertions.assertThatThrownBy(() -> this.service.findAllByProyecto(proyectoId, query, PageRequest.of(0, 10)))
         .isInstanceOf(UserNotAuthorizedToAccessProyectoException.class);
