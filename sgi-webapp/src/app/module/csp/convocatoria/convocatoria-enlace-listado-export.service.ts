@@ -92,7 +92,7 @@ export class ConvocatoriaEnlaceListadoExportService extends AbstractTableExportF
 
       const columnTipoEnlace: ISgiColumnReport = {
         name: ENLACE_TIPO_FIELD + idEnlace,
-        title: this.translate.instant(ENLACE_TIPO_KEY) + idEnlace,
+        title: titleEnlace + idEnlace + ': ' + this.translate.instant(ENLACE_TIPO_KEY),
         type: ColumnType.STRING,
       };
       columns.push(columnTipoEnlace);

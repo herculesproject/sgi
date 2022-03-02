@@ -146,7 +146,9 @@ export class ConvocatoriaAreaTematicaListadoExportService
     convocatoria.areasTematicas?.forEach(data => {
       const areaConocimientoElementsRow: any[] = [];
 
-      const areaConocimientoContent = data.convocatoriaAreaTematica.areaTematica?.nombre ?? '';
+      const areaConocimientoContent = data.convocatoriaAreaTematica.areaTematica?.padre ?
+        (data.convocatoriaAreaTematica.areaTematica?.nombre + ' - ' + data.convocatoriaAreaTematica.areaTematica?.padre.nombre) :
+        (data.convocatoriaAreaTematica.areaTematica?.nombre ?? '');
       areaConocimientoElementsRow.push(areaConocimientoContent);
 
       const rowReport: ISgiRowReport = {
@@ -161,7 +163,13 @@ export class ConvocatoriaAreaTematicaListadoExportService
   }
 
   private fillRowsEntidadExcel(elementsRow: any[], data: IConvocatoriaAreaTematicaListadoExport) {
-    const content = data?.convocatoriaAreaTematica ? data.convocatoriaAreaTematica?.areaTematica?.nombre ?? '' : '';
-    elementsRow.push(content);
+    if (data && data.convocatoriaAreaTematica) {
+      const content = data?.convocatoriaAreaTematica && data.convocatoriaAreaTematica.areaTematica?.padre ?
+        (data.convocatoriaAreaTematica.areaTematica?.nombre + ' - ' + data.convocatoriaAreaTematica.areaTematica?.padre.nombre) :
+        (data.convocatoriaAreaTematica?.areaTematica?.nombre ?? '');
+      elementsRow.push(content);
+    } else {
+      elementsRow.push('');
+    }
   }
 }

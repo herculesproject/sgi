@@ -224,28 +224,28 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
-
-      const columnPosteriorA: ISgiColumnReport = {
-        name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_FECHA_POSTERIOR_FIELD + idNivelesAcademicos,
-        title: titleRequisitoEquipo + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_POSTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnPosteriorA);
-
-      const columnAnteriorA: ISgiColumnReport = {
-        name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_FECHA_ANTERIOR_FIELD + idNivelesAcademicos,
-        title: titleRequisitoEquipo + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_ANTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnAnteriorA);
-
-      const columnVinculacion: ISgiColumnReport = {
-        name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_FIELD + idNivelesAcademicos,
-        title: titleRequisitoEquipo + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_EQUIPO_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY),
-        type: ColumnType.STRING,
-      };
-      columns.push(columnVinculacion);
     }
+
+    const columnPosteriorA: ISgiColumnReport = {
+      name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_FECHA_POSTERIOR_FIELD,
+      title: titleRequisitoEquipo + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_POSTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnPosteriorA);
+
+    const columnAnteriorA: ISgiColumnReport = {
+      name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_FECHA_ANTERIOR_FIELD,
+      title: titleRequisitoEquipo + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_ANTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnAnteriorA);
+
+    const columnVinculacion: ISgiColumnReport = {
+      name: REQUISITO_EQUIPO_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_FIELD,
+      title: titleRequisitoEquipo + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_EQUIPO_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY),
+      type: ColumnType.STRING,
+    };
+    columns.push(columnVinculacion);
 
     for (let i = 0; i < maxNumCategoriasProfesionalesEquipo; i++) {
       const idCategoriaProfesional: string = String(i + 1);
@@ -255,21 +255,21 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
-
-      const columnPosteriorA: ISgiColumnReport = {
-        name: REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_FECHA_POSTERIOR_FIELD + idCategoriaProfesional,
-        title: titleRequisitoEquipo + ': ' + titleCategoriaProfesional + idCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_POSTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnPosteriorA);
-
-      const columnAnteriorA: ISgiColumnReport = {
-        name: REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_FECHA_ANTERIOR_FIELD + idCategoriaProfesional,
-        title: titleRequisitoEquipo + ': ' + titleCategoriaProfesional + idCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_ANTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnAnteriorA);
     }
+
+    const columnCatPosteriorA: ISgiColumnReport = {
+      name: REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_FECHA_POSTERIOR_FIELD,
+      title: titleRequisitoEquipo + ': ' + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_POSTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnCatPosteriorA);
+
+    const columnCatAnteriorA: ISgiColumnReport = {
+      name: REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_FECHA_ANTERIOR_FIELD,
+      title: titleRequisitoEquipo + ': ' + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_EQUIPO_FECHA_ANTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnCatAnteriorA);
 
     const columnNumMinCompetitivos: ISgiColumnReport = {
       name: REQUISITO_EQUIPO_NUM_MINIMO_COMPETITIVO_FIELD,
@@ -315,11 +315,13 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
         const nivelAcademicoEquipo = convocatoria.nivelesAcademicosEquipo ? convocatoria.nivelesAcademicosEquipo[i] ?? null : null;
         this.fillRowsEntidadExcelNivelAcademico(elementsRow, nivelAcademicoEquipo);
       }
+      this.fillRowsEntidadExcelNivelAcademicoFechas(elementsRow, convocatoria.requisitoEquipo);
       const maxNumCategoriasProfesionalesEquipo = Math.max(...convocatorias.map(c => c.categoriasProfesionalesEquipo ? c.categoriasProfesionalesEquipo?.length : 0));
       for (let i = 0; i < maxNumCategoriasProfesionalesEquipo; i++) {
         const categoriaProfesionalEquipo = convocatoria.categoriasProfesionalesEquipo ? convocatoria.categoriasProfesionalesEquipo[i] ?? null : null;
         this.fillRowsEntidadExcelCategoriaProfesional(elementsRow, categoriaProfesionalEquipo);
       }
+      this.fillRowsEntidadExcelCategoriaProfesionalFechas(elementsRow, convocatoria.requisitoEquipo);
       this.fillRowsEntidadExcel2(elementsRow, convocatoria.requisitoEquipo);
     }
     return elementsRow;
@@ -338,27 +340,29 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
       convocatoria.nivelesAcademicosEquipo?.filter(n => n.requisitoEquipo.id === convocatoria.requisitoEquipo.id).forEach((nivelAcademicoEquipo, index) => {
         requisitoEquipoContent += '\n';
         requisitoEquipoContent += (this.translate.instant(REQUISITO_EQUIPO_NIVEL_ACADEMICO_KEY) + (index + 1) + ': ') + (nivelAcademicoEquipo.nivelAcademico ? nivelAcademicoEquipo.nivelAcademico.nombre ?? '' : '');
-        requisitoEquipoContent += '\n';
-        requisitoEquipoContent += nivelAcademicoEquipo.nivelAcademico && nivelAcademicoEquipo.requisitoEquipo.fechaMinimaNivelAcademico
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(nivelAcademicoEquipo.requisitoEquipo.fechaMinimaNivelAcademico, true), 'shortDate') ?? '' : '';
-        requisitoEquipoContent += '\n';
-        requisitoEquipoContent += nivelAcademicoEquipo.nivelAcademico && nivelAcademicoEquipo.requisitoEquipo.fechaMaximaNivelAcademico
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(nivelAcademicoEquipo.requisitoEquipo.fechaMaximaNivelAcademico, true), 'shortDate') ?? '' : '';
-        requisitoEquipoContent += '\n';
-        requisitoEquipoContent += this.notIsNullAndNotUndefined(nivelAcademicoEquipo.requisitoEquipo.vinculacionUniversidad)
-          ? this.getI18nBooleanYesNo(nivelAcademicoEquipo.requisitoEquipo.vinculacionUniversidad) ?? '' : '';
       });
+
+      requisitoEquipoContent += '\n';
+      requisitoEquipoContent += convocatoria.requisitoEquipo.fechaMinimaNivelAcademico
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoEquipo.fechaMinimaNivelAcademico, true), 'shortDate') ?? '' : '';
+      requisitoEquipoContent += '\n';
+      requisitoEquipoContent += convocatoria.requisitoEquipo.fechaMaximaNivelAcademico
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoEquipo.fechaMaximaNivelAcademico, true), 'shortDate') ?? '' : '';
+      requisitoEquipoContent += '\n';
+      requisitoEquipoContent += this.notIsNullAndNotUndefined(convocatoria.requisitoEquipo.vinculacionUniversidad)
+        ? this.getI18nBooleanYesNo(convocatoria.requisitoEquipo.vinculacionUniversidad) ?? '' : '';
 
       convocatoria.categoriasProfesionalesEquipo?.filter(c => c.requisitoEquipo.id === convocatoria.requisitoEquipo.id).forEach((categoriaProfesionalEquipo, index) => {
         requisitoEquipoContent += '\n';
         requisitoEquipoContent += (this.translate.instant(REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_KEY) + (index + 1) + ': ') + (categoriaProfesionalEquipo.categoriaProfesional ? categoriaProfesionalEquipo.categoriaProfesional.nombre ?? '' : '');
-        requisitoEquipoContent += '\n';
-        requisitoEquipoContent += categoriaProfesionalEquipo.categoriaProfesional && categoriaProfesionalEquipo.requisitoEquipo.fechaMinimaCategoriaProfesional
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(categoriaProfesionalEquipo.requisitoEquipo.fechaMinimaCategoriaProfesional, true), 'shortDate') ?? '' : '';
-        requisitoEquipoContent += '\n';
-        requisitoEquipoContent += categoriaProfesionalEquipo.categoriaProfesional && categoriaProfesionalEquipo.requisitoEquipo.fechaMaximaCategoriaProfesional
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(categoriaProfesionalEquipo.requisitoEquipo.fechaMaximaCategoriaProfesional, true), 'shortDate') ?? '' : '';
       });
+
+      requisitoEquipoContent += '\n';
+      requisitoEquipoContent += convocatoria.requisitoEquipo.fechaMinimaCategoriaProfesional
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoEquipo.fechaMinimaCategoriaProfesional, true), 'shortDate') ?? '' : '';
+      requisitoEquipoContent += '\n';
+      requisitoEquipoContent += convocatoria.requisitoEquipo.fechaMaximaCategoriaProfesional
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoEquipo.fechaMaximaCategoriaProfesional, true), 'shortDate') ?? '' : '';
 
       requisitoEquipoContent += '\n';
       requisitoEquipoContent += convocatoria?.requisitoEquipo && convocatoria.requisitoEquipo?.numMinimoCompetitivos
@@ -414,14 +418,20 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
   private fillRowsEntidadExcelNivelAcademico(elementsRow: any[], nivelAcademicoEquipo: IRequisitoEquipoNivelAcademico) {
     if (nivelAcademicoEquipo) {
       elementsRow.push(nivelAcademicoEquipo.nivelAcademico ? nivelAcademicoEquipo.nivelAcademico.nombre ?? '' : '');
-      elementsRow.push(nivelAcademicoEquipo.nivelAcademico && nivelAcademicoEquipo.requisitoEquipo.fechaMinimaNivelAcademico
-        ? LuxonUtils.toBackend(nivelAcademicoEquipo.requisitoEquipo.fechaMinimaNivelAcademico) ?? '' : '');
-      elementsRow.push(nivelAcademicoEquipo.nivelAcademico && nivelAcademicoEquipo.requisitoEquipo.fechaMaximaNivelAcademico
-        ? LuxonUtils.toBackend(nivelAcademicoEquipo.requisitoEquipo.fechaMaximaNivelAcademico) ?? '' : '');
-      elementsRow.push(this.notIsNullAndNotUndefined(nivelAcademicoEquipo.requisitoEquipo.vinculacionUniversidad)
-        ? this.getI18nBooleanYesNo(nivelAcademicoEquipo.requisitoEquipo.vinculacionUniversidad) ?? '' : '');
     } else {
       elementsRow.push('');
+    }
+  }
+
+  private fillRowsEntidadExcelNivelAcademicoFechas(elementsRow: any[], requisitosEquipo: IConvocatoriaRequisitoEquipo) {
+    if (requisitosEquipo) {
+      elementsRow.push(requisitosEquipo.fechaMinimaNivelAcademico
+        ? LuxonUtils.toBackend(requisitosEquipo.fechaMinimaNivelAcademico) ?? '' : '');
+      elementsRow.push(requisitosEquipo.fechaMaximaNivelAcademico
+        ? LuxonUtils.toBackend(requisitosEquipo.fechaMaximaNivelAcademico) ?? '' : '');
+      elementsRow.push(this.notIsNullAndNotUndefined(requisitosEquipo.vinculacionUniversidad)
+        ? this.getI18nBooleanYesNo(requisitosEquipo.vinculacionUniversidad) ?? '' : '');
+    } else {
       elementsRow.push('');
       elementsRow.push('');
       elementsRow.push('');
@@ -431,12 +441,18 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
   private fillRowsEntidadExcelCategoriaProfesional(elementsRow: any[], categoriaProfesionalEquipo: IRequisitoEquipoCategoriaProfesional) {
     if (categoriaProfesionalEquipo) {
       elementsRow.push(categoriaProfesionalEquipo.categoriaProfesional ? categoriaProfesionalEquipo.categoriaProfesional.nombre ?? '' : '');
-      elementsRow.push(categoriaProfesionalEquipo.categoriaProfesional && categoriaProfesionalEquipo.requisitoEquipo.fechaMinimaCategoriaProfesional
-        ? LuxonUtils.toBackend(categoriaProfesionalEquipo.requisitoEquipo.fechaMinimaCategoriaProfesional) ?? '' : '');
-      elementsRow.push(categoriaProfesionalEquipo.categoriaProfesional && categoriaProfesionalEquipo.requisitoEquipo.fechaMaximaCategoriaProfesional
-        ? LuxonUtils.toBackend(categoriaProfesionalEquipo.requisitoEquipo.fechaMaximaCategoriaProfesional) ?? '' : '');
     } else {
       elementsRow.push('');
+    }
+  }
+
+  private fillRowsEntidadExcelCategoriaProfesionalFechas(elementsRow: any[], requisitosEquipo: IConvocatoriaRequisitoEquipo) {
+    if (requisitosEquipo) {
+      elementsRow.push(requisitosEquipo.fechaMinimaCategoriaProfesional
+        ? LuxonUtils.toBackend(requisitosEquipo.fechaMinimaCategoriaProfesional) ?? '' : '');
+      elementsRow.push(requisitosEquipo.fechaMaximaCategoriaProfesional
+        ? LuxonUtils.toBackend(requisitosEquipo.fechaMaximaCategoriaProfesional) ?? '' : '');
+    } else {
       elementsRow.push('');
       elementsRow.push('');
     }

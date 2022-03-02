@@ -88,7 +88,7 @@ export class ConvocatoriaHitoListadoExportService extends AbstractTableExportFil
 
       const columnTipoHito: ISgiColumnReport = {
         name: HITO_TIPO_FIELD + idHito,
-        title: this.translate.instant(HITO_TIPO_KEY) + idHito,
+        title: titleHito + idHito + ': ' + this.translate.instant(HITO_TIPO_KEY),
         type: ColumnType.STRING,
       };
       columns.push(columnTipoHito);
@@ -96,7 +96,7 @@ export class ConvocatoriaHitoListadoExportService extends AbstractTableExportFil
       const columnFecha: ISgiColumnReport = {
         name: HITO_URL_FIELD + idHito,
         title: titleHito + idHito + ': ' + this.translate.instant(HITO_FECHA_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFecha);
     }
@@ -128,7 +128,7 @@ export class ConvocatoriaHitoListadoExportService extends AbstractTableExportFil
 
       let hitoContent = convocatoriaHito?.tipoHito ? convocatoriaHito.tipoHito?.nombre ?? '' : '';
       hitoContent += ' - ';
-      hitoContent += this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaHito?.fecha, true), 'shortDate') ?? '';
+      hitoContent += this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaHito?.fecha, false), 'short') ?? '';
 
       hitoElementsRow.push(hitoContent);
 
@@ -146,7 +146,7 @@ export class ConvocatoriaHitoListadoExportService extends AbstractTableExportFil
   private fillRowsEntidadExcel(elementsRow: any[], convocatoriaHito: IConvocatoriaHito) {
     if (convocatoriaHito) {
       elementsRow.push(convocatoriaHito.tipoHito ? convocatoriaHito.tipoHito?.nombre ?? '' : '');
-      elementsRow.push(LuxonUtils.toBackend(convocatoriaHito.fecha) ?? '');
+      elementsRow.push(this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaHito?.fecha, false), 'short') ?? '');
     } else {
       elementsRow.push('');
       elementsRow.push('');

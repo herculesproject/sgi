@@ -241,7 +241,7 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
     reportOptions: IConvocatoriaReportOptions
   ): Observable<IConvocatoriaReportData> {
     if (reportOptions?.showAreasTematicas) {
-      return this.convocatoriaGeneralListadoExportService.getData(convocatoriaData)
+      return this.convocatoriaAreaTematicaListadoExportService.getData(convocatoriaData)
         .pipe(tap({ error: (err) => this.logger.error(err) }));
     } else {
       return of(convocatoriaData);

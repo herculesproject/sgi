@@ -92,20 +92,20 @@ export class ConvocatoriaFaseListadoExportService extends AbstractTableExportFil
       const columnFechaInicio: ISgiColumnReport = {
         name: FASE_FECHA_INICIO_FIELD + idFase,
         title: titleFase + idFase + ': ' + this.translate.instant(FASE_FECHA_INICIO_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaInicio);
 
       const columnFechaFin: ISgiColumnReport = {
         name: FASE_FECHA_FIN_FIELD + idFase,
         title: titleFase + idFase + ': ' + this.translate.instant(FASE_FECHA_FIN_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaFin);
 
       const columnTipoFase: ISgiColumnReport = {
         name: FASE_TIPO_FIELD + idFase,
-        title: this.translate.instant(FASE_TIPO_KEY) + idFase,
+        title: titleFase + idFase + ': ' + this.translate.instant(FASE_TIPO_KEY),
         type: ColumnType.STRING,
       };
       columns.push(columnTipoFase);
@@ -136,9 +136,9 @@ export class ConvocatoriaFaseListadoExportService extends AbstractTableExportFil
     convocatoria.fases?.forEach(convocatoriaFase => {
       const faseElementsRow: any[] = [];
 
-      let faseContent = this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaInicio, true), 'shortDate') ?? '';
+      let faseContent = this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaInicio, false), 'short') ?? '';
       faseContent += ' - ';
-      faseContent += this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaFin, true), 'shortDate') ?? '';
+      faseContent += this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaFin, false), 'short') ?? '';
       faseContent += ' - ';
       faseContent += convocatoriaFase?.tipoFase ? convocatoriaFase.tipoFase.nombre ?? '' : '';
 
@@ -157,8 +157,8 @@ export class ConvocatoriaFaseListadoExportService extends AbstractTableExportFil
 
   private fillRowsEntidadExcel(elementsRow: any[], convocatoriaFase: IConvocatoriaFase) {
     if (convocatoriaFase) {
-      elementsRow.push(LuxonUtils.toBackend(convocatoriaFase.fechaInicio) ?? '');
-      elementsRow.push(LuxonUtils.toBackend(convocatoriaFase.fechaFin) ?? '');
+      elementsRow.push(this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaInicio, false), 'short') ?? '');
+      elementsRow.push(this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaFase?.fechaFin, false), 'short') ?? '');
       elementsRow.push(convocatoriaFase.tipoFase ? convocatoriaFase.tipoFase?.nombre ?? '' : '');
     } else {
       elementsRow.push('');

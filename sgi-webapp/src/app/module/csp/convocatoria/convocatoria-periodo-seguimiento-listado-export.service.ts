@@ -131,14 +131,14 @@ export class ConvocatoriaPeriodoSeguimientoListadoExportService
       const columnFechaInicioPresentacionPeriodoSeguimiento: ISgiColumnReport = {
         name: PERIODO_SEGUIMIENTO_FECHA_INICIO_PRESENTACION_FIELD + idPeriodoSeguimiento,
         title: titleColumn + this.translate.instant(PERIODO_SEGUIMIENTO_FECHA_INICIO_PRESENTACION_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaInicioPresentacionPeriodoSeguimiento);
 
       const columnFechaFinPresentacionPeriodoSeguimiento: ISgiColumnReport = {
         name: PERIODO_SEGUIMIENTO_FECHA_FIN_PRESENTACION_FIELD + idPeriodoSeguimiento,
         title: titleColumn + this.translate.instant(PERIODO_SEGUIMIENTO_FECHA_FIN_PRESENTACION_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaFinPresentacionPeriodoSeguimiento);
     }
@@ -179,10 +179,10 @@ export class ConvocatoriaPeriodoSeguimientoListadoExportService
       periodoSeguimientoContent += convocatoriaPeriodoSeguimiento?.mesFinal ? convocatoriaPeriodoSeguimiento?.mesFinal.toString() ?? '' : '';
       periodoSeguimientoContent += '\n';
       periodoSeguimientoContent +=
-        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaPeriodoSeguimiento?.fechaInicioPresentacion, true), 'shortDate') ?? '';
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaPeriodoSeguimiento?.fechaInicioPresentacion, false), 'short') ?? '';
       periodoSeguimientoContent += '\n';
       periodoSeguimientoContent +=
-        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaPeriodoSeguimiento?.fechaFinPresentacion, true), 'shortDate') ?? '';
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoriaPeriodoSeguimiento?.fechaFinPresentacion, false), 'short') ?? '';
       periodoSeguimientoElementsRow.push(periodoSeguimientoContent);
 
       const rowReport: ISgiRowReport = {
@@ -202,8 +202,8 @@ export class ConvocatoriaPeriodoSeguimientoListadoExportService
       elementsRow.push(periodo?.tipoSeguimiento ? this.translate.instant(TIPO_SEGUIMIENTO_MAP.get(periodo.tipoSeguimiento)) : '');
       elementsRow.push(periodo?.mesInicial ? periodo?.mesInicial.toString() ?? '' : '');
       elementsRow.push(periodo?.mesInicial ? periodo?.mesFinal.toString() ?? '' : '');
-      elementsRow.push(LuxonUtils.toBackend(periodo?.fechaInicioPresentacion) ?? '');
-      elementsRow.push(LuxonUtils.toBackend(periodo?.fechaFinPresentacion) ?? '');
+      elementsRow.push(this.luxonDatePipe.transform(LuxonUtils.toBackend(periodo?.fechaInicioPresentacion, false), 'short') ?? '');
+      elementsRow.push(this.luxonDatePipe.transform(LuxonUtils.toBackend(periodo?.fechaFinPresentacion, false), 'short') ?? '');
     } else {
       elementsRow.push('');
       elementsRow.push('');

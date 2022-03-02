@@ -222,28 +222,28 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
-
-      const columnPosteriorA: ISgiColumnReport = {
-        name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_POSTERIOR_FIELD + idNivelesAcademicos,
-        title: titleRequisitoIP + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnPosteriorA);
-
-      const columnAnteriorA: ISgiColumnReport = {
-        name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_ANTERIOR_FIELD + idNivelesAcademicos,
-        title: titleRequisitoIP + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnAnteriorA);
-
-      const columnVinculacion: ISgiColumnReport = {
-        name: REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_FIELD + idNivelesAcademicos,
-        title: titleRequisitoIP + ': ' + titleNivelAcademico + idNivelesAcademicos + ' ' + this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY),
-        type: ColumnType.STRING,
-      };
-      columns.push(columnVinculacion);
     }
+
+    const columnPosteriorA: ISgiColumnReport = {
+      name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_POSTERIOR_FIELD,
+      title: titleRequisitoIP + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnPosteriorA);
+
+    const columnAnteriorA: ISgiColumnReport = {
+      name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_ANTERIOR_FIELD,
+      title: titleRequisitoIP + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnAnteriorA);
+
+    const columnVinculacion: ISgiColumnReport = {
+      name: REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_FIELD,
+      title: titleRequisitoIP + ': ' + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY),
+      type: ColumnType.STRING,
+    };
+    columns.push(columnVinculacion);
 
     for (let i = 0; i < maxNumCategoriasProfesionales; i++) {
       const idCategoriaProfesional: string = String(i + 1);
@@ -253,21 +253,21 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
-
-      const columnPosteriorA: ISgiColumnReport = {
-        name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_POSTERIOR_FIELD + idCategoriaProfesional,
-        title: titleRequisitoIP + ': ' + titleCategoriaProfesional + idCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnPosteriorA);
-
-      const columnAnteriorA: ISgiColumnReport = {
-        name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_ANTERIOR_FIELD + idCategoriaProfesional,
-        title: titleRequisitoIP + ': ' + titleCategoriaProfesional + idCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
-        type: ColumnType.DATE,
-      };
-      columns.push(columnAnteriorA);
     }
+
+    const columnCatPosteriorA: ISgiColumnReport = {
+      name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_POSTERIOR_FIELD,
+      title: titleRequisitoIP + ': ' + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnCatPosteriorA);
+
+    const columnCatAnteriorA: ISgiColumnReport = {
+      name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_ANTERIOR_FIELD,
+      title: titleRequisitoIP + ': ' + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
+      type: ColumnType.DATE,
+    };
+    columns.push(columnCatAnteriorA);
 
     const columnNumMinCompetitivos: ISgiColumnReport = {
       name: REQUISITO_IP_NUM_MINIMO_COMPETITIVO_FIELD,
@@ -313,11 +313,13 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
         const nivelAcademico = convocatoria.nivelesAcademicos ? convocatoria.nivelesAcademicos[i] ?? null : null;
         this.fillRowsEntidadExcelNivelAcademico(elementsRow, nivelAcademico);
       }
+      this.fillRowsEntidadExcelNivelAcademicoFechas(elementsRow, convocatoria.requisitoIP);
       const maxNumCategoriasProfesionales = Math.max(...convocatorias.map(c => c.categoriasProfesionales ? c.categoriasProfesionales?.length : 0));
       for (let i = 0; i < maxNumCategoriasProfesionales; i++) {
         const categoriaProfesional = convocatoria.categoriasProfesionales ? convocatoria.categoriasProfesionales[i] ?? null : null;
         this.fillRowsEntidadExcelCategoriaProfesional(elementsRow, categoriaProfesional);
       }
+      this.fillRowsEntidadExcelCategoriaProfesionalFechas(elementsRow, convocatoria.requisitoIP);
       this.fillRowsEntidadExcel2(elementsRow, convocatoria.requisitoIP);
     }
     return elementsRow;
@@ -336,27 +338,29 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       convocatoria.nivelesAcademicos?.filter(n => n.requisitoIP.id === convocatoria.requisitoIP.id).forEach((nivelAcademicoIP, index) => {
         requisitoIPContent += '\n';
         requisitoIPContent += (this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_KEY) + (index + 1) + ': ') + (nivelAcademicoIP.nivelAcademico ? nivelAcademicoIP.nivelAcademico.nombre ?? '' : '');
-        requisitoIPContent += '\n';
-        requisitoIPContent += nivelAcademicoIP.nivelAcademico && nivelAcademicoIP.requisitoIP.fechaMinimaNivelAcademico
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(nivelAcademicoIP.requisitoIP.fechaMinimaNivelAcademico, true), 'shortDate') ?? '' : '';
-        requisitoIPContent += '\n';
-        requisitoIPContent += nivelAcademicoIP.nivelAcademico && nivelAcademicoIP.requisitoIP.fechaMaximaNivelAcademico
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(nivelAcademicoIP.requisitoIP.fechaMaximaNivelAcademico, true), 'shortDate') ?? '' : '';
-        requisitoIPContent += '\n';
-        requisitoIPContent += this.notIsNullAndNotUndefined(nivelAcademicoIP.requisitoIP.vinculacionUniversidad)
-          ? this.getI18nBooleanYesNo(nivelAcademicoIP.requisitoIP.vinculacionUniversidad) ?? '' : '';
       });
+
+      requisitoIPContent += '\n';
+      requisitoIPContent += convocatoria?.requisitoIP.fechaMinimaNivelAcademico
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoIP.fechaMinimaNivelAcademico, true), 'shortDate') ?? '' : '';
+      requisitoIPContent += '\n';
+      requisitoIPContent += convocatoria.requisitoIP.fechaMaximaNivelAcademico
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoIP.fechaMaximaNivelAcademico, true), 'shortDate') ?? '' : '';
+      requisitoIPContent += '\n';
+      requisitoIPContent += this.notIsNullAndNotUndefined(convocatoria.requisitoIP.vinculacionUniversidad)
+        ? this.getI18nBooleanYesNo(convocatoria.requisitoIP.vinculacionUniversidad) ?? '' : '';
 
       convocatoria.categoriasProfesionales?.filter(c => c.requisitoIP.id === convocatoria.requisitoIP.id).forEach((categoriaProfesionalIP, index) => {
         requisitoIPContent += '\n';
         requisitoIPContent += (this.translate.instant(REQUISITO_IP_CATEGORIA_PROFESIONAL_KEY) + (index + 1) + ': ') + (categoriaProfesionalIP.categoriaProfesional ? categoriaProfesionalIP.categoriaProfesional.nombre ?? '' : '');
-        requisitoIPContent += '\n';
-        requisitoIPContent += categoriaProfesionalIP.categoriaProfesional && categoriaProfesionalIP.requisitoIP.fechaMinimaCategoriaProfesional
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(categoriaProfesionalIP.requisitoIP.fechaMinimaCategoriaProfesional, true), 'shortDate') ?? '' : '';
-        requisitoIPContent += '\n';
-        requisitoIPContent += categoriaProfesionalIP.categoriaProfesional && categoriaProfesionalIP.requisitoIP.fechaMaximaCategoriaProfesional
-          ? this.luxonDatePipe.transform(LuxonUtils.toBackend(categoriaProfesionalIP.requisitoIP.fechaMaximaCategoriaProfesional, true), 'shortDate') ?? '' : '';
       });
+
+      requisitoIPContent += '\n';
+      requisitoIPContent += convocatoria.requisitoIP.fechaMinimaCategoriaProfesional
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoIP.fechaMinimaCategoriaProfesional, true), 'shortDate') ?? '' : '';
+      requisitoIPContent += '\n';
+      requisitoIPContent += convocatoria.requisitoIP.fechaMaximaCategoriaProfesional
+        ? this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.requisitoIP.fechaMaximaCategoriaProfesional, true), 'shortDate') ?? '' : '';
 
       requisitoIPContent += '\n';
       requisitoIPContent += convocatoria?.requisitoIP && convocatoria.requisitoIP?.numMinimoCompetitivos
@@ -412,14 +416,20 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
   private fillRowsEntidadExcelNivelAcademico(elementsRow: any[], nivelAcademicoIP: IRequisitoIPNivelAcademico) {
     if (nivelAcademicoIP) {
       elementsRow.push(nivelAcademicoIP.nivelAcademico ? nivelAcademicoIP.nivelAcademico.nombre ?? '' : '');
-      elementsRow.push(nivelAcademicoIP.nivelAcademico && nivelAcademicoIP.requisitoIP.fechaMinimaNivelAcademico
-        ? LuxonUtils.toBackend(nivelAcademicoIP.requisitoIP.fechaMinimaNivelAcademico) ?? '' : '');
-      elementsRow.push(nivelAcademicoIP.nivelAcademico && nivelAcademicoIP.requisitoIP.fechaMaximaNivelAcademico
-        ? LuxonUtils.toBackend(nivelAcademicoIP.requisitoIP.fechaMaximaNivelAcademico) ?? '' : '');
-      elementsRow.push(this.notIsNullAndNotUndefined(nivelAcademicoIP.requisitoIP.vinculacionUniversidad)
-        ? this.getI18nBooleanYesNo(nivelAcademicoIP.requisitoIP.vinculacionUniversidad) ?? '' : '');
     } else {
       elementsRow.push('');
+    }
+  }
+
+  private fillRowsEntidadExcelNivelAcademicoFechas(elementsRow: any[], requisitosIP: IConvocatoriaRequisitoIP) {
+    if (requisitosIP) {
+      elementsRow.push(requisitosIP.fechaMinimaNivelAcademico
+        ? LuxonUtils.toBackend(requisitosIP.fechaMinimaNivelAcademico) ?? '' : '');
+      elementsRow.push(requisitosIP.fechaMaximaNivelAcademico
+        ? LuxonUtils.toBackend(requisitosIP.fechaMaximaNivelAcademico) ?? '' : '');
+      elementsRow.push(this.notIsNullAndNotUndefined(requisitosIP.vinculacionUniversidad)
+        ? this.getI18nBooleanYesNo(requisitosIP.vinculacionUniversidad) ?? '' : '');
+    } else {
       elementsRow.push('');
       elementsRow.push('');
       elementsRow.push('');
@@ -429,12 +439,18 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
   private fillRowsEntidadExcelCategoriaProfesional(elementsRow: any[], categoriaProfesionalIP: IRequisitoIPCategoriaProfesional) {
     if (categoriaProfesionalIP) {
       elementsRow.push(categoriaProfesionalIP.categoriaProfesional ? categoriaProfesionalIP.categoriaProfesional.nombre ?? '' : '');
-      elementsRow.push(categoriaProfesionalIP.categoriaProfesional && categoriaProfesionalIP.requisitoIP.fechaMinimaCategoriaProfesional
-        ? LuxonUtils.toBackend(categoriaProfesionalIP.requisitoIP.fechaMinimaCategoriaProfesional) ?? '' : '');
-      elementsRow.push(categoriaProfesionalIP.categoriaProfesional && categoriaProfesionalIP.requisitoIP.fechaMaximaCategoriaProfesional
-        ? LuxonUtils.toBackend(categoriaProfesionalIP.requisitoIP.fechaMaximaCategoriaProfesional) ?? '' : '');
     } else {
       elementsRow.push('');
+    }
+  }
+
+  private fillRowsEntidadExcelCategoriaProfesionalFechas(elementsRow: any[], requisitosIP: IConvocatoriaRequisitoIP) {
+    if (requisitosIP) {
+      elementsRow.push(requisitosIP.fechaMinimaCategoriaProfesional
+        ? LuxonUtils.toBackend(requisitosIP.fechaMinimaCategoriaProfesional) ?? '' : '');
+      elementsRow.push(requisitosIP.fechaMaximaCategoriaProfesional
+        ? LuxonUtils.toBackend(requisitosIP.fechaMaximaCategoriaProfesional) ?? '' : '');
+    } else {
       elementsRow.push('');
       elementsRow.push('');
     }
