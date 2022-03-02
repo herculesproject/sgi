@@ -4,10 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { DialogService } from '@core/services/dialog.service';
 import { IEstadoProduccionCientificaRequest } from '@core/services/prc/estado-produccion-cientifica/estado-produccion-cientifica-input';
-import { ProduccionCientificaService } from '@core/services/prc/produccion-cientifica/produccion-cientifica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -34,7 +32,6 @@ export class PublicacionEditarComponent extends ActionComponent implements OnIni
   PUBLICACION_ROUTE_NAMES = PUBLICACION_ROUTE_NAMES;
 
   isProduccionCientificaEditable: boolean;
-  private produccionCientifica: IProduccionCientifica;
   private textoValidateSuccess: string;
   private textoValidateError: string;
   private textoRejectSuccess: string;
@@ -49,16 +46,11 @@ export class PublicacionEditarComponent extends ActionComponent implements OnIni
     dialogService: DialogService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
-    private readonly produccionCientificaService: ProduccionCientificaService,
   ) {
     super(router, route, actionService, dialogService);
     this.subscriptions.push(
       this.actionService.isProduccionCientificaEditable$()
         .subscribe(isEditable => this.isProduccionCientificaEditable = isEditable)
-    );
-    this.subscriptions.push(
-      this.actionService.getProduccionCientifica$()
-        .subscribe(produccionCientifica => this.produccionCientifica = produccionCientifica)
     );
   }
 
@@ -137,21 +129,19 @@ export class PublicacionEditarComponent extends ActionComponent implements OnIni
     }
   }
 
-  validar() {
-    this.produccionCientificaService.validar(this.produccionCientifica?.id)
+  validar(): void {
+    this.actionService.validar()
       .subscribe(
-        produccionCientificaUpdated => this.actionService.emitProduccionCientifica(produccionCientificaUpdated),
-        (error) => this.snackBarService.showError(this.textoValidateError),
-        () => this.snackBarService.showSuccess(this.textoValidateSuccess)
+        () => this.snackBarService.showSuccess(this.textoValidateSuccess),
+        (error) => this.snackBarService.showError(this.textoValidateError)
       );
   }
 
-  rechazar(estadoProduccionCientifica: IEstadoProduccionCientificaRequest) {
-    this.produccionCientificaService.rechazar(this.produccionCientifica?.id, estadoProduccionCientifica)
+  rechazar(estadoProduccionCientifica: IEstadoProduccionCientificaRequest): void {
+    this.actionService.rechazar(estadoProduccionCientifica)
       .subscribe(
-        produccionCientificaUpdated => this.actionService.emitProduccionCientifica(produccionCientificaUpdated),
-        (error) => this.snackBarService.showError(this.textoRejectError),
-        () => this.snackBarService.showSuccess(this.textoRejectSuccess)
+        () => this.snackBarService.showSuccess(this.textoRejectSuccess),
+        (error) => this.snackBarService.showError(this.textoRejectError)
       );
   }
 }

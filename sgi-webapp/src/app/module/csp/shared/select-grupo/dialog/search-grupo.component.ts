@@ -25,7 +25,7 @@ import { EMPTY, from, merge, Observable, Subject, Subscription } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 interface IGrupoListado extends IGrupo {
-  investigadoresPrincipales: IPersona[]
+  investigadoresPrincipales: IPersona[];
 }
 
 @Component({

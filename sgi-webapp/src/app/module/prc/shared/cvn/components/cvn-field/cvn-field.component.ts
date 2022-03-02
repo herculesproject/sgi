@@ -3,9 +3,9 @@ import { IAliasEnumerado } from '@core/models/prc/alias-enumerado';
 import { ICampoProduccionCientifica, ICampoProduccionCientificaWithConfiguracion } from '@core/models/prc/campo-produccion-cientifica';
 import { TipoFormato } from '@core/models/prc/configuracion-campo';
 import { IValorCampo } from '@core/models/prc/valor-campo';
-import { ValorCampoService } from '@core/services/prc/valor-campo/valor-campo.service';
 import { Observable, of } from 'rxjs';
 import { ALIAS_ENUMERADOS } from '../../alias-enumerado.token';
+import { CvnValorCampoService } from '../../services/cvn-valor-campo.service';
 
 @Component({
   selector: 'sgi-cvn-field',
@@ -29,7 +29,8 @@ export class CvnFieldComponent implements OnInit {
     return this._getValoresCampoFn;
   }
   // tslint:disable-next-line: variable-name
-  private _getValoresCampoFn: (value: ICampoProduccionCientifica) => Observable<IValorCampo[]> = this.valorCampoService.findAllValorCampo;
+  private _getValoresCampoFn: (value: ICampoProduccionCientifica) => Observable<IValorCampo[]> =
+    this.cvnValorCampoService.findCvnValorCampo;
 
   @Input()
   set campoCVN(value: string) {
@@ -59,7 +60,7 @@ export class CvnFieldComponent implements OnInit {
 
   constructor(
     @Inject(ALIAS_ENUMERADOS) public aliasEnumerados$: Readonly<Observable<IAliasEnumerado[]>>,
-    private valorCampoService: ValorCampoService
+    private cvnValorCampoService: CvnValorCampoService
   ) { }
 
   ngOnInit(): void {

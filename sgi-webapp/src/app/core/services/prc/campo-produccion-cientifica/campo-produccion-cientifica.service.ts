@@ -2,15 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ICampoProduccionCientifica } from '@core/models/prc/campo-produccion-cientifica';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
+import { IValorCampo } from '@core/models/prc/valor-campo';
 import { environment } from '@env';
 import {
   FindAllCtor, FindByIdCtor,
   mixinFindAll, mixinFindById,
   RSQLSgiRestFilter, SgiRestBaseService,
-  SgiRestFilterOperator, SgiRestFindOptions
+  SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult,
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IValorCampoResponse } from '../valor-campo/valor-campo-response';
+import { VALOR_CAMPO_RESPONSE_CONVERTER } from '../valor-campo/valor-campo-response.converter';
 import { ICampoProduccionCientificaResponse } from './campo-produccion-cientifica-response';
 import { CAMPO_PRODUCCION_CIENTIFICA_RESPONSE_CONVERTER } from './campo-produccion-cientifica-response.converter';
 
@@ -46,5 +49,18 @@ export class CampoProduccionCientificaService extends _CampoProduccionCientifica
     return this.findAll(options).pipe(
       map(response => response.items)
     );
+  }
+
+  /**
+   * Obtiene todos los Valores de un Campo de producción científica dado el id
+   * @param id id del Campo de producción científica
+   * @param options opciones de busqueda
+   * @returns Valores de un Campo de producción científica
+   */
+  findValores(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IValorCampo>> {
+    return this.find<IValorCampoResponse, IValorCampo>(
+      `${this.endpointUrl}/${id}/valores`,
+      options,
+      VALOR_CAMPO_RESPONSE_CONVERTER);
   }
 }

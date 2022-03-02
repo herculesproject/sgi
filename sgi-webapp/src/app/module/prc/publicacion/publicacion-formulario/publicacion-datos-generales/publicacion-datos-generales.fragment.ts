@@ -1,7 +1,7 @@
 import { IAcreditacion } from '@core/models/prc/acreditacion';
 import { IAutorWithGrupos } from '@core/models/prc/autor';
 import { ICampoProduccionCientifica, ICampoProduccionCientificaWithConfiguracion } from '@core/models/prc/campo-produccion-cientifica';
-import { IEstadoProduccionCientifica } from '@core/models/prc/estado-produccion-cientifica';
+import { IEstadoProduccionCientifica, TipoEstadoProduccion } from '@core/models/prc/estado-produccion-cientifica';
 import { IIndiceImpacto } from '@core/models/prc/indice-impacto';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { IProyectoPrc } from '@core/models/prc/proyecto-prc';
@@ -12,11 +12,11 @@ import { AutorService } from '@core/services/prc/autor/autor.service';
 import { CampoProduccionCientificaService } from '@core/services/prc/campo-produccion-cientifica/campo-produccion-cientifica.service';
 import { ConfiguracionCampoService } from '@core/services/prc/configuracion-campo/configuracion-campo.service';
 import { ProduccionCientificaService } from '@core/services/prc/produccion-cientifica/produccion-cientifica.service';
-import { ValorCampoService } from '@core/services/prc/valor-campo/valor-campo.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
+import { CvnValorCampoService } from '../../../shared/cvn/services/cvn-valor-campo.service';
 
 export class PublicacionDatosGeneralesFragment extends Fragment {
   private camposProduccionCientificaWithConfiguracionMap$ =
@@ -26,28 +26,30 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
   private proyectos$ = new BehaviorSubject<IProyectoPrc[]>([]);
   private acreditaciones$ = new BehaviorSubject<IAcreditacion[]>([]);
   private valoresCampoMap = new Map<string, IValorCampo[]>();
-  private produccionCientifica: IProduccionCientifica;
+  private produccionCientifica$: BehaviorSubject<IProduccionCientifica>;
+
+  get produccionCientifica(): IProduccionCientifica {
+    return this.produccionCientifica$.value;
+  }
 
   get estadoProduccionCientifica(): IEstadoProduccionCientifica {
     return this.produccionCientifica?.estado;
   }
 
   constructor(
-    private id: number,
-    private produccionCientifica$: Observable<IProduccionCientifica>,
+    produccionCientifica: IProduccionCientifica,
     private campoProduccionCientificaService: CampoProduccionCientificaService,
     private configuracionCampo: ConfiguracionCampoService,
-    private valorCampoService: ValorCampoService,
+    private cvnValorCampoService: CvnValorCampoService,
     private produccionCientificaService: ProduccionCientificaService,
     private personaService: PersonaService,
     private proyectoResumenService: ProyectoResumenService,
     private documentoService: DocumentoService,
     private autorService: AutorService,
   ) {
-    super(id);
-    this.subscriptions.push(this.produccionCientifica$
-      .subscribe(produccionCientifica => this.produccionCientifica = produccionCientifica)
-    );
+    super(produccionCientifica?.id);
+    this.produccionCientifica$ = new BehaviorSubject(produccionCientifica);
+    this.emitProduccionCientifica(produccionCientifica);
     this.setComplete(true);
   }
 
@@ -152,20 +154,19 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
   private initializeProyectos(): Observable<IProyectoPrc[]> {
     return this.produccionCientificaService.findProyectos(this.produccionCientifica.id)
       .pipe(
-        map(({ items }) => items.map(proyecto => {
-          proyecto.produccionCientifica = this.produccionCientifica;
-          return proyecto;
+        map(({ items }) => items.map(proyectoPrc => {
+          proyectoPrc.produccionCientifica = this.produccionCientifica;
+          return proyectoPrc;
         })),
-        concatMap(proyectos => from(proyectos)
+        concatMap(proyectosPrc => from(proyectosPrc)
           .pipe(
-            // TODO obtener sólo los datos necesarios del proyecto para PRC
-            mergeMap(proyecto => this.proyectoResumenService.findById(proyecto.id)
+            mergeMap(proyectoPrc => this.proyectoResumenService.findById(proyectoPrc?.proyecto?.id)
               .pipe(
                 map(proyectoResumen => {
-                  proyecto.proyecto = proyectoResumen;
-                  return proyecto;
+                  proyectoPrc.proyecto = proyectoResumen;
+                  return proyectoPrc;
                 }),
-                catchError(() => of(proyecto)),
+                catchError(() => of(proyectoPrc)),
               )
             ),
             toArray()
@@ -232,11 +233,25 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
   getValoresCampo$ = (campoProduccionCientifica: ICampoProduccionCientifica) => {
     const valoresCampo = this.valoresCampoMap.get(campoProduccionCientifica.codigo);
     if (!valoresCampo) {
-      return this.valorCampoService.findAllValorCampo(campoProduccionCientifica).pipe(
+      return this.cvnValorCampoService.findCvnValorCampo(campoProduccionCientifica).pipe(
         tap(valoresCampoFetched => this.valoresCampoMap.set(campoProduccionCientifica.codigo, valoresCampoFetched))
       );
     } else {
       return of(valoresCampo);
     }
+  }
+
+  getProduccionCientifica$(): Observable<IProduccionCientifica> {
+    return this.produccionCientifica$.asObservable();
+  }
+
+  isProduccionCientificaEditable$(): Observable<boolean> {
+    return this.getProduccionCientifica$().pipe(
+      map(({ estado }) => estado?.estado === TipoEstadoProduccion.VALIDADO || estado?.estado === TipoEstadoProduccion.RECHAZADO)
+    );
+  }
+
+  emitProduccionCientifica(produccionCientifica: IProduccionCientifica): void {
+    this.produccionCientifica$.next(produccionCientifica);
   }
 }
