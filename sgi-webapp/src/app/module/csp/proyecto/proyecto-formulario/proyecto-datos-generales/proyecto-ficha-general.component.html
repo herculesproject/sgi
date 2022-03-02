@@ -359,11 +359,11 @@
           <sgi-select-boolean formControlName="coordinadorExterno" [required]="(formPart.coordinado$ | async)">
           </sgi-select-boolean>
           <sgi-field-info matSuffix
-            [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false"
+            [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false && !formPart.isInvestigador"
             message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-periodos-socios-dependencies.info' | translate}}">
           </sgi-field-info>
           <sgi-field-info matSuffix
-            [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async)"
+            [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async) && !formPart.isInvestigador"
             message="{{'info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip' | translate}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.coordinadorExterno.errors?.required">
