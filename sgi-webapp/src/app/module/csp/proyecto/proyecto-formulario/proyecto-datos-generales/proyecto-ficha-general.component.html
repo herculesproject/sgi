@@ -88,7 +88,8 @@
           <mat-label>{{'csp.proyecto.ambito-geografico' | translate}}</mat-label>
           <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico" [required]="formPart.abiertoRequired">
           </sgi-select-tipo-ambito-geografico>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.ambitoGeograficoConvocatoria$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.ambitoGeograficoConvocatoria$ | async)"
             message="{{textoInfoAmbitoGeograficoConvocatoria}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
@@ -181,10 +182,12 @@
           <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}</mat-label>
           <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion" required>
           </sgi-select-unidad-gestion>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.unidadGestionConvocatoria$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.unidadGestionConvocatoria$ | async)"
             message="{{textoInfoUnidadGestionConvocatoria}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
@@ -202,10 +205,12 @@
             [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
             [resetOnChange]="unidadGestion.selectionChange">
           </sgi-select-modelo-ejecucion>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.vinculacionesModeloEjecucion$ | async)"
             message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
           </sgi-field-info>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.modeloEjecucionConvocatoria$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.modeloEjecucionConvocatoria$ | async)"
             message="{{textoInfoModeloEjecucionConvocatoria}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
@@ -223,7 +228,8 @@
             [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
             [resetOnChange]="modeloEjecucion.selectionChange">
           </sgi-select-tipo-finalidad>
-          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.finalidadConvocatoria$ | async)"
+          <sgi-field-info matSuffix
+            [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.finalidadConvocatoria$ | async)"
             message="{{textoInfoFinalidadConvocatoria}}">
           </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">
