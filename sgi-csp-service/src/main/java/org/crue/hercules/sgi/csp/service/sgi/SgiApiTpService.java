@@ -47,7 +47,7 @@ public class SgiApiTpService extends SgiApiBaseService {
     Assert.notNull(instant, "Instant is required");
 
     ServiceType serviceType = ServiceType.TP;
-    String relativeUrl = "/sgiapitasks";
+    String relativeUrl = "/sgiapitasks/instant";
     HttpMethod httpMethod = HttpMethod.POST;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -88,7 +88,7 @@ public class SgiApiTpService extends SgiApiBaseService {
     Assert.notNull(instant, "Instant is required");
 
     ServiceType serviceType = ServiceType.TP;
-    String relativeUrl = "/sgiapitasks/{id}";
+    String relativeUrl = "/sgiapitasks/instant/{id}";
     HttpMethod httpMethod = HttpMethod.PUT;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
