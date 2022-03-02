@@ -247,4 +247,22 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000005-modelo_ejecucion">
+    <update tableName="modelo_ejecucion">
+      <column name="contrato" valueBoolean="true" />
+      <column name="externo" valueBoolean="false" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="nombre" value="Facturación" />
+      </whereParams>
+    </update>
+    <insert tableName="modelo_ejecucion">
+      <column name="id" valueSequenceNext="modelo_ejecucion_seq" />
+      <column name="nombre" value="Proyecto externo" />
+      <column name="descripcion" value="Proyecto externo" />
+      <column name="externo" valueBoolean="true" />
+      <column name="contrato" valueBoolean="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
