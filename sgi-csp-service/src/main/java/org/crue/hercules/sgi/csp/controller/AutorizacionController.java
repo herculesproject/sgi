@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
+import org.crue.hercules.sgi.csp.dto.AutorizacionWithFirstEstado;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
@@ -184,10 +185,11 @@ public class AutorizacionController {
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E', 'CSP-AUT-V')")
-  public ResponseEntity<Page<AutorizacionOutput>> findAll(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<AutorizacionWithFirstEstado>> findAll(
+      @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
-    Page<AutorizacionOutput> page = convert(service.findAll(query, paging));
+    Page<AutorizacionWithFirstEstado> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAll(String query,Pageable paging) - end");
@@ -240,11 +242,11 @@ public class AutorizacionController {
    */
   @GetMapping("/investigador")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-INV-C', 'CSP-AUT-INV-ER')")
-  public ResponseEntity<Page<AutorizacionOutput>> findAllInvestigador(
+  public ResponseEntity<Page<AutorizacionWithFirstEstado>> findAllInvestigador(
       @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllInvestigador(String query, Pageable paging) - start");
-    Page<AutorizacionOutput> page = convert(service.findAllInvestigador(query, paging));
+    Page<AutorizacionWithFirstEstado> page = service.findAllInvestigador(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAllInvestigador(String query, Pageable paging) - end");

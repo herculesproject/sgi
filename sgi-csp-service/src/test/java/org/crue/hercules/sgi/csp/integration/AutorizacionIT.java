@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.AutorizacionController;
 import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
+import org.crue.hercules.sgi.csp.dto.AutorizacionWithFirstEstado;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
@@ -282,13 +283,13 @@ class AutorizacionIT extends BaseIT {
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
-    final ResponseEntity<List<AutorizacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<AutorizacionOutput>>() {
+    final ResponseEntity<List<AutorizacionWithFirstEstado>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<AutorizacionWithFirstEstado>>() {
         });
 
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<AutorizacionOutput> responseData = response.getBody();
+    final List<AutorizacionWithFirstEstado> responseData = response.getBody();
     Assertions.assertThat(responseData.size()).isEqualTo(3);
 
     HttpHeaders responseHeaders = response.getHeaders();
@@ -325,13 +326,13 @@ class AutorizacionIT extends BaseIT {
         .queryParam("q", filter)
         .build(false).toUri();
 
-    final ResponseEntity<List<AutorizacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<AutorizacionOutput>>() {
+    final ResponseEntity<List<AutorizacionWithFirstEstado>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<AutorizacionWithFirstEstado>>() {
         });
 
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<AutorizacionOutput> responseData = response.getBody();
+    final List<AutorizacionWithFirstEstado> responseData = response.getBody();
     Assertions.assertThat(responseData.size()).isEqualTo(3);
 
     HttpHeaders responseHeaders = response.getHeaders();
@@ -753,7 +754,7 @@ class AutorizacionIT extends BaseIT {
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  //@Test // Falla al llamar al servicio externo de generar el reporte
+  // @Test // Falla al llamar al servicio externo de generar el reporte
   void documentoAutorizacion_ReturnsDocumentoOutput() throws Exception {
     String roles = "CSP-AUT-INV-ER";
     Long autorizacionId = 1L;

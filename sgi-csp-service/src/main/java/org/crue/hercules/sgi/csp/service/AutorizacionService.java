@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.AutorizacionWithFirstEstado;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.AlreadyInEstadoAutorizacionException;
@@ -169,11 +170,13 @@ public class AutorizacionService {
    * @return la lista de entidades {@link Autorizacion} paginadas y/o
    *         filtradas.
    */
-  public Page<Autorizacion> findAll(String query, Pageable paging) {
+  public Page<AutorizacionWithFirstEstado> findAll(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
-    Specification<Autorizacion> specs = SgiRSQLJPASupport.toSpecification(query);
-
-    Page<Autorizacion> returnValue = repository.findAll(specs, paging);
+    Specification<Autorizacion> specs = null;
+    if (query != null) {
+      specs = SgiRSQLJPASupport.toSpecification(query);
+    }
+    Page<AutorizacionWithFirstEstado> returnValue = repository.findAllAutorizacionWithFirstEstado(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
@@ -187,12 +190,12 @@ public class AutorizacionService {
    * @return el listado de entidades {@link Autorizacion} que puede visualizar un
    *         investigador paginadas y filtradas.
    */
-  public Page<Autorizacion> findAllInvestigador(String query, Pageable paging) {
+  public Page<AutorizacionWithFirstEstado> findAllInvestigador(String query, Pageable paging) {
     log.debug("findAllInvestigador(String query, Pageable paging) - start");
     Specification<Autorizacion> specs = AutorizacionSpecifications.bySolicitante(getUserPersonaRef())
         .and(SgiRSQLJPASupport.toSpecification(query));
 
-    Page<Autorizacion> returnValue = repository.findAll(specs, paging);
+    Page<AutorizacionWithFirstEstado> returnValue = repository.findAllAutorizacionWithFirstEstado(specs, paging);
     log.debug("findAllInvestigador(String query, Pageable paging) - end");
     return returnValue;
   }
