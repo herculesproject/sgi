@@ -374,7 +374,8 @@ export class ConvocatoriaConceptoGastoListadoExportService extends AbstractTable
       elementsRow.push(convocatoriaConceptoGasto?.mesFinal ? convocatoriaConceptoGasto?.mesFinal.toString() ?? '' : '');
 
       for (let i = 0; i < maxNumCodigosConceptosGastos; i++) {
-        const codigoEconomicoConceptoGasto = convocatoriaConceptoGasto.codigosEconomicos[i] ?? null;
+        const codigoEconomicoConceptoGasto = convocatoriaConceptoGasto.codigosEconomicos ?
+          convocatoriaConceptoGasto.codigosEconomicos[i] ?? null : null;
         if (codigoEconomicoConceptoGasto) {
           elementsRow.push(codigoEconomicoConceptoGasto.codigoEconomico?.id + '-' + codigoEconomicoConceptoGasto.codigoEconomico?.nombre);
         } else {

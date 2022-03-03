@@ -375,7 +375,8 @@ export class ProyectoConceptoGastoListadoExportService extends AbstractTableExpo
       elementsRow.push(LuxonUtils.toBackend(proyectoConceptoGasto?.fechaFin) ?? '');
 
       for (let i = 0; i < maxNumCodigosConceptosGastos; i++) {
-        const codigoEconomicoConceptoGasto = proyectoConceptoGasto.codigosEconomicos[i] ?? null;
+        const codigoEconomicoConceptoGasto = proyectoConceptoGasto.codigosEconomicos
+          ? proyectoConceptoGasto.codigosEconomicos[i] ?? null : null;
         if (codigoEconomicoConceptoGasto) {
           elementsRow.push(codigoEconomicoConceptoGasto.codigoEconomico?.id + '-' + codigoEconomicoConceptoGasto.codigoEconomico?.nombre);
         } else {

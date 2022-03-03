@@ -82,6 +82,7 @@ export class ConvocatoriaConfiguracionSolicitudListadoExportService extends Abst
       ' - ' + this.translate.instant(CONFIGURACION_SOLICITUD_INICIO_PRESENTACION_KEY) +
       ' - ' + this.translate.instant(CONFIGURACION_SOLICITUD_FIN_PRESENTACION_KEY) +
       ' - ' + this.translate.instant(CONFIGURACION_SOLICITUD_IMPORTE_MAXIMO_KEY) +
+      ' - ' + this.translate.instant(DOCUMENTOS_REQUERIDOS_KEY, MSG_PARAMS.CARDINALIRY.PLURAL) +
       ')';
 
     const columnEntidad: ISgiColumnReport = {
