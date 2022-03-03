@@ -575,7 +575,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<Proyecto> specs = ProyectoSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query,
-        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
+        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository, sgiConfigProperties)));
 
     // No tiene acceso a todos los UO
     List<String> unidadesGestion = SgiSecurityContextHolder
@@ -612,7 +612,8 @@ public class ProyectoServiceImpl implements ProyectoService {
             .or(ProyectoSpecifications.byResponsableEconomicoId(authentication.getName())))
         .and(ProyectoSpecifications.byEstadoNotBorrador())
         .and(SgiRSQLJPASupport.toSpecification(query,
-            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository))));
+            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository,
+                sgiConfigProperties))));
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
     log.debug("findAllActivosInvestigador(String query, Pageable paging) - end");
@@ -632,7 +633,8 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Specification<Proyecto> specs = ProyectoSpecifications.distinct()
         .and(SgiRSQLJPASupport.toSpecification(query,
-            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
+            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository,
+                sgiConfigProperties)));
 
     List<String> unidadesGestion = SgiSecurityContextHolder
         .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
@@ -1750,7 +1752,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("findIds(String query) - start");
 
     List<Long> returnValue = repository.findIds(SgiRSQLJPASupport.toSpecification(query,
-        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
+        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository, sgiConfigProperties)));
 
     log.debug("findIds(String query) - end");
 

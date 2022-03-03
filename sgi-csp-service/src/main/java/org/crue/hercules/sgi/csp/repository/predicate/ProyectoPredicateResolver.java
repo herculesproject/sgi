@@ -14,6 +14,7 @@ import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -77,20 +78,22 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
 
   private final ProgramaRepository programaRepository;
   private final ProyectoProrrogaRepository proyectoProrrogaRepository;
+  private final SgiConfigProperties sgiConfigProperties;
 
   private ProyectoPredicateResolver(ProgramaRepository programaRepository,
-      ProyectoProrrogaRepository proyectoProrrogaRepository) {
+      ProyectoProrrogaRepository proyectoProrrogaRepository,
+      SgiConfigProperties sgiConfigProperties) {
     this.programaRepository = programaRepository;
     this.proyectoProrrogaRepository = proyectoProrrogaRepository;
+    this.sgiConfigProperties = sgiConfigProperties;
   }
 
   public static ProyectoPredicateResolver getInstance(ProgramaRepository programaRepository,
-      ProyectoProrrogaRepository proyectoProrrogaRepository) {
-    return new ProyectoPredicateResolver(programaRepository, proyectoProrrogaRepository);
+      ProyectoProrrogaRepository proyectoProrrogaRepository, SgiConfigProperties sgiConfigProperties) {
+    return new ProyectoPredicateResolver(programaRepository, proyectoProrrogaRepository, sgiConfigProperties);
   }
 
-  private Predicate buildByPlanInvestigacion(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByPlanInvestigacion(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -101,8 +104,8 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
       throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
     }
 
-    List<Programa> programasQuery = new ArrayList<Programa>();
-    List<Programa> programasHijos = new ArrayList<Programa>();
+    List<Programa> programasQuery = new ArrayList<>();
+    List<Programa> programasHijos = new ArrayList<>();
     Long idProgramaRaiz = Long.parseLong(node.getArguments().get(0));
     Optional<Programa> programaRaizOpt = this.programaRepository.findById(idProgramaRaiz);
     if (programaRaizOpt.isPresent()) {
@@ -122,8 +125,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
         joinEntidadesConvocantes.get(ProyectoEntidadConvocante_.programaConvocatoria).in(programasQuery));
   }
 
-  private Predicate buildByResponsableEquipo(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByResponsableEquipo(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -141,8 +143,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
         cb.equal(joinEquipos.get(ProyectoEquipo_.rolProyecto).get(RolProyecto_.rolPrincipal), true));
   }
 
-  private Predicate buildByFinalizado(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByFinalizado(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -162,8 +163,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     }
   }
 
-  private Predicate buildByProrrogado(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByProrrogado(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -186,8 +186,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     }
   }
 
-  private Predicate buildByFechaModificacion(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByFechaModificacion(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
       // Unsupported Operator
@@ -222,8 +221,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
         cb.greaterThanOrEqualTo(joinEntidadFinanciadora.get(Auditable_.lastModifiedDate), fechaModificacion));
   }
 
-  private Predicate buildByParticipacionActual(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
+  private Predicate buildByParticipacionActual(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.EQUAL)) {
       // Unsupported Operator
@@ -236,40 +234,46 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
 
     boolean participacionActual = Boolean.parseBoolean(node.getArguments().get(0));
 
-    if (participacionActual) {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      Instant fechaActual = Instant.now();
-      ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.LEFT);
-      Predicate participaEquipoConFechaFin = cb.and(
-          cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio),
-              fechaActual),
-          cb.greaterThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaFin), fechaActual),
-          cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
-      Predicate participaEquipoSinFechaFin = cb.and(
-          cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio),
-              fechaActual),
-          cb.isNull(joinEquipos.get(ProyectoEquipo_.fechaFin)),
-          cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
-
-      ListJoin<Proyecto, ProyectoResponsableEconomico> joinResponsableEconomico = root
-          .join(Proyecto_.responsablesEconomicos, JoinType.LEFT);
-      Predicate participaResponsableEconomicoConFechafin = cb.and(
-          cb.lessThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio),
-              fechaActual),
-          cb.greaterThanOrEqualTo(joinResponsableEconomico.get(
-              ProyectoResponsableEconomico_.fechaFin), fechaActual),
-          cb.equal(joinResponsableEconomico.get(ProyectoResponsableEconomico_.personaRef), authentication.getName()));
-      Predicate participaResponsableEconomicoSinFechafin = cb.and(
-          cb.lessThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio),
-              fechaActual),
-          cb.isNull(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaFin)),
-          cb.equal(joinResponsableEconomico.get(ProyectoResponsableEconomico_.personaRef), authentication.getName()));
-
-      return cb.or(participaEquipoConFechaFin, participaEquipoSinFechaFin, participaResponsableEconomicoConFechafin,
-          participaResponsableEconomicoSinFechafin);
-    } else {
-      return cb.equal(cb.literal("1"), cb.literal("1"));
+    if (!participacionActual) {
+      return cb.isTrue(cb.literal(true)); // always true = no filtering
     }
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.LEFT);
+
+    Predicate fechaInicioMiembroEquipoLessOrNull = cb.or(
+        cb.lessThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaInicio), fechaActual),
+        cb.isNull(joinEquipos.get(ProyectoEquipo_.fechaInicio)));
+
+    Predicate fechaFinMiembroEquipoGreaterOrNull = cb.or(
+        cb.greaterThanOrEqualTo(joinEquipos.get(ProyectoEquipo_.fechaFin), fechaActual),
+        cb.isNull(joinEquipos.get(ProyectoEquipo_.fechaFin)));
+
+    Predicate participacionActualEquipo = cb.and(
+        fechaInicioMiembroEquipoLessOrNull,
+        fechaFinMiembroEquipoGreaterOrNull,
+        cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), authentication.getName()));
+
+    ListJoin<Proyecto, ProyectoResponsableEconomico> joinResponsableEconomico = root
+        .join(Proyecto_.responsablesEconomicos, JoinType.LEFT);
+
+    Predicate fechaInicioResponsableEconomicoLessOrNull = cb.or(
+        cb.lessThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio), fechaActual),
+        cb.isNull(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaInicio)));
+
+    Predicate fechaFinResponsableEconomicoGreaterOrNull = cb.or(
+        cb.greaterThanOrEqualTo(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaFin), fechaActual),
+        cb.isNull(joinResponsableEconomico.get(ProyectoResponsableEconomico_.fechaFin)));
+
+    Predicate participacionActualResponsableEconomico = cb.and(
+        fechaInicioResponsableEconomicoLessOrNull,
+        fechaFinResponsableEconomicoGreaterOrNull,
+        cb.equal(joinResponsableEconomico.get(ProyectoResponsableEconomico_.personaRef), authentication.getName()));
+
+    return cb.or(participacionActualEquipo, participacionActualResponsableEconomico);
   }
 
   @Override
@@ -281,19 +285,25 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
   @Override
   public Predicate toPredicate(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
-    switch (Property.fromCode(node.getSelector())) {
+    Property property = Property.fromCode(node.getSelector());
+
+    if (property == null) {
+      return null;
+    }
+
+    switch (property) {
       case PLAN_INVESTIGACION:
-        return buildByPlanInvestigacion(node, root, query, criteriaBuilder);
+        return buildByPlanInvestigacion(node, root, criteriaBuilder);
       case RESPONSABLE_PROYECTO:
-        return buildByResponsableEquipo(node, root, query, criteriaBuilder);
+        return buildByResponsableEquipo(node, root, criteriaBuilder);
       case FINALIZADO:
-        return buildByFinalizado(node, root, query, criteriaBuilder);
+        return buildByFinalizado(node, root, criteriaBuilder);
       case PRORROGADO:
-        return buildByProrrogado(node, root, query, criteriaBuilder);
+        return buildByProrrogado(node, root, criteriaBuilder);
       case FECHA_MODIFICACION:
-        return buildByFechaModificacion(node, root, query, criteriaBuilder);
+        return buildByFechaModificacion(node, root, criteriaBuilder);
       case PARTICIPACION_ACTUAL:
-        return buildByParticipacionActual(node, root, query, criteriaBuilder);
+        return buildByParticipacionActual(node, root, criteriaBuilder);
       default:
         return null;
     }
