@@ -1,13 +1,9 @@
 package org.crue.hercules.sgi.tp.service.sgi;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.hc.core5.net.URIBuilder;
+import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.tp.config.RestApiProperties;
 import org.crue.hercules.sgi.tp.enums.ServiceType;
 import org.crue.hercules.sgi.tp.exceptions.UnknownServiceTypeException;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -27,11 +23,14 @@ public abstract class SgiApiBaseService {
     this.restTemplate = restTemplate;
   }
 
-  protected URI buildUri(
+  protected String buildUri(
       ServiceType serviceType, String relativeUrl) {
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - start");
     String serviceURL = null;
     switch (serviceType) {
+      case COM:
+        serviceURL = restApiProperties.getComUrl();
+        break;
       case CSP:
         serviceURL = restApiProperties.getCspUrl();
         break;
@@ -53,13 +52,8 @@ public abstract class SgiApiBaseService {
       default:
         throw new UnknownServiceTypeException(serviceType.name());
     }
-    URI mergedURL;
-    try {
-      mergedURL = new URIBuilder(serviceURL).appendPath(relativeUrl).build();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-      throw new IllegalArgumentException(e);
-    }
+    // TODO revisit implementation
+    String mergedURL = new StringBuilder(serviceURL).append(relativeUrl).toString();
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - end");
     return mergedURL;
   }
@@ -72,6 +66,7 @@ public abstract class SgiApiBaseService {
   protected <E, T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod, E entity,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     log.info("Calling SGI API endpoint: {}", endPoint);
+    log.debug("Endpoint uri variables: {} \\nRequest data: {}", (Object[]) uriVariables, entity);
     HttpEntity<E> request = new HttpEntityBuilder<E>().withEntity(entity)
         .withClientAuthorization(CLIENT_REGISTRATION_ID).build();
 

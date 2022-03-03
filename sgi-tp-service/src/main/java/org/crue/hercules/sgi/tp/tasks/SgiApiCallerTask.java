@@ -1,9 +1,5 @@
 package org.crue.hercules.sgi.tp.tasks;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.crue.hercules.sgi.tp.config.RestApiProperties;
 import org.crue.hercules.sgi.tp.enums.ServiceType;
 import org.crue.hercules.sgi.tp.service.sgi.SgiApiBaseService;
@@ -29,11 +25,10 @@ public class SgiApiCallerTask extends SgiApiBaseService {
     if (method == null) {
       method = HttpMethod.PATCH;
     }
-    URI mergedURL = buildUri(type, relativeUrl);
+    String mergedURL = buildUri(type, relativeUrl);
 
-    final String result = super.<String>callEndpoint(mergedURL
-        .toString(), method, new ParameterizedTypeReference<String>() {
-        }).getBody();
+    final String result = super.<String>callEndpoint(mergedURL, method, new ParameterizedTypeReference<String>() {
+    }).getBody();
 
     log.debug("call(String serviceType, String relativeUrl, String httpMethod) - end");
     return result;
