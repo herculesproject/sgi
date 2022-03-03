@@ -228,5 +228,10 @@
   <changeSet author="user (generated)" id="0000000000005-30">
     <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_palabra_clave" constraintName="FK_GRUPOPALABRACLAVE_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
   </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-31">
+    <addColumn tableName="rol_proyecto">
+      <column name="baremable_prc" defaultValueBoolean="false" type="boolean" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

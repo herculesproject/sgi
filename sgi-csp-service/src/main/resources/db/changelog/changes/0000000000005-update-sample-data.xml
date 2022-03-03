@@ -265,4 +265,59 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000005-rol_proyecto">
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=1</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=2</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=3</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="false" />
+      <where>id=4</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=5</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=6</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=7</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=8</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="false" />
+      <where>id=9</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="false" />
+      <where>id=10</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="false" />
+      <where>id=11</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="false" />
+      <where>id=12</where>
+    </update>
+    <update tableName="rol_proyecto">
+      <column name="baremable_prc" valueBoolean="true" />
+      <where>id=13</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
