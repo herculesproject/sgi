@@ -1,13 +1,9 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.hc.core5.net.URIBuilder;
+import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.enums.ServiceType;
 import org.crue.hercules.sgi.prc.exceptions.UnknownServiceTypeException;
-import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
