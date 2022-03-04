@@ -169,8 +169,8 @@ export class AutorizacionActionService extends
       (modalData: IEstadoAutorizacion) => {
         if (modalData) {
           this.snackBarService.showSuccess(MSG_CAMBIO_ESTADO_SUCCESS);
-          this.datosGenerales.estado$.next(modalData);
-          this.datosGenerales.refreshInitialState(true);
+          this.datosGenerales.reload();
+          this.historicoEstados.reload();
         }
       }
     );
