@@ -233,5 +233,10 @@
       <column name="baremable_prc" defaultValueBoolean="false" type="boolean" />
     </addColumn>
   </changeSet>
+  <changeSet author="user (generated)" id="0000000000005-32">
+    <addColumn tableName="convocatoria">
+      <column name="excelencia" type="boolean" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>
