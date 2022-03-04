@@ -148,7 +148,9 @@ enum CodigoCVN {
   /* Ámbito geográfico, patente europea */
   E050_030_010_170 = '050.030.010.170',
   /* Número de tramos de investigación reconocidos */
-  E060_030_070_010 = '060.030.070.010'
+  E060_030_070_010 = '060.030.070.010',
+  /* Categoría profesional */
+  E060_030_030_100 = '060.030.030.100'
 }
 
 export const CODIGO_CVN_MAP = new Map(Object.entries(CodigoCVN).map(([key, value]) => [value.toString(), key]));
