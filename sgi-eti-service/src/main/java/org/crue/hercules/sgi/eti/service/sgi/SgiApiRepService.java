@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.eti.service.sgi;
 
-import java.net.URI;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
