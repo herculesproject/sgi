@@ -1,9 +1,5 @@
 package org.crue.hercules.sgi.eti.service.sgi;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.hc.core5.net.URIBuilder;
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
 import org.crue.hercules.sgi.eti.exceptions.UnknownServiceTypeException;
