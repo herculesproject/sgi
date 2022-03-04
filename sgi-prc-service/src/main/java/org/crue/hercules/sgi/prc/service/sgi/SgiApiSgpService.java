@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
-import java.net.URI;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
