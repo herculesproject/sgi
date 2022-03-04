@@ -16,6 +16,7 @@ import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-p
 import { SolicitiudHitosModalComponent } from './modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
 import { SolicitudListadoExportModalComponent } from './modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
+import { SolicitudProyectoPresupuestoListadoExportModalComponent } from './modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';
 import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
@@ -44,6 +45,7 @@ import { SolicitudProyectoClasificacionListadoExportService } from './solicitud-
 import { SolicitudProyectoEntidadFinanciadoraListadoExportService } from './solicitud-proyecto-entidad-financiadora-listado-export.service';
 import { SolicitudProyectoEquipoListadoExportService } from './solicitud-proyecto-equipo-listado-export.service';
 import { SolicitudProyectoFichaGeneralListadoExportService } from './solicitud-proyecto-ficha-general-listado-export.service';
+import { SolicitudProyectoPresupuestoListadoExportService } from './solicitud-proyecto-presupuesto-listado-export.service';
 import { SolicitudProyectoResponsableEconomicoListadoExportService } from './solicitud-proyecto-responsable-economico-listado-export.service';
 import { SolicitudProyectoSocioListadoExportService } from './solicitud-proyecto-socio-listado-export.service';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
@@ -73,7 +75,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoAreaConocimientoComponent,
     SolicitudProyectoResponsableEconomicoComponent,
     SolicitudProyectoResponsableEconomicoModalComponent,
-    SolicitudAutoevaluacionComponent
+    SolicitudAutoevaluacionComponent,
+    SolicitudProyectoPresupuestoListadoExportModalComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +106,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoEquipoListadoExportService,
     SolicitudProyectoResponsableEconomicoListadoExportService,
     SolicitudProyectoSocioListadoExportService,
-    SolicitudProyectoEntidadFinanciadoraListadoExportService
+    SolicitudProyectoEntidadFinanciadoraListadoExportService,
+    SolicitudProyectoPresupuestoListadoExportService
   ]
 })
 export class SolicitudModule { }

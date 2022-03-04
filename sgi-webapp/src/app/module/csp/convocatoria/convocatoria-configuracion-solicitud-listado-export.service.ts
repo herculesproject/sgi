@@ -112,14 +112,14 @@ export class ConvocatoriaConfiguracionSolicitudListadoExportService extends Abst
     const columnInicioPresentacion: ISgiColumnReport = {
       name: CONFIGURACION_SOLICITUD_INICIO_PRESENTACION_FIELD,
       title: titleConfiguracionSolicitud + ': ' + this.translate.instant(CONFIGURACION_SOLICITUD_INICIO_PRESENTACION_KEY),
-      type: ColumnType.DATE,
+      type: ColumnType.STRING,
     };
     columns.push(columnInicioPresentacion);
 
     const columnFinPresentacion: ISgiColumnReport = {
       name: CONFIGURACION_SOLICITUD_FIN_PRESENTACION_FIELD,
       title: titleConfiguracionSolicitud + ': ' + this.translate.instant(CONFIGURACION_SOLICITUD_FIN_PRESENTACION_KEY),
-      type: ColumnType.DATE,
+      type: ColumnType.STRING,
     };
     columns.push(columnFinPresentacion);
 
@@ -169,17 +169,19 @@ export class ConvocatoriaConfiguracionSolicitudListadoExportService extends Abst
         ? this.getI18nBooleanYesNo(convocatoria.configuracionSolicitudes?.tramitacionSGI) : '';
       configuracionSolicitudContent += '\n';
       configuracionSolicitudContent += convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes ?
-        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes.fechaInicio, true), 'shortDate') ?? '' : '';
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes.fechaInicio, false), 'short') ?? '' : '';
       configuracionSolicitudContent += '\n';
       configuracionSolicitudContent += convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes ?
-        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes.fechaFin, true), 'shortDate') ?? '' : '';
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(convocatoria.configuracionSolicitudes?.fasePresentacionSolicitudes.fechaFin, false), 'short') ?? '' : '';
       configuracionSolicitudContent += '\n';
       configuracionSolicitudContent += convocatoria.configuracionSolicitudes?.importeMaximoSolicitud ? convocatoria.configuracionSolicitudes?.importeMaximoSolicitud.toString() : '';
       configuracionSolicitudContent += '\n';
 
-      convocatoria.documentosRequeridos?.forEach(documento => {
+      convocatoria.documentosRequeridos?.forEach((documento, index) => {
         configuracionSolicitudContent += documento?.tipoDocumento ? documento?.tipoDocumento.nombre ?? '' : '';
-
+        if (convocatoria.documentosRequeridos.length - 1 > index) {
+          configuracionSolicitudContent += ', ';
+        }
       });
       const configuracionSolicitudElementsRow: any[] = [];
       configuracionSolicitudElementsRow.push(configuracionSolicitudContent);
@@ -199,8 +201,10 @@ export class ConvocatoriaConfiguracionSolicitudListadoExportService extends Abst
     if (configuracionSolicitud) {
       elementsRow.push(this.notIsNullAndNotUndefined(configuracionSolicitud?.tramitacionSGI)
         ? this.getI18nBooleanYesNo(configuracionSolicitud?.tramitacionSGI) : '');
-      elementsRow.push(configuracionSolicitud.fasePresentacionSolicitudes ? LuxonUtils.toBackend(configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio) ?? '' : '');
-      elementsRow.push(configuracionSolicitud.fasePresentacionSolicitudes ? LuxonUtils.toBackend(configuracionSolicitud.fasePresentacionSolicitudes.fechaFin) ?? '' : '');
+      elementsRow.push(configuracionSolicitud.fasePresentacionSolicitudes ?
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(configuracionSolicitud?.fasePresentacionSolicitudes.fechaInicio, false), 'short') ?? '' : '');
+      elementsRow.push(configuracionSolicitud.fasePresentacionSolicitudes ?
+        this.luxonDatePipe.transform(LuxonUtils.toBackend(configuracionSolicitud?.fasePresentacionSolicitudes.fechaFin, false), 'short') ?? '' : '');
       elementsRow.push(configuracionSolicitud.importeMaximoSolicitud ? configuracionSolicitud.importeMaximoSolicitud.toString() ?? '' : '');
     } else {
       elementsRow.push('');
