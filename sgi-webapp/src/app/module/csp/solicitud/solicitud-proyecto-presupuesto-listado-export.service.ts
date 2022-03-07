@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
@@ -36,6 +37,7 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     protected readonly translate: TranslateService,
+    private readonly decimalPipe: DecimalPipe,
     private readonly solicitudService: SolicitudService,
     protected reportService: ReportService
   ) {
@@ -102,7 +104,10 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
   private getDataReportListadoGeneral(
     solicitudPresupuestoData: ISolicitudPrespuestoReportData
   ): Observable<ISolicitudPrespuestoReportData> {
-    return this.solicitudService.findAllSolicitudProyectoPresupuesto(solicitudPresupuestoData.id).pipe(
+    const findOptions: SgiRestFindOptions = {
+      sort: new RSQLSgiRestSort('anualidad', SgiRestSortDirection.DESC)
+    };
+    return this.solicitudService.findAllSolicitudProyectoPresupuesto(solicitudPresupuestoData.id, findOptions).pipe(
       map((solicitudesPresupestoResponse) => {
         solicitudPresupuestoData.solicitudesPresupuesto = solicitudesPresupestoResponse.items;
         return solicitudPresupuestoData;
@@ -157,7 +162,7 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
       const columnImportePresupuestado = {
         title: this.translate.instant(SOLICITUD_PROYECTO_PRESUPUESTO_IMPORTE_PRESUPUESTADO_KEY) + ' ' + idPresupuesto,
         name: 'importePresupuestado' + idPresupuesto,
-        type: ColumnType.NUMBER,
+        type: ColumnType.STRING,
         format: '#'
       };
       columns.push(columnImportePresupuestado);
@@ -165,7 +170,8 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
       const columnImporteSolicitado = {
         title: this.translate.instant(SOLICITUD_PROYECTO_PRESUPUESTO_IMPORTE_SOLICITADO_KEY) + ' ' + idPresupuesto,
         name: 'importeSolicitado' + idPresupuesto,
-        type: ColumnType.NUMBER,
+        type: ColumnType.STRING,
+        format: '#'
       };
       columns.push(columnImporteSolicitado);
     }
@@ -181,8 +187,8 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
       solicitudPresupuestoData.solicitudesPresupuesto.forEach(solicitudPresupuesto => {
         elementsRow.push(solicitudPresupuesto?.anualidad ?? '');
         elementsRow.push(solicitudPresupuesto?.conceptoGasto ? solicitudPresupuesto?.conceptoGasto.nombre ?? '' : '');
-        elementsRow.push(solicitudPresupuesto?.importePresupuestado ? solicitudPresupuesto?.importePresupuestado ?? '' : '');
-        elementsRow.push(solicitudPresupuesto?.importeSolicitado ? solicitudPresupuesto?.importeSolicitado ?? '' : '');
+        elementsRow.push(solicitudPresupuesto?.importePresupuestado ? this.decimalPipe.transform(solicitudPresupuesto?.importePresupuestado, '2.2-2') ?? '' : '');
+        elementsRow.push(solicitudPresupuesto?.importeSolicitado ? this.decimalPipe.transform(solicitudPresupuesto?.importeSolicitado, '2.2-2') ?? '' : '');
       });
     }
     return elementsRow;
