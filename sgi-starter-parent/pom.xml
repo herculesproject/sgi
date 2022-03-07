@@ -126,15 +126,6 @@
         <version>${greenmail.version}</version>
       </dependency>
       <!--
-        HttpClient - An efficient, up-to-date, and feature-rich package implementing the client side of the most recent HTTP standards and recommendations.
-        https://hc.apache.org/httpcomponents-client-5.1.x/index.html
-      -->
-      <dependency>
-        <groupId>org.apache.httpcomponents.client5</groupId>
-        <artifactId>httpclient5</artifactId>
-        <version>${httpclient5.version}</version>
-      </dependency>
-      <!--
         JSLT - A complete query and transformation language for JSON.
         https://github.com/schibsted/jslt
       -->
