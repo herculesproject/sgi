@@ -62,13 +62,13 @@ public class SgiApiSgpService extends SgiApiBaseService {
     String in = ids.stream().map(id -> StringUtils.wrap(id, "\"")).collect(Collectors.joining(","));
 
     ServiceType serviceType = ServiceType.SGP;
-    String relativeUrl = "/personas?q=id=in=({" + in + "})";
+    String relativeUrl = "/personas/?q=id=in=({in})";
     HttpMethod httpMethod = HttpMethod.GET;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
     final List<PersonaOutput> response = super.<List<PersonaOutput>>callEndpoint(mergedURL, httpMethod,
         new ParameterizedTypeReference<List<PersonaOutput>>() {
-        }).getBody();
+        }, in).getBody();
 
     log.debug("findAllByIdIn({}) - end", ids);
     return response;
