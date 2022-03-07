@@ -122,7 +122,6 @@ public class Convocatoria extends BaseEntity {
   /** Estado */
   @Column(name = "estado", length = 50, nullable = false)
   @Enumerated(EnumType.STRING)
-  @NotNull
   private Estado estado;
 
   /** Duracion */
