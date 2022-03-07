@@ -192,8 +192,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
     const controls = this.formGroup.controls;
 
     const rsqlFilter = new RSQLSgiRestFilter(
-      new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
-        .or('apellidos', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
+      new RSQLSgiRestFilter('nombreApellidos', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
         .or('email', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
     );
 
