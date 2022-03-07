@@ -15,8 +15,8 @@ import { DateValidator } from '@core/validators/date-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
-import { merge, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { merge, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -86,7 +86,7 @@ export class MiembroEquipoProyectoModalComponent extends
 
     this.textSaveOrUpdate = this.data?.entidad?.rolProyecto ? MSG_ACEPTAR : MSG_ANADIR;
 
-    this.getColectivosRolProyecto(this.data.entidad?.rolProyecto?.id);
+    this.loadColectivosRolProyecto(this.data.entidad?.rolProyecto?.id);
 
     this.subscriptions.push(
       this.formGroup.get('rolParticipacion').valueChanges
@@ -104,15 +104,22 @@ export class MiembroEquipoProyectoModalComponent extends
     );
   }
 
-  private getColectivosRolProyecto(rolProyectoId: number): void {
+  private loadColectivosRolProyecto(rolProyectoId: number): void {
+    this.subscriptions.push(
+      this.getColectivosRolProyecto(rolProyectoId).subscribe()
+    );
+  }
+
+  private getColectivosRolProyecto(rolProyectoId: number): Observable<string[]> {
     this.colectivosIdRolParticipacion = [];
-    if (rolProyectoId) {
-      this.rolProyectoService.findAllColectivos(rolProyectoId).subscribe(
-        (res) => {
-          this.colectivosIdRolParticipacion = res.items;
-        }
-      );
+    if (!rolProyectoId) {
+      return of([]);
     }
+
+    return this.rolProyectoService.findAllColectivos(rolProyectoId).pipe(
+      map(res => res.items),
+      tap(colectivos => this.colectivosIdRolParticipacion = colectivos)
+    );
   }
 
   private setupI18N(): void {
@@ -215,18 +222,26 @@ export class MiembroEquipoProyectoModalComponent extends
 
   private checkSelectedRol(rolProyecto: IRolProyecto): void {
     if (rolProyecto && this.formGroup.controls.miembro.value) {
-      this.subscriptions.push(this.rolProyectoService.findAllColectivos(rolProyecto?.id).pipe(
-        switchMap((response) => {
-          this.colectivosIdRolParticipacion = response.items;
-          return this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, this.colectivosIdRolParticipacion);
+      this.subscriptions.push(
+        this.getColectivosRolProyecto(rolProyecto?.id).pipe(
+          switchMap(colectivos => {
+            this.colectivosIdRolParticipacion = colectivos;
+            return this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, this.colectivosIdRolParticipacion);
+          })
+        ).subscribe(result => {
+          if (!result) {
+            this.formGroup.controls.miembro.setValue(undefined);
+          }
         })
-      ).subscribe(result => {
-        if (!result) {
-          this.formGroup.controls.miembro.setValue(undefined);
-        }
-      }));
-    } else if (rolProyecto && this.formGroup.controls.miembro.disabled) {
-      this.formGroup.controls.miembro.enable();
+      );
+    } else if (rolProyecto) {
+      this.subscriptions.push(
+        this.getColectivosRolProyecto(rolProyecto.id).subscribe(() => {
+          if (this.formGroup.controls.miembro.disabled) {
+            this.formGroup.controls.miembro.enable();
+          }
+        })
+      );
     } else if (!rolProyecto) {
       this.formGroup.controls.miembro.disable();
       this.formGroup.controls.miembro.setValue(undefined);
