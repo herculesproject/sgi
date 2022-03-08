@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -34,6 +35,9 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO = "CSP_COM_INICIO_PRESENTACION_GASTO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO
       + "_DATA";
+  private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION = "CSP_COM_SOLICITUD_PETICION_EVALUACION";
+  private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO = "ETI_PETICION_EVALUACION_CODIGO";
+  private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
 
@@ -235,6 +239,44 @@ public class SgiApiComService extends SgiApiBaseService {
 
     log.debug(
         "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - end");
+    return response;
+  }
+
+  /**
+   * Crea un email en el modulo COM para el aviso de Alta de solicitud de petición
+   * de evaluación de ética
+   * 
+   * @param data       información a incluir en el email
+   * @param recipients lista de destinatarios
+   * @return EmailOutput información del email creado
+   * @throws JsonProcessingException en caso de que se produzca un error
+   *                                 convirtiendo data a JSON
+   */
+  public EmailOutput createComunicadoSolicitudPeticionEvaluacionEti(CspComSolicitudPeticionEvaluacionData data,
+      List<Recipient> recipients) throws JsonProcessingException {
+    log.debug(
+        "createComunicadoSolicitudPeticionEvaluacionEti(CspComSolicitudPeticionEvaluacionData data, List<Recipient> recipients) - start");
+
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails";
+    HttpMethod httpMethod = HttpMethod.POST;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+
+    EmailInput request = EmailInput.builder().template(
+        TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION).recipients(recipients)
+        .build();
+    request.setParams(Arrays.asList(
+        new EmailParam(TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO,
+            data.getCodigoPeticionEvaluacion()),
+        new EmailParam(TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO,
+            data.getCodigoSolicitud())));
+
+    final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
+        new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
+
+    log.debug(
+        "createComunicadoSolicitudPeticionEvaluacionEti(CspComSolicitudPeticionEvaluacionData data, List<Recipient> recipients) - end");
     return response;
   }
 

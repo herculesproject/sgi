@@ -109,6 +109,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SgiApiEtiService sgiApiEtiService;
 
+  @Mock
+  private ComunicadosService comunicadosService;
+
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
 
@@ -121,7 +124,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         estadoSolicitudRepository, configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
-        convocatoriaEntidadFinanciadoraRepository);
+        convocatoriaEntidadFinanciadoraRepository, comunicadosService);
   }
 
   @Test

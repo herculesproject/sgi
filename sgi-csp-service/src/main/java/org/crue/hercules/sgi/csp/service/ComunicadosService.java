@@ -14,13 +14,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
+import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +38,13 @@ public class ComunicadosService {
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
+  private final SgiApiSgpService personasService;
 
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
-      SgiApiCnfService configService, SgiApiComService emailService) {
+      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) {
     log.debug(
         "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - start");
     this.sgiConfigProperties = sgiConfigProperties;
@@ -48,6 +52,7 @@ public class ComunicadosService {
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
     this.configService = configService;
     this.emailService = emailService;
+    this.personasService = personasService;
     log.debug(
         "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - end");
   }
@@ -121,5 +126,29 @@ public class ComunicadosService {
           "No existen proyectos que requieran generar aviso de inicio del período de presentación de justificación de gastos");
     }
     log.debug("enviarComunicadoInicioPresentacionJustificacionGastos() - end");
+  }
+
+  public void enviarComunicadoSolicitudAltaPeticionEvaluacionEti(String codigoPeticionEvaluacion,
+      String codigoSolicitud, String solicitanteRef) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudAltaPeticionEvaluacionEti() - start");
+    PersonaOutput persona = personasService.findById(solicitanteRef);
+    if (persona != null) {
+      List<Recipient> recipients = persona.getEmails().stream()
+          .map(email -> Recipient.builder().name(email.getEmail()).address(email.getEmail()).build())
+          .collect(Collectors.toList());
+
+      EmailOutput emailOutput;
+      emailOutput = emailService
+          .createComunicadoSolicitudPeticionEvaluacionEti(
+              CspComSolicitudPeticionEvaluacionData.builder().codigoPeticionEvaluacion(codigoPeticionEvaluacion)
+                  .codigoSolicitud(codigoSolicitud).build(),
+              recipients);
+
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudAltaPeticionEvaluacionEti() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudAltaPeticionEvaluacionEti() - end");
   }
 }

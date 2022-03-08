@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -94,6 +96,7 @@ public class SolicitudService {
   private final SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository;
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+  private final ComunicadosService comunicadosService;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -106,7 +109,8 @@ public class SolicitudService {
       SolicitudProyectoSocioRepository solicitudProyectoSocioRepository,
       SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository,
       ConvocatoriaRepository convocatoriaRepository,
-      ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository) {
+      ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
+      ComunicadosService comunicadosService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -121,6 +125,7 @@ public class SolicitudService {
     this.solicitudProyectoPresupuestoRepository = solicitudProyectoPresupuestoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
+    this.comunicadosService = comunicadosService;
   }
 
   /**
@@ -506,7 +511,23 @@ public class SolicitudService {
                 // Copiamos el equipo de trabajo de una solicitud (personaRef
                 // SolicitudProyectoEquipo)
                 // a una petición de evalaución (personaRef EquipoTrabajo)
-                copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion, solicitudProyecto.getId());
+                copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion,
+                    solicitudProyecto.getId());
+
+                try {
+                  // Enviamos el comunicado de alta de solicitud de petición evaluación de ética
+                  this.comunicadosService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
+                      peticionEvaluacion.getCodigo(), solicitud.getCodigoRegistroInterno(),
+                      solicitud.getSolicitanteRef());
+                } catch (JsonProcessingException e) {
+                  log.debug(
+                      "Error enviarComunicadoSolicitudAltaPeticionEvaluacionEti(String codigoPeticionEvaluacion, String codigoSolicitud, String solicitanteRef) -  codigoPeticionEvaluacion: "
+                          + peticionEvaluacion
+                              .getCodigo()
+                          + ", codigoSolicitud: " + solicitud.getCodigoRegistroInterno() + ", solicitanteRef: "
+                          + solicitud.getSolicitanteRef(),
+                      e);
+                }
               } else {
                 // throw exception
                 throw new GetPeticionEvaluacionException();
