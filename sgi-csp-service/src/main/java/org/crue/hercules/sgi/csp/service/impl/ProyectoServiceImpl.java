@@ -1741,20 +1741,25 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Obtiene todos los ids de {@link Proyecto} que cumplan las condiciones
-   * indicadas en la query.
+   * Obtiene los ids de {@link Proyecto} modificados que esten
+   * activos y con {@link Proyecto#confidencial} a <code>false</code> que cumplan
+   * las condiciones indicadas en el filtro de búsqueda
    *
    * @param query información del filtro.
    * @return el listado de ids de {@link Proyecto}.
    */
   @Override
-  public List<Long> findIds(String query) {
-    log.debug("findIds(String query) - start");
+  public List<Long> findIdsProyectosModificados(String query) {
+    log.debug("findIdsProyectosModificados(String query) - start");
 
-    List<Long> returnValue = repository.findIds(SgiRSQLJPASupport.toSpecification(query,
-        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository, sgiConfigProperties)));
+    Specification<Proyecto> specs = ProyectoSpecifications.activos().and(ProyectoSpecifications.confidencial(false))
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository,
+                sgiConfigProperties)));
 
-    log.debug("findIds(String query) - end");
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsProyectosModificados(String query) - end");
 
     return returnValue;
   }
