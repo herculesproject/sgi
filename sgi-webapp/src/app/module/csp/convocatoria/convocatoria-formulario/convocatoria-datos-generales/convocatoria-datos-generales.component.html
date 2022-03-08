@@ -114,6 +114,15 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Fecha Publicación -->
+      <mat-form-field color="primary" fxFlex="33%">
+        <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
+        <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion">
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaPublicacion>
+        </mat-datepicker>
+      </mat-form-field>
+
       <!-- Fecha Provisional -->
       <mat-form-field color="primary" fxFlex="33%">
         <mat-label>{{'csp.convocatoria.fecha-provisional'| translate}}</mat-label>
@@ -129,15 +138,6 @@
         <input matInput [matDatepicker]="pickerFechaConcesion" formControlName="fechaConcesion">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaConcesion"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaConcesion>
-        </mat-datepicker>
-      </mat-form-field>
-
-      <!-- Fecha Publicación -->
-      <mat-form-field color="primary" fxFlex="33%">
-        <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion">
-        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaPublicacion>
         </mat-datepicker>
       </mat-form-field>
     </div>
