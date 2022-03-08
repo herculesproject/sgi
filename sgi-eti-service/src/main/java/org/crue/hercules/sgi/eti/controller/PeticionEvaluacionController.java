@@ -113,7 +113,7 @@ public class PeticionEvaluacionController {
    * @return Nuevo {@link PeticionEvaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-INV-C', 'ETI-PEV-MOD-C')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti')) or hasAnyAuthorityForAnyUO('ETI-PEV-INV-C', 'ETI-PEV-MOD-C')")
   public ResponseEntity<PeticionEvaluacion> newPeticionEvaluacion(
       @Valid @RequestBody PeticionEvaluacion nuevoPeticionEvaluacion) {
     log.debug("newPeticionEvaluacion(PeticionEvaluacion nuevoPeticionEvaluacion) - start");
@@ -265,7 +265,7 @@ public class PeticionEvaluacionController {
    * @return Nuevo {@link EquipoTrabajo} creado.
    */
   @PostMapping("/{id}/equipos-trabajo")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-V', 'ETI-PEV-INV-VR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER', 'ETI-PEV-MOD-C')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti')) or hasAnyAuthorityForAnyUO('ETI-PEV-V', 'ETI-PEV-INV-VR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER', 'ETI-PEV-MOD-C')")
   public ResponseEntity<EquipoTrabajo> createEquipoTrabajo(@PathVariable Long id,
       @Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
     log.debug("createEquipoTrabajo(Long id, EquipoTrabajo nuevoEquipoTrabajo) - start");
