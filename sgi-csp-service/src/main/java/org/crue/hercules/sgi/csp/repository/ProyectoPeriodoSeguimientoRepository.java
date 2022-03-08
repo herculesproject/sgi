@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -11,10 +12,15 @@ public interface ProyectoPeriodoSeguimientoRepository
     extends JpaRepository<ProyectoPeriodoSeguimiento, Long>, JpaSpecificationExecutor<ProyectoPeriodoSeguimiento> {
 
   /**
-   * Recupera un listado de ProyectoPeriodoSeguimiento ordenado por su fecha de inicio direccion ascendente
+   * Recupera un listado de ProyectoPeriodoSeguimiento ordenado por su fecha de
+   * inicio direccion ascendente
+   * 
    * @param proyectoId Id de {@link Proyecto}
    * @return proyectoPeriodosSeguimiento List
    */
   List<ProyectoPeriodoSeguimiento> findByProyectoIdOrderByFechaInicio(Long proyectoId);
+
+  List<ProyectoPeriodoSeguimiento> findByFechaInicioPresentacionBetween(Instant fechaInicioPresentacion,
+      Instant fechaFinPresentacion);
 
 }

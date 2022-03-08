@@ -30,4 +30,10 @@ public class ComunicadosController {
     service.enviarComunicadoInicioPresentacionJustificacionGastos();
     log.debug("enviarComunicadoInicioPresentacionJustificacionGastos() - end");
   }
+
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp'))")
+  @GetMapping("/inicio-justificacion-seguimiento-cientifico")
+  public void sendStartOfJustificacionSeguimientoCientificoCommunication() throws JsonProcessingException {
+    this.service.sendStartOfJustificacionSeguimientoCientificoCommunication();
+  }
 }

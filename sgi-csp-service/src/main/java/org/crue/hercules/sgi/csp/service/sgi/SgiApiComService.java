@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
+import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -38,6 +39,10 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION = "CSP_COM_SOLICITUD_PETICION_EVALUACION";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO = "ETI_PETICION_EVALUACION_CODIGO";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
+
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO
+      + "_DATA";
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
@@ -210,7 +215,7 @@ public class SgiApiComService extends SgiApiBaseService {
 
   /**
    * Crea un email en el modulo COM para el aviso de un hito de solicitud
-   * 
+   *
    * @param solicitudHitoId Identificador del hito de solicitud
    * @param subject         Asunto del email
    * @param content         Contenido del email
@@ -240,7 +245,7 @@ public class SgiApiComService extends SgiApiBaseService {
 
   /**
    * Actualiza un email en el modulo COM para el aviso de un hito de solicitud
-   * 
+   *
    * @param id              Identificador el email
    * @param solicitudHitoId Identificador del hito de solicitud
    * @param subject         Asunto del email
@@ -305,7 +310,7 @@ public class SgiApiComService extends SgiApiBaseService {
   /**
    * Crea un email en el modulo COM para el aviso de Alta de solicitud de petición
    * de evaluación de ética
-   * 
+   *
    * @param data       información a incluir en el email
    * @param recipients lista de destinatarios
    * @return EmailOutput información del email creado
@@ -338,6 +343,38 @@ public class SgiApiComService extends SgiApiBaseService {
     log.debug(
         "createComunicadoSolicitudPeticionEvaluacionEti(CspComSolicitudPeticionEvaluacionData data, List<Recipient> recipients) - end");
     return response;
+  }
+
+  /**
+   * Crea un email en el modulo COM para el aviso de inicio del per&iacute;odo de
+   * presentaci&oacute;n de justificaci&oacute;n de gastos
+   *
+   * @param data       informaci&oacute;n a incluir en el email
+   * @param recipients lista de destinatarios
+   * @return EmailOutput informaci&oacute;n del email creado
+   * @throws JsonProcessingException en caso de que se produzca un error
+   *                                 convirtiendo data a JSON
+   */
+  public EmailOutput createComunicadoInicioPresentacionSeguimientoCientificoEmail(
+      CspComInicioPresentacionSeguimientoCientificoData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails";
+    HttpMethod httpMethod = HttpMethod.POST;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+
+    EmailInput request = EmailInput.builder().template(
+        TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO).recipients(recipients)
+        .build();
+    request.setParams(Arrays.asList(
+        new EmailParam(
+            TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM, mapper.writeValueAsString(data))));
+
+    return super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
+        new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
+
   }
 
   /**
