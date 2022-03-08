@@ -223,7 +223,7 @@ export class TipoProteccionListadoComponent extends AbstractTablePaginationCompo
   }
 
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   /**

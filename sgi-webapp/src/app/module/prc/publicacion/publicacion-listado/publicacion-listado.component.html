@@ -4,11 +4,11 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Investigador -->
+      <!-- Autor -->
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field class="input-form">
-          <mat-label>{{'prc.publicacion.investigador' | translate}}</mat-label>
-          <sgi-select-persona placeholder="{{'prc.publicacion.investigador' | translate}}"
+          <mat-label>{{'prc.publicacion.autor' | translate}}</mat-label>
+          <sgi-select-persona placeholder="{{'prc.publicacion.autor' | translate}}"
             [colectivos]="TIPO_COLECTIVO.AUTOR_PRC" formControlName="investigador"></sgi-select-persona>
         </mat-form-field>
       </div>
@@ -77,8 +77,11 @@
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field>
           <mat-label>{{'prc.publicacion.estado' | translate}}</mat-label>
-          <sgi-select-enum formControlName="estado" [enumMap]="TIPO_ESTADO_PRODUCCION_MAP">
-          </sgi-select-enum>
+          <mat-select matNativeControl formControlName="estado" multiple>
+            <mat-option *ngFor="let tipoEstadoProduccion of TIPO_ESTADO_PRODUCCION_LIST" [value]="tipoEstadoProduccion">
+              {{ TIPO_ESTADO_PRODUCCION_MAP.get(tipoEstadoProduccion) | translate }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 

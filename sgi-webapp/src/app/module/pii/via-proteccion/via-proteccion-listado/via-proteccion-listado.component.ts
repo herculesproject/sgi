@@ -73,7 +73,7 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
   }
 
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   ngOnInit(): void {

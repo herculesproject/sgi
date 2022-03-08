@@ -247,7 +247,7 @@ export class ResultadoInformePatentabilidadListadoComponent
   }
 
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IResultadoInformePatentibilidad>> {

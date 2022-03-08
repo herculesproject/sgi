@@ -75,7 +75,7 @@ export class TramoRepartoListadoComponent extends AbstractTablePaginationCompone
   }
 
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   /**

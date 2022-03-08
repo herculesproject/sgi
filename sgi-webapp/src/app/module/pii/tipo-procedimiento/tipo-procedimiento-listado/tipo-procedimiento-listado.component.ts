@@ -189,7 +189,7 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
     this.tipoProcedimiento$ = this.getObservableLoadTable(reset);
   }
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   ngOnInit(): void {

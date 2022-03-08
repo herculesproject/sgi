@@ -179,7 +179,7 @@ export class SectorAplicacionListadoComponent extends AbstractTablePaginationCom
   }
 
   protected createFilter(): SgiRestFilter {
-    throw new Error('Method not implemented.');
+    return undefined;
   }
 
   /**
