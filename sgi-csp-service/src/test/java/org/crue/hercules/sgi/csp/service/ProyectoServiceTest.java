@@ -456,50 +456,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(null);
-    proyecto.setTimesheet(false);
-
-    ModeloUnidad modeloUnidad = new ModeloUnidad();
-    modeloUnidad.setId(1L);
-    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
-    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
-    modeloUnidad.setActivo(true);
-
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-
-    // when: Creamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El proyecto requiere timesheet");
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(null);
-    proyecto.setTipoHorasAnuales(null);
-
-    ModeloUnidad modeloUnidad = new ModeloUnidad();
-    modeloUnidad.setId(1L);
-    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
-    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
-    modeloUnidad.setActivo(true);
-
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-
-    // when: Creamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
-  }
-
-  @Test
   @WithMockUser(authorities = { "CSP-PRO-E_2" })
   void update_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
@@ -757,50 +713,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void update_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.setTimesheet(false);
-
-    ModeloUnidad modeloUnidad = new ModeloUnidad();
-    modeloUnidad.setId(1L);
-    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
-    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
-    modeloUnidad.setActivo(true);
-
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-
-    // when: Creamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El proyecto requiere timesheet");
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  public void update_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.setTipoHorasAnuales(null);
-
-    ModeloUnidad modeloUnidad = new ModeloUnidad();
-    modeloUnidad.setId(1L);
-    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
-    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
-    modeloUnidad.setActivo(true);
-
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-
-    // when: Creamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
-  }
-
-  @Test
   @WithMockUser(authorities = { "CSP-PRO-R_2" })
   public void enable_ReturnsProyecto() {
     // given: Un nuevo Proyecto inactivo
@@ -1026,9 +938,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
     proyecto.setConfidencial(Boolean.FALSE);
-    proyecto.setCosteHora(true);
-    proyecto.setTimesheet(true);
-    proyecto.setTipoHorasAnuales(Proyecto.TipoHorasAnuales.REAL);
     proyecto.setActivo(true);
 
     if (id != null) {

@@ -371,7 +371,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setConfidencial(proyectoActualizar.getConfidencial());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
       data.setCoordinadorExterno(proyectoActualizar.getCoordinadorExterno());
-      data.setCosteHora(proyectoActualizar.getCosteHora());
       data.setFechaFin(proyectoActualizar.getFechaFin());
       data.setFechaInicio(proyectoActualizar.getFechaInicio());
       data.setFinalidad(proyectoActualizar.getFinalidad());
@@ -398,8 +397,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setModeloEjecucion(proyectoActualizar.getModeloEjecucion());
       data.setObservaciones(proyectoActualizar.getObservaciones());
       data.setPermitePaquetesTrabajo(proyectoActualizar.getPermitePaquetesTrabajo());
-      data.setTimesheet(proyectoActualizar.getTimesheet());
-      data.setTipoHorasAnuales(proyectoActualizar.getTipoHorasAnuales());
+      data.setExcelencia(proyectoActualizar.getExcelencia());
       data.setTitulo(proyectoActualizar.getTitulo());
       data.setUnidadGestionRef(proyectoActualizar.getUnidadGestionRef());
       data.setImportePresupuesto(proyectoActualizar.getImportePresupuesto());
@@ -783,12 +781,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.isTrue(modeloUnidad.isPresent(), "ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
         + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
 
-    if (proyecto.getCosteHora() != null && proyecto.getCosteHora()) {
-      Assert.isTrue(proyecto.getTimesheet() != null && proyecto.getTimesheet(), "El proyecto requiere timesheet");
-      Assert.isTrue(proyecto.getTipoHorasAnuales() != null,
-          "El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
-    }
-
     // FechasFin after than última prórroga
     Optional<ProyectoProrroga> prorroga = proyectoProrrogaRepository
         .findFirstByProyectoIdOrderByFechaConcesionDesc(proyecto.getId());
@@ -819,15 +811,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         Assert.isTrue(proyecto.getCoordinadorExterno() != null,
             "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
       }
-      Assert.isTrue(
-          proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO && proyecto.getTimesheet() != null,
-          "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
           "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getCosteHora() != null,
-          "El campo costeHora debe ser obligatorio para el proyecto en estado 'Abierto'");
     }
 
     // Validación de datos IVA
@@ -1015,6 +1001,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setFinalidad(convocatoria.getFinalidad());
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
       proyecto.setClasificacionCVN(convocatoria.getClasificacionCVN());
+      proyecto.setExcelencia(convocatoria.getExcelencia());
     } else {
       proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }
@@ -1703,14 +1690,8 @@ public class ProyectoServiceImpl implements ProyectoService {
             "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
       }
 
-      Assert.isTrue(proyecto.getTimesheet() != null,
-          "El campo timesheet debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
       Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
           "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getCosteHora() != null,
-          "El campo costeHora debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       List<ProyectoEquipo> equipos = proyectoEquipoService.findAllByProyectoId(proyecto.getId());
 
