@@ -7,15 +7,13 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
-import { CAUSA_EXENCION_MAP, IProyecto, TIPO_HORAS_ANUALES_MAP } from '@core/models/csp/proyecto';
+import { CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
 
@@ -37,7 +35,6 @@ const PROYECTO_MODELO_EJECUCION_KEY = marker('csp.proyecto.modelo-ejecucion');
 const PROYECTO_PAQUETE_TRABAJO_KEY = marker('csp.proyecto-paquete-trabajo');
 const PROYECTO_PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colaborativo');
 const PROYECTO_PROYECTO_COORDINADO_KEY = marker('csp.proyecto.proyecto-coordinado');
-const PROYECTO_TIMESHEET_KEY = marker('csp.proyecto.timesheet');
 const PROYECTO_TITULO_KEY = marker('csp.proyecto.titulo');
 const PROYECTO_UNIDAD_GESTION_KEY = marker('csp.proyecto.unidad-gestion');
 const MSG_PROYECTO_VALUE_CONVOCATORIA = marker('msg.csp.proyecto.value-convocatoria');
@@ -50,12 +47,6 @@ const MSG_PROYECTO_VALUE_CONVOCATORIA = marker('msg.csp.proyecto.value-convocato
 export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyecto> implements OnInit, OnDestroy {
 
   formPart: ProyectoFichaGeneralFragment;
-
-  fxFlexProperties: FxFlexProperties;
-  fxFlexPropertiesOne: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
-  fxFlexPropertiesInline: FxFlexProperties;
-  fxFlexPropertiesEntidad: FxFlexProperties;
 
   proyectosSge: StatusWrapper<IProyectoProyectoSge>[];
 
@@ -85,7 +76,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamPaqueteTrabajoEntity = {};
   msgParamProyectoColaborativoEntity = {};
   msgParamTituloEntity = {};
-  msgParamTimesheetEntity = {};
   msgParamUnidadGestionEntity = {};
   msgParamFechaFinDefinitivaEntity = {};
   msgParamProyectoCoordinadoEntity = {};
@@ -96,10 +86,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   get CLASIFICACION_CVN_MAP() {
     return CLASIFICACION_CVN_MAP;
-  }
-
-  get TIPO_HORAS_ANUALES_MAP() {
-    return TIPO_HORAS_ANUALES_MAP;
   }
 
   get CAUSA_EXENCION_MAP() {
@@ -114,44 +100,12 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     return MSG_PARAMS;
   }
 
-  private obligatorioTimesheet: boolean;
-  requiredHoras = false;
-
   constructor(
     protected actionService: ProyectoActionService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.FICHA_GENERAL, actionService);
     this.formPart = this.fragment as ProyectoFichaGeneralFragment;
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexPropertiesEntidad = new FxFlexProperties();
-    this.fxFlexPropertiesEntidad.sm = '0 1 calc(36%-10px)';
-    this.fxFlexPropertiesEntidad.md = '0 1 calc(36%-10px)';
-    this.fxFlexPropertiesEntidad.gtMd = '0 1 calc(36%-10px)';
-    this.fxFlexPropertiesEntidad.order = '3';
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexPropertiesInline = new FxFlexProperties();
-    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.order = '4';
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
   }
 
   ngOnInit(): void {
@@ -181,14 +135,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     if (!this.fragment.isEdit()) {
       this.formGroup.controls.estado.setValue(Estado.BORRADOR);
     }
-
-    this.subscriptions.push(this.formGroup.controls.costeHora.valueChanges.pipe(
-      tap(() => this.validarCoste())
-    ).subscribe());
-
-    this.subscriptions.push(this.formGroup.controls.timesheet.valueChanges.pipe(
-      tap(() => this.validarTimesheet())
-    ).subscribe());
 
     if (!this.formPart?.isInvestigador) {
       this.subscriptions.push(
@@ -318,11 +264,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
-      PROYECTO_TIMESHEET_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTimesheetEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
       PROYECTO_PAQUETE_TRABAJO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamPaqueteTrabajoEntity =
@@ -354,69 +295,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  /**
-   * En caso de ser NO timesheet
-   * y SI calculo coste
-   * Error en el formulario
-   */
-  private validarTimesheet() {
-    if (this.formGroup.controls.timesheet.value === false && this.formGroup.controls.costeHora.value === true) {
-      this.formGroup.controls.timesheet.setErrors({ invalid: true });
-      this.formGroup.controls.timesheet.markAsTouched({ onlySelf: true });
-    }
-  }
-
-  /**
-   * En caso de activar coste hora personal
-   * Habilitamos horas anuales
-   */
-  private validarCoste() {
-    if (this.formGroup.controls.costeHora.value) {
-      this.requiredHoras = true;
-      if (this.formGroup.controls.timesheet.value === null || this.formGroup.controls.timesheet.value === false) {
-        this.formGroup.controls.timesheet.setErrors({ invalid: true });
-        this.formGroup.controls.timesheet.markAsTouched({ onlySelf: true });
-        this.obligatorioTimesheet = true;
-        this.requiredHoras = true;
-      } else {
-        this.obligatorioTimesheet = false;
-
-        if (this.formGroup.controls.costeHora.value === true) {
-          this.requiredHoras = true;
-        } else {
-          this.requiredHoras = false;
-        }
-        this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
-      }
-    } else {
-      if (this.formGroup.controls.tipoHorasAnuales.value) {
-        this.formGroup.controls.tipoHorasAnuales.patchValue(null);
-        this.requiredHoras = false;
-        this.formGroup.controls.tipoHorasAnuales.setValidators(null);
-        this.formGroup.controls.tipoHorasAnuales.updateValueAndValidity({ onlySelf: true });
-      }
-      if (this.formGroup.controls.timesheet.value === false) {
-        this.obligatorioTimesheet = false;
-        this.requiredHoras = false;
-        this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
-      }
-      this.requiredHoras = false;
-      this.formGroup.controls.tipoHorasAnuales.setValidators(null);
-      this.formGroup.controls.tipoHorasAnuales.updateValueAndValidity({ onlySelf: true });
-    }
-  }
-
-  /**
-   * Validacion timesheet por estado u obligatorio
-   */
-  validacionTimesheet() {
-    if (this.formPart.abiertoRequired === true || this.obligatorioTimesheet === true) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   setTextoInfoFinalidadConvocatoria() {

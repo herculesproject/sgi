@@ -25,9 +25,7 @@ const PROYECTO_AMBITO_GEOGRAFICO = marker('csp.proyecto.ambito-geografico');
 const PROYECTO_CONFIDENCIAL = marker('csp.proyecto.confidencial');
 const PROYECTO_COORDINADO = marker('csp.proyecto.proyecto-coordinado');
 const PROYECTO_COORDINADOR_EXTERNO = marker('csp.proyecto.coordinador-externo');
-const PROYECTO_TIMESHEET = marker('csp.proyecto.timesheet');
 const PROYECTO_PAQUETES_TRABAJO = marker('csp.proyecto.permite-paquetes-trabajo');
-const PROYECTO_COSTE_HORA = marker('csp.proyecto.calculo-coste-personal');
 const MSG_PROYECTO_EQUIPO_MIEMBROS = marker('msg.csp.proyecto.equipo-miembros-obligatorio');
 
 export interface ProyectoCambioEstadoModalComponentData {
@@ -55,9 +53,7 @@ export class CambioEstadoModalComponent
   msgProyectoConfidencialRequired: string;
   msgProyectoCoordinadoRequired: string;
   msgProyectoCoordinadorExternoRequired: string;
-  msgProyectoTimesheetRequired: string;
   msgProyectoPaquetesTrabajoRequired: string;
-  msgProyectoCosteHoraRequired: string;
   msgProyectoMiembrosEquipoRequired: string;
 
   readonly estadosNuevos: Map<string, string>;
@@ -116,9 +112,7 @@ export class CambioEstadoModalComponent
     this.msgProyectoConfidencialRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_CONFIDENCIAL) });
     this.msgProyectoCoordinadoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_COORDINADO) });
     this.msgProyectoCoordinadorExternoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_COORDINADOR_EXTERNO) });
-    this.msgProyectoTimesheetRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_TIMESHEET) });
     this.msgProyectoPaquetesTrabajoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_PAQUETES_TRABAJO) });
-    this.msgProyectoCosteHoraRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_COSTE_HORA) });
     this.msgProyectoMiembrosEquipoRequired = this.translate.instant(MSG_PROYECTO_EQUIPO_MIEMBROS);
   }
 
@@ -188,16 +182,8 @@ export class CambioEstadoModalComponent
       problems.push(this.buildValidationProblem(this.msgProyectoCoordinadorExternoRequired));
     }
 
-    if (this.data.proyecto.timesheet === undefined || this.data.proyecto.timesheet === null) {
-      problems.push(this.buildValidationProblem(this.msgProyectoTimesheetRequired));
-    }
-
     if (this.data.proyecto.permitePaquetesTrabajo === undefined || this.data.proyecto.permitePaquetesTrabajo === null) {
       problems.push(this.buildValidationProblem(this.msgProyectoPaquetesTrabajoRequired));
-    }
-
-    if (this.data.proyecto.costeHora === undefined || this.data.proyecto.costeHora === null) {
-      problems.push(this.buildValidationProblem(this.msgProyectoCosteHoraRequired));
     }
 
     return problems;
