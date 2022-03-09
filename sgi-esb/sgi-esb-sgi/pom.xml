@@ -9,6 +9,7 @@
   <description>sgi-esb-sgi</description>
   <modules>
     <module>sgi-integration-project</module>
+    <module>sgi-registry-resources</module>
     <module>sgi-composite-application</module>
   </modules>
   <!-- ********************************************** -->
