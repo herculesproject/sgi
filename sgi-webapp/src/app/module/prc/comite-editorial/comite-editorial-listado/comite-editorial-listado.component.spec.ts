@@ -12,16 +12,16 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from 'src/app/module/csp/shared/csp-shared.module';
 
-import { PublicacionListadoComponent } from './publicacion-listado.component';
+import { ComiteEditorialListadoComponent } from './comite-editorial-listado.component';
 
-describe('PublicacionListadoComponent', () => {
-  let component: PublicacionListadoComponent;
-  let fixture: ComponentFixture<PublicacionListadoComponent>;
+describe('ComiteEditorialListadoComponent', () => {
+  let component: ComiteEditorialListadoComponent;
+  let fixture: ComponentFixture<ComiteEditorialListadoComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        PublicacionListadoComponent,
+        ComiteEditorialListadoComponent,
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -45,7 +45,7 @@ describe('PublicacionListadoComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PublicacionListadoComponent);
+    fixture = TestBed.createComponent(ComiteEditorialListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -54,3 +54,4 @@ describe('PublicacionListadoComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

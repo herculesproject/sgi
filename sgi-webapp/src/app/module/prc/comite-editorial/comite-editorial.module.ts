@@ -6,9 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ComiteEditorialRoutingModule } from './comite-editorial-routing.module';
+import { ComiteEditorialListadoComponent } from './comite-editorial-listado/comite-editorial-listado.component';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [ComiteEditorialListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +20,9 @@ import { ComiteEditorialRoutingModule } from './comite-editorial-routing.module'
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    SgpSharedModule,
+    CspSharedModule
   ]
 })
 export class ComiteEditorialModule { }
