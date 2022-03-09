@@ -18,5 +18,23 @@
       <column name="description" value="Destinatarios de comunicado de inicio de presentacion del seguimiento científico - UGI" />
       <column name="value" value="[&quot;sample@sample.es&quot;]" />
     </insert>
+    <!-- Destinatarios defecto CSP Solicitudes Hitos OTRI -->
+    <insert tableName="config">
+      <column name="name" value="csp-sol-hitos-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - OTRI" />
+      <column name="value" value="[&quot;solicitud.hitos.otri@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Solicitudes Hitos OPE -->
+    <insert tableName="config">
+      <column name="name" value="csp-sol-hitos-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - OPE" />
+      <column name="value" value="[&quot;solicitud.hitos.ope@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Solicitudes Hitos UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-sol-hitos-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - UGI" />
+      <column name="value" value="[&quot;solicitud.hitos.ugi@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
