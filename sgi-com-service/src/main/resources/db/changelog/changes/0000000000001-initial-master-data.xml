@@ -16,6 +16,19 @@
       <column name="description" value="Código de la solicitud de csp" />
       <column name="type" value="STRING" />
     </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_HITO_OBSERVACIONES" />
+      <column name="description" value="Observaciones del Hito" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_SOLICITUD_TITULO" />
+      <column name="description" value="Titulo de la Solicitud" />
+      <column name="type" value="STRING" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subject_tpl">
@@ -30,6 +43,17 @@
       <column name="tpl" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT.ftl" />
       <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT'</where>
     </update>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_SOLICITUD_HITO_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para Solicitudes-Hitos" />
+      <column name="tpl" value="" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/CSP_SOLICITUD_HITO_SUBJECT.ftl" />
+      <where>name='CSP_SOLICITUD_HITO_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subjecttpl_param">
@@ -37,6 +61,19 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_PETICION_EVALUACION_CODIGO')" />
+    </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_TIPO')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_CONVOCATORIA_TITULO')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_TITULO')" />
     </insert>
   </changeSet>
 
@@ -57,6 +94,22 @@
       <column name="tpl_html" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_html.ftl" />
       <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT'</where>
     </update>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_SOLICITUD_HITO_CONTENT" />
+      <column name="description" value="Plantilla de contenido para Solicitudes-Hitos" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_text.ftl" />
+      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_html.ftl" />
+      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-contenttpl_param">
@@ -68,6 +121,27 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_CODIGO')" />
+    </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_FECHA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_TIPO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_CONVOCATORIA_TITULO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_OBSERVACIONES')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_TITULO')" />
     </insert>
   </changeSet>
 
@@ -82,6 +156,12 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_SOLICITUD_HITO" />
+      <column name="description" value="Email de Solicitud-Hito" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
@@ -90,6 +170,11 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT')" />
     </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
@@ -97,6 +182,11 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
+    </insert>
+    <!-- CSP Solicitud Hito -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
