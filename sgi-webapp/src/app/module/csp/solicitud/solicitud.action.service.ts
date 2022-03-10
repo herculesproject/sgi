@@ -17,7 +17,7 @@ import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
-import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
+import { SolicitudHitoService } from '@core/services/csp/solicitud-hito/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudProyectoAreaConocimientoService } from '@core/services/csp/solicitud-proyecto-area-conocimiento.service';
 import { SolicitudProyectoClasificacionService } from '@core/services/csp/solicitud-proyecto-clasificacion.service';
@@ -152,6 +152,10 @@ export class SolicitudActionService extends ActionService {
 
   get modeloEjecucionId(): number {
     return this.convocatoria?.modeloEjecucion?.id;
+  }
+
+  get convocatoriaTitulo(): string {
+    return this.convocatoria?.titulo;
   }
 
   get solicitante(): IPersona {

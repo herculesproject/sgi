@@ -5,7 +5,6 @@ import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/cs
 import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
 import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
-import { SOLICITUD_HITO_CONVERTER } from '@core/converters/csp/solicitud-hito.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
@@ -21,7 +20,6 @@ import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backen
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
-import { ISolicitudHitoBackend } from '@core/models/csp/backend/solicitud-hito-backend';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
@@ -65,6 +63,8 @@ import { IRequisitoIPCategoriaProfesionalResponse } from './requisito-ip-categor
 import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response.converter';
 import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
 import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
+import { ISolicitudHitoResponse } from './solicitud-hito/solicitud-hito-response';
+import { SOLICITUD_HITO_RESPONSE_CONVERTER } from './solicitud-hito/solicitud-hito-response.converter';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
 import { SOLICITUD_PALABRACLAVE_REQUEST_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-request.converter';
 import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave/solicitud-palabra-clave-response';
@@ -172,10 +172,10 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de modalidades de la solicitud
    */
   findHitosSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudHito>> {
-    return this.find<ISolicitudHitoBackend, ISolicitudHito>(
+    return this.find<ISolicitudHitoResponse, ISolicitudHito>(
       `${this.endpointUrl}/${solicitudId}/solicitudhitos`,
       options,
-      SOLICITUD_HITO_CONVERTER
+      SOLICITUD_HITO_RESPONSE_CONVERTER
     );
   }
 
