@@ -70,7 +70,7 @@
         <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico" [required]="formPart.abiertoRequired">
         </sgi-select-tipo-ambito-geografico>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.ambitoGeograficoConvocatoria$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.ambitoGeograficoConvocatoria$ | async)"
           message="{{textoInfoAmbitoGeograficoConvocatoria}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
@@ -143,11 +143,11 @@
         <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion" required>
         </sgi-select-unidad-gestion>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.vinculacionesModeloEjecucion$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor &&(formPart.vinculacionesModeloEjecucion$ | async)"
           message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
         </sgi-field-info>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.unidadGestionConvocatoria$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.unidadGestionConvocatoria$ | async)"
           message="{{textoInfoUnidadGestionConvocatoria}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
@@ -164,11 +164,11 @@
           [resetOnChange]="unidadGestion.selectionChange">
         </sgi-select-modelo-ejecucion>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.vinculacionesModeloEjecucion$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.vinculacionesModeloEjecucion$ | async)"
           message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
         </sgi-field-info>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.modeloEjecucionConvocatoria$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.modeloEjecucionConvocatoria$ | async)"
           message="{{textoInfoModeloEjecucionConvocatoria}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
@@ -184,7 +184,7 @@
           [resetOnChange]="modeloEjecucion.selectionChange">
         </sgi-select-tipo-finalidad>
         <sgi-field-info matSuffix
-          [visible]="!formPart.readonly && !formPart.isInvestigador && (formPart.finalidadConvocatoria$ | async)"
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.finalidadConvocatoria$ | async)"
           message="{{textoInfoFinalidadConvocatoria}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">
@@ -269,7 +269,8 @@
       <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.proyecto.proyecto-coordinado' | translate}}</mat-label>
         <sgi-select-boolean formControlName="coordinado" [required]="formPart.abiertoRequired"></sgi-select-boolean>
-        <sgi-field-info matSuffix [visible]="(formPart.hasPopulatedSocios$ | async)  && (formPart.coordinado$ | async)"
+        <sgi-field-info matSuffix
+          [visible]="(formPart.hasPopulatedSocios$ | async)  && (formPart.coordinado$ | async) && !formPart.isVisor"
           message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-socios-dependencies.info' | translate}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.coordinado.errors?.required">
@@ -283,11 +284,11 @@
         <sgi-select-boolean formControlName="coordinadorExterno" [required]="(formPart.coordinado$ | async)">
         </sgi-select-boolean>
         <sgi-field-info matSuffix
-          [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false && !formPart.isInvestigador"
+          [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false && !formPart.isInvestigador && !formPart.isVisor"
           message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-periodos-socios-dependencies.info' | translate}}">
         </sgi-field-info>
         <sgi-field-info matSuffix
-          [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async) && !formPart.isInvestigador"
+          [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async) && !formPart.isInvestigador && !formPart.isVisor"
           message="{{'info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip' | translate}}">
         </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.coordinadorExterno.errors?.required">
