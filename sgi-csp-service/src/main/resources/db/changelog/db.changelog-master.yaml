@@ -44,4 +44,4 @@ databaseChangeLog:
       file: classpath*:db/changelog/changes/0000000000005-fixup-initial-database.xml
   # HERCULES_0.0.8
   - include:
-      file: classpath*:db/changelog/changes/0000000000008-update-initial-database.xml
+      file: classpath*:db/changelog/changes/0000000000006-update-initial-database.xml

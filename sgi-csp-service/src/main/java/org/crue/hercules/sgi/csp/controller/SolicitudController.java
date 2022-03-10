@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudHitoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
@@ -418,10 +419,11 @@ public class SolicitudController {
    */
   @GetMapping("/{id}/solicitudhitos")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
-  public ResponseEntity<Page<SolicitudHito>> findAllSolicitudHito(@PathVariable Long id,
+  public ResponseEntity<Page<SolicitudHitoOutput>> findAllSolicitudHito(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudHito(Long id, String query, Pageable paging) - start");
-    Page<SolicitudHito> page = solicitudHitoService.findAllBySolicitud(id, query, paging);
+    Page<SolicitudHitoOutput> page = this
+        .convertSolicitudHitos(solicitudHitoService.findAllBySolicitud(id, query, paging));
 
     if (page.isEmpty()) {
       log.debug("findAllSolicitudHito(Long id, String query, Pageable paging) - end");
@@ -1259,4 +1261,14 @@ public class SolicitudController {
     return entities.stream().map(this::convert).collect(Collectors.toList());
   }
 
+  private SolicitudHitoOutput convert(SolicitudHito convocatoriaHito) {
+    return modelMapper.map(convocatoriaHito, SolicitudHitoOutput.class);
+  }
+
+  private Page<SolicitudHitoOutput> convertSolicitudHitos(Page<SolicitudHito> page) {
+    List<SolicitudHitoOutput> content = page.getContent().stream()
+        .map(this::convert).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
 }

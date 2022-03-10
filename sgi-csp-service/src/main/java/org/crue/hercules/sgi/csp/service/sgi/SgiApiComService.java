@@ -40,6 +40,7 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
+  private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
 
   private final ObjectMapper mapper;
 
@@ -204,6 +205,65 @@ public class SgiApiComService extends SgiApiBaseService {
         ServiceType.CSP,
         String.format(CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT, convocatoriaHitoId), HttpMethod.GET));
     log.debug("updateConvocatoriaHitoEmail({}, {}, {}, {}) - end", id, convocatoriaHitoId, subject, content,
+        recipients);
+  }
+
+  /**
+   * Crea un email en el modulo COM para el aviso de un hito de solicitud
+   * 
+   * @param solicitudHitoId Identificador del hito de solicitud
+   * @param subject         Asunto del email
+   * @param content         Contenido del email
+   * @param recipients      Destinatarios del email
+   * @return Identificador del email creado
+   */
+  public Long createSolicitudHitoEmail(Long solicitudHitoId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("createSolicitudHitoEmail({}, {}, {}, {}) - start", solicitudHitoId, subject, content, recipients);
+
+    Assert.notNull(solicitudHitoId, "SolicitudHito ID is required");
+    Assert.notNull(subject, "Subject is required");
+    Assert.notNull(content, "Content is required");
+    Assert.notEmpty(recipients, "At least one Recipient is required");
+    Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
+
+    Long id = this.createGenericEmailText(subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(
+            SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT,
+            solicitudHitoId),
+        HttpMethod.GET))
+        .getId();
+    log.debug("createSolicitudHitoEmail({}, {}, {}, {}) - end", solicitudHitoId, subject, content, recipients);
+    return id;
+  }
+
+  /**
+   * Actualiza un email en el modulo COM para el aviso de un hito de solicitud
+   * 
+   * @param id              Identificador el email
+   * @param solicitudHitoId Identificador del hito de solicitud
+   * @param subject         Asunto del email
+   * @param content         Contenido del email
+   * @param recipients      Destinatarios del email
+   */
+  public void updateSolicitudHitoEmail(Long id, Long solicitudHitoId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("updateSolicitudHitoEmail({}, {}, {}, {}) - start", id, solicitudHitoId, subject, content,
+        recipients);
+
+    Assert.notNull(id, "ID is required");
+    Assert.notNull(solicitudHitoId, "SolicitudHito ID is required");
+    Assert.notNull(subject, "Subject is required");
+    Assert.notNull(content, "Content is required");
+    Assert.notEmpty(recipients, "At least one Recipient is required");
+    Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
+
+    this.updateGenericEmailText(id, subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT, solicitudHitoId), HttpMethod.GET));
+    log.debug("updateSolicitudHitoEmail({}, {}, {}, {}) - end", id,
+        solicitudHitoId, subject, content,
         recipients);
   }
 

@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet author="user (generated)" id="0000000000006-1">
+    <addColumn tableName="proyecto">
+      <column name="excelencia" type="boolean" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-2">
+    <dropColumn columnName="coste_hora" tableName="proyecto" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-3">
+    <dropColumn columnName="timesheet" tableName="proyecto" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-4">
+    <dropColumn columnName="tipo_horas_anuales" tableName="proyecto" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000006-5">
+    <createSequence incrementBy="1" sequenceName="solicitud_hito_aviso_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-6">
+    <createTable tableName="solicitud_hito_aviso">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_hito_avisoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="comunicado_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_solicitud" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="tarea_programada_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-7">
+    <addColumn tableName="solicitud_hito">
+      <column name="solicitud_hito_aviso_id" type="bigint" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-8">
+    <addForeignKeyConstraint baseColumnNames="solicitud_hito_aviso_id" baseTableName="solicitud_hito" constraintName="FK_SOLICITUDHITO_SOLICITUDHITOAVISO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_hito_aviso" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-9">
+    <dropColumn columnName="genera_aviso" tableName="solicitud_hito" />
+  </changeSet>
+
+</databaseChangeLog>

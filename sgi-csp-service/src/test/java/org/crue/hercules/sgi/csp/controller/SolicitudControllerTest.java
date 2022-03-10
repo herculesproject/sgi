@@ -1329,7 +1329,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
     SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
-        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now()).generaAviso(Boolean.TRUE)
+        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now())
         .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
     return solicitudHito;
