@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="0000000000002-config">
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-seguimiento-cientifico-destinatarios-1" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion del seguimiento científico - OTRI" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-seguimiento-cientifico-destinatarios-2" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion del seguimiento científico - OPE" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-inicio-presentacion-seguimiento-cientifico-destinatarios-3" />
+      <column name="description" value="Destinatarios de comunicado de inicio de presentacion del seguimiento científico - UGI" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>
