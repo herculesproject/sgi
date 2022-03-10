@@ -1,0 +1,102 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="0000000000001-param">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_PETICION_EVALUACION_CODIGO" />
+      <column name="description" value="Código de la solicitud de evaluación de ética" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_SOLICITUD_CODIGO" />
+      <column name="description" value="Código de la solicitud de csp" />
+      <column name="type" value="STRING" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-subject_tpl">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el alta de solicitud de petición evaluación de ética" />
+      <column name="tpl" value="" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT.ftl" />
+      <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT'</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-subjecttpl_param">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_PETICION_EVALUACION_CODIGO')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-content_tpl">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el alta de solicitud de petición de evaluación de ética" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT'</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-contenttpl_param">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_PETICION_EVALUACION_CODIGO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_CODIGO')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-email_tpl">
+    <!-- CSP Solicitud Petición Evaluación -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_SOLICITUD_PETICION_EVALUACION" />
+      <column name="description" value="Aviso de alta de solicitud de petición de evaluación de ética (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
+    <!-- CSP Solicitud Petición Evaluación -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT')" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
+    <!-- CSP Solicitud Peticion Evaluacion -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>
