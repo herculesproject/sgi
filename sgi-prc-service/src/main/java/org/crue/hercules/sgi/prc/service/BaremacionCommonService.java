@@ -100,7 +100,7 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
 
     setAnio(baremacionInput.getAnio());
 
-    produccionCientificaRepository.findAllByBaremacion(baremacionInput).stream().forEach(produccionCientificaId -> {
+    produccionCientificaRepository.findAllBaremacion(baremacionInput).stream().forEach(produccionCientificaId -> {
       baremacionInput.setProduccionCientificaId(produccionCientificaId);
       BigDecimal puntos = evaluateItemProduccionCientifica(baremacionInput);
       if (puntos.compareTo(BigDecimal.ZERO) >= 0) {
@@ -356,150 +356,150 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndJCR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.WOS_JCR)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndJCR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.WOS_JCR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndJCR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.WOS_JCR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndJCR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.WOS_JCR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   // SCOPUS
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndSCOPUS() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCOPUS_SJR)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndSCOPUS() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCOPUS_SJR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndSCOPUS() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCOPUS_SJR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndSCOPUS() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCOPUS_SJR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   // SCIMAGO
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndSCIMAGO() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCIMAGO)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndSCIMAGO() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCIMAGO)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndSCIMAGO() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCIMAGO)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndSCIMAGO() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.SCIMAGO)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   // DIALNET
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndDIALNET() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.DIALNET)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndDIALNET() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.DIALNET)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndDIALNET() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.DIALNET)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndDIALNET() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.DIALNET)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   // MIAR
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndMIAR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.MIAR)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndMIAR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.MIAR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndMIAR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.MIAR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndMIAR() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.MIAR)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   // FECYT
   protected LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndFECYT() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.FECYT)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
+        .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan25AndLessThanEqual50AndFECYT() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.FECYT)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
+        .anyMatch(this::isPosicionRevistaGreatherThan25AndLessThanEqual50);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan50AndLessThanEqual75AndFECYT() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.FECYT)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
+        .anyMatch(this::isPosicionRevistaGreatherThan50AndLessThanEqual75);
   }
 
   protected LongPredicate getPredicateHasPosicionRevistaGreatherThan75AndFECYT() {
     return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
         Arrays.asList(TipoFuenteImpacto.FECYT)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan75);
+        .anyMatch(this::isPosicionRevistaGreatherThan75);
   }
 
   protected boolean isRevista25OrPosicionRevistaLessEqualThan25(IndiceImpacto indiceImpacto) {

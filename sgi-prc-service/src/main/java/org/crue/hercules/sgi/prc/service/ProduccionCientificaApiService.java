@@ -65,7 +65,7 @@ import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
-import org.crue.hercules.sgi.prc.repository.predicate.ProduccionCientificaPredicateResolver;
+import org.crue.hercules.sgi.prc.repository.predicate.ProduccionCientificaPredicateResolverApi;
 import org.crue.hercules.sgi.prc.repository.specification.ConfiguracionBaremoSpecifications;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -645,7 +645,7 @@ public class ProduccionCientificaApiService {
   public List<ProduccionCientificaApiOutput> findByEstadoValidadoOrRechazadoByFechaModificacion(String query) {
     return produccionCientificaConverter.convertProduccionCientificaEstadoResumen(
         produccionCientificaRepository.findByEstadoValidadoOrRechazadoByFechaModificacion(
-            SgiRSQLJPASupport.toSpecification(query, ProduccionCientificaPredicateResolver.getInstance())));
+            SgiRSQLJPASupport.toSpecification(query, ProduccionCientificaPredicateResolverApi.getInstance())));
   }
 
 }

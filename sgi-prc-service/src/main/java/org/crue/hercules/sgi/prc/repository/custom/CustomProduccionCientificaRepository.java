@@ -4,31 +4,18 @@ import java.util.List;
 
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaResumen;
-import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
 
 /**
- * Custom repository para {@link PublicacionResumen}.
+ * Custom repository para {@link ProduccionCientifica}.
  */
 @Component
 public interface CustomProduccionCientificaRepository {
-
-  /**
-   * Recupera todas las {@link PublicacionResumen} con su
-   * título, fecha y tipo de producción
-   * 
-   * @param query    la información del filtro.
-   * @param pageable la información de la paginación.
-   * @return Listado paginado de {@link PublicacionResumen}
-   */
-  Page<PublicacionResumen> findAllPublicaciones(String query, Pageable pageable);
 
   /**
    * Elimina el estado de {@link ProduccionCientifica} cuyo id coincide con el
@@ -64,5 +51,5 @@ public interface CustomProduccionCientificaRepository {
    *                        codigoCVN {@link CodigoCVN} a filtrar
    * @return lista de ids de {@link ProduccionCientifica}
    */
-  List<Long> findAllByBaremacion(BaremacionInput baremacionInput);
+  List<Long> findAllBaremacion(BaremacionInput baremacionInput);
 }

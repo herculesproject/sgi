@@ -53,8 +53,9 @@ public class CampoProduccionCientificaController {
   /**
    * Instancia un nuevo CampoProduccionCientificaController.
    * 
-   * @param modelMapper {@link ModelMapper}
-   * @param service     {@link CampoProduccionCientificaService}
+   * @param modelMapper       {@link ModelMapper}
+   * @param service           {@link CampoProduccionCientificaService}
+   * @param valorCampoService {@link ValorCampoService}
    */
   public CampoProduccionCientificaController(
       ModelMapper modelMapper,

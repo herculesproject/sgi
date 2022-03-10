@@ -134,6 +134,8 @@ public class CampoProduccionCientifica extends BaseEntity {
     TIPO_OBRA("TIPO_OBRA"),
     /* Nombre del Consejo editorial */
     E060_030_030_010("060.030.030.010"),
+    /* Categoría profesional */
+    E060_030_030_100("060.030.030.100"),
     /* País de radicación */
     E060_030_030_020("060.030.030.020"),
     /* Fecha de inicio */
@@ -208,7 +210,9 @@ public class CampoProduccionCientifica extends BaseEntity {
      */
     CUANTIA_LICENCIAS("CUANTIA_LICENCIAS"),
     /* Número de tramos de investigación reconocidos */
-    E060_030_070_010("060.030.070.010");
+    E060_030_070_010("060.030.070.010"),
+    CUANTIA_COSTES_INDIRECTOS_PROYECTO("CUANTIA_COSTES_INDIRECTOS_PROYECTO"),
+    CUANTIA_COSTES_INDIRECTOS_CONTRATO("CUANTIA_COSTES_INDIRECTOS_CONTRATO");
 
     private String internValue;
 

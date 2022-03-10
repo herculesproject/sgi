@@ -11,6 +11,7 @@ import javax.persistence.PersistenceUnitUtil;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
@@ -178,6 +179,48 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void findAllComitesEditoriales_ReturnsPage() {
+    // given: Una lista con 37 ComiteEditorialResumen
+    List<ComiteEditorialResumen> comitesEditoriales = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      comitesEditoriales.add(generarMockComiteEditorialResumen(i, String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        repository.findAllComitesEditoriales(ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ComiteEditorialResumen>>() {
+          @Override
+          public Page<ComiteEditorialResumen> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > comitesEditoriales.size() ? comitesEditoriales.size() : toIndex;
+            List<ComiteEditorialResumen> content = comitesEditoriales.subList(fromIndex, toIndex);
+            Page<ComiteEditorialResumen> page = new PageImpl<>(content, pageable, comitesEditoriales.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ComiteEditorialResumen> page = service.findAllComitesEditoriales(null, paging);
+
+    // then: Devuelve la pagina 3 con los ComiteEditorialResumen del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      ComiteEditorialResumen publicacion = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(publicacion.getProduccionCientificaRef())
+          .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
   void cambiarEstado_WithIdIsNull_ThrowsIllegalArgumentException() {
     Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(null, null, null))
         .isInstanceOf(IllegalArgumentException.class);
@@ -256,6 +299,17 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
     publicacion.setTipoProduccion("Produccion" + idRef);
 
     return publicacion;
+  }
+
+  private ComiteEditorialResumen generarMockComiteEditorialResumen(Long id, String idRef) {
+    ComiteEditorialResumen comiteEditorial = new ComiteEditorialResumen();
+    comiteEditorial.setId(id);
+    comiteEditorial.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    comiteEditorial.setEpigrafeCVN(EpigrafeCVN.E060_030_030_000);
+    comiteEditorial.setFechaInicio(Instant.now());
+    comiteEditorial.setNombre("Nombre" + idRef);
+
+    return comiteEditorial;
   }
 
 }

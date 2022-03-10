@@ -10,8 +10,12 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
+import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
+import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
+import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
+import org.crue.hercules.sgi.prc.dto.PublicacionOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
@@ -66,28 +70,29 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   private static final String CONTROLLER_BASE_PATH = ProduccionCientificaController.MAPPING;
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PUBLICACIONES_PATH = CONTROLLER_BASE_PATH + "/publicaciones";
+  private static final String PATH_PUBLICACIONES = ProduccionCientificaController.PATH_PUBLICACIONES;
+  private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
   private static final String PATH_PARAMETER_VALIDAR = "/validar";
+  private static final String PATH_PARAMETER_RECHAZAR = "/rechazar";
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
   private static final String PATH_PROYECTOS = ProduccionCientificaController.PATH_PROYECTOS;
   private static final String PATH_ACREDITACIONES = ProduccionCientificaController.PATH_ACREDITACIONES;
   private static final String PATH_AUTORES = ProduccionCientificaController.PATH_AUTORES;
   private static Long estadoProduccionCientificaId = 0L;
 
-  // @Test
-  // @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
   public void findAllPublicaciones_ReturnsPage() throws Exception {
-    // given: Una lista con 37 ProduccionCientifica
-    List<ProduccionCientifica> produccionCientificas = new ArrayList<>();
+    // given: Una lista con 37 PublicacionResumen
+    List<PublicacionResumen> publicaciones = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      produccionCientificas.add(generarMockProduccionCientifica(i,
-          "ProduccionCientifica" + String.format("%03d", i)));
+      publicaciones.add(generarMockPublicacionResumen(i, String.valueOf(i)));
     }
 
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(),
+    BDDMockito.given(service.findAllPublicaciones(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -95,22 +100,22 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
           int index = pageable.getPageNumber();
           int fromIndex = size * index;
           int toIndex = fromIndex + size;
-          toIndex = toIndex > produccionCientificas.size() ? produccionCientificas.size() : toIndex;
-          List<ProduccionCientifica> content = produccionCientificas.subList(fromIndex, toIndex);
-          Page<ProduccionCientifica> pageResponse = new PageImpl<>(content, pageable,
-              produccionCientificas.size());
+          toIndex = toIndex > publicaciones.size() ? publicaciones.size() : toIndex;
+          List<PublicacionResumen> content = publicaciones.subList(fromIndex, toIndex);
+          Page<PublicacionResumen> pageResponse = new PageImpl<>(content, pageable,
+              publicaciones.size());
           return pageResponse;
         });
 
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(PUBLICACIONES_PATH)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
                 page)
             .header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devuelve la pagina 3 con los ProduccionCientifica del 31 al 37
+        // then: Devuelve la pagina 3 con los PublicacionOutput del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
@@ -121,15 +126,132 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
             Matchers.hasSize(7)))
         .andReturn();
 
-    List<PublicacionResumen> produccionCientificasResponse = mapper.readValue(
-        requestResult.getResponse().getContentAsString(), new TypeReference<List<PublicacionResumen>>() {
+    List<PublicacionOutput> publicacionesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<PublicacionOutput>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      PublicacionResumen produccionCientifica = produccionCientificasResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(produccionCientifica.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica"
-          + String.format("%03d", i));
+      PublicacionOutput publicacion = publicacionesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(publicacion.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
     }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllPublicaciones_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 PublicacionResumen
+    List<PublicacionResumen> publicaciones = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllPublicaciones(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<PublicacionResumen> pageResponse = new PageImpl<>(publicaciones, pageable,
+              publicaciones.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllComitesEditoriales_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ComiteEditorialResumen
+    List<ComiteEditorialResumen> comitesEditoriales = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      comitesEditoriales.add(generarMockComiteEditorialResumen(i, String.valueOf(i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllComitesEditoriales(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > comitesEditoriales.size() ? comitesEditoriales.size() : toIndex;
+          List<ComiteEditorialResumen> content = comitesEditoriales.subList(fromIndex, toIndex);
+          Page<ComiteEditorialResumen> pageResponse = new PageImpl<>(content, pageable,
+              comitesEditoriales.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_COMITES_EDITORIALES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los ComiteEditorialOutput del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$",
+            Matchers.hasSize(7)))
+        .andReturn();
+
+    List<ComiteEditorialOutput> comitesEditorialesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ComiteEditorialOutput>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ComiteEditorialOutput comiteEditorial = comitesEditorialesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(comiteEditorial.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllComitesEditoriales_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 PublicacionResumen
+    List<ComiteEditorialResumen> produccionCientificas = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllComitesEditoriales(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<ComiteEditorialResumen> pageResponse = new PageImpl<>(produccionCientificas, pageable,
+              produccionCientificas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_COMITES_EDITORIALES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
   }
 
   @Test
@@ -225,6 +347,8 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     // given: existing id
     ProduccionCientifica produccionCientifica = generarMockProduccionCientifica(1L,
         "ProduccionCientifica" + String.format("%03d", 1));
+    EstadoProduccionCientificaInput estado = EstadoProduccionCientificaInput.builder().comentario("Motivo rechazo")
+        .build();
 
     BDDMockito.given(service.cambiarEstado(ArgumentMatchers.<Long>any(), ArgumentMatchers.<TipoEstadoProduccion>any(),
         ArgumentMatchers.<String>any())).willAnswer((InvocationOnMock invocation) -> {
@@ -238,8 +362,9 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     // when: rechazar by id
     mockMvc
         .perform(MockMvcRequestBuilders
-            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VALIDAR, produccionCientifica.getId())
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_RECHAZAR, produccionCientifica.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(estado)))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Proyecto is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
@@ -251,6 +376,8 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   public void rechazar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
+    EstadoProduccionCientificaInput estado = EstadoProduccionCientificaInput.builder().comentario("Motivo rechazo")
+        .build();
 
     BDDMockito.willThrow(new ProduccionCientificaNotFoundException(id.toString())).given(service).cambiarEstado(
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<TipoEstadoProduccion>any(),
@@ -258,8 +385,9 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
     // when: rechazar by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VALIDAR, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_RECHAZAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(estado))
             .accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
@@ -670,6 +798,29 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     estadoProduccionCientifica.setFecha(Instant.now());
 
     return estadoProduccionCientifica;
+  }
+
+  private PublicacionResumen generarMockPublicacionResumen(Long id, String idRef) {
+    PublicacionResumen publicacion = new PublicacionResumen();
+    publicacion.setId(id);
+    publicacion.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    publicacion.setEpigrafeCVN(EpigrafeCVN.E060_010_010_000);
+    publicacion.setFechaPublicacion(Instant.now());
+    publicacion.setTituloPublicacion("Título" + idRef);
+    publicacion.setTipoProduccion("Produccion" + idRef);
+
+    return publicacion;
+  }
+
+  private ComiteEditorialResumen generarMockComiteEditorialResumen(Long id, String idRef) {
+    ComiteEditorialResumen comiteEditorial = new ComiteEditorialResumen();
+    comiteEditorial.setId(id);
+    comiteEditorial.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    comiteEditorial.setEpigrafeCVN(EpigrafeCVN.E060_030_030_000);
+    comiteEditorial.setFechaInicio(Instant.now());
+    comiteEditorial.setNombre("Nombre" + idRef);
+
+    return comiteEditorial;
   }
 
   private IndiceImpacto generarMockIndiceImpacto(Long id, Long produccionCientificaId) {

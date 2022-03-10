@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
+import org.crue.hercules.sgi.prc.repository.custom.CustomComiteEditorialRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.custom.CustomPublicacionRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProduccionCientificaRepository
     extends JpaRepository<ProduccionCientifica, Long>, JpaSpecificationExecutor<ProduccionCientifica>,
-    CustomProduccionCientificaRepository {
+    CustomProduccionCientificaRepository, CustomPublicacionRepository, CustomComiteEditorialRepository {
 
   /**
    * Obtiene la entidad {@link ProduccionCientifica} con el

@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
+import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
+import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaOutput;
@@ -51,6 +53,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProduccionCientificaController {
   public static final String MAPPING = "/producciones-cientificas";
+  public static final String PATH_PUBLICACIONES = "/publicaciones";
+  public static final String PATH_COMITES_EDITORIALES = "/comites-editoriales";
   public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
   public static final String PATH_AUTORES = "/{id}/autores";
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
@@ -107,7 +111,7 @@ public class ProduccionCientificaController {
    * @return el listado de entidades {@link PublicacionOutput} paginadas y
    *         filtradas.
    */
-  @GetMapping("/publicaciones")
+  @GetMapping(PATH_PUBLICACIONES)
   @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
   public ResponseEntity<Page<PublicacionOutput>> findAllPublicaciones(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
@@ -121,6 +125,59 @@ public class ProduccionCientificaController {
 
     log.debug("findAllPublicaciones(String query, Pageable paging) - end");
     return new ResponseEntity<>(convertPublicacionResumen(page), HttpStatus.OK);
+  }
+
+  private PublicacionOutput convertPublicacionResumen(PublicacionResumen publicacionResumen) {
+    PublicacionOutput output = modelMapper.map(publicacionResumen, PublicacionOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(publicacionResumen.getEstado());
+    return output;
+  }
+
+  private Page<PublicacionOutput> convertPublicacionResumen(Page<PublicacionResumen> page) {
+    List<PublicacionOutput> content = page.getContent().stream()
+        .map(publicacionResumen -> convertPublicacionResumen(publicacionResumen)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ComiteEditorialOutput}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging la información de la paginación.
+   * @return el listado de entidades {@link ComiteEditorialOutput} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_COMITES_EDITORIALES)
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  public ResponseEntity<Page<ComiteEditorialOutput>> findAllComitesEditoriales(
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllComitesEditoriales(String query, Pageable paging) - start");
+    Page<ComiteEditorialResumen> page = service.findAllComitesEditoriales(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllComitesEditoriales(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllComitesEditoriales(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertComiteEditorialResumen(page), HttpStatus.OK);
+  }
+
+  private ComiteEditorialOutput convertComiteEditorialResumen(ComiteEditorialResumen comiteEditorialResumen) {
+    ComiteEditorialOutput output = modelMapper.map(comiteEditorialResumen, ComiteEditorialOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(comiteEditorialResumen.getEstado());
+    return output;
+  }
+
+  private Page<ComiteEditorialOutput> convertComiteEditorialResumen(Page<ComiteEditorialResumen> page) {
+    List<ComiteEditorialOutput> content = page.getContent().stream()
+        .map(comiteEditorialResumen -> convertComiteEditorialResumen(comiteEditorialResumen))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   /**
@@ -175,20 +232,6 @@ public class ProduccionCientificaController {
 
   private ProduccionCientificaOutput convert(ProduccionCientifica produccionCientifica) {
     return modelMapper.map(produccionCientifica, ProduccionCientificaOutput.class);
-  }
-
-  private PublicacionOutput convertPublicacionResumen(PublicacionResumen publicacionResumen) {
-    PublicacionOutput output = modelMapper.map(publicacionResumen, PublicacionOutput.class);
-    output.setEstado(new EstadoProduccionCientifica());
-    output.getEstado().setEstado(publicacionResumen.getEstado());
-    return output;
-  }
-
-  private Page<PublicacionOutput> convertPublicacionResumen(Page<PublicacionResumen> page) {
-    List<PublicacionOutput> content = page.getContent().stream()
-        .map(produccionCientifica -> convertPublicacionResumen(produccionCientifica)).collect(Collectors.toList());
-
-    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   /**

@@ -34,16 +34,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProduccionCientificaIT extends BaseIT {
 
-  private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = ProduccionCientificaController.MAPPING;
-  private static final String VALIDAR_PATH = "/validar";
-  private static final String RECHAZAR_PATH = "/rechazar";
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PUBLICACIONES = ProduccionCientificaController.PATH_PUBLICACIONES;
+  private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
   private static final String PATH_AUTORES = ProduccionCientificaController.PATH_AUTORES;
   private static final String PATH_PROYECTOS = ProduccionCientificaController.PATH_PROYECTOS;
   private static final String PATH_ACREDITACIONES = ProduccionCientificaController.PATH_ACREDITACIONES;
+  private static final String PATH_RECHAZAR = "/rechazar";
+  private static final String PATH_VALIDAR = "/validar";
 
-  private static final String PRODUCCION_CIENTIFICA_REF_VALUE = "publicacion-ref-";
+  private static final String PUBLICACION_REF_VALUE = "publicacion-ref-";
+  private static final String COMITE_EDITORIAL_REF_VALUE = "comite-ref-";
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity,
       String... roles)
@@ -80,7 +83,7 @@ public class ProduccionCientificaIT extends BaseIT {
     ProduccionCientificaOutput produccionCientifica = response.getBody();
     Assertions.assertThat(produccionCientifica.getId()).as("getId()").isNotNull();
     Assertions.assertThat(produccionCientifica.getProduccionCientificaRef()).as("getProduccionCientificaRef()")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + "001");
+        .isEqualTo(PUBLICACION_REF_VALUE + "001");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -103,7 +106,7 @@ public class ProduccionCientificaIT extends BaseIT {
     headers.add("X-Page-Size", "10");
     String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/publicaciones")
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
         .queryParam("q", filter)
         .build(false)
@@ -123,7 +126,7 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 1));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 1));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -147,7 +150,7 @@ public class ProduccionCientificaIT extends BaseIT {
     headers.add("X-Page-Size", "10");
     String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/publicaciones")
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
         .queryParam("q", filter)
         .build(false)
@@ -168,10 +171,10 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 1));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 1));
     Assertions.assertThat(produccionesCientificas.get(1).getProduccionCientificaRef())
         .as("get(1).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 2));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 2));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -193,7 +196,7 @@ public class ProduccionCientificaIT extends BaseIT {
     String sort = "id,desc";
     String filter = "investigador=ik=persona_ref1";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/publicaciones")
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
         .queryParam("q", filter)
         .build(false)
@@ -214,7 +217,7 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 1));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 1));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -236,7 +239,7 @@ public class ProduccionCientificaIT extends BaseIT {
     String sort = "id,desc";
     String filter = "investigador=ik=persona_ref2_2;tituloPublicacion=ik=ubli";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/publicaciones")
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
         .queryParam("q", filter)
         .build(false)
@@ -257,7 +260,7 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 2));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 2));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -279,7 +282,7 @@ public class ProduccionCientificaIT extends BaseIT {
     String sort = "id,desc";
     String filter = "fechaPublicacionDesde=ge=2021-01-01T23:00:00Z;fechaPublicacionHasta=le=2021-02-01T23:00:00Z";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/publicaciones")
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
         .queryParam("q", filter)
         .build(false)
@@ -300,10 +303,61 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 2));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 2));
     Assertions.assertThat(produccionesCientificas.get(1).getProduccionCientificaRef())
         .as("get(1).getProduccionCientificaRef())")
-        .isEqualTo(PRODUCCION_CIENTIFICA_REF_VALUE + String.format("%03d", 1));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 1));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off 
+      "classpath:scripts/produccion_cientifica.sql",
+      "classpath:scripts/campo_produccion_cientifica.sql",
+      "classpath:scripts/valor_campo.sql",
+      "classpath:scripts/autor.sql",
+      // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @ParameterizedTest
+  @ValueSource(strings = { "nombre=ik=Título", "issn=ik=ISSN",
+      "fechaInicioDesde=ge=2020-01-1T23:00:00Z;fechaInicioHasta=le=2021-02-22T23:00:00Z" })
+  public void findAllComitesEditorialesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+      String filter)
+      throws Exception {
+    String roles = "PRC-VAL-V";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_COMITES_EDITORIALES)
+        .queryParam("s", sort)
+        .queryParam("q", filter)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<PublicacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<PublicacionOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<PublicacionOutput> produccionesCientificas = response.getBody();
+    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(3);
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
+        .as("get(0).getProduccionCientificaRef())")
+        .isEqualTo(COMITE_EDITORIAL_REF_VALUE + String.format("%03d", 1));
+    Assertions.assertThat(produccionesCientificas.get(1).getProduccionCientificaRef())
+        .as("get(1).getProduccionCientificaRef())")
+        .isEqualTo(COMITE_EDITORIAL_REF_VALUE + String.format("%03d", 2));
+    Assertions.assertThat(produccionesCientificas.get(2).getProduccionCientificaRef())
+        .as("get(1).getProduccionCientificaRef())")
+        .isEqualTo(COMITE_EDITORIAL_REF_VALUE + String.format("%03d", 3));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -319,7 +373,7 @@ public class ProduccionCientificaIT extends BaseIT {
     final Long produccionCientificaId = 2L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH +
-        PATH_PARAMETER_ID + VALIDAR_PATH)
+        PATH_PARAMETER_ID + PATH_VALIDAR)
         .buildAndExpand(produccionCientificaId)
         .toUri();
 
@@ -355,7 +409,7 @@ public class ProduccionCientificaIT extends BaseIT {
         .comentario(comentarioRechazo).build();
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH +
-        PATH_PARAMETER_ID + RECHAZAR_PATH)
+        PATH_PARAMETER_ID + PATH_RECHAZAR)
         .buildAndExpand(produccionCientificaId)
         .toUri();
 
