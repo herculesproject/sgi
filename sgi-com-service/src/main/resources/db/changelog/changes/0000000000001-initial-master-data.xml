@@ -3,6 +3,37 @@
   <property name="schemaPrefix" value="" />
 
   <changeSet context="!test" author="master" id="0000000000001-param">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DATA" />
+      <column name="description" value="JSON con formato: {&quot;fecha&quot;:&quot;2022-01-01&quot;,&quot;proyectos&quot;:[{&quot;titulo&quot;:&quot;Proyecto1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-31T23:59:59Z&quot;},{&quot;titulo&quot;:&quot;Proyecto2&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-31T23:59:59Z&quot;}]}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo&quot;&quot;proyecto 1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-31T00:00:00Z&quot;,&quot;numPeriodo&quot;: 2}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo&quot;&quot;proyecto 1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-31T00:00:00Z&quot;,&quot;numPeriodo&quot;: 2}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -32,6 +63,49 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subject_tpl">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT" />
+      <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico" />
+      <column name="tpl" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT'</where>
+    </update>
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT" />
+      <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico IP" />
+      <column name="tpl" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT'</where>
+    </update>
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT" />
+      <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico IP" />
+      <column name="tpl" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT'</where>
+    </update>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
@@ -57,6 +131,19 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subjecttpl_param">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DATA')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA')" />
+    </insert>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT')" />
@@ -78,6 +165,64 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-content_tpl">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT" />
+      <column name="description" value="Contenido del aviso de inicio del período de presentación de justificación de gastos (texto + HTML)" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT'</where>
+    </update>
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT" />
+      <column name="description" value="Contenido del aviso de inicio del período de presentación de justificación de gastos (texto + HTML) para IPs" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT" />
+      <column name="description" value="Contenido del aviso de finalización del período de presentación de justificación de gastos (texto + HTML) para ips" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -113,6 +258,19 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-contenttpl_param">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DATA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_DATA')" />
+    </insert>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT')" />
@@ -146,6 +304,34 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-email_tpl">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO" />
+      <column name="description" value="Aviso de inicio del período de presentación de justificación de seguimiento científico (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP" />
+      <column name="description" value="Aviso de inicio del período de presentación de justificación de seguimiento científico (texto + HTML) IP" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP" />
+      <column name="description" value="Aviso de fin del período de presentación de justificación de seguimiento científico (texto + HTML) IP" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Solicitud Petición Evaluación -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -165,6 +351,19 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT')" />
+    </insert>
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT')" />
+    </insert>
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT')" />
+    </insert>
     <!-- CSP Solicitud Petición Evaluación -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
@@ -178,6 +377,19 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
+    <!-- CSP Seguimiento Cientifico -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT')" />
+    </insert>
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT')" />
+    </insert>
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT')" />
+    </insert>
     <!-- CSP Solicitud Peticion Evaluacion -->
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOLICITUD_PETICION_EVALUACION')" />
