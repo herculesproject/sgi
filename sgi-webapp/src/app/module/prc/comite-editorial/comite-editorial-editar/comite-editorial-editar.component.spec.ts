@@ -1,28 +1,25 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FlexModule } from '@angular/flex-layout';
+import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { ActionEmptyFooterComponent } from '@shared/action-empty-footer/action-empty-footer.component';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
-import { PrcSharedModule } from '../../../shared/prc-shared.module';
-import { ProduccionCientificaInitializerService } from '../../../shared/produccion-cientifica-initializer.service';
-import { IProduccionCientificaData, PRODUCCION_CIENTIFICA_DATA_KEY } from '../../../shared/produccion-cientifica.resolver';
-import { PublicacionActionService } from '../../publicacion.action.service';
+import { ProduccionCientificaInitializerService } from '../../shared/produccion-cientifica-initializer.service';
+import { IProduccionCientificaData, PRODUCCION_CIENTIFICA_DATA_KEY } from '../../shared/produccion-cientifica.resolver';
+import { ComiteEditorialActionService } from '../comite-editorial.action.service';
 
-import { PublicacionDatosGeneralesComponent } from './publicacion-datos-generales.component';
+import { ComiteEditorialEditarComponent } from './comite-editorial-editar.component';
 
-describe('PublicacionDatosGeneralesComponent', () => {
-  let component: PublicacionDatosGeneralesComponent;
-  let fixture: ComponentFixture<PublicacionDatosGeneralesComponent>;
-
+describe('ComiteEditorialEditarComponent', () => {
+  let component: ComiteEditorialEditarComponent;
+  let fixture: ComponentFixture<ComiteEditorialEditarComponent>;
   const routeData: Data = {
     [PRODUCCION_CIENTIFICA_DATA_KEY]: {
       produccionCientifica: {
@@ -35,26 +32,24 @@ describe('PublicacionDatosGeneralesComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        PublicacionDatosGeneralesComponent
+        ComiteEditorialEditarComponent,
+        ActionEmptyFooterComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        SgiAuthModule,
-        LoggerTestingModule,
-        SharedModule,
-        SgpSharedModule,
-        PrcSharedModule
+        FlexLayoutModule,
+        SharedModule
       ],
       providers: [
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        PublicacionActionService,
+        ComiteEditorialActionService,
         ProduccionCientificaInitializerService,
         SgiAuthService,
         { provide: ActivatedRoute, useValue: routeMock }
@@ -64,7 +59,7 @@ describe('PublicacionDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PublicacionDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ComiteEditorialEditarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -4,24 +4,23 @@ import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { ActionService } from '@core/services/action-service';
 import { IEstadoProduccionCientificaRequest } from '@core/services/prc/estado-produccion-cientifica/estado-produccion-cientifica-input';
 import { ProduccionCientificaService } from '@core/services/prc/produccion-cientifica/produccion-cientifica.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CvnValorCampoService } from '../shared/cvn/services/cvn-valor-campo.service';
 import { ProduccionCientificaInitializerService } from '../shared/produccion-cientifica-initializer.service';
 import { PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from '../shared/produccion-cientifica-route-params';
 import { IProduccionCientificaData, PRODUCCION_CIENTIFICA_DATA_KEY } from '../shared/produccion-cientifica.resolver';
-import { PublicacionDatosGeneralesFragment } from './publicacion-formulario/publicacion-datos-generales/publicacion-datos-generales.fragment';
+import { ComiteEditorialDatosGeneralesFragment } from './comite-editorial-formulario/comite-editorial-datos-generales/comite-editorial-datos-generales.fragment';
 
 @Injectable()
-export class PublicacionActionService extends ActionService {
+export class ComiteEditorialActionService extends ActionService {
 
   public readonly id: number;
   private data: IProduccionCientificaData;
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
   };
-  private datosGenerales: PublicacionDatosGeneralesFragment;
+  private datosGenerales: ComiteEditorialDatosGeneralesFragment;
 
   get canEdit(): boolean {
     return this.data?.canEdit ?? true;
@@ -32,7 +31,6 @@ export class PublicacionActionService extends ActionService {
     private produccionCientificaService: ProduccionCientificaService,
     initializerService: ProduccionCientificaInitializerService,
     cvnValorCampoService: CvnValorCampoService,
-    personaService: PersonaService,
   ) {
     super();
 
@@ -41,11 +39,10 @@ export class PublicacionActionService extends ActionService {
       this.data = route.snapshot.data[PRODUCCION_CIENTIFICA_DATA_KEY];
       this.enableEdit();
 
-      this.datosGenerales = new PublicacionDatosGeneralesFragment(
+      this.datosGenerales = new ComiteEditorialDatosGeneralesFragment(
         this.data?.produccionCientifica,
         initializerService,
-        cvnValorCampoService,
-        personaService);
+        cvnValorCampoService);
       this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     }
   }

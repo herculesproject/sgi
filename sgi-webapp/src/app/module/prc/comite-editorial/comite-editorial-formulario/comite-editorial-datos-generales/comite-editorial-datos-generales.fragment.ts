@@ -6,15 +6,13 @@ import { IIndiceImpacto } from '@core/models/prc/indice-impacto';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { IProyectoPrc } from '@core/models/prc/proyecto-prc';
 import { IValorCampo } from '@core/models/prc/valor-campo';
-import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
-import { PersonaService } from '@core/services/sgp/persona.service';
-import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap, tap, toArray } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { CvnValorCampoService } from '../../../shared/cvn/services/cvn-valor-campo.service';
 import { ProduccionCientificaInitializerService } from '../../../shared/produccion-cientifica-initializer.service';
 
-export class PublicacionDatosGeneralesFragment extends Fragment {
+export class ComiteEditorialDatosGeneralesFragment extends Fragment {
   private camposProduccionCientificaWithConfiguracionMap$ =
     new BehaviorSubject<Map<string, ICampoProduccionCientificaWithConfiguracion>>(new Map());
   private indicesImpacto$ = new BehaviorSubject<IIndiceImpacto[]>([]);
@@ -36,7 +34,6 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
     produccionCientifica: IProduccionCientifica,
     private initializerService: ProduccionCientificaInitializerService,
     private cvnValorCampoService: CvnValorCampoService,
-    private personaService: PersonaService,
   ) {
     super(produccionCientifica?.id);
     this.produccionCientifica$ = new BehaviorSubject(produccionCientifica);
@@ -60,7 +57,7 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
   }
 
   saveOrUpdate(action?: any): Observable<string | number | void> {
-    throw new Error('Method not implemented.');
+    return of(void 0);
   }
 
   getCamposProduccionCientificaWithConfiguracionMap$(): Observable<Map<string, ICampoProduccionCientificaWithConfiguracion>> {
@@ -93,45 +90,6 @@ export class PublicacionDatosGeneralesFragment extends Fragment {
     } else {
       return of(valoresCampo);
     }
-  }
-
-  getAutorValoresCampo$ = (campoProduccionCientifica: ICampoProduccionCientifica) => {
-    const valoresCampo = this.valoresCampoMap.get(campoProduccionCientifica.codigo);
-    if (!valoresCampo) {
-      return this.findAutorCvnValorCampo(campoProduccionCientifica)
-        .pipe(
-          tap(valoresCampoFetched => this.valoresCampoMap.set(campoProduccionCientifica.codigo, valoresCampoFetched))
-        );
-    } else {
-      return of(valoresCampo);
-    }
-  }
-
-  private findAutorCvnValorCampo = (campoProduccionCientifica: ICampoProduccionCientifica) => {
-    return this.cvnValorCampoService.findCvnValorCampo(campoProduccionCientifica)
-      .pipe(
-        switchMap(valoresCampos => from(valoresCampos).pipe(
-          concatMap(valorCampo => this.personaService.findById(valorCampo.valor)
-            .pipe(
-              map((persona) => {
-                valorCampo.valor = this.buildFullName(persona);
-                return valorCampo;
-              }),
-              catchError(() => of(valorCampo))
-            )
-          ),
-          toArray()
-        ))
-      );
-  }
-
-  private buildFullName({ nombre, apellidos }: IPersona): string {
-    let fullName = nombre;
-    if (fullName) {
-      fullName = fullName.concat(' ');
-    }
-    fullName = fullName.concat(apellidos);
-    return fullName;
   }
 
   getProduccionCientifica$(): Observable<IProduccionCientifica> {

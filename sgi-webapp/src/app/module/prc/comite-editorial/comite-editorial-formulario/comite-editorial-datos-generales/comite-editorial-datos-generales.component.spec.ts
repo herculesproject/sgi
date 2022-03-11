@@ -15,13 +15,13 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { PrcSharedModule } from '../../../shared/prc-shared.module';
 import { ProduccionCientificaInitializerService } from '../../../shared/produccion-cientifica-initializer.service';
 import { IProduccionCientificaData, PRODUCCION_CIENTIFICA_DATA_KEY } from '../../../shared/produccion-cientifica.resolver';
-import { PublicacionActionService } from '../../publicacion.action.service';
+import { ComiteEditorialActionService } from '../../comite-editorial.action.service';
 
-import { PublicacionDatosGeneralesComponent } from './publicacion-datos-generales.component';
+import { ComiteEditorialDatosGeneralesComponent } from './comite-editorial-datos-generales.component';
 
-describe('PublicacionDatosGeneralesComponent', () => {
-  let component: PublicacionDatosGeneralesComponent;
-  let fixture: ComponentFixture<PublicacionDatosGeneralesComponent>;
+describe('ComiteEditorialDatosGeneralesComponent', () => {
+  let component: ComiteEditorialDatosGeneralesComponent;
+  let fixture: ComponentFixture<ComiteEditorialDatosGeneralesComponent>;
 
   const routeData: Data = {
     [PRODUCCION_CIENTIFICA_DATA_KEY]: {
@@ -35,7 +35,7 @@ describe('PublicacionDatosGeneralesComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        PublicacionDatosGeneralesComponent
+        ComiteEditorialDatosGeneralesComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -54,7 +54,7 @@ describe('PublicacionDatosGeneralesComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        PublicacionActionService,
+        ComiteEditorialActionService,
         ProduccionCientificaInitializerService,
         SgiAuthService,
         { provide: ActivatedRoute, useValue: routeMock }
@@ -64,7 +64,7 @@ describe('PublicacionDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PublicacionDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ComiteEditorialDatosGeneralesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
