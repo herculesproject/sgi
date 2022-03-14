@@ -19,9 +19,9 @@ public class ComiteEditorialResumen extends ProduccionCientificaResumen {
   private String nombre;
 
   public ComiteEditorialResumen(Long id, String produccionCientificaRef, TipoEstadoProduccion estado,
-      EpigrafeCVN epigrafeCVN, String tipoProduccion, String fechaInicio) {
+      EpigrafeCVN epigrafeCVN, String nombre, String fechaInicio) {
     super(id, produccionCientificaRef, estado, epigrafeCVN);
     this.fechaInicio = StringUtils.hasText(fechaInicio) ? Instant.parse(fechaInicio) : null;
-    this.nombre = tipoProduccion;
+    this.nombre = nombre;
   }
 }

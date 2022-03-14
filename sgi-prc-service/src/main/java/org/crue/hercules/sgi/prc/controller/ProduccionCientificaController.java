@@ -10,6 +10,8 @@ import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
+import org.crue.hercules.sgi.prc.dto.CongresoOutput;
+import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaOutput;
@@ -55,6 +57,7 @@ public class ProduccionCientificaController {
   public static final String MAPPING = "/producciones-cientificas";
   public static final String PATH_PUBLICACIONES = "/publicaciones";
   public static final String PATH_COMITES_EDITORIALES = "/comites-editoriales";
+  public static final String PATH_CONGRESOS = "/congresos";
   public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
   public static final String PATH_AUTORES = "/{id}/autores";
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
@@ -175,6 +178,45 @@ public class ProduccionCientificaController {
   private Page<ComiteEditorialOutput> convertComiteEditorialResumen(Page<ComiteEditorialResumen> page) {
     List<ComiteEditorialOutput> content = page.getContent().stream()
         .map(comiteEditorialResumen -> convertComiteEditorialResumen(comiteEditorialResumen))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link CongresoOutput}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging la información de la paginación.
+   * @return el listado de entidades {@link CongresoOutput} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_CONGRESOS)
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  public ResponseEntity<Page<CongresoOutput>> findAllCongresos(
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllCongresos(String query, Pageable paging) - start");
+    Page<CongresoResumen> page = service.findAllCongresos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllCongresos(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllCongresos(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertCongresoResumen(page), HttpStatus.OK);
+  }
+
+  private CongresoOutput convertCongresoResumen(CongresoResumen congresoResumen) {
+    CongresoOutput output = modelMapper.map(congresoResumen, CongresoOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(congresoResumen.getEstado());
+    return output;
+  }
+
+  private Page<CongresoOutput> convertCongresoResumen(Page<CongresoResumen> page) {
+    List<CongresoOutput> content = page.getContent().stream()
+        .map(congresoResumen -> convertCongresoResumen(congresoResumen))
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

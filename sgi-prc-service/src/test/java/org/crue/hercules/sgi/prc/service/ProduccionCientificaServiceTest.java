@@ -12,6 +12,7 @@ import javax.persistence.PersistenceUnitUtil;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
+import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
@@ -214,8 +215,50 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
-      ComiteEditorialResumen publicacion = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(publicacion.getProduccionCientificaRef())
+      ComiteEditorialResumen comiteEditorial = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(comiteEditorial.getProduccionCientificaRef())
+          .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  public void findAllCongresos_ReturnsPage() {
+    // given: Una lista con 37 CongresoResumen
+    List<CongresoResumen> congresos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      congresos.add(generarMockCongresoResumen(i, String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        repository.findAllCongresos(ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<CongresoResumen>>() {
+          @Override
+          public Page<CongresoResumen> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > congresos.size() ? congresos.size() : toIndex;
+            List<CongresoResumen> content = congresos.subList(fromIndex, toIndex);
+            Page<CongresoResumen> page = new PageImpl<>(content, pageable, congresos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<CongresoResumen> page = service.findAllCongresos(null, paging);
+
+    // then: Devuelve la pagina 3 con los CongresoResumen del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      CongresoResumen congreso = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(congreso.getProduccionCientificaRef())
           .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
     }
   }
@@ -312,4 +355,15 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
     return comiteEditorial;
   }
 
+  private CongresoResumen generarMockCongresoResumen(Long id, String idRef) {
+    CongresoResumen congreso = new CongresoResumen();
+    congreso.setId(id);
+    congreso.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    congreso.setEpigrafeCVN(EpigrafeCVN.E060_010_020_000);
+    congreso.setFechaCelebracion(Instant.now());
+    congreso.setTipoEvento("Tipo-evento" + idRef);
+    congreso.setTituloTrabajo("Titulo-trabajo" + idRef);
+
+    return congreso;
+  }
 }

@@ -12,6 +12,8 @@ import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
+import org.crue.hercules.sgi.prc.dto.CongresoOutput;
+import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
@@ -72,6 +74,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PUBLICACIONES = ProduccionCientificaController.PATH_PUBLICACIONES;
   private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
+  private static final String PATH_CONGRESOS = ProduccionCientificaController.PATH_CONGRESOS;
   private static final String PATH_PARAMETER_VALIDAR = "/validar";
   private static final String PATH_PARAMETER_RECHAZAR = "/rechazar";
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
@@ -244,6 +247,93 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     // when: Get page=3 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_COMITES_EDITORIALES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllCongresos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 CongresoResumen
+    List<CongresoResumen> congresos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      congresos.add(generarMockCongresoResumen(i, String.valueOf(i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllCongresos(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > congresos.size() ? congresos.size() : toIndex;
+          List<CongresoResumen> content = congresos.subList(fromIndex, toIndex);
+          Page<CongresoResumen> pageResponse = new PageImpl<>(content, pageable,
+              congresos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_CONGRESOS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los CongresoOutput del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$",
+            Matchers.hasSize(7)))
+        .andReturn();
+
+    List<CongresoOutput> congresosResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<CongresoOutput>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      CongresoOutput congreso = congresosResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(congreso.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllCongresos_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 CongresoResumen
+    List<CongresoResumen> congresos = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllCongresos(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<CongresoResumen> pageResponse = new PageImpl<>(congresos, pageable,
+              congresos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_CONGRESOS)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
                 page)
             .header("X-Page-Size", pageSize)
@@ -821,6 +911,18 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     comiteEditorial.setNombre("Nombre" + idRef);
 
     return comiteEditorial;
+  }
+
+  private CongresoResumen generarMockCongresoResumen(Long id, String idRef) {
+    CongresoResumen congreso = new CongresoResumen();
+    congreso.setId(id);
+    congreso.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    congreso.setEpigrafeCVN(EpigrafeCVN.E060_010_020_000);
+    congreso.setFechaCelebracion(Instant.now());
+    congreso.setTipoEvento("Tipo-evento" + idRef);
+    congreso.setTituloTrabajo("Titulo-trabajo" + idRef);
+
+    return congreso;
   }
 
   private IndiceImpacto generarMockIndiceImpacto(Long id, Long produccionCientificaId) {

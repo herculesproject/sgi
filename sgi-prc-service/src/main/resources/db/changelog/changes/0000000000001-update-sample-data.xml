@@ -19,6 +19,24 @@
       <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-006" />
       <column name="epigrafe_cvn" value="060.030.030.000" />
     </insert>
+    <!-- Producción científica 7 - Congreso 1 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-007" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+    </insert>
+    <!-- Producción científica 8 - Congreso 2 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-008" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+    </insert>
+    <!-- Producción científica 9 - Congreso 3 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-009" />
+      <column name="epigrafe_cvn" value="060.010.020.000" />
+    </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-estado_produccion_cientifica">
     <!-- Estado para Producción científica 4 - Comité editorial 1 -->
@@ -45,6 +63,30 @@
       <column name="produccion_cientifica_id" valueNumeric="6" />
       <column name="estado" value="PENDIENTE" />
     </insert>
+    <!-- Estado para Producción científica 7 - Congreso 1 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2021-12-22T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="estado" value="VALIDADO" />
+    </insert>
+    <!-- Estado para Producción científica 8 - Congreso 2 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2022-01-12T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="estado" value="PENDIENTE" />
+    </insert>
+    <!-- Estado para Producción científica 9 - Congreso 3 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2022-01-24T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="estado" value="PENDIENTE" />
+    </insert>
     <!-- Actualizar Estado de Producción científica 4 - Comité editorial 1 -->
     <update tableName="produccion_cientifica">
       <column name="estado_produccion_cientifica_id" valueNumeric="4" />
@@ -67,6 +109,30 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-006" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado de Producción científica 7 - Congreso 1 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="7" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-007" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado de Producción científica 8 - Congreso 2 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="8" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-008" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado de Producción científica 9 - Congreso 3 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="9" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-009" />
       </whereParams>
     </update>
   </changeSet>
@@ -166,6 +232,210 @@
       <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
       <column name="produccion_cientifica_id" valueNumeric="6" />
       <column name="codigo_cvn" value="060.030.030.100" />
+    </insert>
+
+    <!-- Producción científica 7 - Congreso 1 -->
+    <!-- Título del trabajo (id 56) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.030" />
+    </insert>
+    <!-- Fecha de celebración	(id 57) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.190" />
+    </insert>
+    <!-- Fecha de finalización (id 58) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.380" />
+    </insert>
+    <!-- Tipo de evento	(id 59) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.010" />
+    </insert>
+    <!-- Ámbito geográfico (id 60) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.080" />
+    </insert>
+    <!-- Nombre del congreso (id 61) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.100" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 62) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.320" />
+    </insert>
+    <!-- Nombre de la publicación	(id 63) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.370" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 64) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="RESUMEN_REVISTA" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 65) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.390" />
+    </insert>
+    <!-- Tipo participación	 (id 66) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+      <column name="codigo_cvn" value="060.010.020.050" />
+    </insert>
+
+    <!-- Producción científica 8 - Congreso 2 -->
+    <!-- Título del trabajo (id 67) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.030" />
+    </insert>
+    <!-- Fecha de celebración	(id 68) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.190" />
+    </insert>
+    <!-- Fecha de finalización (id 69) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.380" />
+    </insert>
+    <!-- Tipo de evento	(id 70) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.010" />
+    </insert>
+    <!-- Ámbito geográfico (id 71) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.080" />
+    </insert>
+    <!-- Nombre del congreso (id 72) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.100" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 73) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.320" />
+    </insert>
+    <!-- Nombre de la publicación	(id 74) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.370" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 75) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="RESUMEN_REVISTA" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 76) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.390" />
+    </insert>
+    <!-- Tipo participación	 (id 77) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+      <column name="codigo_cvn" value="060.010.020.050" />
+    </insert>
+
+    <!-- Producción científica 9 - Congreso 3 -->
+    <!-- Título del trabajo (id 78) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.030" />
+    </insert>
+    <!-- Fecha de celebración	(id 79) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.190" />
+    </insert>
+    <!-- Fecha de finalización (id 79) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.380" />
+    </insert>
+    <!-- Tipo de evento	(id 80) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.010" />
+    </insert>
+    <!-- Ámbito geográfico (id 81) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.080" />
+    </insert>
+    <!-- Nombre del congreso (id 82) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.100" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 83) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.320" />
+    </insert>
+    <!-- Nombre de la publicación	(id 84) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.370" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 85) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="RESUMEN_REVISTA" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 86) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.390" />
+    </insert>
+    <!-- Tipo participación	 (id 87) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+      <column name="codigo_cvn" value="060.010.020.050" />
     </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-valor_campo">
@@ -279,8 +549,244 @@
       <column name="orden" valueNumeric="1" />
       <column name="valor" value="OTHERS" />
     </insert>
-  </changeSet>
 
+    <!-- Producción científica 7 - Congreso 1 -->
+    <!-- Título del trabajo (id 56) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="56" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Titulo trabajo 1" />
+    </insert>
+    <!-- Fecha de celebración	(id 57) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="57" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2021-12-03T23:00:00Z" />
+    </insert>
+    <!-- Fecha de finalización (id 58) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="58" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2021-12-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de evento	(id 59) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="59" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="008" />
+    </insert>
+    <!-- Ámbito geográfico (id 60) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="60" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="000" />
+    </insert>
+    <!-- Nombre del congreso (id 61) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="61" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Nombre congreso 1" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 62) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="62" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="ISBN-1" />
+    </insert>
+    <!-- Nombre de la publicación	(id 63) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="63" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Publicación 1" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 64) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="64" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 65) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="65" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Fulanito Lomo" />
+    </insert>
+    <!-- Tipo de participación	 (id 66) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="66" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="050" />
+    </insert>
+
+    <!-- Producción científica 8 - Congreso 2 -->
+    <!-- Título del trabajo (id 67) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="67" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Titulo trabajo 2" />
+    </insert>
+    <!-- Fecha de celebración	(id 68) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="68" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-01-03T23:00:00Z" />
+    </insert>
+    <!-- Fecha de finalización (id 69) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="69" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-01-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de evento	(id 70) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="70" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="031" />
+    </insert>
+    <!-- Ámbito geográfico (id 71) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="71" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="010" />
+    </insert>
+    <!-- Nombre del congreso (id 72) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="72" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Nombre congreso 2" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 73) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="73" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="ISBN-2" />
+    </insert>
+    <!-- Nombre de la publicación	(id 74) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="74" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Publicación 2" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 75) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="75" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 76) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="76" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Fulanita Lomo" />
+    </insert>
+    <!-- Tipo de participación	 (id 77) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="77" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="060" />
+    </insert>
+
+    <!-- Producción científica 9 - Congreso 3 -->
+    <!-- Título del trabajo (id 78) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="78" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Titulo trabajo 3" />
+    </insert>
+    <!-- Fecha de celebración	(id 79) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="79" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-02-03T23:00:00Z" />
+    </insert>
+    <!-- Fecha de finalización (id 80) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="80" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-02-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de evento	(id 81) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="81" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="063" />
+    </insert>
+    <!-- Ámbito geográfico (id 82) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="82" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="020" />
+    </insert>
+    <!-- Nombre del congreso (id 83) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="83" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Nombre congreso 3" />
+    </insert>
+    <!-- ISBN - ISSN publicación	(id 84) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="84" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="ISBN-3" />
+    </insert>
+    <!-- Nombre de la publicación	(id 85) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="85" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Publicación 3" />
+    </insert>
+    <!-- Resumen o abstract en una revista (id 86) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="86" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Autor/a de correspondencia	 (id 87) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="87" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Fulanita Lomo" />
+    </insert>
+    <!-- Tipo de participación	 (id 88) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="88" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="080" />
+    </insert>
+  </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-autor">
     <!-- Autor de  Producción científica 4 - Comité editorial 1 -->
     <insert tableName="autor">
@@ -377,9 +883,56 @@
         <param name="persona_ref" value="persona_ref3_3" />
       </whereParams>
     </update>
+
+    <!-- Autor de  Producción científica 7 - Congreso 1 -->
+    <insert tableName="autor">
+      <!-- 13 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="null" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="firma1" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor congreso 1" />
+      <column name="orcid_id" value="orcid_id1" />
+      <column name="orden" valueNumeric="1" />
+      <column name="persona_ref" value="null" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
+    <!-- Autor de  Producción científica 8 - Congreso 2 -->
+    <insert tableName="autor">
+      <!-- 14 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="null" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="null" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor congreso 2" />
+      <column name="orcid_id" value="orcid_id2" />
+      <column name="orden" valueNumeric="2" />
+      <column name="persona_ref" value="" />
+      <column name="produccion_cientifica_id" valueNumeric="8" />
+    </insert>
+    <!-- Autor de Producción científica 9 - Congreso 3 -->
+    <insert tableName="autor">
+      <!-- 15 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="apellidos1" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="null" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor comité editorial 3" />
+      <column name="orcid_id" value="orcid_id3" />
+      <column name="orden" valueNumeric="3" />
+      <column name="persona_ref" value="null" />
+      <column name="produccion_cientifica_id" valueNumeric="9" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-indice_impacto">
+    <!-- Producción científica 4 - Comité editorial 1 -->
     <insert tableName="indice_impacto">
       <column name="id" valueSequenceNext="indice_impacto_seq" />
       <column name="tipo_fuente_impacto" value="GII-GRIN-SCIE" />
@@ -404,9 +957,36 @@
       <column name="revista_25" valueBoolean="true" />
       <column name="produccion_cientifica_id" valueNumeric="4" />
     </insert>
+
+    <!-- Producción científica 7 - Congreso 1 -->
+    <insert tableName="indice_impacto">
+      <column name="id" valueSequenceNext="indice_impacto_seq" />
+      <column name="tipo_fuente_impacto" value="GII-GRIN-SCIE" />
+      <column name="tipo_ranking" value="CLASE1" />
+      <column name="anio" valueNumeric="2018" />
+      <column name="indice" valueNumeric="1.85" />
+      <column name="otra_fuente_impacto" value="" />
+      <column name="posicion_publicacion" valueNumeric="100" />
+      <column name="numero_revistas" valueNumeric="20" />
+      <column name="revista_25" valueBoolean="false" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
+    <insert tableName="indice_impacto">
+      <column name="id" valueSequenceNext="indice_impacto_seq" />
+      <column name="tipo_fuente_impacto" value="OTHERS" />
+      <column name="tipo_ranking" value="CLASE2" />
+      <column name="anio" valueNumeric="2020" />
+      <column name="indice" valueNumeric="1.95" />
+      <column name="otra_fuente_impacto" value="Otra fuente de impacto 1" />
+      <column name="posicion_publicacion" valueNumeric="200" />
+      <column name="numero_revistas" valueNumeric="500" />
+      <column name="revista_25" valueBoolean="true" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-proyecto">
+    <!-- Producción científica 4 - Comité editorial 1 -->
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
       <column name="proyecto_ref" value="1" />
@@ -417,9 +997,22 @@
       <column name="proyecto_ref" value="2" />
       <column name="produccion_cientifica_id" valueNumeric="4" />
     </insert>
+
+    <!-- Producción científica 7 - Congreso 1 -->
+    <insert tableName="proyecto">
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="proyecto_ref" value="1" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
+    <insert tableName="proyecto">
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="proyecto_ref" value="2" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-acreditacion">
+    <!-- Producción científica 4 - Comité editorial 1 -->
     <insert tableName="acreditacion">
       <column name="id" valueSequenceNext="acreditacion_seq" />
       <column name="documento_ref" value="sample-txt" />
@@ -431,9 +1024,23 @@
       <column name="url" value="http://www.google.es/sin_documento" />
       <column name="produccion_cientifica_id" valueNumeric="4" />
     </insert>
+
+    <!-- Producción científica 7 - Congreso 1 -->
+    <insert tableName="acreditacion">
+      <column name="id" valueSequenceNext="acreditacion_seq" />
+      <column name="documento_ref" value="sample-txt" />
+      <column name="url" value="http://www.google.es/con_documento" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
+    <insert tableName="acreditacion">
+      <column name="id" valueSequenceNext="acreditacion_seq" />
+      <column name="url" value="http://www.google.es/sin_documento" />
+      <column name="produccion_cientifica_id" valueNumeric="7" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-autor_grupo">
+    <!-- Producción científica 4 - Comité editorial 1 -->
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="VALIDADO" />
@@ -446,5 +1053,19 @@
       <column name="grupo_ref" value="2" />
       <column name="autor_id" valueNumeric="10" />
     </insert>
+    <!-- Producción científica 7 - Congreso 1 -->
+    <insert tableName="autor_grupo">
+      <column name="id" valueSequenceNext="autor_grupo_seq" />
+      <column name="estado" value="VALIDADO" />
+      <column name="grupo_ref" value="1" />
+      <column name="autor_id" valueNumeric="13" />
+    </insert>
+    <insert tableName="autor_grupo">
+      <column name="id" valueSequenceNext="autor_grupo_seq" />
+      <column name="estado" value="PENDIENTE" />
+      <column name="grupo_ref" value="2" />
+      <column name="autor_id" valueNumeric="13" />
+    </insert>
   </changeSet>
+
 </databaseChangeLog>
