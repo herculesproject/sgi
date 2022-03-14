@@ -12,16 +12,16 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from 'src/app/module/csp/shared/csp-shared.module';
 
-import { ComiteEditorialListadoComponent } from './comite-editorial-listado.component';
+import { CongresoListadoComponent } from './congreso-listado.component';
 
-describe('ComiteEditorialListadoComponent', () => {
-  let component: ComiteEditorialListadoComponent;
-  let fixture: ComponentFixture<ComiteEditorialListadoComponent>;
+describe('CongresoListadoComponent', () => {
+  let component: CongresoListadoComponent;
+  let fixture: ComponentFixture<CongresoListadoComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ComiteEditorialListadoComponent,
+        CongresoListadoComponent,
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -45,7 +45,7 @@ describe('ComiteEditorialListadoComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComiteEditorialListadoComponent);
+    fixture = TestBed.createComponent(CongresoListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
