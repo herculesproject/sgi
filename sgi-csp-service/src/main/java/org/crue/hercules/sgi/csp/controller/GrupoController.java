@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.converter.GrupoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPalabraClaveConverter;
+import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
@@ -61,6 +62,8 @@ public class GrupoController {
   public static final String PATH_CODIGO_DUPLICADO = "/codigoduplicado";
   public static final String PATH_NEXT_CODIGO = "/nextcodigo";
   public static final String PATH_PALABRAS_CLAVE = PATH_ID + "/palabrasclave";
+  public static final String PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO = "/grupo-baremable/{grupoRef}/{anio}";
+  public static final String PATH_BAREMABLES_ANIO = "/baremables/{anio}";
 
   private final GrupoService service;
   private final GrupoEquipoService grupoEquipoService;
@@ -317,6 +320,50 @@ public class GrupoController {
             grupoPalabraClaveConverter.convertGrupoPalabrasClaveInput(palabrasClave)));
     log.debug("updatePalabrasClave(Long id, List<ConvocatoriaPalabraClave> palabrasClave) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve si grupoRef pertenece a un grupo de investigación con el campo
+   * "Grupo especial de investigación" a "No" el 31 de diciembre del
+   * año que se esta baremando
+   * 
+   * @param grupoRef grupoRef
+   * @param anio     Año de baremación
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  public ResponseEntity<Void> isGrupoBaremable(@PathVariable Long grupoRef, @PathVariable Integer anio) {
+    log.debug("isGrupoBaremable(grupoRef, anio) - start");
+    if (service.isGrupoBaremable(grupoRef, anio)) {
+      log.debug("isGrupoBaremable(grupoRef, anio) - end");
+
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isGrupoBaremable(grupoRef, anio) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista de {@link GrupoDto} pertenecientes a un determinado
+   * grupo y que estén a 31 de diciembre del año de baremación
+   *
+   * @param anio año de baremación
+   * @return lista de {@link GrupoDto}
+   */
+  @GetMapping(PATH_BAREMABLES_ANIO)
+  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  public ResponseEntity<List<GrupoDto>> findAllByAnio(@PathVariable Integer anio) {
+    log.debug("findAllByAnio(anio) - start");
+    List<GrupoDto> grupos = service.findAllByAnio(anio);
+
+    if (grupos.isEmpty()) {
+      log.debug("findAllByAnio(anio) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllByAnio(anio) - end");
+    return new ResponseEntity<>(grupos, HttpStatus.OK);
   }
 
 }

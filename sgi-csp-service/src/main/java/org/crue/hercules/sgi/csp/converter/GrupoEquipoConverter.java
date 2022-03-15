@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.converter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
@@ -33,4 +36,7 @@ public class GrupoEquipoConverter {
     return page.map(this::convert);
   }
 
+  public List<GrupoEquipoOutput> convert(List<GrupoEquipo> list) {
+    return list.stream().map(this::convert).collect(Collectors.toList());
+  }
 }

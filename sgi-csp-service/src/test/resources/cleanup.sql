@@ -1,4 +1,12 @@
 -- vacia la bd
+-- GIN
+update test.grupo set grupo_especial_investigacion_id = null, grupo_tipo_id = null;
+DELETE FROM test.grupo_equipo;
+DELETE FROM test.grupo_especial_investigacion;
+DELETE FROM test.grupo_tipo;
+DELETE FROM test.grupo_palabra_clave;
+DELETE FROM test.grupo;
+
 DELETE FROM test.proyecto_entidad_convocante;
 DELETE FROM test.proyecto_entidad_gestora;
 DELETE FROM test.prorroga_documento;

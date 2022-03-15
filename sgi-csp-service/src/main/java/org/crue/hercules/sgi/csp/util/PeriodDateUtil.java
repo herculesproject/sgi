@@ -1,8 +1,11 @@
 package org.crue.hercules.sgi.csp.util;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
+
+import org.springframework.data.util.Pair;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,7 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PeriodDateUtil {
 
-  private static final int MONTHS_TO_SUBTRACT = 1;
+  public static final String PATTERN_MONTH_DAY_01_01 = "-01-01";
+  private static final Long MONTHS_TO_SUBTRACT = 1L;
 
   public static Instant calculateFechaInicioPeriodo(Instant fechaInicio, Integer mesInicial, TimeZone timeZone) {
     if (mesInicial == null) {
@@ -23,12 +27,11 @@ public class PeriodDateUtil {
     // empezamos en el primer mes, no hay que sumar nada)
     ZonedDateTime fechaInicioPeriodo = fechaBase.plusMonths(mesInicial - MONTHS_TO_SUBTRACT);
 
-    Instant instantInicioPeriodo = fechaInicioPeriodo.toInstant();
-
-    return instantInicioPeriodo;
+    return fechaInicioPeriodo.toInstant();
   }
 
-  public static Instant calculateFechaFinPeriodo(Instant fechaInicio, Integer mesFinal, Instant fechaFin, TimeZone timeZone) {
+  public static Instant calculateFechaFinPeriodo(Instant fechaInicio, Integer mesFinal, Instant fechaFin,
+      TimeZone timeZone) {
     if (mesFinal == null) {
       return null;
     }
@@ -47,5 +50,23 @@ public class PeriodDateUtil {
       return instantFinPeriodo;
     }
     return fechaFin.isBefore(instantFinPeriodo) ? fechaFin : instantFinPeriodo;
+  }
+
+  public static Instant calculateFechaFinBaremacionByAnio(Integer anio, TimeZone timeZone) {
+    String strFechaInicioBaremacion = (anio + 1) + PATTERN_MONTH_DAY_01_01;
+
+    return LocalDate.parse(strFechaInicioBaremacion)
+        .atStartOfDay(timeZone.toZoneId()).toInstant().minusSeconds(1);
+  }
+
+  public static Pair<Instant, Instant> calculateFechasInicioFinBaremacionByAnio(Integer anio, TimeZone timeZone) {
+    String strFechaInicioBaremacion = anio + PATTERN_MONTH_DAY_01_01;
+
+    Instant fechaInicioBaremacion = LocalDate.parse(strFechaInicioBaremacion)
+        .atStartOfDay(timeZone.toZoneId()).toInstant();
+
+    Instant fechaFinBaremacion = calculateFechaFinBaremacionByAnio(anio, timeZone);
+
+    return Pair.of(fechaInicioBaremacion, fechaFinBaremacion);
   }
 }

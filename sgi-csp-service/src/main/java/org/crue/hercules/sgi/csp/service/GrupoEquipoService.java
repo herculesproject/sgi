@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.GrupoEquipoDto;
 import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
@@ -14,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -163,6 +165,37 @@ public class GrupoEquipoService {
 
     log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si personaRef pertenece a un grupo de investigación con un rol con
+   * el flag de baremable a true a fecha 31 de diciembre del año que se esta
+   * baremando y el grupo al que pertenecen los autores (tabla Grupo) este activo
+   * y el campo "Grupo especial de investigación" a "No" el 31 de diciembre del
+   * año que se esta baremando
+   *
+   * @param personaRef personaRef
+   * @param anio       año de baremación
+   * @return true/false
+   */
+  public boolean isPersonaBaremable(String personaRef, Integer anio) {
+
+    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
+    return repository.isPersonaBaremable(personaRef, fechaBaremacion);
+  }
+
+  /**
+   * Devuelve una lista de {@link GrupoEquipoDto} pertenecientes a un determinado
+   * grupo y que estén a 31 de diciembre del año de baremación
+   *
+   * @param grupoRef grupoRef
+   * @param anio     año de baremación
+   * @return Lista de {@link GrupoEquipoDto}
+   */
+  public List<GrupoEquipoDto> findByGrupoIdAndAnio(Long grupoRef, Integer anio) {
+
+    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
+    return repository.findByGrupoIdAndAnio(grupoRef, fechaBaremacion);
   }
 
 }

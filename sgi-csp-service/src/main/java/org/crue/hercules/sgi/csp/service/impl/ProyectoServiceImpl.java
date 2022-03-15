@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -58,7 +60,6 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -150,7 +151,6 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
   private final ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
   private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
-  private final ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
   private final ContextoProyectoService contextoProyectoService;
   private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
   private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
@@ -200,7 +200,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoEntidadConvocanteService proyectoEntidadConvocanteService,
       ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository,
       ProyectoEntidadGestoraService proyectoEntidadGestoraService,
-      ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository,
       ContextoProyectoService contextoProyectoService,
       ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService, SolicitudRepository solicitudRepository,
@@ -244,7 +243,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
     this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
     this.proyectoEntidadConvocanteService = proyectoEntidadConvocanteService;
-    this.convocatoriaAreaTematicaRepository = convocatoriaAreaTematicaRepository;
     this.contextoProyectoService = contextoProyectoService;
     this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
@@ -900,7 +898,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
     List<ConvocatoriaEntidadFinanciadora> entidadesConvocatoria = convocatoriaEntidadFinanciadoraRepository
         .findByConvocatoriaId(convocatoriaId);
-    entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
+    entidadesConvocatoria.stream().forEach(entidadConvocatoria -> {
       log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {}", entidadConvocatoria.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
       entidadProyecto.setProyectoId(proyectoId);
@@ -926,7 +924,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - start");
 
     convocatoriaPeriodoSeguimientoCientificoRepository
-        .findAllByConvocatoriaIdOrderByMesInicial(proyecto.getConvocatoriaId()).forEach((convocatoriaSeguimiento) -> {
+        .findAllByConvocatoriaIdOrderByMesInicial(proyecto.getConvocatoriaId()).forEach(convocatoriaSeguimiento -> {
 
           log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {}", convocatoriaSeguimiento.getId());
 
@@ -1814,6 +1812,28 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Override
   public List<Long> findIdsBySolicitudId(Long solicitudId) {
     return this.repository.findIds(ProyectoSpecifications.bySolicitudId(solicitudId));
+  }
+
+  /**
+   * Devuelve una lista de {@link ProyectoDto} que se incorporarán a la baremación
+   * de producción científica
+   * 
+   * @param anioInicio año inicio de baremación
+   * @param anioFin    año fin de baremación
+   * 
+   * @return Lista de {@link ProyectoDto}
+   */
+  @Override
+  public List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin){
+
+          String strFechaInicioBaremacion = anioInicio + PeriodDateUtil.PATTERN_MONTH_DAY_01_01;
+
+    Instant fechaInicioBaremacion = LocalDate.parse(strFechaInicioBaremacion)
+        .atStartOfDay(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    Instant fechaFinBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anioFin, sgiConfigProperties.getTimeZone());
+
+    return repository.findProyectosProduccionCientifica(fechaInicioBaremacion, fechaFinBaremacion);
   }
 
 }

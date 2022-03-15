@@ -24,7 +24,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -96,8 +95,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
   @Mock
   private ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
-  @Mock
-  private ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
   @Mock
   private ContextoProyectoService contextoProyectoService;
   @Mock
@@ -195,7 +192,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     service = new ProyectoServiceImpl(sgiConfigProperties, repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
         convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
-        proyectoEntidadGestoraService, convocatoriaAreaTematicaRepository, contextoProyectoService,
+        proyectoEntidadGestoraService, contextoProyectoService,
         convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService, solicitudRepository,
         solicitudProyectoRepository, solicitudModalidadRepository, solicitudEquipoRepository, proyectoEquipoService,
         solicitudSocioRepository, proyectoSocioService, solicitudEquipoSocioRepository, proyectoEquipoSocioService,
@@ -730,7 +727,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     // then: El Proyecto se activa correctamente.
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(proyecto.getId());
-    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Test
@@ -761,7 +758,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     // then: El Proyecto se desactivan correctamente
     Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo()").isFalse();
   }
 
   @Test
@@ -792,7 +789,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(proyecto.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
     Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
-    Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isTrue();
   }
 
   @Test

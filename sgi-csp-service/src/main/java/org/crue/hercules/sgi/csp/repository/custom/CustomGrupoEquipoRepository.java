@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.repository.custom;
 import java.time.Instant;
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.dto.GrupoEquipoDto;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
@@ -31,5 +32,29 @@ public interface CustomGrupoEquipoRepository {
    *         {@link Grupo} en el momento actual.
    */
   List<String> findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha);
+
+  /**
+   * Comprueba si personaRef pertenece a un grupo de investigación con un rol con
+   * el flag de baremable a true a fecha 31 de diciembre del año que se esta
+   * baremando y el grupo al que pertenecen los autores (tabla Grupo) este activo
+   * y el campo "Grupo especial de investigación" a "No" el 31 de diciembre del
+   * año que se esta baremando
+   *
+   * @param personaRef      personaRef
+   * @param fechaBaremacion fecha de baremación
+   * @return true/false
+   */
+  Boolean isPersonaBaremable(String personaRef, Instant fechaBaremacion);
+
+  /**
+   * Devuelve una lista de {@link GrupoEquipoDto} pertenecientes a un determinado
+   * grupo y que estén a 31 de diciembre del año de baremación
+   *
+   * @param grupoRef        grupoRef
+   * @param fechaBaremacion fecha de baremación
+   * 
+   * @return Lista de {@link GrupoEquipoDto}
+   */
+  List<GrupoEquipoDto> findByGrupoIdAndAnio(Long grupoRef, Instant fechaBaremacion);
 
 }

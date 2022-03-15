@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -165,4 +166,16 @@ public interface ProyectoService {
    * @return lista de ids de los {@link Proyecto}
    */
   List<Long> findIdsBySolicitudId(Long solicitudId);
+
+  /**
+   * Devuelve una lista de {@link ProyectoDto} que se incorporarán a la baremación
+   * de producción científica
+   * 
+   * @param anioInicio año inicio de baremación
+   * @param anioFin    año fin de baremación
+   * 
+   * @return Lista de {@link ProyectoDto}
+   */
+  List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin);
+
 }

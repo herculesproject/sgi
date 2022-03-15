@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -7,6 +9,8 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
@@ -16,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +46,7 @@ public class GrupoService {
   private final GrupoTipoService grupoTipoService;
   private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
   private final Validator validator;
+  private final SgiConfigProperties sgiConfigProperties;
 
   /**
    * Guarda la entidad {@link Grupo}.
@@ -310,6 +316,35 @@ public class GrupoService {
    */
   private String generateCodigo(String departamentoRef, long numGrupoDepartamento) {
     return departamentoRef + "-" + numGrupoDepartamento;
+  }
+
+  /**
+   * Devuelve si grupoRef pertenece a un grupo de investigación con el campo
+   * "Grupo especial de investigación" a "No" el 31 de diciembre del
+   * año que se esta baremando
+   *
+   * @param grupoRef grupoRef
+   * @param anio     año de baremación
+   * @return true/false
+   */
+  public boolean isGrupoBaremable(Long grupoRef, Integer anio) {
+
+    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
+    return repository.isGrupoBaremable(grupoRef, fechaBaremacion);
+  }
+
+  /**
+   * Devuelve una lista de {@link GrupoDto} con el campo
+   * "Grupo especial de investigación" a "No" el 31 de diciembre del
+   * año que se esta baremando
+   *
+   * @param anio año de baremación
+   * @return Lista de {@link GrupoDto}
+   */
+  public List<GrupoDto> findAllByAnio(Integer anio) {
+
+    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
+    return repository.findAllByAnio(fechaBaremacion);
   }
 
 }
