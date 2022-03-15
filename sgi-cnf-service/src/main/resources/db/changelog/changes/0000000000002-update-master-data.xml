@@ -68,5 +68,23 @@
       <column name="description" value="Destinatarios de comunicado de cambio de estado de solicitud a alegaciones - UGI" />
       <column name="value" value="[&quot;ugiproy@um.es&quot;,&quot;ugirrhh@um.es&quot;]" />
     </insert>
+    <!-- Destinatarios defecto CSP Vencimiento Periodo Pago Socio OTRI -->
+    <insert tableName="config">
+      <column name="name" value="csp-vencim-periodo-pago-socio-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Vencimiento Periodo Pago Socio - OTRI" />
+      <column name="value" value="[&quot;venc.periodo.pago.socio.otri@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Vencimiento Periodo Pago Socio OPE -->
+    <insert tableName="config">
+      <column name="name" value="csp-vencim-periodo-pago-socio-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Vencimiento Periodo Pago Socio - OPE" />
+      <column name="value" value="[&quot;venc.periodo.pago.socio.ope@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Vencimiento Periodo Pago Socio UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-vencim-periodo-pago-socio-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Vencimiento Periodo Pago Socio - UGI" />
+      <column name="value" value="[&quot;venc.periodo.pago.socio.ugi@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
