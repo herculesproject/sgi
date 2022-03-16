@@ -68,7 +68,7 @@
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_SUBJECT" />
       <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico" />
-      <column name="tpl" value="" />
+      <column name="tpl" value=" " />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
       <column name="last_modified_by" value="master" />
@@ -82,7 +82,7 @@
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT" />
       <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico IP" />
-      <column name="tpl" value="" />
+      <column name="tpl" value=" " />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
       <column name="last_modified_by" value="master" />
@@ -96,7 +96,7 @@
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_SUBJECT" />
       <column name="description" value="Asunto del aviso de inicio del período de presentación de justificación de seguimiento científico IP" />
-      <column name="tpl" value="" />
+      <column name="tpl" value=" " />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
       <column name="last_modified_by" value="master" />
@@ -111,7 +111,7 @@
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT" />
       <column name="description" value="Plantilla de asunto para el alta de solicitud de petición evaluación de ética" />
-      <column name="tpl" value="" />
+      <column name="tpl" value=" " />
     </insert>
     <update tableName="subject_tpl">
       <column name="tpl" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT.ftl" />
@@ -122,7 +122,7 @@
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="CSP_SOLICITUD_HITO_SUBJECT" />
       <column name="description" value="Plantilla de asunto para Solicitudes-Hitos" />
-      <column name="tpl" value="" />
+      <column name="tpl" value=" " />
     </insert>
     <update tableName="subject_tpl">
       <column name="tpl" valueClobFile="clob/CSP_SOLICITUD_HITO_SUBJECT.ftl" />
@@ -170,7 +170,7 @@
       <column name="id" valueSequenceNext="content_tpl_seq" />
       <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT" />
       <column name="description" value="Contenido del aviso de inicio del período de presentación de justificación de gastos (texto + HTML)" />
-      <column name="tpl_text" value="" />
+      <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -189,7 +189,7 @@
       <column name="id" valueSequenceNext="content_tpl_seq" />
       <column name="name" value="CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT" />
       <column name="description" value="Contenido del aviso de inicio del período de presentación de justificación de gastos (texto + HTML) para IPs" />
-      <column name="tpl_text" value="" />
+      <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -208,7 +208,7 @@
       <column name="id" valueSequenceNext="content_tpl_seq" />
       <column name="name" value="CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT" />
       <column name="description" value="Contenido del aviso de finalización del período de presentación de justificación de gastos (texto + HTML) para ips" />
-      <column name="tpl_text" value="" />
+      <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -228,7 +228,7 @@
       <column name="id" valueSequenceNext="content_tpl_seq" />
       <column name="name" value="CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT" />
       <column name="description" value="Plantilla de contenido para el alta de solicitud de petición de evaluación de ética" />
-      <column name="tpl_text" value="" />
+      <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
@@ -244,7 +244,7 @@
       <column name="id" valueSequenceNext="content_tpl_seq" />
       <column name="name" value="CSP_SOLICITUD_HITO_CONTENT" />
       <column name="description" value="Plantilla de contenido para Solicitudes-Hitos" />
-      <column name="tpl_text" value="" />
+      <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
