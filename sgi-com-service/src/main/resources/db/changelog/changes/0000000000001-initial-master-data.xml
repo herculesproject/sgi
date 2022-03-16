@@ -54,10 +54,59 @@
       <column name="description" value="Observaciones del Hito" />
       <column name="type" value="STRING" />
     </insert>
+    <!-- ETI Convocatoria Reunión -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_COMITE_NOMBRE_INVESTIGACION" />
+      <column name="description" value="Nombre de investigación del comité" />
+      <column name="type" value="STRING" />
+    </insert>
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
       <column name="name" value="CSP_SOLICITUD_TITULO" />
       <column name="description" value="Titulo de la Solicitud" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_COMITE" />
+      <column name="description" value="Nombre del comité" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_FECHA_EVALUACION" />
+      <column name="description" value="Día de la semana de la fecha de evaluación" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_HORA_INICIO" />
+      <column name="description" value="La hora de inicio de la primera convocatoria" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_MINUTO_INICIO" />
+      <column name="description" value="EL minuto de inicio de la primera convocatoria" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA" />
+      <column name="description" value="La hora de inicio de la segunda convocatoria" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_MINUTO_INICIO_SEGUNDA" />
+      <column name="description" value="EL minuto de inicio de la segunda convocatoria" />
+      <column name="type" value="STRING" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA" />
+      <column name="description" value="Orden del día de la convocatoria de reunión" />
       <column name="type" value="STRING" />
     </insert>
   </changeSet>
@@ -114,7 +163,7 @@
       <column name="tpl" value=" " />
     </insert>
     <update tableName="subject_tpl">
-      <column name="tpl" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT.ftl" />
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-solicitud-peticion-evaluacion/CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT.ftl" />
       <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_SUBJECT'</where>
     </update>
     <!-- CSP Solicitud Hito -->
@@ -127,6 +176,17 @@
     <update tableName="subject_tpl">
       <column name="tpl" valueClobFile="clob/CSP_SOLICITUD_HITO_SUBJECT.ftl" />
       <where>name='CSP_SOLICITUD_HITO_SUBJECT'</where>
+    </update>
+    <!-- ETI Convocatoria de reunión -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="ETI_COM_CONVOCATORIA_REUNION_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de la convocatoria de reunión de ética" />
+      <column name="tpl" value="" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/eti-com-convocatoria-reunion/ETI_COM_CONVOCATORIA_REUNION_SUBJECT.ftl" />
+      <where>name='ETI_COM_CONVOCATORIA_REUNION_SUBJECT'</where>
     </update>
   </changeSet>
 
@@ -161,6 +221,11 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_TITULO')" />
+    </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_CONVOCATORIA_REUNION_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COMITE_NOMBRE_INVESTIGACION')" />
     </insert>
   </changeSet>
 
@@ -232,11 +297,11 @@
       <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
-      <column name="tpl_text" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_text.ftl" />
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-solicitud-peticion-evaluacion/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_text.ftl" />
       <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT'</where>
     </update>
     <update tableName="content_tpl">
-      <column name="tpl_html" valueClobFile="clob/0000000000001/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_html.ftl" />
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-solicitud-peticion-evaluacion/CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT_html.ftl" />
       <where>name='CSP_COM_SOLICITUD_PETICION_EVALUACION_CONTENT'</where>
     </update>
     <!-- CSP Solicitud Hito -->
@@ -247,6 +312,14 @@
       <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="ETI_COM_CONVOCATORIA_REUNION_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de una convocatoria de reunión de ética" />
+      <column name="tpl_text" value="" />
+      <column name="tpl_html" value="" />
+    </insert>
     <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_text.ftl" />
       <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
@@ -254,6 +327,14 @@
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_html.ftl" />
       <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/eti-com-convocatoria-reunion/ETI_COM_CONVOCATORIA_REUNION_CONTENT_text.ftl" />
+      <where>name='ETI_COM_CONVOCATORIA_REUNION_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/eti-com-convocatoria-reunion/ETI_COM_CONVOCATORIA_REUNION_CONTENT_html.ftl" />
+      <where>name='ETI_COM_CONVOCATORIA_REUNION_CONTENT'</where>
     </update>
   </changeSet>
 
@@ -300,6 +381,39 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_SOLICITUD_TITULO')" />
+    </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COMITE_NOMBRE_INVESTIGACION')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COMITE')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_FECHA_EVALUACION')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_HORA_INICIO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_MINUTO_INICIO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_MINUTO_INICIO_SEGUNDA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA')" />
     </insert>
   </changeSet>
 
@@ -348,6 +462,16 @@
       <column name="name" value="CSP_SOLICITUD_HITO" />
       <column name="description" value="Email de Solicitud-Hito" />
     </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="ETI_COM_CONVOCATORIA_REUNION" />
+      <column name="description" value="Aviso de envío de una convocatoria de reunión de ética (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
@@ -374,6 +498,11 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_SOLICITUD_HITO_SUBJECT')" />
     </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_CONVOCATORIA_REUNION')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_CONVOCATORIA_REUNION_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
@@ -399,6 +528,11 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
+    </insert>
+    <!-- ETI Convocatoria de Reunión -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_CONVOCATORIA_REUNION')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
