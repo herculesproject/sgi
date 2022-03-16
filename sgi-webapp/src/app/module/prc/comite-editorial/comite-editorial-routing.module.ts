@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from '../shared/produccion-cientifica-route-params';
@@ -32,6 +33,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: COMITE_EDITORIAL_KEY,
+      titleParams: {
+        ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      },
       hasAnyAuthority: ['PRC-VAL-V', 'PRC-VAL-E']
     },
     resolve: {

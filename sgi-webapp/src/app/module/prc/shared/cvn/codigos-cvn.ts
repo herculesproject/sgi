@@ -77,7 +77,7 @@ enum CodigoCVN {
   COLECTIVA = 'COLECTIVA',
   /* Tipo */
   TIPO_OBRA = 'TIPO_OBRA',
-  /* Nombre del Consejo editorial */
+  /* Nombre del comité editorial */
   E060_030_030_010 = '060.030.030.010',
   /* Categoría profesional */
   E060_030_030_100 = '060.030.030.100',

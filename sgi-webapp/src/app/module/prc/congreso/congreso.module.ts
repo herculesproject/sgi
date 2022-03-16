@@ -10,9 +10,12 @@ import { CongresoListadoComponent } from './congreso-listado/congreso-listado.co
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { PrcSharedModule } from '../shared/prc-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { CongresoEditarComponent } from './congreso-editar/congreso-editar.component';
+import { CongresoDatosGeneralesComponent } from './congreso-formulario/congreso-datos-generales/congreso-datos-generales.component';
+import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
 
 @NgModule({
-  declarations: [CongresoListadoComponent],
+  declarations: [CongresoListadoComponent, CongresoEditarComponent, CongresoDatosGeneralesComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -25,6 +28,9 @@ import { CspSharedModule } from '../../csp/shared/csp-shared.module';
     SgpSharedModule,
     PrcSharedModule,
     CspSharedModule
+  ],
+  providers: [
+    ProduccionCientificaResolver
   ]
 })
 export class CongresoModule { }
