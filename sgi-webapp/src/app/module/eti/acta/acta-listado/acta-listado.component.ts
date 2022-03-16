@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -24,6 +25,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { ActaListadoExportModalComponent, IActaListadoModalData } from '../modals/acta-listado-export-modal/acta-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -69,7 +71,8 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoActaService: TipoEstadoActaService,
     private readonly translate: TranslateService,
-    private readonly documentoService: DocumentoService
+    private readonly documentoService: DocumentoService,
+    private readonly matDialog: MatDialog,
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -304,6 +307,17 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     ).subscribe(response => {
       triggerDownloadToUser(response, documento.nombre);
     });
+  }
+
+  openExportModal(): void {
+    const data: IActaListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(ActaListadoExportModalComponent, config);
   }
 
 }
