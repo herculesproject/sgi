@@ -34,30 +34,30 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ComunicadosService {
   private static final String CONFIG_CSP_COM_INICIO_PRESENTACION_JUSTIFICACION_GASTO_DESTINATARIOS = "csp-com-inicio-presentacion-gasto-destinatarios-";
-  private static final String CONFIG_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DESTINATARIOS = "csp-com-inicio-presentacion-seguimiento-cientifico-destinatarios-";
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
-  private final ProyectoPeriodoSeguimientoRepository proyectoPeriodoSeguimientoRepository;
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
   private final SgiApiSgpService personasService;
+
+  private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
 
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
-      ProyectoPeriodoSeguimientoRepository proyectoPeriodoSeguimientoRepository,
-      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) {
+      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService,
+      ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService) {
     log.debug(
         "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - start");
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
-    this.proyectoPeriodoSeguimientoRepository = proyectoPeriodoSeguimientoRepository;
     this.configService = configService;
     this.emailService = emailService;
     this.personasService = personasService;
+    this.proyectoSeguimientoCientificoComService = proyectoSeguimientoCientificoComService;
     log.debug(
         "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - end");
   }
@@ -68,7 +68,7 @@ public class ComunicadosService {
     ZoneId zoneId = sgiConfigProperties.getTimeZone().toZoneId();
     YearMonth yearMonth = YearMonth.now(zoneId);
     List<ProyectoPeriodoJustificacion> periodos = proyectoPeriodoJustificacionRepository
-        .findByFechaInicioPresentacionBetween(
+        .findByFechaInicioPresentacionBetweenAndProyectoActivoTrue(
             yearMonth.atDay(1).atStartOfDay(zoneId)
                 .toInstant(),
             yearMonth.atEndOfMonth().atStartOfDay(zoneId).withHour(23).withMinute(59).withSecond(59).toInstant());
@@ -109,40 +109,8 @@ public class ComunicadosService {
     log.debug("enviarComunicadoInicioPresentacionJustificacionGastos() - end");
   }
 
-  public void sendStartOfJustificacionSeguimientoCientificoCommunication() throws JsonProcessingException {
-    ZoneId zoneId = sgiConfigProperties.getTimeZone().toZoneId();
-    YearMonth yearMonth = YearMonth.now(zoneId);
-
-    List<ProyectoPeriodoSeguimiento> periodos = this.proyectoPeriodoSeguimientoRepository
-        .findByFechaInicioPresentacionBetween(yearMonth.atDay(1).atStartOfDay(zoneId)
-            .toInstant(),
-            yearMonth.atEndOfMonth().atStartOfDay(zoneId).withHour(23).withMinute(59).withSecond(59).toInstant());
-
-    List<Long> proyectoIds = periodos.stream().map(ProyectoPeriodoSeguimiento::getProyectoId)
-        .collect(Collectors.toList());
-
-    if (CollectionUtils.isEmpty(proyectoIds)) {
-
-      log.info(
-          "No existen proyectos que requieran generar aviso de inicio del período de presentación de justificación de gastos");
-      return;
-    }
-
-    Map<String, List<Proyecto>> proyectosByUnidadGestionRef = getProyectosByUnidadGestion(proyectoIds);
-    Map<Long, List<ProyectoPeriodoSeguimiento>> periodosByProyecto = getPeriodosSeguimientoCientificoByProyecto(
-        periodos);
-
-    for (Map.Entry<String, List<Proyecto>> entry : proyectosByUnidadGestionRef.entrySet()) {
-
-      List<Recipient> recipients = getRecipients(entry.getKey(),
-          CONFIG_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DESTINATARIOS);
-
-      List<CspComInicioPresentacionSeguimientoCientificoData.Proyecto> proyectosEmail = getProyectosEmailSeguimientoCientifico(
-          periodosByProyecto, proyectosByUnidadGestionRef.get(entry.getKey()));
-
-      buildAndSendEmailForPeriodosSeguimiento(recipients, proyectosEmail);
-    }
-    log.debug("enviarComunicadoInicioPresentacionJustificacionGastos() - end");
+  public void enviarComunicadoInicioJustificacionSeguimientoCientificoCommunication() throws JsonProcessingException {
+    this.proyectoSeguimientoCientificoComService.sendStartOfJustificacionSeguimientoCientificoCommunication();
   }
 
   public void enviarComunicadoSolicitudAltaPeticionEvaluacionEti(String codigoPeticionEvaluacion,
@@ -169,18 +137,8 @@ public class ComunicadosService {
     log.debug("enviarComunicadoSolicitudAltaPeticionEvaluacionEti() - end");
   }
 
-  private List<CspComInicioPresentacionSeguimientoCientificoData.Proyecto> getProyectosEmailSeguimientoCientifico(
-      Map<Long, List<ProyectoPeriodoSeguimiento>> periodosByProyecto,
-      List<Proyecto> proyectosUnidad) {
-
-    return proyectosUnidad.stream().flatMap(proyecto -> periodosByProyecto.get(proyecto.getId()).stream()
-        .map(periodo -> CspComInicioPresentacionSeguimientoCientificoData.Proyecto
-            .builder()
-            .titulo(proyecto.getTitulo())
-            .fechaInicio(periodo.getFechaInicioPresentacion())
-            .fechaFin(periodo.getFechaFinPresentacion())
-            .build()))
-        .collect(Collectors.toList());
+  public void enviarComunicadoJustificacionSeguimientoCientificoIps() {
+    this.proyectoSeguimientoCientificoComService.sendCommunicationIPs();
   }
 
   private void buildAndSendEmailForPeriodosJustificacionGasto(List<Recipient> recipients,
@@ -192,20 +150,6 @@ public class ComunicadosService {
     EmailOutput emailOutput = emailService
         .createComunicadoInicioPresentacionJustificacionGastosEmail(
             CspComInicioPresentacionGastoData.builder().fecha(yearMonth.atDay(1)).proyectos(
-                proyectosEmail).build(),
-            recipients);
-    emailService.sendEmail(emailOutput.getId());
-  }
-
-  private void buildAndSendEmailForPeriodosSeguimiento(List<Recipient> recipients,
-      List<CspComInicioPresentacionSeguimientoCientificoData.Proyecto> proyectosEmail) throws JsonProcessingException {
-
-    ZoneId zoneId = sgiConfigProperties.getTimeZone().toZoneId();
-    YearMonth yearMonth = YearMonth.now(zoneId);
-
-    EmailOutput emailOutput = emailService
-        .createComunicadoInicioPresentacionSeguimientoCientificoEmail(
-            CspComInicioPresentacionSeguimientoCientificoData.builder().fecha(yearMonth.atDay(1)).proyectos(
                 proyectosEmail).build(),
             recipients);
     emailService.sendEmail(emailOutput.getId());
@@ -237,24 +181,8 @@ public class ComunicadosService {
     return periodosByProyecto;
   }
 
-  private Map<Long, List<ProyectoPeriodoSeguimiento>> getPeriodosSeguimientoCientificoByProyecto(
-      List<ProyectoPeriodoSeguimiento> periodos) {
-    Map<Long, List<ProyectoPeriodoSeguimiento>> periodosByProyecto = new HashMap<>();
-    for (ProyectoPeriodoSeguimiento periodo : periodos) {
-      Long proyectoId = periodo.getProyectoId();
-
-      List<ProyectoPeriodoSeguimiento> periodosProyecto = periodosByProyecto.get(proyectoId);
-      if (periodosProyecto == null) {
-        periodosProyecto = new LinkedList<>();
-      }
-      periodosProyecto.add(periodo);
-      periodosByProyecto.put(proyectoId, periodosProyecto);
-    }
-    return periodosByProyecto;
-  }
-
   private Map<String, List<Proyecto>> getProyectosByUnidadGestion(List<Long> proyectoIds) {
-    List<Proyecto> proyectos = proyectoRepository.findByIdIn(proyectoIds);
+    List<Proyecto> proyectos = proyectoRepository.findByIdInAndActivoTrue(proyectoIds);
     Map<String, List<Proyecto>> proyectosByUnidadGestionRef = new HashMap<>();
     for (Proyecto proyecto : proyectos) {
       List<Proyecto> proyectosUnidad = proyectosByUnidadGestionRef.get(proyecto.getUnidadGestionRef());

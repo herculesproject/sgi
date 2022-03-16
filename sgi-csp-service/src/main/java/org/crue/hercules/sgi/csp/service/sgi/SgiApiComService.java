@@ -1,16 +1,13 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import lombok.extern.slf4j.Slf4j;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -24,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -42,6 +41,14 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP";
+  private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP = "CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP";
+  private static final String TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM = TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP
       + "_DATA";
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
@@ -347,8 +354,8 @@ public class SgiApiComService extends SgiApiBaseService {
 
   /**
    * Crea un email en el modulo COM para el aviso de inicio del per&iacute;odo de
-   * presentaci&oacute;n de justificaci&oacute;n de gastos
-   *
+   * presentaci&oacute;n de justificaci&oacute;n de seguimiento científico UG
+   * 
    * @param data       informaci&oacute;n a incluir en el email
    * @param recipients lista de destinatarios
    * @return EmailOutput informaci&oacute;n del email creado
@@ -378,8 +385,57 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   /**
+   * Crea un email en el modulo COM para el aviso de inicio del per&iacute;odo de
+   * presentaci&oacute;n de justificaci&oacute;n de seguimiento científico IP
+   *
+   * @param data       informaci&oacute;n a incluir en el email
+   * @param recipients lista de destinatarios
+   * @return EmailOutput informaci&oacute;n del email creado
+   * @throws JsonProcessingException en caso de que se produzca un error
+   *                                 convirtiendo data a JSON
+   */
+  public EmailOutput createComunicadoInicioPresentacionSeguimientoCientificoIPEmail(
+      CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicadoPresentacionSeguimientoCientificoIPEmail(data, recipients,
+        TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP,
+        TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM);
+
+  }
+
+  public EmailOutput createComunicadoFinPresentacionSeguimientoCientificoIPEmail(
+      CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicadoPresentacionSeguimientoCientificoIPEmail(data, recipients,
+        TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP,
+        TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM);
+  }
+
+  private EmailOutput createComunicadoPresentacionSeguimientoCientificoIPEmail(
+      CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients, String template,
+      String templateParam)
+      throws JsonProcessingException {
+
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = "/emails";
+    HttpMethod httpMethod = HttpMethod.POST;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+
+    EmailInput request = EmailInput.builder().template(
+        template).recipients(recipients)
+        .build();
+    request.setParams(Arrays.asList(
+        new EmailParam(
+            templateParam, mapper.writeValueAsString(data))));
+
+    return super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
+        new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
+  }
+
+  /**
    * Invoca el env&iacute;o de un email en el modulo COM
-   * 
+   *
    * @param id identificador de email a enviar
    * @return Status el estado del env&iacute;o
    */
@@ -396,5 +452,4 @@ public class SgiApiComService extends SgiApiBaseService {
     log.debug("sendEmail(Long id) - end");
     return response;
   }
-
 }

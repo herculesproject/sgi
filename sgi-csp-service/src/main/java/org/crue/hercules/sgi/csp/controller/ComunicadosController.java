@@ -33,7 +33,13 @@ public class ComunicadosController {
 
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp'))")
   @GetMapping("/inicio-justificacion-seguimiento-cientifico")
-  public void sendStartOfJustificacionSeguimientoCientificoCommunication() throws JsonProcessingException {
-    this.service.sendStartOfJustificacionSeguimientoCientificoCommunication();
+  public void enviarComunicadoInicioJustificacionSeguimientoCientificoCommunicationUG() throws JsonProcessingException {
+    this.service.enviarComunicadoInicioJustificacionSeguimientoCientificoCommunication();
+  }
+
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp'))")
+  @GetMapping("/justificacion-seguimiento-cientifico-ips")
+  public void enviarComunicadoJustificacionSeguimientoCientificoCommunicationIps() throws JsonProcessingException {
+    this.service.enviarComunicadoJustificacionSeguimientoCientificoIps();
   }
 }
