@@ -91,10 +91,14 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
           cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
               cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
-      listPredicates.add(cb.and(cb.equal(root.get(Acta_.activo), Boolean.TRUE), cb.in(queryComites)
-          .value(root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(Comite_.id))));
-      listPredicatesCount.add(cb.and(cb.equal(rootCount.get(Acta_.activo), Boolean.TRUE), cb.in(queryComites)
-          .value(rootCount.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(Comite_.id))));
+      listPredicates.add(cb.and(cb.equal(root.get(Acta_.activo), Boolean.TRUE), cb.in(
+          root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(
+              Comite_.id))
+          .value(queryComites)));
+      listPredicatesCount.add(cb.and(cb.equal(rootCount.get(Acta_.activo), Boolean.TRUE), cb.in(
+          rootCount.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(
+              Comite_.id))
+          .value(queryComites)));
     } else {
       listPredicates.add(cb.and(cb.equal(root.get(Acta_.activo), Boolean.TRUE)));
       listPredicatesCount.add(cb.and(cb.equal(rootCount.get(Acta_.activo), Boolean.TRUE)));
