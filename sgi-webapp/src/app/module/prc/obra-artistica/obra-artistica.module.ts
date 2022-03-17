@@ -6,9 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ObraArtisticaRoutingModule } from './obra-artistica-routing.module';
+import { ObraArtisticaListadoComponent } from './obra-artistica-listado/obra-artistica-listado.component';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [ObraArtisticaListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +20,9 @@ import { ObraArtisticaRoutingModule } from './obra-artistica-routing.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    SgpSharedModule,
+    CspSharedModule,
   ]
 })
 export class ObraArtisticaModule { }
