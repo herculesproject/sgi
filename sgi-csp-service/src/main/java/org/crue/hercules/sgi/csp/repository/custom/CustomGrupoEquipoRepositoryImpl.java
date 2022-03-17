@@ -114,7 +114,7 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
    * @return true/false
    */
   @Override
-  public Boolean isPersonaBaremable(String personaRef, Instant fechaBaremacion) {
+  public boolean isPersonaBaremable(String personaRef, Instant fechaBaremacion) {
     log.debug("isPersonaBaremable(personaRef, fechaBaremacion) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();

@@ -22,7 +22,7 @@ public interface CustomGrupoRepository {
    * @param fechaBaremacion fecha de baremación
    * @return true/false
    */
-  Boolean isGrupoBaremable(Long grupoRef, Instant fechaBaremacion);
+  boolean isGrupoBaremable(Long grupoRef, Instant fechaBaremacion);
 
   /**
    * Devuelve una lista de {@link GrupoDto} pertenecientes a un determinado

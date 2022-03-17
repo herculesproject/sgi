@@ -44,7 +44,7 @@ public interface CustomGrupoEquipoRepository {
    * @param fechaBaremacion fecha de baremación
    * @return true/false
    */
-  Boolean isPersonaBaremable(String personaRef, Instant fechaBaremacion);
+  boolean isPersonaBaremable(String personaRef, Instant fechaBaremacion);
 
   /**
    * Devuelve una lista de {@link GrupoEquipoDto} pertenecientes a un determinado

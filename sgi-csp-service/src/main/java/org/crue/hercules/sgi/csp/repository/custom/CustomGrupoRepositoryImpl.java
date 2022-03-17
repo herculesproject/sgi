@@ -44,7 +44,7 @@ public class CustomGrupoRepositoryImpl implements CustomGrupoRepository {
    * @return true/false
    */
   @Override
-  public Boolean isGrupoBaremable(Long grupoRef, Instant fechaBaremacion) {
+  public boolean isGrupoBaremable(Long grupoRef, Instant fechaBaremacion) {
     log.debug("isGrupoBaremable(grupoRef, fechaBaremacion) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
