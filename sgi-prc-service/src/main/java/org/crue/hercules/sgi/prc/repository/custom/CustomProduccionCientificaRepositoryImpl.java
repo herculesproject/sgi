@@ -15,8 +15,9 @@ import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaResumen;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo_;
@@ -24,7 +25,6 @@ import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.model.ValorCampo_;
@@ -120,15 +120,13 @@ public class CustomProduccionCientificaRepositoryImpl implements CustomProduccio
    * @return lista de ids de {@link ProduccionCientifica}
    */
   @Override
-  public List<Long> findAllBaremacion(BaremacionInput baremacionInput) {
-    log.debug("findAllBaremacion(BaremacionInput baremacionInput) - start");
+  public List<Long> findAllBaremacionByFechaInicio(BaremacionInput baremacionInput) {
+    log.debug("findAllBaremacionByFechaInicio(BaremacionInput baremacionInput) - start");
 
-    // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
     CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
-    // Define FROM clause
     Root<ProduccionCientifica> root = cq.from(ProduccionCientifica.class);
 
     Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(
@@ -170,7 +168,80 @@ public class CustomProduccionCientificaRepositoryImpl implements CustomProduccio
 
     List<Long> result = entityManager.createQuery(cq).getResultList();
 
-    log.debug("findAllBaremacion(BaremacionInput baremacionInput) - end");
+    log.debug("findAllBaremacionByFechaInicio(BaremacionInput baremacionInput) - end");
+
+    return result;
+  }
+
+  /**
+   * Devuelve una lista de ids de {@link ProduccionCientifica} de un
+   * {@link EpigrafeCVN} que cumplan las condiciones de baremación.
+   * 
+   * @param baremacionInput      fechaInicio Fecha inicio de baremación en formato
+   *                             UTC,
+   *                             fechaFin Fecha fin de baremación en formato UTC,
+   *                             {@link EpigrafeCVN} a filtrar,
+   *                             {@link CodigoCVN} a filtrar
+   * @param codigoCVNFechaInicio {@link CodigoCVN} de fechaInicio
+   * @param codigoCVNFechaFin    {@link CodigoCVN} de fechaFin
+   * @return lista de ids de {@link ProduccionCientifica}
+   */
+  @Override
+  public List<Long> findAllBaremacionByFechaInicioAndFechaFin(BaremacionInput baremacionInput,
+      CodigoCVN codigoCVNFechaInicio, CodigoCVN codigoCVNFechaFin) {
+    log.debug(
+        "findAllBaremacionByFechaInicioAndFechaFin(baremacionInput, codigoCVNFechaInicio, codigoCVNFechaFin) - start");
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+    Root<ProduccionCientifica> root = cq.from(ProduccionCientifica.class);
+
+    Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(
+        ProduccionCientifica_.estado);
+
+    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposFechaInicio = root.join(
+        ProduccionCientifica_.campos);
+    Join<CampoProduccionCientifica, ValorCampo> joinValoresFechaInicio = joinCamposFechaInicio.join(
+        CampoProduccionCientifica_.valoresCampos);
+    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposFechaFin = root.join(
+        ProduccionCientifica_.campos);
+    Join<CampoProduccionCientifica, ValorCampo> joinValoresFechaFin = joinCamposFechaFin.join(
+        CampoProduccionCientifica_.valoresCampos);
+
+    cq.select(root.get(ProduccionCientifica_.id)).distinct(true);
+
+    Predicate predicateEpigrafe = cb.equal(root.get(ProduccionCientifica_.epigrafeCVN),
+        baremacionInput.getEpigrafeCVN());
+
+    Predicate predicateConvocatoriaBaremacionIsNull = cb
+        .isNull(root.get(ProduccionCientifica_.convocatoriaBaremacionId));
+
+    Predicate predicateEstado = cb.or(
+        cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.VALIDADO),
+        cb.equal(joinEstado.get(EstadoProduccionCientifica_.estado),
+            TipoEstadoProduccion.VALIDADO_PARCIALMENTE));
+
+    Predicate predicateFechaInicio = cb.equal(joinCamposFechaInicio.get(CampoProduccionCientifica_.codigoCVN),
+        codigoCVNFechaInicio);
+    Predicate predicateFechaFin = cb.equal(joinCamposFechaFin.get(CampoProduccionCientifica_.codigoCVN),
+        codigoCVNFechaFin);
+
+    Predicate predicateValorFechaInicio = cb.lessThanOrEqualTo(joinValoresFechaInicio.get(ValorCampo_.valor),
+        baremacionInput.getFechaFin());
+    Predicate predicateValorFechaFin = cb.greaterThanOrEqualTo(joinValoresFechaFin.get(ValorCampo_.valor),
+        baremacionInput.getFechaInicio());
+
+    Predicate predicateFinal = cb.and(predicateConvocatoriaBaremacionIsNull, predicateEpigrafe, predicateEstado,
+        predicateFechaInicio, predicateFechaFin, predicateValorFechaInicio, predicateValorFechaFin);
+
+    cq.where(predicateFinal);
+
+    List<Long> result = entityManager.createQuery(cq).getResultList();
+
+    log.debug(
+        "findAllBaremacionByFechaInicioAndFechaFin(baremacionInput, codigoCVNFechaInicio, codigoCVNFechaFin) - end");
 
     return result;
   }

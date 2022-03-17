@@ -16,6 +16,8 @@ sgi:
       tp-url:  "http://sgi-tp-service:4285"
       com-url: "http://sgi-com-service:4286"
       sgp-url: "http://sgi-esb:8080/sgp"
+      sgo-url: "http:/sgi-esb:8080/sgo"
+
 spring:
   profiles:
     # Set spring-profile using maven
@@ -177,9 +179,11 @@ sgi:
       eti-url: "http://sgi-eti-service:8080"
       pii-url: "http://sgi-pii-service:8080"
       rel-url: "http://sgi-rel-service:8080"
+      sgo-url: "http://sgi-esb:8080/sgo"
       sgp-url: "http://sgi-esb:8080/sgp"
       tp-url:  "http://sgi-tp-service:8080"
       usr-url: "http://sgi-usr-service:8080"
+
 spring:
   profiles: prod
   datasource:

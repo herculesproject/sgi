@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -53,6 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(ProduccionCientificaController.MAPPING)
 @Slf4j
+@RequiredArgsConstructor
 public class ProduccionCientificaController {
   public static final String MAPPING = "/producciones-cientificas";
   public static final String PATH_PUBLICACIONES = "/publicaciones";
@@ -63,48 +65,13 @@ public class ProduccionCientificaController {
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
   public static final String PATH_ACREDITACIONES = "/{id}/acreditaciones";
 
-  private ModelMapper modelMapper;
-
-  /** ProduccionCientifica service */
   private final ProduccionCientificaService service;
-  /** IndiceImpacto service */
   private final IndiceImpactoService indiceImpactoService;
-  /** Autor service */
   private final AutorService autorService;
-  /** Proyecto service */
   private final ProyectoService proyectoService;
-  /** Acreditacion service */
   private final AcreditacionService acreditacionService;
 
-  /**
-   * Instancia un nuevo ProduccionCientificaController.
-   * 
-   * @param modelMapper {@link ModelMapper}
-   * @param service     {@link ProduccionCientificaService}
-   */
-  /**
-   * 
-   * @param modelMapper          {@link ModelMapper}
-   * @param service              {@link ProduccionCientificaService}
-   * @param indiceImpactoService {@link IndiceImpactoService}
-   * @param autorService         {@link AutorService}
-   * @param proyectoService      {@link ProyectoService}
-   * @param acreditacionService  {@link AcreditacionService}
-   */
-  public ProduccionCientificaController(
-      ModelMapper modelMapper,
-      ProduccionCientificaService service,
-      IndiceImpactoService indiceImpactoService,
-      AutorService autorService,
-      ProyectoService proyectoService,
-      AcreditacionService acreditacionService) {
-    this.modelMapper = modelMapper;
-    this.service = service;
-    this.indiceImpactoService = indiceImpactoService;
-    this.autorService = autorService;
-    this.proyectoService = proyectoService;
-    this.acreditacionService = acreditacionService;
-  }
+  private final ModelMapper modelMapper;
 
   /**
    * Devuelve una lista paginada y filtrada {@link PublicacionOutput}.
@@ -128,20 +95,6 @@ public class ProduccionCientificaController {
 
     log.debug("findAllPublicaciones(String query, Pageable paging) - end");
     return new ResponseEntity<>(convertPublicacionResumen(page), HttpStatus.OK);
-  }
-
-  private PublicacionOutput convertPublicacionResumen(PublicacionResumen publicacionResumen) {
-    PublicacionOutput output = modelMapper.map(publicacionResumen, PublicacionOutput.class);
-    output.setEstado(new EstadoProduccionCientifica());
-    output.getEstado().setEstado(publicacionResumen.getEstado());
-    return output;
-  }
-
-  private Page<PublicacionOutput> convertPublicacionResumen(Page<PublicacionResumen> page) {
-    List<PublicacionOutput> content = page.getContent().stream()
-        .map(publicacionResumen -> convertPublicacionResumen(publicacionResumen)).collect(Collectors.toList());
-
-    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
 
   /**
@@ -276,6 +229,20 @@ public class ProduccionCientificaController {
     return modelMapper.map(produccionCientifica, ProduccionCientificaOutput.class);
   }
 
+  private PublicacionOutput convertPublicacionResumen(PublicacionResumen publicacionResumen) {
+    PublicacionOutput output = modelMapper.map(publicacionResumen, PublicacionOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(publicacionResumen.getEstado());
+    return output;
+  }
+
+  private Page<PublicacionOutput> convertPublicacionResumen(Page<PublicacionResumen> page) {
+    List<PublicacionOutput> content = page.getContent().stream()
+        .map(this::convertPublicacionResumen).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
   /**
    * Obtiene todos los {@link IndiceImpacto} del {@link ProduccionCientifica} con
    * el id indicado paginadas y/o filtradas.
@@ -301,7 +268,7 @@ public class ProduccionCientificaController {
 
   private Page<IndiceImpactoOutput> convertIndiceImpacto(Page<IndiceImpacto> page) {
     List<IndiceImpactoOutput> content = page.getContent().stream()
-        .map((indiceImpacto) -> convert(indiceImpacto))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -336,7 +303,7 @@ public class ProduccionCientificaController {
 
   private Page<AutorOutput> convertAutor(Page<Autor> page) {
     List<AutorOutput> content = page.getContent().stream()
-        .map((autor) -> convert(autor))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -371,7 +338,7 @@ public class ProduccionCientificaController {
 
   private Page<ProyectoOutput> convertProyecto(Page<Proyecto> page) {
     List<ProyectoOutput> content = page.getContent().stream()
-        .map((proyecto) -> convert(proyecto))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -406,7 +373,7 @@ public class ProduccionCientificaController {
 
   private Page<AcreditacionOutput> convertAcreditacion(Page<Acreditacion> page) {
     List<AcreditacionOutput> content = page.getContent().stream()
-        .map((acreditacion) -> convert(acreditacion))
+        .map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

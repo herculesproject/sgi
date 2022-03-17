@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.prc.model.BaseEntity;
+import org.crue.hercules.sgi.prc.validation.EpigrafeCVNValueValid;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class ProduccionCientificaApiCreateInput extends ProduccionCientificaApiI
   @Size(max = BaseEntity.ID_REF_LENGTH)
   private String idRef;
 
+  @EpigrafeCVNValueValid
   @NotEmpty
   @Size(max = BaseEntity.EPIGRAFE_LENGTH)
   private String epigrafeCVN;

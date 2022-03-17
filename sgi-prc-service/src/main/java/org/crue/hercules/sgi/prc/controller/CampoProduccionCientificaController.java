@@ -176,7 +176,7 @@ public class CampoProduccionCientificaController {
 
   private Page<CampoProduccionCientificaOutput> convert(Page<CampoProduccionCientifica> page) {
     List<CampoProduccionCientificaOutput> content = page.getContent().stream()
-        .map(campoProduccionCientifica -> convert(campoProduccionCientifica)).collect(Collectors.toList());
+        .map(this::convert).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }

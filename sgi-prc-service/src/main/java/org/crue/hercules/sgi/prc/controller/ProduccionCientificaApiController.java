@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -32,19 +33,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(ProduccionCientificaApiController.MAPPING)
 @Slf4j
+@RequiredArgsConstructor
 public class ProduccionCientificaApiController {
   public static final String MAPPING = "/producciones-cientificas-api";
 
   private final ProduccionCientificaApiService service;
-
-  /**
-   * Instancia un nuevo ProduccionCientificaApiController.
-   * 
-   * @param service {@link ProduccionCientificaApiService}
-   */
-  public ProduccionCientificaApiController(ProduccionCientificaApiService service) {
-    this.service = service;
-  }
 
   /**
    * Crea un nuevo {@link ProduccionCientifica}.

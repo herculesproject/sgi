@@ -101,7 +101,7 @@ public class AutorControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       AutorGrupoOutput autorGrupo = autorGrupoResponse.get(i - (page * pageSize) - 1);
       Assertions.assertThat(autorGrupo.getGrupoRef())
-          .isEqualTo("Grupo-" + String.format("%03d", i));
+          .isEqualTo(i);
     }
   }
 
@@ -140,8 +140,7 @@ public class AutorControllerTest extends BaseControllerTest {
     AutorGrupo autor = new AutorGrupo();
     autor.setId(id);
     autor.setAutorId(idRef);
-    autor.setGrupoRef("Grupo-" + String.format("%03d", id));
-
+    autor.setGrupoRef(id);
     return autor;
   }
 }

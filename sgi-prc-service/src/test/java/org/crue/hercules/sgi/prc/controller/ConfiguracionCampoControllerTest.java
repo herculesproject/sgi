@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.prc.dto.ConfiguracionCampoOutput;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
 import org.crue.hercules.sgi.prc.service.ConfiguracionCampoService;
 import org.hamcrest.Matchers;

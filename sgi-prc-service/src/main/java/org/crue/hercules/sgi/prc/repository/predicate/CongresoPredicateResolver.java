@@ -6,7 +6,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;
 

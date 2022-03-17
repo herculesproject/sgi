@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.prc.repository;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,5 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BaremoRepository
     extends JpaRepository<Baremo, Long>, JpaSpecificationExecutor<Baremo> {
+
+  List<Baremo> findByConvocatoriaBaremacionId(Long convocatoriaBaremacionId);
 
 }

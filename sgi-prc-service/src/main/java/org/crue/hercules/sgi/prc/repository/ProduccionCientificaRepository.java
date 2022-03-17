@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.repository.custom.CustomComiteEditorialRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomCongresoRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomProduccionCientificaRepository;
@@ -36,6 +37,20 @@ public interface ProduccionCientificaRepository
       String produccionCientificaRef);
 
   /**
+   * Obtiene la entidad {@link ProduccionCientifica} con el
+   * produccionCientificaRef indicado y ConvocatoriaBaremacionId
+   *
+   * @param produccionCientificaRef  el produccionCientificaRef de
+   *                                 {@link ProduccionCientifica}.
+   * @param convocatoriaBaremacionId Id de {@link ConvocatoriaBaremacion}
+   * 
+   * @return el {@link ProduccionCientifica} con el produccionCientificaRef
+   *         indicado
+   */
+  Optional<ProduccionCientifica> findByProduccionCientificaRefAndConvocatoriaBaremacionId(
+      String produccionCientificaRef, Long convocatoriaBaremacionId);
+
+  /**
    * Obtiene las entidades {@link ProduccionCientifica} con el
    * ConvocatoriaBaremacionId indicado
    * 
@@ -43,5 +58,26 @@ public interface ProduccionCientificaRepository
    * @return lista de {@link ProduccionCientifica}
    */
   List<ProduccionCientifica> findByConvocatoriaBaremacionId(Long convocatoriaBaremacionId);
+
+  /**
+   * Obtiene las {@link ProduccionCientifica} con el {@link EpigrafeCVN}
+   * y ConvocatoriaBaremacionId indicado
+   * 
+   * @param epigrafeCVN              Id de {@link EpigrafeCVN}
+   * @param convocatoriaBaremacionId Id de
+   *                                 {@link ConvocatoriaBaremacion}
+   * @return lista de {@link ProduccionCientifica}
+   */
+  List<ProduccionCientifica> findByEpigrafeCVNAndConvocatoriaBaremacionId(EpigrafeCVN epigrafeCVN,
+      Long convocatoriaBaremacionId);
+
+  /**
+   * Obtiene las {@link ProduccionCientifica} con el {@link EpigrafeCVN}
+   * y ConvocatoriaBaremacionId es nulo
+   * 
+   * @param epigrafeCVN Id de {@link EpigrafeCVN}
+   * @return lista de {@link ProduccionCientifica}
+   */
+  List<ProduccionCientifica> findByEpigrafeCVNAndConvocatoriaBaremacionIdIsNull(EpigrafeCVN epigrafeCVN);
 
 }

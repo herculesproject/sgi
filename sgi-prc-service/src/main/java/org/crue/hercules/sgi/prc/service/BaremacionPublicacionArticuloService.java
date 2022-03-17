@@ -1,91 +1,102 @@
 package org.crue.hercules.sgi.prc.service;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.LongPredicate;
-import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.enums.TablaMaestraCVN;
-import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.model.Autor;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoBaremo;
+import org.crue.hercules.sgi.prc.model.Modulador.TipoModulador;
+import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador.TipoPuntuacion;
+import org.crue.hercules.sgi.prc.repository.AliasEnumeradoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorRepository;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.CampoProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.IndiceExperimentalidadRepository;
 import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ModuladorRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.TipoFuenteImpactoCuartilRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
-import org.crue.hercules.sgi.prc.service.sgi.GrupoInvestigacionService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgoService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Servicio para la baremación de publicaciones
+ * Servicio para la baremación de publicaciones de artículos
  */
 @Service
 @Slf4j
 @Transactional(readOnly = true)
 @Validated
-public class BaremacionPublicacionService extends BaremacionCommonService {
-  private final ModuladorRepository moduladorRepository;
-  private final AutorRepository autorRepository;
-  private final AutorGrupoRepository autorGrupoRepository;
-  private final SgiApiSgpService personaService;
-  private final GrupoInvestigacionService grupoInvestigacionService;
+public class BaremacionPublicacionArticuloService extends BaremacionPublicacionAndComiteService {
 
   @Autowired
-  public BaremacionPublicacionService(
+  public BaremacionPublicacionArticuloService(
+      AliasEnumeradoRepository aliasEnumeradoRepository,
       ProduccionCientificaRepository produccionCientificaRepository,
       PuntuacionBaremoItemRepository puntuacionBaremoItemRepository,
+      PuntuacionItemInvestigadorRepository puntuacionItemInvestigadorRepository,
+      IndiceExperimentalidadRepository indiceExperimentalidadRepository,
       BaremoRepository baremoRepository,
+      AutorRepository autorRepository,
+      AutorGrupoRepository autorGrupoRepository,
       CampoProduccionCientificaRepository campoProduccionCientificaRepository,
       ValorCampoRepository valorCampoRepository,
       IndiceImpactoRepository indiceImpactoRepository,
-      AutorRepository autorRepository,
-      AutorGrupoRepository autorGrupoRepository,
       TipoFuenteImpactoCuartilRepository tipoFuenteImpactoCuartilRepository,
-      ProduccionCientificaCloneService produccionCientificaCloneService,
-      SgiApiSgpService personaService,
-      GrupoInvestigacionService grupoInvestigacionService,
+      ProduccionCientificaBuilderService produccionCientificaBuilderService,
+      SgiApiSgpService sgiApiSgpService,
+      SgiApiCspService sgiApiCspService,
+      ConvocatoriaBaremacionLogService convocatoriaBaremacionLogService,
       ModelMapper modelMapper,
+      SgiConfigProperties sgiConfigProperties,
+      SgiApiSgoService sgiApiSgoService,
       ModuladorRepository moduladorRepository) {
-    super(produccionCientificaRepository, puntuacionBaremoItemRepository, baremoRepository,
-        campoProduccionCientificaRepository, valorCampoRepository, indiceImpactoRepository,
-        tipoFuenteImpactoCuartilRepository, produccionCientificaCloneService,
-        modelMapper);
-    this.moduladorRepository = moduladorRepository;
-    this.autorRepository = autorRepository;
-    this.autorGrupoRepository = autorGrupoRepository;
-    this.personaService = personaService;
-    this.grupoInvestigacionService = grupoInvestigacionService;
+    super(aliasEnumeradoRepository,
+        produccionCientificaRepository,
+        puntuacionBaremoItemRepository,
+        puntuacionItemInvestigadorRepository,
+        indiceExperimentalidadRepository,
+        baremoRepository,
+        autorRepository, autorGrupoRepository,
+        campoProduccionCientificaRepository,
+        valorCampoRepository,
+        indiceImpactoRepository,
+        tipoFuenteImpactoCuartilRepository,
+        produccionCientificaBuilderService,
+        sgiApiSgpService,
+        sgiApiCspService,
+        convocatoriaBaremacionLogService,
+        modelMapper,
+        sgiConfigProperties,
+        sgiApiSgoService,
+        moduladorRepository);
 
     loadPredicates();
   }
 
-  protected void loadPredicates() {
-    loadLibrosPredicates();
-    loadArticulosPredicates();
+  protected TipoPuntuacion getTipoPuntuacion() {
+    return TipoPuntuacion.ARTICULOS;
   }
 
-  private void loadLibrosPredicates() {
-    loadLibrosAutoriaPredicates();
-    loadLibrosCapituloPredicates();
-    loadLibrosEdicionPredicates();
-    loadLibrosComentarioPredicates();
+  protected void loadPredicates() {
+    loadArticulosPredicates();
   }
 
   private void loadArticulosPredicates() {
@@ -106,151 +117,36 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
 
     getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO, isISNNNotEmpty.and(hasFuenteImpactoOtras)
         .and(isTipoProduccionEqualsArticuloCientifico));
+
+    loadArticulosExtraPredicates();
   }
 
-  private void loadLibrosAutoriaPredicates() {
-    // AUTORIA_BCI_EDITORIAL_EXTRANJERA
-    LongPredicate hasFuenteImpactoBCI = getPredicateHasFuenteImpactoBCI();
+  private void loadArticulosExtraPredicates() {
 
-    LongPredicate isTipoProduccionEqualsLibroOrMonografia = produccionCientificaId -> isValorEqualsTablaMaestraCVN(
-        CodigoCVN.E060_010_010_010, TablaMaestraCVN.E060_010_010_010_032, produccionCientificaId);
+    // ARTICULO_JCR_Q1_DECIL1
+    LongPredicate hasFuenteImpactoJCR = getPredicateHasFuenteImpactoJCR();
+    LongPredicate isISNNNotEmpty = getPredicateIsISNNNotEmpty();
+    LongPredicate isTipoProduccionEqualsArticuloCientifico = getPredicateIsArticuloCientifico();
 
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_BCI_EDITORIAL_EXTRANJERA,
-        getPredicateIsISSNForeign().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsLibroOrMonografia));
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_JCR_Q1_DECIL1,
+        isISNNNotEmpty.and(hasFuenteImpactoJCR)
+            .and(getPredicateHasPosicionRevistaLessEqualThan10AndJCR())
+            .and(isTipoProduccionEqualsArticuloCientifico));
 
-    // AUTORIA_BCI_EDITORIAL_NACIONAL
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_BCI_EDITORIAL_NACIONAL,
-        getPredicateIsISSNNational()
-            .and(hasFuenteImpactoBCI)
-            .and(isTipoProduccionEqualsLibroOrMonografia));
-
-    // AUTORIA_ICEE_Q1
-    LongPredicate hasFuenteImpactoICEE = getPredicateHasFuenteImpactoICEE();
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_ICEE_Q1,
-        hasFuenteImpactoICEE.and(getPredicateHasPosicionRevistaLessEqualThan25AndICEE())
-            .and(isTipoProduccionEqualsLibroOrMonografia));
-
-    // AUTORIA_ICEE_RESTO_CUARTILES
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_ICEE_RESTO_CUARTILES,
-        hasFuenteImpactoICEE.and(getPredicateHasPositionRevistaGreatherThan25AndICEE())
-            .and(isTipoProduccionEqualsLibroOrMonografia));
-
-    // AUTORIA_DIALNET
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_DIALNET,
-        getPredicateHasFuenteImpactoDIALNET().and(isTipoProduccionEqualsLibroOrMonografia));
-
-    // AUTORIA_OTRAS
-    getHmTipoBaremoPredicates().put(TipoBaremo.AUTORIA_OTRAS,
-        getPredicateHasFuenteImpactoLibrosOTRAS().and(isTipoProduccionEqualsLibroOrMonografia));
-  }
-
-  private void loadLibrosCapituloPredicates() {
-    // CAP_LIBRO_BCI_EDITORIAL_EXTRANJERA
-    LongPredicate hasFuenteImpactoBCI = getPredicateHasFuenteImpactoBCI();
-
-    LongPredicate isTipoProduccionEqualsCapitulo = produccionCientificaId -> isValorEqualsTablaMaestraCVN(
-        CodigoCVN.E060_010_010_010, TablaMaestraCVN.E060_010_010_010_004, produccionCientificaId);
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_BCI_EDITORIAL_EXTRANJERA,
-        getPredicateIsISSNForeign().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsCapitulo));
-
-    // CAP_LIBRO_BCI_EDITORIAL_NACIONAL
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_BCI_EDITORIAL_NACIONAL,
-        getPredicateIsISSNNational()
-            .and(hasFuenteImpactoBCI)
-            .and(isTipoProduccionEqualsCapitulo));
-
-    // CAP_LIBRO_ICEE_Q1
-    LongPredicate hasFuenteImpactoICEE = getPredicateHasFuenteImpactoICEE();
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_ICEE_Q1,
-        hasFuenteImpactoICEE.and(getPredicateHasPosicionRevistaLessEqualThan25AndICEE())
-            .and(isTipoProduccionEqualsCapitulo));
-
-    // CAP_LIBRO_ICEE_RESTO_CUARTILES
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_ICEE_RESTO_CUARTILES,
-        hasFuenteImpactoICEE.and(getPredicateHasPositionRevistaGreatherThan25AndICEE())
-            .and(isTipoProduccionEqualsCapitulo));
-
-    // CAP_LIBRO_DIALNET
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_DIALNET,
-        getPredicateHasFuenteImpactoDIALNET().and(isTipoProduccionEqualsCapitulo));
-
-    // CAP_LIBRO_OTRAS
-    getHmTipoBaremoPredicates().put(TipoBaremo.CAP_LIBRO_OTRAS,
-        getPredicateHasFuenteImpactoLibrosOTRAS().and(isTipoProduccionEqualsCapitulo));
-  }
-
-  private void loadLibrosEdicionPredicates() {
-    // EDICION_BCI_EDITORIAL_EXTRANJERA
-    LongPredicate hasFuenteImpactoBCI = getPredicateHasFuenteImpactoBCI();
-
-    LongPredicate isTipoProduccionEqualsEdicion = produccionCientificaId -> isValorEqualsTablaMaestraCVN(
-        CodigoCVN.E060_010_010_010, TablaMaestraCVN.E060_010_010_010_208, produccionCientificaId);
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_BCI_EDITORIAL_EXTRANJERA,
-        getPredicateIsISSNForeign().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsEdicion));
-
-    // EDICION_BCI_EDITORIAL_NACIONAL
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_BCI_EDITORIAL_NACIONAL,
-        getPredicateIsISSNNational().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsEdicion));
-
-    // EDICION_ICEE_Q1
-    LongPredicate hasFuenteImpactoICEE = getPredicateHasFuenteImpactoICEE();
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_ICEE_Q1,
-        hasFuenteImpactoICEE.and(getPredicateHasPosicionRevistaLessEqualThan25AndICEE())
-            .and(isTipoProduccionEqualsEdicion));
-
-    // EDICION_ICEE_RESTO_CUARTILES
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_ICEE_RESTO_CUARTILES,
-        hasFuenteImpactoICEE.and(getPredicateHasPositionRevistaGreatherThan25AndICEE())
-            .and(isTipoProduccionEqualsEdicion));
-
-    // EDICION_DIALNET
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_DIALNET,
-        getPredicateHasFuenteImpactoDIALNET().and(isTipoProduccionEqualsEdicion));
-
-    // EDICION_OTRAS
-    getHmTipoBaremoPredicates().put(TipoBaremo.EDICION_OTRAS,
-        getPredicateHasFuenteImpactoLibrosOTRAS().and(isTipoProduccionEqualsEdicion));
-  }
-
-  private void loadLibrosComentarioPredicates() {
-    // COMENTARIO_BCI_EDITORIAL_EXTRANJERA
-    LongPredicate hasFuenteImpactoBCI = getPredicateHasFuenteImpactoBCI();
-
-    LongPredicate isTipoProduccionEqualsComentario = produccionCientificaId -> isValorEqualsTablaMaestraCVN(
-        CodigoCVN.E060_010_010_010, TablaMaestraCVN.E060_010_010_010_COMENTARIO_SISTEMATICO_NORMAS,
-        produccionCientificaId);
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_BCI_EDITORIAL_EXTRANJERA,
-        getPredicateIsISSNForeign().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsComentario));
-
-    // COMENTARIO_BCI_EDITORIAL_NACIONAL
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_BCI_EDITORIAL_NACIONAL,
-        getPredicateIsISSNNational().and(hasFuenteImpactoBCI).and(isTipoProduccionEqualsComentario));
-
-    // COMENTARIO_ICEE_Q1
-    LongPredicate hasFuenteImpactoICEE = getPredicateHasFuenteImpactoICEE();
-
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_ICEE_Q1,
-        hasFuenteImpactoICEE.and(getPredicateHasPosicionRevistaLessEqualThan25AndICEE())
-            .and(isTipoProduccionEqualsComentario));
-
-    // COMENTARIO_ICEE_RESTO_CUARTILES
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_ICEE_RESTO_CUARTILES,
-        hasFuenteImpactoICEE.and(getPredicateHasPositionRevistaGreatherThan25AndICEE())
-            .and(isTipoProduccionEqualsComentario));
-
-    // COMENTARIO_DIALNET
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_DIALNET,
-        getPredicateHasFuenteImpactoDIALNET().and(isTipoProduccionEqualsComentario));
-
-    // CAP_LIBRO_OTRAS
-    getHmTipoBaremoPredicates().put(TipoBaremo.COMENTARIO_OTRAS,
-        getPredicateHasFuenteImpactoLibrosOTRAS().and(isTipoProduccionEqualsComentario));
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_NATURE_O_SCIENCE,
+        getPredicateIsISSNNature().or(getPredicateIsISSNScience()));
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_INDICE_NORMALIZADO,
+        getPredicateIsIndiceNormalizadoGreatherThan1());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_LIDERAZGO, getPredicateHasLiderazgo());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_EXCELENCIA, getPredicateIsPublicacionRelevante());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_OPEN_ACCESS_ALL, getPredicateIsTipoOpenAccessAll());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_OPEN_ACCESS_GOLD, getPredicateIsTipoOpenAccessGold());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_OPEN_ACCESS_HYBRID_GOLD,
+        getPredicateIsTipoOpenAccessHybridGold());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_OPEN_ACCESS_BRONZE, getPredicateIsTipoOpenAccessBronze());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_OPEN_ACCESS_GREEN, getPredicateIsTipoOpenAccessGreen());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_INTERNACIONALIZACION, getPredicateIsInternacional());
+    getHmTipoBaremoPredicates().put(TipoBaremo.ARTICULO_INTERDISCIPLINARIEDAD, getPredicateIsInterdisciplinar());
   }
 
   private void loadArticulosJCRPredicates() {
@@ -496,57 +392,23 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
   protected BigDecimal evaluateBaremoModulador(BaremacionInput baremacionInput) {
     log.debug("evaluateBaremoModulador(baremacionInput) - start");
 
-    BigDecimal puntos = new BigDecimal("1.00");
+    BigDecimal puntos = BigDecimal.ZERO;
 
     TipoBaremo tipoBaremo = baremacionInput.getBaremo().getConfiguracionBaremo().getTipoBaremo();
 
-    if (tipoBaremo.equals(TipoBaremo.LIBRO_NUMERO_AUTORES)) {
-      puntos = evaluateLibroNumeroAutores(baremacionInput);
+    Long produccionCientificaId = baremacionInput.getProduccionCientificaId();
+    boolean isTipoProduccionEqualsArticuloCientifico = getPredicateIsArticuloCientifico().test(produccionCientificaId);
+
+    if (isTipoProduccionEqualsArticuloCientifico && tipoBaremo.equals(TipoBaremo.ARTICULO_NUMERO_AUTORES)) {
+      return evaluateModuladorByTipo(baremacionInput, TipoModulador.NUMERO_AUTORES);
+    }
+
+    if (isTipoProduccionEqualsArticuloCientifico && tipoBaremo.equals(TipoBaremo.ARTICULO_AREAS)) {
+      return evaluateModuladorByTipo(baremacionInput, TipoModulador.AREAS);
     }
 
     log.debug("evaluateBaremoModulador(baremacionInput) - end");
     return puntos;
-  }
-
-  private BigDecimal evaluateLibroNumeroAutores(BaremacionInput baremacionInput) {
-    BigDecimal puntos = new BigDecimal("1.00");
-
-    Long produccionCientificaId = baremacionInput.getProduccionCientificaId();
-    List<Autor> autoresBaremables = findAutoresBaremables(produccionCientificaId);
-
-    String areaRef = getAreaByAutorBaremable(produccionCientificaId, autoresBaremables);
-    if (StringUtils.hasText(areaRef)) {
-
-      // moduladorRepository.findByConvocatoriaBaremacionIdAndAreaRefAndTipoModulador(baremacionInput.getConvocatoriaBaremacionId(),
-      // areaRef, TipoModulador.NUMERO_AUTORES).map(modulador ->
-      // modulador.getValor3())
-      puntos = baremacionInput.getBaremo().getPuntos();
-
-    }
-
-    return puntos;
-  }
-
-  private String getAreaByAutorBaremable(Long produccionCientificaId, List<Autor> autoresBaremables) {
-    String areaRef = null;
-
-    // Buscamos area si viene informado E060_010_010_390
-    areaRef = findValoresByCampoProduccionCientificaId(CodigoCVN.E060_010_010_390,
-        produccionCientificaId).stream()
-            .filter(valorCampo -> isPersonaRef(valorCampo.getValor()) && isPersonaRefBaremable(valorCampo.getValor()))
-            .findFirst()
-            .map(valorCampo -> getAreaNodoRaiz()).orElse(null);
-
-    // Buscamos area en la lista de autores baremables
-    if (!StringUtils.hasText(areaRef)) {
-
-    }
-
-    return areaRef;
-  }
-
-  private String getAreaNodoRaiz() {
-    return null;
   }
 
   protected BigDecimal evaluateBaremoExtra(BaremacionInput baremacionInput) {
@@ -556,14 +418,11 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
 
     TipoBaremo tipoBaremo = baremacionInput.getBaremo().getConfiguracionBaremo().getTipoBaremo();
 
-    boolean isValid = false;
-    if (tipoBaremo.equals(TipoBaremo.LIBRO_EDITORIAL_PRESTIGIO)) {
-      // TODO cuando esté grupos
-      // isValid = evaluateLibroEditorialPrestigio(produccionCientificaId,
-      // tipoBaremo);
-    }
+    Long produccionCientificaId = baremacionInput.getProduccionCientificaId();
+    boolean isTipoProduccionEqualsArticuloCientifico = getPredicateIsArticuloCientifico().test(produccionCientificaId);
 
-    if (isValid) {
+    if (isTipoProduccionEqualsArticuloCientifico
+        && evaluateProduccionCientificaByTipoBaremo(baremacionInput, tipoBaremo)) {
       puntos = baremacionInput.getBaremo().getPuntos();
     }
 
@@ -577,58 +436,100 @@ public class BaremacionPublicacionService extends BaremacionCommonService {
     return produccionCientificaId -> isValorCampoNotEmpty(produccionCientificaId, CodigoCVN.E060_010_010_160);
   }
 
-  private LongPredicate getPredicateHasPosicionRevistaLessEqualThan25AndICEE() {
-    return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
-        Arrays.asList(TipoFuenteImpacto.ICEE)).stream()
-            .anyMatch(this::isRevista25OrPosicionRevistaLessEqualThan25);
-  }
-
-  private LongPredicate getPredicateHasPositionRevistaGreatherThan25AndICEE() {
-    return produccionCientificaId -> findFuentesImpactoByTipoFuenteIn(produccionCientificaId,
-        Arrays.asList(TipoFuenteImpacto.ICEE)).stream()
-            .anyMatch(this::isPosicionRevistaGreatherThan25);
-  }
-
-  private LongPredicate getPredicateHasFuenteImpactoLibrosOTRAS() {
-    return produccionCientificaId -> hasFuenteImpactoNotIn(produccionCientificaId,
-        Arrays.asList(TipoFuenteImpacto.BCI, TipoFuenteImpacto.ICEE, TipoFuenteImpacto.DIALNET));
-  }
-
-  private LongPredicate getPredicateHasFuenteImpactoBCI() {
-    return produccionCientificaId -> hasFuenteImpactoIn(produccionCientificaId, Arrays.asList(TipoFuenteImpacto.BCI));
-  }
-
-  private LongPredicate getPredicateHasFuenteImpactoICEE() {
-    return produccionCientificaId -> hasFuenteImpactoIn(produccionCientificaId,
-        Arrays.asList(TipoFuenteImpacto.ICEE));
-  }
-
   private LongPredicate getPredicateIsArticuloCientifico() {
     return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
         CodigoCVN.E060_010_010_010, TablaMaestraCVN.E060_010_010_010_020, produccionCientificaId);
   }
 
-  protected LongPredicate getPredicateIsISSNNational() {
-    return produccionCientificaId -> isValorCampoISBNNational(produccionCientificaId,
-        CodigoCVN.E060_010_010_160);
+  private LongPredicate getPredicateIsISSNNature() {
+    return produccionCientificaId -> isValorEqualsStringValue(
+        CodigoCVN.E060_010_010_160, "0028-0836", produccionCientificaId)
+        || isValorEqualsStringValue(CodigoCVN.E060_010_010_160, "1476-4687", produccionCientificaId);
   }
 
-  protected LongPredicate getPredicateIsISSNForeign() {
-    return produccionCientificaId -> !isValorCampoISBNNational(produccionCientificaId,
-        CodigoCVN.E060_010_010_160);
+  private LongPredicate getPredicateIsISSNScience() {
+    return produccionCientificaId -> isValorEqualsStringValue(
+        CodigoCVN.E060_010_010_160, "1095-9203", produccionCientificaId);
   }
 
-  protected List<Autor> findAutoresBaremables(Long produccionCientificaId) {
-    return autorRepository.findAllByProduccionCientificaIdAndPersonaRefIsNotNull(produccionCientificaId).stream()
-        .filter(autor -> isPersonaRef(autor.getPersonaRef()) && isPersonaRefBaremable(autor.getPersonaRef()))
-        .collect(Collectors.toList());
+  private LongPredicate getPredicateIsIndiceNormalizadoGreatherThan1() {
+    return produccionCientificaId -> isValorGreatherThanIntegerValue(
+        CodigoCVN.INDICE_NORMALIZADO, "1", produccionCientificaId);
   }
 
-  protected Boolean isPersonaRef(String personaRef) {
-    return personaService.findById(personaRef).isPresent();
+  protected boolean isValorGreatherThanIntegerValue(CodigoCVN codigoCVN, String numberValue,
+      Long produccionCientificaId) {
+    return findValoresByCampoProduccionCientificaId(codigoCVN, produccionCientificaId).stream()
+        .anyMatch(valorCampo -> valorCampo.getValor()
+            .compareTo(ProduccionCientificaFieldFormatUtil.formatNumber(numberValue)) > 0);
   }
 
-  protected Boolean isPersonaRefBaremable(String personaRef) {
-    return grupoInvestigacionService.isBaremable(personaRef, getAnio());
+  private LongPredicate getPredicateHasLiderazgo() {
+    return this::hasAutorBaremable;
   }
+
+  private Boolean hasAutorBaremable(Long produccionCientificaId) {
+    // Buscamos si viene informado E060_010_010_390 y pertenece a la universidad
+    if (findValoresByCampoProduccionCientificaId(
+        CodigoCVN.E060_010_010_390, produccionCientificaId).stream()
+        .anyMatch(valorCampo -> isPersonaRefAndBaremable(valorCampo.getValor()))) {
+      return Boolean.TRUE;
+    }
+
+    List<Autor> autoresBaremables = findAutoresBaremables(produccionCientificaId);
+
+    if (!autoresBaremables.isEmpty()) {
+      // Buscamos area en la lista de autores baremables el autor en primera posición
+      if (Boolean.TRUE.equals(isPersonaRefAndBaremable(autoresBaremables.get(0).getPersonaRef()))) {
+        return Boolean.TRUE;
+      }
+
+      // Buscamos area en la lista de autores baremables el autor en última posición
+      int numAutores = autoresBaremables.size();
+      return numAutores > 1
+          && Boolean.TRUE.equals(isPersonaRefAndBaremable(autoresBaremables.get(numAutores - 1).getPersonaRef()));
+    }
+    return Boolean.FALSE;
+  }
+
+  private LongPredicate getPredicateIsPublicacionRelevante() {
+    return produccionCientificaId -> isValorEqualsStringValue(
+        CodigoCVN.E060_010_010_300, "true", produccionCientificaId)
+        || isValorEqualsStringValue(CodigoCVN.PUBLICACION_MUY_RELEVANTE, "true", produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsTipoOpenAccessAll() {
+    return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
+        CodigoCVN.TIPO_OPEN_ACCESS, TablaMaestraCVN.TIPO_OPEN_ACCESS_ALL, produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsTipoOpenAccessGold() {
+    return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
+        CodigoCVN.TIPO_OPEN_ACCESS, TablaMaestraCVN.TIPO_OPEN_ACCESS_GOLD, produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsTipoOpenAccessHybridGold() {
+    return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
+        CodigoCVN.TIPO_OPEN_ACCESS, TablaMaestraCVN.TIPO_OPEN_ACCESS_HYBRID_GOLD, produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsTipoOpenAccessBronze() {
+    return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
+        CodigoCVN.TIPO_OPEN_ACCESS, TablaMaestraCVN.TIPO_OPEN_ACCESS_BRONZE, produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsTipoOpenAccessGreen() {
+    return produccionCientificaId -> isValorEqualsTablaMaestraCVN(
+        CodigoCVN.TIPO_OPEN_ACCESS, TablaMaestraCVN.TIPO_OPEN_ACCESS_GREEN, produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsInternacional() {
+    return produccionCientificaId -> isValorEqualsStringValue(CodigoCVN.INTERNACIONAL, "true", produccionCientificaId);
+  }
+
+  private LongPredicate getPredicateIsInterdisciplinar() {
+    return produccionCientificaId -> isValorEqualsStringValue(CodigoCVN.INTERDISCIPLINAR, "true",
+        produccionCientificaId);
+  }
+
 }

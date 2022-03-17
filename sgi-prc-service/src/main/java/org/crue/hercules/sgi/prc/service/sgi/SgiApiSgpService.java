@@ -3,7 +3,11 @@ package org.crue.hercules.sgi.prc.service.sgi;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
+import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.DatosAcademicosDto;
+import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.VinculacionDto;
+import org.crue.hercules.sgi.prc.dto.sgp.SexenioDto;
 import org.crue.hercules.sgi.prc.enums.ServiceType;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,7 +32,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
    * @param personaRef String
    * @return Optional de {@link PersonaDto}
    */
-  public Optional<PersonaDto> findById(String personaRef) {
+  public Optional<PersonaDto> findPersonaById(String personaRef) {
     log.debug("findById(personaRef)- start");
     Optional<PersonaDto> persona = Optional.empty();
 
@@ -52,6 +56,146 @@ public class SgiApiSgpService extends SgiApiBaseService {
 
     log.debug("findById(personaRef)- end");
     return persona;
+  }
+
+  /**
+   * Devuelve datos de vinculación de una persona a través de una consulta al ESB
+   *
+   * @param personaRef String
+   * @return Optional de {@link VinculacionDto}
+   * 
+   */
+  public Optional<VinculacionDto> findVinculacionByPersonaId(String personaRef) {
+    log.debug("findVinculacionByPersonaId(personaRef)- start");
+    Optional<VinculacionDto> vinculacion = Optional.empty();
+
+    try {
+
+      ServiceType serviceType = ServiceType.SGP;
+      HttpMethod httpMethod = HttpMethod.GET;
+
+      StringBuilder relativeUrl = new StringBuilder();
+      relativeUrl.append("/vinculaciones/persona/");
+      relativeUrl.append(personaRef);
+      String mergedURL = buildUri(serviceType, relativeUrl.toString());
+
+      final VinculacionDto response = super.<VinculacionDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+          httpMethod, new ParameterizedTypeReference<VinculacionDto>() {
+          }, personaRef).getBody();
+
+      vinculacion = Optional.of(response);
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findVinculacionByPersonaId(personaRef)- end");
+
+    return vinculacion;
+  }
+
+  /**
+   * Devuelve datos de contacto de una persona a través de una consulta al ESB
+   *
+   * @param personaRef String
+   * @return Optional de {@link DatosContactoDto}
+   */
+  public Optional<DatosContactoDto> findDatosContactoByPersonaId(String personaRef) {
+    log.debug("findDatosContactoByPersonaId(personaRef)- start");
+    Optional<DatosContactoDto> datosContacto = Optional.empty();
+
+    try {
+
+      ServiceType serviceType = ServiceType.SGP;
+      HttpMethod httpMethod = HttpMethod.GET;
+
+      StringBuilder relativeUrl = new StringBuilder();
+      relativeUrl.append("/datos-contacto/persona/");
+      relativeUrl.append(personaRef);
+      String mergedURL = buildUri(serviceType, relativeUrl.toString());
+
+      final DatosContactoDto response = super.<DatosContactoDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+          httpMethod, new ParameterizedTypeReference<DatosContactoDto>() {
+          }, personaRef).getBody();
+
+      datosContacto = Optional.of(response);
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findDatosContactoByPersonaId(personaRef)- end");
+
+    return datosContacto;
+  }
+
+  /**
+   * Devuelve datos académicos de una persona a través de una consulta al ESB
+   *
+   * @param personaRef String
+   * @return Optional de {@link DatosAcademicosDto}
+   * 
+   */
+  public Optional<DatosAcademicosDto> findDatosAcademicosByPersonaId(String personaRef) {
+    log.debug("findDatosAcademicosByPersonaId(personaRef)- start");
+    Optional<DatosAcademicosDto> datosAcademicos = Optional.empty();
+
+    try {
+      ServiceType serviceType = ServiceType.SGP;
+      HttpMethod httpMethod = HttpMethod.GET;
+
+      StringBuilder relativeUrl = new StringBuilder();
+      relativeUrl.append("/datos-academicos/persona/");
+      relativeUrl.append(personaRef);
+      String mergedURL = buildUri(serviceType, relativeUrl.toString());
+
+      final DatosAcademicosDto response = super.<DatosAcademicosDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+          httpMethod, new ParameterizedTypeReference<DatosAcademicosDto>() {
+          }, personaRef).getBody();
+
+      datosAcademicos = Optional.of(response);
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findDatosAcademicosByPersonaId(personaRef)- end");
+
+    return datosAcademicos;
+  }
+
+  /**
+   * Devuelve los sexenios de una persona a través de una consulta al ESB
+   *
+   * @param personaRef String
+   * @return Optional de {@link SexenioDto}
+   * 
+   */
+  public Optional<SexenioDto> findSexeniosByPersonaId(String personaRef) {
+    log.debug("findSexeniosByPersonaId(personaRef)- start");
+    Optional<SexenioDto> sexenios = Optional.empty();
+
+    try {
+      ServiceType serviceType = ServiceType.SGP;
+      HttpMethod httpMethod = HttpMethod.GET;
+      StringBuilder relativeUrl = new StringBuilder();
+      relativeUrl.append("/sexenios/persona/");
+      relativeUrl.append(personaRef);
+      String mergedURL = buildUri(serviceType, relativeUrl.toString());
+
+      final SexenioDto response = super.<SexenioDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+          httpMethod, new ParameterizedTypeReference<SexenioDto>() {
+          }, personaRef).getBody();
+
+      sexenios = Optional.of(response);
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findSexeniosByPersonaId(personaRef)- end");
+
+    return sexenios;
   }
 
 }

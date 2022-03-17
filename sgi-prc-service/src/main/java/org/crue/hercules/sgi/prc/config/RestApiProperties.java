@@ -50,4 +50,9 @@ public class RestApiProperties {
    */
   private String sgpUrl;
 
+  /**
+   * URL base de los end-points de SGO.
+   */
+  private String sgoUrl;
+
 }

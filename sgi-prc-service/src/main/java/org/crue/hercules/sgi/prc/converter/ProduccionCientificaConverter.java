@@ -38,8 +38,10 @@ public class ProduccionCientificaConverter {
 
   public ProduccionCientificaApiOutput convertProduccionCientificaEstadoResumen(
       ProduccionCientificaResumen produccionCientificaResumen) {
-    return modelMapper.map(produccionCientificaResumen,
+    ProduccionCientificaApiOutput output = modelMapper.map(produccionCientificaResumen,
         ProduccionCientificaApiOutput.class);
+    output.setIdRef(produccionCientificaResumen.getProduccionCientificaRef());
+    return output;
   }
 
   public List<ProduccionCientificaApiOutput> convertProduccionCientificaEstadoResumen(
@@ -53,7 +55,8 @@ public class ProduccionCientificaConverter {
     ProduccionCientificaApiFullOutput output = modelMapper.map(produccionCientifica,
         ProduccionCientificaApiFullOutput.class);
     output.setIdRef(produccionCientifica.getProduccionCientificaRef());
-    output.setEpigrafeCVN(produccionCientifica.getEpigrafeCVN().getInternValue());
+    output.setEpigrafeCVN(
+        null != produccionCientifica.getEpigrafeCVN() ? produccionCientifica.getEpigrafeCVN().getCode() : null);
     return output;
   }
 
@@ -67,7 +70,7 @@ public class ProduccionCientificaConverter {
 
   public IndiceImpactoInput convertIndiceImpacto(IndiceImpacto indiceImpacto) {
     IndiceImpactoInput output = modelMapper.map(indiceImpacto, IndiceImpactoInput.class);
-    output.setFuenteImpacto(indiceImpacto.getFuenteImpacto().getInternValue());
+    output.setFuenteImpacto(indiceImpacto.getFuenteImpacto().getCode());
     return output;
   }
 }

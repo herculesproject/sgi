@@ -20,7 +20,6 @@ public class BaseEntity extends Auditable implements Serializable {
   public static final int ORCID_ID_LENGTH = 100;
   public static final int CAMPO_CVN_LENGTH = 50;
   public static final int COMENTARIO_LENGTH = 2000;
-  public static final int GRUPO_REF_LENGTH = 100;
   public static final int TIPO_FUENTE_IMPACTO_LENGTH = 50;
   public static final int OTRA_FUENTE_IMPACTO_LENGTH = 1000;
   public static final int VALOR_LENGTH = 250;
@@ -39,8 +38,9 @@ public class BaseEntity extends Auditable implements Serializable {
   public static final int TIPO_CUANTIA_LENGTH = 50;
   public static final int TIPO_BAREMO_LENGTH = 80;
   public static final int TIPO_FUENTE_LENGTH = 50;
+  public static final int TIPO_PUNTUACION_LENGTH = 50;
   public static final int TIPO_PUNTOS_LENGTH = 50;
-  public static final int VALOR_MAPEO_TIPOS = 100;
+  public static final int VALOR_MAPEO_TIPOS_LENGTH = 20;
   public static final int NOMBRE_CONF_BAREMOS_LENGTH = 100;
   public static final int CUARTIL_LENGTH = 2;
 

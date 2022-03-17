@@ -27,7 +27,7 @@ import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.crue.hercules.sgi.prc.service.AcreditacionService;
 import org.crue.hercules.sgi.prc.service.AutorService;

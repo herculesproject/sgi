@@ -9,6 +9,7 @@ public enum ServiceType {
   PII,
   REL,
   SGP,
+  SGO,
   TP,
   USR
 }

@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoFuente;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo_;

@@ -932,10 +932,14 @@
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-indice_impacto">
+    <update tableName="indice_impacto">
+      <column name="tipo_fuente_impacto" value="GII_GRIN_SCIE" />
+      <where>tipo_fuente_impacto='GII-GRIN-SCIE'</where>
+    </update>
     <!-- Producción científica 4 - Comité editorial 1 -->
     <insert tableName="indice_impacto">
       <column name="id" valueSequenceNext="indice_impacto_seq" />
-      <column name="tipo_fuente_impacto" value="GII-GRIN-SCIE" />
+      <column name="tipo_fuente_impacto" value="GII_GRIN_SCIE" />
       <column name="tipo_ranking" value="CLASE1" />
       <column name="anio" valueNumeric="2018" />
       <column name="indice" valueNumeric="1.85" />
@@ -961,7 +965,7 @@
     <!-- Producción científica 7 - Congreso 1 -->
     <insert tableName="indice_impacto">
       <column name="id" valueSequenceNext="indice_impacto_seq" />
-      <column name="tipo_fuente_impacto" value="GII-GRIN-SCIE" />
+      <column name="tipo_fuente_impacto" value="GII_GRIN_SCIE" />
       <column name="tipo_ranking" value="CLASE1" />
       <column name="anio" valueNumeric="2018" />
       <column name="indice" valueNumeric="1.85" />
@@ -1039,33 +1043,2350 @@
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-autor_grupo">
-    <!-- Producción científica 4 - Comité editorial 1 -->
+  <changeSet context="dev" author="master" id="0000000000001-autor_grupo">
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="VALIDADO" />
-      <column name="grupo_ref" value="1" />
+      <column name="grupo_ref" valueNumeric="1" />
       <column name="autor_id" valueNumeric="10" />
     </insert>
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="PENDIENTE" />
-      <column name="grupo_ref" value="2" />
+      <column name="grupo_ref" valueNumeric="2" />
       <column name="autor_id" valueNumeric="10" />
     </insert>
     <!-- Producción científica 7 - Congreso 1 -->
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="VALIDADO" />
-      <column name="grupo_ref" value="1" />
+      <column name="grupo_ref" valueNumeric="1" />
       <column name="autor_id" valueNumeric="13" />
     </insert>
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="PENDIENTE" />
-      <column name="grupo_ref" value="2" />
+      <column name="grupo_ref" valueNumeric="2" />
       <column name="autor_id" valueNumeric="13" />
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000001-convocatoria_baremacion">
+    <dropSequence sequenceName="convocatoria_baremacion_seq" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_baremacion_seq" startValue="1" />
+
+    <insert tableName="convocatoria_baremacion">
+      <column name="id" valueSequenceNext="convocatoria_baremacion_seq" />
+      <column name="anio" valueNumeric="2021" />
+      <column name="anios_baremables" valueNumeric="2" />
+      <column name="importe_total" valueNumeric="150000.00" />
+      <column name="nombre" value="Convocatoria ACI 2021" />
+      <column name="partida_presupuestaria" value="11.1234.1234.12345" />
+      <column name="punto_costes_indirectos" valueNumeric="null" />
+      <column name="punto_produccion" valueNumeric="null" />
+      <column name="punto_sexenio" valueNumeric="null" />
+      <column name="ultimo_anio" valueNumeric="2021" />
+      <column name="fecha_fin_ejecucion" valueDate="null" />
+      <column name="fecha_inicio_ejecucion" valueDate="null" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000001-baremo">
+
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='SEXENIO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="10" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COSTE_INDIRECTO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="1000.00" />
+      <column name="peso" valueNumeric="15" />
+      <column name="puntos" valueNumeric="null" />
+      <column name="tipo_cuantia" value="PUNTOS" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PRODUCCION_CIENTIFICA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="75" />
+      <column name="puntos" valueNumeric="null" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_BCI_EDITORIAL_EXTRANJERA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="12.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_BCI_EDITORIAL_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="8.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_ICEE_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="12.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_ICEE_RESTO_CUARTILES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="8.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_DIALNET')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='AUTORIA_OTRAS')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_BCI_EDITORIAL_EXTRANJERA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_BCI_EDITORIAL_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_ICEE_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_ICEE_RESTO_CUARTILES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_DIALNET')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CAP_LIBRO_OTRAS')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_BCI_EDITORIAL_EXTRANJERA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_BCI_EDITORIAL_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_ICEE_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_ICEE_RESTO_CUARTILES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_DIALNET')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='EDICION_OTRAS')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMENTARIO_ICEE_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMENTARIO_ICEE_RESTO_CUARTILES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='LIBRO_NUMERO_AUTORES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='LIBRO_EDITORIAL_PRESTIGIO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_JCR_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="8.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_JCR_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_JCR_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_JCR_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_CITEC_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_CITEC_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_CITEC_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_CITEC_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCOPUS_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCOPUS_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCOPUS_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCOPUS_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCIMAGO_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCIMAGO_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCIMAGO_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_SCIMAGO_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_ERIH_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_ERIH_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_ERIH_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_ERIH_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_DIALNET_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_DIALNET_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_DIALNET_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_DIALNET_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_MIAR_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_MIAR_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_MIAR_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_MIAR_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_FECYT_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_FECYT_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_FECYT_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_FECYT_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_NUMERO_AUTORES')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_AREAS')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_NATURE_O_SCIENCE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="16.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_INDICE_NORMALIZADO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_LIDERAZGO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_EXCELENCIA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_OPEN_ACCESS_ALL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_OPEN_ACCESS_GOLD')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_OPEN_ACCESS_HYBRID_GOLD')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_OPEN_ACCESS_BRONZE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_OPEN_ACCESS_GREEN')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_INTERNACIONALIZACION')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_INTERDISCIPLINARIEDAD')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ARTICULO_JCR_Q1_DECIL1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="8.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_JCR_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_CITEC_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCOPUS_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_SCIMAGO_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_ERIH_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_DIALNET_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_MIAR_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q1_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q2_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q3_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL_FECYT_Q4_EDITOR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='COMITE_EDITORIAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.75" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_GRUPO1_O_CORE_A_POR')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_GRUPO1_O_CORE_A')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_INTERNACIONAL_POSTER_O_CARTEL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.30" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_INTERNACIONAL_PONENCIA_ORAL_O_ESCRITA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_INTERNACIONAL_PLENARIA_O_KEYNOTE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_NACIONAL_POSTER_O_CARTEL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.15" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_NACIONAL_PONENCIA_ORAL_O_ESCRITA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.25" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_NACIONAL_PLENARIA_O_KEYNOTE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_RESUMEN_O_ABSTRACT')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.20" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_INTERNACIONAL_OBRA_COLECTIVA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONGRESO_NACIONAL_OBRA_COLECTIVA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.20" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='DIRECCION_TESIS_TESIS')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='DIRECCION_TESIS_TESINA_O_DEA_O_TFM')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='DIRECCION_TESIS_MENCION_INDUSTRIAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='DIRECCION_TESIS_MENCION_INTERNACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_REGIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_EUROPEO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_RESTO')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_REGIONAL_EXCELENCIA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_NACIONAL_EXCELENCIA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="10.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_REGIONAL_IP')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_NACIONAL_IP')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_EUROPEO_IP')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='PROYECTO_INVESTIGACION_RESTO_IP')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='CONTRATO_CUANTIA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="null" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO1_INDIVIDUAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="9.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO1_COLECTIVA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="5.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO2_INDIVIDUAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO2_COLECTIVA')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="3.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_EXP_GRUPO4')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_DISENIO_GRUPO1')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="6.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_DISENIO_GRUPO2')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='OBRA_ARTISTICA_DISENIO_GRUPO3')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ORG_ACT_COMITE_CIENTIFICO_ORGANIZ_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="0.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ORG_ACT_COMITE_CIENTIFICO_ORGANIZ_INTERNACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ORG_ACT_COMITE_CIENTIFICO_ORGANIZ_NACIONAL_PRESIDENTE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="1.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='ORG_ACT_COMITE_CIENTIFICO_ORGANIZ_INTERNACIONAL_PRESIDENTE')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="2.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='INVENCION_PATENTE_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="8.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='INVENCION_PATENTE_INTERNACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='INVENCION_OTRO_NACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="4.00" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='INVENCION_OTRO_INTERNACIONAL')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="7.50" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+    <insert tableName="baremo">
+      <column name="id" valueSequenceNext="baremo_seq" />
+      <column name="configuracion_baremo_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='INVENCION_LICENCIA_EXPLOTACION')" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="cuantia" valueNumeric="null" />
+      <column name="peso" valueNumeric="null" />
+      <column name="puntos" valueNumeric="null" />
+      <column name="tipo_cuantia" value="null" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000001-modulador">
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="H" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="NUMERO_AUTORES" />
+      <column name="valor1" valueNumeric="1.10" />
+      <column name="valor2" valueNumeric="2.10" />
+      <column name="valor3" valueNumeric="3.10" />
+      <column name="valor4" valueNumeric="4.10" />
+      <column name="valor5" valueNumeric="5.10" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="C" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="NUMERO_AUTORES" />
+      <column name="valor1" valueNumeric="1.20" />
+      <column name="valor2" valueNumeric="2.20" />
+      <column name="valor3" valueNumeric="3.20" />
+      <column name="valor4" valueNumeric="4.20" />
+      <column name="valor5" valueNumeric="5.20" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="J" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="NUMERO_AUTORES" />
+      <column name="valor1" valueNumeric="1.30" />
+      <column name="valor2" valueNumeric="2.30" />
+      <column name="valor3" valueNumeric="3.30" />
+      <column name="valor4" valueNumeric="4.30" />
+      <column name="valor5" valueNumeric="5.30" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="S" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="NUMERO_AUTORES" />
+      <column name="valor1" valueNumeric="1.40" />
+      <column name="valor2" valueNumeric="2.40" />
+      <column name="valor3" valueNumeric="3.40" />
+      <column name="valor4" valueNumeric="4.40" />
+      <column name="valor5" valueNumeric="5.40" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="I" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="NUMERO_AUTORES" />
+      <column name="valor1" valueNumeric="1.50" />
+      <column name="valor2" valueNumeric="2.50" />
+      <column name="valor3" valueNumeric="3.50" />
+      <column name="valor4" valueNumeric="4.50" />
+      <column name="valor5" valueNumeric="5.50" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="H" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="AREAS" />
+      <column name="valor1" valueNumeric="1.10" />
+      <column name="valor2" valueNumeric="2.10" />
+      <column name="valor3" valueNumeric="3.10" />
+      <column name="valor4" valueNumeric="4.10" />
+      <column name="valor5" valueNumeric="5.10" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="C" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="AREAS" />
+      <column name="valor1" valueNumeric="1.20" />
+      <column name="valor2" valueNumeric="2.20" />
+      <column name="valor3" valueNumeric="3.20" />
+      <column name="valor4" valueNumeric="4.20" />
+      <column name="valor5" valueNumeric="5.20" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="J" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="AREAS" />
+      <column name="valor1" valueNumeric="1.30" />
+      <column name="valor2" valueNumeric="2.30" />
+      <column name="valor3" valueNumeric="3.30" />
+      <column name="valor4" valueNumeric="4.30" />
+      <column name="valor5" valueNumeric="5.30" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="S" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="AREAS" />
+      <column name="valor1" valueNumeric="1.40" />
+      <column name="valor2" valueNumeric="2.40" />
+      <column name="valor3" valueNumeric="3.40" />
+      <column name="valor4" valueNumeric="4.40" />
+      <column name="valor5" valueNumeric="5.40" />
+    </insert>
+    <insert tableName="modulador">
+      <column name="id" valueSequenceNext="modulador_seq" />
+      <column name="area_ref" value="I" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="tipo" value="AREAS" />
+      <column name="valor1" valueNumeric="1.50" />
+      <column name="valor2" valueNumeric="2.50" />
+      <column name="valor3" valueNumeric="3.50" />
+      <column name="valor4" valueNumeric="4.50" />
+      <column name="valor5" valueNumeric="5.50" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-rango">
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="0.00" />
+      <column name="hasta" valueNumeric="29999.00" />
+      <column name="puntos" valueNumeric="10.00" />
+      <column name="tipo_rango" value="CUANTIA_CONTRATOS" />
+      <column name="tipo_temporalidad" value="INICIAL" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="30000.00" />
+      <column name="hasta" valueNumeric="59999.00" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_rango" value="CUANTIA_CONTRATOS" />
+      <column name="tipo_temporalidad" value="INTERMEDIO" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="60000.00" />
+      <column name="hasta" valueNumeric="null" />
+      <column name="puntos" valueNumeric="20.00" />
+      <column name="tipo_rango" value="CUANTIA_CONTRATOS" />
+      <column name="tipo_temporalidad" value="FINAL" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="0.00" />
+      <column name="hasta" valueNumeric="29999.00" />
+      <column name="puntos" valueNumeric="10.00" />
+      <column name="tipo_rango" value="LICENCIA" />
+      <column name="tipo_temporalidad" value="INICIAL" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="30000.00" />
+      <column name="hasta" valueNumeric="59999.00" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_rango" value="LICENCIA" />
+      <column name="tipo_temporalidad" value="INTERMEDIO" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="60000.00" />
+      <column name="hasta" valueNumeric="null" />
+      <column name="puntos" valueNumeric="20.00" />
+      <column name="tipo_rango" value="LICENCIA" />
+      <column name="tipo_temporalidad" value="FINAL" />
+    </insert>
+
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-tabla_indice">
+    <dropSequence sequenceName="tabla_indice_seq" />
+    <createSequence incrementBy="1" sequenceName="tabla_indice_seq" startValue="1" />
+
+    <insert tableName="tabla_indice">
+      <column name="id" valueSequenceNext="tabla_indice_seq" />
+      <column name="activo" valueBoolean="true" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="2020-01-20T21:59:59" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-indice_experimentalidad">
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B5" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A3" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E002" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0D0" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0D1" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A6" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A8" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E005" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E006" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E060" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C7" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E008" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E009" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E093" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C9" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E076" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E075" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E057" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E070" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E011" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E080" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C1" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E013" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E012" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E073" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E065" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E051" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E016" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B9" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E063" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E079" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E017" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E095" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E019" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E023" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E020" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E091" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E024" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E094" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E081" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E052" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E025" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E026" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A5" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E028" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B2" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C5" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E053" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E097" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E096" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E034" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E084" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B7" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E061" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E036" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C8" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A1" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B1" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E074" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B8" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A4" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E069" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E041" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="2.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E058" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E038" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E042" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E043" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E048" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E044" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E045" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E046" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E047" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E072" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A2" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C3" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E098" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E050" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.50" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0C6" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0B6" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="1.00" />
+    </insert>
+    <insert tableName="indice_experimentalidad">
+      <column name="id" valueSequenceNext="indice_experimentalidad_seq" />
+      <column name="departamento_ref" value="E0A0" />
+      <column name="tabla_indice_id" valueNumeric="1" />
+      <column name="valor" valueNumeric="3.00" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

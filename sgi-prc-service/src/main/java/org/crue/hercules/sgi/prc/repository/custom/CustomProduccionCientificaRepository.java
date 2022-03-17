@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaResumen;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
@@ -51,5 +51,21 @@ public interface CustomProduccionCientificaRepository {
    *                        codigoCVN {@link CodigoCVN} a filtrar
    * @return lista de ids de {@link ProduccionCientifica}
    */
-  List<Long> findAllBaremacion(BaremacionInput baremacionInput);
+  List<Long> findAllBaremacionByFechaInicio(BaremacionInput baremacionInput);
+
+  /**
+   * Devuelve una lista de ids de {@link ProduccionCientifica} de un
+   * {@link EpigrafeCVN} que cumplan las condiciones de baremación.
+   * 
+   * @param baremacionInput      fechaInicio Fecha inicio de baremación en formato
+   *                             UTC,
+   *                             fechaFin Fecha fin de baremación en formato UTC,
+   *                             {@link EpigrafeCVN} a filtrar,
+   *                             {@link CodigoCVN} a filtrar
+   * @param codigoCVNFechaInicio {@link CodigoCVN} de fechaInicio
+   * @param codigoCVNFechaFin    {@link CodigoCVN} de fechaFin
+   * @return lista de ids de {@link ProduccionCientifica}
+   */
+  List<Long> findAllBaremacionByFechaInicioAndFechaFin(BaremacionInput baremacionInput, CodigoCVN codigoCVNFechaInicio,
+      CodigoCVN codigoCVNFechaFin);
 }

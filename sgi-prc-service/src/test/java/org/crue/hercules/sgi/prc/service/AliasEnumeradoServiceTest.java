@@ -8,9 +8,9 @@ import javax.persistence.PersistenceUnitUtil;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.exceptions.AliasEnumeradoNotFoundException;
 import org.crue.hercules.sgi.prc.model.AliasEnumerado;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.repository.AliasEnumeradoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

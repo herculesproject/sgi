@@ -2,8 +2,8 @@ package org.crue.hercules.sgi.prc.dto;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
 import org.springframework.util.StringUtils;
 
 import lombok.Data;

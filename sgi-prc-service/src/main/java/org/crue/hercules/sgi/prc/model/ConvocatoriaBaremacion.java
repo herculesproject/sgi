@@ -68,8 +68,11 @@ public class ConvocatoriaBaremacion extends BaseEntity {
   @Column(name = "punto_costes_indirectos", nullable = true)
   private BigDecimal puntoCostesIndirectos;
 
-  @Column(name = "fecha_ejecucion", nullable = true)
-  private Instant fechaEjecucion;
+  @Column(name = "fecha_inicio_ejecucion", nullable = true)
+  private Instant fechaInicioEjecucion;
+
+  @Column(name = "fecha_fin_ejecucion", nullable = true)
+  private Instant fechaFinEjecucion;
 
   @OneToMany(mappedBy = "convocatoriaBaremacion")
   @Getter(AccessLevel.NONE)
@@ -95,5 +98,16 @@ public class ConvocatoriaBaremacion extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final List<Baremo> baremos = null;
+
+  @OneToMany(mappedBy = "convocatoriaBaremacion")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaBaremacionLog> logs = null;
+
+  public ConvocatoriaBaremacion(BigDecimal puntoProduccion, BigDecimal puntoSexenio, BigDecimal puntoCostesIndirectos) {
+    this.puntoProduccion = puntoProduccion;
+    this.puntoSexenio = puntoSexenio;
+    this.puntoCostesIndirectos = puntoCostesIndirectos;
+  }
 
 }

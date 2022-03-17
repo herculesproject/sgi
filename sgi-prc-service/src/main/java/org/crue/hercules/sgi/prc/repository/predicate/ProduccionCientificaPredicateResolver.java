@@ -13,12 +13,12 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.Autor;
 import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.AutorGrupo_;
 import org.crue.hercules.sgi.prc.model.Autor_;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;

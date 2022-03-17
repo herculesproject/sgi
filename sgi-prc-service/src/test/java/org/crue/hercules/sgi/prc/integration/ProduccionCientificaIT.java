@@ -33,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ProduccionCientifica.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProduccionCientificaIT extends BaseIT {
+class ProduccionCientificaIT extends BaseIT {
 
   private static final String CONTROLLER_BASE_PATH = ProduccionCientificaController.MAPPING;
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -73,7 +73,7 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsProduccionCientifica() throws Exception {
+  void findById_ReturnsProduccionCientifica() throws Exception {
     Long idProduccionCientifica = 1L;
     String roles = "PRC-VAL-V";
 
@@ -100,7 +100,7 @@ public class ProduccionCientificaIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @ValueSource(strings = { "estado.estado==\"PENDIENTE\"" })
-  public void findAllPublicacionesFilterByEstado_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllPublicacionesFilterByEstado_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";
@@ -121,7 +121,9 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PublicacionOutput> produccionesCientificas = response.getBody();
-    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(3);
+    int numPRCs = produccionesCientificas.size();
+    Assertions.assertThat(numPRCs).as("numPRCs").isEqualTo(3);
+
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -142,9 +144,9 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
-  @ValueSource(strings = { "tituloPublicacion=ik=ubli", "investigador=ik=persona_ref",
+  @ValueSource(strings = { "tituloPublicacion=ik=ubli", "investigador=ik=52364567",
       "fechaPublicacionDesde=ge=2020-01-01T23:00:00Z;fechaPublicacionHasta=le=2021-02-01T23:00:00Z" })
-  public void findAllPublicacionesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllPublicacionesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";
@@ -165,7 +167,8 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PublicacionOutput> produccionesCientificas = response.getBody();
-    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(3);
+    int numPRCs = produccionesCientificas.size();
+    Assertions.assertThat(numPRCs).as("numPRCs").isEqualTo(3);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -190,14 +193,14 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllPublicacionesByInvestigador2_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
+  void findAllPublicacionesByInvestigador2_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
       throws Exception {
     String roles = "PRC-VAL-V";
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "investigador=ik=persona_ref1";
+    String filter = "investigador=ik=persona_ref3_2";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
@@ -211,7 +214,8 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PublicacionOutput> produccionesCientificas = response.getBody();
-    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(1);
+    int numPRCs = produccionesCientificas.size();
+    Assertions.assertThat(numPRCs).as("numPRCs").isEqualTo(1);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -220,7 +224,7 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 1));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 3));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -233,14 +237,14 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllPublicacionesByInvestigadorAndTituloPublicacion_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
+  void findAllPublicacionesByInvestigadorAndTituloPublicacion_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
       throws Exception {
     String roles = "PRC-VAL-V";
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "investigador=ik=persona_ref2_2;tituloPublicacion=ik=ubli";
+    String filter = "investigador=ik=persona_ref3_2;tituloPublicacion=ik=ubli";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PUBLICACIONES)
         .queryParam("s", sort)
@@ -254,7 +258,8 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PublicacionOutput> produccionesCientificas = response.getBody();
-    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(1);
+    int numPRCs = produccionesCientificas.size();
+    Assertions.assertThat(numPRCs).as("numPRCs").isEqualTo(1);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -263,7 +268,7 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
         .as("get(0).getProduccionCientificaRef())")
-        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 2));
+        .isEqualTo(PUBLICACION_REF_VALUE + String.format("%03d", 3));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -276,7 +281,7 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllPublicacionesByFechaPublicacion_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
+  void findAllPublicacionesByFechaPublicacion_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList()
       throws Exception {
     String roles = "PRC-VAL-V";
     HttpHeaders headers = new HttpHeaders();
@@ -297,7 +302,8 @@ public class ProduccionCientificaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PublicacionOutput> produccionesCientificas = response.getBody();
-    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(2);
+    int numPRCs = produccionesCientificas.size();
+    Assertions.assertThat(numPRCs).as("numPRCs").isEqualTo(2);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -324,7 +330,7 @@ public class ProduccionCientificaIT extends BaseIT {
   @ParameterizedTest
   @ValueSource(strings = { "nombre=ik=Título", "issn=ik=ISSN",
       "fechaInicioDesde=ge=2020-01-1T23:00:00Z;fechaInicioHasta=le=2021-02-22T23:00:00Z" })
-  public void findAllComitesEditorialesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllComitesEditorialesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";
@@ -418,7 +424,7 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void validar_ReturnsProduccionCientifica()
+  void validar_ReturnsProduccionCientifica()
       throws Exception {
     String roles = "PRC-VAL-E";
     final Long produccionCientificaId = 2L;
@@ -451,7 +457,7 @@ public class ProduccionCientificaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void rechazar_ReturnsProduccionCientifica()
+  void rechazar_ReturnsProduccionCientifica()
       throws Exception {
     String roles = "PRC-VAL-E";
     final Long produccionCientificaId = 2L;

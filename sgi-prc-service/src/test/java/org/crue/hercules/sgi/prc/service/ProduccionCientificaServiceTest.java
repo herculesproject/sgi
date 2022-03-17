@@ -18,7 +18,7 @@ import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundExceptio
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica.EpigrafeCVN;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ProduccionCientificaServiceTest
  */
 @Import({ ProduccionCientificaService.class, ApplicationContextSupport.class })
-public class ProduccionCientificaServiceTest extends BaseServiceTest {
+class ProduccionCientificaServiceTest extends BaseServiceTest {
 
   @MockBean
   private ProduccionCientificaRepository repository;
@@ -67,7 +67,7 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAll_ReturnsPage() {
+  void findAll_ReturnsPage() {
     // given: Una lista con 37 ProduccionCientifica
     List<ProduccionCientifica> produccionCientificaes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -109,7 +109,7 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsProduccionCientifica() {
+  void findById_ReturnsProduccionCientifica() {
     // given: Un ProduccionCientifica con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado))
@@ -126,7 +126,7 @@ public class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsProduccionCientificaNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProduccionCientificaNotFoundException() throws Exception {
     // given: Ningun ProduccionCientifica con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());

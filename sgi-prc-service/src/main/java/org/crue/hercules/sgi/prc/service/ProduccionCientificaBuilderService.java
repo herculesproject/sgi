@@ -3,11 +3,14 @@ package org.crue.hercules.sgi.prc.service;
 import java.time.Instant;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.Acreditacion;
 import org.crue.hercules.sgi.prc.model.Autor;
 import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
+import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.Proyecto;
@@ -21,6 +24,7 @@ import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
 import org.springframework.stereotype.Service;
@@ -38,10 +42,11 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 @RequiredArgsConstructor
-public class ProduccionCientificaCloneService {
+public class ProduccionCientificaBuilderService {
 
   private final ProduccionCientificaRepository produccionCientificaRepository;
   private final EstadoProduccionCientificaRepository estadoProduccionCientificaRepository;
+  private final PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository;
   private final PuntuacionBaremoItemRepository puntuacionBaremoItemRepository;
   private final PuntuacionItemInvestigadorRepository puntuacionItemInvestigadorRepository;
   private final CampoProduccionCientificaRepository campoProduccionCientificaRepository;
@@ -52,15 +57,12 @@ public class ProduccionCientificaCloneService {
   private final AutorGrupoRepository autorGrupoRepository;
   private final ProyectoRepository proyectoRepository;
 
-  // TODO ver si la pasamos a ProduccionCientificaService, se deja aqui de momento
-  // para que no haya conflicto entre tareas
-
   @Transactional
   public ProduccionCientifica cloneProduccionCientificaAndRelations(Long convocatoriaBaremacionId,
-      Long baremoId, ProduccionCientifica produccionCientifica) {
+      ProduccionCientifica produccionCientifica) {
 
     log.debug(
-        "cloneProduccionCientificaAndRelations(convocatoriaBaremacionId, baremoId, produccionCientifica) - start");
+        "cloneProduccionCientificaAndRelations(convocatoriaBaremacionId, produccionCientifica) - start");
 
     ProduccionCientifica produccionCientificaCreate = cloneProduccionCientificaAndEstado(convocatoriaBaremacionId,
         produccionCientifica);
@@ -75,15 +77,15 @@ public class ProduccionCientificaCloneService {
         .forEach(autor -> cloneAutoresAndGrupos(autor, produccionCientificaIdNew));
 
     proyectoRepository.findAllByProduccionCientificaId(produccionCientificaId).stream()
-        .forEach(proyecto -> cloneProyectos(proyecto, produccionCientificaIdNew));
+        .forEach(proyecto -> addProyecto(proyecto, produccionCientificaIdNew));
 
     acreditacionRepository.findAllByProduccionCientificaId(produccionCientificaId).stream()
-        .forEach(acreditacion -> cloneAcreditaciones(acreditacion, produccionCientificaIdNew));
+        .forEach(acreditacion -> addAcreditacion(acreditacion, produccionCientificaIdNew));
 
     indiceImpactoRepository.findAllByProduccionCientificaId(produccionCientificaId).stream()
-        .forEach(indiceImpacto -> cloneIndicesImpacto(indiceImpacto, produccionCientificaIdNew));
+        .forEach(indiceImpacto -> addIndiceImpacto(indiceImpacto, produccionCientificaIdNew));
 
-    log.debug("cloneProduccionCientificaAndRelations(convocatoriaBaremacionId, baremoId, produccionCientifica) - end");
+    log.debug("cloneProduccionCientificaAndRelations(convocatoriaBaremacionId, produccionCientifica) - end");
 
     return produccionCientificaCreate;
   }
@@ -100,15 +102,10 @@ public class ProduccionCientificaCloneService {
 
     Long produccionCientificaId = produccionCientificaCreate.getId();
 
-    EstadoProduccionCientifica estadoProduccionCientifica = EstadoProduccionCientifica.builder()
-        .produccionCientificaId(produccionCientificaId)
-        .estado(produccionCientifica.getEstado().getEstado())
-        .build();
-    estadoProduccionCientifica.setFecha(Instant.now());
-    estadoProduccionCientifica = estadoProduccionCientificaRepository.save(estadoProduccionCientifica);
+    EstadoProduccionCientifica estadoProduccionCientifica = addEstado(produccionCientificaId,
+        produccionCientifica.getEstado().getEstado());
 
-    produccionCientificaCreate
-        .setEstado(EstadoProduccionCientifica.builder().id(estadoProduccionCientifica.getId()).build());
+    produccionCientificaCreate.setEstado(estadoProduccionCientifica);
     produccionCientificaRepository.save(produccionCientificaCreate);
     return produccionCientificaCreate;
   }
@@ -124,19 +121,58 @@ public class ProduccionCientificaCloneService {
 
     Long campoProduccionCientificaCreateId = campoProduccionCientificaCreate.getId();
     valorCampoRepository.findAllByCampoProduccionCientificaId(campo.getId()).stream()
-        .forEach(valorCampo -> cloneValores(valorCampo, campoProduccionCientificaCreateId));
+        .forEach(valorCampo -> addValorCampo(campoProduccionCientificaCreateId, valorCampo.getValor(),
+            valorCampo.getOrden()));
 
     return campoProduccionCientificaCreate;
   }
 
-  private ValorCampo cloneValores(ValorCampo valorCampo, Long campoProduccionCientificaId) {
-    ValorCampo valorCampoCreate = ValorCampo.builder()
-        .valor(valorCampo.getValor())
-        .orden(valorCampo.getOrden())
-        .campoProduccionCientificaId(campoProduccionCientificaId)
+  public Long addProduccionCientifaAndEstado(ProduccionCientifica produccionCientifica,
+      TipoEstadoProduccion tipoEstadoProduccion) {
+    ProduccionCientifica produccionCientificaCreate = produccionCientificaRepository.save(produccionCientifica);
+
+    EstadoProduccionCientifica estadoProduccionCientifica = addEstado(
+        produccionCientificaCreate.getId(), tipoEstadoProduccion);
+
+    produccionCientificaCreate.setEstado(estadoProduccionCientifica);
+
+    return produccionCientificaRepository.save(produccionCientificaCreate).getId();
+  }
+
+  public EstadoProduccionCientifica addEstado(Long produccionCientificaId, TipoEstadoProduccion tipoEstado) {
+    EstadoProduccionCientifica estadoProduccionCientifica = EstadoProduccionCientifica.builder()
+        .produccionCientificaId(produccionCientificaId)
+        .estado(tipoEstado)
+        .build();
+    estadoProduccionCientifica.setFecha(Instant.now());
+    return estadoProduccionCientificaRepository.save(estadoProduccionCientifica);
+  }
+
+  public CampoProduccionCientifica addCampoProduccionCientifica(Long produccionCientificaId, CodigoCVN codigoCVN) {
+    CampoProduccionCientifica campoProduccionCientifica = CampoProduccionCientifica.builder()
+        .produccionCientificaId(produccionCientificaId)
+        .codigoCVN(codigoCVN)
         .build();
 
-    return valorCampoRepository.save(valorCampoCreate);
+    return campoProduccionCientificaRepository.save(campoProduccionCientifica);
+  }
+
+  public CampoProduccionCientifica addCampoProduccionCientificaAndValor(Long produccionCientificaId,
+      CodigoCVN codigoCVN, String valor) {
+    CampoProduccionCientifica campoProduccionCientifica = addCampoProduccionCientifica(produccionCientificaId,
+        codigoCVN);
+    addValorCampo(campoProduccionCientifica.getId(), valor, 1);
+    return campoProduccionCientifica;
+  }
+
+  public void addValorCampo(Long campoProduccionCientificaId, String valor, Integer orden) {
+    ValorCampo valorCampoCreate = ValorCampo.builder()
+        .campoProduccionCientificaId(campoProduccionCientificaId)
+        .orden(orden)
+        .valor(valor)
+        .build();
+
+    valorCampoRepository.save(valorCampoCreate);
   }
 
   private Autor cloneAutoresAndGrupos(Autor autor, Long produccionCientificaId) {
@@ -149,19 +185,35 @@ public class ProduccionCientificaCloneService {
         .apellidos(autor.getApellidos())
         .orcidId(autor.getOrcidId())
         .orden(autor.getOrden())
-        .ip(autor.getIp())
+        .fechaInicio(autor.getFechaInicio())
+        .fechaFin(autor.getFechaFin())
+        .ip(ObjectUtils.defaultIfNull(autor.getIp(), Boolean.FALSE))
         .build();
 
     autorCreate = autorRepository.save(autorCreate);
     Long autorCreateId = autorCreate.getId();
 
     autorGrupoRepository.findAllByAutorId(autor.getId()).stream()
-        .forEach(autorGrupo -> cloneAutoresGrupos(autorGrupo, autorCreateId));
+        .forEach(autorGrupo -> addAutorGrupo(autorGrupo, autorCreateId));
 
     return autorCreate;
   }
 
-  private AutorGrupo cloneAutoresGrupos(AutorGrupo autorGrupo, Long autorId) {
+  public Autor addAutor(Autor autorNew) {
+    return autorRepository.save(autorNew);
+  }
+
+  public Autor addAutorByPersonaRefAndIp(Long produccionCientificaId, String personaRef, Boolean ip) {
+    Autor autorNew = Autor.builder()
+        .produccionCientificaId(produccionCientificaId)
+        .personaRef(personaRef)
+        .ip(ObjectUtils.defaultIfNull(ip, Boolean.FALSE))
+        .build();
+
+    return autorRepository.save(autorNew);
+  }
+
+  public AutorGrupo addAutorGrupo(AutorGrupo autorGrupo, Long autorId) {
     AutorGrupo autorGrupoCreate = AutorGrupo.builder()
         .autorId(autorId)
         .estado(autorGrupo.getEstado())
@@ -171,7 +223,7 @@ public class ProduccionCientificaCloneService {
     return autorGrupoRepository.save(autorGrupoCreate);
   }
 
-  private Proyecto cloneProyectos(Proyecto proyecto, Long produccionCientificaId) {
+  public Proyecto addProyecto(Proyecto proyecto, Long produccionCientificaId) {
     Proyecto proyectoCreate = Proyecto.builder()
         .proyectoRef(proyecto.getProyectoRef())
         .produccionCientificaId(produccionCientificaId)
@@ -180,7 +232,7 @@ public class ProduccionCientificaCloneService {
     return proyectoRepository.save(proyectoCreate);
   }
 
-  private Acreditacion cloneAcreditaciones(Acreditacion acreditacion, Long produccionCientificaId) {
+  public Acreditacion addAcreditacion(Acreditacion acreditacion, Long produccionCientificaId) {
     Acreditacion acreditacionCreate = Acreditacion.builder()
         .url(acreditacion.getUrl())
         .documentoRef(acreditacion.getDocumentoRef())
@@ -190,7 +242,7 @@ public class ProduccionCientificaCloneService {
     return acreditacionRepository.save(acreditacionCreate);
   }
 
-  private IndiceImpacto cloneIndicesImpacto(IndiceImpacto indiceImpacto, Long produccionCientificaId) {
+  public IndiceImpacto addIndiceImpacto(IndiceImpacto indiceImpacto, Long produccionCientificaId) {
     IndiceImpacto indiceImpactoCreate = IndiceImpacto.builder()
         .produccionCientificaId(produccionCientificaId)
         .posicionPublicacion(indiceImpacto.getPosicionPublicacion())
@@ -222,6 +274,9 @@ public class ProduccionCientificaCloneService {
         .forEach(entity -> autorGrupoRepository.deleteInBulkByAutorId(entity.getId()));
     autorRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
 
+    puntuacionGrupoInvestigadorRepository.updatePuntuacionItemInvestigadorNull(produccionCientificaId);
+
+    puntuacionItemInvestigadorRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
     puntuacionBaremoItemRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
     puntuacionItemInvestigadorRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
     acreditacionRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);

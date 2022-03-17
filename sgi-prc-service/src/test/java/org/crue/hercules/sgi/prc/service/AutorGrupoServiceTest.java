@@ -36,10 +36,9 @@ import org.springframework.data.jpa.domain.Specification;
 @Import({ AutorGrupoService.class, ApplicationContextSupport.class })
 public class AutorGrupoServiceTest extends BaseServiceTest {
 
-  private static final String GRUPO_REF_PREFIX = "Grupo-ref-";
   private static final Long DEFAULT_DATA_AUTOR_ID = 1L;
   private static final TipoEstadoProduccion DEFAULT_DATA_ESTADO = TipoEstadoProduccion.PENDIENTE;
-  private static final String DEFAULT_DATA_GRUPO_REF = GRUPO_REF_PREFIX + "default";
+  private static final Long DEFAULT_DATA_GRUPO_REF = 1L;
 
   @MockBean
   private AutorGrupoRepository repository;
@@ -152,7 +151,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
     // given: Una lista con 37 AutorGrupo
     List<AutorGrupo> autorGrupos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      autorGrupos.add(generarMockAutorGrupo(i, String.format("%03d", i)));
+      autorGrupos.add(generarMockAutorGrupo(i, i));
     }
 
     BDDMockito.given(
@@ -185,7 +184,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
     for (int i = 31; i <= 37; i++) {
       AutorGrupo autorGrupo = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(autorGrupo.getGrupoRef()).as("getGrupoRef")
-          .isEqualTo(GRUPO_REF_PREFIX + String.format("%03d", i));
+          .isEqualTo(i);
     }
   }
 
@@ -249,9 +248,9 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
     List<AutorGrupo> autorGrupos = new ArrayList<>();
     for (long i = 1; i <= 7; i++) {
       if (i % 2 == 0) {
-        autorGrupos.add(generarMockAutorGrupo(i, autorId, String.format("%03d", i)));
+        autorGrupos.add(generarMockAutorGrupo(i, autorId, i));
       } else {
-        autorGrupos.add(generarMockAutorGrupo(i, 2L, String.format("%03d", i)));
+        autorGrupos.add(generarMockAutorGrupo(i, 2L, i));
       }
     }
 
@@ -285,12 +284,12 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
     Assertions.assertThat(numeroRegistrosDeleted).as("numeroRegistrosDeleted").isEqualTo(numeroRegistrosToDelete);
   }
 
-  private AutorGrupo generarMockAutorGrupo(Long id, Long autorId, String grupoRefId) {
-    return this.generarMockAutorGrupo(id, autorId, DEFAULT_DATA_ESTADO, GRUPO_REF_PREFIX + grupoRefId);
+  private AutorGrupo generarMockAutorGrupo(Long id, Long autorId, Long grupoRefId) {
+    return this.generarMockAutorGrupo(id, autorId, DEFAULT_DATA_ESTADO, grupoRefId);
   }
 
-  private AutorGrupo generarMockAutorGrupo(Long id, String grupoRefId) {
-    return this.generarMockAutorGrupo(id, DEFAULT_DATA_AUTOR_ID, DEFAULT_DATA_ESTADO, GRUPO_REF_PREFIX + grupoRefId);
+  private AutorGrupo generarMockAutorGrupo(Long id, Long grupoRefId) {
+    return this.generarMockAutorGrupo(id, DEFAULT_DATA_AUTOR_ID, DEFAULT_DATA_ESTADO, grupoRefId);
   }
 
   private AutorGrupo generarMockAutorGrupo(Long id) {
@@ -298,7 +297,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   private AutorGrupo generarMockAutorGrupo(
-      Long id, Long autorId, TipoEstadoProduccion estado, String grupoRef) {
+      Long id, Long autorId, TipoEstadoProduccion estado, Long grupoRef) {
     return AutorGrupo.builder()
         .id(id)
         .autorId(autorId)
