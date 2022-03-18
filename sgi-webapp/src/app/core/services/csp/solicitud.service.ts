@@ -37,6 +37,7 @@ import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
+import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudPalabraClave } from '@core/models/csp/solicitud-palabra-clave';
@@ -65,6 +66,8 @@ import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academi
 import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
 import { ISolicitudHitoResponse } from './solicitud-hito/solicitud-hito-response';
 import { SOLICITUD_HITO_RESPONSE_CONVERTER } from './solicitud-hito/solicitud-hito-response.converter';
+import { ISolicitudGrupoResponse } from './solicitud-grupo/solicitud-grupo-response';
+import { SOLICITUD_GRUPO_RESPONSE_CONVERTER } from './solicitud-grupo/solicitud-grupo-response-converter';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
 import { SOLICITUD_PALABRACLAVE_REQUEST_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-request.converter';
 import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave/solicitud-palabra-clave-response';
@@ -618,4 +621,14 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     return this.http.get<string>(`${this.endpointUrl}/${solicitudId}/codigo-registro-interno`);
   }
 
+
+  findSolicitudGrupo(id: number): Observable<ISolicitudGrupo> {
+    const endpointUrl = `${this.endpointUrl}/${id}/solcitudgrupo`;
+    return this.http.get<ISolicitudGrupoResponse>(endpointUrl)
+      .pipe(
+        map(response => {
+          return SOLICITUD_GRUPO_RESPONSE_CONVERTER.toTarget(response);
+        })
+      );
+  }
 }

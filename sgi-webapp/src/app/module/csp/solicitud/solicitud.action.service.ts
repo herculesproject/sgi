@@ -15,8 +15,10 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
+import { SolicitudGrupoService } from '@core/services/csp/solicitud-grupo/solicitud-grupo.service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudProyectoAreaConocimientoService } from '@core/services/csp/solicitud-proyecto-area-conocimiento.service';
@@ -219,7 +221,9 @@ export class SolicitudActionService extends ActionService {
     rolProyectoService: RolProyectoService,
     private translate: TranslateService,
     datosPersonalesService: DatosPersonalesService,
-    palabraClaveService: PalabraClaveService
+    palabraClaveService: PalabraClaveService,
+    solicitudGrupoService: SolicitudGrupoService,
+    grupoService: GrupoService
   ) {
     super();
 
@@ -246,6 +250,8 @@ export class SolicitudActionService extends ActionService {
       personaService,
       solicitudModalidadService,
       unidadGestionService,
+      solicitudGrupoService,
+      grupoService,
       authService,
       this.readonly,
       this.isInvestigador

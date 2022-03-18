@@ -1,15 +1,20 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { TipoSolicitudGrupo } from '@core/models/csp/solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { Estado } from '@core/models/csp/estado-solicitud';
+import { IGrupo } from '@core/models/csp/grupo';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { SolicitudGrupoService } from '@core/services/csp/solicitud-grupo/solicitud-grupo.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
@@ -34,7 +39,8 @@ export interface SolicitudDatosGenerales extends ISolicitud {
 
 export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
-  private solicitud: ISolicitud;
+  public solicitud: ISolicitud;
+  public grupo: IGrupo;
 
   entidadesConvocantes = [] as IConvocatoriaEntidadConvocante[];
 
@@ -55,6 +61,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private personaService: PersonaService,
     private solicitudModalidadService: SolicitudModalidadService,
     private unidadGestionService: UnidadGestionService,
+    private solicitudGrupoService: SolicitudGrupoService,
+    private grupoService: GrupoService,
     private authService: SgiAuthService,
     public readonly: boolean,
     public isInvestigador: boolean
@@ -102,13 +110,24 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         }
         return of(solicitud);
       }),
+      switchMap(solicitud => {
+        if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
+          return this.service.findSolicitudGrupo(solicitud.id).pipe(
+            switchMap(solicitudGrupo => {
+              return this.grupoService.findById(solicitudGrupo.grupo.id).pipe(
+                map(grupo => {
+                  this.grupo = grupo;
+                  return solicitud;
+                })
+              );
+            })
+          );
+        } else {
+          return of(solicitud);
+        }
+      }),
       map((solicitud) => {
-        const estadosComentarioNoVisble = [
-          Estado.BORRADOR
-        ];
-
-        this.showComentariosEstado$.next(!estadosComentarioNoVisble.includes(solicitud.estado.estado));
-
+        this.showComentariosEstado$.next(solicitud.estado.comentario != null && solicitud.estado.comentario.length > 0);
         return solicitud;
       }),
       catchError((error) => {
@@ -127,7 +146,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         convocatoria: new FormControl({ value: '', disabled: true }),
         codigoExterno: new FormControl({ value: '', disabled: true }, Validators.maxLength(50)),
         observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),
-        comentariosEstado: new FormControl({ value: '', disabled: true })
+        comentariosEstado: new FormControl({ value: '', disabled: true }),
+        tipoSolicitudGrupo: new FormControl({ value: '', disabled: true }, Validators.required),
+        grupo: new FormControl({ value: null, disabled: true }, Validators.required),
       });
 
       this.subscriptions.push(
@@ -146,6 +167,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         comentariosEstado: new FormControl({ value: '', disabled: true }),
         convocatoriaExterna: new FormControl(''),
         formularioSolicitud: new FormControl({ value: FormularioSolicitud.PROYECTO, disabled: this.isEdit() }),
+        tipoSolicitudGrupo: new FormControl({ value: '', disabled: this.isEdit() }, Validators.required),
+        grupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
         unidadGestion: new FormControl(null, Validators.required),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
         codigoRegistro: new FormControl({ value: '', disabled: true }),
@@ -169,6 +192,40 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
           (convocatoria) => {
             this.onConvocatoriaChange(convocatoria);
             this.convocatoria$.next(convocatoria);
+          }
+        )
+      );
+
+      this.subscriptions.push(
+        form.controls.formularioSolicitud.valueChanges.subscribe(
+          (tipoFormulario) => {
+            if (tipoFormulario === FormularioSolicitud.GRUPO && !this.isEdit()) {
+              form.controls.tipoSolicitudGrupo.enable();
+            } else {
+              form.controls.tipoSolicitudGrupo.disable();
+            }
+          }
+        )
+      );
+
+      this.subscriptions.push(
+        form.controls.tipoSolicitudGrupo.valueChanges.subscribe(
+          (tipoSolicitudGrupo) => {
+            if (tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
+              form.controls.grupo.enable();
+            } else {
+              form.controls.grupo.disable();
+            }
+          }
+        )
+      );
+
+      this.subscriptions.push(
+        form.controls.solicitante.valueChanges.subscribe(
+          (solicitante) => {
+            this.solicitud.solicitante = solicitante;
+            form.controls.grupo.enable();
+            this.getFormGroup().controls.grupo.setValue(null);
           }
         )
       );
@@ -198,6 +255,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         codigoExterno: solicitud?.codigoExterno,
         observaciones: solicitud?.observaciones ?? '',
         comentariosEstado: solicitud?.estado?.comentario,
+        tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
       };
     } else {
       return {
@@ -208,7 +266,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         convocatoria: solicitud.convocatoria,
         convocatoriaExterna: solicitud.convocatoriaExterna,
         formularioSolicitud: solicitud.formularioSolicitud,
+        tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
         unidadGestion: solicitud.unidadGestion,
+        grupo: this.grupo,
         codigoRegistro: solicitud.codigoRegistroInterno,
         codigoExterno: solicitud.codigoExterno,
         observaciones: solicitud.observaciones
@@ -235,6 +295,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.solicitud.convocatoriaId = form.convocatoria.value?.id;
       this.solicitud.convocatoriaExterna = form.convocatoriaExterna.value;
       this.solicitud.formularioSolicitud = form.formularioSolicitud.value;
+      this.solicitud.tipoSolicitudGrupo = form.tipoSolicitudGrupo.value;
       this.solicitud.unidadGestion = form.unidadGestion.value;
       this.solicitud.codigoExterno = form.codigoExterno.value;
       this.solicitud.observaciones = form.observaciones.value;
@@ -257,6 +318,19 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     return obs.pipe(
       tap((value) => {
         this.solicitud = value;
+      }),
+      switchMap((solicitud) => {
+        if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
+          const solicitudGrupo: ISolicitudGrupo = {} as ISolicitudGrupo;
+          solicitudGrupo.grupo = this.getFormGroup().controls.grupo.value;
+          solicitudGrupo.solicitud = solicitud;
+          return this.createSolicitudGrupo(solicitudGrupo).pipe(
+            map(_ => solicitud)
+          );
+        } else {
+          return of(solicitud);
+        }
+
       }),
       switchMap((solicitud) => {
         return merge(
@@ -642,6 +716,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
     this.convocatoriaRequired = !convocatoriaExternaSolicitud;
     this.convocatoriaExternaRequired = !convocatoriaSolicitud;
+  }
+
+  private createSolicitudGrupo(solicitudGrupo: ISolicitudGrupo): Observable<ISolicitudGrupo> {
+    return this.solicitudGrupoService.create(solicitudGrupo);
   }
 
 }

@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 import { SearchGrupoModalComponent } from './dialog/search-grupo.component';
 
 @Component({
-  selector: 'sgi-select-grupo',
+  selector: 'sgi-select-dialog-grupo',
   templateUrl: '../../../../core/component/select-dialog/select-dialog.component.html',
   styleUrls: ['../../../../core/component/select-dialog/select-dialog.component.scss'],
   // tslint:disable-next-line: no-inputs-metadata-property
@@ -33,11 +33,14 @@ import { SearchGrupoModalComponent } from './dialog/search-grupo.component';
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SelectGrupoComponent
+      useExisting: SelectDialogGrupoComponent
     }
   ],
 })
-export class SelectGrupoComponent extends SelectDialogComponent<SearchGrupoModalComponent, IGrupo> {
+export class SelectDialogGrupoComponent extends SelectDialogComponent<SearchGrupoModalComponent, IGrupo> {
+
+  @Input()
+  personaRef: number;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,

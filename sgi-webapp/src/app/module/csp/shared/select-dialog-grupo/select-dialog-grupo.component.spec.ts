@@ -7,11 +7,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SelectGrupoComponent } from './select-grupo.component';
+import { SelectDialogGrupoComponent } from './select-dialog-grupo.component';
 
-describe('SelectGrupoComponent', () => {
-  let component: SelectGrupoComponent;
-  let fixture: ComponentFixture<SelectGrupoComponent>;
+describe('SelectDialogGrupoComponent', () => {
+  let component: SelectDialogGrupoComponent;
+  let fixture: ComponentFixture<SelectDialogGrupoComponent>;
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
@@ -36,12 +36,12 @@ describe('SelectGrupoComponent', () => {
           useValue: mockDialogRef,
         }
       ],
-      declarations: [SelectGrupoComponent],
+      declarations: [SelectDialogGrupoComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectGrupoComponent);
+    fixture = TestBed.createComponent(SelectDialogGrupoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

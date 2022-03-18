@@ -8,7 +8,7 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
-import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitud, TipoSolicitudGrupo, TIPO_SOLICITUD_GRUPO_MAP } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -30,6 +30,8 @@ const SOLICITUD_TITULO_KEY = marker('csp.solicitud.titulo');
 const SOLICITUD_FORMULARIO_SOLICITUD_KEY = marker('csp.solicitud.tipo-formulario');
 const SOLICITUD_CONVOCATORIA_KEY = marker('csp.solicitud.convocatoria');
 const SOLICITUD_SOLICITANTE_KEY = marker('csp.solicitud.solicitante');
+const SOLICITUD_TIPO_SOLICITUD_GRUPO_KEY = marker('csp.solicitud.tipo-solicitud-grupo');
+const SOLICITUD_GRUPO_KEY = marker('csp.solicitud.grupo');
 
 @Component({
   selector: 'sgi-solicitud-datos-generales',
@@ -57,8 +59,10 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   msgParamUnidadGestionEntity = {};
   msgParamTituloEntity = {};
   msgParamFormularioSolicitudEntity = {};
+  msgParamTipoSolicitudGrupoEntity = {};
   msgParamConvocatoriaEntity = {};
   msgParamSolicitanteEntity = {};
+  msgParamGrupoEntity = {};
 
   dataSourceEntidadesConvocantes: MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -72,6 +76,14 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   get FORMULARIO_SOLICITUD_MAP() {
     return FORMULARIO_SOLICITUD_MAP;
+  }
+
+  get TIPO_SOLICITUD_GRUPO_MAP() {
+    return TIPO_SOLICITUD_GRUPO_MAP;
+  }
+
+  get TipoSolicitudGrupo() {
+    return TipoSolicitudGrupo;
   }
 
   get ESTADO_MAP() {
@@ -197,6 +209,18 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       SOLICITUD_FORMULARIO_SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFormularioSolicitudEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_TIPO_SOLICITUD_GRUPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoSolicitudGrupoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_GRUPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamGrupoEntity =
       { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
