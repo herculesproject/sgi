@@ -9,9 +9,13 @@ import { ObraArtisticaRoutingModule } from './obra-artistica-routing.module';
 import { ObraArtisticaListadoComponent } from './obra-artistica-listado/obra-artistica-listado.component';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { PrcSharedModule } from '../shared/prc-shared.module';
+import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
+import { ObraArtisticaEditarComponent } from './obra-artistica-editar/obra-artistica-editar.component';
+import { ObraArtisticaDatosGeneralesComponent } from './obra-artistica-formulario/obra-artistica-datos-generales/obra-artistica-datos-generales.component';
 
 @NgModule({
-  declarations: [ObraArtisticaListadoComponent],
+  declarations: [ObraArtisticaListadoComponent, ObraArtisticaEditarComponent, ObraArtisticaDatosGeneralesComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -23,6 +27,10 @@ import { CspSharedModule } from '../../csp/shared/csp-shared.module';
     SgiAuthModule,
     SgpSharedModule,
     CspSharedModule,
+    PrcSharedModule,
+  ],
+  providers: [
+    ProduccionCientificaResolver
   ]
 })
 export class ObraArtisticaModule { }
