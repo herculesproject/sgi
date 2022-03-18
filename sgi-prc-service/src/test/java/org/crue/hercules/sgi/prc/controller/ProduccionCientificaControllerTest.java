@@ -16,6 +16,8 @@ import org.crue.hercules.sgi.prc.dto.CongresoOutput;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
+import org.crue.hercules.sgi.prc.dto.ObraArtisticaOutput;
+import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
@@ -75,6 +77,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   private static final String PATH_PUBLICACIONES = ProduccionCientificaController.PATH_PUBLICACIONES;
   private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
   private static final String PATH_CONGRESOS = ProduccionCientificaController.PATH_CONGRESOS;
+  private static final String PATH_OBRAS_ARTISTICAS = ProduccionCientificaController.PATH_OBRAS_ARTISTICAS;
   private static final String PATH_PARAMETER_VALIDAR = "/validar";
   private static final String PATH_PARAMETER_RECHAZAR = "/rechazar";
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
@@ -334,6 +337,93 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     // when: Get page=3 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_CONGRESOS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllObrasArtisticas_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ObraArtisticaResumen
+    List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      obrasArtisticas.add(generarMockObraArtisticaResumen(i, String.valueOf(i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllObrasArtisticas(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > obrasArtisticas.size() ? obrasArtisticas.size() : toIndex;
+          List<ObraArtisticaResumen> content = obrasArtisticas.subList(fromIndex, toIndex);
+          Page<ObraArtisticaResumen> pageResponse = new PageImpl<>(content, pageable,
+              obrasArtisticas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_OBRAS_ARTISTICAS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los ObraArtisticaOutput del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$",
+            Matchers.hasSize(7)))
+        .andReturn();
+
+    List<ObraArtisticaOutput> obrasArtisticasResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ObraArtisticaOutput>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ObraArtisticaOutput congreso = obrasArtisticasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(congreso.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  public void findAllObrasArtisticas_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 ObraArtisticaResumen
+    List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllObrasArtisticas(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<ObraArtisticaResumen> pageResponse = new PageImpl<>(obrasArtisticas, pageable,
+              obrasArtisticas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_OBRAS_ARTISTICAS)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
                 page)
             .header("X-Page-Size", pageSize)
@@ -923,6 +1013,17 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     congreso.setTituloTrabajo("Titulo-trabajo" + idRef);
 
     return congreso;
+  }
+
+  private ObraArtisticaResumen generarMockObraArtisticaResumen(Long id, String idRef) {
+    ObraArtisticaResumen obraArtistica = new ObraArtisticaResumen();
+    obraArtistica.setId(id);
+    obraArtistica.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    obraArtistica.setEpigrafeCVN(EpigrafeCVN.E050_020_030_000);
+    obraArtistica.setDescripcion("Descripcion-" + idRef);
+    obraArtistica.setFechaInicio(Instant.now());
+
+    return obraArtistica;
   }
 
   private IndiceImpacto generarMockIndiceImpacto(Long id, Long produccionCientificaId) {

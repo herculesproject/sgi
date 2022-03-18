@@ -14,25 +14,23 @@ import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import io.github.perplexhub.rsql.RSQLOperators;
 
-public class CongresoPredicateResolver extends ProduccionCientificaPredicateResolver {
+public class ObraArtisticaPredicateResolver extends ProduccionCientificaPredicateResolver {
 
   public enum Property {
-    /* Fecha celebración */
-    FECHA_CELEBRACION("fechaCelebracion"),
-    /* Fecha celebración desde */
-    FECHA_CELEBRACION_DESDE("fechaCelebracionDesde"),
-    /* Fecha celebración hasta */
-    FECHA_CELEBRACION_HASTA("fechaCelebracionHasta"),
+    /* Descripción de la exposición */
+    DESCRIPCION("descripcion"),
+    /* Fecha inicio */
+    FECHA_INICIO("fechaInicio"),
+    /* Fecha inicio desde */
+    FECHA_INICIO_DESDE("fechaInicioDesde"),
+    /* Fecha inicio hasta */
+    FECHA_INICIO_HASTA("fechaInicioHasta"),
     /* Grupo investigación */
     GRUPO_INVESTIGACION("grupoInvestigacion"),
     /* Investigador */
     INVESTIGADOR("investigador"),
-    /* Nombre del congreso */
-    NOMBRE_CONGRESO("nombreCongreso"),
-    /* Tipo de evento */
-    TIPO_EVENTO("tipoEvento"),
-    /* Título de trabajo */
-    TITULO_TRABAJO("tituloTrabajo");
+    /* Nombre de la exposición */
+    NOMBRE_EXPOSICION("nombreExposicion");
 
     private String code;
 
@@ -54,14 +52,34 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
     }
   }
 
-  private CongresoPredicateResolver() {
+  private ObraArtisticaPredicateResolver() {
   }
 
-  public static CongresoPredicateResolver getInstance() {
-    return new CongresoPredicateResolver();
+  public static ObraArtisticaPredicateResolver getInstance() {
+    return new ObraArtisticaPredicateResolver();
   }
 
-  private Predicate buildByFechaCelebracionDesde(ComparisonNode node, Root<ProduccionCientifica> root,
+  private Predicate buildByDescripcion(ComparisonNode node, Root<ProduccionCientifica> root,
+      CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    ComparisonOperator operator = node.getOperator();
+    if (!(operator.equals(RSQLOperators.IGNORE_CASE_LIKE))) {
+      // Unsupported Operator
+      throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator + FOR + node.getSelector());
+    }
+    if (node.getArguments().size() != 1) {
+      // Bad number of arguments
+      throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
+    }
+
+    String descripcion = "%" + node.getArguments().get(0) + "%";
+
+    Subquery<String> queryDescripcion = buildSubqueryValorCampoProduccionCientifica(cb,
+        query, root.get(ProduccionCientifica_.id), CodigoCVN.E050_020_030_010, operator, descripcion);
+    return cb.and(cb.exists(queryDescripcion));
+  }
+
+  private Predicate buildByFechaInicioDesde(ComparisonNode node, Root<ProduccionCientifica> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!(operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL))) {
@@ -74,14 +92,14 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String fechaCelebracionDesde = node.getArguments().get(0);
+    String fechaInicioDesde = node.getArguments().get(0);
 
-    Subquery<String> queryFechaCelebracionDesde = buildSubqueryValorCampoProduccionCientifica(
-        cb, query, root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_020_190, operator, fechaCelebracionDesde);
-    return cb.and(cb.exists(queryFechaCelebracionDesde));
+    Subquery<String> queryFechaInicioDesde = buildSubqueryValorCampoProduccionCientifica(
+        cb, query, root.get(ProduccionCientifica_.id), CodigoCVN.E050_020_030_120, operator, fechaInicioDesde);
+    return cb.and(cb.exists(queryFechaInicioDesde));
   }
 
-  private Predicate buildByFechaCelebracionHasta(ComparisonNode node, Root<ProduccionCientifica> root,
+  private Predicate buildByFechaInicioHasta(ComparisonNode node, Root<ProduccionCientifica> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!(operator.equals(RSQLOperators.LESS_THAN_OR_EQUAL))) {
@@ -93,11 +111,11 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String fechaCelebracionHasta = node.getArguments().get(0);
+    String fechaInicioHasta = node.getArguments().get(0);
 
-    Subquery<String> queryFechaCelebracionHasta = buildSubqueryValorCampoProduccionCientifica(
-        cb, query, root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_020_190, operator, fechaCelebracionHasta);
-    return cb.and(cb.exists(queryFechaCelebracionHasta));
+    Subquery<String> queryFechaInicioHasta = buildSubqueryValorCampoProduccionCientifica(
+        cb, query, root.get(ProduccionCientifica_.id), CodigoCVN.E050_020_030_120, operator, fechaInicioHasta);
+    return cb.and(cb.exists(queryFechaInicioHasta));
   }
 
   private Predicate buildByGrupoInvestigacion(ComparisonNode node, Root<ProduccionCientifica> root,
@@ -139,26 +157,7 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
     return cb.and(cb.exists(queryInvestigador));
   }
 
-  private Predicate buildByNombreCongreso(ComparisonNode node, Root<ProduccionCientifica> root, CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
-    ComparisonOperator operator = node.getOperator();
-    if (!(operator.equals(RSQLOperators.IGNORE_CASE_LIKE))) {
-      // Unsupported Operator
-      throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator + FOR + node.getSelector());
-    }
-    if (node.getArguments().size() != 1) {
-      // Bad number of arguments
-      throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
-    }
-
-    String nombreCongreso = "%" + node.getArguments().get(0) + "%";
-
-    Subquery<String> queryNombreCongreso = buildSubqueryValorCampoProduccionCientifica(cb, query,
-        root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_020_100, operator, nombreCongreso);
-    return cb.and(cb.exists(queryNombreCongreso));
-  }
-
-  private Predicate buildByTipoEvento(ComparisonNode node, Root<ProduccionCientifica> root,
+  private Predicate buildByNombreExposicion(ComparisonNode node, Root<ProduccionCientifica> root,
       CriteriaQuery<?> query,
       CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
@@ -171,31 +170,11 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String tipoEvento = "%" + node.getArguments().get(0) + "%";
+    String nombreExposicion = "%" + node.getArguments().get(0) + "%";
 
-    Subquery<String> queryTipoEvento = buildSubqueryValorCampoProduccionCientifica(cb,
-        query, root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_020_010, operator, tipoEvento);
-    return cb.and(cb.exists(queryTipoEvento));
-  }
-
-  private Predicate buildByTituloTrabajo(ComparisonNode node, Root<ProduccionCientifica> root,
-      CriteriaQuery<?> query,
-      CriteriaBuilder cb) {
-    ComparisonOperator operator = node.getOperator();
-    if (!(operator.equals(RSQLOperators.IGNORE_CASE_LIKE))) {
-      // Unsupported Operator
-      throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator + FOR + node.getSelector());
-    }
-    if (node.getArguments().size() != 1) {
-      // Bad number of arguments
-      throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
-    }
-
-    String tituloTrabajo = "%" + node.getArguments().get(0) + "%";
-
-    Subquery<String> queryTituloTrabajo = buildSubqueryValorCampoProduccionCientifica(cb,
-        query, root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_020_030, operator, tituloTrabajo);
-    return cb.and(cb.exists(queryTituloTrabajo));
+    Subquery<String> queryNombreExposicion = buildSubqueryValorCampoProduccionCientifica(cb, query,
+        root.get(ProduccionCientifica_.id), CodigoCVN.E050_020_030_020, operator, nombreExposicion);
+    return cb.and(cb.exists(queryNombreExposicion));
   }
 
   @Override
@@ -210,20 +189,18 @@ public class CongresoPredicateResolver extends ProduccionCientificaPredicateReso
     Property property = Property.fromCode(node.getSelector());
     if (null != property) {
       switch (property) {
-        case FECHA_CELEBRACION_DESDE:
-          return buildByFechaCelebracionDesde(node, root, query, criteriaBuilder);
-        case FECHA_CELEBRACION_HASTA:
-          return buildByFechaCelebracionHasta(node, root, query, criteriaBuilder);
+        case DESCRIPCION:
+          return buildByDescripcion(node, root, query, criteriaBuilder);
+        case FECHA_INICIO_DESDE:
+          return buildByFechaInicioDesde(node, root, query, criteriaBuilder);
+        case FECHA_INICIO_HASTA:
+          return buildByFechaInicioHasta(node, root, query, criteriaBuilder);
         case GRUPO_INVESTIGACION:
           return buildByGrupoInvestigacion(node, root, query, criteriaBuilder);
         case INVESTIGADOR:
           return buildByInvestigador(node, root, query, criteriaBuilder);
-        case NOMBRE_CONGRESO:
-          return buildByNombreCongreso(node, root, query, criteriaBuilder);
-        case TIPO_EVENTO:
-          return buildByTipoEvento(node, root, query, criteriaBuilder);
-        case TITULO_TRABAJO:
-          return buildByTituloTrabajo(node, root, query, criteriaBuilder);
+        case NOMBRE_EXPOSICION:
+          return buildByNombreExposicion(node, root, query, criteriaBuilder);
         default:
           return null;
       }

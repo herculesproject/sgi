@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.repository.custom.CustomComiteEditorialRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomCongresoRepository;
+import org.crue.hercules.sgi.prc.repository.custom.CustomObraArtisticaRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.custom.CustomPublicacionRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public interface ProduccionCientificaRepository
     extends JpaRepository<ProduccionCientifica, Long>, JpaSpecificationExecutor<ProduccionCientifica>,
     CustomProduccionCientificaRepository, CustomPublicacionRepository, CustomComiteEditorialRepository,
-    CustomCongresoRepository {
+    CustomCongresoRepository, CustomObraArtisticaRepository {
 
   /**
    * Obtiene la entidad {@link ProduccionCientifica} con el

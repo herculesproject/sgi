@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.prc.dto.CongresoOutput;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
+import org.crue.hercules.sgi.prc.dto.ObraArtisticaOutput;
+import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaOutput.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
@@ -60,6 +62,7 @@ public class ProduccionCientificaController {
   public static final String PATH_PUBLICACIONES = "/publicaciones";
   public static final String PATH_COMITES_EDITORIALES = "/comites-editoriales";
   public static final String PATH_CONGRESOS = "/congresos";
+  public static final String PATH_OBRAS_ARTISTICAS = "/obras-artisticas";
   public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
   public static final String PATH_AUTORES = "/{id}/autores";
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
@@ -170,6 +173,45 @@ public class ProduccionCientificaController {
   private Page<CongresoOutput> convertCongresoResumen(Page<CongresoResumen> page) {
     List<CongresoOutput> content = page.getContent().stream()
         .map(congresoResumen -> convertCongresoResumen(congresoResumen))
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ObraArtisticaOutput}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging la información de la paginación.
+   * @return el listado de entidades {@link ObraArtisticaOutput} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_OBRAS_ARTISTICAS)
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  public ResponseEntity<Page<ObraArtisticaOutput>> findAllObrasArtisticas(
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllObrasArtisticas(String query, Pageable paging) - start");
+    Page<ObraArtisticaResumen> page = service.findAllObrasArtisticas(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllObrasArtisticas(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllObrasArtisticas(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertObraArtisticaResumen(page), HttpStatus.OK);
+  }
+
+  private ObraArtisticaOutput convertObraArtisticaResumen(ObraArtisticaResumen obraArtisticaResumen) {
+    ObraArtisticaOutput output = modelMapper.map(obraArtisticaResumen, ObraArtisticaOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(obraArtisticaResumen.getEstado());
+    return output;
+  }
+
+  private Page<ObraArtisticaOutput> convertObraArtisticaResumen(Page<ObraArtisticaResumen> page) {
+    List<ObraArtisticaOutput> content = page.getContent().stream()
+        .map(obraArtisticaResumen -> convertObraArtisticaResumen(obraArtisticaResumen))
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

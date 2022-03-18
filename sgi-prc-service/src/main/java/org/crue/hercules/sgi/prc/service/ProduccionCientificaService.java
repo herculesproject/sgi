@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
+import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
@@ -87,6 +88,23 @@ public class ProduccionCientificaService {
 
     Page<CongresoResumen> returnValue = repository.findAllCongresos(query, pageable);
     log.debug("findAllCongresos(String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Recupera todas las entidades {@link ObraArtisticaResumen} paginadas y/o
+   * filtradas
+   * 
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return Listado de entidades {@link ObraArtisticaResumen} paginadas y/o
+   *         filtradas.
+   */
+  public Page<ObraArtisticaResumen> findAllObrasArtisticas(String query, Pageable pageable) {
+    log.debug("findAllObrasArtisticas(String query, Pageable pageable) - start");
+
+    Page<ObraArtisticaResumen> returnValue = repository.findAllObrasArtisticas(query, pageable);
+    log.debug("findAllObrasArtisticas(String query, Pageable pageable) - end");
     return returnValue;
   }
 
