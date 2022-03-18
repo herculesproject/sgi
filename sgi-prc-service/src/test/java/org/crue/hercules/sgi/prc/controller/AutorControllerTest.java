@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * AutorControllerTest
  */
 @WebMvcTest(AutorController.class)
-public class AutorControllerTest extends BaseControllerTest {
+class AutorControllerTest extends BaseControllerTest {
 
   @MockBean
   private AutorGrupoService autorGrupoService;
@@ -48,7 +48,7 @@ public class AutorControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAcreditaciones_ReturnsPage() throws Exception {
+  void findAcreditaciones_ReturnsPage() throws Exception {
     // given: Una lista con 37 AutorGrupo para el Autor
     Long autorId = 1L;
 
@@ -107,7 +107,7 @@ public class AutorControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAcreditaciones_EmptyList_Returns204() throws Exception {
+  void findAcreditaciones_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de AutorGrupo para el Autor
     Long autorId = 1L;
     List<AutorGrupo> indicesImpacto = new ArrayList<>();

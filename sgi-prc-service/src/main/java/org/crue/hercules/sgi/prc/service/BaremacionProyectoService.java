@@ -167,6 +167,7 @@ public class BaremacionProyectoService extends BaremacionCommonService {
     return puntos;
   }
 
+  @Override
   protected List<Long> getProduccionCientificaIdsByEpigrafeCVNAndAnio(BaremacionInput baremacionInput) {
     List<Long> result = new ArrayList<>();
     Optional<ConfiguracionCampo> optFechaInicio = configuracionCampoRepository
@@ -183,6 +184,7 @@ public class BaremacionProyectoService extends BaremacionCommonService {
     return result;
   }
 
+  @Override
   protected ProduccionCientifica cloneProduccionCientifica(BaremacionInput baremacionInput) {
     Long produccionCientificaId = baremacionInput.getProduccionCientificaId();
     Long convocatoriaBaremacionId = baremacionInput.getConvocatoriaBaremacionId();
@@ -205,6 +207,7 @@ public class BaremacionProyectoService extends BaremacionCommonService {
             () -> new ProduccionCientificaNotFoundException(baremacionInput.getProduccionCientificaId().toString()));
   }
 
+  @Override
   protected void evaluateAutores(BaremacionInput baremacionInput, BigDecimal puntos, Long newProduccionCientificaId) {
     log.debug("evaluateAutores(baremacionInput, puntos, newProduccionCientificaId) - start");
 
@@ -238,9 +241,8 @@ public class BaremacionProyectoService extends BaremacionCommonService {
                 evaluatePuntuacionItemInvestigador(baremacionInputNew, puntosInvestigadorAdicional, autor);
               });
 
-      mapPuntuacionBaremo.forEach((baremo, puntosBaremo) -> {
-        savePuntacionBaremoAutores(baremacionInput, baremo, puntosBaremo);
-      });
+      mapPuntuacionBaremo
+          .forEach((baremo, puntosBaremo) -> savePuntacionBaremoAutores(baremacionInput, baremo, puntosBaremo));
     }
 
     log.debug("evaluateAutores(baremacionInput, puntos, newProduccionCientificaId) - end");

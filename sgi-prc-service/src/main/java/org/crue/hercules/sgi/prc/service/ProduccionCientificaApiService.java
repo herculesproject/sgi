@@ -1,11 +1,13 @@
 package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +36,7 @@ import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.Acreditacion;
 import org.crue.hercules.sgi.prc.model.Autor;
+import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.BaseEntity;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
@@ -47,7 +50,6 @@ import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.repository.AcreditacionRepository;
-import org.crue.hercules.sgi.prc.repository.AliasEnumeradoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorRepository;
 import org.crue.hercules.sgi.prc.repository.CampoProduccionCientificaRepository;
@@ -60,12 +62,15 @@ import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
 import org.crue.hercules.sgi.prc.repository.predicate.ProduccionCientificaPredicateResolverApi;
 import org.crue.hercules.sgi.prc.repository.specification.ConfiguracionBaremoSpecifications;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -95,7 +100,7 @@ public class ProduccionCientificaApiService {
   private final ProyectoRepository proyectoRepository;
   private final ConfiguracionCampoRepository configuracionCampoRepository;
   private final ConfiguracionBaremoRepository configuracionBaremoRepository;
-  private final AliasEnumeradoRepository aliasEnumeradoRepository;
+  private final SgiApiCspService sgiApiCspService;
   private final ProduccionCientificaConverter produccionCientificaConverter;
   private final SgiConfigProperties sgiConfigProperties;
 
@@ -133,8 +138,7 @@ public class ProduccionCientificaApiService {
 
     List<CampoProduccionCientificaInput> campos = addCamposProduccionCientifica(produccionCientificaCreate.getId(),
         produccionCientificaApiInput.getCampos());
-    List<AutorInput> autores = addAutores(produccionCientificaCreate.getId(),
-        produccionCientificaApiInput.getAutores());
+    List<AutorInput> autores = addAutores(produccionCientificaCreate, produccionCientificaApiInput.getAutores());
     List<IndiceImpactoInput> indicesImpacto = addIndicesImpacto(produccionCientificaCreate.getId(),
         produccionCientificaApiInput.getIndicesImpacto());
     List<AcreditacionInput> acreditaciones = addAcreditaciones(produccionCientificaCreate.getId(),
@@ -190,7 +194,7 @@ public class ProduccionCientificaApiService {
 
     List<AutorInput> autores = new ArrayList<>();
     if (produccionCientificaUpdate.getEstado().getEstado().equals(TipoEstadoProduccion.PENDIENTE)) {
-      autores = updateAutores(produccionCientificaApiInput.getAutores(), produccionCientificaId);
+      autores = updateAutores(produccionCientificaApiInput.getAutores(), produccionCientificaUpdate);
     }
 
     List<IndiceImpactoInput> indicesImpacto = updateIndicesImpacto(produccionCientificaApiInput.getIndicesImpacto(),
@@ -374,10 +378,10 @@ public class ProduccionCientificaApiService {
     campoProduccionCientificaRepository.deleteInBulkByProduccionCientificaId(produccionCientificaId);
   }
 
-  private List<AutorInput> updateAutores(List<AutorInput> autores, Long produccionCientificaId) {
-    deleteAutoresAndGrupos(produccionCientificaId);
+  private List<AutorInput> updateAutores(List<AutorInput> autores, ProduccionCientifica produccionCientificaUpdate) {
+    deleteAutoresAndGrupos(produccionCientificaUpdate.getId());
 
-    return addAutores(produccionCientificaId, autores);
+    return addAutores(produccionCientificaUpdate, autores);
   }
 
   private void deleteAutoresAndGrupos(Long produccionCientificaId) {
@@ -471,16 +475,24 @@ public class ProduccionCientificaApiService {
     return valoresCamposSave;
   }
 
-  private List<AutorInput> addAutores(Long idProduccionCientifica, List<AutorInput> autores) {
+  private List<ValorCampo> findValoresByCampoProduccionCientificaId(CodigoCVN codigoCVN,
+      Long produccionCientificaId) {
+    return campoProduccionCientificaRepository
+        .findByCodigoCVNAndProduccionCientificaId(codigoCVN, produccionCientificaId)
+        .map(campo -> valorCampoRepository.findAllByCampoProduccionCientificaId(campo.getId()))
+        .orElse(new ArrayList<>());
+  }
+
+  private List<AutorInput> addAutores(ProduccionCientifica produccionCientifica, List<AutorInput> autores) {
     List<AutorInput> autoresSave = new ArrayList<>();
 
     ListUtils.emptyIfNull(autores).stream().forEach(autor -> {
-      // TODO validar personaRef y grupos de autores
+      String personaRef = autor.getPersonaRef();
 
       Autor autorNew = Autor.builder()
-          .produccionCientificaId(idProduccionCientifica)
+          .produccionCientificaId(produccionCientifica.getId())
           .firma(autor.getFirma())
-          .personaRef(autor.getPersonaRef())
+          .personaRef(personaRef)
           .nombre(autor.getNombre())
           .apellidos(autor.getApellidos())
           .orcidId(autor.getOrcidId())
@@ -495,9 +507,57 @@ public class ProduccionCientificaApiService {
 
       autorNew = autorRepository.save(autorNew);
       autoresSave.add(produccionCientificaConverter.convertAutor(autorNew));
+      Long autorId = autorNew.getId();
+
+      saveGruposAutorBaremable(produccionCientifica, personaRef, autorId);
     });
 
     return autoresSave;
+  }
+
+  private void saveGruposAutorBaremable(ProduccionCientifica produccionCientifica, String personaRef, Long autorId) {
+    if (StringUtils.hasText(personaRef)) {
+
+      Integer anio = getAnioIsAutorBaremable(produccionCientifica);
+
+      if (null != anio && sgiApiCspService.isPersonaBaremable(personaRef, anio)) {
+        sgiApiCspService.findAllGruposByAnio(anio).stream().forEach(
+            grupo -> saveAutorGrupo(autorId, grupo.getId(), produccionCientifica.getEstado().getEstado()));
+      }
+    }
+  }
+
+  private AutorGrupo saveAutorGrupo(Long autorId, Long grupoRef, TipoEstadoProduccion tipoEstado) {
+    AutorGrupo autorGrupoNew = AutorGrupo.builder()
+        .autorId(autorId)
+        .grupoRef(grupoRef)
+        .estado(tipoEstado)
+        .build();
+    return autorGrupoRepository.save(autorGrupoNew);
+  }
+
+  private Integer getAnioIsAutorBaremable(ProduccionCientifica produccionCientifica) {
+    return configuracionCampoRepository
+        .findByEpigrafeCVNAndFechaReferenciaInicioIsTrue(produccionCientifica.getEpigrafeCVN())
+        .map(configuracionCampo -> {
+          Integer anioCampo = null;
+          List<ValorCampo> valores = findValoresByCampoProduccionCientificaId(configuracionCampo.getCodigoCVN(),
+              produccionCientifica.getId());
+          if (!CollectionUtils.isEmpty(valores)) {
+
+            TimeZone timeZone = sgiConfigProperties.getTimeZone();
+
+            ZonedDateTime fechaInicio = Instant.parse(valores.get(0).getValor()).atZone(timeZone.toZoneId());
+            ZonedDateTime fechaActual = Instant.now().atZone(timeZone.toZoneId());
+
+            if (fechaInicio.compareTo(fechaActual) < 0) {
+              anioCampo = fechaInicio.getYear();
+            } else {
+              anioCampo = fechaActual.getYear();
+            }
+          }
+          return anioCampo;
+        }).orElse(null);
   }
 
   private List<IndiceImpactoInput> addIndicesImpacto(Long idProduccionCientifica,

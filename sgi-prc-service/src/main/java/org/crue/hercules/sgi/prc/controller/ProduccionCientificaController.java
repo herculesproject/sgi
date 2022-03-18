@@ -133,7 +133,7 @@ public class ProduccionCientificaController {
 
   private Page<ComiteEditorialOutput> convertComiteEditorialResumen(Page<ComiteEditorialResumen> page) {
     List<ComiteEditorialOutput> content = page.getContent().stream()
-        .map(comiteEditorialResumen -> convertComiteEditorialResumen(comiteEditorialResumen))
+        .map(this::convertComiteEditorialResumen)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -172,7 +172,7 @@ public class ProduccionCientificaController {
 
   private Page<CongresoOutput> convertCongresoResumen(Page<CongresoResumen> page) {
     List<CongresoOutput> content = page.getContent().stream()
-        .map(congresoResumen -> convertCongresoResumen(congresoResumen))
+        .map(this::convertCongresoResumen)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -240,7 +240,7 @@ public class ProduccionCientificaController {
    */
   @PatchMapping("/{id}/validar")
   @PreAuthorize("hasAuthority('PRC-VAL-E')")
-  ProduccionCientificaOutput validar(@PathVariable Long id) {
+  public ProduccionCientificaOutput validar(@PathVariable Long id) {
     log.debug("validar(Long id) - start");
     ProduccionCientifica returnValue = service.cambiarEstado(id, TipoEstadoProduccion.VALIDADO, null);
     log.debug("validar(Long id) - end");
@@ -258,7 +258,7 @@ public class ProduccionCientificaController {
    */
   @PatchMapping("/{id}/rechazar")
   @PreAuthorize("hasAuthority('PRC-VAL-E')")
-  ProduccionCientificaOutput rechazar(@PathVariable Long id,
+  public ProduccionCientificaOutput rechazar(@PathVariable Long id,
       @Valid @RequestBody EstadoProduccionCientificaInput estadoProduccionCientifica) {
     log.debug("rechazar(Long id, EstadoProduccionCientificaInput estadoProduccionCientifica) - start");
     ProduccionCientifica returnValue = service.cambiarEstado(id, TipoEstadoProduccion.RECHAZADO,

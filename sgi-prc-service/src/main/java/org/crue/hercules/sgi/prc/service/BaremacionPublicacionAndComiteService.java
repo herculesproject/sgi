@@ -62,6 +62,7 @@ public abstract class BaremacionPublicacionAndComiteService extends BaremacionCo
   private static final String POSICION_REVISTA_25_00 = "25.00";
   private static final String POSICION_REVISTA_50_00 = "50.00";
   private static final String POSICION_REVISTA_75_00 = "75.00";
+  private static final String LOG_AREAS_NUM_AUTORES_AUTORES = "Area[%s] NumAutores[%d] Autor[%s]";
 
   private final TipoFuenteImpactoCuartilRepository tipoFuenteImpactoCuartilRepository;
   private final ModuladorRepository moduladorRepository;
@@ -165,11 +166,10 @@ public abstract class BaremacionPublicacionAndComiteService extends BaremacionCo
   }
 
   protected List<String> getAreaByAutorBaremable(BaremacionInput baremacionInput, List<Autor> autoresBaremables) {
-    List<String> areas = new ArrayList<>();
     log.debug("getAreaByAutorBaremable(produccionCientificaId, autoresBaremables) - start");
 
     // Buscamos area si viene informado E060_010_010_390
-    areas = findValoresByCampoProduccionCientificaId(CodigoCVN.E060_010_010_390,
+    List<String> areas = findValoresByCampoProduccionCientificaId(CodigoCVN.E060_010_010_390,
         baremacionInput.getProduccionCientificaId()).stream()
         .filter(valorCampo -> isPersonaRefAndBaremable(valorCampo.getValor()))
         .findFirst()
@@ -180,13 +180,13 @@ public abstract class BaremacionPublicacionAndComiteService extends BaremacionCo
       areas = getAreaRefByAutor(autoresBaremables.get(0));
 
       if (!CollectionUtils.isEmpty(areas)) {
-        String optionalMessage = String.format("Area[%s] NumAutores[%d] Autor[%s]",
+        String optionalMessage = String.format(LOG_AREAS_NUM_AUTORES_AUTORES,
             areas, autoresBaremables.size(), "Primer Autor");
         traceLog(baremacionInput, optionalMessage);
       }
 
     } else {
-      String optionalMessage = String.format("Area[%s] NumAutores[%d] Autor[%s]",
+      String optionalMessage = String.format(LOG_AREAS_NUM_AUTORES_AUTORES,
           areas, autoresBaremables.size(), "E060_010_010_390");
       traceLog(baremacionInput, optionalMessage);
     }
@@ -198,7 +198,7 @@ public abstract class BaremacionPublicacionAndComiteService extends BaremacionCo
       areas = getAreaRefByAutor(autoresBaremables.get(numAutores - 1));
 
       if (!CollectionUtils.isEmpty(areas)) {
-        String optionalMessage = String.format("Area[%s] NumAutores[%d] Autor[%s]",
+        String optionalMessage = String.format(LOG_AREAS_NUM_AUTORES_AUTORES,
             areas, autoresBaremables.size(), "Autor en última posición");
         traceLog(baremacionInput, optionalMessage);
       }
@@ -224,7 +224,7 @@ public abstract class BaremacionPublicacionAndComiteService extends BaremacionCo
     if (null != areaRefPersona && null != areaRefPersona.getId()) {
       List<AreaConocimientoDto> areasDto = new ArrayList<>();
       areasDto.add(areaRefPersona);
-      areas = getAreaNodoRaizById(areasDto).stream().map(area -> area.getId())
+      areas = getAreaNodoRaizById(areasDto).stream().map(AreaConocimientoDto::getId)
           .collect(Collectors.toList());
     }
     return areas;

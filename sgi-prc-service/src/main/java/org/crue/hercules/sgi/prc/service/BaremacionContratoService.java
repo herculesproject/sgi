@@ -112,6 +112,7 @@ public class BaremacionContratoService extends BaremacionCommonService {
     getHmTipoBaremoPredicates().put(TipoBaremo.CONTRATO_CUANTIA, getPredicateIsCuantiaNotEmpty());
   }
 
+  @Override
   protected BigDecimal evaluateBaremoPrincipal(BaremacionInput baremacionInput) {
     log.debug("calcularBaremoPrincipalPublicacion(produccionCientificaId, baremo) - start");
 
@@ -124,7 +125,7 @@ public class BaremacionContratoService extends BaremacionCommonService {
       puntos = evaluateCuantia(baremacionInput.getProduccionCientificaId());
 
       String optionalMessage = String.format("BAREMACION CONTRATO CUANTIA PRINCIPAL [%s] %s", tipoBaremo.name(),
-          puntos.toString());
+          null != puntos ? puntos.toString() : "");
       traceLog(baremacionInput, optionalMessage);
     }
 
@@ -152,6 +153,7 @@ public class BaremacionContratoService extends BaremacionCommonService {
     return null;
   }
 
+  @Override
   protected void evaluatePuntuacionItemInvestigador(BaremacionInput baremacionInput, BigDecimal puntosInvestigador,
       Autor autor) {
     log.debug("evaluatePuntuacioItemInvestigador(baremacionInput, puntosInvestigador, autor) - start");
@@ -187,6 +189,7 @@ public class BaremacionContratoService extends BaremacionCommonService {
     return BigDecimal.ZERO;
   }
 
+  @Override
   protected List<Long> getProduccionCientificaIdsByEpigrafeCVNAndAnio(BaremacionInput baremacionInput) {
     List<Long> result = new ArrayList<>();
     Optional<ConfiguracionCampo> optFechaInicio = configuracionCampoRepository
@@ -203,6 +206,7 @@ public class BaremacionContratoService extends BaremacionCommonService {
     return result;
   }
 
+  @Override
   protected void evaluateAutores(BaremacionInput baremacionInput, BigDecimal puntos, Long newProduccionCientificaId) {
     log.debug("evaluateAutores(baremacionInput, puntos, newProduccionCientificaId) - start");
 

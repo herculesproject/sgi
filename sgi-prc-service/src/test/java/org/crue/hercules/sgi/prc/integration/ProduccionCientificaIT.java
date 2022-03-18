@@ -16,10 +16,15 @@ import org.crue.hercules.sgi.prc.dto.ProduccionCientificaOutput;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionOutput;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiPiiService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgoService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -53,6 +58,18 @@ class ProduccionCientificaIT extends BaseIT {
   private static final String COMITE_EDITORIAL_REF_VALUE = "comite-ref-";
   private static final String CONGRESO_REF_VALUE = "congreso-ref-";
   private static final String OBRA_ARTISTICA_REF_VALUE = "obra-artistica-ref-";
+
+  @MockBean
+  private SgiApiSgpService sgiApiSgpService;
+
+  @MockBean
+  private SgiApiSgoService sgiApiSgoService;
+
+  @MockBean
+  private SgiApiCspService sgiApiCspService;
+
+  @MockBean
+  private SgiApiPiiService sgiApiPiiService;
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity,
       String... roles)
@@ -384,7 +401,7 @@ class ProduccionCientificaIT extends BaseIT {
   @ParameterizedTest
   @ValueSource(strings = { "tipoEvento=ik=008",
       "fechaCelebracionDesde=ge=2021-01-01T00:00:00Z;fechaCelebracionHasta=le=2021-02-01T00:00:00Z" })
-  public void findAllCongresosByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllCongresosByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";

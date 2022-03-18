@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
  * Test de integracion de Baremacion de organización de actividades
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BaremacionOrganizacionActividadIT extends BaremacionBaseIT {
+class BaremacionOrganizacionActividadIT extends BaremacionBaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 

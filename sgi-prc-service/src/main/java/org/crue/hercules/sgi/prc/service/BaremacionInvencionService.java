@@ -135,6 +135,7 @@ public class BaremacionInvencionService extends BaremacionCommonService {
     return produccionCientificaId -> isValorCampoNotEmpty(produccionCientificaId, CodigoCVN.E060_030_070_010);
   }
 
+  @Override
   protected List<Pair<BigDecimal, Baremo>> calculatePuntosBaremosPrincipales(BaremacionInput baremacionInput,
       List<Baremo> baremosPrincipales) {
     return baremosPrincipales.stream().map(

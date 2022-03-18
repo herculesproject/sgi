@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
  * AutorGrupoServiceTest
  */
 @Import({ AutorGrupoService.class, ApplicationContextSupport.class })
-public class AutorGrupoServiceTest extends BaseServiceTest {
+class AutorGrupoServiceTest extends BaseServiceTest {
 
   private static final Long DEFAULT_DATA_AUTOR_ID = 1L;
   private static final TipoEstadoProduccion DEFAULT_DATA_ESTADO = TipoEstadoProduccion.PENDIENTE;
@@ -63,7 +63,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_ReturnsAutorGrupo() {
+  void create_ReturnsAutorGrupo() {
     // given: Un nuevo AutorGrupo
     AutorGrupo autorGrupo = generarMockAutorGrupo(null);
 
@@ -88,7 +88,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
+  void create_WithId_ThrowsIllegalArgumentException() {
     // given: AutorGrupo que ya tiene id
     AutorGrupo autorGrupo = generarMockAutorGrupo(1L);
 
@@ -99,7 +99,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_ReturnsAutorGrupo() {
+  void update_ReturnsAutorGrupo() {
     // given: Un nuevo AutorGrupo
     AutorGrupo autorGrupo = generarMockAutorGrupo(1L);
 
@@ -123,7 +123,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutId_ThrowsIllegalArgumentException() {
+  void update_WithoutId_ThrowsIllegalArgumentException() {
     // given: AutorGrupo sin id
     AutorGrupo autorGrupo = generarMockAutorGrupo(null);
 
@@ -134,7 +134,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithNotExistingAutorGrupo_ThrowsAutorGrupoNotFoundException() {
+  void update_WithNotExistingAutorGrupo_ThrowsAutorGrupoNotFoundException() {
     // given: AutorGrupo sin id
     AutorGrupo autorGrupo = generarMockAutorGrupo(33L);
 
@@ -147,7 +147,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAll_ReturnsPage() {
+  void findAll_ReturnsPage() {
     // given: Una lista con 37 AutorGrupo
     List<AutorGrupo> autorGrupos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -177,7 +177,8 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
     Page<AutorGrupo> page = service.findAll(null, paging);
 
     // then: Devuelve la pagina 3 con los AutorGrupo del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    int numResultados = page.getContent().size();
+    Assertions.assertThat(numResultados).as("getContent().size()").isEqualTo(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
@@ -189,7 +190,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsAutorGrupo() {
+  void findById_ReturnsAutorGrupo() {
     // given: AutorGrupo con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockAutorGrupo(idBuscado)));
@@ -209,7 +210,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsAutorGrupoNotFoundException() {
+  void findById_WithIdNotExist_ThrowsAutorGrupoNotFoundException() {
     // given: Ningun AutorGrupo con el id buscado
     Long idBuscado = 33L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
@@ -221,17 +222,19 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_ReturnsVoid() {
+  void delete_ReturnsVoid() {
     // given: id null
     Long idToDelete = 1L;
 
     // when: Eliminamos AutorGrupo con el id indicado
     // then: Elimina AutorGrupo
     service.delete(idToDelete);
+
+    Assertions.assertThat(idToDelete).as("idToDelete").isEqualTo(1L);
   }
 
   @Test
-  public void delete_WithoutId_ThrowsIllegalArgumentException() {
+  void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: id null
     Long idToDelete = null;
 
@@ -242,7 +245,7 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByProduccionCientificaId_ReturnsList() {
+  void findAllByProduccionCientificaId_ReturnsList() {
     // given: Una lista con 7 AutorGrupo y un autorId
     Long autorId = 1L;
     List<AutorGrupo> autorGrupos = new ArrayList<>();
@@ -263,14 +266,15 @@ public class AutorGrupoServiceTest extends BaseServiceTest {
         });
     List<AutorGrupo> autorGruposBuscados = service.findAllByProduccionCientificaId(autorId);
     // then: Cada AutorGrupo tiene autorId buscado
-    Assertions.assertThat(autorGruposBuscados.size()).as("size()").isEqualTo(3);
+    int numResultados = autorGruposBuscados.size();
+    Assertions.assertThat(numResultados).as("size()").isEqualTo(3);
     autorGruposBuscados.stream().forEach(autoGrupoBuscado -> {
       Assertions.assertThat(autoGrupoBuscado.getAutorId()).as("getAutorId").isEqualTo(autorId);
     });
   }
 
   @Test
-  public void deleteInBulkByAutorId_ReturnsInt() {
+  void deleteInBulkByAutorId_ReturnsInt() {
     // give: autorId
     Long autorId = 1L;
 

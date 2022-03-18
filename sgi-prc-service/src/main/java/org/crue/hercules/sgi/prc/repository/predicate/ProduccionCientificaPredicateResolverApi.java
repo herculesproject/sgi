@@ -96,13 +96,8 @@ public class ProduccionCientificaPredicateResolverApi extends ProduccionCientifi
   public Predicate toPredicate(ComparisonNode node, Root<ProduccionCientifica> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     Property property = Property.fromCode(node.getSelector());
-    if (null != property) {
-      switch (property) {
-        case FECHA_ESTADO:
-          return buildByFechaEstado(node, root, query, criteriaBuilder);
-        default:
-          return null;
-      }
+    if (null != property && property.equals(Property.FECHA_ESTADO)) {
+      return buildByFechaEstado(node, root, query, criteriaBuilder);
     } else {
       return null;
     }

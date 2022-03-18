@@ -126,6 +126,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     return produccionCientificaId -> isValorCampoNotEmpty(produccionCientificaId, CodigoCVN.E060_030_070_010);
   }
 
+  @Override
   public void evaluateProduccionCientificaByTypeAndAnio(BaremacionInput baremacionInput) {
     log.debug("evaluateProduccionCientificaByTypeAndAnio(baremacionInput) - start");
 
@@ -165,6 +166,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
 
   }
 
+  @Override
   protected Pair<BigDecimal, Long> evaluateItemProduccionCientifica(BaremacionInput baremacionInput) {
     log.debug("evaluateItemProduccionCientifica(baremacionInput) - start");
     BigDecimal puntos = null;
@@ -216,6 +218,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     return pairEvaluateItemPrincipal;
   }
 
+  @Override
   protected BigDecimal evaluateBaremoPrincipal(BaremacionInput baremacionInput) {
     log.debug("calcularBaremoPrincipalPublicacion(produccionCientificaId, baremo) - start");
 
@@ -242,6 +245,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     return puntos;
   }
 
+  @Override
   protected void evaluatePuntuacionItemInvestigador(BaremacionInput baremacionInput, BigDecimal puntosInvestigador,
       Autor autor) {
     log.debug("evaluatePuntuacioItemInvestigador(baremacionInput, puntosInvestigador, anio) - start");

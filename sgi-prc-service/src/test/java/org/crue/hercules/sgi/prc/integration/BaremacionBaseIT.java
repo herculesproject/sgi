@@ -34,10 +34,6 @@ import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepositor
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiPiiService;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgoService;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,21 +54,6 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
 
   protected static final String PATH_PARAMETER_ID = "/{id}";
   protected static final String CONTROLLER_BASE_PATH = BaremacionController.MAPPING;
-
-  @MockBean
-  @Getter
-  private SgiApiSgpService sgiApiSgpService;
-
-  @MockBean
-  private SgiApiSgoService sgiApiSgoService;
-
-  @MockBean
-  @Getter
-  private SgiApiCspService sgiApiCspService;
-
-  @MockBean
-  @Getter
-  private SgiApiPiiService sgiApiPiiService;
 
   @Autowired
   private EditorialPrestigioRepository editorialPrestigioRepository;
@@ -202,40 +183,40 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
 
   protected void mockPersonaAndAreaConocimientoAndGrupoInvestigacion(String personaRef, String areaRef,
       String areaRefRaiz) {
-    BDDMockito.given(sgiApiSgpService.findPersonaById(personaRef))
+    BDDMockito.given(getSgiApiSgpService().findPersonaById(personaRef))
         .willReturn((Optional.of(generarMockPersona(personaRef))));
 
-    BDDMockito.given(sgiApiSgpService.findVinculacionByPersonaId(personaRef))
+    BDDMockito.given(getSgiApiSgpService().findVinculacionByPersonaId(personaRef))
         .willReturn((Optional.of(generarMockVinculacion(areaRef, areaRefRaiz))));
 
-    BDDMockito.given(sgiApiSgoService.findAllAreasConocimiento("id==" + areaRef))
+    BDDMockito.given(getSgiApiSgoService().findAllAreasConocimiento("id==" + areaRef))
         .willReturn((Arrays.asList(generarMockAreaConocimiento(areaRef, areaRefRaiz))));
 
-    BDDMockito.given(sgiApiSgoService.findAllAreasConocimiento("id==" + areaRefRaiz))
+    BDDMockito.given(getSgiApiSgoService().findAllAreasConocimiento("id==" + areaRefRaiz))
         .willReturn((Arrays.asList(generarMockAreaConocimiento(areaRefRaiz, null))));
 
     Boolean booleanReturn = Boolean.TRUE;
 
-    BDDMockito.given(sgiApiCspService.isGrupoBaremable(
+    BDDMockito.given(getSgiApiCspService().isGrupoBaremable(
         ArgumentMatchers.anyLong(), ArgumentMatchers.anyInt())).willReturn(booleanReturn);
 
-    BDDMockito.given(sgiApiCspService.findAllGruposByAnio(ArgumentMatchers.anyInt()))
+    BDDMockito.given(getSgiApiCspService().findAllGruposByAnio(ArgumentMatchers.anyInt()))
         .willReturn(Arrays.asList(generarMockGrupo(1L)));
 
-    BDDMockito.given(sgiApiCspService.isPersonaBaremable(
+    BDDMockito.given(getSgiApiCspService().isPersonaBaremable(
         ArgumentMatchers.anyString(), ArgumentMatchers.anyInt())).willReturn(booleanReturn);
 
-    BDDMockito.given(sgiApiCspService.findAllGruposEquipoByGrupoIdAndAnio(ArgumentMatchers.anyLong(),
+    BDDMockito.given(getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyInt()))
         .willReturn(Arrays.asList(generarMockGrupoEquipo(personaRef, new BigDecimal("60.00"))));
   }
 
   protected void mockInvenciones(String personaRef) {
 
-    BDDMockito.given(sgiApiPiiService.findInvencionesProduccionCientifica(ArgumentMatchers.anyInt()))
+    BDDMockito.given(getSgiApiPiiService().findInvencionesProduccionCientifica(ArgumentMatchers.anyInt()))
         .willReturn(generarMockInvenciones());
 
-    BDDMockito.given(sgiApiPiiService.findInvencionInventorByInvencionIdAndAnio(ArgumentMatchers.anyLong(),
+    BDDMockito.given(getSgiApiPiiService().findInvencionInventorByInvencionIdAndAnio(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyInt())).willReturn(Arrays.asList(personaRef));
   }
 

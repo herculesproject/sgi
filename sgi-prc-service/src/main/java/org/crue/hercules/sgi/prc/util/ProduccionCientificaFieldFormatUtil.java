@@ -59,7 +59,7 @@ public class ProduccionCientificaFieldFormatUtil {
 
   public static String normalizeString(String value) {
     String stringNormalize = Normalizer.normalize(value, Normalizer.Form.NFKD);
-    return stringNormalize.replaceAll("[^a-z,^A-Z,^0-9]", "");
+    return stringNormalize.replaceAll("[^a-zA-Z^0-9]", "");
   }
 
   public static Instant calculateFechaFinBaremacionByAnio(Integer anio, TimeZone timeZone) {
@@ -70,7 +70,7 @@ public class ProduccionCientificaFieldFormatUtil {
   }
 
   public static Pair<Instant, Instant> calculateFechasInicioFinBaremacionByAnio(Integer anio, TimeZone timeZone) {
-    String strFechaInicioBaremacion = anio + "-01-01";
+    String strFechaInicioBaremacion = anio + PATTERN_MONTH_DAY_01_01;
 
     Instant fechaInicioBaremacion = LocalDate.parse(strFechaInicioBaremacion)
         .atStartOfDay(timeZone.toZoneId()).toInstant();

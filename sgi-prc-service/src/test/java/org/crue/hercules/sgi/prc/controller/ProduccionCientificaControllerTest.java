@@ -88,7 +88,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllPublicaciones_ReturnsPage() throws Exception {
+  void findAllPublicaciones_ReturnsPage() throws Exception {
     // given: Una lista con 37 PublicacionResumen
     List<PublicacionResumen> publicaciones = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -144,7 +144,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllPublicaciones_ReturnsNoContent() throws Exception {
+  void findAllPublicaciones_ReturnsNoContent() throws Exception {
     // given: Una lista con 0 PublicacionResumen
     List<PublicacionResumen> publicaciones = new ArrayList<>();
 
@@ -175,7 +175,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllComitesEditoriales_ReturnsPage() throws Exception {
+  void findAllComitesEditoriales_ReturnsPage() throws Exception {
     // given: Una lista con 37 ComiteEditorialResumen
     List<ComiteEditorialResumen> comitesEditoriales = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -231,7 +231,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllComitesEditoriales_ReturnsNoContent() throws Exception {
+  void findAllComitesEditoriales_ReturnsNoContent() throws Exception {
     // given: Una lista con 0 PublicacionResumen
     List<ComiteEditorialResumen> produccionCientificas = new ArrayList<>();
 
@@ -262,7 +262,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllCongresos_ReturnsPage() throws Exception {
+  void findAllCongresos_ReturnsPage() throws Exception {
     // given: Una lista con 37 CongresoResumen
     List<CongresoResumen> congresos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -318,7 +318,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllCongresos_ReturnsNoContent() throws Exception {
+  void findAllCongresos_ReturnsNoContent() throws Exception {
     // given: Una lista con 0 CongresoResumen
     List<CongresoResumen> congresos = new ArrayList<>();
 
@@ -349,7 +349,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllObrasArtisticas_ReturnsPage() throws Exception {
+  void findAllObrasArtisticas_ReturnsPage() throws Exception {
     // given: Una lista con 37 ObraArtisticaResumen
     List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -405,7 +405,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findAllObrasArtisticas_ReturnsNoContent() throws Exception {
+  void findAllObrasArtisticas_ReturnsNoContent() throws Exception {
     // given: Una lista con 0 ObraArtisticaResumen
     List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
 
@@ -436,7 +436,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findById_WithExistingId_ReturnsProduccionCientifica() throws Exception {
+  void findById_WithExistingId_ReturnsProduccionCientifica() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -457,7 +457,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
-  public void findById_WithNoExistingId_Returns404() throws Exception {
+  void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -476,7 +476,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
-  public void validar_WithExistingId_ReturnProduccionCientifica() throws Exception {
+  void validar_WithExistingId_ReturnProduccionCientifica() throws Exception {
     // given: existing id
     ProduccionCientifica produccionCientifica = generarMockProduccionCientifica(1L,
         "ProduccionCientifica" + String.format("%03d", 1));
@@ -503,7 +503,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
-  public void validar_NoExistingId_Return404() throws Exception {
+  void validar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
@@ -523,7 +523,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
-  public void rechazar_WithExistingId_ReturnProduccionCientifica() throws Exception {
+  void rechazar_WithExistingId_ReturnProduccionCientifica() throws Exception {
     // given: existing id
     ProduccionCientifica produccionCientifica = generarMockProduccionCientifica(1L,
         "ProduccionCientifica" + String.format("%03d", 1));
@@ -553,7 +553,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
-  public void rechazar_NoExistingId_Return404() throws Exception {
+  void rechazar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
     EstadoProduccionCientificaInput estado = EstadoProduccionCientificaInput.builder().comentario("Motivo rechazo")
@@ -582,7 +582,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findIndicesImpacto_ReturnsPage() throws Exception {
+  void findIndicesImpacto_ReturnsPage() throws Exception {
     // given: Una lista con 37 IndiceImpacto para la ProduccionCientifica
     Long produccionCientificaId = 1L;
 
@@ -641,7 +641,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findIndicesImpacto_EmptyList_Returns204() throws Exception {
+  void findIndicesImpacto_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de IndiceImpacto para la ProduccionCientifica
     Long produccionCientificaId = 1L;
     List<IndiceImpacto> indicesImpacto = new ArrayList<>();
@@ -678,7 +678,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAutores_ReturnsPage() throws Exception {
+  void findAutores_ReturnsPage() throws Exception {
     // given: Una lista con 37 Autor para la ProduccionCientifica
     Long produccionCientificaId = 1L;
 
@@ -737,7 +737,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAutores_EmptyList_Returns204() throws Exception {
+  void findAutores_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Autor para la ProduccionCientifica
     Long produccionCientificaId = 1L;
     List<IndiceImpacto> autores = new ArrayList<>();
@@ -774,7 +774,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findProyectos_ReturnsPage() throws Exception {
+  void findProyectos_ReturnsPage() throws Exception {
     // given: Una lista con 37 Proyecto para la ProduccionCientifica
     Long produccionCientificaId = 1L;
 
@@ -833,7 +833,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findProyectos_EmptyList_Returns204() throws Exception {
+  void findProyectos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de IndiceImpacto para la ProduccionCientifica
     Long produccionCientificaId = 1L;
     List<Proyecto> proyectos = new ArrayList<>();
@@ -870,7 +870,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAcreditaciones_ReturnsPage() throws Exception {
+  void findAcreditaciones_ReturnsPage() throws Exception {
     // given: Una lista con 37 Acreditacion para la ProduccionCientifica
     Long produccionCientificaId = 1L;
 
@@ -929,7 +929,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
-  public void findAcreditaciones_EmptyList_Returns204() throws Exception {
+  void findAcreditaciones_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de IndiceImpacto para la ProduccionCientifica
     Long produccionCientificaId = 1L;
     List<Acreditacion> indicesImpacto = new ArrayList<>();

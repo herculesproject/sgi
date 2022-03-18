@@ -206,12 +206,20 @@ public class SgiApiCspService extends SgiApiBaseService {
    * @return suma de puntos del campo importeConcedido
    */
   public BigDecimal getTotalImporteConcedidoAnualidadGasto(Long proyectoId) {
-    BigDecimal result = null;
     log.debug("getTotalImporteConcedidoAnualidadGasto(proyectoId)- start");
+
+    String relativeUrl = "/proyectos/produccioncientifica/totalimporteconcedido/{proyectoId}";
+    BigDecimal result = callProyectosByProyectoIdAndReturnBigDecimal(proyectoId, relativeUrl);
+    log.debug("getTotalImporteConcedidoAnualidadGasto(proyectoId)- end");
+
+    return result;
+  }
+
+  private BigDecimal callProyectosByProyectoIdAndReturnBigDecimal(Long proyectoId, String relativeUrl) {
+    BigDecimal result = null;
 
     try {
       ServiceType serviceType = ServiceType.CSP;
-      String relativeUrl = "/proyectos/produccioncientifica/totalimporteconcedido/{proyectoId}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -223,8 +231,6 @@ public class SgiApiCspService extends SgiApiBaseService {
       log.error(e.getMessage(), e);
       throw new MicroserviceCallException();
     }
-    log.debug("getTotalImporteConcedidoAnualidadGasto(proyectoId)- end");
-
     return result;
   }
 
@@ -237,23 +243,12 @@ public class SgiApiCspService extends SgiApiBaseService {
    * @return suma de puntos del campo importeConcedido
    */
   public BigDecimal getTotalImporteConcedidoAnualidadGastoCostesIndirectos(Long proyectoId) {
-    BigDecimal result = null;
     log.debug("getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyectoId)- start");
 
-    try {
-      ServiceType serviceType = ServiceType.CSP;
-      String relativeUrl = "/proyectos/produccioncientifica/totalimporteconcedidocostesindirectos/{proyectoId}";
-      HttpMethod httpMethod = HttpMethod.GET;
-      String mergedURL = buildUri(serviceType, relativeUrl);
+    String relativeUrl = "/proyectos/produccioncientifica/totalimporteconcedidocostesindirectos/{proyectoId}";
 
-      result = super.<BigDecimal>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
-          new ParameterizedTypeReference<BigDecimal>() {
-          }, proyectoId).getBody();
+    BigDecimal result = callProyectosByProyectoIdAndReturnBigDecimal(proyectoId, relativeUrl);
 
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      throw new MicroserviceCallException();
-    }
     log.debug("getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyectoId)- end");
 
     return result;

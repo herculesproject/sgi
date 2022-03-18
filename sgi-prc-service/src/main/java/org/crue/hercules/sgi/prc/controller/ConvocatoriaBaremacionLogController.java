@@ -83,7 +83,7 @@ public class ConvocatoriaBaremacionLogController {
 
   private Page<ConvocatoriaBaremacionLogOutput> convert(Page<ConvocatoriaBaremacionLog> page) {
     List<ConvocatoriaBaremacionLogOutput> content = page.getContent().stream()
-        .map(responsableEconomico -> convert(responsableEconomico)).collect(Collectors.toList());
+        .map(this::convert).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }

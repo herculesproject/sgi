@@ -14,9 +14,6 @@ public abstract class AbstractEnumValueValidValidator<A extends Annotation> impl
   /** Message parameter holding the entity field value */
   public static final String MESSAGE_PARAMETER_VALUE = "value";
 
-  public AbstractEnumValueValidValidator() {
-  }
-
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     if (Objects.isNull(value)) {

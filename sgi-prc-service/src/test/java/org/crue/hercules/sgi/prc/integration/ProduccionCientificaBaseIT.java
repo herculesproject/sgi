@@ -47,7 +47,12 @@ import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiPiiService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgoService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -106,6 +111,22 @@ class ProduccionCientificaBaseIT extends BaseIT {
   @Autowired
   @Getter
   private ProduccionCientificaConverter produccionCientificaConverter;
+
+  @MockBean
+  @Getter
+  private SgiApiSgpService sgiApiSgpService;
+
+  @MockBean
+  @Getter
+  private SgiApiSgoService sgiApiSgoService;
+
+  @MockBean
+  @Getter
+  private SgiApiCspService sgiApiCspService;
+
+  @MockBean
+  @Getter
+  private SgiApiPiiService sgiApiPiiService;
 
   protected HttpEntity<ProduccionCientificaApiInput> buildRequestProduccionCientificaApi(HttpHeaders headers,
       ProduccionCientificaApiInput entity)

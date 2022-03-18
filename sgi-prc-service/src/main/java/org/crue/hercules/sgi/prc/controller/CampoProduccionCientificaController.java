@@ -206,8 +206,7 @@ public class CampoProduccionCientificaController {
 
   private Page<ValorCampoOutput> convertValorCampo(Page<ValorCampo> page) {
     List<ValorCampoOutput> content = page.getContent().stream()
-        .map((valorCampo) -> convert(valorCampo))
-        .collect(Collectors.toList());
+        .map(this::convert).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
