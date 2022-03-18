@@ -39,6 +39,13 @@ import lombok.Setter;
 @Builder
 public class Solicitud extends BaseEntity {
 
+  public enum TipoGrupo {
+    /** Constitucion */
+    CONSTITUCION,
+    /** Modificacion */
+    MODIFICACION,
+  }
+
   /**
    * Serial version
    */
@@ -108,6 +115,11 @@ public class Solicitud extends BaseEntity {
   @NotNull
   private FormularioSolicitud formularioSolicitud;
 
+  /** Tipo formulario Grupo */
+  @Column(name = "tipo_solicitud_grupo", length = 50, nullable = true)
+  @Enumerated(EnumType.STRING)
+  private TipoGrupo tipoSolicitudGrupo;
+
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
@@ -153,4 +165,9 @@ public class Solicitud extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final List<SolicitudPalabraClave> palabrasClave = null;
+
+  @OneToOne(mappedBy = "solicitud")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final SolicitudGrupo solicitudGrupo = null;
 }

@@ -51,4 +51,38 @@
     <dropColumn columnName="genera_aviso" tableName="solicitud_hito" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000006-10">
+    <addColumn tableName="solicitud">
+      <column name="tipo_solicitud_grupo" type="VARCHAR(255)" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000006-11">
+    <createSequence incrementBy="1" sequenceName="solicitud_grupo_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-12">
+    <createTable tableName="solicitud_grupo">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_grupoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="solicitud_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-13">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="solicitud_grupo" constraintName="FK_SOLICITUDGRUPO_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000006-14">
+    <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_grupo" constraintName="FK_SOLICITUDGRUPO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
+  </changeSet>
+
+
 </databaseChangeLog>

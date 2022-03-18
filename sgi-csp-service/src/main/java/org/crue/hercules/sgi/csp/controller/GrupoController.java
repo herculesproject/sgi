@@ -110,7 +110,7 @@ public class GrupoController {
    * @return {@link Grupo} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
   public GrupoOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     GrupoOutput returnValue = converter.convert(service.findById(id));
@@ -161,7 +161,7 @@ public class GrupoController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
   public ResponseEntity<Page<GrupoOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");

@@ -5,10 +5,12 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.converter.SolicitudGrupoConverter;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudGrupoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
@@ -26,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudGrupo;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudPalabraClave;
@@ -46,6 +49,7 @@ import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
+import org.crue.hercules.sgi.csp.service.SolicitudGrupoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudPalabraClaveService;
@@ -155,6 +159,12 @@ public class SolicitudController {
   /** RequisitoIPNivelAcademicoService */
   private final RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService;
 
+  /** SolicitudGrupoService */
+  private final SolicitudGrupoService solicitudGrupoService;
+
+  /** Solicitud Grupo Converter */
+  private final SolicitudGrupoConverter solicitudGrupoConverter;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -180,6 +190,7 @@ public class SolicitudController {
    * @param requisitoIPCategoriaProfesionalService           {@link RequisitoIPCategoriaProfesionalService}.
    * @param requisitoIPNivelAcademicoService                 {@link RequisitoIPNivelAcademicoService}.
    * @param requisitoEquipoNivelAcademicoService             {@link RequisitoEquipoNivelAcademicoService}.
+   * @param solicitudGrupoService                            {@link SolicitudGrupoService}
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -197,7 +208,9 @@ public class SolicitudController {
       ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
       RequisitoIPCategoriaProfesionalService requisitoIPCategoriaProfesionalService,
       RequisitoIPNivelAcademicoService requisitoIPNivelAcademicoService,
-      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService) {
+      RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService,
+      SolicitudGrupoService solicitudGrupoService,
+      SolicitudGrupoConverter solicitudGrupoConverter) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -220,6 +233,8 @@ public class SolicitudController {
     this.requisitoIPCategoriaProfesionalService = requisitoIPCategoriaProfesionalService;
     this.requisitoIPNivelAcademicoService = requisitoIPNivelAcademicoService;
     this.requisitoEquipoNivelAcademicoService = requisitoEquipoNivelAcademicoService;
+    this.solicitudGrupoService = solicitudGrupoService;
+    this.solicitudGrupoConverter = solicitudGrupoConverter;
   }
 
   /**
@@ -1202,6 +1217,15 @@ public class SolicitudController {
     log.debug("Solicitud getCodigoRegistroInterno(Long id) - end");
 
     return JSONObject.quote(codigoRegistroInterno);
+  }
+
+  @GetMapping("/{id}/solcitudgrupo")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
+  public SolicitudGrupoOutput getSolicitudGrupo(@PathVariable Long id) {
+    log.debug("SolicitudGrupoOutput getSolicitudGrupo(Long id) - start");
+    SolicitudGrupo solicitudGrupo = solicitudGrupoService.findBySolicitudId(id);
+    log.debug("SolicitudGrupoOutput getSolicitudGrupo(Long id) - end");
+    return solicitudGrupoConverter.convert(solicitudGrupo);
   }
 
   private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {
