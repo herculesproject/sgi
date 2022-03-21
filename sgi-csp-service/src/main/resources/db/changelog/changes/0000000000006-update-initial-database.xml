@@ -83,6 +83,10 @@
   <changeSet author="user (generated)" id="0000000000006-14">
     <addForeignKeyConstraint baseColumnNames="solicitud_id" baseTableName="solicitud_grupo" constraintName="FK_SOLICITUDGRUPO_SOLICITUD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
   </changeSet>
-
+  <changeSet author="user (generated)" id="0000000000006-15">
+    <addColumn tableName="configuracion">
+      <column name="cod_universidad" type="varchar(255)" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>
