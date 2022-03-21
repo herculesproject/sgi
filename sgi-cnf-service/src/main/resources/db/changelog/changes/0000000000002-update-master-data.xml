@@ -36,5 +36,20 @@
       <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - UGI" />
       <column name="value" value="[&quot;solicitud.hitos.ugi@sgi.es&quot;]" />
     </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-sol-camb-est-solicitada-destinatarios-1" />
+      <column name="description" value="Destinatarios de comunicado de cambio de estado de solicitud a solicitada - OTRI" />
+      <column name="value" value="[&quot;sample@sample.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-sol-camb-est-solicitada-destinatarios-2" />
+      <column name="description" value="Destinatarios de comunicado de cambio de estado de solicitud a solicitada - OPE" />
+      <column name="value" value="[&quot;operum@um.es&quot;,&quot;msojo@um.es&quot;,&quot;javr@um.es&quot;,&quot;lcs@um.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-sol-camb-est-solicitada-destinatarios-3" />
+      <column name="description" value="Destinatarios de comunicado de cambio de estado de solicitud a solicitada - UGI" />
+      <column name="value" value="[&quot;ugiproy@um.es&quot;,&quot;ugirrhh@um.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
