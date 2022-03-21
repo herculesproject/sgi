@@ -110,9 +110,8 @@ public class Solicitud extends BaseEntity {
   private String unidadGestionRef;
 
   /** Tipo formulario solicitud */
-  @Column(name = "formulario_solicitud", length = 50, nullable = false)
+  @Column(name = "formulario_solicitud", length = 50, nullable = true)
   @Enumerated(EnumType.STRING)
-  @NotNull
   private FormularioSolicitud formularioSolicitud;
 
   /** Tipo formulario Grupo */
