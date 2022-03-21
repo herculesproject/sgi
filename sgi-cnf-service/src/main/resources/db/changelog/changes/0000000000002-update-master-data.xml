@@ -86,5 +86,23 @@
       <column name="description" value="Destinatarios defecto CSP Vencimiento Periodo Pago Socio - UGI" />
       <column name="value" value="[&quot;venc.periodo.pago.socio.ugi@sgi.es&quot;]" />
     </insert>
+    <!-- Destinatarios defecto CSP inicio/fin Periodo Justificación Socio UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-inicio-fin-periodo-just-socio-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Inicio/Fin Periodo Justificación Socio - UG" />
+      <column name="value" value="[&quot;aviso.just.periodo.socio.ugi@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP inicio/fin Periodo Justificación Socio UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-inicio-fin-periodo-just-socio-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Inicio/Fin Periodo Justificación Socio - UG" />
+      <column name="value" value="[&quot;aviso.just.periodo.socio.ugi@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP inicio/fin Periodo Justificación Socio UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-inicio-fin-periodo-just-socio-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Inicio/Fin Periodo Justificación Socio - UG" />
+      <column name="value" value="[&quot;aviso.just.periodo.socio.ugi@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
