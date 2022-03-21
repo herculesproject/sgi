@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.prc.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
@@ -18,6 +19,8 @@ public interface ConfiguracionCampoRepository
     extends JpaRepository<ConfiguracionCampo, Long>, JpaSpecificationExecutor<ConfiguracionCampo> {
 
   Optional<ConfiguracionCampo> findByCodigoCVN(CodigoCVN codigoCVN);
+
+  List<ConfiguracionCampo> findByEpigrafeCVNOrderByCodigoCVN(EpigrafeCVN epigrafeCVN);
 
   Optional<ConfiguracionCampo> findByEpigrafeCVNAndFechaReferenciaInicioIsTrue(EpigrafeCVN epigrafeCVN);
 

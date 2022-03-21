@@ -8,15 +8,14 @@ sgi:
   time-zone: "Europe/Madrid"
   rest:
     api:
-      eti-url: "http://sgi-eti-service:4280"
+      cnf-url: "http://sgi-com-service:4288"
+      com-url: "http://sgi-com-service:4286"
       csp-url: "http://sgi-csp-service:4281"
-      usr-url: "http://sgi-usr-service:4282"
       pii-url: "http://sgi-pii-service:4283"
       rel-url: "http://sgi-rel-service:4284"
-      tp-url:  "http://sgi-tp-service:4285"
-      com-url: "http://sgi-com-service:4286"
-      sgp-url: "http://sgi-esb:8080/sgp"
       sgo-url: "http:/sgi-esb:8080/sgo"
+      sgp-url: "http://sgi-esb:8080/sgp"
+      tp-url:  "http://sgi-tp-service:4285"
 
 spring:
   profiles:
@@ -174,15 +173,14 @@ logging:
 sgi:
   rest:
     api:
+      cnf-url: "http://sgi-cnf-service:8080"
       com-url: "http://sgi-com-service:8080"
       csp-url: "http://sgi-csp-service:8080"
-      eti-url: "http://sgi-eti-service:8080"
       pii-url: "http://sgi-pii-service:8080"
       rel-url: "http://sgi-rel-service:8080"
       sgo-url: "http://sgi-esb:8080/sgo"
       sgp-url: "http://sgi-esb:8080/sgp"
       tp-url:  "http://sgi-tp-service:8080"
-      usr-url: "http://sgi-usr-service:8080"
 
 spring:
   profiles: prod

@@ -3,20 +3,25 @@ package org.crue.hercules.sgi.prc.integration;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.net.URI;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.prc.dto.EpigrafeCVNOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput;
-import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
+import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de ProduccionCientifica.
@@ -420,5 +425,40 @@ class ProduccionCientificaApiIT extends ProduccionCientificaBaseIT {
         HttpMethod.DELETE, buildRequestProduccionCientificaApi(null, null), Void.class, produccionCientificaRef);
     // then: 204 NO CONTENT
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+      "classpath:scripts/produccion_cientifica.sql",
+      "classpath:scripts/configuracion_baremo.sql",
+      "classpath:scripts/configuracion_campo.sql",
+      "classpath:scripts/convocatoria_baremacion.sql",
+      "classpath:scripts/baremo.sql",
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findListadoEpigrafes()
+      throws Exception {
+    final Long produccionCientificaId = 1L;
+    // first page, 3 elements per page sorted
+    HttpHeaders headers = new HttpHeaders();
+
+    // when: find Proyecto
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH_API + "/epigrafes")
+        .buildAndExpand(produccionCientificaId).toUri();
+
+    final ResponseEntity<List<EpigrafeCVNOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET,
+        buildRequestProduccionCientificaApi(headers, null),
+        new ParameterizedTypeReference<List<EpigrafeCVNOutput>>() {
+        });
+
+    // given:
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<EpigrafeCVNOutput> responseData = response.getBody();
+    Assertions.assertThat(responseData).isNotNull();
   }
 }

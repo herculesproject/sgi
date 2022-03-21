@@ -12,4 +12,11 @@ public interface CustomConvocatoriaBaremacionRepository {
    * @return suma de puntos de cada tipo
    */
   ConvocatoriaBaremacion findSumPuntosById(Long id);
+
+  /**
+   * Retorna el Id de {@link ConvocatoriaBaremacion} del último año
+   * 
+   * @return Id de {@link ConvocatoriaBaremacion}
+   */
+  Long findIdByMaxAnio();
 }

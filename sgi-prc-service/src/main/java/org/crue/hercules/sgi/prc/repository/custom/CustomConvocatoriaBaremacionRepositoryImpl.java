@@ -1,12 +1,14 @@
 package org.crue.hercules.sgi.prc.repository.custom;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -16,6 +18,8 @@ import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion_;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo_;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -93,6 +97,42 @@ public class CustomConvocatoriaBaremacionRepositoryImpl implements CustomConvoca
     sqlTotalPuntos.where(cb.and(
         cb.equal(rootTotalPuntos.get(PuntuacionGrupo_.convocatoriaBaremacionId), id)));
     return sqlTotalPuntos;
+  }
+
+  /**
+   * Retorna el Id de {@link ConvocatoriaBaremacion} del último año
+   * 
+   * @return Id de {@link ConvocatoriaBaremacion}
+   */
+  @Override
+  public Long findIdByMaxAnio() {
+    log.debug("findIdByMaxAnio - start");
+    Long convocatoriaBaremacionId = null;
+
+    // Create query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+    // Define FROM clause
+    Root<ConvocatoriaBaremacion> root = cq.from(ConvocatoriaBaremacion.class);
+
+    cq.select(root.get(ConvocatoriaBaremacion_.id));
+
+    // Where
+
+    // Order
+    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, ConvocatoriaBaremacion_.ANIO), root, cb);
+    cq.orderBy(orders);
+
+    TypedQuery<Long> typedQuery = entityManager.createQuery(cq);
+    typedQuery.setMaxResults(1);
+
+    convocatoriaBaremacionId = typedQuery.getSingleResult();
+
+    log.debug("findIdByMaxAnio - end");
+
+    return convocatoriaBaremacionId;
   }
 
 }

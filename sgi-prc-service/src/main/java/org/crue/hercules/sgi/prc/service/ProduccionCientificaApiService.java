@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.converter.ProduccionCientificaConverter;
+import org.crue.hercules.sgi.prc.dto.EpigrafeCVNOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput.TipoEstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
@@ -52,9 +53,11 @@ import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.repository.AcreditacionRepository;
 import org.crue.hercules.sgi.prc.repository.AutorGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.AutorRepository;
+import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.CampoProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionBaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionCampoRepository;
+import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.EstadoProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
@@ -100,6 +103,8 @@ public class ProduccionCientificaApiService {
   private final ProyectoRepository proyectoRepository;
   private final ConfiguracionCampoRepository configuracionCampoRepository;
   private final ConfiguracionBaremoRepository configuracionBaremoRepository;
+  private final ConvocatoriaBaremacionRepository convocatoriaBaremacionRepository;
+  private final BaremoRepository baremoRepository;
   private final SgiApiCspService sgiApiCspService;
   private final ProduccionCientificaConverter produccionCientificaConverter;
   private final SgiConfigProperties sgiConfigProperties;
@@ -671,6 +676,36 @@ public class ProduccionCientificaApiService {
     return produccionCientificaConverter.convertProduccionCientificaEstadoResumen(
         produccionCientificaRepository.findByEstadoValidadoOrRechazadoByFechaModificacion(
             SgiRSQLJPASupport.toSpecification(query, ProduccionCientificaPredicateResolverApi.getInstance())));
+  }
+
+  /**
+   * Listado con los códigos de los apartados del CVN que forman parte de la
+   * Producción científica y que necesitan validación. Se enviarán los epígrafes
+   * marcados en el SGI de la última convocatoria creada.
+   * 
+   * Por cada epígrafe se enviarán los campos dinámicos del CVN que se tienen que
+   * enviar a PRC. Será un subconjunto de los de la Fecyt.
+   *
+   * @return lista de {@link EpigrafeCVNOutput}.
+   * @return
+   */
+  public List<EpigrafeCVNOutput> findListadoEpigrafes() {
+    log.debug("findListadoEpigrafes - start");
+    Long convocatoriaBaremacionId = convocatoriaBaremacionRepository.findIdByMaxAnio();
+
+    List<EpigrafeCVNOutput> result = baremoRepository
+        .findDistinctEpigrafesCVNByConvocatoriaBaremacionId(convocatoriaBaremacionId).stream()
+        .map(epigrafeCVN -> {
+          List<String> codigosCVN = configuracionCampoRepository.findByEpigrafeCVNOrderByCodigoCVN(epigrafeCVN).stream()
+              .map(configuracionCampo -> configuracionCampo.getCodigoCVN().getCode()).collect(Collectors.toList());
+
+          return EpigrafeCVNOutput.builder().epigrafeCVN(epigrafeCVN.getCode()).codigosCVN(codigosCVN).build();
+        }).collect(Collectors.toList());
+
+    log.debug("findListadoEpigrafes - end");
+
+    return result;
+
   }
 
 }

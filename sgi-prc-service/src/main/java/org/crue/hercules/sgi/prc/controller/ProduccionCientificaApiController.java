@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.prc.dto.EpigrafeCVNOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput;
@@ -119,6 +120,31 @@ public class ProduccionCientificaApiController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findByEstadoValidadoOrRechazadoByFechaModificacion(String query) -  end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Listado con los códigos de los apartados del CVN que forman parte de la
+   * Producción científica y que necesitan validación. Se enviarán los epígrafes
+   * marcados en el SGI de la última convocatoria creada.
+   * 
+   * Por cada epígrafe se enviarán los campos dinámicos del CVN que se tienen que
+   * enviar a PRC. Será un subconjunto de los de la Fecyt.
+   *
+   * @return lista de {@link EpigrafeCVNOutput}.
+   */
+  @GetMapping("/epigrafes")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<List<EpigrafeCVNOutput>> findListadoEpigrafes() {
+    log.debug("findListadoEpigrafes() - start");
+
+    List<EpigrafeCVNOutput> returnValue = service.findListadoEpigrafes();
+
+    if (returnValue.isEmpty()) {
+      log.debug("findListadoEpigrafes() - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findListadoEpigrafes() - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
