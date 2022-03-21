@@ -1,0 +1,2 @@
+<#assign data = CSP_COM_SOL_CAMB_EST_SOLICITADA_DATA?eval />
+Con fecha "${data.fechaCambioEstadoSolicitud?datetime.iso?string("dd/MM/yyyy")}", ha sido registrada en nuestra base de datos la solicitud presentada por D./Dña. "${data.nombreApellidosSolicitante}" a la convocatoria de "${data.tituloConvocatoria}" de "${data.fechaPublicacionConvocatoria?datetime.iso?string("dd/MM/yyyy")}".
