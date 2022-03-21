@@ -398,6 +398,14 @@
       <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_text.ftl" />
+      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_html.ftl" />
+      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
+    </update>
     <!-- ETI Convocatoria de Reunión -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -407,20 +415,21 @@
       <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
-      <column name="tpl_text" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_text.ftl" />
-      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
-    </update>
-    <update tableName="content_tpl">
-      <column name="tpl_html" valueClobFile="clob/CSP_SOLICITUD_HITO_CONTENT_html.ftl" />
-      <where>name='CSP_SOLICITUD_HITO_CONTENT'</where>
-    </update>
-    <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/0000000000001/eti-com-convocatoria-reunion/ETI_COM_CONVOCATORIA_REUNION_CONTENT_text.ftl" />
       <where>name='ETI_COM_CONVOCATORIA_REUNION_CONTENT'</where>
     </update>
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/0000000000001/eti-com-convocatoria-reunion/ETI_COM_CONVOCATORIA_REUNION_CONTENT_html.ftl" />
       <where>name='ETI_COM_CONVOCATORIA_REUNION_CONTENT'</where>
+    </update>
+    <!-- CSP Convocatoria Hito -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/CSP_CONVOCATORIA_HITO_CONTENT_text.ftl" />
+      <where>name='CSP_CONVOCATORIA_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/CSP_CONVOCATORIA_HITO_CONTENT_html.ftl" />
+      <where>name='CSP_CONVOCATORIA_HITO_CONTENT'</where>
     </update>
   </changeSet>
 
@@ -510,6 +519,11 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_CONVOCATORIA_REUNION_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA')" />
+    </insert>
+    <!-- CSP Convocatoria Hito -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_CONVOCATORIA_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_OBSERVACIONES')" />
     </insert>
   </changeSet>
 
