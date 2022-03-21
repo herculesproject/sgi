@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -36,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ComunicadosService {
   private static final String CONFIG_CSP_COM_INICIO_PRESENTACION_JUSTIFICACION_GASTO_DESTINATARIOS = "csp-com-inicio-presentacion-gasto-destinatarios-";
   private static final String CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA = "csp-com-sol-camb-est-solicitada-destinatarios-";
+  private static final String CONFIG_CSP_COM_SOL_CAMB_EST_ALEGACIONES = "csp-com-sol-camb-est-alegaciones-destinatarios-";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
@@ -197,23 +199,18 @@ public class ComunicadosService {
     return proyectosByUnidadGestionRef;
   }
 
-  public void enviarComunicadoSolicitudCambioEstadoSolicitada(String solicitanteRef, String unidadGestionRef,
-      String tituloConvocatoria, Instant fechaPublicacionConvocatoria, Instant fechaCambioEstadoSolicitud)
+  public void enviarComunicadoSolicitudCambioEstadoSolicitada(String nombreApellidosSolicitante,
+      String unidadGestionRef, String tituloConvocatoria, Instant fechaPublicacionConvocatoria,
+      Instant fechaCambioEstadoSolicitud)
       throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - start");
-    List<String> destinatarios = configService
-        .findStringListByName(
-            CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA + unidadGestionRef);
-    List<Recipient> recipients = destinatarios.stream()
-        .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
-        .collect(Collectors.toList());
+    List<Recipient> recipients = getRecipients(unidadGestionRef, CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA);
     if (!recipients.isEmpty()) {
-      PersonaOutput persona = personasService.findById(solicitanteRef);
       EmailOutput emailOutput;
       emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
           CspComSolicitudCambioEstadoSolicitadaData.builder()
               .tituloConvocatoria(tituloConvocatoria)
-              .nombreApellidosSolicitante(persona.getNombre() + " " + persona.getApellidos())
+              .nombreApellidosSolicitante(nombreApellidosSolicitante)
               .fechaCambioEstadoSolicitud(fechaCambioEstadoSolicitud)
               .fechaPublicacionConvocatoria(fechaPublicacionConvocatoria).build(),
           recipients);
@@ -223,5 +220,28 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoSolicitada() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoAlegaciones(String nombreApellidosSolicitante,
+      String unidadGestionRef, String tituloConvocatoria, String codigoInterno, Instant fechaCambioEstadoSolicitud,
+      Instant fechaProvisionalConvocatoria) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - start");
+    List<Recipient> recipients = getRecipients(unidadGestionRef, CONFIG_CSP_COM_SOL_CAMB_EST_ALEGACIONES);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput;
+      emailOutput = emailService.createComunicadoSolicitudCambioEstadoAlegaciones(
+          CspComSolicitudCambioEstadoAlegacionesData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .nombreApellidosSolicitante(nombreApellidosSolicitante)
+              .codigoInternoSolicitud(codigoInterno)
+              .fechaCambioEstadoSolicitud(fechaCambioEstadoSolicitud)
+              .fechaProvisionalConvocatoria(fechaProvisionalConvocatoria).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoAlegaciones() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - end");
   }
 }

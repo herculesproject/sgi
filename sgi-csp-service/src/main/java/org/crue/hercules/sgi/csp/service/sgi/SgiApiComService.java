@@ -1,12 +1,17 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
@@ -22,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -41,6 +44,10 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA = "CSP_COM_SOL_CAMB_EST_SOLICITADA";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES = "CSP_COM_SOL_CAMB_EST_ALEGACIONES";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES
       + "_DATA";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
@@ -463,6 +470,14 @@ public class SgiApiComService extends SgiApiBaseService {
       throws JsonProcessingException {
     return this.createComunicado(data, recipients, TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA_PARAM);
+  }
+
+  public EmailOutput createComunicadoSolicitudCambioEstadoAlegaciones(
+      CspComSolicitudCambioEstadoAlegacionesData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)

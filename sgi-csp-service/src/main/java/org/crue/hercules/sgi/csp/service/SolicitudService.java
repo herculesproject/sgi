@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
+import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -58,6 +59,7 @@ import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -97,6 +99,7 @@ public class SolicitudService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
   private final ComunicadosService comunicadosService;
+  private final SgiApiSgpService personasService;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -110,7 +113,8 @@ public class SolicitudService {
       SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository,
       ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
-      ComunicadosService comunicadosService) {
+      ComunicadosService comunicadosService,
+      SgiApiSgpService personasService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -126,6 +130,7 @@ public class SolicitudService {
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
     this.comunicadosService = comunicadosService;
+    this.personasService = personasService;
   }
 
   /**
@@ -1054,40 +1059,66 @@ public class SolicitudService {
 
   private void enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {
     log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - start");
-    switch (estadoSolicitud.getEstado()) {
-      case SOLICITADA:
-        try {
+    try {
+      switch (estadoSolicitud.getEstado()) {
+        case SOLICITADA:
           /*
            * Enviamos el comunicado de Cambio al estado SOLICITADA en solicitudes de
            * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
            */
-          String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
-          if (personaRef.equals(solicitud.getSolicitanteRef())) {
-            ConfiguracionSolicitud datosConfiguracionSolicitud = configuracionSolicitudRepository
-                .findByConvocatoriaId(solicitud.getConvocatoriaId())
-                .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(solicitud.getConvocatoriaId()));
-            if (datosConfiguracionSolicitud.getTramitacionSGI()) {
-              Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
-                  .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
-              this.comunicadosService.enviarComunicadoSolicitudCambioEstadoSolicitada(solicitud.getSolicitanteRef(),
-                  solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), convocatoria.getFechaPublicacion(),
-                  solicitud.getEstado().getFechaEstado());
-            } else {
-              log.debug(
-                  "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - No se puede enviar el comunicado porque no es tramitable");
-            }
-          } else {
-            log.debug(
-                "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - No se puede enviar el comunicado, no es una convocatoria propia");
+          if (checkConvocatoriaPropia(solicitud.getSolicitanteRef())
+              && checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
+            Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoSolicitada(
+                getNombreApellidosByPersonaRef(solicitud.getSolicitanteRef()),
+                solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), convocatoria.getFechaPublicacion(),
+                solicitud.getEstado().getFechaEstado());
           }
-        } catch (JsonProcessingException e) {
-          log.debug("Error enviarComunicadoSolicitudCambioEstadoSolicitada(String solicitanteRef "
-              + solicitud.getSolicitanteRef() + ", String unidadGestionRef " + solicitud.getUnidadGestionRef()
-              + ", Long convocatoriaId " + solicitud.getConvocatoriaId() + ", Instant fechaEstado "
-              + solicitud.getEstado().getFechaEstado(), e);
-        }
-        break;
+          break;
+        case PRESENTADA_SUBSANACION:
+        case ALEGACION_FASE_ADMISION:
+        case RECURSO_FASE_ADMISION:
+        case ALEGACION_FASE_PROVISIONAL:
+        case RECURSO_FASE_CONCESION:
+          /*
+           * Enviamos el comunicado de Cambio de estado a PRESENTACIÓN DE ALEGACIONES en
+           * solicitudes de CONVOCATORIAS PROPIAS registradas por el propio por
+           * solicitante
+           */
+          if (checkConvocatoriaPropia(solicitud.getSolicitanteRef())
+              && checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
+            Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoAlegaciones(
+                getNombreApellidosByPersonaRef(solicitud.getSolicitanteRef()),
+                solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), solicitud.getCodigoRegistroInterno(),
+                solicitud.getEstado().getFechaEstado(), convocatoria.getFechaProvisional());
+          }
+          break;
+      }
+      log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
+    } catch (JsonProcessingException e) {
+      log.debug(
+          "Error enviarComunicadoSolicitudCambioEstadoAlegaciones(Solicitud solicitud, EstadoSolicitud estadoSolicitud",
+          e);
     }
-    log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
+  }
+
+  private boolean checkConvocatoriaTramitable(Long convocatoriaId) {
+    ConfiguracionSolicitud datosConfiguracionSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(convocatoriaId)
+        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoriaId));
+    return datosConfiguracionSolicitud.getTramitacionSGI();
+  }
+
+  private boolean checkConvocatoriaPropia(String solicitanteRef) {
+    String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
+    return personaRef.equals(solicitanteRef);
+  }
+
+  private String getNombreApellidosByPersonaRef(String personaRef) {
+    PersonaOutput persona = personasService.findById(personaRef);
+    return persona.getNombre() + " " + persona.getApellidos();
   }
 }
