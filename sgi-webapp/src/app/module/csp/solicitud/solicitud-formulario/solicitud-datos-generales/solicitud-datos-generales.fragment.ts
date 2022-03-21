@@ -147,7 +147,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         codigoExterno: new FormControl({ value: '', disabled: true }, Validators.maxLength(50)),
         observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),
         comentariosEstado: new FormControl({ value: '', disabled: true }),
-        tipoSolicitudGrupo: new FormControl({ value: '', disabled: true }, Validators.required),
+        tipoSolicitudGrupo: new FormControl({ value: null, disabled: true }, Validators.required),
         grupo: new FormControl({ value: null, disabled: true }, Validators.required),
       });
 
@@ -167,7 +167,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         comentariosEstado: new FormControl({ value: '', disabled: true }),
         convocatoriaExterna: new FormControl(''),
         formularioSolicitud: new FormControl({ value: FormularioSolicitud.PROYECTO, disabled: this.isEdit() }),
-        tipoSolicitudGrupo: new FormControl({ value: '', disabled: this.isEdit() }, Validators.required),
+        tipoSolicitudGrupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
         grupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
         unidadGestion: new FormControl(null, Validators.required),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
