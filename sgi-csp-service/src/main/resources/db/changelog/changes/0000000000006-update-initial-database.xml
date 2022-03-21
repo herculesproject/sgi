@@ -88,5 +88,8 @@
       <column name="cod_universidad" type="varchar(255)" />
     </addColumn>
   </changeSet>
+  <changeSet context="dev" author="master" id="0000000000006-16">
+    <dropColumn columnName="horas_dedicacion" tableName="proyecto_equipo" />
+  </changeSet>
 
 </databaseChangeLog>
