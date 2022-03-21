@@ -2052,4 +2052,22 @@
     </faultSequence>
   </resource>
 
+  <resource methods="GET" uri-template="/vinculaciones/persona/{id}/vinculaciones-categorias-profesionales">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <sequence key="sgp-add-x-api-key-sequence"/>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <script key="gov:scripts/sgp/vinculacion-categoria-profesional-response-converter-mediator.js" language="js"/>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
 </api>
