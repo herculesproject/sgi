@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -38,6 +39,9 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION = "CSP_COM_SOLICITUD_PETICION_EVALUACION";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO = "ETI_PETICION_EVALUACION_CODIGO";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA = "CSP_COM_SOL_CAMB_EST_SOLICITADA";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA
+      + "_DATA";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO
@@ -51,6 +55,7 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM = TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP
       + "_DATA";
 
+  private static final String PATH_EMAILS = "/emails";
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
 
@@ -451,5 +456,26 @@ public class SgiApiComService extends SgiApiBaseService {
 
     log.debug("sendEmail(Long id) - end");
     return response;
+  }
+
+  public EmailOutput createComunicadoSolicitudCambioEstadoSolicitada(
+      CspComSolicitudCambioEstadoSolicitadaData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients, TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA_PARAM);
+  }
+
+  private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
+      throws JsonProcessingException {
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = PATH_EMAILS;
+    HttpMethod httpMethod = HttpMethod.POST;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+    EmailInput request = EmailInput.builder().template(template).recipients(recipients).build();
+    request.setParams(Arrays.asList(
+        new EmailParam(templateParam, mapper.writeValueAsString(data))));
+    return super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
+        new ParameterizedTypeReference<EmailOutput>() {
+        }).getBody();
   }
 }

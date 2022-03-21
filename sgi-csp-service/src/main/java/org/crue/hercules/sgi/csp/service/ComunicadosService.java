@@ -1,26 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
-import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
-import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
-import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
-import org.crue.hercules.sgi.csp.dto.com.Recipient;
-import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
-import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
-import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
-import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
-import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.springframework.stereotype.Service;
-
+import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -30,36 +10,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
+import org.crue.hercules.sgi.csp.dto.com.Recipient;
+import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Slf4j
 public class ComunicadosService {
   private static final String CONFIG_CSP_COM_INICIO_PRESENTACION_JUSTIFICACION_GASTO_DESTINATARIOS = "csp-com-inicio-presentacion-gasto-destinatarios-";
+  private static final String CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA = "csp-com-sol-camb-est-solicitada-destinatarios-";
+
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
+  private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
   private final SgiApiSgpService personasService;
-
-  private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
 
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
-      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService,
-      ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService) {
+      ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService,
+      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) {
     log.debug(
-        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - start");
+        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService, SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) - start");
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
+    this.proyectoSeguimientoCientificoComService = proyectoSeguimientoCientificoComService;
     this.configService = configService;
     this.emailService = emailService;
     this.personasService = personasService;
-    this.proyectoSeguimientoCientificoComService = proyectoSeguimientoCientificoComService;
     log.debug(
-        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ConfigService configService, EmailService emailService) - end");
+        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService, SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) - end");
   }
 
   public void enviarComunicadoInicioPresentacionJustificacionGastos() throws JsonProcessingException {
@@ -195,4 +197,31 @@ public class ComunicadosService {
     return proyectosByUnidadGestionRef;
   }
 
+  public void enviarComunicadoSolicitudCambioEstadoSolicitada(String solicitanteRef, String unidadGestionRef,
+      String tituloConvocatoria, Instant fechaPublicacionConvocatoria, Instant fechaCambioEstadoSolicitud)
+      throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - start");
+    List<String> destinatarios = configService
+        .findStringListByName(
+            CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA + unidadGestionRef);
+    List<Recipient> recipients = destinatarios.stream()
+        .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
+        .collect(Collectors.toList());
+    if (!recipients.isEmpty()) {
+      PersonaOutput persona = personasService.findById(solicitanteRef);
+      EmailOutput emailOutput;
+      emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
+          CspComSolicitudCambioEstadoSolicitadaData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .nombreApellidosSolicitante(persona.getNombre() + " " + persona.getApellidos())
+              .fechaCambioEstadoSolicitud(fechaCambioEstadoSolicitud)
+              .fechaPublicacionConvocatoria(fechaPublicacionConvocatoria).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoSolicitada() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - end");
+  }
 }

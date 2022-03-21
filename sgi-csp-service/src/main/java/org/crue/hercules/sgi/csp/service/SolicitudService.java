@@ -580,7 +580,7 @@ public class SolicitudService {
       }
     }
     Solicitud returnValue = repository.save(solicitud);
-
+    enviarComunicadosCambioEstado(solicitud, estadoSolicitud);
     log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - end");
     return returnValue;
   }
@@ -1052,4 +1052,42 @@ public class SolicitudService {
         .sumImporteSolicitadoBySolicitudIdAndFinanciacionAjenaIsFalse(solicitud.getId());
   }
 
+  private void enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {
+    log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - start");
+    switch (estadoSolicitud.getEstado()) {
+      case SOLICITADA:
+        try {
+          /*
+           * Enviamos el comunicado de Cambio al estado SOLICITADA en solicitudes de
+           * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
+           */
+          String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
+          if (personaRef.equals(solicitud.getSolicitanteRef())) {
+            ConfiguracionSolicitud datosConfiguracionSolicitud = configuracionSolicitudRepository
+                .findByConvocatoriaId(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(solicitud.getConvocatoriaId()));
+            if (datosConfiguracionSolicitud.getTramitacionSGI()) {
+              Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                  .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+              this.comunicadosService.enviarComunicadoSolicitudCambioEstadoSolicitada(solicitud.getSolicitanteRef(),
+                  solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), convocatoria.getFechaPublicacion(),
+                  solicitud.getEstado().getFechaEstado());
+            } else {
+              log.debug(
+                  "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - No se puede enviar el comunicado porque no es tramitable");
+            }
+          } else {
+            log.debug(
+                "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - No se puede enviar el comunicado, no es una convocatoria propia");
+          }
+        } catch (JsonProcessingException e) {
+          log.debug("Error enviarComunicadoSolicitudCambioEstadoSolicitada(String solicitanteRef "
+              + solicitud.getSolicitanteRef() + ", String unidadGestionRef " + solicitud.getUnidadGestionRef()
+              + ", Long convocatoriaId " + solicitud.getConvocatoriaId() + ", Instant fechaEstado "
+              + solicitud.getEstado().getFechaEstado(), e);
+        }
+        break;
+    }
+    log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
+  }
 }
