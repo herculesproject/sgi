@@ -147,7 +147,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         codigoExterno: new FormControl({ value: '', disabled: true }, Validators.maxLength(50)),
         observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),
         comentariosEstado: new FormControl({ value: '', disabled: true }),
-        tipoSolicitudGrupo: new FormControl({ value: null, disabled: true }, Validators.required),
+        tipoSolicitudGrupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
         grupo: new FormControl({ value: null, disabled: true }, Validators.required),
       });
 
@@ -199,7 +199,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.subscriptions.push(
         form.controls.formularioSolicitud.valueChanges.subscribe(
           (tipoFormulario) => {
-            if (tipoFormulario === FormularioSolicitud.GRUPO && !this.isEdit()) {
+            if (tipoFormulario === FormularioSolicitud.GRUPO && (!this.isEdit())) {
               form.controls.tipoSolicitudGrupo.enable();
             } else {
               form.controls.tipoSolicitudGrupo.disable();
@@ -289,6 +289,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.solicitud.titulo = form.titulo.value;
       this.solicitud.observaciones = form.observaciones.value;
       this.solicitud.codigoExterno = form.codigoExterno.value;
+      this.solicitud.tipoSolicitudGrupo = form.tipoSolicitudGrupo.value;
     } else {
       this.solicitud.solicitante = form.solicitante.value;
       this.solicitud.titulo = form.titulo.value;
