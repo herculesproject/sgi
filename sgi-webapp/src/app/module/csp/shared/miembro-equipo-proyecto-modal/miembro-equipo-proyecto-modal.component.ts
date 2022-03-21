@@ -33,7 +33,6 @@ export interface MiembroEquipoProyectoModalData {
   entidad: IMiembroEquipoProyecto;
   fechaInicioMin: DateTime;
   fechaFinMax: DateTime;
-  showHorasDedicacion: boolean;
   isEdit: boolean;
   readonly: boolean;
 }
@@ -193,13 +192,6 @@ export class MiembroEquipoProyectoModalComponent extends
       }
     );
 
-    if (this.data.showHorasDedicacion) {
-      formGroup.addControl('horasDedicacion', new FormControl(this.data?.entidad?.horasDedicacion, [
-        Validators.min(0),
-        Validators.max(9999)
-      ]));
-    }
-
     if (this.data.readonly) {
       formGroup.disable();
     }
@@ -212,11 +204,6 @@ export class MiembroEquipoProyectoModalComponent extends
     this.data.entidad.persona = this.formGroup.get('miembro').value;
     this.data.entidad.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.entidad.fechaFin = this.formGroup.get('fechaFin').value;
-
-    if (this.data.showHorasDedicacion) {
-      this.data.entidad.horasDedicacion = this.formGroup.get('horasDedicacion').value;
-    }
-
     return this.data;
   }
 
