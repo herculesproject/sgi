@@ -32,6 +32,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { IGrupo } from '@core/models/csp/grupo';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
 import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
@@ -58,6 +59,9 @@ import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { PersonaService } from '../sgp/persona.service';
+import { GRUPO_REQUEST_CONVERTER } from './grupo/grupo-request.converter';
+import { IGrupoResponse } from './grupo/grupo-response';
+import { GRUPO_RESPONSE_CONVERTER } from './grupo/grupo-response.converter';
 import { IRequisitoEquipoNivelAcademicoResponse } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response';
 import { REQUISITO_EQUIPO_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response.converter';
 import { IRequisitoIPCategoriaProfesionalResponse } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response';
@@ -631,4 +635,18 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
         })
       );
   }
+  /**
+   * Se crea un grupo a partir de los datos de la solicitud
+   *
+   * @param id identificador de la solicitud a copiar
+   */
+  createGrupoBySolicitud(id: number, grupo: IGrupo): Observable<IGrupo> {
+    return this.http.post<IGrupoResponse>(
+      `${this.endpointUrl}/${id}/grupo`,
+      GRUPO_REQUEST_CONVERTER.fromTarget(grupo)
+    ).pipe(
+      map(response => GRUPO_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
 }

@@ -72,6 +72,16 @@
         </td>
       </ng-container>
 
+      <!-- Titulo Solicitud Column -->
+      <ng-container matColumnDef="titulo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.solicitud.titulo-listado' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.titulo}}
+        </td>
+      </ng-container>
+
       <!-- Referencia convocatoria Column -->
       <ng-container matColumnDef="referencia">
         <th mat-header-cell *matHeaderCellDef>
@@ -89,16 +99,6 @@
         </th>
         <td mat-cell *matCellDef="let element">
           {{ESTADO_MAP.get(element.estado?.estado) | translate}}
-        </td>
-      </ng-container>
-
-      <!-- Titulo Solicitud Column -->
-      <ng-container matColumnDef="titulo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'csp.solicitud.titulo-listado' | translate}}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.titulo}}
         </td>
       </ng-container>
 

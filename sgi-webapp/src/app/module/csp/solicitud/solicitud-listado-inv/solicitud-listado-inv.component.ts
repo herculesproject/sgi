@@ -150,9 +150,9 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     this.columnas = [
       'codigoRegistroInterno',
       'codigoExterno',
+      'titulo',
       'referencia',
       'estado.estado',
-      'titulo',
       'estado.fechaEstado',
       'acciones'
     ];

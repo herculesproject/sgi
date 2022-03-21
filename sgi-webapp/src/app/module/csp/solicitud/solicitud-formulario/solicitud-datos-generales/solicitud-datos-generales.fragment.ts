@@ -256,6 +256,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         observaciones: solicitud?.observaciones ?? '',
         comentariosEstado: solicitud?.estado?.comentario,
         tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
+        grupo: this.grupo,
       };
     } else {
       return {

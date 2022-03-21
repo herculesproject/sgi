@@ -89,7 +89,7 @@ export class GrupoService extends _GrupoMixinBase {
 
   /**
    * Desactiva el grupo
-   * 
+   *
    * @param id Identificador del grupo
    */
   desactivar(id: number): Observable<void> {
@@ -99,7 +99,7 @@ export class GrupoService extends _GrupoMixinBase {
 
   /**
    * Recupera la lista de miembros del equipo del grupo
-   * 
+   *
    * @param id Identificador del grupo
    * @param options opciones de búsqueda.
    */
@@ -113,7 +113,7 @@ export class GrupoService extends _GrupoMixinBase {
 
   /**
    * Recupera la lista de investigadores principales del grupo
-   * 
+   *
    * @param id Identificador del grupo
    * @param options opciones de búsqueda.
    */

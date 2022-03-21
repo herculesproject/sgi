@@ -1,0 +1,57 @@
+<div class="sgi-dialog-header" fxLayout="row" fxLayoutGap="20px">
+  <span fxFlexAlign="center" mat-mat-dialog-title role="heading" aria-level="3" fxFlex>{{'title.new.entity' |
+    translate:msgParamGrupoEntity}}</span>
+  <button fxFlex="nogrow" mat-icon-button mat-dialog-close>
+    <mat-icon class="close-icon">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" fxLayout="column">
+    <!-- Nombre -->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{'csp.solicitud.grupo.nombre' | translate}}</mat-label>
+        <input matInput formControlName="nombre" type="text" id="nombre"
+          placeholder="{{'csp.solicitud.grupo.nombre' | translate}}" required>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!--Fecha inicio-->
+      <mat-form-field fxFlex="50%">
+        <mat-label>{{'label.fecha-inicio' | translate}}</mat-label>
+        <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="fechaInicio" required>
+        <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #fechaInicio showSeconds="true">
+        </ngx-mat-datetime-picker>
+        <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
+          {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
+        </mat-error>
+      </mat-form-field>
+      <!--Fecha Fin-->
+      <mat-form-field fxFlex="50%">
+        <mat-label>{{'label.fecha-fin' | translate}}</mat-label>
+        <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="fechaFin" required>
+        <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #fechaFin showSeconds="true">
+        </ngx-mat-datetime-picker>
+        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
+          {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button color="accent" [disabled]="formGroup.invalid" (click)="saveOrUpdate()" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate |
+    translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>
