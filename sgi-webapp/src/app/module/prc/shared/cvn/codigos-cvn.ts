@@ -71,7 +71,7 @@ enum CodigoCVN {
   E050_020_030_090 = '050.020.030.090',
   /* Catálogo */
   E050_020_030_100 = '050.020.030.100',
-  /* Comisario de exposición */
+  /* Comisario */
   E050_020_030_110 = '050.020.030.110',
   /* Colectiva */
   COLECTIVA = 'COLECTIVA',
