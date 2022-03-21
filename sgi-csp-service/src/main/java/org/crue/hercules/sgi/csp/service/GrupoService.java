@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -11,17 +12,33 @@ import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
+import org.crue.hercules.sgi.csp.converter.GrupoConverter;
+import org.crue.hercules.sgi.csp.dto.GrupoInput;
+import org.crue.hercules.sgi.csp.dto.GrupoOutput;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
+import org.crue.hercules.sgi.csp.exceptions.FormularioSolicitudTypeNotCorrect;
 import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudNotInCorrectState;
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Grupo;
+import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.GrupoEquipo.Dedicacion;
+import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -45,8 +62,12 @@ public class GrupoService {
   private final GrupoRepository repository;
   private final GrupoTipoService grupoTipoService;
   private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
+  private final GrupoConverter converter;
   private final Validator validator;
   private final SgiConfigProperties sgiConfigProperties;
+  private final SolicitudRepository solicitudRepository;
+  private final RolProyectoService rolProyectoService;
+  private final GrupoEquipoRepository grupoEquipoRepository;
 
   /**
    * Guarda la entidad {@link Grupo}.
@@ -345,6 +366,78 @@ public class GrupoService {
 
     Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
     return repository.findAllByAnio(fechaBaremacion);
+  }
+
+  /*
+   * Guarda la entidad {@link Grupo} a partir de los datos de la entidad
+   * {@link Solicitud}.
+   *
+   * @param solicitudId identificador de la entidad {@link Solicitud} a copiar
+   * datos.
+   * 
+   * @param grupo datos necesarios para crear el {@link Grupo}
+   * 
+   * @return proyecto la entidad {@link Grupo} persistida.
+   */
+  @Transactional
+  public Grupo createGrupoBySolicitud(Long solicitudId, Grupo grupo) {
+    log.debug("createGrupoBySolicitud(Long solicitudId, GrupoInput grupo) - start");
+
+    Solicitud solicitud = solicitudRepository.findById(solicitudId)
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
+
+    this.validarDatosSolicitud(solicitud);
+    grupo.setSolicitudId(solicitudId);
+    // Crea el grupo
+    Grupo newGrupo = repository.save(grupo);
+
+    // Grupo Especial investigacion
+    GrupoEspecialInvestigacion grupoEspecialInvestigacion = GrupoEspecialInvestigacion.builder()
+        .especialInvestigacion(false)
+        .fechaInicio(newGrupo.getFechaInicio())
+        .build();
+
+    grupoEspecialInvestigacion.setGrupoId(newGrupo.getId());
+    newGrupo.setEspecialInvestigacion(grupoEspecialInvestigacionService.create(grupoEspecialInvestigacion));
+
+    // Grupo Equipo
+    RolProyecto rolProyecto = rolProyectoService.findPrincipal();
+
+    GrupoEquipo grupoEquipo = GrupoEquipo.builder()
+        .personaRef(solicitud.getSolicitanteRef())
+        .fechaInicio(newGrupo.getFechaInicio())
+        .fechaFin(newGrupo.getFechaFin())
+        .rol(rolProyecto)
+        .dedicacion(Dedicacion.COMPLETA)
+        .participacion(new BigDecimal(100))
+        .grupoId(newGrupo.getId())
+        .build();
+
+    grupoEquipoRepository.save(grupoEquipo);
+    Grupo returnValue = repository.save(newGrupo);
+
+    log.debug("createGrupoBySolicitud(Long solicitudId, GrupoInput grupo) - end");
+    return returnValue;
+  }
+
+  /**
+   * Se comprueba que los datos de la {@link Solicitud} a copiar para crear el
+   * {@link Grupo} cumplan las validaciones oportunas
+   *
+   * @param solicitud datos de la {@link Solicitud}
+   */
+  private void validarDatosSolicitud(Solicitud solicitud) {
+
+    if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL_ALEGADA)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL_NO_ALEGADA)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA)) {
+      throw new SolicitudNotInCorrectState();
+    }
+
+    if (solicitud.getFormularioSolicitud() != FormularioSolicitud.GRUPO) {
+      throw new FormularioSolicitudTypeNotCorrect();
+    }
   }
 
 }

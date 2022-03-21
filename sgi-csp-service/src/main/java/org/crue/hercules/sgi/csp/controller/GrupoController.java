@@ -207,7 +207,7 @@ public class GrupoController {
    * @return el siguiente codigo para el {@link Grupo}.
    */
   @GetMapping(PATH_NEXT_CODIGO)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-GIN-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-C','CSP-SOL-E')")
   public String getNextCodigo(@RequestParam String departamentoRef) {
     log.debug("getNextCodigo(String departamentoRef) - start");
     String returnValue = service.getNextCodigo(departamentoRef);
