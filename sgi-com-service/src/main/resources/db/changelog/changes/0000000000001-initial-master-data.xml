@@ -124,7 +124,18 @@
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
       <column name="name" value="CSP_COM_SOL_CAMB_EST_ALEGACIONES_DATA" />
-      <column name="description" value="JSON con formato: {&quot;titulo de convocatoria&quot;&quot;,nombre y apellidos del solicitante&quot;,&quot;código de registro interno&quot;&quot;,&quot;fecha de cambio de estado solicitud&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fecha provisional de la convocatoria&quot;:&quot;2022-01-31T00:00:00Z&quot;}" />
+      <column name="description" value="JSON con formato: {&quot;titulo de convocatoria&quot;&quot;,nombre y apellidos del solicitante&quot;,&quot;código de registro interno&quot;&quot;,&quot;fecha de cambio de estado solicitud&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fecha concesión de la convocatoria&quot;:&quot;2022-01-31T00:00:00Z&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_EXCL_DEF_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo de convocatoria&quot;&quot;,fecha definitiva de convocatoria&quot;,&quot;código de registro interno&quot;&quot;,&quot;Listado de enlaces de la convocatoria&quot;" />
       <column name="type" value="JSON" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -286,6 +297,17 @@
       <column name="tpl" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_PROV_SUBJECT.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_SUBJECT'</where>
     </update>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_EXCL_DEF_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el cambio de estado de solicitud excluida definitiva" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_SUBJECT.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_SUBJECT'</where>
+    </update>
     <!-- CSP Solicitud Hito -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
@@ -411,6 +433,11 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_DATA')" />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado definitiva -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_DATA')" />
     </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="subjecttpl_param">
@@ -572,6 +599,15 @@
       <column name="tpl_text" value=" " />
       <column name="tpl_html" value=" " />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el cambio de estado de solicitud a excluida definitiva" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value=" " />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida Provisional -->
     <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT_text.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT'</where>
@@ -579,6 +615,15 @@
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT_html.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT'</where>
+    </update>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT'</where>
     </update>
     <!-- CSP Solicitud Hito -->
     <insert tableName="content_tpl">
@@ -753,6 +798,11 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_DATA')" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_DATA')" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
@@ -908,6 +958,16 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_EXCL_DEF" />
+      <column name="description" value="Aviso de cambio de estado de solicitud a excluida definitiva (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -1006,6 +1066,11 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_SUBJECT')" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_SUBJECT')" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
@@ -1076,6 +1141,11 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT')" />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado Excluida definitiva -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT')" />
     </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="emailtpl_contenttpl">
