@@ -1,1 +1,1 @@
-Convocatoria de reunión "${ETI_COMITE_NOMBRE_INVESTIGACION}"
+Convocatoria de reunión ${ETI_COMITE_NOMBRE_INVESTIGACION}
