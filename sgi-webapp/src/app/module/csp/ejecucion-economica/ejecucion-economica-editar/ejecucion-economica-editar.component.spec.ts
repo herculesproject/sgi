@@ -12,7 +12,7 @@ import { ActionFooterComponent } from '@shared/action-footer/action-footer.compo
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { EJECUCION_ECONOMICA_DATA_KEY } from '../ejecucion-economica-data.resolver';
-import { EjecucionEconomicaActionService, IEjecucionEconomicaData } from '../ejecucion-economica.action.service';
+import { EjecucionEconomicaActionService, IEjecucionEconomicaData, IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { EjecucionEconomicaEditarComponent } from './ejecucion-economica-editar.component';
 
 describe('EjecucionEconomicaEditarComponent', () => {
@@ -21,7 +21,7 @@ describe('EjecucionEconomicaEditarComponent', () => {
   const routeData: Data = {
     [EJECUCION_ECONOMICA_DATA_KEY]: {
       proyectoSge: {},
-      proyectosRelacionados: [],
+      relaciones: [{ id: 1 } as IRelacionEjecucionEconomicaWithResponsables],
       readonly: false,
       configuracion: {
         validacionGastos: false

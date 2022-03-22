@@ -69,7 +69,7 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
     this.subscriptions.push(this.ejecucionEconomicaService.getViajeDieta(element.id).pipe(
       map(detalle => {
         const datoEconomicoDetalle = detalle as DatoEconomicoDetalleModalData;
-        datoEconomicoDetalle.proyectosSgi = this.formPart.relaciones$.value.map(relacion => relacion.proyecto);
+        datoEconomicoDetalle.proyectosSgiIds = this.formPart.relaciones$.value.map(relacion => relacion.id);
         datoEconomicoDetalle.proyecto = element.proyecto;
         return datoEconomicoDetalle;
       }),

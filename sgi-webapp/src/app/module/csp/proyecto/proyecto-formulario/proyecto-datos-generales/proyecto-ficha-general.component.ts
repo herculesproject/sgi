@@ -19,7 +19,6 @@ import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment'
 
 const PROYECTO_ACRONIMO_KEY = marker('csp.proyecto.acronimo');
 const PROYECTO_AMBITO_GEOGRAFICO_KEY = marker('csp.proyecto.ambito-geografico');
-const PROYECTO_CALCULO_COSTE_KEY = marker('csp.proyecto.calculo-coste-personal');
 const PROYECTO_CODIGO_EXTERNO_KEY = marker('csp.proyecto.codigo-externo');
 const PROYECTO_CONFIDENCIAL_KEY = marker('csp.proyecto.confidencial');
 const PROYECTO_COORDINADOR_EXTERNO_KEY = marker('csp.proyecto.coordinador-externo');
@@ -61,7 +60,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   msgParamAmbitoGeograficoEntity = {};
   msgParamAcronimoEntity = {};
-  msgParamCalculoCosteEntity = {};
   msgParamCodigoExternoEntity = {};
   msgParamConfidencialEntity = {};
   msgParamCoordinadorExternoEntity = {};
@@ -268,12 +266,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamPaqueteTrabajoEntity =
       { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
-      PROYECTO_CALCULO_COSTE_KEY,
-      MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamCalculoCosteEntity =
-      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_HORAS_ANUALES_KEY,

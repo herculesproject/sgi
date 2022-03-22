@@ -112,10 +112,33 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
-   * Recupera la lista de investigadores principales del grupo
+   * GrupoEquipo que son investigador o investigadores principales del
+   * grupo con el id indicado.
+   * Se considera investiador principal a la GrupoEquipo que a fecha actual
+   * tiene el rol Proyecto con el flag "principal" a
+   * true. En caso de existir mas de una GrupoEquipo principal, se
+   * recupera el que tenga el mayor porcentaje de dedicación al grupo (campo
+   * "participación").
+   * Y en caso de que varios coincidan se devuelven todos los que coincidan.
    *
-   * @param id Identificador del grupo
-   * @param options opciones de búsqueda.
+   * @param id identificador del grupo.
+   * @return la lista de personaRef de los investigadores principales del
+   *         grupo en el momento actual.
+   */
+  findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(id: number): Observable<string[]> {
+    return this.get<string[]>(`${this.endpointUrl}/${id}/investigadoresprincipalesmaxparticipacion`);
+  }
+
+  /**
+   * GrupoEquipo que son investigador o investigadores principales del
+   * grupo con el id indicado.
+   * Se considera investiador principal a la GrupoEquipo que a fecha actual
+   * tiene el rol Proyecto con el flag "principal" a
+   * true. En caso de que varios coincidan se devuelven todos los que coincidan.
+   *
+   * @param id identificador del grupo.
+   * @return la lista de personaRef de los investigadores principales del
+   *         grupo en el momento actual.
    */
   findPersonaRefInvestigadoresPrincipales(id: number): Observable<string[]> {
     return this.get<string[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`);
