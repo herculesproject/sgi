@@ -14,6 +14,7 @@ import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
+import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -48,6 +49,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
@@ -92,7 +94,9 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRep
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
+import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
@@ -1826,7 +1830,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Override
   public List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin){
 
-          String strFechaInicioBaremacion = anioInicio + PeriodDateUtil.PATTERN_MONTH_DAY_01_01;
+    String strFechaInicioBaremacion = anioInicio + PeriodDateUtil.PATTERN_MONTH_DAY_01_01;
 
     Instant fechaInicioBaremacion = LocalDate.parse(strFechaInicioBaremacion)
         .atStartOfDay(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
@@ -1834,6 +1838,39 @@ public class ProyectoServiceImpl implements ProyectoService {
     Instant fechaFinBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anioFin, sgiConfigProperties.getTimeZone());
 
     return repository.findProyectosProduccionCientifica(fechaInicioBaremacion, fechaFinBaremacion);
+  }
+    
+  /**  
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} que se
+   * encuentren dentro de la unidad de gestión del usuario logueado
+   * 
+   * @param query    filtro de búsqueda.
+   * @param pageable {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas paginadas
+   *         y filtradas.
+   */
+  @Override
+  public Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable) {
+    log.debug("findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable) - start");
+
+    Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.activos();
+    if (query != null) {
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query,  ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
+    }
+
+    // No tiene acceso a todos los UO
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-EJEC-V", "CSP-EJEC-E" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<ProyectoProyectoSge> specByUnidadGestionRefIn = ProyectoProyectoSgeSpecifications
+          .unidadGestionRefIn(unidadesGestion);
+      specs = specs.and(specByUnidadGestionRefIn);
+    }
+
+    Page<RelacionEjecucionEconomica> returnValue = proyectoProyectoSGERepository.findRelacionesEjecucionEconomica(specs, pageable);
+    log.debug("findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable) - end");
+    return returnValue;
   }
 
 }

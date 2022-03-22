@@ -4,7 +4,11 @@ import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
+import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.model.Grupo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,5 +37,17 @@ public interface CustomGrupoRepository {
    * @return Lista de {@link GrupoDto}
    */
   List<GrupoDto> findAllByAnio(Instant fechaBaremacion);
+
+  /**
+   * Obtiene datos economicos de los {@link Grupo}
+   * 
+   * @param specification condiciones que deben cumplir.
+   * @param pageable      paginación.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} paginadas
+   *         y
+   *         filtradas.
+   */
+  Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomica(Specification<Grupo> specification,
+      Pageable pageable);
 
 }

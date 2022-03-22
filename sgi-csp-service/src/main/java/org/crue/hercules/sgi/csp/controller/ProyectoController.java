@@ -47,6 +47,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
@@ -107,6 +108,8 @@ public class ProyectoController {
 
   /** El path que gestiona este controlador */
   public static final String REQUEST_MAPPING = "/proyectos";
+  public static final String PATH_ID = "/{id}";
+  public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + "/investigadoresprincipales";
 
   private ModelMapper modelMapper;
 
@@ -1550,6 +1553,28 @@ public class ProyectoController {
     return proyectoAnualidadService.getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyectoId);
   }
 
+  /**
+   * Devuelve una lista filtrada de investigadores principales del
+   * {@link Proyecto} en el momento actual.
+   *
+   * Son investiador principales los {@link ProyectoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * <code>true</code>.
+   * 
+   * @param id Identificador del {@link Proyecto}.
+   * @return la lista de personaRef de los investigadores principales del
+   *         {@link Proyecto} en el momento actual.
+   */
+  @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR')")
+  public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipales(@PathVariable Long id) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
+    List<String> returnValue = proyectoEquipoService.findPersonaRefInvestigadoresPrincipales(id);
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
     List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
         .map(this::convert)
@@ -1608,4 +1633,5 @@ public class ProyectoController {
     proyectoEquipoDto.setIp(ip);
     return proyectoEquipoDto;
   }
+
 }

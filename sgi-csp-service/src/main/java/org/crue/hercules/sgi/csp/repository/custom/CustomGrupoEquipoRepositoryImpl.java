@@ -45,21 +45,21 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
    * {@link GrupoEquipo} que son investigador o investigadores principales del
    * {@link Grupo} con el id indicado.
    * 
-   * Se considera investigador principal al {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag "principal" a
-   * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
+   * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag "principal" a <code>true</code>. En
+   * caso de existir mas de un {@link GrupoEquipo}, se
    * recupera el que tenga el mayor porcentaje de dedicación al grupo (campo
    * "participación").
    * Y en caso de que varios coincidan se devuelven todos los que coincidan.
    * 
    * @param grupoId identificador del {@link Grupo}.
    * @param fecha   fecha en la que se busca el investigador principal.
-   * @return la lista de personaRef de losinvestigadores principales del
+   * @return la lista de personaRef de los investigadores principales del
    *         {@link Grupo} en el momento actual.
    */
   @Override
-  public List<String> findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) {
-    log.debug("findPersonaRefInvestigadoresPrincipales() - start");
+  public List<String> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId, Instant fecha) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<String> cq = cb.createQuery(String.class);
@@ -79,7 +79,38 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
 
     List<String> returnValue = entityManager.createQuery(cq).getResultList();
 
-    log.debug("findPersonaRefInvestigadoresPrincipales() - end");
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - end");
+    return returnValue;
+  }
+
+  /**
+   * {@link GrupoEquipo} que son investigador o investigadores principales del
+   * {@link Grupo} con el id indicado.
+   * 
+   * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag "principal" a true. En caso de que
+   * varios coincidan se devuelven todos los que coincidan.
+   * 
+   * @param grupoId identificador del {@link Grupo}.
+   * @param fecha   fecha en la que se busca el investigador principal.
+   * @return la lista de personaRef de los investigadores principales del
+   *         {@link Grupo} en el momento actual.
+   */
+  @Override
+  public List<String> findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - start");
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<String> cq = cb.createQuery(String.class);
+    Root<GrupoEquipo> root = cq.from(GrupoEquipo.class);
+
+    cq.select(root.get(GrupoEquipo_.personaRef)).where(cb.and(
+        getPredicateRolPrincipalFecha(root, cb, grupoId, fecha)))
+        .distinct(true);
+
+    List<String> returnValue = entityManager.createQuery(cq).getResultList();
+
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - end");
     return returnValue;
   }
 

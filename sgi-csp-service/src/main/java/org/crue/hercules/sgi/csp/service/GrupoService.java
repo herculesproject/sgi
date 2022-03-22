@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -12,13 +12,10 @@ import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
-import org.crue.hercules.sgi.csp.converter.GrupoConverter;
-import org.crue.hercules.sgi.csp.dto.GrupoInput;
-import org.crue.hercules.sgi.csp.dto.GrupoOutput;
+import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.FormularioSolicitudTypeNotCorrect;
 import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotInCorrectState;
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
@@ -26,19 +23,19 @@ import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
+import org.crue.hercules.sgi.csp.model.GrupoEquipo.Dedicacion;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.GrupoEquipo.Dedicacion;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.GrupoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -62,7 +59,6 @@ public class GrupoService {
   private final GrupoRepository repository;
   private final GrupoTipoService grupoTipoService;
   private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
-  private final GrupoConverter converter;
   private final Validator validator;
   private final SgiConfigProperties sgiConfigProperties;
   private final SolicitudRepository solicitudRepository;
@@ -313,6 +309,28 @@ public class GrupoService {
 
     log.debug("isDuplicatedCodigo(Long grupoId, String codigo) - end");
     return repository.count(specs) > 0;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica}
+   * 
+   * @param query    filtro de búsqueda.
+   * @param pageable {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas
+   *         paginadas y filtradas.
+   */
+  public Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaGrupos(String query, Pageable pageable) {
+    log.debug("findRelacionesEjecucionEconomicaGrupos(String query, Pageable pageable) - start");
+
+    Specification<Grupo> specs = GrupoSpecifications.activos();
+    if (query != null) {
+      specs = specs
+          .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+    }
+
+    Page<RelacionEjecucionEconomica> returnValue = repository.findRelacionesEjecucionEconomica(specs, pageable);
+    log.debug("findRelacionesEjecucionEconomicaGrupos(String query, Pageable pageable) - end");
+    return returnValue;
   }
 
   /**

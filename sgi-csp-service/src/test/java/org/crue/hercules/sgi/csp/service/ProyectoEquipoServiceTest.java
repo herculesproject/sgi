@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -44,13 +45,15 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
   @Mock
   private ProyectoHelper proyectoHelper;
+  @Mock
+  private SgiConfigProperties sgiConfigProperties;
 
   private ProyectoEquipoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoEquipoServiceImpl(repository, proyectoRepository,
-        proyectoHelper);
+        proyectoHelper, sgiConfigProperties);
   }
 
   @Test

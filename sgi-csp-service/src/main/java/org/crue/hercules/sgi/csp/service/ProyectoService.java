@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
@@ -177,5 +178,17 @@ public interface ProyectoService {
    * @return Lista de {@link ProyectoDto}
    */
   List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin);
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} que
+   * se
+   * encuentren dentro de la unidad de gestión del usuario logueado
+   * 
+   * @param query    filtro de búsqueda.
+   * @param pageable {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas
+   *         paginadas y filtradas.
+   */
+  Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable);
 
 }

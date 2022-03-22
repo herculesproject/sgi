@@ -142,17 +142,41 @@ public class GrupoEquipoService {
   }
 
   /**
-   * Obtiene los personaRef del investigador o investigadores principales del
-   * {@link Grupo} en el momento actual.
-   * 
-   * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag "principal" a
-   * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
-   * recupera el que tenga el mayor porcentaje de dedicación al grupo (campo
-   * "participación").
-   * Y en caso de que varios coincidan se devuelven todos los que coincidan.
+   * Devuelve una lista filtrada de investigadores principales del
+   * {@link Grupo} en el momento actual con mayor porcentaje de particitacion.
    *
-   * @param grupoId Identificador de la entidad {@link Grupo}.
+   * Son investiador principales los {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
+   * recupera el que tenga el mayor porcentaje de dedicación al grupo
+   * ({@link GrupoEquipo#participacion}) y en caso de que varios tengan la misma
+   * participacion se devuelven todos los que coincidan.
+   * 
+   * @param grupoId Identificador del {@link Grupo}.
+   * @return la lista de personaRef de los investigadores principales del
+   *         {@link Grupo} en el momento actual.
+   */
+  public List<String> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId) {
+    log.debug("findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId) - start");
+
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+    List<String> returnValue = repository.findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(grupoId,
+        fechaActual);
+
+    log.debug("findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista filtrada de investigadores principales del {@link Grupo}
+   * en el momento actual.
+   *
+   * Son investiador principales los {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * <code>true</code>.
+   * 
+   * @param grupoId Identificador del {@link Grupo}.
    * @return la lista de personaRef de los investigadores principales del
    *         {@link Grupo} en el momento actual.
    */

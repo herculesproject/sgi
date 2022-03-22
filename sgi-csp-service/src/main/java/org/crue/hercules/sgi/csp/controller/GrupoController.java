@@ -58,6 +58,8 @@ public class GrupoController {
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
   public static final String PATH_GRUPO_EQUIPO = PATH_ID + "/miembrosequipo";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + "/investigadoresprincipales";
+  public static final String PATH_INVESTIGADORES_PRINCIPALES_MAX_PARTICIPACION = PATH_ID
+      + "/investigadoresprincipalesmaxparticipacion";
   public static final String PATH_TODOS = "/todos";
   public static final String PATH_CODIGO_DUPLICADO = "/codigoduplicado";
   public static final String PATH_NEXT_CODIGO = "/nextcodigo";
@@ -255,22 +257,45 @@ public class GrupoController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de investigadores principales del
-   * {@link Grupo} en el momento actual.
+   * Devuelve una lista filtrada de investigadores principales del
+   * {@link Grupo} en el momento actual con mayor porcentaje de particitacion.
    *
-   * Se considera investiador principal al {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag "principal" a
+   * Son investiador principales los {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
    * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
-   * recupera el que tenga el mayor porcentaje de dedicación al grupo (campo
-   * "participación").
-   * Y en caso de que varios coincidan se devuelven todos los que coincidan.
+   * recupera el que tenga el mayor porcentaje de dedicación al grupo
+   * ({@link GrupoEquipo#participacion}) y en caso de que varios tengan la misma
+   * participacion se devuelven todos los que coincidan.
    * 
-   * @param id Identificador del {@link GrupoEquipo}.
-   * @return la lista de personaRef de losinvestigadores principales del
+   * @param id Identificador del {@link Grupo}.
+   * @return la lista de personaRef de los investigadores principales del
+   *         {@link Grupo} en el momento actual.
+   */
+  @GetMapping(PATH_INVESTIGADORES_PRINCIPALES_MAX_PARTICIPACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
+  public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(
+      @PathVariable Long id) {
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
+    List<String> returnValue = grupoEquipoService.findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(id);
+    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista filtrada de investigadores principales del {@link Grupo}
+   * en el momento actual.
+   *
+   * Son investiador principales los {@link GrupoEquipo} que a fecha actual
+   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * <code>true</code>.
+   * 
+   * @param id Identificador del {@link Grupo}.
+   * @return la lista de personaRef de los investigadores principales del
    *         {@link Grupo} en el momento actual.
    */
   @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR')")
   public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipales(@PathVariable Long id) {
     log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
     List<String> returnValue = grupoEquipoService.findPersonaRefInvestigadoresPrincipales(id);
