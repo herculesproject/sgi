@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -20,6 +18,7 @@ import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.EstadoSolicitudNotUpdatedException;
 import org.crue.hercules.sgi.csp.exceptions.MissingInvestigadorPrincipalInSolicitudProyectoEquipoException;
@@ -33,6 +32,7 @@ import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudEx
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -44,6 +44,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
@@ -98,6 +99,7 @@ public class SolicitudService {
   private final SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository;
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+  private final ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
   private final ComunicadosService comunicadosService;
   private final SgiApiSgpService personasService;
 
@@ -113,6 +115,7 @@ public class SolicitudService {
       SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository,
       ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
+      ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
       ComunicadosService comunicadosService,
       SgiApiSgpService personasService) {
     this.sgiConfigProperties = sgiConfigProperties;
@@ -129,6 +132,7 @@ public class SolicitudService {
     this.solicitudProyectoPresupuestoRepository = solicitudProyectoPresupuestoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
+    this.convocatoriaEnlaceRepository = convocatoriaEnlaceRepository;
     this.comunicadosService = comunicadosService;
     this.personasService = personasService;
   }
@@ -524,7 +528,7 @@ public class SolicitudService {
                   this.comunicadosService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
                       peticionEvaluacion.getCodigo(), solicitud.getCodigoRegistroInterno(),
                       solicitud.getSolicitanteRef());
-                } catch (JsonProcessingException e) {
+                } catch (Exception e) {
                   log.debug(
                       "Error enviarComunicadoSolicitudAltaPeticionEvaluacionEti(String codigoPeticionEvaluacion, String codigoSolicitud, String solicitanteRef) -  codigoPeticionEvaluacion: "
                           + peticionEvaluacion
@@ -1096,9 +1100,29 @@ public class SolicitudService {
                 solicitud.getEstado().getFechaEstado(), convocatoria.getFechaProvisional());
           }
           break;
+        case EXCLUIDA_PROVISIONAL:
+          /*
+           * Enviamos el comunicado de Cambio al estado EXCLUIDA PROVISIONAL en
+           * solicitudes de
+           * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
+           */
+          if (checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
+            Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+
+            List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
+                .findByConvocatoriaId(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoExclProv(
+                convocatoria.getTitulo(),
+                convocatoria.getFechaProvisional(),
+                enlaces,
+                solicitud.getId());
+          }
+          break;
       }
       log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       log.debug(
           "Error enviarComunicadoSolicitudCambioEstadoAlegaciones(Solicitud solicitud, EstadoSolicitud estadoSolicitud",
           e);

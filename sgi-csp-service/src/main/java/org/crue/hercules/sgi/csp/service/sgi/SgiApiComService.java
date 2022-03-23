@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
@@ -42,12 +43,17 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION = "CSP_COM_SOLICITUD_PETICION_EVALUACION";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO = "ETI_PETICION_EVALUACION_CODIGO";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
+
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA = "CSP_COM_SOL_CAMB_EST_SOLICITADA";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_SOLICITADA
       + "_DATA";
 
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES = "CSP_COM_SOL_CAMB_EST_ALEGACIONES";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV = "CSP_COM_SOL_CAMB_EST_EXCL_PROV";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV
       + "_DATA";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
@@ -478,6 +484,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_ALEGACIONES_PARAM);
+  }
+
+  public EmailOutput createComunicadoSolicitudCambioEstadoExclProv(
+      CspComSolicitudCambioEstadoExclProvData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)

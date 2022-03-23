@@ -14,17 +14,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
@@ -41,6 +46,7 @@ public class ComunicadosService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
+  private final SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
   private final SgiApiCnfService configService;
@@ -50,20 +56,18 @@ public class ComunicadosService {
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
+      SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService,
       SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) {
-    log.debug(
-        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService, SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) - start");
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
+    this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
     this.proyectoSeguimientoCientificoComService = proyectoSeguimientoCientificoComService;
     this.configService = configService;
     this.emailService = emailService;
     this.personasService = personasService;
-    log.debug(
-        "ComunicadosService(SgiConfigProperties sgiConfigProperties, ProyectoRepository proyectoRepository, ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository, ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService, SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) - end");
   }
 
   public void enviarComunicadoInicioPresentacionJustificacionGastos() throws JsonProcessingException {
@@ -125,9 +129,7 @@ public class ComunicadosService {
       List<Recipient> recipients = persona.getEmails().stream()
           .map(email -> Recipient.builder().name(email.getEmail()).address(email.getEmail()).build())
           .collect(Collectors.toList());
-
-      EmailOutput emailOutput;
-      emailOutput = emailService
+      EmailOutput emailOutput = emailService
           .createComunicadoSolicitudPeticionEvaluacionEti(
               CspComSolicitudPeticionEvaluacionData.builder().codigoPeticionEvaluacion(codigoPeticionEvaluacion)
                   .codigoSolicitud(codigoSolicitud).build(),
@@ -206,8 +208,7 @@ public class ComunicadosService {
     log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - start");
     List<Recipient> recipients = getRecipients(unidadGestionRef, CONFIG_CSP_COM_SOL_CAMB_EST_SOLICITADA);
     if (!recipients.isEmpty()) {
-      EmailOutput emailOutput;
-      emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
           CspComSolicitudCambioEstadoSolicitadaData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .nombreApellidosSolicitante(nombreApellidosSolicitante)
@@ -228,8 +229,7 @@ public class ComunicadosService {
     log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - start");
     List<Recipient> recipients = getRecipients(unidadGestionRef, CONFIG_CSP_COM_SOL_CAMB_EST_ALEGACIONES);
     if (!recipients.isEmpty()) {
-      EmailOutput emailOutput;
-      emailOutput = emailService.createComunicadoSolicitudCambioEstadoAlegaciones(
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoAlegaciones(
           CspComSolicitudCambioEstadoAlegacionesData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .nombreApellidosSolicitante(nombreApellidosSolicitante)
@@ -243,5 +243,57 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoAlegaciones() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoExclProv(String tituloConvocatoria,
+      Instant fechaProvisionalConvocatoria,
+      List<ConvocatoriaEnlace> convocatoriaEnlaces, Long solicitudId) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - start");
+    List<CspComSolicitudCambioEstadoExclProvData.Enlace> enlaces = new ArrayList<>();
+    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
+      CspComSolicitudCambioEstadoExclProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoExclProvData.Enlace
+          .builder()
+          .descripcion(enlace.getDescripcion())
+          .url(enlace.getUrl())
+          .build();
+      if (enlace.getTipoEnlace() != null) {
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+      }
+      enlaces.add(nuevoEnlace);
+    }
+    List<Recipient> recipients = getRecipientsFromSolicitud(solicitudId);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
+          CspComSolicitudCambioEstadoExclProvData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .fechaProvisionalConvocatoria(
+                  fechaProvisionalConvocatoria)
+              .enlaces(enlaces).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoExclProv() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - end");
+  }
+
+  /**
+   * Obtiene los emails de los Investigadores principales
+   * de los proyectos generados a partir de la solicitud
+   * 
+   * @param solicitudId id del proyecto
+   * @return lista @link{Recipient}
+   */
+  private List<Recipient> getRecipientsFromSolicitud(Long solicitudId) {
+    List<Recipient> recipients = new ArrayList<>();
+    List<String> investigadoresPrincipalesRef = new ArrayList<>();
+    investigadoresPrincipalesRef.addAll(this.solicitudProyectoEquipoRepository
+        .findAllBySolicitudProyectoIdAndRolProyectoRolPrincipalTrue(solicitudId)
+        .stream().map(SolicitudProyectoEquipo::getPersonaRef).collect(Collectors.toList()));
+    if (!CollectionUtils.isEmpty(investigadoresPrincipalesRef)) {
+      recipients = ComConverter.toRecipients(personasService.findAllByIdIn(investigadoresPrincipalesRef));
+    }
+    return recipients;
   }
 }
