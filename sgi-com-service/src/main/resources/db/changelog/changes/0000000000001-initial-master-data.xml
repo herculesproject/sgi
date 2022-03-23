@@ -142,6 +142,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_DATA" />
+      <column name="description" value="JSON con formato: {&quot;nombreApellidosValidador&quot;:&quot;Manolo Sanchez Esturión&quot;,&quot;tituloProyecto&quot;:&quot;proyecto 1&quot;,&quot;codigosSge&quot;:[&quot;202200Z&quot;],&quot;numPrevision&quot;: 2,&quot;motivoRechazo&quot;:&quot;Motivo Rechazo&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Proyecto Periodo Pago Socio -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -168,6 +179,17 @@
       <column name="id" valueSequenceNext="param_seq" />
       <column name="name" value="CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA" />
       <column name="description" value="JSON con formato: {&quot;titulo&quot;:&quot;proyecto 1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;nombreEntidad&quot;:&quot;entidad&quot;,&quot;numPeriodo&quot;:&quot;1&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_DATA" />
+      <column name="description" value="JSON con formato: {&quot;nombreApellidosValidador&quot;:&quot;Manolo Sanchez Esturión&quot;,&quot;tituloProyecto&quot;:&quot;proyecto 1&quot;,&quot;codigosSge&quot;:[&quot;202200Z&quot;],&quot;numPrevision&quot;: 2,&quot;motivoRechazo&quot;:&quot;Motivo Rechazo&quot;}" />
       <column name="type" value="JSON" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -331,6 +353,29 @@
       <column name="tpl" valueClobFile="clob/0000000000001/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT.ftl" />
       <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT'</where>
     </update>
+
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de la validación de una factura con estado validada" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_SUBJECT.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_SUBJECT'</where>
+    </update>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de la validación de una factura con estado rechazada" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_SUBJECT.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subjecttpl_param">
@@ -399,6 +444,16 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_DATA')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_DATA')" />
     </insert>
   </changeSet>
 
@@ -626,6 +681,38 @@
       <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
       <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
     </update>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de la validación de una factura con estado validada" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT'</where>
+    </update>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de la validación de una factura con estado rechazada" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-contenttpl_param">
@@ -740,6 +827,16 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
     </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_DATA')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_DATA')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-email_tpl">
@@ -853,6 +950,26 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA" />
+      <column name="description" value="Notificación al validar una factura y pasarla a estado validada (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA" />
+      <column name="description" value="Notificación al validar una factura y pasarla a estado rechazada (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
@@ -914,6 +1031,16 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
     </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_SUBJECT')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
@@ -974,6 +1101,16 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Validada -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT')" />
+    </insert>
+    <!-- CSP Calendario Facturacion Validar IP - Rechazada -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
