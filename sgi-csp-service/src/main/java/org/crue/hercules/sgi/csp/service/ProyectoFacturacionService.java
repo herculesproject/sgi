@@ -8,14 +8,10 @@ import org.crue.hercules.sgi.csp.model.EstadoValidacionIP.TipoEstadoValidacion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.csp.repository.EstadoValidacionIPRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoFacturacionPredicateResolver;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoFacturacionSpecifications;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -40,6 +36,7 @@ public class ProyectoFacturacionService {
   private final EstadoValidacionIPRepository estadoValidacionIPRepository;
   private final ProyectoRepository proyectoRepository;
   private final ProyectoHelper proyectoHelper;
+  private final ProyectoFacturacionComService proyectoFacturacionComService;
 
   /**
    * Busca todos los objetos de tipo {@link ProyectoFacturacion} cuyo proyectoId
@@ -112,6 +109,8 @@ public class ProyectoFacturacionService {
 
     if (toUpdate.getEstadoValidacionIP().getEstado() != beforeUpdate.getEstadoValidacionIP().getEstado()) {
       beforeUpdate.setEstadoValidacionIP(persistEstadoValidacionIP(toUpdate.getEstadoValidacionIP(), toUpdate.getId()));
+
+      this.proyectoFacturacionComService.enviarComunicado(beforeUpdate);
     }
 
     return this.proyectoFacturacionRepository.save(beforeUpdate);

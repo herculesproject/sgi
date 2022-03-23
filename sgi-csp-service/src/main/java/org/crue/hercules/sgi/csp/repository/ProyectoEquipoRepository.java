@@ -43,4 +43,6 @@ public interface ProyectoEquipoRepository
   List<ProyectoEquipo> findAllByProyectoIdAndFechaFinGreaterThan(Long proyectoId, Instant fechaFin);
 
   List<ProyectoEquipo> findByProyectoIdAndRolProyectoRolPrincipalTrue(Long proyectoId);
+
+  boolean existsByProyectoIdAndPersonaRefAndRolProyectoRolPrincipalTrue(Long proyectoId, String personaRef);
 }

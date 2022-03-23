@@ -27,5 +27,7 @@ public interface ProyectoProyectoSgeRepository
   boolean existsByProyectoId(Long proyectoId);
 
   Optional<ProyectoProyectoSge> findByIdAndProyectoUnidadGestionRefIn(Long id, List<String> unidadGestionRefs);
+  
+  List<ProyectoProyectoSge> findByProyectoId(Long proyectoId);
 
 }

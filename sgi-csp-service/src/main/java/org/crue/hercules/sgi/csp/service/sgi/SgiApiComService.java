@@ -1,13 +1,10 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import lombok.extern.slf4j.Slf4j;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
+import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionValidarIPData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
@@ -30,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -85,6 +84,14 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO = "CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO";
   private static final String TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_PARAM = TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO
       + DATA;
+
+  private static final String TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA = "CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA";
+  private static final String TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_PARAM = TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA = "CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA";
+  private static final String TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_PARAM = TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA
+      + "_DATA";
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
@@ -496,6 +503,22 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO,
         TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_PARAM);
+  }
+
+  public EmailOutput createComunicadoCalendarioFacturacionValidarIpValidada(
+      CspComCalendarioFacturacionValidarIPData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA,
+        TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_PARAM);
+  }
+
+  public EmailOutput createComunicadoCalendarioFacturacionValidarIpRechazada(
+      CspComCalendarioFacturacionValidarIPData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA,
+        TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
