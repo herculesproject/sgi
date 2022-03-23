@@ -104,5 +104,21 @@
       <column name="description" value="Destinatarios defecto CSP Inicio/Fin Periodo Justificación Socio - UG" />
       <column name="value" value="[&quot;aviso.just.periodo.socio.ugi@sgi.es&quot;]" />
     </insert>
+    <!-- Destinatarios por defecto para CSP Calendario Facturacion Validar IP -->
+    <insert tableName="config">
+      <column name="name" value="csp-com-cal-fact-validarip-destinatarios-1" />
+      <column name="description" value="Destinatario de comunicados al validar una factura - OTRI" />
+      <column name="value" value="[&quot;lmsi@um.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-cal-fact-validarip-destinatarios-2" />
+      <column name="description" value="Destinatario de comunicados al validar una factura - OPE" />
+      <column name="value" value="[&quot;operum@um.es&quot;,&quot;msojo@um.es&quot;,&quot;javr@um.es&quot;,&quot;lcs@um.es&quot;]" />
+    </insert>
+    <insert tableName="config">
+      <column name="name" value="csp-com-cal-fact-validarip-destinatarios-3" />
+      <column name="description" value="Destinatario de comunicados al validar una factura - UGI" />
+      <column name="value" value="[&quot;ugiproy@um.es&quot;,&quot;ugirrhh@um.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
