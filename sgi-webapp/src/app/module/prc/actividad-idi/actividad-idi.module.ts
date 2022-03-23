@@ -6,9 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ActividadIdiRoutingModule } from './actividad-idi-routing.module';
+import { ActividadIdiListadoComponent } from './actividad-idi-listado/actividad-idi-listado.component';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [ActividadIdiListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +20,9 @@ import { ActividadIdiRoutingModule } from './actividad-idi-routing.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    SgpSharedModule,
+    CspSharedModule,
   ]
 })
 export class ActividadIdiModule { }
