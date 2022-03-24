@@ -4,17 +4,12 @@ import java.time.Instant;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.Grupo;
-import org.crue.hercules.sgi.csp.model.GrupoEquipo;
-import org.crue.hercules.sgi.csp.model.GrupoEquipo_;
-import org.crue.hercules.sgi.csp.model.Grupo_;
-import org.crue.hercules.sgi.csp.model.RolProyecto_;
+import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
@@ -24,6 +19,8 @@ import io.github.perplexhub.rsql.RSQLOperators;
 public class GrupoPredicateResolver implements SgiRSQLPredicateResolver<Grupo> {
 
   public enum Property {
+    /* Persona autorizada */
+    PERSONA_AUTORIZADA("personaAutorizada"),
     /* Responsable */
     RESPONSABLE("responsable");
 
@@ -72,36 +69,35 @@ public class GrupoPredicateResolver implements SgiRSQLPredicateResolver<Grupo> {
     }
 
     switch (property) {
+      case PERSONA_AUTORIZADA:
+        return buildByPersonaAutorizada(node, root, query, criteriaBuilder);
       case RESPONSABLE:
-        return buildByResponsable(node, root, criteriaBuilder);
+        return buildByResponsable(node, root, query, criteriaBuilder);
       default:
         return null;
     }
   }
 
-  private Predicate buildByResponsable(ComparisonNode node, Root<Grupo> root, CriteriaBuilder cb) {
+  private Predicate buildByPersonaAutorizada(ComparisonNode node, Root<Grupo> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
     PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
     PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
 
     String personaRef = node.getArguments().get(0);
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
-    Join<Grupo, GrupoEquipo> joinEquipos = root.join(Grupo_.miembrosEquipo, JoinType.LEFT);
+    return GrupoSpecifications.byPersonaAutorizada(personaRef, fechaActual).toPredicate(root, query, cb);
+  }
 
-    Predicate personaRefEquals = cb.equal(joinEquipos.get(GrupoEquipo_.personaRef), personaRef);
-    Predicate rolPrincipal = cb.equal(joinEquipos.get(GrupoEquipo_.rol).get(RolProyecto_.rolPrincipal), true);
-    Predicate greaterThanFechaInicio = cb.lessThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaInicio), fechaActual);
-    Predicate lowerThanFechaFin = cb.or(cb.isNull(joinEquipos.get(GrupoEquipo_.fechaFin)),
-        cb.greaterThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaFin), fechaActual));
+  private Predicate buildByResponsable(ComparisonNode node, Root<Grupo> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
 
-    Predicate fechaLowerThanFechaInicioGrupo = cb.greaterThan(root.get(Grupo_.fechaInicio), fechaActual);
-    Predicate fechaGreaterThanFechaFinGrupo = cb.lessThan(root.get(Grupo_.fechaFin), fechaActual);
+    String personaRef = node.getArguments().get(0);
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
-    return cb.and(
-        personaRefEquals,
-        rolPrincipal,
-        cb.or(fechaLowerThanFechaInicioGrupo, greaterThanFechaInicio),
-        cb.or(fechaGreaterThanFechaFinGrupo, lowerThanFechaFin));
+    return GrupoSpecifications.byResponsable(personaRef, fechaActual).toPredicate(root, query, cb);
   }
 
 }

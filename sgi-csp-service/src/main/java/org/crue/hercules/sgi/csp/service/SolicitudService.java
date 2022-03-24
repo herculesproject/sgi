@@ -26,7 +26,6 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToChangeEstadoSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
@@ -61,6 +60,7 @@ import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSoli
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -102,6 +102,7 @@ public class SolicitudService {
   private final ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
   private final ComunicadosService comunicadosService;
   private final SgiApiSgpService personasService;
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -117,7 +118,8 @@ public class SolicitudService {
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
       ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
       ComunicadosService comunicadosService,
-      SgiApiSgpService personasService) {
+      SgiApiSgpService personasService,
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -135,6 +137,7 @@ public class SolicitudService {
     this.convocatoriaEnlaceRepository = convocatoriaEnlaceRepository;
     this.comunicadosService = comunicadosService;
     this.personasService = personasService;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -206,8 +209,6 @@ public class SolicitudService {
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
 
-    Assert.notNull(solicitud.getTitulo(), "Titulo no puede ser null para actualizar Solicitud");
-
     Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
 
     Assert.isTrue(
@@ -222,7 +223,7 @@ public class SolicitudService {
 
       Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
 
-      Assert.isTrue(this.hasPermisosEdicion(solicitud),
+      Assert.isTrue(solicitudAuthorityHelper.hasPermisosEdicion(solicitud),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
@@ -325,14 +326,14 @@ public class SolicitudService {
     log.debug("findById(Long id) - start");
     final Solicitud returnValue = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    checkUserHasAuthorityViewSolicitud(returnValue);
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(returnValue);
 
     String authorityVisualizar = "CSP-SOL-V";
 
     Assert
         .isTrue(
             SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C")
-                || hasPermisosEdicion(returnValue)
+                || solicitudAuthorityHelper.hasPermisosEdicion(returnValue)
                 || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar) || SgiSecurityContextHolder
                     .hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
             "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
@@ -350,13 +351,13 @@ public class SolicitudService {
    *         filtradas.
    */
   public Page<Solicitud> findAllRestringidos(String query, Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+    log.debug("findAllRestringidos(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.distinct().and(SolicitudSpecifications.activos()
         .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance())));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findAllRestringidos(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -444,7 +445,7 @@ public class SolicitudService {
     // VALIDACIONES
 
     // Permisos
-    if (!hasPermisosEdicion(solicitud)) {
+    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
       throw new UserNotAuthorizedToModifySolicitudException();
     }
 
@@ -460,7 +461,7 @@ public class SolicitudService {
       validateCambioNoDesistidaRenunciada(solicitud);
     }
 
-    if (isUserInvestigador()) {
+    if (solicitudAuthorityHelper.isUserInvestigador()) {
       validateCambioEstadoInvestigador(solicitud.getEstado().getEstado(), estadoSolicitud.getEstado());
     }
 
@@ -769,11 +770,11 @@ public class SolicitudService {
   public boolean modificable(Long id) {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    if (!this.hasPermisosEdicion(solicitud)) {
+    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
       return false;
     }
 
-    if (isUserInvestigador()) {
+    if (solicitudAuthorityHelper.isUserInvestigador()) {
       return modificableByInvestigador(solicitud);
     } else {
       return modificableByUnidadGestion(solicitud);
@@ -791,11 +792,11 @@ public class SolicitudService {
   public boolean modificableEstadoAndDocumentos(Long id) {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    if (!this.hasPermisosEdicion(solicitud)) {
+    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
       return false;
     }
 
-    if (isUserInvestigador()) {
+    if (solicitudAuthorityHelper.isUserInvestigador()) {
       return modificableEstadoAndDocumentosByInvestigador(solicitud);
     } else {
       return modificableByUnidadGestion(solicitud);
@@ -824,7 +825,7 @@ public class SolicitudService {
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   private boolean modificableEstadoAndDocumentosByInvestigador(Solicitud solicitud) {
-    if (!this.hasPermisosEdicion(solicitud)) {
+    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
       return false;
     }
 
@@ -894,7 +895,7 @@ public class SolicitudService {
         throw new MissingInvestigadorPrincipalInSolicitudProyectoEquipoException();
       }
 
-      if (!hasAuthorityEditInvestigador()) {
+      if (!solicitudAuthorityHelper.hasAuthorityEditInvestigador()) {
         // En caso de sea colaborativo y no tenga coordinador externo
         if (Boolean.TRUE.equals(solicitudProyecto.getColaborativo())
             && solicitudProyecto.getCoordinadorExterno() == null) {
@@ -958,68 +959,6 @@ public class SolicitudService {
     if (!isCambioEstadoValido) {
       throw new UserNotAuthorizedToChangeEstadoSolicitudException(estadoActual, nuevoEstado);
     }
-  }
-
-  private boolean hasAuthorityCreateInvestigador() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-C");
-  }
-
-  private boolean hasAuthorityDeleteInvestigador() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-BR");
-  }
-
-  private boolean hasAuthorityEditInvestigador() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER");
-  }
-
-  private boolean hasAuthorityEditUnidadGestion(String unidadGestion) {
-    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", unidadGestion);
-  }
-
-  private boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER")
-        && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
-  }
-
-  private boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {
-    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", solicitud.getUnidadGestionRef())
-        || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef());
-  }
-
-  private String getAuthenticationPersonaRef() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
-
-  private boolean isUserInvestigador() {
-    return hasAuthorityCreateInvestigador() || hasAuthorityDeleteInvestigador() || hasAuthorityEditInvestigador();
-  }
-
-  /**
-   * Comprueba si el usuario logueado tiene permiso para ver la {@link Solicitud}
-   * 
-   * @param solicitud la {@link Solicitud}
-   * 
-   * @throws {@link UserNotAuthorizedToAccessSolicitudException}
-   */
-  private void checkUserHasAuthorityViewSolicitud(Solicitud solicitud) {
-    if (!(hasAuthorityViewInvestigador(solicitud) || hasAuthorityViewUnidadGestion(solicitud))) {
-      throw new UserNotAuthorizedToAccessSolicitudException();
-    }
-  }
-
-  /**
-   * Comprueba si el usuario logueado tiene los permisos globales de edición, el
-   * de la unidad de gestión de la solicitud o si es tiene el permiso de
-   * investigador y es el creador de la solicitud.
-   * 
-   * @param solicitud La solicitud
-   * @return <code>true</code> si tiene el permiso de edición; <code>false</code>
-   *         caso contrario.
-   */
-  private boolean hasPermisosEdicion(Solicitud solicitud) {
-    return hasAuthorityEditUnidadGestion(solicitud.getUnidadGestionRef())
-        || (hasAuthorityEditInvestigador() && solicitud.getCreadorRef().equals(
-            getAuthenticationPersonaRef()));
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
@@ -1119,6 +1058,11 @@ public class SolicitudService {
                 enlaces,
                 solicitud.getId());
           }
+          break;
+        default:
+          log.debug(
+              "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - El estado {} no tiene comunicado",
+              estadoSolicitud.getEstado());
           break;
       }
       log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");

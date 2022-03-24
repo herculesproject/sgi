@@ -185,7 +185,8 @@ public class GrupoService {
   public Page<Grupo> findAll(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Grupo> specs = SgiRSQLJPASupport.toSpecification(query);
+    Specification<Grupo> specs = GrupoSpecifications.distinct()
+        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(String query, Pageable paging) - end");
@@ -201,13 +202,14 @@ public class GrupoService {
    *         filtradas.
    */
   public Page<Grupo> findActivos(String query, Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+    log.debug("findActivos(String query, Pageable paging) - start");
 
-    Specification<Grupo> specs = GrupoSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query));
+    Specification<Grupo> specs = GrupoSpecifications.distinct()
+        .and(GrupoSpecifications.activos())
+        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findActivos(String query, Pageable paging) - end");
     return returnValue;
   }
 

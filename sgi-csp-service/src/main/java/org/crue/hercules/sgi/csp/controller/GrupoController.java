@@ -163,7 +163,7 @@ public class GrupoController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Page<GrupoOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");

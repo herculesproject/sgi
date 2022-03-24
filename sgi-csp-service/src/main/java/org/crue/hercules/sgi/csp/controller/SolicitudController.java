@@ -1230,19 +1230,19 @@ public class SolicitudController {
   @GetMapping("/{id}/codigo-registro-interno")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-ETI-V')")
   public String getCodigoRegistroInterno(@PathVariable Long id) {
-    log.debug("Solicitud getCodigoRegistroInterno(Long id) - start");
+    log.debug("getCodigoRegistroInterno(Long id) - start");
     String codigoRegistroInterno = service.getCodigoRegistroInterno(id);
-    log.debug("Solicitud getCodigoRegistroInterno(Long id) - end");
+    log.debug("getCodigoRegistroInterno(Long id) - end");
 
     return JSONObject.quote(codigoRegistroInterno);
   }
 
   @GetMapping("/{id}/solcitudgrupo")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public SolicitudGrupoOutput getSolicitudGrupo(@PathVariable Long id) {
-    log.debug("SolicitudGrupoOutput getSolicitudGrupo(Long id) - start");
+    log.debug("getSolicitudGrupo(Long id) - start");
     SolicitudGrupo solicitudGrupo = solicitudGrupoService.findBySolicitudId(id);
-    log.debug("SolicitudGrupoOutput getSolicitudGrupo(Long id) - end");
+    log.debug("getSolicitudGrupo(Long id) - end");
     return solicitudGrupoConverter.convert(solicitudGrupo);
   }
 

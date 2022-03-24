@@ -20,9 +20,9 @@ public class SolicitudGrupoConverter {
   }
 
   public SolicitudGrupo convert(Long id, SolicitudGrupoInput input) {
-    SolicitudGrupo Solicitudgrupo = modelMapper.map(input, SolicitudGrupo.class);
-    Solicitudgrupo.setId(id);
-    return Solicitudgrupo;
+    SolicitudGrupo solicitudGrupo = modelMapper.map(input, SolicitudGrupo.class);
+    solicitudGrupo.setId(id);
+    return solicitudGrupo;
   }
 
   public SolicitudGrupoOutput convert(SolicitudGrupo entity) {
