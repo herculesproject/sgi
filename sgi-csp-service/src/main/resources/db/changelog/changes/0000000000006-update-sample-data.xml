@@ -15,5 +15,17 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000006-linea_investigacion">
+    <insert tableName="linea_investigacion">
+      <column name="id" valueSequenceNext="linea_investigacion_seq" />
+      <column name="nombre" value="Psicología Laboral u Organizacional" />
+      <column name="activo" valueDate="true" />
+    </insert>
+    <insert tableName="linea_investigacion">
+      <column name="id" valueSequenceNext="linea_investigacion_seq" />
+      <column name="nombre" value="Psicología Clínica de la Salud" />
+      <column name="activo" valueDate="true" />
+    </insert>
+  </changeSet>
 
 </databaseChangeLog>
