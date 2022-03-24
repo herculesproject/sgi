@@ -15,7 +15,6 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudGrupoService } from '@core/services/csp/solicitud-grupo/solicitud-grupo.service';
@@ -130,6 +129,7 @@ export class SolicitudActionService extends ActionService {
 
   private readonly data: ISolicitudData;
   private convocatoria: IConvocatoria;
+  // tslint:disable-next-line: variable-name
   private _isSolicitanteInSolicitudEquipo: boolean;
 
   get solicitud(): ISolicitud {
@@ -222,8 +222,7 @@ export class SolicitudActionService extends ActionService {
     private translate: TranslateService,
     datosPersonalesService: DatosPersonalesService,
     palabraClaveService: PalabraClaveService,
-    solicitudGrupoService: SolicitudGrupoService,
-    grupoService: GrupoService
+    solicitudGrupoService: SolicitudGrupoService
   ) {
     super();
 
@@ -251,7 +250,6 @@ export class SolicitudActionService extends ActionService {
       solicitudModalidadService,
       unidadGestionService,
       solicitudGrupoService,
-      grupoService,
       authService,
       this.readonly,
       this.isInvestigador

@@ -1,19 +1,16 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { TipoSolicitudGrupo } from '@core/models/csp/solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { Estado } from '@core/models/csp/estado-solicitud';
-import { IGrupo } from '@core/models/csp/grupo';
 import { IPrograma } from '@core/models/csp/programa';
-import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitud, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
 import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { SolicitudGrupoService } from '@core/services/csp/solicitud-grupo/solicitud-grupo.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -25,7 +22,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface SolicitudModalidadEntidadConvocanteListado {
   entidadConvocante: IConvocatoriaEntidadConvocante;
@@ -40,7 +37,8 @@ export interface SolicitudDatosGenerales extends ISolicitud {
 export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   public solicitud: ISolicitud;
-  public grupo: IGrupo;
+  private solicitudGrupo: ISolicitudGrupo;
+  public solicitanteRef: string;
 
   entidadesConvocantes = [] as IConvocatoriaEntidadConvocante[];
 
@@ -51,6 +49,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   convocatoriaRequired = false;
   convocatoriaExternaRequired = false;
+  tipoFormularioSolicitud: FormularioSolicitud;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -62,7 +61,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private solicitudModalidadService: SolicitudModalidadService,
     private unidadGestionService: UnidadGestionService,
     private solicitudGrupoService: SolicitudGrupoService,
-    private grupoService: GrupoService,
     private authService: SgiAuthService,
     public readonly: boolean,
     public isInvestigador: boolean
@@ -95,7 +93,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       }),
       switchMap((solicitud) => {
         if (solicitud.convocatoriaId) {
-          const convocatoriaSolicitud$ = this.isInvestigador ? this.service.findConvocatoria(solicitud.id) : this.convocatoriaService.findById(solicitud.convocatoriaId);
+          const convocatoriaSolicitud$ = this.isInvestigador ?
+            this.service.findConvocatoria(solicitud.id) : this.convocatoriaService.findById(solicitud.convocatoriaId);
           return convocatoriaSolicitud$.pipe(
             switchMap(convocatoria => {
               return this.loadEntidadesConvocantesModalidad(solicitud.id, convocatoria.id).pipe(
@@ -113,14 +112,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       switchMap(solicitud => {
         if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
           return this.service.findSolicitudGrupo(solicitud.id).pipe(
-            switchMap(solicitudGrupo => {
-              return this.grupoService.findById(solicitudGrupo.grupo.id).pipe(
-                map(grupo => {
-                  this.grupo = grupo;
-                  return solicitud;
-                })
-              );
-            })
+            tap(solicitudGrupo => this.solicitudGrupo = solicitudGrupo),
+            map(() => solicitud)
           );
         } else {
           return of(solicitud);
@@ -144,31 +137,28 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
         titulo: new FormControl({ value: '', disabled: this.isEdit() }, [Validators.maxLength(250)]),
         convocatoria: new FormControl({ value: '', disabled: true }),
-        codigoExterno: new FormControl({ value: '', disabled: true }, Validators.maxLength(50)),
+        codigoRegistro: new FormControl({ value: '', disabled: true }),
+        codigoExterno: new FormControl('', Validators.maxLength(50)),
         observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),
         comentariosEstado: new FormControl({ value: '', disabled: true }),
-        tipoSolicitudGrupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
+        tipoSolicitudGrupo: new FormControl({ value: null, disabled: true }, Validators.required),
         grupo: new FormControl({ value: null, disabled: true }, Validators.required),
       });
 
-      this.subscriptions.push(
-        form.controls.convocatoria.valueChanges.subscribe(
-          (convocatoria) => {
-            this.convocatoria$.next(convocatoria);
-          }
-        )
-      );
+      this.initValueChangesSubscriptionsInvestigador(form);
     } else {
+      this.tipoFormularioSolicitud = FormularioSolicitud.PROYECTO;
+
       form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-        titulo: new FormControl(undefined, [Validators.maxLength(250)]),
+        titulo: new FormControl('', [Validators.maxLength(250)]),
         solicitante: new FormControl('', Validators.required),
         convocatoria: new FormControl({ value: '', disabled: this.isEdit() }),
         comentariosEstado: new FormControl({ value: '', disabled: true }),
         convocatoriaExterna: new FormControl(''),
-        formularioSolicitud: new FormControl({ value: FormularioSolicitud.PROYECTO, disabled: this.isEdit() }),
-        tipoSolicitudGrupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
-        grupo: new FormControl({ value: null, disabled: this.isEdit() }, Validators.required),
+        formularioSolicitud: new FormControl({ value: this.tipoFormularioSolicitud, disabled: this.isEdit() }),
+        tipoSolicitudGrupo: new FormControl({ value: null, disabled: true }, Validators.required),
+        grupo: new FormControl({ value: null, disabled: true }, Validators.required),
         unidadGestion: new FormControl(null, Validators.required),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
         codigoRegistro: new FormControl({ value: '', disabled: true }),
@@ -178,57 +168,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       // cambios en los validadores del formulario
       this.setConditionalValidators(form);
 
-      this.subscriptions.push(
-        merge(
-          form.controls.convocatoria.valueChanges,
-          form.controls.convocatoriaExterna.valueChanges
-        ).subscribe(_ => {
-          this.setConditionalValidators(form);
-        })
-      );
-
-      this.subscriptions.push(
-        form.controls.convocatoria.valueChanges.subscribe(
-          (convocatoria) => {
-            this.onConvocatoriaChange(convocatoria);
-            this.convocatoria$.next(convocatoria);
-          }
-        )
-      );
-
-      this.subscriptions.push(
-        form.controls.formularioSolicitud.valueChanges.subscribe(
-          (tipoFormulario) => {
-            if (tipoFormulario === FormularioSolicitud.GRUPO && (!this.isEdit())) {
-              form.controls.tipoSolicitudGrupo.enable();
-            } else {
-              form.controls.tipoSolicitudGrupo.disable();
-            }
-          }
-        )
-      );
-
-      this.subscriptions.push(
-        form.controls.tipoSolicitudGrupo.valueChanges.subscribe(
-          (tipoSolicitudGrupo) => {
-            if (tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
-              form.controls.grupo.enable();
-            } else {
-              form.controls.grupo.disable();
-            }
-          }
-        )
-      );
-
-      this.subscriptions.push(
-        form.controls.solicitante.valueChanges.subscribe(
-          (solicitante) => {
-            this.solicitud.solicitante = solicitante;
-            form.controls.grupo.enable();
-            this.getFormGroup().controls.grupo.setValue(null);
-          }
-        )
-      );
+      this.initValueChangesSubscriptionsUO(form);
     }
 
     if (this.readonly) {
@@ -239,43 +179,42 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   buildPatch(solicitud: SolicitudDatosGenerales): { [key: string]: any } {
     this.solicitud = solicitud;
+    this.solicitanteRef = solicitud.solicitante.id;
+    this.tipoFormularioSolicitud = solicitud.formularioSolicitud;
+
+    let formValues: { [key: string]: any } = {
+      estado: solicitud?.estado?.estado,
+      titulo: solicitud?.titulo ?? '',
+      convocatoria: solicitud?.convocatoria,
+      codigoRegistro: solicitud.codigoRegistroInterno,
+      codigoExterno: solicitud?.codigoExterno,
+      observaciones: solicitud?.observaciones ?? '',
+      comentariosEstado: solicitud?.estado?.comentario,
+      tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
+      grupo: this.solicitudGrupo?.grupo,
+    };
+
+    if (!this.isInvestigador) {
+      formValues = {
+        ...formValues,
+        convocatoriaExterna: solicitud.convocatoriaExterna,
+        formularioSolicitud: solicitud.formularioSolicitud,
+        solicitante: solicitud.solicitante,
+        unidadGestion: solicitud.unidadGestion
+      };
+    }
 
     if (!this.readonly && solicitud?.estado?.estado === Estado.BORRADOR) {
       this.getFormGroup().controls.titulo.enable();
       this.getFormGroup().controls.codigoExterno.enable();
       this.getFormGroup().controls.observaciones.enable();
-      this.getFormGroup().controls.comentariosEstado.enable();
+
+      if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
+        this.getFormGroup().controls.grupo.enable();
+      }
     }
 
-    if (this.isInvestigador) {
-      return {
-        estado: solicitud?.estado?.estado,
-        titulo: solicitud?.titulo ?? '',
-        convocatoria: solicitud?.convocatoria,
-        codigoExterno: solicitud?.codigoExterno,
-        observaciones: solicitud?.observaciones ?? '',
-        comentariosEstado: solicitud?.estado?.comentario,
-        tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
-        grupo: this.grupo,
-      };
-    } else {
-      return {
-        estado: solicitud.estado?.estado,
-        titulo: solicitud.titulo,
-        comentariosEstado: solicitud.estado?.comentario,
-        solicitante: solicitud.solicitante,
-        convocatoria: solicitud.convocatoria,
-        convocatoriaExterna: solicitud.convocatoriaExterna,
-        formularioSolicitud: solicitud.formularioSolicitud,
-        tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
-        unidadGestion: solicitud.unidadGestion,
-        grupo: this.grupo,
-        codigoRegistro: solicitud.codigoRegistroInterno,
-        codigoExterno: solicitud.codigoExterno,
-        observaciones: solicitud.observaciones
-      };
-    }
-
+    return formValues;
   }
 
   getValue(): ISolicitud {
@@ -283,7 +222,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     if (this.isInvestigador) {
       if (!this.solicitud.solicitante) {
         this.solicitud.solicitante = {
-          id: this.authService.authStatus$?.getValue()?.userRefId
+          id: this.solicitanteRef
         } as IPersona;
       }
 
@@ -322,20 +261,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         this.solicitud = value;
       }),
       switchMap((solicitud) => {
-        if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
-          const solicitudGrupo: ISolicitudGrupo = {} as ISolicitudGrupo;
-          solicitudGrupo.grupo = this.getFormGroup().controls.grupo.value;
-          solicitudGrupo.solicitud = solicitud;
-          return this.createSolicitudGrupo(solicitudGrupo).pipe(
-            map(_ => solicitud)
-          );
-        } else {
-          return of(solicitud);
-        }
-
-      }),
-      switchMap((solicitud) => {
         return merge(
+          this.saveOrUpdateSolicitudGrupo(solicitud),
           this.createSolicitudModalidades(solicitud.id),
           this.deleteSolicitudModalidades(),
           this.updateSolicitudModalidades()
@@ -348,6 +275,24 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     );
   }
 
+  saveOrUpdateSolicitudGrupo(solicitud: ISolicitud): Observable<ISolicitud> {
+    if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
+      if (!this.solicitudGrupo?.id) {
+        this.solicitudGrupo = {
+          solicitud
+        } as ISolicitudGrupo;
+      }
+
+      this.solicitudGrupo.grupo = this.getFormGroup().controls.grupo.value;
+
+      return this.solicitudGrupo.id
+        ? this.solicitudGrupoService.update(this.solicitudGrupo.id, this.solicitudGrupo).pipe(map(() => solicitud))
+        : this.solicitudGrupoService.create(this.solicitudGrupo).pipe(map(() => solicitud));
+    } else {
+      return of(solicitud);
+    }
+  }
+
   setDatosConvocatoria(convocatoria: IConvocatoria) {
     this.subscriptions.push(
       this.unidadGestionService.findById(convocatoria.unidadGestion.id).subscribe(unidadGestion => {
@@ -358,6 +303,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.subscriptions.push(
       this.convocatoriaService.getFormularioSolicitud(convocatoria.id).subscribe(formularioSolicitud => {
         this.solicitud.formularioSolicitud = formularioSolicitud;
+        if (formularioSolicitud === FormularioSolicitud.GRUPO) {
+          this.getFormGroup().controls.tipoSolicitudGrupo.enable();
+        }
       })
     );
 
@@ -368,6 +316,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     );
 
     this.solicitud.convocatoriaId = convocatoria.id;
+    this.tipoFormularioSolicitud = convocatoria.formularioSolicitud;
+    this.solicitanteRef = this.authService.authStatus$?.getValue()?.userRefId;
+    this.solicitud.solicitante = {
+      id: this.solicitanteRef
+    } as IPersona;
 
     this.convocatoria$.next(convocatoria);
     this.getFormGroup().controls.convocatoria.setValue(convocatoria);
@@ -421,6 +374,95 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         this.setChanges(true);
       }
     }
+  }
+
+  private initValueChangesSubscriptionsInvestigador(form: FormGroup): void {
+    this.subscriptions.push(
+      form.controls.convocatoria.valueChanges.subscribe(
+        (convocatoria) => {
+          this.convocatoria$.next(convocatoria);
+        }
+      )
+    );
+
+    this.initTipoSolicitudGrupoValueChangesSubscription(form);
+  }
+
+  private initValueChangesSubscriptionsUO(form: FormGroup): void {
+    this.subscriptions.push(
+      merge(
+        form.controls.convocatoria.valueChanges,
+        form.controls.convocatoriaExterna.valueChanges
+      ).subscribe(_ => {
+        this.setConditionalValidators(form);
+      })
+    );
+
+    this.subscriptions.push(
+      form.controls.convocatoria.valueChanges.subscribe(
+        (convocatoria) => {
+          this.onConvocatoriaChange(convocatoria);
+          this.convocatoria$.next(convocatoria);
+        }
+      )
+    );
+
+    this.subscriptions.push(
+      form.controls.formularioSolicitud.valueChanges.subscribe(
+        (tipoFormulario) => {
+          this.tipoFormularioSolicitud = tipoFormulario;
+
+          if (tipoFormulario === FormularioSolicitud.GRUPO) {
+            if (!this.isEdit()) {
+              form.controls.tipoSolicitudGrupo.enable();
+            }
+          } else {
+            form.controls.tipoSolicitudGrupo.setValue(null);
+            form.controls.tipoSolicitudGrupo.disable();
+          }
+        }
+      )
+    );
+
+    this.subscriptions.push(
+      form.controls.solicitante.valueChanges.pipe(
+        filter(() => !form.controls.solicitante.disabled)
+      ).subscribe(
+        (solicitante) => {
+          this.solicitanteRef = solicitante?.id;
+
+          if (solicitante && form.controls.tipoSolicitudGrupo.value === TipoSolicitudGrupo.MODIFICACION) {
+            if (form.controls.solicitante.value?.id !== solicitante.id) {
+              this.getFormGroup().controls.grupo.setValue(null);
+            }
+
+            form.controls.grupo.enable();
+          } else {
+            form.controls.grupo.setValue(null);
+            form.controls.grupo.disable();
+          }
+        }
+      )
+    );
+
+    this.initTipoSolicitudGrupoValueChangesSubscription(form);
+  }
+
+  private initTipoSolicitudGrupoValueChangesSubscription(form: FormGroup): void {
+    this.subscriptions.push(
+      form.controls.tipoSolicitudGrupo.valueChanges.pipe(
+        filter(() => !form.controls.tipoSolicitudGrupo.disabled)
+      ).subscribe(
+        (tipoSolicitudGrupo) => {
+          if (tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION && !!this.solicitanteRef) {
+            form.controls.grupo.enable();
+          } else {
+            form.controls.grupo.setValue(null);
+            form.controls.grupo.disable();
+          }
+        }
+      )
+    );
   }
 
   /**
@@ -582,7 +624,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    */
   private loadEntidadesConvocantesModalidad(solicitudId: number, convocatoriaId: number):
     Observable<SolicitudModalidadEntidadConvocanteListado[]> {
-    const convocatoriaEntidadConvocantes$ = this.isInvestigador && solicitudId ? this.service.findAllConvocatoriaEntidadConvocantes(solicitudId)
+    const convocatoriaEntidadConvocantes$ = this.isInvestigador && solicitudId
+      ? this.service.findAllConvocatoriaEntidadConvocantes(solicitudId)
       : this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(convocatoriaId);
     return convocatoriaEntidadConvocantes$.pipe(
       map(resultEntidadConvocantes => {
@@ -718,10 +761,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
     this.convocatoriaRequired = !convocatoriaExternaSolicitud;
     this.convocatoriaExternaRequired = !convocatoriaSolicitud;
-  }
-
-  private createSolicitudGrupo(solicitudGrupo: ISolicitudGrupo): Observable<ISolicitudGrupo> {
-    return this.solicitudGrupoService.create(solicitudGrupo);
   }
 
 }

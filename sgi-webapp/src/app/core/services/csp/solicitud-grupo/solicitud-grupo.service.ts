@@ -11,11 +11,16 @@ import { SOLICITUD_GRUPO_RESPONSE_CONVERTER } from './solicitud-grupo-response-c
 // tslint:disable-next-line: variable-name
 const _SolicitudGrupoMixinBase:
   CreateCtor<ISolicitudGrupo, ISolicitudGrupo, ISolicitudGrupoRequest, ISolicitudGrupoResponse> &
+  UpdateCtor<number, ISolicitudGrupo, ISolicitudGrupo, ISolicitudGrupoRequest, ISolicitudGrupoResponse> &
   FindByIdCtor<number, ISolicitudGrupo, ISolicitudGrupoResponse> &
   typeof SgiRestBaseService =
   mixinFindById(
-    mixinCreate(
-      SgiRestBaseService,
+    mixinUpdate(
+      mixinCreate(
+        SgiRestBaseService,
+        SOLICITUD_GRUPO_REQUEST_CONVERTER,
+        SOLICITUD_GRUPO_RESPONSE_CONVERTER
+      ),
       SOLICITUD_GRUPO_REQUEST_CONVERTER,
       SOLICITUD_GRUPO_RESPONSE_CONVERTER
     ),

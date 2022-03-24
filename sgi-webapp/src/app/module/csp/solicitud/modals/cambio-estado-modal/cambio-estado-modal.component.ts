@@ -135,8 +135,14 @@ export class CambioEstadoModalComponent
     });
 
     this.msgDocumentosConvocatoriaRequired = this.translate.instant(MSG_DOCUMENTOS_CONVOCATORIA_REQUIRED);
-    this.msgSolicitudProyectoCoordinadoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(SOLICITUD_PROYECTO_COORDINADO) });
-    this.msgSolicitudProyectoCoordinadorExternoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(SOLICITUD_PROYECTO_COORDINADOR_EXTERNO) });
+    this.msgSolicitudProyectoCoordinadoRequired = this.translate.instant(
+      MSG_FIELD_REQUIRED,
+      { field: this.translate.instant(SOLICITUD_PROYECTO_COORDINADO) }
+    );
+    this.msgSolicitudProyectoCoordinadorExternoRequired = this.translate.instant(
+      MSG_FIELD_REQUIRED,
+      { field: this.translate.instant(SOLICITUD_PROYECTO_COORDINADOR_EXTERNO) }
+    );
     this.msgSolicitudEquipoSolicitanteRequired = this.translate.instant(MSG_SOLICITUD_EQUIPO_SOLICITANTE_REQUIRED);
   }
 
@@ -153,7 +159,7 @@ export class CambioEstadoModalComponent
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       estadoActual: new FormControl({ value: this.data.estadoActual, disabled: true }),
-      estadoNuevo: new FormControl(this.data.estadoNuevo),
+      estadoNuevo: new FormControl(this.data.estadoNuevo, Validators.required),
       fechaEstado: new FormControl({ value: DateTime.now(), disabled: this.data.isInvestigador }, Validators.required),
       comentario: new FormControl('', [Validators.maxLength(2000)])
     });

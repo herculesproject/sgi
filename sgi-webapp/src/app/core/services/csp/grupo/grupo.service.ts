@@ -4,7 +4,10 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import {
+  CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
+  SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
+} from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
@@ -79,7 +82,7 @@ export class GrupoService extends _GrupoMixinBase {
 
   /**
    * Activa el grupo
-   * 
+   *
    * @param id Identificador del grupo
    */
   activar(id: number): Observable<void> {
@@ -154,8 +157,8 @@ export class GrupoService extends _GrupoMixinBase {
   /**
    * Comprueba si el codigo es valido
    *
-   * @param id Identificador del grupo
-   * @param
+   * @param codigo Codigo que se quiere comprobar
+   * @param grupoId Identificador del grupo en el que se esta modificando el codigo
    */
   isDuplicatedCodigo(codigo: string, grupoId?: number): Observable<boolean> {
     const url = `${this.endpointUrl}/codigoduplicado`;

@@ -60,7 +60,7 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   ) {
     super(router, route, actionService, dialogService);
     this.disableRegistrar$.next(true);
-    this.canEdit = this.authService.hasAuthority('CSP-CON-E');
+    this.canEdit = this.authService.hasAuthorityForAnyUO('CSP-CON-E');
     if (this.canEdit) {
       this.subscriptions.push(
         this.convocatoriaService.registrable(this.actionService.id).subscribe(
