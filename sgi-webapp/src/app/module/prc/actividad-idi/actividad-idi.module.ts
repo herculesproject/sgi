@@ -9,9 +9,13 @@ import { ActividadIdiRoutingModule } from './actividad-idi-routing.module';
 import { ActividadIdiListadoComponent } from './actividad-idi-listado/actividad-idi-listado.component';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { ActividadIdiEditarComponent } from './actividad-idi-editar/actividad-idi-editar.component';
+import { ActividadIdiDatosGeneralesComponent } from './actividad-idi-formulario/actividad-idi-datos-generales/actividad-idi-datos-generales.component';
+import { PrcSharedModule } from '../shared/prc-shared.module';
+import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
 
 @NgModule({
-  declarations: [ActividadIdiListadoComponent],
+  declarations: [ActividadIdiListadoComponent, ActividadIdiEditarComponent, ActividadIdiDatosGeneralesComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -23,6 +27,10 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
     SgiAuthModule,
     SgpSharedModule,
     CspSharedModule,
+    PrcSharedModule,
+  ],
+  providers: [
+    ProduccionCientificaResolver
   ]
 })
 export class ActividadIdiModule { }
