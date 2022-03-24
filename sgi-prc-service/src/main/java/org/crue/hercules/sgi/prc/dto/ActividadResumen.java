@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class ObraArtisticaResumen extends ProduccionCientificaResumen {
+public class ActividadResumen extends ProduccionCientificaResumen {
 
   private Instant fechaInicio;
-  private String descripcion;
+  private String tituloActividad;
 
-  public ObraArtisticaResumen(Long id, String produccionCientificaRef, TipoEstadoProduccion estado,
-      EpigrafeCVN epigrafeCVN, String descripcion, String fechaInicio) {
+  public ActividadResumen(Long id, String produccionCientificaRef, TipoEstadoProduccion estado,
+      EpigrafeCVN epigrafeCVN, String tituloActividad, String fechaInicio) {
     super(id, produccionCientificaRef, estado, epigrafeCVN);
-    this.descripcion = descripcion;
+    this.tituloActividad = tituloActividad;
     this.fechaInicio = StringUtils.hasText(fechaInicio) ? Instant.parse(fechaInicio) : null;
   }
 }

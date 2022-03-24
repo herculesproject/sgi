@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
+import org.crue.hercules.sgi.prc.dto.ActividadOutput;
+import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
@@ -63,6 +65,7 @@ public class ProduccionCientificaController {
   public static final String PATH_COMITES_EDITORIALES = "/comites-editoriales";
   public static final String PATH_CONGRESOS = "/congresos";
   public static final String PATH_OBRAS_ARTISTICAS = "/obras-artisticas";
+  public static final String PATH_ACTIVIDADES = "/actividades";
   public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
   public static final String PATH_AUTORES = "/{id}/autores";
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
@@ -211,7 +214,47 @@ public class ProduccionCientificaController {
 
   private Page<ObraArtisticaOutput> convertObraArtisticaResumen(Page<ObraArtisticaResumen> page) {
     List<ObraArtisticaOutput> content = page.getContent().stream()
-        .map(obraArtisticaResumen -> convertObraArtisticaResumen(obraArtisticaResumen))
+        .map(
+            this::convertObraArtisticaResumen)
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ActividadOutput}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging la información de la paginación.
+   * @return el listado de entidades {@link ActividadOutput} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_ACTIVIDADES)
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  public ResponseEntity<Page<ActividadOutput>> findAllActividades(
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllActividades(String query, Pageable paging) - start");
+    Page<ActividadResumen> page = service.findAllActividades(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllActividades(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllActividades(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertActividadResumen(page), HttpStatus.OK);
+  }
+
+  private ActividadOutput convertActividadResumen(ActividadResumen actividadResumen) {
+    ActividadOutput output = modelMapper.map(actividadResumen, ActividadOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(actividadResumen.getEstado());
+    return output;
+  }
+
+  private Page<ActividadOutput> convertActividadResumen(Page<ActividadResumen> page) {
+    List<ActividadOutput> content = page.getContent().stream()
+        .map(this::convertActividadResumen)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

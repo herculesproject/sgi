@@ -11,15 +11,16 @@ import javax.persistence.PersistenceUnitUtil;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -267,9 +268,9 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   @Test
   public void findAllObrasArtisticas_ReturnsPage() {
     // given: Una lista con 37 ObraArtisticaResumen
-    List<ObraArtisticaResumen> congresos = new ArrayList<>();
+    List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      congresos.add(generarMockObraArtisticaResumen(i, String.format("%03d", i)));
+      obrasArtisticas.add(generarMockObraArtisticaResumen(i, String.format("%03d", i)));
     }
 
     BDDMockito.given(
@@ -283,9 +284,9 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            toIndex = toIndex > congresos.size() ? congresos.size() : toIndex;
-            List<ObraArtisticaResumen> content = congresos.subList(fromIndex, toIndex);
-            Page<ObraArtisticaResumen> page = new PageImpl<>(content, pageable, congresos.size());
+            toIndex = toIndex > obrasArtisticas.size() ? obrasArtisticas.size() : toIndex;
+            List<ObraArtisticaResumen> content = obrasArtisticas.subList(fromIndex, toIndex);
+            Page<ObraArtisticaResumen> page = new PageImpl<>(content, pageable, obrasArtisticas.size());
             return page;
           }
         });
@@ -300,8 +301,50 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
-      ObraArtisticaResumen congreso = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(congreso.getProduccionCientificaRef())
+      ObraArtisticaResumen obraArtistica = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(obraArtistica.getProduccionCientificaRef())
+          .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  public void findAllActividades_ReturnsPage() {
+    // given: Una lista con 37 ActividadResumen
+    List<ActividadResumen> actividades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      actividades.add(generarMockActividadResumen(i, String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        repository.findAllActividades(ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ActividadResumen>>() {
+          @Override
+          public Page<ActividadResumen> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > actividades.size() ? actividades.size() : toIndex;
+            List<ActividadResumen> content = actividades.subList(fromIndex, toIndex);
+            Page<ActividadResumen> page = new PageImpl<>(content, pageable, actividades.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ActividadResumen> page = service.findAllActividades(null, paging);
+
+    // then: Devuelve la pagina 3 con los ActividadResumen del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      ActividadResumen actividad = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(actividad.getProduccionCientificaRef())
           .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
     }
   }
@@ -419,5 +462,16 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     obraArtistica.setFechaInicio(Instant.now());
 
     return obraArtistica;
+  }
+
+  private ActividadResumen generarMockActividadResumen(Long id, String idRef) {
+    ActividadResumen actividad = new ActividadResumen();
+    actividad.setId(id);
+    actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E050_020_030_000);
+    actividad.setTituloActividad("Título" + idRef);
+    actividad.setFechaInicio(Instant.now());
+
+    return actividad;
   }
 }

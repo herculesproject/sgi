@@ -7,6 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.ProduccionCientificaController;
 import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
+import org.crue.hercules.sgi.prc.dto.ActividadOutput;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
 import org.crue.hercules.sgi.prc.dto.CongresoOutput;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
@@ -47,6 +48,7 @@ class ProduccionCientificaIT extends BaseIT {
   private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
   private static final String PATH_CONGRESOS = ProduccionCientificaController.PATH_CONGRESOS;
   private static final String PATH_OBRAS_ARTISTICAS = ProduccionCientificaController.PATH_OBRAS_ARTISTICAS;
+  private static final String PATH_ACTIVIDADES = ProduccionCientificaController.PATH_ACTIVIDADES;
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
   private static final String PATH_AUTORES = ProduccionCientificaController.PATH_AUTORES;
   private static final String PATH_PROYECTOS = ProduccionCientificaController.PATH_PROYECTOS;
@@ -58,6 +60,7 @@ class ProduccionCientificaIT extends BaseIT {
   private static final String COMITE_EDITORIAL_REF_VALUE = "comite-ref-";
   private static final String CONGRESO_REF_VALUE = "congreso-ref-";
   private static final String OBRA_ARTISTICA_REF_VALUE = "obra-artistica-ref-";
+  private static final String ACTIVIDAD_REF_VALUE = "organizacion_actividades-ref-";
 
   @MockBean
   private SgiApiSgpService sgiApiSgpService;
@@ -483,6 +486,55 @@ class ProduccionCientificaIT extends BaseIT {
     Assertions.assertThat(produccionesCientificas.get(1).getProduccionCientificaRef())
         .as("get(1).getProduccionCientificaRef())")
         .isEqualTo(OBRA_ARTISTICA_REF_VALUE + String.format("%03d", 2));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off 
+      "classpath:scripts/produccion_cientifica.sql",
+      "classpath:scripts/campo_produccion_cientifica.sql",
+      "classpath:scripts/valor_campo.sql",
+      "classpath:scripts/autor.sql",
+      // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "fechaInicioDesde=ge=2021-01-01T00:00:00Z;fechaInicioHasta=le=2021-02-01T00:00:00Z"
+  })
+  public void findAllActividadesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+      String filter)
+      throws Exception {
+    String roles = "PRC-VAL-V";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_ACTIVIDADES)
+        .queryParam("s", sort)
+        .queryParam("q", filter)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<ActividadOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<ActividadOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ActividadOutput> produccionesCientificas = response.getBody();
+    Assertions.assertThat(produccionesCientificas).as("numElements").hasSize(2);
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
+
+    Assertions.assertThat(produccionesCientificas.get(0).getProduccionCientificaRef())
+        .as("get(0).getProduccionCientificaRef())")
+        .isEqualTo(ACTIVIDAD_REF_VALUE + String.format("%03d", 1));
+    Assertions.assertThat(produccionesCientificas.get(1).getProduccionCientificaRef())
+        .as("get(1).getProduccionCientificaRef())")
+        .isEqualTo(ACTIVIDAD_REF_VALUE + String.format("%03d", 2));
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

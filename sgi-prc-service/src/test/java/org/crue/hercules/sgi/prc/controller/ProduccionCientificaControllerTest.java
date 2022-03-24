@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.prc.dto.AcreditacionOutput;
+import org.crue.hercules.sgi.prc.dto.ActividadOutput;
+import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.AutorOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
@@ -21,6 +23,7 @@ import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.ProyectoOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionOutput;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.Acreditacion;
@@ -29,7 +32,6 @@ import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.IndiceImpacto;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
-import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Proyecto;
 import org.crue.hercules.sgi.prc.service.AcreditacionService;
 import org.crue.hercules.sgi.prc.service.AutorService;
@@ -78,6 +80,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   private static final String PATH_COMITES_EDITORIALES = ProduccionCientificaController.PATH_COMITES_EDITORIALES;
   private static final String PATH_CONGRESOS = ProduccionCientificaController.PATH_CONGRESOS;
   private static final String PATH_OBRAS_ARTISTICAS = ProduccionCientificaController.PATH_OBRAS_ARTISTICAS;
+  private static final String PATH_ACTIVIDADES = ProduccionCientificaController.PATH_ACTIVIDADES;
   private static final String PATH_PARAMETER_VALIDAR = "/validar";
   private static final String PATH_PARAMETER_RECHAZAR = "/rechazar";
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
@@ -398,8 +401,8 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
         });
 
     for (int i = 31; i <= 37; i++) {
-      ObraArtisticaOutput congreso = obrasArtisticasResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(congreso.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+      ObraArtisticaOutput obraArtistica = obrasArtisticasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(obraArtistica.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
     }
   }
 
@@ -424,6 +427,93 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     // when: Get page=3 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_OBRAS_ARTISTICAS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  void findAllActividades_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ActividadResumen
+    List<ActividadResumen> actividades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      actividades.add(generarMockActividadResumen(i, String.valueOf(i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllActividades(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > actividades.size() ? actividades.size() : toIndex;
+          List<ActividadResumen> content = actividades.subList(fromIndex, toIndex);
+          Page<ActividadResumen> pageResponse = new PageImpl<>(content, pageable,
+              actividades.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ACTIVIDADES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los ActividadOutput del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$",
+            Matchers.hasSize(7)))
+        .andReturn();
+
+    List<ActividadOutput> actividadesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ActividadOutput>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ActividadOutput actividad = actividadesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(actividad.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  void findAllActividades_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 ActividadResumen
+    List<ActividadResumen> obrasArtisticas = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllActividades(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<ActividadResumen> pageResponse = new PageImpl<>(obrasArtisticas, pageable,
+              obrasArtisticas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ACTIVIDADES)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
                 page)
             .header("X-Page-Size", pageSize)
@@ -1024,6 +1114,17 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     obraArtistica.setFechaInicio(Instant.now());
 
     return obraArtistica;
+  }
+
+  private ActividadResumen generarMockActividadResumen(Long id, String idRef) {
+    ActividadResumen actividad = new ActividadResumen();
+    actividad.setId(id);
+    actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E050_020_030_000);
+    actividad.setTituloActividad("Título" + idRef);
+    actividad.setFechaInicio(Instant.now());
+
+    return actividad;
   }
 
   private IndiceImpacto generarMockIndiceImpacto(Long id, Long produccionCientificaId) {

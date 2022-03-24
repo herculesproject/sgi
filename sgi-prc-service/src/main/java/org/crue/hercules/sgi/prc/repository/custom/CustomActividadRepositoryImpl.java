@@ -20,7 +20,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
+import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
@@ -30,7 +30,7 @@ import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.model.ValorCampo_;
-import org.crue.hercules.sgi.prc.repository.predicate.ObraArtisticaPredicateResolver;
+import org.crue.hercules.sgi.prc.repository.predicate.ActividadPredicateResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,30 +43,30 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Spring Data JPA repository para {@link ObraArtisticaResumen}.
+ * Spring Data JPA repository para {@link ActividadResumen}.
  */
 @Slf4j
 @Component
-public class CustomObraArtisticaRepositoryImpl implements CustomObraArtisticaRepository {
+public class CustomActividadRepositoryImpl implements CustomActividadRepository {
 
   /** The entity manager. */
   @PersistenceContext
   private EntityManager entityManager;
 
   @Override
-  public Page<ObraArtisticaResumen> findAllObrasArtisticas(String query, Pageable pageable) {
-    log.debug("findAllObrasArtisticas(String query, Pageable pageable) - start");
+  public Page<ActividadResumen> findAllActividades(String query, Pageable pageable) {
+    log.debug("findAllActividades(String query, Pageable pageable) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-    CriteriaQuery<ObraArtisticaResumen> cq = cb.createQuery(ObraArtisticaResumen.class);
+    CriteriaQuery<ActividadResumen> cq = cb.createQuery(ActividadResumen.class);
     Root<ProduccionCientifica> root = cq.from(ProduccionCientifica.class);
 
     Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(
         ProduccionCientifica_.estado);
 
-    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposDescripcion = root.join(
+    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposTituloActividad = root.join(
         ProduccionCientifica_.campos, JoinType.LEFT);
-    Join<CampoProduccionCientifica, ValorCampo> joinValoresDescripcion = joinCamposDescripcion.join(
+    Join<CampoProduccionCientifica, ValorCampo> joinValoresTituloActividad = joinCamposTituloActividad.join(
         CampoProduccionCientifica_.valoresCampos, JoinType.LEFT);
 
     Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposFechaInicio = root.join(
@@ -81,9 +81,9 @@ public class CustomObraArtisticaRepositoryImpl implements CustomObraArtisticaRep
 
     rootCount.join(ProduccionCientifica_.estado);
 
-    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposDescripcionCount = rootCount.join(
+    Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposTituloActividadCount = rootCount.join(
         ProduccionCientifica_.campos, JoinType.LEFT);
-    joinCamposDescripcionCount.join(CampoProduccionCientifica_.valoresCampos, JoinType.LEFT);
+    joinCamposTituloActividadCount.join(CampoProduccionCientifica_.valoresCampos, JoinType.LEFT);
 
     Join<ProduccionCientifica, CampoProduccionCientifica> joinCamposFechaInicioCount = rootCount.join(
         ProduccionCientifica_.campos, JoinType.LEFT);
@@ -94,21 +94,21 @@ public class CustomObraArtisticaRepositoryImpl implements CustomObraArtisticaRep
 
     listPredicates.add(cb.isNull(root.get(ProduccionCientifica_.convocatoriaBaremacionId)));
     listPredicates.add(cb.and(
-        cb.equal(joinCamposDescripcion.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E050_020_030_010)));
+        cb.equal(joinCamposTituloActividad.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E060_020_030_010)));
     listPredicates.add(cb.and(
-        cb.equal(joinCamposFechaInicio.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E050_020_030_120)));
+        cb.equal(joinCamposFechaInicio.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E060_020_030_160)));
 
     listPredicatesCount.add(cb.isNull(rootCount.get(ProduccionCientifica_.convocatoriaBaremacionId)));
     listPredicatesCount.add(cb.and(
-        cb.equal(joinCamposDescripcionCount.get(CampoProduccionCientifica_.codigoCVN),
-            CodigoCVN.E050_020_030_010)));
+        cb.equal(joinCamposTituloActividadCount.get(CampoProduccionCientifica_.codigoCVN),
+            CodigoCVN.E060_020_030_010)));
     listPredicatesCount.add(cb.and(
         cb.equal(joinCamposFechaInicioCount.get(CampoProduccionCientifica_.codigoCVN),
-            CodigoCVN.E050_020_030_120)));
+            CodigoCVN.E060_020_030_160)));
 
     if (StringUtils.hasText(query)) {
       Specification<ProduccionCientifica> spec = SgiRSQLJPASupport.toSpecification(query,
-          ObraArtisticaPredicateResolver.getInstance());
+          ActividadPredicateResolver.getInstance());
       listPredicates.add(spec.toPredicate(root, cq, cb));
       listPredicatesCount.add(spec.toPredicate(rootCount, countQuery, cb));
     }
@@ -120,14 +120,14 @@ public class CustomObraArtisticaRepositoryImpl implements CustomObraArtisticaRep
         root.get(ProduccionCientifica_.produccionCientificaRef).alias("produccionCientificaRef"),
         joinEstado.get(EstadoProduccionCientifica_.estado).alias("estado"),
         root.get(ProduccionCientifica_.epigrafeCVN).alias("epigrafe"),
-        joinValoresDescripcion.get(ValorCampo_.valor)
-            .alias(ObraArtisticaPredicateResolver.Property.DESCRIPCION.getCode()),
+        joinValoresTituloActividad.get(ValorCampo_.valor)
+            .alias(ActividadPredicateResolver.Property.TITULO_ACTIVIDAD.getCode()),
         joinValoresFechaInicio.get(ValorCampo_.valor)
-            .alias(ObraArtisticaPredicateResolver.Property.FECHA_INICIO.getCode()));
+            .alias(ActividadPredicateResolver.Property.FECHA_INICIO.getCode()));
 
     String[] selectionNames = new String[] {
-        ObraArtisticaPredicateResolver.Property.DESCRIPCION.getCode(),
-        ObraArtisticaPredicateResolver.Property.FECHA_INICIO.getCode() };
+        ActividadPredicateResolver.Property.TITULO_ACTIVIDAD.getCode(),
+        ActividadPredicateResolver.Property.FECHA_INICIO.getCode() };
 
     Optional<Integer> selectionIndex = getIndexOrderBySelectionName(selectionNames, pageable.getSort(), cq);
     if (selectionIndex.isPresent()) {
@@ -140,16 +140,16 @@ public class CustomObraArtisticaRepositoryImpl implements CustomObraArtisticaRep
     countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
-    TypedQuery<ObraArtisticaResumen> typedQuery = entityManager.createQuery(cq);
+    TypedQuery<ActividadResumen> typedQuery = entityManager.createQuery(cq);
     if (pageable.isPaged()) {
       typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
       typedQuery.setMaxResults(pageable.getPageSize());
     }
 
-    List<ObraArtisticaResumen> result = typedQuery.getResultList();
-    Page<ObraArtisticaResumen> returnValue = new PageImpl<>(result, pageable, count);
+    List<ActividadResumen> result = typedQuery.getResultList();
+    Page<ActividadResumen> returnValue = new PageImpl<>(result, pageable, count);
 
-    log.debug("findAllObrasArtisticas(String query, Pageable pageable) - end");
+    log.debug("findAllActividades(String query, Pageable pageable) - end");
 
     return returnValue;
   }
