@@ -19,12 +19,12 @@
     <insert tableName="linea_investigacion">
       <column name="id" valueSequenceNext="linea_investigacion_seq" />
       <column name="nombre" value="Psicología Laboral u Organizacional" />
-      <column name="activo" valueDate="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="linea_investigacion">
       <column name="id" valueSequenceNext="linea_investigacion_seq" />
       <column name="nombre" value="Psicología Clínica de la Salud" />
-      <column name="activo" valueDate="true" />
+      <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
 
