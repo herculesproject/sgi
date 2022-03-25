@@ -13,19 +13,20 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { transformAutorApellidos } from '../../../shared/autor/pipe/autor-apellidos.pipe';
 import { transformAutorNombre } from '../../../shared/autor/pipe/autor-nombre.pipe';
-import { ObraArtisticaActionService } from '../../obra-artistica.action.service';
-import { ObraArtisticaDatosGeneralesFragment } from './obra-artistica-datos-generales.fragment';
+import { TesisTfmTfgActionService } from '../../tesis-tfm-tfg.action.service';
+import { TesisTfmTfgDatosGeneralesFragment } from './tesis-tfm-tfg-datos-generales.fragment';
 
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 @Component({
-  selector: 'sgi-obra-artistica-datos-generales',
-  templateUrl: './obra-artistica-datos-generales.component.html',
-  styleUrls: ['./obra-artistica-datos-generales.component.scss']
+  selector: 'sgi-tesis-tfm-tfg-datos-generales',
+  templateUrl: './tesis-tfm-tfg-datos-generales.component.html',
+  styleUrls: ['./tesis-tfm-tfg-datos-generales.component.scss']
 })
-export class ObraArtisticaDatosGeneralesComponent extends FragmentComponent implements OnInit, OnDestroy {
+export class TesisTfmTfgDatosGeneralesComponent extends FragmentComponent implements OnInit, OnDestroy {
+
   fxLayoutProperties: FxLayoutProperties;
-  formPart: ObraArtisticaDatosGeneralesFragment;
+  formPart: TesisTfmTfgDatosGeneralesFragment;
   private subscriptions: Subscription[] = [];
 
   autorDataSource = new MatTableDataSource<IAutorWithGrupos>();
@@ -41,13 +42,13 @@ export class ObraArtisticaDatosGeneralesComponent extends FragmentComponent impl
   @ViewChild('sortAcreditacion', { static: true }) sortAcreditacion: MatSort;
 
   constructor(
-    public readonly actionService: ObraArtisticaActionService,
+    public readonly actionService: TesisTfmTfgActionService,
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     private readonly documentoService: DocumentoService,
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.formPart = this.fragment as ObraArtisticaDatosGeneralesFragment;
+    this.formPart = this.fragment as TesisTfmTfgDatosGeneralesFragment;
   }
 
   ngOnInit(): void {
@@ -71,7 +72,6 @@ export class ObraArtisticaDatosGeneralesComponent extends FragmentComponent impl
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
   }
-
 
   private configSortAutor(): void {
     this.autorDataSource.sortingDataAccessor =

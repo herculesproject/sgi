@@ -9,7 +9,6 @@ import { IProyectoPrc } from '@core/models/prc/proyecto-prc';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { transformAutorApellidos } from '../../../shared/autor/pipe/autor-apellidos.pipe';
@@ -47,7 +46,6 @@ export class ActividadIdiDatosGeneralesComponent extends FragmentComponent imple
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     private readonly documentoService: DocumentoService,
-    private readonly translateService: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as ActividadIdiDatosGeneralesFragment;
@@ -74,7 +72,6 @@ export class ActividadIdiDatosGeneralesComponent extends FragmentComponent imple
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
   }
-
 
   private configSortAutor(): void {
     this.autorDataSource.sortingDataAccessor =

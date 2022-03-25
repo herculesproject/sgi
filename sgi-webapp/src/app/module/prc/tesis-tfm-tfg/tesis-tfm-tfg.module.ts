@@ -9,9 +9,13 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 import { TesisTfmTfgRoutingModule } from './tesis-tfm-tfg-routing.module';
 import { TesisTfmTfgListadoComponent } from './tesis-tfm-tfg-listado/tesis-tfm-tfg-listado.component';
+import { TesisTfmTfgDatosGeneralesComponent } from './tesis-tfm-tfg-formulario/tesis-tfm-tfg-datos-generales/tesis-tfm-tfg-datos-generales.component';
+import { TesisTfmTfgEditarComponent } from './tesis-tfm-tfg-editar/tesis-tfm-tfg-editar.component';
+import { PrcSharedModule } from '../shared/prc-shared.module';
+import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
 
 @NgModule({
-  declarations: [TesisTfmTfgListadoComponent],
+  declarations: [TesisTfmTfgListadoComponent, TesisTfmTfgDatosGeneralesComponent, TesisTfmTfgEditarComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -23,6 +27,10 @@ import { TesisTfmTfgListadoComponent } from './tesis-tfm-tfg-listado/tesis-tfm-t
     SgiAuthModule,
     SgpSharedModule,
     CspSharedModule,
+    PrcSharedModule,
+  ],
+  providers: [
+    ProduccionCientificaResolver
   ]
 })
 export class TesisTfmTfgModule { }
