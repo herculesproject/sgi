@@ -1052,11 +1052,10 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoExclProv(
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoExclProv(solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaProvisional(),
-                enlaces,
-                solicitud.getId());
+                enlaces);
           }
           break;
         default:

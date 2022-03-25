@@ -256,10 +256,11 @@ public class ComunicadosService {
     log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - end");
   }
 
-  public void enviarComunicadoSolicitudCambioEstadoExclProv(String tituloConvocatoria,
+  public void enviarComunicadoSolicitudCambioEstadoExclProv(String solicitanteRef, String tituloConvocatoria,
       Instant fechaProvisionalConvocatoria,
-      List<ConvocatoriaEnlace> convocatoriaEnlaces, Long solicitudId) throws JsonProcessingException {
+      List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - start");
+
     List<CspComSolicitudCambioEstadoExclProvData.Enlace> enlaces = new ArrayList<>();
     for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
       CspComSolicitudCambioEstadoExclProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoExclProvData.Enlace
@@ -272,7 +273,8 @@ public class ComunicadosService {
       }
       enlaces.add(nuevoEnlace);
     }
-    List<Recipient> recipients = getRecipientsFromSolicitud(solicitudId);
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
           CspComSolicitudCambioEstadoExclProvData.builder()
@@ -290,20 +292,18 @@ public class ComunicadosService {
   }
 
   /**
-   * Obtiene los emails de los Investigadores principales
-   * de los proyectos generados a partir de la solicitud
+   * Obtiene los emails de la personaRef recibida
    * 
-   * @param solicitudId id del proyecto
+   * @param personaRef id del proyecto
    * @return lista @link{Recipient}
    */
-  private List<Recipient> getRecipientsFromSolicitud(Long solicitudId) {
+  private List<Recipient> getRecipientsFromPersonaRef(String personaRef) {
     List<Recipient> recipients = new ArrayList<>();
-    List<String> investigadoresPrincipalesRef = new ArrayList<>();
-    investigadoresPrincipalesRef.addAll(this.solicitudProyectoEquipoRepository
-        .findAllBySolicitudProyectoIdAndRolProyectoRolPrincipalTrue(solicitudId)
-        .stream().map(SolicitudProyectoEquipo::getPersonaRef).collect(Collectors.toList()));
-    if (!CollectionUtils.isEmpty(investigadoresPrincipalesRef)) {
-      recipients = ComConverter.toRecipients(personasService.findAllByIdIn(investigadoresPrincipalesRef));
+    PersonaOutput persona = personasService.findById(personaRef);
+    if (persona != null) {
+      recipients = persona.getEmails().stream()
+          .map(email -> Recipient.builder().name(email.getEmail()).address(email.getEmail()).build())
+          .collect(Collectors.toList());
     }
     return recipients;
   }
