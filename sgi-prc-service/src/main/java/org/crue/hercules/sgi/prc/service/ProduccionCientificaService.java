@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
@@ -123,6 +124,23 @@ public class ProduccionCientificaService {
 
     Page<ActividadResumen> returnValue = repository.findAllActividades(query, pageable);
     log.debug("findAllActividades(String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Recupera todas las entidades {@link DireccionTesisResumen} paginadas y/o
+   * filtradas
+   * 
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return Listado de entidades {@link DireccionTesisResumen} paginadas y/o
+   *         filtradas.
+   */
+  public Page<DireccionTesisResumen> findAllDireccionesTesis(String query, Pageable pageable) {
+    log.debug("findAllDireccionesTesis(String query, Pageable pageable) - start");
+
+    Page<DireccionTesisResumen> returnValue = repository.findAllDireccionesTesis(query, pageable);
+    log.debug("findAllDireccionesTesis(String query, Pageable pageable) - end");
     return returnValue;
   }
 

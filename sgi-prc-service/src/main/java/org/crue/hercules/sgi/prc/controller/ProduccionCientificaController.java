@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoOutput;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisOutput;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaOutput;
@@ -66,6 +68,7 @@ public class ProduccionCientificaController {
   public static final String PATH_CONGRESOS = "/congresos";
   public static final String PATH_OBRAS_ARTISTICAS = "/obras-artisticas";
   public static final String PATH_ACTIVIDADES = "/actividades";
+  public static final String PATH_DIRECCIONES_TESIS = "/direcciones-tesis";
   public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
   public static final String PATH_AUTORES = "/{id}/autores";
   public static final String PATH_PROYECTOS = "/{id}/proyectos";
@@ -255,6 +258,45 @@ public class ProduccionCientificaController {
   private Page<ActividadOutput> convertActividadResumen(Page<ActividadResumen> page) {
     List<ActividadOutput> content = page.getContent().stream()
         .map(this::convertActividadResumen)
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link DireccionTesisOutput}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging la información de la paginación.
+   * @return el listado de entidades {@link DireccionTesisOutput} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_DIRECCIONES_TESIS)
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  public ResponseEntity<Page<DireccionTesisOutput>> findAllDireccionesTesis(
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllDireccionesTesis(String query, Pageable paging) - start");
+    Page<DireccionTesisResumen> page = service.findAllDireccionesTesis(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllDireccionesTesis(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllDireccionesTesis(String query, Pageable paging) - end");
+    return new ResponseEntity<>(convertDireccionTesisResumen(page), HttpStatus.OK);
+  }
+
+  private DireccionTesisOutput convertDireccionTesisResumen(DireccionTesisResumen actividadResumen) {
+    DireccionTesisOutput output = modelMapper.map(actividadResumen, DireccionTesisOutput.class);
+    output.setEstado(new EstadoProduccionCientifica());
+    output.getEstado().setEstado(actividadResumen.getEstado());
+    return output;
+  }
+
+  private Page<DireccionTesisOutput> convertDireccionTesisResumen(Page<DireccionTesisResumen> page) {
+    List<DireccionTesisOutput> content = page.getContent().stream()
+        .map(this::convertDireccionTesisResumen)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

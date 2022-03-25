@@ -73,6 +73,24 @@
       <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-015" />
       <column name="epigrafe_cvn" value="060.020.030.000" />
     </insert>
+    <!-- Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-016" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+    </insert>
+    <!-- Producción científica 17 - Dirección tesis 2 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-017" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+    </insert>
+    <!-- Producción científica 18 - Dirección tesis 3 -->
+    <insert tableName="produccion_cientifica">
+      <column name="id" valueSequenceNext="produccion_cientifica_seq" />
+      <column name="produccion_cientifica_ref" value="produccion-cientifica-ref-018" />
+      <column name="epigrafe_cvn" value="030.040.000.000" />
+    </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-estado_produccion_cientifica">
     <!-- Estado para Producción científica 4 - Comité editorial 1 -->
@@ -171,6 +189,30 @@
       <column name="produccion_cientifica_id" valueNumeric="15" />
       <column name="estado" value="PENDIENTE" />
     </insert>
+    <!-- Estado para Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2021-12-22T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="estado" value="VALIDADO" />
+    </insert>
+    <!-- Estado para Producción científica 17 - Dirección tesis 2 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2022-01-12T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="estado" value="PENDIENTE" />
+    </insert>
+    <!-- Estado para Producción científica 18 - Dirección tesis 3 -->
+    <insert tableName="estado_produccion_cientifica">
+      <column name="id" valueSequenceNext="estado_produccion_cientifica_seq" />
+      <column name="comentario" value="Comentario" />
+      <column name="fecha" valueDate="2022-01-24T23:00:00" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="estado" value="PENDIENTE" />
+    </insert>
     <!-- Actualizar Estado de Producción científica 4 - Comité editorial 1 -->
     <update tableName="produccion_cientifica">
       <column name="estado_produccion_cientifica_id" valueNumeric="4" />
@@ -265,6 +307,30 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-015" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado Producción científica 16 - Dirección tesis 1 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="16" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-016" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado Producción científica 17 - Dirección tesis 2 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="17" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-017" />
+      </whereParams>
+    </update>
+    <!-- Actualizar Estado Producción científica 18 - Dirección tesis 3 -->
+    <update tableName="produccion_cientifica">
+      <column name="estado_produccion_cientifica_id" valueNumeric="18" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="produccion_cientifica_ref" value="produccion-cientifica-ref-018" />
       </whereParams>
     </update>
   </changeSet>
@@ -850,6 +916,192 @@
       <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
       <column name="produccion_cientifica_id" valueNumeric="15" />
       <column name="codigo_cvn" value="060.020.030.110" />
+    </insert>
+
+    <!-- Producción científica 16 - Dirección tesis 1 -->
+    <!-- Título del trabajo (id 134) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.030" />
+    </insert>
+    <!-- Fecha de defensa (id 135) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.140" />
+    </insert>
+    <!-- Alumno (id 136) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.120" />
+    </insert>
+    <!-- Mención de calidad (id 137) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.170" />
+    </insert>
+    <!-- Fecha de obtención	(id 138) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.200" />
+    </insert>
+    <!-- Doctorado europeo (id 139) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.190" />
+    </insert>
+    <!-- Fecha de mención	(id 140) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.160" />
+    </insert>
+    <!-- Tipo de proyecto (id 141) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="030.040.000.010" />
+    </insert>
+    <!-- Mención industrial (id 142) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="MENCION_INDUSTRIAL" />
+    </insert>
+    <!-- Mención internacional (id 143) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+      <column name="codigo_cvn" value="MENCION_INTERNACIONAL" />
+    </insert>
+
+    <!-- Producción científica 17 - Dirección tesis 2 -->
+    <!-- Título del trabajo (id 144) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.030" />
+    </insert>
+    <!-- Fecha de defensa (id 145) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.140" />
+    </insert>
+    <!-- Alumno (id 146) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.120" />
+    </insert>
+    <!-- Mención de calidad (id 147) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.170" />
+    </insert>
+    <!-- Fecha de obtención	(id 148) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.200" />
+    </insert>
+    <!-- Doctorado europeo (id 149) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.190" />
+    </insert>
+    <!-- Fecha de mención	(id 150) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.160" />
+    </insert>
+    <!-- Tipo de proyecto (id 151) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="030.040.000.010" />
+    </insert>
+    <!-- Mención industrial (id 152) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="MENCION_INDUSTRIAL" />
+    </insert>
+    <!-- Mención internacional (id 153) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+      <column name="codigo_cvn" value="MENCION_INTERNACIONAL" />
+    </insert>
+
+    <!-- Producción científica 18 - Dirección tesis 3 -->
+    <!-- Título del trabajo (id 154) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.030" />
+    </insert>
+    <!-- Fecha de defensa (id 155) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.140" />
+    </insert>
+    <!-- Alumno (id 156) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.120" />
+    </insert>
+    <!-- Mención de calidad (id 157) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.170" />
+    </insert>
+    <!-- Fecha de obtención	(id 158) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.200" />
+    </insert>
+    <!-- Doctorado europeo (id 159) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.190" />
+    </insert>
+    <!-- Fecha de mención	(id 160) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.160" />
+    </insert>
+    <!-- Tipo de proyecto (id 161) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="030.040.000.010" />
+    </insert>
+    <!-- Mención industrial (id 162) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="MENCION_INDUSTRIAL" />
+    </insert>
+    <!-- Mención internacional (id 163) -->
+    <insert tableName="campo_produccion_cientifica">
+      <column name="id" valueSequenceNext="campo_produccion_cientifica_seq" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+      <column name="codigo_cvn" value="MENCION_INTERNACIONAL" />
     </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-valor_campo">
@@ -1527,6 +1779,222 @@
       <column name="orden" valueNumeric="1" />
       <column name="valor" value="830" />
     </insert>
+
+    <!-- Producción científica 16 - Dirección tesis 1 -->
+    <!-- Título del trabajo (id 134) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="134" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Título dirección tesis 1" />
+    </insert>
+    <!-- Fecha de defensa (id 135) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="135" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-01-04T23:00:00Z" />
+    </insert>
+    <!-- Alumno (id 136) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="136" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Alumno 1" />
+    </insert>
+    <!-- Mención de calidad (id 137) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="137" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Fecha de obtención	(id 138) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="138" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-01-04T23:00:00Z" />
+    </insert>
+    <!-- Doctorado europeo (id 139) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="139" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Fecha de mención	(id 140) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="140" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-01-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de proyecto (id 141) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="141" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="055" />
+    </insert>
+    <!-- Mención industrial (id 142) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="142" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Mención internacional (id 143) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="143" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+
+    <!-- Producción científica 17 - Dirección tesis 2 -->
+    <!-- Título del trabajo (id 144) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="144" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Título dirección tesis 2" />
+    </insert>
+    <!-- Fecha de defensa (id 145) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="145" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-02-04T23:00:00Z" />
+    </insert>
+    <!-- Alumno (id 146) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="146" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Alumno 2" />
+    </insert>
+    <!-- Mención de calidad (id 147) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="147" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Fecha de obtención	(id 148) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="148" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-02-04T23:00:00Z" />
+    </insert>
+    <!-- Doctorado europeo (id 149) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="149" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Fecha de mención	(id 150) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="150" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-02-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de proyecto (id 151) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="151" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="066" />
+    </insert>
+    <!-- Mención industrial (id 152) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="152" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Mención internacional (id 153) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="153" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+
+    <!-- Producción científica 18 - Dirección tesis 3 -->
+    <!-- Título del trabajo (id 154) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="154" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Título dirección tesis 3" />
+    </insert>
+    <!-- Fecha de defensa (id 155) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="155" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-03-04T23:00:00Z" />
+    </insert>
+    <!-- Alumno (id 156) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="156" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="Alumno 3" />
+    </insert>
+    <!-- Mención de calidad (id 157) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="157" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Fecha de obtención	(id 158) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="158" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-03-04T23:00:00Z" />
+    </insert>
+    <!-- Doctorado europeo (id 159) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="159" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <!-- Fecha de mención	(id 160) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="160" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="2022-03-04T23:00:00Z" />
+    </insert>
+    <!-- Tipo de proyecto (id 161) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="161" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="067" />
+    </insert>
+    <!-- Mención industrial (id 162) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="162" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <!-- Mención internacional (id 163) -->
+    <insert tableName="valor_campo">
+      <column name="id" valueSequenceNext="valor_campo_seq" />
+      <column name="campo_produccion_cientifica_id" valueNumeric="163" />
+      <column name="orden" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000001-autor">
     <!-- Autor de  Producción científica 4 - Comité editorial 1 -->
@@ -1762,6 +2230,52 @@
       <column name="persona_ref" value="null" />
       <column name="produccion_cientifica_id" valueNumeric="15" />
     </insert>
+
+    <!-- Autor de  Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="autor">
+      <!-- 17 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="apellidos1" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="firma1" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor dirección tesis 1" />
+      <column name="orcid_id" value="orcid_id1" />
+      <column name="orden" valueNumeric="1" />
+      <column name="persona_ref" value="null" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+    </insert>
+    <!-- Autor de  Producción científica 17 - Dirección tesis 2 -->
+    <insert tableName="autor">
+      <!-- 18 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="apellidos2" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="firma2" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor dirección tesis 2" />
+      <column name="orcid_id" value="orcid_id2" />
+      <column name="orden" valueNumeric="2" />
+      <column name="persona_ref" value="" />
+      <column name="produccion_cientifica_id" valueNumeric="17" />
+    </insert>
+    <!-- Autor de Producción científica 18 - Dirección tesis 3 -->
+    <insert tableName="autor">
+      <!-- 19 -->
+      <column name="id" valueSequenceNext="autor_seq" />
+      <column name="apellidos" value="apellidos3" />
+      <column name="fecha_fin" valueDate="null" />
+      <column name="fecha_inicio" valueDate="null" />
+      <column name="firma" value="firma3" />
+      <column name="ip" valueBoolean="false" />
+      <column name="nombre" value="Autor dirección tesis 3" />
+      <column name="orcid_id" value="orcid_id3" />
+      <column name="orden" valueNumeric="3" />
+      <column name="persona_ref" value="null" />
+      <column name="produccion_cientifica_id" valueNumeric="18" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-indice_impacto">
@@ -1896,6 +2410,18 @@
       <column name="proyecto_ref" value="2" />
       <column name="produccion_cientifica_id" valueNumeric="13" />
     </insert>
+
+    <!-- Autor de  Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="proyecto">
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="proyecto_ref" value="1" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+    </insert>
+    <insert tableName="proyecto">
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="proyecto_ref" value="2" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000001-acreditacion">
@@ -1938,7 +2464,7 @@
       <column name="produccion_cientifica_id" valueNumeric="10" />
     </insert>
 
-    <!-- Autor de  Producción científica 13 - Actividad 1 -->
+    <!-- Producción científica 13 - Actividad 1 -->
     <insert tableName="acreditacion">
       <column name="id" valueSequenceNext="acreditacion_seq" />
       <column name="documento_ref" value="sample-txt" />
@@ -1949,6 +2475,19 @@
       <column name="id" valueSequenceNext="acreditacion_seq" />
       <column name="url" value="http://www.google.es/sin_documento" />
       <column name="produccion_cientifica_id" valueNumeric="13" />
+    </insert>
+
+    <!-- Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="acreditacion">
+      <column name="id" valueSequenceNext="acreditacion_seq" />
+      <column name="documento_ref" value="sample-txt" />
+      <column name="url" value="http://www.google.es/con_documento" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
+    </insert>
+    <insert tableName="acreditacion">
+      <column name="id" valueSequenceNext="acreditacion_seq" />
+      <column name="url" value="http://www.google.es/sin_documento" />
+      <column name="produccion_cientifica_id" valueNumeric="16" />
     </insert>
   </changeSet>
 
@@ -1994,7 +2533,7 @@
       <column name="autor_id" valueNumeric="16" />
     </insert>
 
-    <!-- Autor de  Producción científica 13 - Actividad 1 -->
+    <!-- Producción científica 13 - Actividad 1 -->
     <insert tableName="autor_grupo">
       <column name="id" valueSequenceNext="autor_grupo_seq" />
       <column name="estado" value="VALIDADO" />
@@ -2006,6 +2545,20 @@
       <column name="estado" value="PENDIENTE" />
       <column name="grupo_ref" value="2" />
       <column name="autor_id" valueNumeric="19" />
+    </insert>
+
+    <!-- Producción científica 16 - Dirección tesis 1 -->
+    <insert tableName="autor_grupo">
+      <column name="id" valueSequenceNext="autor_grupo_seq" />
+      <column name="estado" value="VALIDADO" />
+      <column name="grupo_ref" value="1" />
+      <column name="autor_id" valueNumeric="22" />
+    </insert>
+    <insert tableName="autor_grupo">
+      <column name="id" valueSequenceNext="autor_grupo_seq" />
+      <column name="estado" value="PENDIENTE" />
+      <column name="grupo_ref" value="2" />
+      <column name="autor_id" valueNumeric="22" />
     </insert>
   </changeSet>
 

@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
@@ -350,6 +351,48 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void findAllDireccionesTesis_ReturnsPage() {
+    // given: Una lista con 37 DireccionTesisResumen
+    List<DireccionTesisResumen> direccionesTesis = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      direccionesTesis.add(generarMockDireccionTesisResumen(i, String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        repository.findAllDireccionesTesis(ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<DireccionTesisResumen>>() {
+          @Override
+          public Page<DireccionTesisResumen> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > direccionesTesis.size() ? direccionesTesis.size() : toIndex;
+            List<DireccionTesisResumen> content = direccionesTesis.subList(fromIndex, toIndex);
+            Page<DireccionTesisResumen> page = new PageImpl<>(content, pageable, direccionesTesis.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<DireccionTesisResumen> page = service.findAllDireccionesTesis(null, paging);
+
+    // then: Devuelve la pagina 3 con los DireccionTesisResumen del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      DireccionTesisResumen direccionTesis = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(direccionTesis.getProduccionCientificaRef())
+          .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
   void cambiarEstado_WithIdIsNull_ThrowsIllegalArgumentException() {
     Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(null, null, null))
         .isInstanceOf(IllegalArgumentException.class);
@@ -468,9 +511,20 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     ActividadResumen actividad = new ActividadResumen();
     actividad.setId(id);
     actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
-    actividad.setEpigrafeCVN(EpigrafeCVN.E050_020_030_000);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E060_020_030_000);
     actividad.setTituloActividad("Título" + idRef);
     actividad.setFechaInicio(Instant.now());
+
+    return actividad;
+  }
+
+  private DireccionTesisResumen generarMockDireccionTesisResumen(Long id, String idRef) {
+    DireccionTesisResumen actividad = new DireccionTesisResumen();
+    actividad.setId(id);
+    actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E030_040_000_000);
+    actividad.setTituloTrabajo("Título" + idRef);
+    actividad.setFechaDefensa(Instant.now());
 
     return actividad;
   }

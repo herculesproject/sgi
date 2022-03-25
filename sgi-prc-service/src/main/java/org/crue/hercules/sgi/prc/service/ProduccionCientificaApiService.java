@@ -687,7 +687,6 @@ public class ProduccionCientificaApiService {
    * enviar a PRC. Será un subconjunto de los de la Fecyt.
    *
    * @return lista de {@link EpigrafeCVNOutput}.
-   * @return
    */
   public List<EpigrafeCVNOutput> findListadoEpigrafes() {
     log.debug("findListadoEpigrafes - start");

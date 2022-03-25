@@ -16,6 +16,8 @@ import org.crue.hercules.sgi.prc.dto.ComiteEditorialOutput;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
 import org.crue.hercules.sgi.prc.dto.CongresoOutput;
 import org.crue.hercules.sgi.prc.dto.CongresoResumen;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisOutput;
+import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.EstadoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.IndiceImpactoOutput;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaOutput;
@@ -81,6 +83,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   private static final String PATH_CONGRESOS = ProduccionCientificaController.PATH_CONGRESOS;
   private static final String PATH_OBRAS_ARTISTICAS = ProduccionCientificaController.PATH_OBRAS_ARTISTICAS;
   private static final String PATH_ACTIVIDADES = ProduccionCientificaController.PATH_ACTIVIDADES;
+  private static final String PATH_DIRECCIONES_TESIS = ProduccionCientificaController.PATH_DIRECCIONES_TESIS;
   private static final String PATH_PARAMETER_VALIDAR = "/validar";
   private static final String PATH_PARAMETER_RECHAZAR = "/rechazar";
   private static final String PATH_INDICES_IMPACTO = ProduccionCientificaController.PATH_INDICES_IMPACTO;
@@ -497,7 +500,7 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
   void findAllActividades_ReturnsNoContent() throws Exception {
     // given: Una lista con 0 ActividadResumen
-    List<ActividadResumen> obrasArtisticas = new ArrayList<>();
+    List<ActividadResumen> actividades = new ArrayList<>();
 
     Integer page = 3;
     Integer pageSize = 10;
@@ -506,14 +509,101 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
         ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ActividadResumen> pageResponse = new PageImpl<>(obrasArtisticas, pageable,
-              obrasArtisticas.size());
+          Page<ActividadResumen> pageResponse = new PageImpl<>(actividades, pageable,
+              actividades.size());
           return pageResponse;
         });
 
     // when: Get page=3 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ACTIVIDADES)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve 204 - NO CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  void findAllDireccionesTesis_ReturnsPage() throws Exception {
+    // given: Una lista con 37 DireccionTesisResumen
+    List<DireccionTesisResumen> direccionesTesis = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      direccionesTesis.add(generarMockDireccionTesisResumen(i, String.valueOf(i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllDireccionesTesis(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > direccionesTesis.size() ? direccionesTesis.size() : toIndex;
+          List<DireccionTesisResumen> content = direccionesTesis.subList(fromIndex, toIndex);
+          Page<DireccionTesisResumen> pageResponse = new PageImpl<>(content, pageable,
+              direccionesTesis.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_DIRECCIONES_TESIS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
+                page)
+            .header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los ActividadOutput del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$",
+            Matchers.hasSize(7)))
+        .andReturn();
+
+    List<DireccionTesisOutput> direccionesTesisResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<DireccionTesisOutput>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      DireccionTesisOutput direccionTesis = direccionesTesisResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(direccionTesis.getProduccionCientificaRef()).isEqualTo("ProduccionCientifica" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V", "PRC-VAL-E" })
+  void findAllDireccionesTesis_ReturnsNoContent() throws Exception {
+    // given: Una lista con 0 DireccionTesisResumen
+    List<DireccionTesisResumen> direccionesTesis = new ArrayList<>();
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAllDireccionesTesis(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<DireccionTesisResumen> pageResponse = new PageImpl<>(direccionesTesis, pageable,
+              direccionesTesis.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_DIRECCIONES_TESIS)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page",
                 page)
             .header("X-Page-Size", pageSize)
@@ -1120,9 +1210,20 @@ public class ProduccionCientificaControllerTest extends BaseControllerTest {
     ActividadResumen actividad = new ActividadResumen();
     actividad.setId(id);
     actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
-    actividad.setEpigrafeCVN(EpigrafeCVN.E050_020_030_000);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E060_020_030_000);
     actividad.setTituloActividad("Título" + idRef);
     actividad.setFechaInicio(Instant.now());
+
+    return actividad;
+  }
+
+  private DireccionTesisResumen generarMockDireccionTesisResumen(Long id, String idRef) {
+    DireccionTesisResumen actividad = new DireccionTesisResumen();
+    actividad.setId(id);
+    actividad.setProduccionCientificaRef("ProduccionCientifica" + idRef);
+    actividad.setEpigrafeCVN(EpigrafeCVN.E030_040_000_000);
+    actividad.setTituloTrabajo("Título" + idRef);
+    actividad.setFechaDefensa(Instant.now());
 
     return actividad;
   }
