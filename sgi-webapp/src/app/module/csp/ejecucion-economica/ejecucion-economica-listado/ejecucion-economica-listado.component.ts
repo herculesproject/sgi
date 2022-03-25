@@ -65,7 +65,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.initFormGroup();
+    this.createFormGroup();
     this.loadColectivos();
   }
 
@@ -165,7 +165,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
   }
 
   onClearFilters(): void {
-    this.initFormGroup();
+    this.initFormGroup(true);
     this.onSearch();
   }
 
@@ -173,18 +173,34 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     this.subscriptions?.forEach(x => x.unsubscribe());
   }
 
-  private initFormGroup(): void {
+  private createFormGroup(): void {
     this.formGroup = new FormGroup({
-      tipoEntidad: new FormControl(TipoEntidad.PROYECTO),
-      nombre: new FormControl(undefined),
-      identificadorSge: new FormControl(undefined),
+      tipoEntidad: new FormControl(null),
+      nombre: new FormControl(null),
+      identificadorSge: new FormControl(null),
       fechaInicioDesde: new FormControl(null),
       fechaInicioHasta: new FormControl(null),
       fechaFinDesde: new FormControl(null),
       fechaFinHasta: new FormControl(null),
-      convocatoria: new FormControl(undefined),
-      responsable: new FormControl({ value: '', disabled: true })
+      convocatoria: new FormControl(null),
+      responsable: new FormControl({ value: null, disabled: true })
     });
+
+    this.initFormGroup();
+  }
+
+  private initFormGroup(reset = false): void {
+    if (reset) {
+      this.formGroup.reset();
+    }
+
+    this.formGroup.controls.tipoEntidad.setValue(TipoEntidad.PROYECTO);
+
+    if (!this.colectivosResponsable || this.colectivosResponsable.length === 0) {
+      this.formGroup.controls.responsable.disable();
+    } else {
+      this.formGroup.controls.responsable.enable();
+    }
 
     this.tipoEntidadSelected = this.formGroup.controls.tipoEntidad?.value;
   }
