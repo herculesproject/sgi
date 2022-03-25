@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
@@ -75,6 +76,14 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO = "CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO";
   private static final String TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_PARAM = TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO = "CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO";
+  private static final String TEMPLATE_CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_PARAM = TEMPLATE_CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO = "CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO";
+  private static final String TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_PARAM = TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO
       + DATA;
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
@@ -423,28 +432,6 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM);
   }
 
-  private EmailOutput createComunicadoPresentacionSeguimientoCientificoIPEmail(
-      CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients, String template,
-      String templateParam)
-      throws JsonProcessingException {
-
-    ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails";
-    HttpMethod httpMethod = HttpMethod.POST;
-    String mergedURL = buildUri(serviceType, relativeUrl);
-
-    EmailInput request = EmailInput.builder().template(
-        template).recipients(recipients)
-        .build();
-    request.setParams(Arrays.asList(
-        new EmailParam(
-            templateParam, mapper.writeValueAsString(data))));
-
-    return super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
-        new ParameterizedTypeReference<EmailOutput>() {
-        }).getBody();
-  }
-
   public EmailOutput createComunicadoVencimientoPeriodoPagoSocioEmail(CspComVencimientoPeriodoPagoSocioData data,
       List<Recipient> recipients) throws JsonProcessingException {
     return this.createComunicado(data, recipients, TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO,
@@ -493,6 +480,22 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV_PARAM);
+  }
+
+  public EmailOutput createComunicadoInicioPresentacionPeriodoJustificacionSocioEmail(
+      CspComPeriodoJustificacionSocioData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO,
+        TEMPLATE_CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_PARAM);
+  }
+
+  public EmailOutput createComunicadoFinPresentacionPeriodoJustificacionSocioEmail(
+      CspComPeriodoJustificacionSocioData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO,
+        TEMPLATE_CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)

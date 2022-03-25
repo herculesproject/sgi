@@ -53,6 +53,7 @@ public class ComunicadosService {
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
   private final SgiApiSgpService personasService;
+  private final ProyectoSocioPeriodoJustificacionComService proyectoSocioPeriodoJustificacionComService;
 
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
@@ -61,7 +62,9 @@ public class ComunicadosService {
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService,
       ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService,
-      ProyectoSocioPeriodoPagoComService proyectoSocioPeriodoPagoComService) {
+      ProyectoSocioPeriodoPagoComService proyectoSocioPeriodoPagoComService,
+      ProyectoSocioPeriodoJustificacionComService proyectoSocioPeriodoJustificacionComService) {
+
     this.proyectoSocioPeriodoPagoComService = proyectoSocioPeriodoPagoComService;
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
@@ -71,6 +74,7 @@ public class ComunicadosService {
     this.configService = configService;
     this.emailService = emailService;
     this.personasService = personasService;
+    this.proyectoSocioPeriodoJustificacionComService = proyectoSocioPeriodoJustificacionComService;
   }
 
   public void enviarComunicadoInicioPresentacionJustificacionGastos() throws JsonProcessingException {
@@ -303,4 +307,9 @@ public class ComunicadosService {
     }
     return recipients;
   }
+
+  public void enviarComunicadosPeriodoJustificacionSocio() {
+    this.proyectoSocioPeriodoJustificacionComService.enviarComunicadoInicioFinPeriodoJustificacionSocio();
+  }
+
 }

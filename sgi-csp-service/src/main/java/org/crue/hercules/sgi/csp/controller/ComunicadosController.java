@@ -48,4 +48,10 @@ public class ComunicadosController {
   public void enviarComunicadoVencimientoPeriodoPagoSocio() throws JsonProcessingException {
     this.service.enviarComunicadoVencimientoPeriodoPagoSocio();
   }
+
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp'))")
+  @GetMapping("/periodo-justificacion-socio")
+  public void enviarComunicadosPeriodoJustificacionSocio() {
+    this.service.enviarComunicadosPeriodoJustificacionSocio();
+  }
 }
