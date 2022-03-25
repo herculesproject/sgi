@@ -153,6 +153,27 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Periodo Justificacion Socio -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo&quot;:&quot;proyecto 1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;nombreEntidad&quot;:&quot;entidad&quot;,&quot;numPeriodo&quot;:&quot;1&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo&quot;:&quot;proyecto 1&quot;,&quot;fechaInicio&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;fechaFin&quot;:&quot;2022-01-01T00:00:00Z&quot;,&quot;nombreEntidad&quot;:&quot;entidad&quot;,&quot;numPeriodo&quot;:&quot;1&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subject_tpl">
@@ -280,6 +301,36 @@
       <column name="tpl" valueClobFile="clob/0000000000001/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_SUBJECT.ftl" />
       <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_SUBJECT'</where>
     </update>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_SUBJECT" />
+      <column name="description" value="Comunicado de inicio del periodo para entregar la documentación de justificación" />
+      <column name="tpl" value=" " />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_SUBJECT.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_SUBJECT'</where>
+    </update>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT" />
+      <column name="description" value="Aviso de finalización del periodo para entregar la documentación de justificación" />
+      <column name="tpl" value=" " />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-subjecttpl_param">
@@ -338,6 +389,16 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_DATA')" />
+    </insert>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
+    </insert>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
     </insert>
   </changeSet>
 
@@ -438,7 +499,7 @@
       <column name="name" value="CSP_COM_SOL_CAMB_EST_ALEGACIONES_CONTENT" />
       <column name="description" value="Plantilla de contenido para el cambio de estado de solicitud a alegaciones" />
       <column name="tpl_text" value=" " />
-      <column name="tpl_html" value=" " />
+      <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/alegaciones/CSP_COM_SOL_CAMB_EST_ALEGACIONES_CONTENT_text.ftl" />
@@ -524,6 +585,46 @@
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_html.ftl" />
       <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT'</where>
+    </update>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT" />
+      <column name="description" value="Contenido del aviso del inicio del período de entrega de justificación al socio colaborador (texto + HTML)" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value=" " />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT" />
+      <column name="description" value="Contenido del aviso del vencimiento del período de entrega de justificación al socio colaborador (texto + HTML)" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value=" " />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
     </update>
   </changeSet>
 
@@ -629,6 +730,16 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_DATA')" />
     </insert>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
+    </insert>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_DATA')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-email_tpl">
@@ -722,6 +833,26 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO" />
+      <column name="description" value="Aviso de inicio del período de justificación al socio colaborador (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO" />
+      <column name="description" value="Aviso de inicio del período de justificación al socio colaborador (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_subjecttpl">
@@ -773,6 +904,16 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_SUBJECT')" />
     </insert>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
+    </insert>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-emailtpl_contenttpl">
@@ -823,6 +964,16 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT')" />
+    </insert>
+    <!-- CSP Inicio Periodo Justificación Socio -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
+    </insert>
+    <!-- CSP Fin Periodo Justificación Socio -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
