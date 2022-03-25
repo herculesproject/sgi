@@ -1081,6 +1081,7 @@ public class SolicitudService {
            * solicitudes de
            * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
            */
+
           if (checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
             Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
@@ -1089,6 +1090,26 @@ public class SolicitudService {
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
             this.comunicadosService.enviarComunicadoSolicitudCambioEstadoConcProv(
+                solicitud.getSolicitanteRef(),
+                convocatoria.getTitulo(),
+                convocatoria.getFechaProvisional(),
+                enlaces);
+          }
+          break;
+        case DENEGADA_PROVISIONAL:
+          /*
+           * Enviamos el comunicado de Cambio al estado DENEGADA PROVISIONAL en
+           * solicitudes de CONVOCATORIAS PROPIAS registradas por el propio por
+           * solicitante
+           */
+          if (checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
+            Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+
+            List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
+                .findByConvocatoriaId(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoDenProv(
                 solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaProvisional(),
