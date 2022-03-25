@@ -10,8 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const TIPO_ENLACE_KEY = marker('csp.linea-investigacion');
-const TIPO_ENLACE_NOMBRE_KEY = marker('csp.linea-investigacion.nombre');
+const LINEA_INVESTIGACION_KEY = marker('csp.linea-investigacion');
+const LINEA_INVESTIGACION_NOMBRE_KEY = marker('csp.linea-investigacion.nombre');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -46,24 +46,24 @@ export class LineaInvestigacionModalComponent extends DialogActionComponent<ILin
 
   private setupI18N(): void {
     this.translate.get(
-      TIPO_ENLACE_NOMBRE_KEY,
+      LINEA_INVESTIGACION_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
-        TIPO_ENLACE_KEY,
+        LINEA_INVESTIGACION_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        TIPO_ENLACE_KEY,
+        LINEA_INVESTIGACION_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {
           return this.translate.get(
             TITLE_NEW_ENTITY,
-            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
           );
         })
       ).subscribe((value) => this.title = value);
