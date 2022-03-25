@@ -14,7 +14,6 @@ const _ActividadMixinBase:
     ACTIVIDAD_RESPONSE_CONVERTER
   );
 
-
 @Injectable({
   providedIn: 'root'
 })

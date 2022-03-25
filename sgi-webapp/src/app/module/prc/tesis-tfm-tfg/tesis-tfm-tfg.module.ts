@@ -5,10 +5,13 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 import { TesisTfmTfgRoutingModule } from './tesis-tfm-tfg-routing.module';
+import { TesisTfmTfgListadoComponent } from './tesis-tfm-tfg-listado/tesis-tfm-tfg-listado.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [TesisTfmTfgListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +20,9 @@ import { TesisTfmTfgRoutingModule } from './tesis-tfm-tfg-routing.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    SgpSharedModule,
+    CspSharedModule,
   ]
 })
 export class TesisTfmTfgModule { }
