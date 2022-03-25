@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesD
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
+import org.crue.hercules.sgi.csp.dto.com.CspComVencimientoPeriodoPagoSocioData;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput;
 import org.crue.hercules.sgi.csp.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
@@ -33,13 +34,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SgiApiComService extends SgiApiBaseService {
+  private static final String DATA = "_DATA";
+  private static final String PATH_EMAILS = "/emails";
+  private static final String PATH_PARAMETER_ID = "/{id}";
+
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_NAME = "GENERIC_EMAIL_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT = "GENERIC_SUBJECT";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO = "CSP_COM_INICIO_PRESENTACION_GASTO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO
-      + "_DATA";
+      + DATA;
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION = "CSP_COM_SOLICITUD_PETICION_EVALUACION";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_PETICION_EVALUACION_CODIGO = "ETI_PETICION_EVALUACION_CODIGO";
   private static final String TEMPLATE_CSP_COM_SOLICITUD_PETICION_EVALUACION_PARAM_SOLICITUD_CODIGO = "CSP_SOLICITUD_CODIGO";
@@ -58,17 +63,20 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO
-      + "_DATA";
+      + DATA;
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP
-      + "_DATA";
+      + DATA;
 
   private static final String TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP = "CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP";
   private static final String TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM = TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP
-      + "_DATA";
+      + DATA;
 
-  private static final String PATH_EMAILS = "/emails";
+  private static final String TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO = "CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO";
+  private static final String TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_PARAM = TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO
+      + DATA;
+
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
 
@@ -99,7 +107,7 @@ public class SgiApiComService extends SgiApiBaseService {
     Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
 
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails";
+    String relativeUrl = PATH_EMAILS;
     HttpMethod httpMethod = HttpMethod.POST;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -142,7 +150,7 @@ public class SgiApiComService extends SgiApiBaseService {
     Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
 
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails/{id}";
+    String relativeUrl = PATH_EMAILS + PATH_PARAMETER_ID;
     HttpMethod httpMethod = HttpMethod.PUT;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -173,7 +181,7 @@ public class SgiApiComService extends SgiApiBaseService {
     Assert.notNull(id, "ID is required");
 
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails/{id}";
+    String relativeUrl = PATH_EMAILS + PATH_PARAMETER_ID;
     HttpMethod httpMethod = HttpMethod.DELETE;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -313,7 +321,7 @@ public class SgiApiComService extends SgiApiBaseService {
         "createComunicadoInicioPresentacionJustificacionGastosEmail(CspComInicioPresentacionGastoData data, List<Recipient> recipients) - start");
 
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails";
+    String relativeUrl = PATH_EMAILS;
     HttpMethod httpMethod = HttpMethod.POST;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -383,22 +391,8 @@ public class SgiApiComService extends SgiApiBaseService {
   public EmailOutput createComunicadoInicioPresentacionSeguimientoCientificoEmail(
       CspComInicioPresentacionSeguimientoCientificoData data, List<Recipient> recipients)
       throws JsonProcessingException {
-
-    ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails";
-    HttpMethod httpMethod = HttpMethod.POST;
-    String mergedURL = buildUri(serviceType, relativeUrl);
-
-    EmailInput request = EmailInput.builder().template(
-        TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO).recipients(recipients)
-        .build();
-    request.setParams(Arrays.asList(
-        new EmailParam(
-            TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM, mapper.writeValueAsString(data))));
-
-    return super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, request,
-        new ParameterizedTypeReference<EmailOutput>() {
-        }).getBody();
+    return this.createComunicado(data, recipients, TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO,
+        TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_PARAM);
 
   }
 
@@ -415,7 +409,7 @@ public class SgiApiComService extends SgiApiBaseService {
   public EmailOutput createComunicadoInicioPresentacionSeguimientoCientificoIPEmail(
       CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients)
       throws JsonProcessingException {
-    return this.createComunicadoPresentacionSeguimientoCientificoIPEmail(data, recipients,
+    return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP,
         TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM);
 
@@ -424,7 +418,7 @@ public class SgiApiComService extends SgiApiBaseService {
   public EmailOutput createComunicadoFinPresentacionSeguimientoCientificoIPEmail(
       CspComPresentacionSeguimientoCientificoIpData data, List<Recipient> recipients)
       throws JsonProcessingException {
-    return this.createComunicadoPresentacionSeguimientoCientificoIPEmail(data, recipients,
+    return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP,
         TEMPLATE_CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_PARAM);
   }
@@ -451,6 +445,13 @@ public class SgiApiComService extends SgiApiBaseService {
         }).getBody();
   }
 
+  public EmailOutput createComunicadoVencimientoPeriodoPagoSocioEmail(CspComVencimientoPeriodoPagoSocioData data,
+      List<Recipient> recipients) throws JsonProcessingException {
+    return this.createComunicado(data, recipients, TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO,
+        TEMPLATE_CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_PARAM);
+
+  }
+
   /**
    * Invoca el env&iacute;o de un email en el modulo COM
    *
@@ -460,7 +461,7 @@ public class SgiApiComService extends SgiApiBaseService {
   public Status sendEmail(Long id) {
     log.debug("sendEmail(Long id) - start");
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails/{id}/send";
+    String relativeUrl = PATH_EMAILS + PATH_PARAMETER_ID + "/send";
     HttpMethod httpMethod = HttpMethod.GET;
     String mergedURL = buildUri(serviceType, relativeUrl);
 

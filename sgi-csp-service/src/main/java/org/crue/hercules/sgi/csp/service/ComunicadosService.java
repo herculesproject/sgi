@@ -49,6 +49,7 @@ public class ComunicadosService {
   private final SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
+  private final ProyectoSocioPeriodoPagoComService proyectoSocioPeriodoPagoComService;
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
   private final SgiApiSgpService personasService;
@@ -58,8 +59,10 @@ public class ComunicadosService {
       ProyectoRepository proyectoRepository,
       SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
+      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService,
       ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService,
-      SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService) {
+      ProyectoSocioPeriodoPagoComService proyectoSocioPeriodoPagoComService) {
+    this.proyectoSocioPeriodoPagoComService = proyectoSocioPeriodoPagoComService;
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
     this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
@@ -145,6 +148,10 @@ public class ComunicadosService {
 
   public void enviarComunicadoJustificacionSeguimientoCientificoIps() {
     this.proyectoSeguimientoCientificoComService.sendCommunicationIPs();
+  }
+
+  public void enviarComunicadoVencimientoPeriodoPagoSocio() {
+    this.proyectoSocioPeriodoPagoComService.enviarComunicadoVencimientoPeriodoPagoSocio();
   }
 
   private void buildAndSendEmailForPeriodosJustificacionGasto(List<Recipient> recipients,
