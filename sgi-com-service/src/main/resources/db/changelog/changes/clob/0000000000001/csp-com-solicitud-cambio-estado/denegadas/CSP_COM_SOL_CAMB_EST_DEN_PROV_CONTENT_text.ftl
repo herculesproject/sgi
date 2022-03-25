@@ -1,0 +1,23 @@
+<#assign data = CSP_COM_SOL_CAMB_EST_DEN_PROV_DATA?eval />
+Estimado/a investigador/a,
+
+le informamos que con fecha ${data.fechaProvisionalConvocatoria?datetime.iso?string("dd/MM/yyyy")} se ha publicado la “Resolución Provisional” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece denegada para financiación.
+
+Más información disponible en los siguientes enlaces:
+
+<#list data.enlaces as enlace>
+  <#if enlace.tipoEnlace?? && enlace.descripcion?? && enlace.url?? >
+* ${enlace.tipoEnlace}: ${enlace.descripcion} (link a ${enlace.url})
+  <#elseif enlace.descripcion?? && enlace.url??>
+* ${enlace.descripcion} (link a ${enlace.url})
+  <#elseif enlace.tipoEnlace?? && enlace.url??>
+* ${enlace.tipoEnlace} (link a ${enlace.url})
+  <#elseif enlace.url??>
+* link a ${enlace.url}
+  </#if>
+</#list>
+
+Reciba un cordial saludo.
+
+Sección de Recursos Humanos de la Investigación y Plan Propio
+Área de Investigación
