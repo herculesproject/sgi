@@ -125,4 +125,14 @@ public class Grupo extends BaseActivableEntity {
   @Setter(AccessLevel.NONE)
   private final List<GrupoPersonaAutorizada> personasAutorizadas = null;
 
+  @OneToMany(mappedBy = "grupo")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<GrupoPalabraClave> palabrasClave = null;
+
+  @OneToMany(mappedBy = "grupo")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<GrupoLineaInvestigacion> lineasInvestigacion = null;
+
 }

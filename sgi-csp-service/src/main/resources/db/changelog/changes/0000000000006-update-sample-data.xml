@@ -69,4 +69,22 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000006-grupo-linea-investigacion">
+    <insert tableName="grupo_linea_investigacion">
+      <column name="id" valueSequenceNext="grupo_linea_investigacion_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
+      <column name="fecha_inicio" valueDate="2021-11-07T23:00:00" />
+      <column name="fecha_fin" valueDate="2021-12-30T22:59:59" />
+      <column name="linea_investigacion_id" valueComputed="(select id from ${schemaPrefix}linea_investigacion where nombre='Psicología Laboral u Organizacional')" />
+    </insert>
+
+    <insert tableName="grupo_linea_investigacion">
+      <column name="id" valueSequenceNext="grupo_linea_investigacion_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 2')" />
+      <column name="fecha_inicio" valueDate="2022-03-01T23:00:00" />
+      <column name="fecha_fin" valueDate="2022-10-01T22:59:59" />
+      <column name="linea_investigacion_id" valueComputed="(select id from ${schemaPrefix}linea_investigacion where nombre='Psicología Clínica de la Salud')" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
