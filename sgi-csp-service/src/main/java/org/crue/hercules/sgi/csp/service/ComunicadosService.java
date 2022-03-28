@@ -16,6 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDenProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
@@ -47,7 +48,6 @@ public class ComunicadosService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final ProyectoRepository proyectoRepository;
-  private final SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
   private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
   private final ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService;
   private final ProyectoSocioPeriodoPagoComService proyectoSocioPeriodoPagoComService;
@@ -59,7 +59,6 @@ public class ComunicadosService {
   public ComunicadosService(
       SgiConfigProperties sgiConfigProperties,
       ProyectoRepository proyectoRepository,
-      SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       SgiApiCnfService configService, SgiApiComService emailService, SgiApiSgpService personasService,
       ProyectoSeguimientoCientificoComService proyectoSeguimientoCientificoComService,
@@ -69,7 +68,6 @@ public class ComunicadosService {
     this.proyectoSocioPeriodoPagoComService = proyectoSocioPeriodoPagoComService;
     this.sgiConfigProperties = sgiConfigProperties;
     this.proyectoRepository = proyectoRepository;
-    this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
     this.proyectoPeriodoJustificacionRepository = proyectoPeriodoJustificacionRepository;
     this.proyectoSeguimientoCientificoComService = proyectoSeguimientoCientificoComService;
     this.configService = configService;
@@ -387,6 +385,39 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoDenProv() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoDenProv() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoConc(String solicitanteRef, String tituloConvocatoria,
+      Instant fechaConcesionConvocatoria,
+      List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoConc() - start");
+    List<CspComSolicitudCambioEstadoConcData.Enlace> enlaces = new ArrayList<>();
+    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
+      CspComSolicitudCambioEstadoConcData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoConcData.Enlace
+          .builder()
+          .descripcion(enlace.getDescripcion())
+          .url(enlace.getUrl())
+          .build();
+      if (enlace.getTipoEnlace() != null) {
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+      }
+      enlaces.add(nuevoEnlace);
+    }
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConc(
+          CspComSolicitudCambioEstadoConcData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .fechaConcesionConvocatoria(
+                  fechaConcesionConvocatoria)
+              .enlaces(enlaces).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoConc() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoConc() - end");
   }
 
   /**
