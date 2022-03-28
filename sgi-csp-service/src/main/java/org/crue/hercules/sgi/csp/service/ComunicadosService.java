@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
@@ -273,7 +274,6 @@ public class ComunicadosService {
       }
       enlaces.add(nuevoEnlace);
     }
-
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
@@ -289,6 +289,39 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoExclProv() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoExclDef(String solicitanteRef, String tituloConvocatoria,
+      Instant fechaConcesionConvocatoria,
+      List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoExclDef() - start");
+    List<CspComSolicitudCambioEstadoExclDefData.Enlace> enlaces = new ArrayList<>();
+    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
+      CspComSolicitudCambioEstadoExclDefData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoExclDefData.Enlace
+          .builder()
+          .descripcion(enlace.getDescripcion())
+          .url(enlace.getUrl())
+          .build();
+      if (enlace.getTipoEnlace() != null) {
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+      }
+      enlaces.add(nuevoEnlace);
+    }
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclDef(
+          CspComSolicitudCambioEstadoExclDefData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .fechaConcesionConvocatoria(
+                  fechaConcesionConvocatoria)
+              .enlaces(enlaces).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoExclDef() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoExclDef() - end");
   }
 
   /**

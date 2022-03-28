@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.CspComVencimientoPeriodoPagoSocioData;
@@ -59,6 +60,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV = "CSP_COM_SOL_CAMB_EST_EXCL_PROV";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV
+      + "_DATA";
+
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF = "CSP_COM_SOL_CAMB_EST_EXCL_DEF";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF
       + "_DATA";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO = "CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO";
@@ -519,6 +524,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA,
         TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_RECHAZADA_PARAM);
+  }
+
+  public EmailOutput createComunicadoSolicitudCambioEstadoExclDef(
+      CspComSolicitudCambioEstadoExclDefData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
