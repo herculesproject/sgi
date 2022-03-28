@@ -14,9 +14,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
-import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
@@ -27,7 +27,6 @@ import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
@@ -322,6 +321,39 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoExclDef() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoExclDef() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoConcProv(String solicitanteRef, String tituloConvocatoria,
+      Instant fechaProvisionalConvocatoria,
+      List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoConcProv() - start");
+    List<CspComSolicitudCambioEstadoConcProvData.Enlace> enlaces = new ArrayList<>();
+    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
+      CspComSolicitudCambioEstadoConcProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoConcProvData.Enlace
+          .builder()
+          .descripcion(enlace.getDescripcion())
+          .url(enlace.getUrl())
+          .build();
+      if (enlace.getTipoEnlace() != null) {
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+      }
+      enlaces.add(nuevoEnlace);
+    }
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConcProv(
+          CspComSolicitudCambioEstadoConcProvData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .fechaProvisionalConvocatoria(
+                  fechaProvisionalConvocatoria)
+              .enlaces(enlaces).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoConcProv() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoConcProv() - end");
   }
 
   /**
