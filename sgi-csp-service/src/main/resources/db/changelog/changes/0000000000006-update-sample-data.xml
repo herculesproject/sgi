@@ -48,9 +48,19 @@
     </update>
   </changeSet>
 
+  <!-- fix grupo_equipo_seq changeSet id="0000000000005-grupo-equipo" -->
+  <changeSet author="user (generated)" id="0000000000006-grupo-equipo-seq">
+    <dropSequence sequenceName="grupo_equipo_seq" />
+    <customChange class="org.crue.hercules.sgi.framework.liquibase.change.custom.ComputedValueCreateSequenceChange">
+      <param name="incrementBy" value="1" />
+      <param name="sequenceName" value="grupo_equipo_seq" />
+      <param name="computedStartValue" value="SELECT COALESCE(MAX(id)+1, 1) FROM ${schemaPrefix}grupo_equipo" />
+    </customChange>
+  </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000006-grupo-equipo">
     <insert tableName="grupo_equipo">
-      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="id" valueSequenceNext="grupo_equipo_seq" />
       <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
       <column name="persona_ref" value="02591317" />
       <column name="rol_proyecto_id" valueComputed="(select id from ${schemaPrefix}rol_proyecto where abreviatura='IP')" />
@@ -62,7 +72,7 @@
 
   <changeSet context="dev" author="master" id="0000000000006-grupo-persona-autorizada">
     <insert tableName="grupo_persona_autorizada">
-      <column name="id" valueSequenceNext="proyecto_equipo_seq" />
+      <column name="id" valueSequenceNext="grupo_persona_autorizada_seq" />
       <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
       <column name="persona_ref" value="22932567" />
       <column name="fecha_inicio" valueDate="2022-03-22T23:00:00" />
