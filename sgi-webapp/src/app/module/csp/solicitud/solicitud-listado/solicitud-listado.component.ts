@@ -8,21 +8,19 @@ import { HttpProblem } from '@core/errors/http-problem';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
-import { IGrupo } from '@core/models/csp/grupo';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
+import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +28,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
@@ -51,7 +49,7 @@ const MSG_SUCCESS_CREAR_GRUPO = marker('msg.csp.solicitud.crear.grupo');
 const MSG_ERROR_CREAR_GRUPO = marker('error.csp.solicitud.crear.grupo');
 const SOLICITUD_KEY = marker('csp.solicitud');
 const GRUPO_KEY = marker('csp.grupo');
-const NODEPT = 'SGIDEP';
+
 export interface ISolicitudListadoData extends ISolicitud {
   convocatoria: IConvocatoria;
   showCreateGrupo: boolean;
@@ -122,8 +120,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private readonly translate: TranslateService,
     private convocatoriaService: ConvocatoriaService,
     private authService: SgiAuthService,
-    private grupoService: GrupoService,
-    private vinculacionService: VinculacionService,
     route: ActivatedRoute,
   ) {
     super(snackBarService, MSG_ERROR);
@@ -588,43 +584,31 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
    */
   crearGrupoModal(solicitud: ISolicitud): void {
     const data = {
-    } as IGrupo;
+      solicitud
+    } as ISolicitudGrupo;
+
     const config = {
       panelClass: 'sgi-dialog-container',
       data
     };
-    const dialogRef = this.matDialog.open(SolicitudGrupoModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (data: IGrupo) => {
-        if (data) {
-          this.vinculacionService.findByPersonaId(solicitud.solicitante.id).pipe(
-            switchMap(vinculacion => {
-              return this.grupoService.getNextCodigo(vinculacion ? vinculacion.departamento.id : NODEPT).pipe(
-                switchMap(codigoGenerated => {
-                  data.codigo = codigoGenerated;
-                  return this.solicitudService.createGrupoBySolicitud(solicitud.id, data)
-                })
-              );
-            })
-          ).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_GRUPO);
-              this.loadTable();
-            },
-            (error) => {
-              this.logger.error(error);
-              if (error instanceof HttpProblem) {
-                this.snackBarService.showError(error);
-              }
-              else {
-                this.snackBarService.showError(MSG_ERROR_CREAR_GRUPO);
-              }
-            }
-          );
 
+    this.matDialog.open(SolicitudGrupoModalComponent, config).afterClosed()
+      .pipe(
+        filter(solicitudGrupo => solicitudGrupo)
+      ).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_GRUPO);
+          this.loadTable();
+        },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof HttpProblem) {
+            this.snackBarService.showError(error);
+          } else {
+            this.snackBarService.showError(MSG_ERROR_CREAR_GRUPO);
+          }
         }
-      }
-    );
+      );
   }
 
 }
