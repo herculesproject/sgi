@@ -1,24 +1,30 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IGrupo } from '@core/models/csp/grupo';
 import { Dedicacion, IGrupoEquipo } from '@core/models/csp/grupo-equipo';
+import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
+import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { SgiRestFindOptions, RSQLSgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { GrupoValidator } from '../../validators/grupo-validator';
 
 export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
 
   private grupo: IGrupo;
+  readonly tipos$ = new BehaviorSubject<IGrupoTipo[]>([]);
+  readonly especialesInvestigacion$ = new BehaviorSubject<IGrupoEspecialInvestigacion[]>([]);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -27,7 +33,8 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     private readonly grupoEquipoService: GrupoEquipoService,
     private readonly palabraClaveService: PalabraClaveService,
     private readonly rolProyectoService: RolProyectoService,
-    private readonly vinculacionService: VinculacionService
+    private readonly vinculacionService: VinculacionService,
+    private readonly solicitudService: SolicitudService,
   ) {
     super(key, true);
     this.setComplete(true);
@@ -43,6 +50,21 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
           map(() => grupo)
         )
       ),
+      switchMap(grupo => {
+        if (grupo.solicitud) {
+          return this.solicitudService.findById(grupo.solicitud.id).pipe(
+            map(solicitud => {
+              grupo.solicitud = solicitud;
+            }),
+            map(() => grupo)
+          );
+        } else {
+          return of(grupo);
+        }
+      }),
+      tap(grupo => {
+        this.actualizarTablas(grupo.id);
+      }),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
@@ -63,7 +85,8 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
       tipo: grupo.tipo,
-      especialInvestigacion: grupo.especialInvestigacion
+      especialInvestigacion: grupo.especialInvestigacion,
+      solicitud: grupo.solicitud?.codigoRegistroInterno
     };
   }
 
@@ -87,6 +110,9 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     return observable$.pipe(
       map(value => {
         this.grupo.id = value.id;
+        if (this.isEdit()) {
+          this.actualizarTablas(value.id);
+        }
         return this.grupo.id;
       })
     );
@@ -130,7 +156,8 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       fechaFin: new FormControl(null),
       palabrasClave: new FormControl(null),
       tipo: new FormControl(null),
-      especialInvestigacion: new FormControl(false)
+      especialInvestigacion: new FormControl(null),
+      solicitud: new FormControl(null)
     }, {
       validators: [
         DateValidator.isAfter('fechaInicio', 'fechaFin', false)
@@ -227,6 +254,19 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       dedicacion: Dedicacion.COMPLETA,
       participacion: 100
     }
+  }
+
+  private actualizarTablas(id: number) {
+    const findOptions: SgiRestFindOptions = {
+      sort: new RSQLSgiRestSort('fechaInicio', SgiRestSortDirection.DESC)
+    };
+    this.subscriptions.push(this.grupoService.findEspecialesInvestigacion(id, findOptions).subscribe(especialesInvestigacionResponse => {
+      this.especialesInvestigacion$.next(especialesInvestigacionResponse.items);
+    }));
+
+    this.subscriptions.push(this.grupoService.findTipos(id, findOptions).subscribe(tiposResponse => {
+      this.tipos$.next(tiposResponse.items);
+    }));
   }
 
 }

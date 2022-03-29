@@ -2,7 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
+import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
+import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
@@ -12,9 +14,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
 import { GRUPO_EQUIPO_RESPONSE_CONVERTER } from '../grupo-equipo/grupo-equipo-response.converter';
+import { IGrupoEspecialInvestigacionResponse } from '../grupo-especial-investigacion/grupo-especial-investigacion-response';
+import { GRUPO_ESPECIAL_INVESTIGACION_RESPONSE_CONVERTER } from '../grupo-especial-investigacion/grupo-especial-investigacion-response.converter';
 import { GRUPO_PALABRACLAVE_REQUEST_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-request.converter';
 import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra-clave-response';
 import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
+import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
+import { GRUPO_TIPO_RESPONSE_CONVERTER } from '../grupo-tipo/grupo-tipo-response.converter';
 import { IGrupoRequest } from './grupo-request';
 import { GRUPO_REQUEST_CONVERTER } from './grupo-request.converter';
 import { IGrupoResponse } from './grupo-response';
@@ -197,6 +203,34 @@ export class GrupoService extends _GrupoMixinBase {
       GRUPO_PALABRACLAVE_REQUEST_CONVERTER.fromTargetArray(palabrasClave)
     ).pipe(
       map((response => GRUPO_PALABRACLAVE_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
+  }
+
+  /**
+   * Recupera la lista de tipos del grupo
+   *
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findTipos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoTipo>> {
+    return this.find<IGrupoTipoResponse, IGrupoTipo>(
+      `${this.endpointUrl}/${id}/tipos`,
+      options,
+      GRUPO_TIPO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de especiales de investigación
+   *
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findEspecialesInvestigacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoEspecialInvestigacion>> {
+    return this.find<IGrupoEspecialInvestigacionResponse, IGrupoEspecialInvestigacion>(
+      `${this.endpointUrl}/${id}/especiales-investigacion`,
+      options,
+      GRUPO_ESPECIAL_INVESTIGACION_RESPONSE_CONVERTER
     );
   }
 

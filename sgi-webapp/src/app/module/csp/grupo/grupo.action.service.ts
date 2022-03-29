@@ -4,6 +4,7 @@ import { ActionService } from '@core/services/action-service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { NGXLogger } from 'ngx-logger';
@@ -38,7 +39,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     grupoEquipoService: GrupoEquipoService,
     palabraClaveService: PalabraClaveService,
     rolProyectoService: RolProyectoService,
-    vinculacionService: VinculacionService
+    vinculacionService: VinculacionService,
+    solicitudService: SolicitudService
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(GRUPO_ROUTE_PARAMS.ID));
@@ -48,7 +50,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data = route.snapshot.data[GRUPO_DATA_KEY];
     }
 
-    this.datosGenerales = new GrupoDatosGeneralesFragment(logger, this.id, grupoService, grupoEquipoService, palabraClaveService, rolProyectoService, vinculacionService);
+    this.datosGenerales = new GrupoDatosGeneralesFragment(logger, this.id, grupoService, grupoEquipoService, palabraClaveService, rolProyectoService, vinculacionService, solicitudService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
