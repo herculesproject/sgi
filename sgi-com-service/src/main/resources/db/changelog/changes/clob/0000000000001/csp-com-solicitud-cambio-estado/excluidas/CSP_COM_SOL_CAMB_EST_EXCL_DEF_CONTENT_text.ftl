@@ -1,7 +1,7 @@
-<#assign data = CSP_COM_SOL_CAMB_EST_EXCL_DEF_DATA?eval />
+<#assign data = CSP_COM_SOL_CAMB_EST_EXCL_DEF_DATA?eval_json />
 Estimado/a investigador/a,
 
-le informamos que con fecha ${data.fechaConcesionConvocatoria?datetime.iso?string("dd/MM/yyyy")} se ha publicado la “Resolución con carácter definitivo de Admitidos y Excluidos” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece excluida.
+le informamos que <#if (data.fechaConcesionConvocatoria)??>con fecha ${data.fechaConcesionConvocatoria?datetime.iso?string("dd/MM/yyyy")} </#if>se ha publicado la “Resolución con carácter definitivo de Admitidos y Excluidos” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece excluida.
 
 Más información disponible en los siguientes enlaces:
 

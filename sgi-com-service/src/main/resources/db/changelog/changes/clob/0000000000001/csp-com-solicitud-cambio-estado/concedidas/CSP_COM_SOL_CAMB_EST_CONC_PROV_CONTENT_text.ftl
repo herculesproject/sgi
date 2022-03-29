@@ -1,7 +1,7 @@
-<#assign data = CSP_COM_SOL_CAMB_EST_CONC_PROV_DATA?eval />
+<#assign data = CSP_COM_SOL_CAMB_EST_CONC_PROV_DATA?eval_json />
 Estimado/a investigador/a,
 
-le informamos que con fecha ${data.fechaProvisionalConvocatoria?datetime.iso?string("dd/MM/yyyy")} se ha publicado la “Resolución Provisional” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece propuesta para financiación.
+le informamos que <#if data.fechaProvisionalConvocatoria??>con fecha ${data.fechaProvisionalConvocatoria?datetime.iso?string("dd/MM/yyyy")} </#if>se ha publicado la “Resolución Provisional” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece propuesta para financiación.
 
 Más información disponible en los siguientes enlaces:
 
