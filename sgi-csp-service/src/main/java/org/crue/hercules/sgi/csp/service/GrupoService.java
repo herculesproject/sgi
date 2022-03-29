@@ -2,6 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
@@ -85,11 +90,13 @@ public class GrupoService {
           .fechaInicio(grupo.getFechaInicio())
           .build();
     }
-
-    GrupoEspecialInvestigacion grupoEspecialInvestigacion = GrupoEspecialInvestigacion.builder()
-        .especialInvestigacion(grupo.getEspecialInvestigacion().getEspecialInvestigacion())
-        .fechaInicio(grupo.getFechaInicio())
-        .build();
+    GrupoEspecialInvestigacion grupoEspecialInvestigacion = null;
+    if (grupo.getEspecialInvestigacion() != null) {
+      grupoEspecialInvestigacion = GrupoEspecialInvestigacion.builder()
+          .especialInvestigacion(grupo.getEspecialInvestigacion().getEspecialInvestigacion())
+          .fechaInicio(grupo.getFechaInicio())
+          .build();
+    }
 
     // Elimina el GrupoTipo y GrupoEspecialInvestigacion para crear el grupo
     grupo.setTipo(null);
@@ -103,8 +110,10 @@ public class GrupoService {
       newGrupo.setTipo(grupoTipoService.create(grupoTipo));
     }
 
-    grupoEspecialInvestigacion.setGrupoId(newGrupo.getId());
-    newGrupo.setEspecialInvestigacion(grupoEspecialInvestigacionService.create(grupoEspecialInvestigacion));
+    if (grupoEspecialInvestigacion != null) {
+      grupoEspecialInvestigacion.setGrupoId(newGrupo.getId());
+      newGrupo.setEspecialInvestigacion(grupoEspecialInvestigacionService.create(grupoEspecialInvestigacion));
+    }
 
     // Actualiza el grupo con los GrupoTipo y GrupoEspecialInvestigacion creados
     Grupo returnValue = repository.save(newGrupo);
@@ -133,13 +142,100 @@ public class GrupoService {
       data.setFechaInicio(grupoActualizar.getFechaInicio());
       data.setFechaFin(grupoActualizar.getFechaFin());
 
-      // TODO llamar a los servicios para actualizar tipo y especial
+      data = this.updateEspecialInvestigacion(data, grupoActualizar);
+      data = this.updateTipo(data, grupoActualizar);
 
       Grupo returnValue = repository.save(data);
 
       log.debug("update(Grupo grupoActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new GrupoNotFoundException(grupoActualizar.getId()));
+  }
+
+  private Grupo updateEspecialInvestigacion(Grupo data, Grupo grupoActualizar) {
+    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId());
+    // Ambos informados y distintos (actualiza la fecha de fin del anterior y crea
+    // el nuevo)
+    if (data.getEspecialInvestigacion() != null && grupoActualizar.getEspecialInvestigacion() != null
+        && !data.getEspecialInvestigacion().getEspecialInvestigacion()
+            .equals(grupoActualizar.getEspecialInvestigacion().getEspecialInvestigacion())) {
+
+      // Especial investigación anterior se actualiza tambien en el dia actual
+      if (this.isSameDay(fechaActual,
+          data.getEspecialInvestigacion().getFechaInicio().atZone(this.sgiConfigProperties.getTimeZone().toZoneId()))) {
+        GrupoEspecialInvestigacion grupoEspecialInvestigacion = grupoEspecialInvestigacionService
+            .findById(data.getEspecialInvestigacion().getId());
+        grupoEspecialInvestigacion
+            .setEspecialInvestigacion(grupoActualizar.getEspecialInvestigacion().getEspecialInvestigacion());
+        data.setEspecialInvestigacion(grupoEspecialInvestigacionService.update(grupoEspecialInvestigacion));
+      } else {
+        GrupoEspecialInvestigacion grupoEspecialInvestigacion = GrupoEspecialInvestigacion.builder()
+            .especialInvestigacion(grupoActualizar.getEspecialInvestigacion().getEspecialInvestigacion())
+            .fechaInicio(fechaActual.toInstant())
+            .grupoId(data.getId()).build();
+        data.getEspecialInvestigacion().setFechaFin(fechaActual.minus(Period.ofDays(1)).toInstant());
+        grupoEspecialInvestigacionService.update(data.getEspecialInvestigacion());
+
+        data.setEspecialInvestigacion(grupoEspecialInvestigacionService.create(grupoEspecialInvestigacion));
+      }
+    }
+    // Tipo añadido y sin tipo previo (crea el nuevo tipo)
+    else if (data.getEspecialInvestigacion() == null && grupoActualizar.getEspecialInvestigacion() != null) {
+      GrupoEspecialInvestigacion grupoEspecialInvestigacion = GrupoEspecialInvestigacion.builder()
+          .especialInvestigacion(grupoActualizar.getEspecialInvestigacion().getEspecialInvestigacion())
+          .fechaInicio(fechaActual.toInstant())
+          .grupoId(data.getId()).build();
+
+      data.setEspecialInvestigacion(grupoEspecialInvestigacionService.create(grupoEspecialInvestigacion));
+    }
+    // Con tipo previo y eliminado (actualiza la fecha de fin del anterior)
+    else if (data.getEspecialInvestigacion() != null && grupoActualizar.getEspecialInvestigacion() == null) {
+      data.getEspecialInvestigacion().setFechaFin(fechaActual.minus(Period.ofDays(1)).toInstant());
+      grupoEspecialInvestigacionService.update(data.getEspecialInvestigacion());
+      data.setEspecialInvestigacion(null);
+    }
+    return data;
+  }
+
+  private Grupo updateTipo(Grupo data, Grupo grupoActualizar) {
+    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId());
+
+    // Ambos informados y distintos (actualiza la fecha de fin del anterior y crea
+    // el nuevo)
+    if (data.getTipo() != null && grupoActualizar.getTipo() != null
+        && !data.getTipo().getTipo().equals(grupoActualizar.getTipo().getTipo())) {
+
+      // El tipo anterior se actualiza tambien en el dia actual
+      if (this.isSameDay(fechaActual,
+          data.getTipo().getFechaInicio().atZone(this.sgiConfigProperties.getTimeZone().toZoneId()))) {
+        GrupoTipo grupoTipo = grupoTipoService.findById(data.getTipo().getId());
+        grupoTipo.setTipo(grupoActualizar.getTipo().getTipo());
+        data.setTipo(grupoTipoService.update(grupoTipo));
+      } else {
+        GrupoTipo grupoTipo = GrupoTipo.builder().tipo(grupoActualizar.getTipo().getTipo())
+            .fechaInicio(fechaActual.toInstant())
+            .grupoId(data.getId()).build();
+        data.getTipo().setFechaFin(fechaActual.minus(Period.ofDays(1)).toInstant());
+        grupoTipoService.update(data.getTipo());
+
+        data.setTipo(grupoTipoService.create(grupoTipo));
+      }
+    }
+    // Tipo añadido y sin tipo previo (crea el nuevo tipo)
+    else if (data.getTipo() == null && grupoActualizar.getTipo() != null) {
+      GrupoTipo grupoTipo = GrupoTipo.builder().tipo(grupoActualizar.getTipo().getTipo())
+          .fechaInicio(fechaActual.toInstant())
+          .grupoId(data.getId()).build();
+
+      data.setTipo(grupoTipoService.create(grupoTipo));
+    }
+    // Con tipo previo y eliminado (actualiza la fecha de fin del anterior)
+    else if (data.getTipo() != null && grupoActualizar.getTipo() == null) {
+      data.getTipo().setFechaFin(fechaActual.toInstant().minus(Period.ofDays(1)));
+      grupoTipoService.update(data.getTipo());
+      data.setTipo(null);
+    }
+    return data;
   }
 
   /**
@@ -458,6 +554,10 @@ public class GrupoService {
     if (solicitud.getFormularioSolicitud() != FormularioSolicitud.GRUPO) {
       throw new FormularioSolicitudTypeNotCorrect();
     }
+  }
+
+  private boolean isSameDay(ZonedDateTime date1, ZonedDateTime date2) {
+    return date1.truncatedTo(ChronoUnit.DAYS).equals(date2.truncatedTo(ChronoUnit.DAYS));
   }
 
 }
