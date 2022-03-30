@@ -2,7 +2,11 @@ package org.crue.hercules.sgi.csp.repository.specification;
 
 import java.util.List;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.springframework.data.jpa.domain.Specification;
@@ -66,7 +70,8 @@ public class SolicitudSpecifications {
    */
   public static Specification<Solicitud> distinct() {
     return (root, query, cb) -> {
-      query.distinct(true);
+      Join<Solicitud, EstadoSolicitud> join = root.join(Solicitud_.estado, JoinType.LEFT);
+      query.groupBy(root, join);
       return null;
     };
   }
