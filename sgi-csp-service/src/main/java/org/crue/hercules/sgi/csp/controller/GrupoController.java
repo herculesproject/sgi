@@ -373,7 +373,7 @@ public class GrupoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<Void> isGrupoBaremable(@PathVariable Long grupoRef, @PathVariable Integer anio) {
     log.debug("isGrupoBaremable(grupoRef, anio) - start");
     if (service.isGrupoBaremable(grupoRef, anio)) {
@@ -393,7 +393,7 @@ public class GrupoController {
    * @return lista de {@link GrupoDto}
    */
   @GetMapping(PATH_BAREMABLES_ANIO)
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<List<GrupoDto>> findAllByAnio(@PathVariable Integer anio) {
     log.debug("findAllByAnio(anio) - start");
     List<GrupoDto> grupos = service.findAllByAnio(anio);

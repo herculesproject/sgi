@@ -100,7 +100,7 @@ public class GrupoEquipoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = PATH_PERSONA_BAREMABLE_PERSONA_REF_ANIO, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<Void> isPersonaBaremable(@PathVariable String personaRef, @PathVariable Integer anio) {
     log.debug("isPersonaBaremable(personaRef, anio) - start");
     if (service.isPersonaBaremable(personaRef, anio)) {
@@ -121,7 +121,7 @@ public class GrupoEquipoController {
    * @return lista de {@link GrupoEquipoDto}
    */
   @GetMapping(PATH_BAREMABLES_GRUPO_REF_ANIO)
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<List<GrupoEquipoDto>> findByGrupoIdAndAnio(@PathVariable Long grupoRef,
       @PathVariable Integer anio) {
     log.debug("findByGrupoIdAndAnio(grupoRef, anio) - start");

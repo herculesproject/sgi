@@ -922,7 +922,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectossge")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E', 'CSP-PRO-MOD-V','CSP-PRO-INV-VR')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E', 'CSP-PRO-MOD-V','CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoProyectoSge>> findAllProyectoProyectosSge(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - start");
@@ -1487,7 +1487,7 @@ public class ProyectoController {
    * @return lista de {@link ProyectoDto}
    */
   @GetMapping("/produccioncientifica/{anioInicio}/{anioFin}")
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<List<ProyectoDto>> findProyectosProduccionCientifica(@PathVariable Integer anioInicio,
       @PathVariable Integer anioFin) {
     log.debug("findProyectosProduccionCientifica(anioInicio, anioFin) - start");
@@ -1511,7 +1511,7 @@ public class ProyectoController {
    * @return lista de {@link ProyectoEquipoDto}
    */
   @GetMapping("/produccioncientifica/equipo/{proyectoId}")
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public ResponseEntity<List<ProyectoEquipoDto>> findAllProyectoEquipoByProyectoId(@PathVariable Long proyectoId) {
     log.debug("findAllProyectoEquipoByProyectoId(proyectoId) - start");
     List<ProyectoEquipo> proyectos = proyectoEquipoService.findAllByProyectoId(proyectoId);
@@ -1547,7 +1547,7 @@ public class ProyectoController {
    * @return suma de puntos del campo importeConcedido
    */
   @GetMapping("/produccioncientifica/totalimporteconcedidocostesindirectos/{proyectoId}")
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public BigDecimal getTotalImporteConcedidoAnualidadGastoCostesIndirectos(@PathVariable Long proyectoId) {
     log.debug("getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyectoId) - start");
     return proyectoAnualidadService.getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyectoId);

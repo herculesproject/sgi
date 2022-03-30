@@ -1830,12 +1830,11 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Override
   public List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin){
 
-    String strFechaInicioBaremacion = anioInicio + PeriodDateUtil.PATTERN_MONTH_DAY_01_01;
+    Instant fechaInicioBaremacion = PeriodDateUtil.calculateFechaInicioBaremacionByAnio(
+        anioInicio, sgiConfigProperties.getTimeZone());
 
-    Instant fechaInicioBaremacion = LocalDate.parse(strFechaInicioBaremacion)
-        .atStartOfDay(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
-
-    Instant fechaFinBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anioFin, sgiConfigProperties.getTimeZone());
+    Instant fechaFinBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(
+        anioFin, sgiConfigProperties.getTimeZone());
 
     return repository.findProyectosProduccionCientifica(fechaInicioBaremacion, fechaFinBaremacion);
   }
