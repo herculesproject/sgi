@@ -3,14 +3,14 @@ INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, priorid
 VALUES(1, true, '060.030.070.000', 'Sexenios', 1, 'SEXENIO', 'OTRO_SISTEMA', 'PRINCIPAL', NULL);
 
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id)
-VALUES(2, true, '', 'Aportación costes Indirectos', 1, 'COSTE_INDIRECTO', 'SGI', 'PRINCIPAL', NULL);
+VALUES(2, true, NULL, 'Aportación costes Indirectos', 1, 'COSTE_INDIRECTO', 'SGI', 'PRINCIPAL', NULL);
 
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id)
-VALUES(3, true, '', 'Producción científica', NULL, 'PRODUCCION_CIENTIFICA', NULL, NULL, NULL);
+VALUES(3, true, NULL, 'Producción científica', NULL, 'PRODUCCION_CIENTIFICA', NULL, NULL, NULL);
 
 -- LIBROS
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id)
-VALUES(4, true, '', 'Libros', NULL, 'LIBROS', NULL, NULL, 3);
+VALUES(4, true, NULL, 'Libros', NULL, 'LIBROS', NULL, NULL, 3);
 
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id)
 VALUES(5, true, '060.010.010.000', 'Autoría - BCI - Editorial extranjera', 1, 'AUTORIA_BCI_EDITORIAL_EXTRANJERA', 'CVN', 'PRINCIPAL', 4);

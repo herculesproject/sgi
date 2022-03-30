@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.prc.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -20,7 +19,6 @@ import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupoInvestigador;
 import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador;
-import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador.TipoPuntuacion;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
@@ -63,6 +61,8 @@ public class BaremacionService {
   private final BaremacionSexenioService baremacionSexenioService;
   private final BaremacionProyectoService baremacionProyectoService;
   private final BaremacionContratoService baremacionContratoService;
+  private final BaremacionCosteIndirectoContratoService baremacionCosteIndirectoContratoService;
+  private final BaremacionCosteIndirectoProyectoService baremacionCosteIndirectoProyectoService;
   private final BaremacionInvencionService baremacionInvencionService;
   private final BaremacionPublicacionLibroService baremacionPublicacionLibrosService;
   private final BaremacionPublicacionArticuloService baremacionPublicacionArticulosService;
@@ -126,10 +126,11 @@ public class BaremacionService {
       Integer anioInicio = convocatoriaBaremacion.getUltimoAnio() - convocatoriaBaremacion.getAniosBaremables() + 1;
       Integer anioFin = convocatoriaBaremacion.getUltimoAnio() + 1;
 
-      // baremacionInvencionService.copyInvenciones(anioInicio, anioFin);
+      baremacionInvencionService.copyInvenciones(anioInicio, anioFin);
 
       // Baremacion sexenios
-      baremacionSexenioService.evaluateSexenio(anioInicio, anioFin, convocatoriaBaremacionId);
+      // baremacionSexenioService.evaluateSexenio(anioInicio, anioFin,
+      // convocatoriaBaremacionId);
       baremacionProyectoService.copyProyectos(anioInicio, anioFin);
 
       IntStream.range(anioInicio, anioFin).forEach(anio -> {
@@ -143,10 +144,16 @@ public class BaremacionService {
         // Proyectos
         baremacionInput.setEpigrafeCVN(BaremacionProyectoService.EPIGRAFE_CVN_PROYECTO);
         baremacionProyectoService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
+        baremacionCosteIndirectoProyectoService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
 
         // Contratos
         baremacionInput.setEpigrafeCVN(BaremacionContratoService.EPIGRAFE_CVN_CONTRATO);
         baremacionContratoService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
+        baremacionCosteIndirectoContratoService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
+
+        // Invenciones
+        baremacionInput.setEpigrafeCVN(EpigrafeCVN.E050_030_010_000);
+        baremacionInvencionService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
 
         // Publicaciones libros
         baremacionInput.setEpigrafeCVN(EpigrafeCVN.E060_010_010_000);
@@ -176,7 +183,7 @@ public class BaremacionService {
         baremacionInput.setEpigrafeCVN(EpigrafeCVN.E060_020_030_000);
         baremacionOrganizacionActividadService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
 
-        evaluatePuntuacionGrupoInvestigadorCommon(convocatoriaBaremacionId, anio);
+        evaluatePuntuacionGrupoInvestigador(convocatoriaBaremacionId, anio);
       });
 
       evaluatePuntosConvocatoriaBaremacion(convocatoriaBaremacionId);
@@ -262,7 +269,7 @@ public class BaremacionService {
     return puntos;
   }
 
-  private void evaluatePuntuacionGrupoInvestigadorCommon(Long convocatoriaBaremacionId, Integer anio) {
+  private void evaluatePuntuacionGrupoInvestigador(Long convocatoriaBaremacionId, Integer anio) {
     log.debug("evaluatePuntuacionGrupoInvestigador(convocatoriaBaremacionId, anio) - start");
 
     sgiApiCspService.findAllGruposByAnio(anio).stream().forEach(grupo -> {
@@ -277,8 +284,6 @@ public class BaremacionService {
           Specification<PuntuacionItemInvestigador> specs = PuntuacionItemInvestigadorSpecifications
               .byPersonaRef(grupoEquipo.getPersonaRef())
               .and(PuntuacionItemInvestigadorSpecifications.byConvocatoriaBaremacionAnio(anio))
-              .and(PuntuacionItemInvestigadorSpecifications
-                  .byTipoPuntuacionNotIn(Arrays.asList(TipoPuntuacion.SEXENIO, TipoPuntuacion.COSTE_INDIRECTO)))
               .and(PuntuacionItemInvestigadorSpecifications.byConvocatoriaBaremacionId(convocatoriaBaremacionId));
 
           puntuacionItemInvestigadorRepository.findAll(specs).stream().forEach(puntuacionItemInvestigador -> {
@@ -292,9 +297,19 @@ public class BaremacionService {
 
             puntuacionGrupoInvestigadorRepository.save(puntuacionGrupoInvestigador);
 
-            puntuacionGrupo.setPuntosProduccion(
-                puntuacionGrupo.getPuntosProduccion().add(puntuacionGrupoInvestigador.getPuntos()));
-
+            switch (puntuacionItemInvestigador.getTipoPuntuacion()) {
+              case SEXENIO:
+                puntuacionGrupo.setPuntosSexenios(
+                    puntuacionGrupo.getPuntosSexenios().add(puntuacionGrupoInvestigador.getPuntos()));
+                break;
+              case COSTE_INDIRECTO:
+                puntuacionGrupo.setPuntosCostesIndirectos(
+                    puntuacionGrupo.getPuntosCostesIndirectos().add(puntuacionGrupoInvestigador.getPuntos()));
+                break;
+              default:
+                puntuacionGrupo.setPuntosProduccion(
+                    puntuacionGrupo.getPuntosProduccion().add(puntuacionGrupoInvestigador.getPuntos()));
+            }
           });
         });
 
@@ -307,7 +322,6 @@ public class BaremacionService {
     log.debug("evaluatePuntuacionGrupoInvestigador(convocatoriaBaremacionId, anio) - end");
   }
 
-  // TODO remove duplicated call
   private PuntuacionGrupoInvestigador initPuntuacionGrupoInvestigador(
       PuntuacionItemInvestigador puntuacionItemInvestigador, BigDecimal participacion, Long puntuacionGrupoId) {
     BigDecimal puntosItemInvestigadorPorcentaje = puntuacionItemInvestigador.getPuntos()
@@ -319,7 +333,6 @@ public class BaremacionService {
         .build();
   }
 
-  // TODO remove duplicated call
   private PuntuacionGrupo getOrInitPuntuacionGrupo(Long grupoRef, Long convocatoriaBaremacionId) {
     PuntuacionGrupo puntuacionGrupo = puntuacionGrupoRepository
         .findByConvocatoriaBaremacionIdAndGrupoRef(convocatoriaBaremacionId, grupoRef)

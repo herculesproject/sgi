@@ -13,10 +13,9 @@ import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.CampoProduccionCientificaInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.IndiceImpactoInput;
-import org.crue.hercules.sgi.prc.enums.TablaMaestraCVN;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.enums.TipoFuenteImpacto;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
-import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.junit.jupiter.api.Test;
@@ -635,8 +634,6 @@ class ProduccionCientificaApiUpdateIT extends ProduccionCientificaBaseIT {
     Assertions.assertThat(getProyectoRepository().findAllByProduccionCientificaId(produccionCientificaId))
         .as("number of proyectos created").hasSize(2);
   }
-
-  // TODO probar bien autores cuando este grupos de investigacion
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 

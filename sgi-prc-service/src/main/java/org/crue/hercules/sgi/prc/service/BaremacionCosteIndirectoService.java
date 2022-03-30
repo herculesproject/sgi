@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.prc.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +10,12 @@ import java.util.function.LongPredicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
+import org.crue.hercules.sgi.prc.dto.BaremacionInput.BaremoInput;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Autor;
+import org.crue.hercules.sgi.prc.model.Baremo;
+import org.crue.hercules.sgi.prc.model.Baremo.TipoCuantia;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoBaremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionCampo;
 import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador;
@@ -39,25 +43,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Servicio para la baremación de contratos
+ * Servicio para la baremación de costes indirectos
  */
 @Service
 @Slf4j
 @Transactional(readOnly = true)
-@Validated
-public class BaremacionContratoService extends BaremacionCommonService {
-  public static final EpigrafeCVN EPIGRAFE_CVN_CONTRATO = EpigrafeCVN.E050_020_020_000;
-
+public abstract class BaremacionCosteIndirectoService extends BaremacionCommonService {
   private final ConfiguracionCampoRepository configuracionCampoRepository;
   private final RangoRepository rangoRepository;
 
   @Autowired
-  public BaremacionContratoService(
+  public BaremacionCosteIndirectoService(
       AliasEnumeradoRepository aliasEnumeradoRepository,
       ProduccionCientificaRepository produccionCientificaRepository,
       PuntuacionBaremoItemRepository puntuacionBaremoItemRepository,
@@ -100,14 +100,23 @@ public class BaremacionContratoService extends BaremacionCommonService {
     loadPredicates();
   }
 
+  protected abstract CodigoCVN getCodigoCVNCuantiaCostesIndirectos();
+
+  protected abstract EpigrafeCVN getEpigrafeCVNCostesIndirectos();
+
   protected TipoPuntuacion getTipoPuntuacion() {
-    return TipoPuntuacion.CONTRATOS;
+    return TipoPuntuacion.COSTE_INDIRECTO;
   }
 
   protected void loadPredicates() {
 
-    // CONTRATOS
-    getHmTipoBaremoPredicates().put(TipoBaremo.CONTRATO_CUANTIA, getPredicateIsCuantiaNotEmpty());
+    // COSTE_INDIRECTO
+    getHmTipoBaremoPredicates().put(TipoBaremo.COSTE_INDIRECTO, getPredicateIsCuantiaNotEmpty());
+  }
+
+  @Override
+  protected List<Baremo> findBaremosByBaremacionInput(BaremacionInput baremacionInput) {
+    return findBaremosByTipoBaremoActivo(baremacionInput, TipoBaremo.COSTE_INDIRECTO);
   }
 
   @Override
@@ -120,9 +129,9 @@ public class BaremacionContratoService extends BaremacionCommonService {
 
     if (evaluateProduccionCientificaByTipoBaremo(baremacionInput, tipoBaremo)) {
 
-      puntos = evaluateCuantia(baremacionInput.getProduccionCientificaId());
+      puntos = evaluateCuantia(baremacionInput.getProduccionCientificaId(), baremacionInput.getBaremo());
 
-      String optionalMessage = String.format("BAREMACION CONTRATO CUANTIA PRINCIPAL [%s] %s", tipoBaremo.name(),
+      String optionalMessage = String.format("BAREMACION CUANTIA COSTE INDIRECTO [%s] %s", tipoBaremo.name(),
           null != puntos ? puntos.toString() : "");
       traceLog(baremacionInput, optionalMessage);
     }
@@ -131,19 +140,23 @@ public class BaremacionContratoService extends BaremacionCommonService {
     return puntos;
   }
 
-  private BigDecimal evaluateCuantia(Long produccionCientificaId) {
+  private BigDecimal evaluateCuantia(Long produccionCientificaId, BaremoInput baremo) {
     BigDecimal cuantia = new BigDecimal(
-        findValoresByCampoProduccionCientificaId(CodigoCVN.E050_020_020_200, produccionCientificaId)
+        findValoresByCampoProduccionCientificaId(getCodigoCVNCuantiaCostesIndirectos(), produccionCientificaId)
             .get(0).getValor());
 
-    Specification<Rango> specs = RangoSpecifications
-        .byTipoRango(TipoRango.CUANTIA_CONTRATOS).and(RangoSpecifications.inRange(cuantia));
+    if (baremo.getTipoCuantia().equals(TipoCuantia.RANGO)) {
+      Specification<Rango> specs = RangoSpecifications
+          .byTipoRango(TipoRango.CUANTIA_COSTES_INDIRECTOS).and(RangoSpecifications.inRange(cuantia));
 
-    List<Rango> rangos = rangoRepository.findAll(specs);
-    if (CollectionUtils.isEmpty(rangos)) {
-      return BigDecimal.ZERO;
+      List<Rango> rangos = rangoRepository.findAll(specs);
+      if (CollectionUtils.isEmpty(rangos)) {
+        return BigDecimal.ZERO;
+      } else {
+        return rangos.get(0).getPuntos();
+      }
     } else {
-      return rangos.get(0).getPuntos();
+      return cuantia.divide(baremo.getCuantia(), 2, RoundingMode.HALF_UP);
     }
   }
 
@@ -190,9 +203,9 @@ public class BaremacionContratoService extends BaremacionCommonService {
   protected List<Long> getProduccionCientificaIdsByEpigrafeCVNAndAnio(BaremacionInput baremacionInput) {
     List<Long> result = new ArrayList<>();
     Optional<ConfiguracionCampo> optFechaInicio = configuracionCampoRepository
-        .findByEpigrafeCVNAndFechaReferenciaInicioIsTrue(EPIGRAFE_CVN_CONTRATO);
+        .findByEpigrafeCVNAndFechaReferenciaInicioIsTrue(getEpigrafeCVNCostesIndirectos());
     Optional<ConfiguracionCampo> optFechaFin = configuracionCampoRepository
-        .findByEpigrafeCVNAndFechaReferenciaFinIsTrue(EPIGRAFE_CVN_CONTRATO);
+        .findByEpigrafeCVNAndFechaReferenciaFinIsTrue(getEpigrafeCVNCostesIndirectos());
 
     if (optFechaInicio.isPresent() && optFechaFin.isPresent()) {
       CodigoCVN codigoCVNFechaInicio = optFechaInicio.get().getCodigoCVN();
@@ -216,7 +229,8 @@ public class BaremacionContratoService extends BaremacionCommonService {
   /* -------------------- predicates -------------------- */
 
   private LongPredicate getPredicateIsCuantiaNotEmpty() {
-    return produccionCientificaId -> isValorCampoNotEmpty(produccionCientificaId, CodigoCVN.E050_020_020_200);
+    return produccionCientificaId -> isValorCampoNotEmpty(produccionCientificaId,
+        getCodigoCVNCuantiaCostesIndirectos());
   }
 
 }

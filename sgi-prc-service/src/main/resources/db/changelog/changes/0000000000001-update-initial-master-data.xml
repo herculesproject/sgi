@@ -2365,7 +2365,183 @@
       <column name="configuracion_baremo_padre_id" valueComputed="(select id from ${schemaPrefix}configuracion_baremo where nombre='Invenciones')" />
       <column name="mostrar_puntos" valueBoolean="true" />
     </insert>
+  </changeSet>
 
+  <changeSet context="!test" author="master" id="0000000000001-mapeo_tipos">
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="1" />
+      <column name="valor" value="OTHERS" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="2" />
+      <column name="valor" value="OTHERS" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="3" />
+      <column name="valor" value="000" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="4" />
+      <column name="valor" value="010" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="5" />
+      <column name="valor" value="020" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.020.010.040" />
+      <column name="id_tipo_ref" valueNumeric="6" />
+      <column name="valor" value="030" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="1" />
+      <column name="valor" value="141" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="2" />
+      <column name="valor" value="126" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="3" />
+      <column name="valor" value="109" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="4" />
+      <column name="valor" value="122" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="5" />
+      <column name="valor" value="122" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="6" />
+      <column name="valor" value="122" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="7" />
+      <column name="valor" value="OTHERS" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="8" />
+      <column name="valor" value="OTHERS" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.030" />
+      <column name="id_tipo_ref" valueNumeric="9" />
+      <column name="valor" value="OTHERS" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="1" />
+      <column name="valor" value="true" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="2" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="3" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="4" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="5" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="6" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.160" />
+      <column name="id_tipo_ref" valueNumeric="7" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="1" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="2" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="3" />
+      <column name="valor" value="true" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="4" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="5" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="6" />
+      <column name="valor" value="false" />
+    </insert>
+    <insert tableName="mapeo_tipos">
+      <column name="id" valueSequenceNext="mapeo_tipos_seq" />
+      <column name="codigo_cvn" value="050.030.010.170" />
+      <column name="id_tipo_ref" valueNumeric="7" />
+      <column name="valor" value="false" />
+    </insert>
   </changeSet>
 
 </databaseChangeLog>

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
-import org.crue.hercules.sgi.prc.dto.csp.InvencionDto;
+import org.crue.hercules.sgi.prc.dto.pi.InvencionDto;
 import org.crue.hercules.sgi.prc.enums.ServiceType;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,64 +25,34 @@ public class SgiApiPiiService extends SgiApiBaseService {
 
   /**
    * Devuelve una lista de {@link InvencionDto} que se incorporarán a la
-   * baremación
-   * de producción científica
+   * baremación de producción científica
    * 
-   * @param anio año de baremación
+   * @param anioInicio    año inicio de baremación
+   * @param anioFin       año fin de baremación
+   * @param universidadId Id de la universidad
    * @return lista de {@link InvencionDto}
    */
-  public List<InvencionDto> findInvencionesProduccionCientifica(Integer anio) {
+  public List<InvencionDto> findInvencionesProduccionCientifica(Integer anioInicio, Integer anioFin,
+      String universidadId) {
     List<InvencionDto> result = new ArrayList<>();
-    log.debug("findInvencionesProduccionCientifica(anio)- start");
+    log.debug("findInvencionesProduccionCientifica(anioInicio, anioFin, universidadId)- start");
 
     try {
       ServiceType serviceType = ServiceType.PII;
-      String relativeUrl = "/invenciones/produccioncientifica/{anio}";
+      String relativeUrl = "/invenciones/produccioncientifica/{anioInicio}/{anioFin}/{universidadId}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<List<InvencionDto>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<List<InvencionDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<InvencionDto>>() {
-          }, anio).getBody();
+          }, anioInicio, anioFin, universidadId).getBody();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new MicroserviceCallException();
     }
-    log.debug("findInvencionesProduccionCientifica(anio)- end");
+    log.debug("findInvencionesProduccionCientifica(anioInicio, anioFin, universidadId)- end");
 
     return ObjectUtils.defaultIfNull(result, new ArrayList<>());
   }
-
-  /**
-   * Devuelve una lista de personas que se incorporarán a la baremación
-   * de producción científica
-   *
-   * @param invencionId id de {@link InvencionDto}
-   * @param anio        año de baremación
-   * @return lista de personaRef
-   */
-  public List<String> findInvencionInventorByInvencionIdAndAnio(Long invencionId, Integer anio) {
-    List<String> result = new ArrayList<>();
-    log.debug("findInvencionInventorByInvencionIdAndAnio(proyectoId, anio)- start");
-
-    try {
-      ServiceType serviceType = ServiceType.PII;
-      String relativeUrl = "/invenciones/produccioncientifica/equipo/{invencionId}/{anio}";
-      HttpMethod httpMethod = HttpMethod.GET;
-      String mergedURL = buildUri(serviceType, relativeUrl);
-
-      result = super.<List<String>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
-          new ParameterizedTypeReference<List<String>>() {
-          }, invencionId, anio).getBody();
-
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      throw new MicroserviceCallException();
-    }
-    log.debug("findInvencionInventorByInvencionIdAndAnio(proyectoId, anio)- end");
-
-    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
-  }
-
 }

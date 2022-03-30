@@ -44,6 +44,7 @@ import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
   private final PuntuacionGrupoRepository puntuacionGrupoRepository;
   private final PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository;
 
+  @Autowired
   public BaremacionSexenioService(
       AliasEnumeradoRepository aliasEnumeradoRepository,
       ProduccionCientificaRepository produccionCientificaRepository,

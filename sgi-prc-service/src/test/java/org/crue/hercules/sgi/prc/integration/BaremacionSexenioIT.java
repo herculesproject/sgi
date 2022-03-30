@@ -29,21 +29,22 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = BaremacionController.MAPPING;
 
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-      // @formatter:off 
-      "classpath:scripts/configuracion_baremo.sql",
-      "classpath:scripts/configuracion_campo.sql",
-      "classpath:scripts/alias_enumerado.sql",
-      "classpath:scripts/convocatoria_baremacion.sql",
-      "classpath:scripts/baremo.sql",
-      "classpath:scripts/modulador.sql",
-      "classpath:scripts/rango.sql",
-      "classpath:scripts/tabla_indice.sql",
-      "classpath:scripts/indice_experimentalidad.sql",
-      // @formatter:on  
-  })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
+  // @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+  //     // @formatter:off 
+  //     "classpath:scripts/configuracion_baremo.sql",
+  //     "classpath:scripts/configuracion_campo.sql",
+  //     "classpath:scripts/alias_enumerado.sql",
+  //     "classpath:scripts/convocatoria_baremacion.sql",
+  //     "classpath:scripts/baremo.sql",
+  //     "classpath:scripts/modulador.sql",
+  //     "classpath:scripts/rango.sql",
+  //     "classpath:scripts/tabla_indice.sql",
+  //     "classpath:scripts/indice_experimentalidad.sql",
+  //     // @formatter:on  
+  // })
+  // @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts =
+  // "classpath:cleanup.sql")
+  // @Test
   void baremacion_libro_and_sexenio_from_json() throws Exception {
 
     String produccionCientificaJson = "publicacion-libro.json";

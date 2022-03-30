@@ -319,12 +319,16 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
     return baremoRepository.findAll(specs);
   }
 
-  protected Baremo findBaremoByTipoBaremoActivo(BaremacionInput baremacionInput, TipoBaremo tipoBaremo) {
+  protected List<Baremo> findBaremosByTipoBaremoActivo(BaremacionInput baremacionInput, TipoBaremo tipoBaremo) {
     Specification<Baremo> specs = BaremoSpecifications
         .byConvocatoriaBaremacionId(baremacionInput.getConvocatoriaBaremacionId())
         .and(BaremoSpecifications.byConfiguracionBaremoTipoBaremo(tipoBaremo))
         .and(BaremoSpecifications.byConfiguracionBaremoActivoIsTrue());
-    List<Baremo> baremos = baremoRepository.findAll(specs);
+    return baremoRepository.findAll(specs);
+  }
+
+  protected Baremo findBaremoByTipoBaremoActivo(BaremacionInput baremacionInput, TipoBaremo tipoBaremo) {
+    List<Baremo> baremos = findBaremosByTipoBaremoActivo(baremacionInput, tipoBaremo);
     if (!CollectionUtils.isEmpty(baremos)) {
       return baremos.get(0);
     } else {
@@ -391,10 +395,18 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
   }
 
   protected ProduccionCientifica cloneProduccionCientifica(BaremacionInput baremacionInput) {
-    return produccionCientificaRepository
-        .findById(baremacionInput.getProduccionCientificaId())
-        .map(produccionCientifica -> produccionCientificaBuilderService.cloneProduccionCientificaAndRelations(
-            baremacionInput.getConvocatoriaBaremacionId(), produccionCientifica))
+    return produccionCientificaRepository.findById(baremacionInput.getProduccionCientificaId())
+        .map(produccionCientifica -> {
+          Optional<ProduccionCientifica> prcAlreadyCalled = produccionCientificaRepository
+              .findByProduccionCientificaRefAndConvocatoriaBaremacionId(
+                  produccionCientifica.getProduccionCientificaRef(), baremacionInput.getConvocatoriaBaremacionId());
+          if (prcAlreadyCalled.isPresent()) {
+            return prcAlreadyCalled.get();
+          } else {
+            return produccionCientificaBuilderService.cloneProduccionCientificaAndRelations(
+                baremacionInput.getConvocatoriaBaremacionId(), produccionCientifica);
+          }
+        })
         .orElseThrow(
             () -> new ProduccionCientificaNotFoundException(baremacionInput.getProduccionCientificaId().toString()));
   }
@@ -404,7 +416,7 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
   }
 
   protected BigDecimal evaluateBaremoPrincipal(BaremacionInput baremacionInput) {
-    log.debug("calcularBaremoPrincipalPublicacion(produccionCientificaId, baremo) - start");
+    log.debug("evaluateBaremoPrincipal(baremacionInput) - start");
 
     BigDecimal puntos = BigDecimal.ZERO;
 
@@ -417,7 +429,7 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
       traceLog(baremacionInput, optionalMessage);
     }
 
-    log.debug("calcularBaremoPrincipalPublicacion(produccionCientificaId, baremo) - end");
+    log.debug("evaluateBaremoPrincipal(baremacionInput) - end");
     return puntos;
   }
 

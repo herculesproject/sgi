@@ -1,9 +1,9 @@
-package org.crue.hercules.sgi.prc.service;
+package org.crue.hercules.sgi.prc.service.sgi;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiPiiService;
+import org.crue.hercules.sgi.prc.service.BaseServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,17 +29,11 @@ class SgiApiPiiServiceTest extends BaseServiceTest {
 
   @Test
   void findInvencionesProduccionCientifica_ko() throws Exception {
-    Integer anio = 2022;
+    Integer anioInicio = 2019;
+    Integer anioFin = 2021;
+    String universidadId = "W23434543";
     Assertions.assertThatThrownBy(() -> sgiApiPiiService.findInvencionesProduccionCientifica(
-        anio)).isInstanceOf(MicroserviceCallException.class);
-  }
-
-  @Test
-  void findInvencionInventorByInvencionIdAndAnio_ko() throws Exception {
-    Long invencionId = 1L;
-    Integer anio = 2022;
-    Assertions.assertThatThrownBy(() -> sgiApiPiiService.findInvencionInventorByInvencionIdAndAnio(invencionId, anio))
-        .isInstanceOf(MicroserviceCallException.class);
+        anioInicio, anioFin, universidadId)).isInstanceOf(MicroserviceCallException.class);
   }
 
 }

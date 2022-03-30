@@ -1,9 +1,9 @@
-package org.crue.hercules.sgi.prc.service;
+package org.crue.hercules.sgi.prc.service.sgi;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
-import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
+import org.crue.hercules.sgi.prc.service.BaseServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -84,6 +84,13 @@ class SgiApiCspServiceTest extends BaseServiceTest {
   void findProyectoEquipoByProyectoIdAndAnio_ko() throws Exception {
     Long proyectoId = 1L;
     Assertions.assertThatThrownBy(() -> sgiApiCspService.findProyectoEquipoByProyectoId(proyectoId))
+        .isInstanceOf(MicroserviceCallException.class);
+  }
+
+  @Test
+  void findProyectosSGEByProyectoId_ko() throws Exception {
+    Long proyectoId = 1L;
+    Assertions.assertThatThrownBy(() -> sgiApiCspService.findProyectosSgeByProyectoId(proyectoId))
         .isInstanceOf(MicroserviceCallException.class);
   }
 

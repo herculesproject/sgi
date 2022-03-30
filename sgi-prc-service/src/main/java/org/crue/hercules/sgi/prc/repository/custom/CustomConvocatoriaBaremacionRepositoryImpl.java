@@ -106,6 +106,7 @@ public class CustomConvocatoriaBaremacionRepositoryImpl implements CustomConvoca
    */
   @Override
   public Long findIdByMaxAnio() {
+    // TODO incluir filtro activo
     log.debug("findIdByMaxAnio - start");
     Long convocatoriaBaremacionId = null;
 

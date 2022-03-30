@@ -4383,6 +4383,33 @@
       <column name="tipo_rango" value="LICENCIA" />
       <column name="tipo_temporalidad" value="FINAL" />
     </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="0.00" />
+      <column name="hasta" valueNumeric="29999.00" />
+      <column name="puntos" valueNumeric="10.00" />
+      <column name="tipo_rango" value="CUANTIA_COSTES_INDIRECTOS" />
+      <column name="tipo_temporalidad" value="INICIAL" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="30000.00" />
+      <column name="hasta" valueNumeric="59999.00" />
+      <column name="puntos" valueNumeric="15.00" />
+      <column name="tipo_rango" value="CUANTIA_COSTES_INDIRECTOS" />
+      <column name="tipo_temporalidad" value="INTERMEDIO" />
+    </insert>
+    <insert tableName="rango">
+      <column name="id" valueSequenceNext="rango_seq" />
+      <column name="convocatoria_baremacion_id" valueNumeric="1" />
+      <column name="desde" valueNumeric="60000.00" />
+      <column name="hasta" valueNumeric="null" />
+      <column name="puntos" valueNumeric="20.00" />
+      <column name="tipo_rango" value="CUANTIA_COSTES_INDIRECTOS" />
+      <column name="tipo_temporalidad" value="FINAL" />
+    </insert>
 
   </changeSet>
 

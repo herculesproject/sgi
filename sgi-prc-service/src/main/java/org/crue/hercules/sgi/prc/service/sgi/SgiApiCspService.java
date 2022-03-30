@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
 import org.crue.hercules.sgi.prc.dto.csp.GrupoEquipoDto;
 import org.crue.hercules.sgi.prc.dto.csp.ProyectoDto;
 import org.crue.hercules.sgi.prc.dto.csp.ProyectoEquipoDto;
+import org.crue.hercules.sgi.prc.dto.csp.ProyectoProyectoSgeDto;
 import org.crue.hercules.sgi.prc.enums.ServiceType;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
 import org.springframework.core.ParameterizedTypeReference;
@@ -52,7 +53,7 @@ public class SgiApiCspService extends SgiApiBaseService {
         HttpMethod httpMethod = HttpMethod.GET;
         String mergedURL = buildUri(serviceType, relativeUrl);
 
-        final Boolean response = super.<Boolean>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+        final Boolean response = super.<Boolean>callEndpoint(mergedURL, httpMethod,
             new ParameterizedTypeReference<Boolean>() {
             }, grupoRef, anio).getBody();
 
@@ -83,7 +84,7 @@ public class SgiApiCspService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<List<GrupoDto>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<List<GrupoDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<GrupoDto>>() {
           }, anio).getBody();
 
@@ -119,7 +120,7 @@ public class SgiApiCspService extends SgiApiBaseService {
         HttpMethod httpMethod = HttpMethod.HEAD;
         String mergedURL = buildUri(serviceType, relativeUrl);
 
-        final ResponseEntity<Void> response = super.<Void>callEndpointWithCurrentUserAuthorization(mergedURL,
+        final ResponseEntity<Void> response = super.<Void>callEndpoint(mergedURL,
             httpMethod, new ParameterizedTypeReference<Void>() {
             }, personaRef, anio);
 
@@ -153,7 +154,7 @@ public class SgiApiCspService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<List<GrupoEquipoDto>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<List<GrupoEquipoDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<GrupoEquipoDto>>() {
           }, grupoRef, anio)
           .getBody();
@@ -185,7 +186,7 @@ public class SgiApiCspService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<List<ProyectoDto>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<List<ProyectoDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<ProyectoDto>>() {
           }, anioInicio, anioFin).getBody();
 
@@ -223,7 +224,7 @@ public class SgiApiCspService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<BigDecimal>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<BigDecimal>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<BigDecimal>() {
           }, proyectoId).getBody();
 
@@ -271,7 +272,7 @@ public class SgiApiCspService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
-      result = super.<List<ProyectoEquipoDto>>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+      result = super.<List<ProyectoEquipoDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<ProyectoEquipoDto>>() {
           }, proyectoId).getBody();
 
@@ -284,4 +285,33 @@ public class SgiApiCspService extends SgiApiBaseService {
     return ObjectUtils.defaultIfNull(result, new ArrayList<>());
   }
 
+  /**
+   * Devuelve una lista de {@link ProyectoProyectoSgeDto} de un determinado
+   * {@link ProyectoDto}
+   *
+   * @param proyectoId id de {@link ProyectoProyectoSgeDto}
+   * @return lista de {@link ProyectoProyectoSgeDto}
+   */
+  public List<ProyectoProyectoSgeDto> findProyectosSgeByProyectoId(Long proyectoId) {
+    List<ProyectoProyectoSgeDto> result = new ArrayList<>();
+    log.debug("findProyectosSGEByProyectoId(proyectoId)- start");
+
+    try {
+      ServiceType serviceType = ServiceType.CSP;
+      String relativeUrl = "/proyectos/{proyectoId}/proyectossge";
+      HttpMethod httpMethod = HttpMethod.GET;
+      String mergedURL = buildUri(serviceType, relativeUrl);
+
+      result = super.<List<ProyectoProyectoSgeDto>>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<List<ProyectoProyectoSgeDto>>() {
+          }, proyectoId).getBody();
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findProyectosSGEByProyectoId(proyectoId)- end");
+
+    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
+  }
 }

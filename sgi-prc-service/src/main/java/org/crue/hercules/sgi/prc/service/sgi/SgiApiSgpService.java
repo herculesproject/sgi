@@ -43,7 +43,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
         HttpMethod httpMethod = HttpMethod.GET;
         String mergedURL = buildUri(serviceType, relativeUrl);
 
-        final PersonaDto response = super.<PersonaDto>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
+        final PersonaDto response = super.<PersonaDto>callEndpoint(mergedURL, httpMethod,
             new ParameterizedTypeReference<PersonaDto>() {
             }, personaRef).getBody();
 
@@ -79,7 +79,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       relativeUrl.append(personaRef);
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
-      final VinculacionDto response = super.<VinculacionDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+      final VinculacionDto response = super.<VinculacionDto>callEndpoint(mergedURL,
           httpMethod, new ParameterizedTypeReference<VinculacionDto>() {
           }, personaRef).getBody();
 
@@ -114,7 +114,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       relativeUrl.append(personaRef);
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
-      final DatosContactoDto response = super.<DatosContactoDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+      final DatosContactoDto response = super.<DatosContactoDto>callEndpoint(mergedURL,
           httpMethod, new ParameterizedTypeReference<DatosContactoDto>() {
           }, personaRef).getBody();
 
@@ -149,8 +149,8 @@ public class SgiApiSgpService extends SgiApiBaseService {
       relativeUrl.append(personaRef);
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
-      final DatosAcademicosDto response = super.<DatosAcademicosDto>callEndpointWithCurrentUserAuthorization(mergedURL,
-          httpMethod, new ParameterizedTypeReference<DatosAcademicosDto>() {
+      final DatosAcademicosDto response = super.<DatosAcademicosDto>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<DatosAcademicosDto>() {
           }, personaRef).getBody();
 
       datosAcademicos = Optional.of(response);
@@ -183,7 +183,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       relativeUrl.append(personaRef);
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
-      final SexenioDto response = super.<SexenioDto>callEndpointWithCurrentUserAuthorization(mergedURL,
+      final SexenioDto response = super.<SexenioDto>callEndpoint(mergedURL,
           httpMethod, new ParameterizedTypeReference<SexenioDto>() {
           }, personaRef).getBody();
 

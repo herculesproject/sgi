@@ -17,7 +17,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.ProduccionCientificaApiController;
 import org.crue.hercules.sgi.prc.converter.ProduccionCientificaConverter;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
-import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput.TipoEstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionInput;
@@ -47,8 +46,11 @@ import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.ProyectoRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiPiiService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiRelService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgePiiService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgoService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +129,18 @@ class ProduccionCientificaBaseIT extends BaseIT {
   @MockBean
   @Getter
   private SgiApiPiiService sgiApiPiiService;
+
+  @MockBean
+  @Getter
+  private SgiApiCnfService sgiApiCnfService;
+
+  @MockBean
+  @Getter
+  private SgiApiRelService sgiApiRelService;
+
+  @MockBean
+  @Getter
+  private SgiApiSgePiiService sgiApiSgePiiService;
 
   protected HttpEntity<ProduccionCientificaApiInput> buildRequestProduccionCientificaApi(HttpHeaders headers,
       ProduccionCientificaApiInput entity)
@@ -209,6 +223,28 @@ class ProduccionCientificaBaseIT extends BaseIT {
     return input;
   }
 
+  protected List<?> getObjectListFromJson(String outputJsonPath, String className) {
+    List<?> dto = null;
+    try {
+      Class<?> genericClass = Class.forName(className);
+
+      try (InputStream jsonInputStream = this.getClass().getClassLoader().getResourceAsStream(outputJsonPath)) {
+        try (Scanner scanner = new Scanner(jsonInputStream, "UTF-8").useDelimiter("\\Z")) {
+          String outputJson = scanner.next();
+          ObjectMapper objectMapper = new ObjectMapper();
+          objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+          dto = objectMapper.readValue(outputJson,
+              objectMapper.getTypeFactory().constructCollectionType(List.class, genericClass));
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return dto;
+  }
+
   protected ProduccionCientificaApiInput createApiInputFromProduccionCientificaById(Long produccionCientificaId) {
     List<CampoProduccionCientifica> campos = getCampoProduccionCientificaRepository()
         .findAllByProduccionCientificaId(produccionCientificaId);
@@ -260,7 +296,7 @@ class ProduccionCientificaBaseIT extends BaseIT {
     ProduccionCientificaApiCreateInput produccionCientifica = new ProduccionCientificaApiCreateInput();
     produccionCientifica.setIdRef(PRODUCCION_CIENTIFICA_REF_VALUE + "001");
     produccionCientifica.setEpigrafeCVN(EpigrafeCVN.E060_010_010_000.getCode());
-    produccionCientifica.setEstado(TipoEstadoProduccionCientifica.PENDIENTE);
+    produccionCientifica.setEstado(TipoEstadoProduccion.PENDIENTE);
 
     produccionCientifica.setCampos(new ArrayList<>());
     String codigoCVN1 = CodigoCVN.E060_010_010_010.getCode();

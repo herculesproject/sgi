@@ -158,11 +158,16 @@ public class ProduccionCientificaBuilderService {
   }
 
   public CampoProduccionCientifica addCampoProduccionCientificaAndValor(Long produccionCientificaId,
-      CodigoCVN codigoCVN, String valor) {
+      CodigoCVN codigoCVN, String valor, Integer orden) {
     CampoProduccionCientifica campoProduccionCientifica = addCampoProduccionCientifica(produccionCientificaId,
         codigoCVN);
-    addValorCampo(campoProduccionCientifica.getId(), valor, 1);
+    addValorCampo(campoProduccionCientifica.getId(), valor, orden);
     return campoProduccionCientifica;
+  }
+
+  public CampoProduccionCientifica addCampoProduccionCientificaAndValor(Long produccionCientificaId,
+      CodigoCVN codigoCVN, String valor) {
+    return addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN, valor, 1);
   }
 
   public void addValorCampo(Long campoProduccionCientificaId, String valor, Integer orden) {

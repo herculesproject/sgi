@@ -12,7 +12,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.BaremacionController;
 import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
 import org.crue.hercules.sgi.prc.dto.csp.GrupoEquipoDto;
-import org.crue.hercules.sgi.prc.dto.csp.InvencionDto;
 import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto.ComunidadAutonomaDto;
 import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto.PaisDto;
@@ -24,11 +23,17 @@ import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.DepartamentoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.SexoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.TipoDocumentoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.VinculacionDto;
+import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.Autor;
+import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EditorialPrestigio;
 import org.crue.hercules.sgi.prc.model.PuntuacionBaremoItem;
+import org.crue.hercules.sgi.prc.model.PuntuacionGrupoInvestigador;
+import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador;
+import org.crue.hercules.sgi.prc.model.ValorCampo;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.EditorialPrestigioRepository;
+import org.crue.hercules.sgi.prc.repository.MapeoTiposRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
@@ -37,7 +42,6 @@ import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -81,6 +85,10 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
   @Autowired
   @Getter
   private ConvocatoriaBaremacionRepository convocatoriaBaremacionRepository;
+
+  @Autowired
+  @Getter
+  private MapeoTiposRepository mapeoTiposRepository;
 
   protected HttpEntity<Void> buildRequestBaremacion(HttpHeaders headers, Void entity)
       throws Exception {
@@ -211,26 +219,6 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
         .willReturn(Arrays.asList(generarMockGrupoEquipo(personaRef, new BigDecimal("60.00"))));
   }
 
-  protected void mockInvenciones(String personaRef) {
-
-    BDDMockito.given(getSgiApiPiiService().findInvencionesProduccionCientifica(ArgumentMatchers.anyInt()))
-        .willReturn(generarMockInvenciones());
-
-    BDDMockito.given(getSgiApiPiiService().findInvencionInventorByInvencionIdAndAnio(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyInt())).willReturn(Arrays.asList(personaRef));
-  }
-
-  protected List<InvencionDto> generarMockInvenciones() {
-    return Arrays.asList(generarMockInvencion());
-  }
-
-  protected InvencionDto generarMockInvencion() {
-    return InvencionDto.builder()
-        .id(1L)
-        .titulo("titulo")
-        .build();
-  }
-
   protected GrupoEquipoDto generarMockGrupoEquipo(String personaRef, BigDecimal participacion) {
     return GrupoEquipoDto.builder()
         .personaRef(personaRef)
@@ -261,4 +249,55 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
       return editorialPrestigioRepository.save(editorial);
     }).orElse(null);
   }
+
+  protected ValorCampo getValorCampoByCodigoCVN(List<CampoProduccionCientifica> campos, CodigoCVN codigoCVN) {
+    return campos.stream().filter(campo -> campo.getCodigoCVN().equals(codigoCVN)).findFirst()
+        .map(campo -> getValorCampoRepository().findAllByCampoProduccionCientificaId(campo.getId()).get(0))
+        .orElse(null);
+  }
+
+  protected List<ValorCampo> getValoresCamposByCodigoCVN(List<CampoProduccionCientifica> campos, CodigoCVN codigoCVN) {
+    return campos.stream().filter(campo -> campo.getCodigoCVN().equals(codigoCVN)).findFirst()
+        .map(campo -> getValorCampoRepository().findAllByCampoProduccionCientificaId(campo.getId()))
+        .orElse(null);
+  }
+
+  protected void checkPuntuacionBaremoItem(List<PuntuacionBaremoItem> puntuacionBaremoItems, Long baremoId,
+      BigDecimal puntuacionBaremo) {
+    String assertMessage = String.format("puntuacionBaremoItem[%d]=%s", baremoId, puntuacionBaremo.toString());
+    Assertions.assertThat(hasPuntuacionBaremoItem(puntuacionBaremoItems, baremoId, puntuacionBaremo))
+        .as(assertMessage).isTrue();
+  }
+
+  protected boolean hasPuntuacionBaremoItem(List<PuntuacionBaremoItem> puntuacionBaremoItems, Long baremoId,
+      BigDecimal puntuacionBaremo) {
+    return puntuacionBaremoItems.stream().anyMatch(
+        pbi -> pbi.getBaremoId().compareTo(baremoId) == 0 && pbi.getPuntos().compareTo(puntuacionBaremo) == 0);
+  }
+
+  protected void checkPuntuacionItemInvestigador(List<PuntuacionItemInvestigador> puntuaciones, String personaRef,
+      BigDecimal puntuacionBaremo) {
+    String assertMessage = String.format("PuntuacionItemInvestigador[%s]=%s", personaRef, puntuacionBaremo.toString());
+    Assertions.assertThat(hasPuntuacionItemInvestigador(puntuaciones, personaRef, puntuacionBaremo))
+        .as(assertMessage).isTrue();
+  }
+
+  protected boolean hasPuntuacionItemInvestigador(List<PuntuacionItemInvestigador> puntuaciones,
+      String personaRef, BigDecimal puntuacion) {
+    return puntuaciones.stream().anyMatch(
+        pbi -> pbi.getPersonaRef().compareTo(personaRef) == 0 && pbi.getPuntos().compareTo(puntuacion) == 0);
+  }
+
+  protected void checkPuntuacionGrupoInvestigador(List<PuntuacionGrupoInvestigador> puntuaciones,
+      BigDecimal puntuacionBaremo) {
+    String assertMessage = String.format("PuntuacionGrupoInvestigador=%s", puntuacionBaremo.toString());
+    Assertions.assertThat(hasPuntuacionGrupoInvestigador(puntuaciones, puntuacionBaremo))
+        .as(assertMessage).isTrue();
+  }
+
+  protected boolean hasPuntuacionGrupoInvestigador(List<PuntuacionGrupoInvestigador> puntuaciones,
+      BigDecimal puntuacion) {
+    return puntuaciones.stream().anyMatch(pbi -> pbi.getPuntos().compareTo(puntuacion) == 0);
+  }
+
 }

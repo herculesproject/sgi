@@ -17,13 +17,13 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.converter.ProduccionCientificaConverter;
 import org.crue.hercules.sgi.prc.dto.EpigrafeCVNOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput;
-import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiCreateInput.TipoEstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiFullOutput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput;
 import org.crue.hercules.sgi.prc.dto.ProduccionCientificaApiInput.AcreditacionInput;
@@ -295,10 +295,10 @@ public class ProduccionCientificaApiService {
   }
 
   private boolean autorEqualsAutorInput(Autor autor, AutorInput autorInput) {
-    return Objects.equals(autor.getFirma(), autorInput.getFirma()) &&
-        Objects.equals(autor.getPersonaRef(), autorInput.getPersonaRef()) &&
-        Objects.equals(autor.getNombre(), autorInput.getNombre()) &&
-        Objects.equals(autor.getApellidos(), autorInput.getApellidos());
+    return Objects.equals(ObjectUtils.defaultIfNull(autor.getFirma(), ""), autorInput.getFirma()) &&
+        Objects.equals(ObjectUtils.defaultIfNull(autor.getPersonaRef(), ""), autorInput.getPersonaRef()) &&
+        Objects.equals(ObjectUtils.defaultIfNull(autor.getNombre(), ""), autorInput.getNombre()) &&
+        Objects.equals(ObjectUtils.defaultIfNull(autor.getApellidos(), ""), autorInput.getApellidos());
   }
 
   private boolean valorCampoEqualsValorInput(ValorCampo valorCampo, String valorCampoUpdate, TipoFormato tipoFormato) {
@@ -423,7 +423,7 @@ public class ProduccionCientificaApiService {
       ProduccionCientificaApiCreateInput produccionCientificaApiInput) {
 
     TipoEstadoProduccion tipoEstado = null != produccionCientificaApiInput.getEstado()
-        && produccionCientificaApiInput.getEstado().equals(TipoEstadoProduccionCientifica.VALIDADO)
+        && produccionCientificaApiInput.getEstado().equals(TipoEstadoProduccion.VALIDADO)
             ? EstadoProduccionCientifica.TipoEstadoProduccion.VALIDADO
             : EstadoProduccionCientifica.TipoEstadoProduccion.PENDIENTE;
 

@@ -18,7 +18,6 @@ import org.crue.hercules.sgi.prc.dto.csp.ProyectoDto.ClasificacionCVN;
 import org.crue.hercules.sgi.prc.dto.csp.ProyectoEquipoDto;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
-import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.Autor;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoBaremo;
@@ -38,14 +37,13 @@ import org.crue.hercules.sgi.prc.repository.IndiceImpactoRepository;
 import org.crue.hercules.sgi.prc.repository.MapeoTiposRepository;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
-import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
-import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -71,11 +69,10 @@ public class BaremacionProyectoService extends BaremacionCommonService {
   public static final EpigrafeCVN EPIGRAFE_CVN_PROYECTO = EpigrafeCVN.E050_020_010_000;
   public static final EpigrafeCVN EPIGRAFE_CVN_CONTRATO = EpigrafeCVN.E050_020_020_000;
 
-  private final PuntuacionGrupoRepository puntuacionGrupoRepository;
-  private final PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository;
   private final MapeoTiposRepository mapeoTiposRepository;
   private final ConfiguracionCampoRepository configuracionCampoRepository;
 
+  @Autowired
   public BaremacionProyectoService(
       AliasEnumeradoRepository aliasEnumeradoRepository,
       ProduccionCientificaRepository produccionCientificaRepository,
@@ -94,8 +91,6 @@ public class BaremacionProyectoService extends BaremacionCommonService {
       ConvocatoriaBaremacionLogService convocatoriaBaremacionLogService,
       ModelMapper modelMapper,
       SgiConfigProperties sgiConfigProperties,
-      PuntuacionGrupoRepository puntuacionGrupoRepository,
-      PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository,
       MapeoTiposRepository mapeoTiposRepository,
       ConfiguracionCampoRepository configuracionCampoRepository) {
     super(aliasEnumeradoRepository,
@@ -115,8 +110,6 @@ public class BaremacionProyectoService extends BaremacionCommonService {
         modelMapper,
         sgiConfigProperties);
 
-    this.puntuacionGrupoRepository = puntuacionGrupoRepository;
-    this.puntuacionGrupoInvestigadorRepository = puntuacionGrupoInvestigadorRepository;
     this.mapeoTiposRepository = mapeoTiposRepository;
     this.configuracionCampoRepository = configuracionCampoRepository;
 
@@ -182,29 +175,6 @@ public class BaremacionProyectoService extends BaremacionCommonService {
           codigoCVNFechaInicio, codigoCVNFechaFin);
     }
     return result;
-  }
-
-  @Override
-  protected ProduccionCientifica cloneProduccionCientifica(BaremacionInput baremacionInput) {
-    Long produccionCientificaId = baremacionInput.getProduccionCientificaId();
-    Long convocatoriaBaremacionId = baremacionInput.getConvocatoriaBaremacionId();
-
-    return getProduccionCientificaRepository().findById(produccionCientificaId)
-        .map(produccionCientifica -> {
-
-          Optional<ProduccionCientifica> produccionCientificaSearch = getProduccionCientificaRepository()
-              .findByProduccionCientificaRefAndConvocatoriaBaremacionId(
-                  produccionCientifica.getProduccionCientificaRef(), convocatoriaBaremacionId);
-
-          if (!produccionCientificaSearch.isPresent()) {
-            return getProduccionCientificaBuilderService().cloneProduccionCientificaAndRelations(
-                convocatoriaBaremacionId, produccionCientifica);
-          } else {
-            return produccionCientificaSearch.get();
-          }
-        })
-        .orElseThrow(
-            () -> new ProduccionCientificaNotFoundException(baremacionInput.getProduccionCientificaId().toString()));
   }
 
   @Override
@@ -424,10 +394,12 @@ public class BaremacionProyectoService extends BaremacionCommonService {
           getSgiApiCspService().getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyecto.getId()));
     }
 
-    String importeConcedido = ProduccionCientificaFieldFormatUtil
-        .formatNumber(proyecto.getImporteConcedido().toString());
-    getProduccionCientificaBuilderService().addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN,
-        importeConcedido);
+    if (null != proyecto.getImporteConcedido()) {
+      String importeConcedido = ProduccionCientificaFieldFormatUtil
+          .formatNumber(proyecto.getImporteConcedido().toString());
+      getProduccionCientificaBuilderService().addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN,
+          importeConcedido);
+    }
   }
 
   private void addCampoProyectoTotalImporteConcedido(ProyectoDto proyecto, Long produccionCientificaId) {
@@ -439,10 +411,12 @@ public class BaremacionProyectoService extends BaremacionCommonService {
       proyecto.setTotalImporteConcedido(getSgiApiCspService().getTotalImporteConcedidoAnualidadGasto(proyecto.getId()));
     }
 
-    String totalImporteConcedido = ProduccionCientificaFieldFormatUtil
-        .formatNumber(proyecto.getTotalImporteConcedido().toString());
-    getProduccionCientificaBuilderService()
-        .addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN, totalImporteConcedido);
+    if (null != proyecto.getTotalImporteConcedido()) {
+      String totalImporteConcedido = ProduccionCientificaFieldFormatUtil
+          .formatNumber(proyecto.getTotalImporteConcedido().toString());
+      getProduccionCientificaBuilderService()
+          .addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN, totalImporteConcedido);
+    }
   }
 
   private void addCampoProyectoFechaInicio(ProyectoDto proyecto, Long produccionCientificaId) {
