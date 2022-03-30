@@ -1266,6 +1266,8 @@
   "error.file.upload": "Error adjuntado el fichero",
   "error.footer.form": "Este formulario presenta errores",
   "error.form-group": "Se han encontrado errores en el formulario. Por favor revíselo",
+  "error.generic.message": "Intentelo en otro momento",
+  "error.generic.title": "Error incontrolado",
   "error.initial.mes-desde": "El primer periodo ha de empezar en el mes 1",
   "error.integer.entity": "El valor debe ser un número entero",
   "error.invalid.entity": "{gender,select,male{El} female{La} other{El/La}} {entity} no es válid{gender,select,male{o} female{a} other{o/a}}",

@@ -1,5 +1,4 @@
 import { FormControl } from '@angular/forms';
-import { HttpProblem } from '@core/errors/http-problem';
 import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IColumna } from '@core/models/sge/columna';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
@@ -221,11 +220,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
           });
           this.desglose$.next(regs);
         },
-        (error) => {
-          if (error instanceof HttpProblem) {
-            this.pushProblems(error);
-          }
-        }
+        this.processError
       );
   }
 

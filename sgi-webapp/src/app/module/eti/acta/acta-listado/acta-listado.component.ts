@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { HttpProblem } from '@core/errors/http-problem';
+import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
 import { IComite } from '@core/models/eti/comite';
@@ -265,7 +265,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
         // On error reset pagination values
         this.paginator.firstPage();
         this.totalElementos = 0;
-        if (error instanceof HttpProblem) {
+        if (error instanceof SgiError) {
           this.snackBarService.showError(error);
         }
         else {

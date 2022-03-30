@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
-import { Problem, ValidationHttpProblem } from '@core/errors/http-problem';
+import { SgiHttpProblem, ValidationHttpError } from '@core/errors/http-problem';
+import { SgiProblem } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -42,7 +43,7 @@ export interface ProyectoCambioEstadoModalComponentData {
   styleUrls: ['./cambio-estado-modal.component.scss']
 })
 export class CambioEstadoModalComponent
-  extends DialogActionComponent<ProyectoCambioEstadoModalComponentData, IEstadoProyecto> {
+  extends DialogActionComponent<IEstadoProyecto> {
 
   fxLayoutProperties: FxLayoutProperties;
 
@@ -146,7 +147,7 @@ export class CambioEstadoModalComponent
   }
 
   private validateCambioEstado(estado: Estado): Observable<never | void> {
-    const problems: Problem[] = [];
+    const problems: SgiProblem[] = [];
 
     if (estado === Estado.CONCEDIDO) {
       problems.push(...this.validateRequiredFields(), ...this.validateProyectoHasMiembrosEquipo());
@@ -159,8 +160,8 @@ export class CambioEstadoModalComponent
     return of(void 0);
   }
 
-  private validateRequiredFields(): Problem[] {
-    const problems: Problem[] = [];
+  private validateRequiredFields(): SgiProblem[] {
+    const problems: SgiProblem[] = [];
 
     if (!this.data.proyecto.finalidad) {
       problems.push(this.buildValidationProblem(this.msgProyectoFinalidadRequired));
@@ -189,8 +190,8 @@ export class CambioEstadoModalComponent
     return problems;
   }
 
-  private validateProyectoHasMiembrosEquipo(): Problem[] {
-    const problems: Problem[] = [];
+  private validateProyectoHasMiembrosEquipo(): SgiProblem[] {
+    const problems: SgiProblem[] = [];
 
     if (!this.data.proyectoHasMiembrosEquipo) {
       problems.push(this.buildValidationProblem(this.msgProyectoMiembrosEquipoRequired));
@@ -199,8 +200,8 @@ export class CambioEstadoModalComponent
     return problems;
   }
 
-  private buildValidationProblem(msgError: string): ValidationHttpProblem {
-    return new ValidationHttpProblem({ title: msgError } as Problem);
+  private buildValidationProblem(msgError: string): ValidationHttpError {
+    return new ValidationHttpError({ title: msgError } as SgiHttpProblem);
   }
 
 }

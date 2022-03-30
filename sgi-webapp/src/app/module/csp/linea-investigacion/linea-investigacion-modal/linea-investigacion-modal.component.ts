@@ -18,7 +18,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
   templateUrl: './linea-investigacion-modal.component.html',
   styleUrls: ['./linea-investigacion-modal.component.scss']
 })
-export class LineaInvestigacionModalComponent extends DialogActionComponent<ILineaInvestigacion, ILineaInvestigacion> implements OnInit, OnDestroy {
+export class LineaInvestigacionModalComponent extends DialogActionComponent<ILineaInvestigacion> implements OnInit, OnDestroy {
 
   private readonly lineaInvestigacion: ILineaInvestigacion;
   title: string;

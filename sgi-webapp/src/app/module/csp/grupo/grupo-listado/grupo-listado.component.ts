@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { HttpProblem } from '@core/errors/http-problem';
+import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
 import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
@@ -178,7 +178,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       },
       (error) => {
         this.logger.error(error);
-        if (error instanceof HttpProblem) {
+        if (error instanceof SgiError) {
           this.snackBarService.showError(error);
         } else {
           this.snackBarService.showError(this.textoErrorReactivar);
@@ -199,7 +199,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       },
       (error) => {
         this.logger.error(error);
-        if (error instanceof HttpProblem) {
+        if (error instanceof SgiError) {
           this.snackBarService.showError(error);
         } else {
           this.snackBarService.showError(this.textoErrorDesactivar);

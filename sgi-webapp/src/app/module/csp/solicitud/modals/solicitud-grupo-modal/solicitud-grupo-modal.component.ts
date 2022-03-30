@@ -30,7 +30,7 @@ const SGI_DEP = 'SGIDEP';
   templateUrl: './solicitud-grupo-modal.component.html',
   styleUrls: ['./solicitud-grupo-modal.component.scss']
 })
-export class SolicitudGrupoModalComponent extends DialogActionComponent<SolicitudGrupoModalComponent, ISolicitudGrupo> {
+export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicitudGrupo> {
 
   solicitudGrupo: ISolicitudGrupo;
 

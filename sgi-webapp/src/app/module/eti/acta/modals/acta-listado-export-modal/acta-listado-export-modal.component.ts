@@ -5,7 +5,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseExportModalComponent } from '@core/component/base-export/base-export-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiRestFindOptions } from '@sgi/framework/http';
 import { ActaListadoExportService, IActaReportOptions } from '../../acta-listado-export.service';
@@ -26,12 +25,11 @@ export class ActaListadoExportModalComponent extends BaseExportModalComponent<IR
 
   constructor(
     matDialogRef: MatDialogRef<ActaListadoExportModalComponent>,
-    snackBarService: SnackBarService,
     translate: TranslateService,
     actaListadoExportService: ActaListadoExportService,
     @Inject(MAT_DIALOG_DATA) private modalData: IActaListadoModalData
   ) {
-    super(actaListadoExportService, snackBarService, translate, matDialogRef);
+    super(actaListadoExportService, translate, matDialogRef);
   }
 
   get MSG_PARAMS() {
