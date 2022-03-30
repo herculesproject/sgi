@@ -1,7 +1,7 @@
-<#assign data = CSP_COM_SOL_CAMB_EST_DEN_PROV_DATA?eval_json />
+<#assign data = CSP_COM_SOL_CAMB_EST_DEN_DATA?eval_json />
 Estimado/a investigador/a,
 
-le informamos que <#if (data.fechaProvisionalConvocatoria)??>con fecha ${data.fechaProvisionalConvocatoria?datetime.iso?string("dd/MM/yyyy")} </#if>se ha publicado la “Resolución Provisional” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece denegada.
+le informamos que <#if (data.fechaConcesionConvocatoria)??>con fecha ${data.fechaConcesionConvocatoria?datetime.iso?string("dd/MM/yyyy")} </#if>se ha publicado la “Resolución de Concesión” de la convocatoria de ${data.tituloConvocatoria} en la que su solicitud aparece denegada.
 
 Más información disponible en los siguientes enlaces:
 
