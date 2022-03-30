@@ -164,6 +164,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_CONC_DATA" />
+      <column name="description" value="JSON con formato: {&quot;titulo de convocatoria&quot;&quot;,fecha concesión de convocatoria&quot;,&quot;código de registro interno&quot;&quot;,&quot;Listado de enlaces de la convocatoria&quot;" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Calendario Facturacion Validar IP - Validada -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -352,6 +363,17 @@
       <column name="tpl" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_PROV_SUBJECT.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_DEN_PROV_SUBJECT'</where>
     </update>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_CONC_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el cambio de estado de solicitud a concedida" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_SUBJECT.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_SUBJECT'</where>
+    </update>
     <!-- CSP Solicitud Hito -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
@@ -492,6 +514,11 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_DATA')" />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_CONC_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_CONC_DATA')" />
     </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="subjecttpl_param">
@@ -713,6 +740,22 @@
       <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT_html.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT'</where>
     </update>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_CONC_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el cambio de estado de solicitud a concedida" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value=" " />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000001/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT'</where>
+    </update>
     <!-- CSP Solicitud Hito -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -901,6 +944,11 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_DATA')" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_SOL_CAMB_EST_CONC_DATA')" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_SOLICITUD_HITO_CONTENT')" />
@@ -1086,6 +1134,16 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_SOL_CAMB_EST_CONC" />
+      <column name="description" value="Aviso de cambio de estado de solicitud a concedida (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -1199,6 +1257,11 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_SUBJECT')" />
     </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_CONC')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_SOL_CAMB_EST_CONC_SUBJECT')" />
+    </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_SOLICITUD_HITO')" />
@@ -1284,6 +1347,11 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT')" />
+    </insert>
+    <!-- CSP Solicitud Cambio Estado Concedida -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_SOL_CAMB_EST_CONC')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT')" />
     </insert>
     <!-- CSP Solicitud Hito -->
     <insert tableName="emailtpl_contenttpl">
