@@ -88,8 +88,8 @@
 
         <!-- Lineas investigación -->
         <mat-form-field fxFlex="40%">
-          <mat-label>{{'csp.grupo.lineas-investigacion' | translate}}</mat-label>
-          <input type="text" [placeholder]="'csp.grupo.lineas-investigacion' | translate" arial-label="Number" matInput
+          <mat-label>{{'csp.grupo.linea-investigacion' | translate}}</mat-label>
+          <input type="text" [placeholder]="'csp.grupo.linea-investigacion' | translate" arial-label="Number" matInput
             formControlName="lineaInvestigacion" [matAutocomplete]="autocompleteLineasInvestigacion">
           <mat-autocomplete #autocompleteLineasInvestigacion="matAutocomplete" [displayWith]="getLineaInvestigacion">
             <mat-option *ngFor="let lineaInvestigacion of filteredLineasInvestigacion | async"
@@ -204,7 +204,8 @@
             </a>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-GIN-E'">
-            <a mat-icon-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[element.id]" color="primary">
+            <a *ngIf="element.activo === true" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[element.id]" color="primary">
               <mat-icon>border_color</mat-icon>
             </a>
           </ng-container>
