@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -153,7 +154,8 @@ public class GrupoService {
   }
 
   private Grupo updateEspecialInvestigacion(Grupo data, Grupo grupoActualizar) {
-    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId());
+    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+        .with(LocalTime.MAX);
     // Ambos informados y distintos (actualiza la fecha de fin del anterior y crea
     // el nuevo)
     if (data.getEspecialInvestigacion() != null && grupoActualizar.getEspecialInvestigacion() != null
@@ -198,7 +200,8 @@ public class GrupoService {
   }
 
   private Grupo updateTipo(Grupo data, Grupo grupoActualizar) {
-    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId());
+    ZonedDateTime fechaActual = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+        .with(LocalTime.MAX);
 
     // Ambos informados y distintos (actualiza la fecha de fin del anterior y crea
     // el nuevo)
