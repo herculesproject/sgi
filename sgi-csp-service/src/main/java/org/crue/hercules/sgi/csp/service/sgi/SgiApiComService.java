@@ -15,11 +15,8 @@ import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCien
 import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcProvData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDenProvData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDefinitivoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoProvisionalData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.CspComVencimientoPeriodoPagoSocioData;
@@ -68,16 +65,20 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV
       + DATA;
 
-  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC = "CSP_COM_SOL_CAMB_EST_CONC";
-  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC
-      + DATA;
-
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF = "CSP_COM_SOL_CAMB_EST_EXCL_DEF";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF
       + DATA;
 
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC = "CSP_COM_SOL_CAMB_EST_CONC";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC
+      + DATA;
+
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PROV = "CSP_COM_SOL_CAMB_EST_CONC_PROV";
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PROV_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PROV
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN = "CSP_COM_SOL_CAMB_EST_DEN";
+  private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN_PARAM = TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN
       + DATA;
 
   private static final String TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN_PROV = "CSP_COM_SOL_CAMB_EST_DEN_PROV";
@@ -533,7 +534,7 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   public EmailOutput createComunicadoSolicitudCambioEstadoExclProv(
-      CspComSolicitudCambioEstadoExclProvData data, List<Recipient> recipients)
+      CspComSolicitudCambioEstadoProvisionalData data, List<Recipient> recipients)
       throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_PROV,
@@ -541,11 +542,19 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   public EmailOutput createComunicadoSolicitudCambioEstadoConc(
-      CspComSolicitudCambioEstadoConcData data, List<Recipient> recipients)
+      CspComSolicitudCambioEstadoDefinitivoData data, List<Recipient> recipients)
       throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PARAM);
+  }
+
+  public EmailOutput createComunicadoSolicitudCambioEstadoDen(
+      CspComSolicitudCambioEstadoDefinitivoData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN,
+        TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN_PARAM);
   }
 
   public EmailOutput createComunicadoInicioPresentacionPeriodoJustificacionSocioEmail(
@@ -581,7 +590,7 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   public EmailOutput createComunicadoSolicitudCambioEstadoExclDef(
-      CspComSolicitudCambioEstadoExclDefData data, List<Recipient> recipients)
+      CspComSolicitudCambioEstadoDefinitivoData data, List<Recipient> recipients)
       throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_EXCL_DEF,
@@ -589,7 +598,7 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   public EmailOutput createComunicadoSolicitudCambioEstadoDenProv(
-      CspComSolicitudCambioEstadoDenProvData data, List<Recipient> recipients)
+      CspComSolicitudCambioEstadoProvisionalData data, List<Recipient> recipients)
       throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_DEN_PROV,
@@ -597,7 +606,7 @@ public class SgiApiComService extends SgiApiBaseService {
   }
 
   public EmailOutput createComunicadoSolicitudCambioEstadoConcProv(
-      CspComSolicitudCambioEstadoConcProvData data, List<Recipient> recipients)
+      CspComSolicitudCambioEstadoProvisionalData data, List<Recipient> recipients)
       throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_SOL_CAMB_EST_CONC_PROV,

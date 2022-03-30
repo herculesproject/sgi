@@ -16,14 +16,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoConcProvData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDenProvData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclDefData;
-import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoExclProvData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDefinitivoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoProvisionalData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoSolicitadaData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
+import org.crue.hercules.sgi.csp.dto.com.Enlace;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
@@ -31,7 +29,6 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
@@ -259,22 +256,11 @@ public class ComunicadosService {
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - start");
-    List<CspComSolicitudCambioEstadoExclProvData.Enlace> enlaces = new ArrayList<>();
-    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
-      CspComSolicitudCambioEstadoExclProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoExclProvData.Enlace
-          .builder()
-          .descripcion(enlace.getDescripcion())
-          .url(enlace.getUrl())
-          .build();
-      if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
-      }
-      enlaces.add(nuevoEnlace);
-    }
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
-          CspComSolicitudCambioEstadoExclProvData.builder()
+          CspComSolicitudCambioEstadoProvisionalData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
@@ -292,22 +278,11 @@ public class ComunicadosService {
       Instant fechaConcesionConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoExclDef() - start");
-    List<CspComSolicitudCambioEstadoExclDefData.Enlace> enlaces = new ArrayList<>();
-    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
-      CspComSolicitudCambioEstadoExclDefData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoExclDefData.Enlace
-          .builder()
-          .descripcion(enlace.getDescripcion())
-          .url(enlace.getUrl())
-          .build();
-      if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
-      }
-      enlaces.add(nuevoEnlace);
-    }
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclDef(
-          CspComSolicitudCambioEstadoExclDefData.builder()
+          CspComSolicitudCambioEstadoDefinitivoData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
@@ -325,22 +300,11 @@ public class ComunicadosService {
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoConcProv() - start");
-    List<CspComSolicitudCambioEstadoConcProvData.Enlace> enlaces = new ArrayList<>();
-    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
-      CspComSolicitudCambioEstadoConcProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoConcProvData.Enlace
-          .builder()
-          .descripcion(enlace.getDescripcion())
-          .url(enlace.getUrl())
-          .build();
-      if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
-      }
-      enlaces.add(nuevoEnlace);
-    }
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConcProv(
-          CspComSolicitudCambioEstadoConcProvData.builder()
+          CspComSolicitudCambioEstadoProvisionalData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
@@ -358,22 +322,11 @@ public class ComunicadosService {
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoDenProv() - start");
-    List<CspComSolicitudCambioEstadoDenProvData.Enlace> enlaces = new ArrayList<>();
-    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
-      CspComSolicitudCambioEstadoDenProvData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoDenProvData.Enlace
-          .builder()
-          .descripcion(enlace.getDescripcion())
-          .url(enlace.getUrl())
-          .build();
-      if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
-      }
-      enlaces.add(nuevoEnlace);
-    }
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDenProv(
-          CspComSolicitudCambioEstadoDenProvData.builder()
+          CspComSolicitudCambioEstadoProvisionalData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
@@ -391,22 +344,11 @@ public class ComunicadosService {
       Instant fechaConcesionConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoConc() - start");
-    List<CspComSolicitudCambioEstadoConcData.Enlace> enlaces = new ArrayList<>();
-    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
-      CspComSolicitudCambioEstadoConcData.Enlace nuevoEnlace = CspComSolicitudCambioEstadoConcData.Enlace
-          .builder()
-          .descripcion(enlace.getDescripcion())
-          .url(enlace.getUrl())
-          .build();
-      if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
-      }
-      enlaces.add(nuevoEnlace);
-    }
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConc(
-          CspComSolicitudCambioEstadoConcData.builder()
+          CspComSolicitudCambioEstadoDefinitivoData.builder()
               .tituloConvocatoria(tituloConvocatoria)
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
@@ -418,6 +360,28 @@ public class ComunicadosService {
           "enviarComunicadoSolicitudCambioEstadoConc() - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoSolicitudCambioEstadoConc() - end");
+  }
+
+  public void enviarComunicadoSolicitudCambioEstadoDen(String solicitanteRef, String tituloConvocatoria,
+      Instant fechaConcesionConvocatoria,
+      List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
+    log.debug("enviarComunicadoSolicitudCambioEstadoDen() - start");
+    List<Enlace> enlaces = getListadoEnlacesComunicados(convocatoriaEnlaces);
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    if (!recipients.isEmpty()) {
+      EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDen(
+          CspComSolicitudCambioEstadoDefinitivoData.builder()
+              .tituloConvocatoria(tituloConvocatoria)
+              .fechaConcesionConvocatoria(
+                  fechaConcesionConvocatoria)
+              .enlaces(enlaces).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoSolicitudCambioEstadoDen() - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoSolicitudCambioEstadoDen() - end");
   }
 
   /**
@@ -439,6 +403,22 @@ public class ComunicadosService {
 
   public void enviarComunicadosPeriodoJustificacionSocio() {
     this.proyectoSocioPeriodoJustificacionComService.enviarComunicadoInicioFinPeriodoJustificacionSocio();
+  }
+
+  private List<Enlace> getListadoEnlacesComunicados(List<ConvocatoriaEnlace> convocatoriaEnlaces) {
+    List<Enlace> enlaces = new ArrayList<>();
+    for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
+      Enlace nuevoEnlace = Enlace
+          .builder()
+          .descripcion(enlace.getDescripcion())
+          .url(enlace.getUrl())
+          .build();
+      if (enlace.getTipoEnlace() != null) {
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+      }
+      enlaces.add(nuevoEnlace);
+    }
+    return enlaces;
   }
 
 }

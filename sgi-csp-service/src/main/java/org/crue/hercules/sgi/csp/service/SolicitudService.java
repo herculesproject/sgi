@@ -1134,6 +1134,24 @@ public class SolicitudService {
                 enlaces);
           }
           break;
+        case DENEGADA:
+          /*
+           * Enviamos el comunicado de Cambio al estado DENEGADA en
+           * solicitudes de
+           * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
+           */
+          if (checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
+            Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
+            List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
+                .findByConvocatoriaId(solicitud.getConvocatoriaId())
+                .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
+            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoDen(solicitud.getSolicitanteRef(),
+                convocatoria.getTitulo(),
+                convocatoria.getFechaConcesion(),
+                enlaces);
+          }
+          break;
       }
       log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
     } catch (Exception e) {
