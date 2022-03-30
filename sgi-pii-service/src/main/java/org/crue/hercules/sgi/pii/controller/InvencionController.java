@@ -621,7 +621,7 @@ public class InvencionController {
    * @param anioInicio    año inicio de baremación
    * @param anioFin       año fin de baremación
    * @param universidadId id de la universidad
-   * @return lista de {@link ProyectoDto}
+   * @return lista de {@link InvencionDto}
    */
   @GetMapping(PATH_PRC)
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-pii')) or hasAuthority('CSP-PRO-PRC-V')")

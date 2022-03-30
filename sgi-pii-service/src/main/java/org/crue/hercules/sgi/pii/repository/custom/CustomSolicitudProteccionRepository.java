@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.pii.dto.InvencionDto.SolicitudProteccionDto;
+import org.crue.hercules.sgi.pii.model.Invencion;
 
 public interface CustomSolicitudProteccionRepository {
 

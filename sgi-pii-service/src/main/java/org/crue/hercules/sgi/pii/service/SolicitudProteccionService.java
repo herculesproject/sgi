@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.pii.dto.InvencionDto.SolicitudProteccionDto;
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.exceptions.SolicitudProteccionNotFoundException;
 import org.crue.hercules.sgi.pii.exceptions.ViaProteccionNotFoundException;
+import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion.EstadoSolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnActivar;

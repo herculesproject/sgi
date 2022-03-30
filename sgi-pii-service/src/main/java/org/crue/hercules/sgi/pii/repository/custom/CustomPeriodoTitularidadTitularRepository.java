@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.pii.repository.custom;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.PeriodoTitularidadTitular;
 
 public interface CustomPeriodoTitularidadTitularRepository {

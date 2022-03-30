@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.config.SgiConfigProperties;
 import org.crue.hercules.sgi.pii.exceptions.PeriodoTitularidadNotFoundException;
+import org.crue.hercules.sgi.pii.model.Invencion;
 import org.crue.hercules.sgi.pii.model.PeriodoTitularidad;
 import org.crue.hercules.sgi.pii.model.PeriodoTitularidadTitular;
 import org.crue.hercules.sgi.pii.repository.PeriodoTitularidadRepository;
@@ -130,11 +131,11 @@ public class PeriodoTitularidadTitularService {
 
   /**
    * Devuelve una lista de {@link PeriodoTitularidadTitular} que pertenecen a la
-   * universidad a fecha 31 de diciembre de una determinada {@link Invencion}
+   * universidad en un determinado año y una determinada {@link Invencion}
    * 
-   * @param invencionId     id de {@link Invencion}
-   * @param fechaBaremacion fecha de baremación a 31 de diciembre
-   * @param universidadId   id universidad
+   * @param invencionId   id de {@link Invencion}
+   * @param anio          año de baremación
+   * @param universidadId id universidad
    * 
    * @return Lista de {@link PeriodoTitularidadTitular}
    */
