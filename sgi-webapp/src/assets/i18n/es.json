@@ -1701,7 +1701,7 @@
   "msg.asociar.entity": "Asociar {entity}",
   "msg.asociar.entity.success": "Se ha asociado correctamente {gender,select,male{el} female{la} other{el/la}} {entity}",
   "msg.cloned.entity.success": "{entity} clonad{gender,select,male{o} female{a} other{o/a}} correctamente",
-  "msg.continue.entity.not-set": "¿Desea continuar sin especificar el/la {entity}?",
+  "msg.continue.entity.not-set": "¿Desea continuar sin especificar {gender,select,male{el} female{la} other{el/la}} {entity}?",
   "msg.continue.notificacion.presupuesto": "Se enviará la notificación de presupuestos al Sistema de gestión económica ¿desea continuar?",
   "msg.convocatoria-concepto-gasto.create.success": "Se ha asignado correctamente el concepto de gasto a la convocatoria",
   "msg.csp.autorizacion.presentar": "¿Desea presentar la autorización?",
