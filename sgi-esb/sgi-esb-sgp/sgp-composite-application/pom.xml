@@ -12,6 +12,7 @@
   <name>sgp-composite-application</name>
   <description>sgp-composite-application</description>
   <properties>
+    <org.crue.hercules.sgi.esb.sgp.endpoint_._cvn-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgp.endpoint_._cvn-endpoint>
     <org.crue.hercules.sgi.esb.sgp.endpoint_._sgp-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgp.endpoint_._sgp-endpoint>
     <org.crue.hercules.sgi.esb.sgp.sequence_._sgp-add-x-api-key-sequence>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgp.sequence_._sgp-add-x-api-key-sequence>
     <org.crue.hercules.sgi.esb.sgp.resource_._datos-contacto-response-converter-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.sgp.resource_._datos-contacto-response-converter-mediator>
@@ -27,6 +28,12 @@
     <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.crue.hercules.sgi.esb.sgp.endpoint</groupId>
+      <artifactId>cvn-endpoint</artifactId>
+      <version>0.0.8-SNAPSHOT</version>
+      <type>xml</type>
+    </dependency>
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.api</groupId>
       <artifactId>sgp-api</artifactId>
