@@ -127,4 +127,13 @@
     <dropColumn columnName="TABLA_INDICE_ID" tableName="EDITORIAL_PRESTIGIO" />
     <addForeignKeyConstraint baseColumnNames="tabla_editorial_id" baseTableName="editorial_prestigio" constraintName="FK_EDITORIALPRESTIGIO_TABLAEDITORIAL" referencedColumnNames="id" referencedTableName="tabla_editorial" />
   </changeSet>
+
+  <!-- convocatoria_baremacion -->
+  <changeSet author="user (generated)" id="0000000000001-11">
+    <addColumn tableName="convocatoria_baremacion">
+      <column defaultValueBoolean="true" name="activo" type="boolean">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

@@ -209,4 +209,6 @@ INSERT INTO test.baremo (id, configuracion_baremo_id, convocatoria_baremacion_id
 INSERT INTO test.baremo (id, configuracion_baremo_id, convocatoria_baremacion_id, cuantia, peso, puntos, tipo_cuantia) VALUES(704, 704, 1, NULL, NULL, 704.00, NULL);
 INSERT INTO test.baremo (id, configuracion_baremo_id, convocatoria_baremacion_id, cuantia, peso, puntos, tipo_cuantia) VALUES(705, 705, 1, NULL, NULL, NULL,   NULL);
 
+INSERT INTO test.baremo (id, configuracion_baremo_id, convocatoria_baremacion_id, peso, puntos, cuantia, tipo_cuantia) VALUES(706, 706, 4, 10, 15.00, NULL, NULL);
+
 ALTER SEQUENCE test.baremo_seq RESTART WITH 10000;

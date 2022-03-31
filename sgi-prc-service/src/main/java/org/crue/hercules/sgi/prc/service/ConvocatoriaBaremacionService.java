@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
@@ -11,9 +14,13 @@ import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.ModuladorRepository;
 import org.crue.hercules.sgi.prc.repository.RangoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -116,4 +123,104 @@ public class ConvocatoriaBaremacionService {
     baremoRepository.save(baremoClone);
   }
 
+  /**
+   * Obtener todas las entidades {@link ConvocatoriaBaremacion} paginadas y/o
+   * filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ConvocatoriaBaremacion} paginadas y/o
+   *         filtradas.
+   */
+  public Page<ConvocatoriaBaremacion> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<ConvocatoriaBaremacion> specs = SgiRSQLJPASupport.toSpecification(query);
+
+    Page<ConvocatoriaBaremacion> returnValue = convocatoriaBaremacionRepository.findAll(specs, pageable);
+    log.debug("findAll(String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene {@link ConvocatoriaBaremacion} por su id.
+   *
+   * @param id el id de la entidad {@link ConvocatoriaBaremacion}.
+   * @return la entidad {@link ConvocatoriaBaremacion}.
+   */
+  public ConvocatoriaBaremacion findById(Long id) {
+    log.debug("findById(Long id)  - start");
+    final ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.findById(id)
+        .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(id));
+    log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Activa la {@link ConvocatoriaBaremacion}.
+   *
+   * @param id Id de la {@link ConvocatoriaBaremacion}.
+   * @return la entidad {@link ConvocatoriaBaremacion} persistida.
+   */
+  @Transactional
+  public ConvocatoriaBaremacion activar(Long id) {
+    log.debug("activar(Long id) - start");
+
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+
+    return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
+      if (convocatoriaBaremacion.getActivo()) {
+        log.debug("enable(Long id) - end");
+        // Si esta activo no se hace nada
+        return convocatoriaBaremacion;
+      }
+
+      convocatoriaBaremacion.setActivo(true);
+
+      ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(id));
+  }
+
+  /**
+   * Desactiva la {@link ConvocatoriaBaremacion}.
+   *
+   * @param id Id de la {@link ConvocatoriaBaremacion}.
+   * @return la entidad {@link ConvocatoriaBaremacion} persistida.
+   */
+  @Transactional
+  public ConvocatoriaBaremacion desactivar(Long id) {
+    log.debug("desactivar(Long id) - start");
+
+    Assert.notNull(id,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+
+    return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
+      // Una ConvocatoriaBaremacion con baremación ya realizada no se puede desactivar
+      Assert.isNull(convocatoriaBaremacion.getFechaInicioEjecucion(),
+          // Defer message resolution untill is needed
+          () -> ProblemMessage.builder().key(Assert.class, "isNull")
+              .parameter("field", ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
+              .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+
+      if (!convocatoriaBaremacion.getActivo()) {
+        log.debug("desactivar(Long id) - end");
+        // Si no esta activo no se hace nada
+        return convocatoriaBaremacion;
+      }
+
+      convocatoriaBaremacion.setActivo(false);
+
+      ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
+      log.debug("desactivar(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(id));
+  }
 }

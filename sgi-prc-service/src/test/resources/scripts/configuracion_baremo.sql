@@ -431,6 +431,9 @@ VALUES(704, true, '050.030.010.000', 'Otro registro de la propiedad - Internacio
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id) 
 VALUES(705, true, '050.030.010.000', 'Licencia explotación', 1, 'INVENCION_LICENCIA_EXPLOTACION', 'SGI', 'EXTRA', 700);
 
+INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id) 
+VALUES(706, true, '050.030.010.000', 'Licencia explotación', 1, 'INVENCION_LICENCIA_EXPLOTACION', 'CVN', 'EXTRA', 700);
+
 update test.configuracion_baremo set mostrar_puntos = true;
 
 update test.configuracion_baremo set mostrar_puntos = false where tipo_baremo in ('COSTE_INDIRECTO', 'LIBRO_NUMERO_AUTORES', 'LIBRO_EDITORIAL_PRESTIGIO',

@@ -14,22 +14,20 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = ConvocatoriaBaremacion.TABLE_NAME)
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ConvocatoriaBaremacion extends BaseEntity {
+@SuperBuilder
+public class ConvocatoriaBaremacion extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "convocatoria_baremacion";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
