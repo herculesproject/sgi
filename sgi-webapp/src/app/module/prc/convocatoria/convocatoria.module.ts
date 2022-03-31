@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ConvocatoriaRoutingModule } from './convocatoria-routing.module';
+import { ConvocatoriaBaremacionListadoComponent } from './convocatoria-baremacion-listado/convocatoria-baremacion-listado.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ConvocatoriaBaremacionListadoComponent],
   imports: [
     CommonModule,
     SharedModule,
