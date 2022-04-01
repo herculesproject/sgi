@@ -299,10 +299,7 @@
       <!-- Proyecto colaborativo -->
       <mat-form-field fxFlex="33%" *ngIf="formGroup.controls.coordinado.value">
         <mat-label>{{'csp.proyecto.proyecto-colaborativo' | translate}}</mat-label>
-        <sgi-select-boolean formControlName="colaborativo" [required]="formPart.abiertoRequired"></sgi-select-boolean>
-        <mat-error *ngIf="formGroup.controls.colaborativo.errors?.required">
-          {{'error.required.entity' | translate:msgParamProyectoColaborativoEntity}}
-        </mat-error>
+        <sgi-select-boolean formControlName="colaborativo"></sgi-select-boolean>
       </mat-form-field>
     </div>
 

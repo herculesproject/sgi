@@ -32,7 +32,6 @@ const PROYECTO_HORAS_ANUALES_KEY = marker('csp.proyecto.horas-anuales');
 const PROYECTO_CAUSA_EXENCION_KEY = marker('csp.proyecto.causa-exencion');
 const PROYECTO_MODELO_EJECUCION_KEY = marker('csp.proyecto.modelo-ejecucion');
 const PROYECTO_PAQUETE_TRABAJO_KEY = marker('csp.proyecto-paquete-trabajo');
-const PROYECTO_PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colaborativo');
 const PROYECTO_PROYECTO_COORDINADO_KEY = marker('csp.proyecto.proyecto-coordinado');
 const PROYECTO_TITULO_KEY = marker('csp.proyecto.titulo');
 const PROYECTO_UNIDAD_GESTION_KEY = marker('csp.proyecto.unidad-gestion');
@@ -72,7 +71,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamCausaExencionEntity = {};
   msgParamModeloEjecucionEntity = {};
   msgParamPaqueteTrabajoEntity = {};
-  msgParamProyectoColaborativoEntity = {};
   msgParamTituloEntity = {};
   msgParamUnidadGestionEntity = {};
   msgParamFechaFinDefinitivaEntity = {};
@@ -248,12 +246,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       PROYECTO_PROYECTO_COORDINADO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamProyectoCoordinadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
-      PROYECTO_PROYECTO_COLABORATIVO_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoColaborativoEntity =
-      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_COORDINADOR_EXTERNO_KEY,
