@@ -457,8 +457,4 @@ export class ConvocatoriaRequisitoEquipoListadoExportService extends AbstractTab
       elementsRow.push('');
     }
   }
-
-  private notIsNullAndNotUndefined(value): boolean {
-    return value !== null && value !== undefined;
-  }
 }

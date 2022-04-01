@@ -455,8 +455,4 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       elementsRow.push('');
     }
   }
-
-  private notIsNullAndNotUndefined(value): boolean {
-    return value !== null && value !== undefined;
-  }
 }

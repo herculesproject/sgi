@@ -204,8 +204,4 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
     return elementsRow;
   }
 
-  private notIsNullAndNotUndefined(value): boolean {
-    return value !== null && value !== undefined;
-  }
-
 }
