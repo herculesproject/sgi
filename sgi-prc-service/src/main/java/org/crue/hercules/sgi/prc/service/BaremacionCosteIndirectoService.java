@@ -57,7 +57,7 @@ public abstract class BaremacionCosteIndirectoService extends BaremacionCommonSe
   private final RangoRepository rangoRepository;
 
   @Autowired
-  public BaremacionCosteIndirectoService(
+  protected BaremacionCosteIndirectoService(
       AliasEnumeradoRepository aliasEnumeradoRepository,
       ProduccionCientificaRepository produccionCientificaRepository,
       PuntuacionBaremoItemRepository puntuacionBaremoItemRepository,

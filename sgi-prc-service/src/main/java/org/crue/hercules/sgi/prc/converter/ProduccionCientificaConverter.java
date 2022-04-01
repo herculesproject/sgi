@@ -41,6 +41,9 @@ public class ProduccionCientificaConverter {
     ProduccionCientificaApiOutput output = modelMapper.map(produccionCientificaResumen,
         ProduccionCientificaApiOutput.class);
     output.setIdRef(produccionCientificaResumen.getProduccionCientificaRef());
+    output.setEpigrafeCVN(null != produccionCientificaResumen.getEpigrafeCVN()
+        ? produccionCientificaResumen.getEpigrafeCVN().getCode()
+        : null);
     return output;
   }
 
@@ -55,8 +58,9 @@ public class ProduccionCientificaConverter {
     ProduccionCientificaApiFullOutput output = modelMapper.map(produccionCientifica,
         ProduccionCientificaApiFullOutput.class);
     output.setIdRef(produccionCientifica.getProduccionCientificaRef());
-    output.setEpigrafeCVN(
-        null != produccionCientifica.getEpigrafeCVN() ? produccionCientifica.getEpigrafeCVN().getCode() : null);
+    output.setEpigrafeCVN(null != produccionCientifica.getEpigrafeCVN()
+        ? produccionCientifica.getEpigrafeCVN().getCode()
+        : null);
     return output;
   }
 

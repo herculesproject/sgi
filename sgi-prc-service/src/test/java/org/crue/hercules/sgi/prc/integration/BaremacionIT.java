@@ -493,7 +493,7 @@ class BaremacionIT extends BaremacionBaseIT {
 
     checkPuntuacionLibro20202021(idBaremacion, personaRef);
 
-    idBaremacion = getConvocatoriaBaremacionService().clone(idBaremacion, "CONVOCATORIA DUPLICATED").getId();
+    idBaremacion = getConvocatoriaBaremacionService().clone(idBaremacion, "Clonada - ", 0).getId();
 
     final ResponseEntity<Void> response2 = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.POST,

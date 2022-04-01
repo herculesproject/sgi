@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.prc.integration;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.BaremacionController;
@@ -29,22 +29,21 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = BaremacionController.MAPPING;
 
-  // @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-  //     // @formatter:off 
-  //     "classpath:scripts/configuracion_baremo.sql",
-  //     "classpath:scripts/configuracion_campo.sql",
-  //     "classpath:scripts/alias_enumerado.sql",
-  //     "classpath:scripts/convocatoria_baremacion.sql",
-  //     "classpath:scripts/baremo.sql",
-  //     "classpath:scripts/modulador.sql",
-  //     "classpath:scripts/rango.sql",
-  //     "classpath:scripts/tabla_indice.sql",
-  //     "classpath:scripts/indice_experimentalidad.sql",
-  //     // @formatter:on  
-  // })
-  // @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts =
-  // "classpath:cleanup.sql")
-  // @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off 
+      "classpath:scripts/configuracion_baremo.sql",
+      "classpath:scripts/configuracion_campo.sql",
+      "classpath:scripts/alias_enumerado.sql",
+      "classpath:scripts/convocatoria_baremacion.sql",
+      "classpath:scripts/baremo.sql",
+      "classpath:scripts/modulador.sql",
+      "classpath:scripts/rango.sql",
+      "classpath:scripts/tabla_indice.sql",
+      "classpath:scripts/indice_experimentalidad.sql",
+      // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   void baremacion_libro_and_sexenio_from_json() throws Exception {
 
     String produccionCientificaJson = "publicacion-libro.json";
@@ -61,7 +60,8 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
     String areaRefRaiz = "J";
     mockPersonaAndAreaConocimientoAndGrupoInvestigacion(personaRef, areaRef, areaRefRaiz);
 
-    mockSexenio(personaRef, "5");
+    mockSexenio(2020, personaRef, "5");
+    mockSexenio(2021, personaRef, "6");
 
     final ResponseEntity<Void> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.POST, buildRequestBaremacion(null, null),
@@ -76,45 +76,32 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
     List<PuntuacionBaremoItem> puntuacionBaremoItems = getPuntuacionBaremoItemRepository().findAll();
 
     int numPuntuaciones = puntuacionBaremoItems.size();
-    Assertions.assertThat(numPuntuaciones).as("numPuntuaciones").isEqualTo(3);
+    Assertions.assertThat(numPuntuaciones).as("numPuntuaciones").isEqualTo(4);
 
-    // Assertions.assertThat(puntuacionBaremoItems.get(0).getBaremoId()).as("BaremoId").isEqualTo(1L);
-    // Assertions.assertThat(puntuacionBaremoItems.get(0).getPuntos()).as("Puntos").isEqualTo(new
-    // BigDecimal("75.00"));
-
-    // Assertions.assertThat(puntuacionBaremoItems.get(1).getBaremoId()).as("BaremoId").isEqualTo(6L);
-    // Assertions.assertThat(puntuacionBaremoItems.get(1).getPuntos()).as("Puntos").isEqualTo(new
-    // BigDecimal("6.00"));
-
-    // Assertions.assertThat(puntuacionBaremoItems.get(2).getBaremoId()).as("BaremoId").isEqualTo(29L);
-    // Assertions.assertThat(puntuacionBaremoItems.get(2).getPuntos()).as("Puntos").isEqualTo(new
-    // BigDecimal("1.30"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 1L, new BigDecimal("75.00"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 1L, new BigDecimal("90.00"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 6L, new BigDecimal("6"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 29L, new BigDecimal("1.30"));
 
     List<PuntuacionItemInvestigador> puntuacionItemsInvestigador = getPuntuacionItemInvestigadorRepository()
         .findAll();
 
     int numPuntuacionesItemsInvestigador = puntuacionItemsInvestigador.size();
-    Assertions.assertThat(numPuntuacionesItemsInvestigador).as("numPuntuacionesItemsInvestigador").isEqualTo(2);
+    Assertions.assertThat(numPuntuacionesItemsInvestigador).as("numPuntuacionesItemsInvestigador").isEqualTo(3);
 
-    Assertions.assertThat(puntuacionItemsInvestigador.get(0).getPersonaRef()).as("PersonaRef").isEqualTo(personaRef);
-    Assertions.assertThat(puntuacionItemsInvestigador.get(0).getPuntos()).as("Puntos")
-        .isEqualTo(new BigDecimal("75.00"));
-
-    Assertions.assertThat(puntuacionItemsInvestigador.get(1).getPersonaRef()).as("PersonaRef").isEqualTo(personaRef);
-    Assertions.assertThat(puntuacionItemsInvestigador.get(1).getPuntos()).as("Puntos")
-        .isEqualTo(new BigDecimal("7.80"));
+    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("75.00"));
+    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("90.00"));
+    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("7.80"));
 
     List<PuntuacionGrupoInvestigador> puntuacionGrupoInvestigador = getPuntuacionGrupoInvestigadorRepository()
         .findAll();
 
     int numPuntuacionesGrupoInvestigador = puntuacionGrupoInvestigador.size();
-    Assertions.assertThat(numPuntuacionesGrupoInvestigador).as("numPuntuacionesGrupoInvestigador").isEqualTo(2);
+    Assertions.assertThat(numPuntuacionesGrupoInvestigador).as("numPuntuacionesGrupoInvestigador").isEqualTo(3);
 
-    Assertions.assertThat(puntuacionGrupoInvestigador.get(0).getPuntos()).as("PuntosGrupoInvestigador")
-        .isEqualTo(new BigDecimal("45.00"));
-
-    Assertions.assertThat(puntuacionGrupoInvestigador.get(1).getPuntos()).as("PuntosGrupoInvestigador")
-        .isEqualTo(new BigDecimal("4.68"));
+    checkPuntuacionGrupoInvestigador(puntuacionGrupoInvestigador, new BigDecimal("45.00"));
+    checkPuntuacionGrupoInvestigador(puntuacionGrupoInvestigador, new BigDecimal("54.00"));
+    checkPuntuacionGrupoInvestigador(puntuacionGrupoInvestigador, new BigDecimal("4.68"));
 
     List<PuntuacionGrupo> puntuacionGrupo = getPuntuacionGrupoRepository().findAll();
 
@@ -125,7 +112,7 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
         .isEqualTo(new BigDecimal("0.00"));
 
     Assertions.assertThat(puntuacionGrupo.get(0).getPuntosSexenios()).as("PuntosGrupoSexenios")
-        .isEqualTo(new BigDecimal("45.00"));
+        .isEqualTo(new BigDecimal("99.00"));
 
     Assertions.assertThat(puntuacionGrupo.get(0).getPuntosProduccion()).as("PuntosGrupoProduccion")
         .isEqualTo(new BigDecimal("4.68"));
@@ -137,20 +124,21 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
         .isEqualTo(new BigDecimal("0.00"));
 
     Assertions.assertThat(convocatoriaBaremacion.getPuntoSexenio()).as("PuntosBaremacionSexenios")
-        .isEqualTo(new BigDecimal("333.33"));
+        .isEqualTo(new BigDecimal("151.52"));
 
     Assertions.assertThat(convocatoriaBaremacion.getPuntoProduccion()).as("PuntosBaremacionProduccion")
         .isEqualTo(new BigDecimal("24038.46"));
   }
 
-  protected void mockSexenio(String personaRef, String numeroSexenios) {
-    BDDMockito.given(getSgiApiSgpService().findSexeniosByPersonaId(personaRef))
-        .willReturn((Optional.of(generarMockSexenio(numeroSexenios))));
+  protected void mockSexenio(Integer anio, String personaRef, String numeroSexenios) {
+    BDDMockito.given(getSgiApiSgpService().findSexeniosByAnio(anio))
+        .willReturn((Arrays.asList(generarMockSexenio(personaRef, numeroSexenios))));
   }
 
-  protected SexenioDto generarMockSexenio(String numeroSexenios) {
+  protected SexenioDto generarMockSexenio(String personaRef, String numeroSexenios) {
     return SexenioDto.builder()
         .numero(numeroSexenios)
+        .personaRef(personaRef)
         .build();
   }
 }

@@ -332,8 +332,7 @@ public class BaremacionProyectoService extends BaremacionCommonService {
           .build();
 
       Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientifaAndEstado(
-          produccionCientifica,
-          TipoEstadoProduccion.VALIDADO);
+          produccionCientifica, TipoEstadoProduccion.VALIDADO);
 
       addCampoProyectoTitulo(proyecto, produccionCientificaId);
       addCampoProyectoFechaInicio(proyecto, produccionCientificaId);

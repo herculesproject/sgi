@@ -16,5 +16,6 @@ import lombok.NoArgsConstructor;
 public class SexenioDto implements Serializable {
 
   private String numero;
+  private String personaRef;
   private String paisRef;
 }

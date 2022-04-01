@@ -127,11 +127,8 @@ public class BaremacionService {
       Integer anioFin = convocatoriaBaremacion.getUltimoAnio() + 1;
 
       baremacionInvencionService.copyInvenciones(anioInicio, anioFin);
-
-      // Baremacion sexenios
-      // baremacionSexenioService.evaluateSexenio(anioInicio, anioFin,
-      // convocatoriaBaremacionId);
       baremacionProyectoService.copyProyectos(anioInicio, anioFin);
+      baremacionSexenioService.copySexenios(anioInicio, anioFin);
 
       IntStream.range(anioInicio, anioFin).forEach(anio -> {
         BaremacionInput baremacionInput = ProduccionCientificaFieldFormatUtil.createBaremacionInput(anio,
@@ -154,6 +151,10 @@ public class BaremacionService {
         // Invenciones
         baremacionInput.setEpigrafeCVN(EpigrafeCVN.E050_030_010_000);
         baremacionInvencionService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
+
+        // Sexenios
+        baremacionInput.setEpigrafeCVN(EpigrafeCVN.E060_030_070_000);
+        baremacionSexenioService.evaluateProduccionCientificaByTypeAndAnio(baremacionInput);
 
         // Publicaciones libros
         baremacionInput.setEpigrafeCVN(EpigrafeCVN.E060_010_010_000);

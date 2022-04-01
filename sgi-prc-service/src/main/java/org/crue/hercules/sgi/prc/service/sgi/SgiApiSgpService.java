@@ -1,7 +1,10 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto;
@@ -165,37 +168,36 @@ public class SgiApiSgpService extends SgiApiBaseService {
   }
 
   /**
-   * Devuelve los sexenios de una persona a través de una consulta al ESB
+   * Devuelve los sexenios de todos las personas de un determinado año a través de
+   * una consulta al ESB
    *
-   * @param personaRef String
-   * @return Optional de {@link SexenioDto}
+   * @param anio Integer
+   * @return Lista de {@link SexenioDto}
    * 
    */
-  public Optional<SexenioDto> findSexeniosByPersonaId(String personaRef) {
-    log.debug("findSexeniosByPersonaId(personaRef)- start");
-    Optional<SexenioDto> sexenios = Optional.empty();
+  public List<SexenioDto> findSexeniosByAnio(Integer anio) {
+    log.debug("findSexeniosByAnio(anio)- start");
+    List<SexenioDto> result = new ArrayList<>();
 
     try {
       ServiceType serviceType = ServiceType.SGP;
       HttpMethod httpMethod = HttpMethod.GET;
       StringBuilder relativeUrl = new StringBuilder();
-      relativeUrl.append("/sexenios/persona/");
-      relativeUrl.append(personaRef);
+      relativeUrl.append("/sexenios/{anio}");
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
-      final SexenioDto response = super.<SexenioDto>callEndpoint(mergedURL,
-          httpMethod, new ParameterizedTypeReference<SexenioDto>() {
-          }, personaRef).getBody();
-
-      sexenios = Optional.of(response);
+      result = super.<List<SexenioDto>>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<List<SexenioDto>>() {
+          }, anio).getBody();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new MicroserviceCallException();
     }
-    log.debug("findSexeniosByPersonaId(personaRef)- end");
+    log.debug("findSexeniosByAnio(anio)- end");
 
-    return sexenios;
+    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
+
   }
 
 }

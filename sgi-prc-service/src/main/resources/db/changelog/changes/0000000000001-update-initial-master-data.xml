@@ -10,6 +10,15 @@
       <column name="tipo_formato" value="ENUMERADO" />
       <column name="validacion_adicional" valueBoolean="false" />
     </insert>
+    <insert tableName="configuracion_campo">
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="codigo_cvn" value="ANIO_SEXENIOS" />
+      <column name="epigrafe_cvn" value="060.030.070.000" />
+      <column name="fecha_referencia_fin" valueBoolean="false" />
+      <column name="fecha_referencia_inicio" valueBoolean="true" />
+      <column name="tipo_formato" value="FECHA" />
+      <column name="validacion_adicional" valueBoolean="false" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000001-configuracion_baremos">

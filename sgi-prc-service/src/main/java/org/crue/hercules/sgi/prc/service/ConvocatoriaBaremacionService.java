@@ -53,16 +53,27 @@ public class ConvocatoriaBaremacionService {
         }).orElse(null);
   }
 
+  /**
+   * Clona una convocatoria estableciendo un prefijo al nombre y sumándole el
+   * número de años pasados como parámetro
+   * 
+   * @param convocatoriaBaremacionId Id de {@link ConvocatoriaBaremacion}
+   * @param prefixNombre             Prefijo a añadir al nombre de la nueva
+   *                                 {@link ConvocatoriaBaremacion}
+   * @param aniosAdd                 Años a añadir al año de la nueva
+   *                                 {@link ConvocatoriaBaremacion}
+   * @return nueva {@link ConvocatoriaBaremacion}
+   */
   @Transactional
-  public ConvocatoriaBaremacion clone(Long convocatoriaBaremacionId, String nombre) {
-    log.debug("clone(convocatoriaBaremacionId, nombre) - start");
+  public ConvocatoriaBaremacion clone(Long convocatoriaBaremacionId, String prefixNombre, Integer aniosAdd) {
+    log.debug("clone(convocatoriaBaremacionId, prefixNombre, anioAdded) - start");
 
     return convocatoriaBaremacionRepository
         .findById(convocatoriaBaremacionId).map(convocatoria -> {
           ConvocatoriaBaremacion convocatoriaBaremacionClone = ConvocatoriaBaremacion.builder()
-              .nombre(nombre)
+              .nombre(prefixNombre + convocatoria.getNombre())
               .ultimoAnio(convocatoria.getUltimoAnio())
-              .anio(convocatoria.getAnio())
+              .anio(convocatoria.getAnio() + aniosAdd)
               .aniosBaremables(convocatoria.getAniosBaremables())
               .importeTotal(convocatoria.getImporteTotal())
               .partidaPresupuestaria(convocatoria.getPartidaPresupuestaria())
