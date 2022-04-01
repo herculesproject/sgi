@@ -38,21 +38,21 @@
     <insert tableName="grupo_especial_investigacion">
       <column name="id" valueSequenceNext="grupo_especial_investigacion_seq" />
       <column name="especial_investigacion" valueBoolean="false" />
-      <column name="fecha_inicio" valueDate="2021-12-07T23:00:00" />
+      <column name="fecha_inicio" valueDate="2022-01-02T23:00:00" />
       <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
     </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000006-grupo_update">
     <update tableName="grupo">
-      <column name="grupo_especial_investigacion_id" valueComputed="(select id from ${schemaPrefix}grupo_especial_investigacion where especial_investigacion=false and grupo_id =(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3') order by fecha_inicio desc limit 1)" />
+      <column name="grupo_especial_investigacion_id" valueComputed="(select id from ${schemaPrefix}grupo_especial_investigacion where grupo_id=(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3') order by fecha_inicio desc FETCH FIRST 1 ROW only)" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
       </whereParams>
     </update>
     <update tableName="grupo">
-      <column name="grupo_especial_investigacion_id" valueComputed="(select id from ${schemaPrefix}grupo_especial_investigacion where especial_investigacion=false and grupo_id =(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1') order by fecha_inicio desc limit 1)" />
+      <column name="grupo_especial_investigacion_id" valueComputed="(select id from ${schemaPrefix}grupo_especial_investigacion where grupo_id=(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1') order by fecha_inicio desc FETCH FIRST 1 ROW only)" />
       <where>:name=:value</where>
       <whereParams>
         <param name="id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
