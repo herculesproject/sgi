@@ -8,6 +8,7 @@ public enum ServiceType {
   CNF,
   CSP,
   PII,
+  PRC,
   REL,
   REP,
   SGEPII,

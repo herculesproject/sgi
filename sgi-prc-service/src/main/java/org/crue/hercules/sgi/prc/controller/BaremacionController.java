@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog_;
 import org.crue.hercules.sgi.prc.service.BaremacionService;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionLogService;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiTpService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,25 @@ public class BaremacionController {
   private final BaremacionService service;
   private final SgiConfigProperties sgiConfigProperties;
   private final ConvocatoriaBaremacionLogService convocatoriaBaremacionLogService;
+  private final SgiApiTpService sgiApiTpService;
+
+  /**
+   * Crea la tarea programada que lanza el algoritmo de baremación a partir de
+   * {@link ConvocatoriaBaremacion}
+   * con id indicado.
+   *
+   * @param convocatoriaBaremacionId id de {@link ConvocatoriaBaremacion}.
+   * @return Log
+   */
+  @PostMapping("/createTask/{convocatoriaBaremacionId}")
+  @PreAuthorize("hasAuthority('PRC-CON-BAR')")
+  @ResponseStatus(value = HttpStatus.ACCEPTED)
+  public Long createBaremacionTask(@PathVariable Long convocatoriaBaremacionId) {
+    log.debug("createBaremacionTask({}, {}) - start", convocatoriaBaremacionId);
+
+    Instant fechaBaremacion = Instant.now().plusSeconds(10);
+    return sgiApiTpService.createCallBaremacionTaskId(convocatoriaBaremacionId, fechaBaremacion);
+  }
 
   /**
    * Lanza el algoritmo de baremación a partir de {@link ConvocatoriaBaremacion}
@@ -48,17 +68,14 @@ public class BaremacionController {
    * @return Log
    */
   @PostMapping("/{convocatoriaBaremacionId}")
-  @PreAuthorize("hasAuthority('PRC-CON-BAR')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-prc')) or hasAuthority('PRC-CON-BAR')")
   @ResponseStatus(value = HttpStatus.ACCEPTED)
   public String baremacion(@PathVariable Long convocatoriaBaremacionId) {
-    log.debug("baremacion(String convocatoriaBaremacionId) -  start");
+    log.debug("baremacion({}, {}) - start", convocatoriaBaremacionId);
 
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
-    // TODO pasar a tarea programada
     service.baremacion(convocatoriaBaremacionId);
-
-    log.debug("baremacion(String convocatoriaBaremacionId) -  end");
 
     // TODO quitar despues de pruebas
 
