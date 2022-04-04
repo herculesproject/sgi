@@ -65,7 +65,7 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
       {
         nombre: new FormControl(this.solicitudGrupo.solicitud.titulo, [Validators.required, Validators.maxLength(250)]),
         fechaInicio: new FormControl(null, [Validators.required]),
-        fechaFin: new FormControl(null, [Validators.required]),
+        fechaFin: new FormControl(null),
       },
       {
         validators: [

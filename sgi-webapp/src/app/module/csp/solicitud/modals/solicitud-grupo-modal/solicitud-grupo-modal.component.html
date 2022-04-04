@@ -31,13 +31,10 @@
       <!--Fecha Fin-->
       <mat-form-field fxFlex="50%" sgiEndDate>
         <mat-label>{{'label.fecha-fin' | translate}}</mat-label>
-        <input matInput formControlName="fechaFin" [matDatepicker]="fechaFin" required>
+        <input matInput formControlName="fechaFin" [matDatepicker]="fechaFin">
         <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
         <mat-datepicker #fechaFin>
         </mat-datepicker>
-        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
-          {{'error.required.entity' | translate:msgParamFechaFinEntity}}
-        </mat-error>
         <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
           {{'error.after.fecha-fin' | translate}}
         </mat-error>
