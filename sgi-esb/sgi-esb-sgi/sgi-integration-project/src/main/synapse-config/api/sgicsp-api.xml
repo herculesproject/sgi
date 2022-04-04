@@ -30,6 +30,30 @@
     </faultSequence>
   </resource>
 
+  <resource methods="GET" uri-template="/proyectos/{id}/areasconocimento">
+    <inSequence>
+      <!-- Get URL from HTTP transport properties-->
+      <property name="url" expression="get-property('axis2','REST_URL_POSTFIX')" />
+      <!-- Rewrite get URL property as input and modify the same input property as output -->
+      <rewrite inProperty="url" outProperty="url">
+        <rewriterule>
+          <action type="replace" regex="areasconocimento" value="proyecto-areas-conocimiento" fragment="path" />
+        </rewriterule>
+      </rewrite>
+      <!-- Set URL HTTP transport properties by rewrited value -->
+      <property name="REST_URL_POSTFIX" scope="axis2" expression="get-property('url')" />
+      <send>
+        <endpoint key="sgicsp-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
   <resource methods="GET" uri-template="/proyectos/{id}/contexto">
     <inSequence>
       <!-- Get URL from HTTP transport properties-->
