@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,8 +13,8 @@ import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
-import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
@@ -1659,13 +1658,6 @@ public class ProyectoServiceImpl implements ProyectoService {
   public ProyectoPresupuestoTotales getTotales(Long proyectoId) {
     log.debug("getTotales(Long proyectoId) - start");
     final ProyectoPresupuestoTotales returnValue = repository.getTotales(proyectoId);
-
-    returnValue.setImporteTotalPresupuesto(
-        returnValue.getImporteTotalPresupuestoUniversidadSinCosteIndirecto()
-            .add(returnValue.getImporteTotalPresupuestoSocios()));
-    returnValue.setImporteTotalConcedido(
-        returnValue.getImporteTotalConcedidoUniversidadSinCosteIndirecto()
-            .add(returnValue.getImporteTotalConcedidoSocios()));
     log.debug("getTotales(Long proyectoId) - end");
     return returnValue;
   }

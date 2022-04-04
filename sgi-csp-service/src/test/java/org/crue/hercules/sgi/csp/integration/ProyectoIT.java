@@ -2534,8 +2534,8 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getBody().getImporteTotalConcedidoUniversidadSinCosteIndirecto().doubleValue())
         .isEqualTo(6000d);
     Assertions.assertThat(response.getBody().getImporteTotalConcedidoSocios().doubleValue()).isEqualTo(0d);
-    Assertions.assertThat(response.getBody().getImporteTotalPresupuesto().doubleValue()).isEqualTo(6000d);
-    Assertions.assertThat(response.getBody().getImporteTotalConcedido().doubleValue()).isEqualTo(6000d);
+    Assertions.assertThat(response.getBody().getImporteTotalPresupuesto().doubleValue()).isEqualTo(71000d);
+    Assertions.assertThat(response.getBody().getImporteTotalConcedido().doubleValue()).isEqualTo(63000d);
     Assertions.assertThat(response.getBody().getImporteTotalPresupuestoUniversidadCostesIndirectos().doubleValue())
         .isEqualTo(65000d);
     Assertions.assertThat(response.getBody().getImporteTotalConcedidoUniversidadCostesIndirectos().doubleValue())
