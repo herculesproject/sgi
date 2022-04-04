@@ -136,4 +136,15 @@
       </column>
     </addColumn>
   </changeSet>
+
+  <!-- configuracion -->
+  <changeSet author="user (generated)" id="0000000000001-12">
+    <createSequence incrementBy="1" sequenceName="configuracion_seq" startValue="1" />
+    <createTable tableName="configuracion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="configuracionPK" />
+      </column>
+      <column name="horas_proceso_baremacion" type="INT" />
+    </createTable>
+  </changeSet>
 </databaseChangeLog>

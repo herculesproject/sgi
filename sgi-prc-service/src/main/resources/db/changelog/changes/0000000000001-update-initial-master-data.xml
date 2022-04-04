@@ -2553,4 +2553,11 @@
     </insert>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="0000000000001-configuracion">
+    <insert tableName="configuracion">
+      <column name="id" valueSequenceNext="configuracion_campo_seq" />
+      <column name="horas_proceso_baremacion" valueNumeric="5" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
