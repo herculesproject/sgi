@@ -64,19 +64,13 @@ export class ProyectoSolicitudListadoExportService extends AbstractTableExportFi
     if (!this.isExcelOrCsv(reportConfig.outputType)) {
       return this.getColumnsSolicitudNotExcel();
     } else {
-      const prefixTitleSolicitud = this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR) + ': ';
+      const prefixTitleSolicitud = this.translate.instant(SOLICITUD_KEY) + ': ';
       return this.getColumnsSolicitud(prefixTitleSolicitud, false);
     }
   }
 
   private getColumnsSolicitudNotExcel(): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = this.getColumnsSolicitud('', true);
-
-    columns.push({
-      name: SOLICITUD_FIELD,
-      title: this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR),
-      type: ColumnType.STRING
-    });
 
     const titleI18n = this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
 
@@ -95,35 +89,35 @@ export class ProyectoSolicitudListadoExportService extends AbstractTableExportFi
 
     const columnCodigoSolicitud: ISgiColumnReport = {
       name: SOLICITUD_CODIGO_FIELD,
-      title: prefix + ': ' + this.translate.instant(SOLICITUD_CODIGO_KEY),
+      title: prefix + this.translate.instant(SOLICITUD_CODIGO_KEY),
       type: ColumnType.STRING,
     };
     columns.push(columnCodigoSolicitud);
 
     const columnNombreSolicitud: ISgiColumnReport = {
       name: SOLICITUD_FIELD,
-      title: prefix + ': ' + this.translate.instant(SOLICITUD_TITULO_KEY),
+      title: prefix + this.translate.instant(SOLICITUD_TITULO_KEY),
       type: ColumnType.STRING,
     };
     columns.push(columnNombreSolicitud);
 
     const columnCodigoExternoSolicitud: ISgiColumnReport = {
       name: SOLICITUD_CODIGO_EXTERNO_FIELD,
-      title: prefix + ': ' + this.translate.instant(SOLICITUD_CODIGO_EXTERNO_KEY),
+      title: prefix + this.translate.instant(SOLICITUD_CODIGO_EXTERNO_KEY),
       type: ColumnType.STRING,
     };
     columns.push(columnCodigoExternoSolicitud);
 
     const columnEstadoSolicitud: ISgiColumnReport = {
       name: SOLICITUD_ESTADO_FIELD,
-      title: prefix + ': ' + this.translate.instant(SOLICITUD_ESTADO_KEY),
+      title: prefix + this.translate.instant(SOLICITUD_ESTADO_KEY),
       type: ColumnType.STRING,
     };
     columns.push(columnEstadoSolicitud);
 
     const columnFechaPublicacionSolicitud: ISgiColumnReport = {
       name: SOLICITUD_FECHA_ESTADO_FIELD,
-      title: prefix + ': ' + this.translate.instant(SOLICITUD_FECHA_ESTADO_KEY),
+      title: prefix + this.translate.instant(SOLICITUD_FECHA_ESTADO_KEY),
       type: allString ? ColumnType.STRING : ColumnType.DATE,
     };
     columns.push(columnFechaPublicacionSolicitud);

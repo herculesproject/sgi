@@ -83,7 +83,7 @@ export class ProyectoPresupuestoListadoExportService extends AbstractTableExport
     if (!this.isExcelOrCsv(reportConfig.outputType)) {
       return this.getColumnsPresupuestoNotExcel();
     } else {
-      const prefixTitlePresupuesto = this.translate.instant(PRESUPUESTO_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR) + ': ';
+      const prefixTitlePresupuesto = this.translate.instant(PRESUPUESTO_KEY) + ': ';
 
       return this.getColumnsPresupuesto(prefixTitlePresupuesto, false);
     }
@@ -92,7 +92,7 @@ export class ProyectoPresupuestoListadoExportService extends AbstractTableExport
   private getColumnsPresupuestoNotExcel(): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = this.getColumnsPresupuesto('', true);
 
-    const titleI18n = this.translate.instant(PRESUPUESTO_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
+    const titleI18n = this.translate.instant(PRESUPUESTO_KEY);
 
     const columnPresupuesto: ISgiColumnReport = {
       name: PRESUPUESTO_FIELD,
