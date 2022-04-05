@@ -603,7 +603,7 @@ public class SolicitudService {
    */
   public String getCodigoRegistroInterno(Long id) {
     log.debug("getCodigoRegistroInterno(Long id) - start");
-    final String returnValue = repository.findById(id).map(sol -> sol.getCodigoRegistroInterno())
+    final String returnValue = repository.findById(id).map(Solicitud::getCodigoRegistroInterno)
         .orElseThrow(() -> new SolicitudNotFoundException(id));
     log.debug("getCodigoRegistroInterno(Long id) - end");
     return returnValue;
@@ -628,9 +628,9 @@ public class SolicitudService {
           equipoTrabajo.peticionEvaluacion(peticionEvaluacion);
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
           return equipoTrabajo.build();
-        }).distinct().forEach(equipoTrabajo -> {
-          sgiApiEtiService.newEquipoTrabajo(peticionEvaluacion.getId(), equipoTrabajo);
-        });
+        })
+        .distinct()
+        .forEach(equipoTrabajo -> sgiApiEtiService.newEquipoTrabajo(peticionEvaluacion.getId(), equipoTrabajo));
     log.debug(
         "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - end");
   }
@@ -1151,6 +1151,11 @@ public class SolicitudService {
                 convocatoria.getFechaConcesion(),
                 enlaces);
           }
+          break;
+        default:
+          log.debug(
+              "enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - El estado {} no tiene comunicado",
+              estadoSolicitud.getEstado());
           break;
       }
       log.debug("enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
