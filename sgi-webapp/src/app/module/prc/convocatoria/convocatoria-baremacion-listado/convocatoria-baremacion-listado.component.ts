@@ -6,6 +6,7 @@ import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -14,8 +15,10 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { isConvocatoriaBaremacionEditable } from '../convocatoria-baremacion.resolver';
 
 const MSG_ERROR = marker('error.load');
+const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_REACTIVE = marker('msg.reactivate.entity');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
@@ -30,8 +33,10 @@ const CONVOCATORIA_BAREMACION_KEY = marker('prc.convocatoria');
   styleUrls: ['./convocatoria-baremacion-listado.component.scss']
 })
 export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginationComponent<IConvocatoriaBaremacion> implements OnInit {
+  ROUTE_NAMES = ROUTE_NAMES;
   fxLayoutProperties: FxLayoutProperties;
 
+  textoCrear: string;
   textoDesactivar: string;
   textoReactivar: string;
   textoErrorDesactivar: string;
@@ -150,10 +155,22 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
   }
 
   isConvocatoriaEditable(convocatoriaBaremacion: IConvocatoriaBaremacion): boolean {
-    return convocatoriaBaremacion.activo && convocatoriaBaremacion.fechaInicioEjecucion === null;
+    return isConvocatoriaBaremacionEditable(convocatoriaBaremacion);
   }
 
   private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_BAREMACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_NEW,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
     this.translate.get(
       CONVOCATORIA_BAREMACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

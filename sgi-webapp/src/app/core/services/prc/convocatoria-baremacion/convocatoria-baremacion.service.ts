@@ -2,16 +2,32 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import {
+  CreateCtor, FindByIdCtor, mixinCreate,
+  mixinFindById, mixinUpdate, SgiRestBaseService,
+  SgiRestFindOptions, SgiRestListResult, UpdateCtor
+} from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { IConvocatoriaBaremacionRequest } from './convocatoria-baremacion-request';
+import { CONVOCATORIA_BAREMACION_REQUEST_CONVERTER } from './convocatoria-baremacion-request.converter';
 import { IConvocatoriaBaremacionResponse } from './convocatoria-baremacion-response';
 import { CONVOCATORIA_BAREMACION_RESPONSE_CONVERTER } from './convocatoria-baremacion-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _ConvocatoriaBaremacionMixinBase:
   FindByIdCtor<number, IConvocatoriaBaremacion, IConvocatoriaBaremacionResponse> &
+  CreateCtor<IConvocatoriaBaremacion, IConvocatoriaBaremacion, IConvocatoriaBaremacionRequest, IConvocatoriaBaremacionResponse> &
+  UpdateCtor<number, IConvocatoriaBaremacion, IConvocatoriaBaremacion, IConvocatoriaBaremacionRequest, IConvocatoriaBaremacionResponse> &
   typeof SgiRestBaseService = mixinFindById(
-    SgiRestBaseService,
+    mixinCreate(
+      mixinUpdate(
+        SgiRestBaseService,
+        CONVOCATORIA_BAREMACION_REQUEST_CONVERTER,
+        CONVOCATORIA_BAREMACION_RESPONSE_CONVERTER
+      ),
+      CONVOCATORIA_BAREMACION_REQUEST_CONVERTER,
+      CONVOCATORIA_BAREMACION_RESPONSE_CONVERTER
+    ),
     CONVOCATORIA_BAREMACION_RESPONSE_CONVERTER
   );
 

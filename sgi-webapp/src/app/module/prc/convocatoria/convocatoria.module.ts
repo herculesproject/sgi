@@ -7,9 +7,17 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ConvocatoriaRoutingModule } from './convocatoria-routing.module';
 import { ConvocatoriaBaremacionListadoComponent } from './convocatoria-baremacion-listado/convocatoria-baremacion-listado.component';
+import { ConvocatoriaBaremacionCrearComponent } from './convocatoria-baremacion-crear/convocatoria-baremacion-crear.component';
+import { ConvocatoriaBaremacionEditarComponent } from './convocatoria-baremacion-editar/convocatoria-baremacion-editar.component';
+import { ConvocatoriaBaremacionDatosGeneralesComponent } from './convocatoria-baremacion-formulario/convocatoria-baremacion-datos-generales/convocatoria-baremacion-datos-generales.component';
 
 @NgModule({
-  declarations: [ConvocatoriaBaremacionListadoComponent],
+  declarations: [
+    ConvocatoriaBaremacionListadoComponent,
+    ConvocatoriaBaremacionCrearComponent,
+    ConvocatoriaBaremacionEditarComponent,
+    ConvocatoriaBaremacionDatosGeneralesComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

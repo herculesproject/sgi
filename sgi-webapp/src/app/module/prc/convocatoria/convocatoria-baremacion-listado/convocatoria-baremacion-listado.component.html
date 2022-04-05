@@ -105,6 +105,23 @@
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
           </ng-container>
+          <ng-container *sgiHasAuthority="'PRC-CON-V'">
+            <ng-container *ngTemplateOutlet="viewButton"></ng-container>
+          </ng-container>
+          <ng-container *sgiHasAuthority="'PRC-CON-E'">
+            <ng-container *ngTemplateOutlet="isConvocatoriaEditable(convocatoriaBaremacion) ? editButton : viewButton">
+            </ng-container>
+          </ng-container>
+          <ng-template #editButton>
+            <a mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[convocatoriaBaremacion.id]">
+              <mat-icon color="primary">border_color</mat-icon>
+            </a>
+          </ng-template>
+          <ng-template #viewButton>
+            <a mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[convocatoriaBaremacion.id]">
+              <mat-icon color="primary">visibility</mat-icon>
+            </a>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -114,4 +131,8 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
     </mat-paginator>
   </div>
+  <sgi-menu-content-footer *sgiHasAuthority="'PRC-CON-C'">
+    <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+    </sgi-footer-crear>
+  </sgi-menu-content-footer>
 </sgi-menu-content>
