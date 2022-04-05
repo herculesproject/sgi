@@ -15,8 +15,12 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
+import org.crue.hercules.sgi.prc.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.ModuladorRepository;
+import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.RangoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +54,21 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
 
   @MockBean
   private BaremoRepository baremoRepository;
+
+  @MockBean
+  private ConfiguracionRepository configuracionRepository;
+
+  @MockBean
+  private PuntuacionGrupoRepository puntuacionGrupoRepository;
+
+  @MockBean
+  private PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository;
+
+  @MockBean
+  private ProduccionCientificaRepository produccionCientificaRepository;
+
+  @MockBean
+  private ProduccionCientificaBuilderService produccionCientificaBuilderService;
 
   @MockBean
   private EntityManager entityManager;

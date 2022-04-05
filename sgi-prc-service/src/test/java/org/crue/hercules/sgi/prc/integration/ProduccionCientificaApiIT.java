@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.dto.EpigrafeCVNOutput;
@@ -29,11 +30,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProduccionCientificaApiIT extends ProduccionCientificaBaseIT {
 
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void create_ReturnsProduccionCientifica() throws Exception {
+  // @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts =
+  // "classpath:cleanup.sql")
+  // @Test
+  void create_ReturnsProduccionCientifica_load_test() throws Exception {
     ProduccionCientificaApiCreateInput produccionCientifica = generarMockProduccionCientificaApiInput();
+    String idRef = produccionCientifica.getIdRef();
+    IntStream.range(0, 40000)
+        .forEach(i -> {
+          produccionCientifica.setIdRef(idRef + "_" + i);
+          try {
+            createProduccionCientifica(produccionCientifica);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        });
+  }
 
+  private void createProduccionCientifica(ProduccionCientificaApiCreateInput produccionCientifica) throws Exception {
     final ResponseEntity<ProduccionCientificaApiFullOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH_API,
         HttpMethod.POST,
         buildRequestProduccionCientificaApi(null, produccionCientifica), ProduccionCientificaApiFullOutput.class);
@@ -67,6 +81,15 @@ class ProduccionCientificaApiIT extends ProduccionCientificaBaseIT {
         .as("number of acreditaciones created").hasSize(3);
     Assertions.assertThat(getProyectoRepository().findAllByProduccionCientificaId(produccionCientificaId))
         .as("number of proyectos created").hasSize(3);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void create_ReturnsProduccionCientifica() throws Exception {
+    ProduccionCientificaApiCreateInput produccionCientifica = generarMockProduccionCientificaApiInput();
+
+    createProduccionCientifica(produccionCientifica);
+
   }
 
   @Test

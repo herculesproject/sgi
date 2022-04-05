@@ -1,19 +1,27 @@
 package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.Modulador;
+import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.Rango;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
+import org.crue.hercules.sgi.prc.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
 import org.crue.hercules.sgi.prc.repository.ModuladorRepository;
+import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
+import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.RangoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.ConvocatoriaBaremacionSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,10 +44,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ConvocatoriaBaremacionService {
 
+  private static final String ENTITY = "entity";
+  private static final String FIELD = "field";
   private final ConvocatoriaBaremacionRepository convocatoriaBaremacionRepository;
   private final ModuladorRepository moduladorRepository;
   private final RangoRepository rangoRepository;
   private final BaremoRepository baremoRepository;
+  private final ConfiguracionRepository configuracionRepository;
+  private final PuntuacionGrupoRepository puntuacionGrupoRepository;
+  private final PuntuacionGrupoInvestigadorRepository puntuacionGrupoInvestigadorRepository;
+  private final ProduccionCientificaRepository produccionCientificaRepository;
+  private final ProduccionCientificaBuilderService produccionCientificaBuilderService;
+
+  private final SgiConfigProperties sgiConfigProperties;
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public ConvocatoriaBaremacion updateFechaInicioEjecucion(Long convocatoriaBaremacionId,
@@ -179,8 +196,8 @@ public class ConvocatoriaBaremacionService {
     Assert.notNull(id,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+            .parameter(FIELD, ApplicationContextSupport.getMessage("id"))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
 
     return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
       if (convocatoriaBaremacion.getActivo()) {
@@ -210,16 +227,16 @@ public class ConvocatoriaBaremacionService {
     Assert.notNull(id,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+            .parameter(FIELD, ApplicationContextSupport.getMessage("id"))
+            .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
 
     return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
       // Una ConvocatoriaBaremacion con baremación ya realizada no se puede desactivar
       Assert.isNull(convocatoriaBaremacion.getFechaInicioEjecucion(),
           // Defer message resolution untill is needed
           () -> ProblemMessage.builder().key(Assert.class, "isNull")
-              .parameter("field", ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
-              .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+              .parameter(FIELD, ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
+              .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
 
       if (!convocatoriaBaremacion.getActivo()) {
         log.debug("desactivar(Long id) - end");
@@ -234,4 +251,51 @@ public class ConvocatoriaBaremacionService {
       return returnValue;
     }).orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(id));
   }
+
+  /**
+   * Resetea las {@link ConvocatoriaBaremacion} que han iniciado la baremación
+   * pero han superado el tiempo de finalización
+   */
+  @Transactional
+  public void reset() {
+    log.debug("reset() - start");
+
+    Integer numHoras = configuracionRepository.findAll().get(0).getHorasProcesoBaremacion();
+
+    Instant fechaLimiteBaremacion = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant()
+        .minus(numHoras, ChronoUnit.HOURS);
+
+    Specification<ConvocatoriaBaremacion> specs = ConvocatoriaBaremacionSpecifications
+        .isResettable(fechaLimiteBaremacion);
+
+    convocatoriaBaremacionRepository.findAll(specs).stream().forEach(this::resetDatesConvocatoria);
+
+    log.debug("reset() - end");
+  }
+
+  @Transactional
+  public void resetDatesConvocatoria(ConvocatoriaBaremacion convocatoriaBaremacion) {
+    convocatoriaBaremacion.setFechaInicioEjecucion(null);
+    convocatoriaBaremacion.setFechaFinEjecucion(null);
+    convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
+
+    this.deleteItemsConvocatoriaBaremacion(convocatoriaBaremacion);
+  }
+
+  @Transactional
+  public void deleteItemsConvocatoriaBaremacion(ConvocatoriaBaremacion convocatoriaBaremacion) {
+    Long convocatoriaBaremacionId = convocatoriaBaremacion.getId();
+    puntuacionGrupoRepository.findByConvocatoriaBaremacionId(convocatoriaBaremacionId).stream()
+        .forEach(this::deletePuntuacionGrupo);
+
+    produccionCientificaRepository.findByConvocatoriaBaremacionId(convocatoriaBaremacionId)
+        .forEach(produccionCientificaBuilderService::deleteProduccionCientifica);
+  }
+
+  private void deletePuntuacionGrupo(PuntuacionGrupo puntuacionGrupo) {
+    Long puntuacionGrupoId = puntuacionGrupo.getId();
+    puntuacionGrupoInvestigadorRepository.deleteInBulkByPuntuacionGrupoId(puntuacionGrupoId);
+    puntuacionGrupoRepository.deleteById(puntuacionGrupoId);
+  }
+
 }

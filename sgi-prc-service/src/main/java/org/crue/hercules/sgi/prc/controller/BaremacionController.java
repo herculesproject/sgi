@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog_;
 import org.crue.hercules.sgi.prc.service.BaremacionService;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionLogService;
+import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiTpService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,6 +41,7 @@ public class BaremacionController {
   private final BaremacionService service;
   private final SgiConfigProperties sgiConfigProperties;
   private final ConvocatoriaBaremacionLogService convocatoriaBaremacionLogService;
+  private final ConvocatoriaBaremacionService convocatoriaBaremacionService;
   private final SgiApiTpService sgiApiTpService;
 
   /**
@@ -71,7 +73,7 @@ public class BaremacionController {
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-prc')) or hasAuthority('PRC-CON-BAR')")
   @ResponseStatus(value = HttpStatus.ACCEPTED)
   public String baremacion(@PathVariable Long convocatoriaBaremacionId) {
-    log.debug("baremacion({}, {}) - start", convocatoriaBaremacionId);
+    log.debug("baremacion({}) - start", convocatoriaBaremacionId);
 
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
@@ -88,5 +90,20 @@ public class BaremacionController {
         .getContent().stream()
         .map(ConvocatoriaBaremacionLog::getTrace)
         .collect(Collectors.joining("\n"));
+  }
+
+  /**
+   * Resetea las {@link ConvocatoriaBaremacion} que han iniciado la baremación
+   * pero han superado el tiempo de finalización
+   */
+  @PostMapping("/reset")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-prc')) or hasAuthority('PRC-CON-BAR')")
+  @ResponseStatus(value = HttpStatus.ACCEPTED)
+  public void reset() {
+    log.debug("reset() - start");
+
+    convocatoriaBaremacionService.reset();
+
+    log.debug("reset() - end");
   }
 }

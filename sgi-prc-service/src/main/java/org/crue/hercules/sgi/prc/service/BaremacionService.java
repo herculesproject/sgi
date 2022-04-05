@@ -21,7 +21,6 @@ import org.crue.hercules.sgi.prc.model.PuntuacionGrupoInvestigador;
 import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConvocatoriaBaremacionRepository;
-import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
@@ -51,7 +50,6 @@ public class BaremacionService {
   private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
   private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
 
-  private final ProduccionCientificaRepository produccionCientificaRepository;
   private final BaremoRepository baremoRepository;
   private final PuntuacionItemInvestigadorRepository puntuacionItemInvestigadorRepository;
   private final PuntuacionGrupoRepository puntuacionGrupoRepository;
@@ -77,7 +75,6 @@ public class BaremacionService {
   private final SgiApiCspService sgiApiCspService;
 
   private final SgiConfigProperties sgiConfigProperties;
-  private final ProduccionCientificaBuilderService produccionCientificaBuilderService;
 
   @Transactional
   public synchronized void baremacion(Long convocatoriaBaremacionId) {
@@ -115,11 +112,7 @@ public class BaremacionService {
     Long convocatoriaBaremacionId = convocatoriaBaremacion.getId();
     try {
 
-      puntuacionGrupoRepository.findByConvocatoriaBaremacionId(convocatoriaBaremacionId).stream()
-          .forEach(this::deletePuntuacionGrupo);
-
-      produccionCientificaRepository.findByConvocatoriaBaremacionId(convocatoriaBaremacionId)
-          .forEach(produccionCientificaBuilderService::deleteProduccionCientifica);
+      convocatoriaBaremacionService.deleteItemsConvocatoriaBaremacion(convocatoriaBaremacion);
 
       convocatoriaBaremacionLogService.save(convocatoriaBaremacionId, "Inicio");
 
@@ -196,12 +189,6 @@ public class BaremacionService {
       convocatoriaBaremacionService.updateFechaInicioEjecucion(convocatoriaBaremacionId, null);
     }
     log.debug("baremacion(convocatoriaBaremacion) - end");
-  }
-
-  private void deletePuntuacionGrupo(PuntuacionGrupo puntuacionGrupo) {
-    Long puntuacionGrupoId = puntuacionGrupo.getId();
-    puntuacionGrupoInvestigadorRepository.deleteInBulkByPuntuacionGrupoId(puntuacionGrupoId);
-    puntuacionGrupoRepository.deleteById(puntuacionGrupoId);
   }
 
   private void evaluatePuntosConvocatoriaBaremacion(Long convocatoriaBaremacionId) {
