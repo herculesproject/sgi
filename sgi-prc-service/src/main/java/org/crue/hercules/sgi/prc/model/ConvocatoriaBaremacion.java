@@ -13,6 +13,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnActivar;
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnActualizar;
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnCrear;
+import org.crue.hercules.sgi.prc.validation.UniqueAnioConvocatoriaBaremacionActiva;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +33,8 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @SuperBuilder
+@UniqueAnioConvocatoriaBaremacionActiva(groups = { OnActualizar.class, OnActivar.class, OnCrear.class })
+@ActivableIsActivo(entityClass = ConvocatoriaBaremacion.class, groups = { OnActualizar.class })
 public class ConvocatoriaBaremacion extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "convocatoria_baremacion";
@@ -106,6 +114,24 @@ public class ConvocatoriaBaremacion extends BaseActivableEntity {
     this.puntoProduccion = puntoProduccion;
     this.puntoSexenio = puntoSexenio;
     this.puntoCostesIndirectos = puntoCostesIndirectos;
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la creación de la entidad.
+   */
+  public interface OnCrear {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion de la entidad.
+   */
+  public interface OnActualizar {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en las activaciones de la entidad.
+   */
+  public interface OnActivar {
   }
 
 }

@@ -1,11 +1,13 @@
 package org.crue.hercules.sgi.prc.integration;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.ConvocatoriaBaremacionController;
+import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,6 +31,8 @@ public class ConvocatoriaBaremacionIT extends BaseIT {
 
   private static final String CONTROLLER_BASE_PATH = ConvocatoriaBaremacionController.REQUEST_MAPPING;
   private static final String PATH_PARAMETER_ID = "/{id}";
+
+  private static final String NOMBRE_PREFIX = "Convocatoria baremación ";
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity,
       String... roles)
@@ -75,7 +79,7 @@ public class ConvocatoriaBaremacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaBaremacionOutput> convocatoriasBaremacion = response.getBody();
     int numConvocatoriasBaremacion = convocatoriasBaremacion.size();
-    Assertions.assertThat(numConvocatoriasBaremacion).as("numPRCs").isEqualTo(1);
+    Assertions.assertThat(numConvocatoriasBaremacion).as("numConvocatorias").isEqualTo(1);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -118,7 +122,7 @@ public class ConvocatoriaBaremacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void activar_ReturnsConvocatoriaBaremacion() throws Exception {
-    Long idConvocatoriaBaremacion = 2L;
+    Long idConvocatoriaBaremacion = 5L;
     String roles = "PRC-CON-R";
 
     final ResponseEntity<ConvocatoriaBaremacionOutput> response = restTemplate.exchange(
@@ -154,5 +158,90 @@ public class ConvocatoriaBaremacionIT extends BaseIT {
     Assertions.assertThat(convocatoriaBaremacion.getId()).as("getId()").isEqualTo(idConvocatoriaBaremacion);
     Assertions.assertThat(convocatoriaBaremacion.getActivo()).as("getActivo()")
         .isEqualTo(Boolean.FALSE);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off 
+      "classpath:scripts/convocatoria_baremacion.sql"
+      // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void create_ReturnsConvocatoriaBaremacion() throws Exception {
+    String roles = "PRC-CON-C";
+    ConvocatoriaBaremacionInput convocatoriaBaremacion = generarMockConvocatoriaBaremacionInput();
+
+    final ResponseEntity<ConvocatoriaBaremacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, convocatoriaBaremacion, roles), ConvocatoriaBaremacionOutput.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    ConvocatoriaBaremacionOutput convocatoriaBaremacionCreado = response.getBody();
+    Assertions.assertThat(convocatoriaBaremacionCreado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(convocatoriaBaremacionCreado.getNombre()).as("getNombre()")
+        .isEqualTo(convocatoriaBaremacion.getNombre());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getAnio()).as("getAnio()")
+        .isEqualTo(convocatoriaBaremacion.getAnio());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getAniosBaremables()).as("getAniosBaremables()")
+        .isEqualTo(convocatoriaBaremacion.getAniosBaremables());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getUltimoAnio()).as("getUltimoAnio()")
+        .isEqualTo(convocatoriaBaremacion.getUltimoAnio());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getImporteTotal()).as("getImporteTotal()")
+        .isEqualTo(convocatoriaBaremacion.getImporteTotal());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getPartidaPresupuestaria()).as("getPartidaPresupuestaria()")
+        .isEqualTo(convocatoriaBaremacion.getPartidaPresupuestaria());
+    Assertions.assertThat(convocatoriaBaremacionCreado.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off 
+      "classpath:scripts/convocatoria_baremacion.sql"
+      // @formatter:on  
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_ReturnsConvocatoriaBaremacion() throws Exception {
+    String roles = "PRC-CON-E";
+    Long idFuenteFinanciacion = 1L;
+    ConvocatoriaBaremacionInput convocatoriaBaremacion = generarMockConvocatoriaBaremacionInput();
+    convocatoriaBaremacion.setNombre("nombre-actualizado");
+
+    final ResponseEntity<ConvocatoriaBaremacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, convocatoriaBaremacion, roles),
+        ConvocatoriaBaremacionOutput.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    ConvocatoriaBaremacionOutput convocatoriaBaremacionActualizado = response.getBody();
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(convocatoriaBaremacion.getNombre());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getAnio()).as("getAnio()")
+        .isEqualTo(convocatoriaBaremacion.getAnio());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getAniosBaremables()).as("getAniosBaremables()")
+        .isEqualTo(convocatoriaBaremacion.getAniosBaremables());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getUltimoAnio()).as("getUltimoAnio()")
+        .isEqualTo(convocatoriaBaremacion.getUltimoAnio());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getImporteTotal()).as("getImporteTotal()")
+        .isEqualTo(convocatoriaBaremacion.getImporteTotal());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getPartidaPresupuestaria()).as("getPartidaPresupuestaria()")
+        .isEqualTo(convocatoriaBaremacion.getPartidaPresupuestaria());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getActivo()).as("getActivo()").isTrue();
+  }
+
+  private ConvocatoriaBaremacionInput generarMockConvocatoriaBaremacionInput(String nombreSuffix, Integer anio) {
+    ConvocatoriaBaremacionInput convocatoriaBaremacion = new ConvocatoriaBaremacionInput();
+    convocatoriaBaremacion.setNombre(NOMBRE_PREFIX + nombreSuffix);
+    convocatoriaBaremacion.setAnio(anio);
+    convocatoriaBaremacion.setAniosBaremables(3);
+    convocatoriaBaremacion.setUltimoAnio(2028);
+    convocatoriaBaremacion.setImporteTotal(new BigDecimal(50000));
+    convocatoriaBaremacion.setPartidaPresupuestaria("1234567890");
+
+    return convocatoriaBaremacion;
+  }
+
+  private ConvocatoriaBaremacionInput generarMockConvocatoriaBaremacionInput() {
+    return generarMockConvocatoriaBaremacionInput("001", 2020);
   }
 }

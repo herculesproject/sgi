@@ -9,6 +9,8 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnitUtil;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -28,6 +30,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -175,6 +180,25 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void activar_WithDuplicatedAnio_ThrowsValidationException() {
+    // given: Un ConvocatoriaBaremacion inactivo con un año que ya existe activo
+    Long id = 1L;
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(id, 2022);
+    convocatoriaBaremacion.setActivo(false);
+    ConvocatoriaBaremacion convocatoriaBaremacionRepetido = generarMockConvocatoriaBaremacion(2L, 2022);
+
+    mockActivableIsActivo(ConvocatoriaBaremacion.class, null);
+    BDDMockito.given(repository.findById(convocatoriaBaremacion.getId()))
+        .willReturn(Optional.of(convocatoriaBaremacion));
+    BDDMockito.given(repository.findByAnioAndActivoIsTrue(convocatoriaBaremacion.getAnio()))
+        .willReturn(Optional.of(convocatoriaBaremacionRepetido));
+
+    // when: Activamos el ConvocatoriaBaremacion
+    // then: Lanza una excepcion porque hay otro ConvocatoriaBaremacion con ese año
+    Assertions.assertThatThrownBy(() -> service.activar(id)).isInstanceOf(ConstraintViolationException.class);
+  }
+
+  @Test
   void activar_WithExistingIdAlreadyActivated_ReturnsConvocatoriaBaremacionActivated() {
     // given: Un ConvocatoriaBaremacion ya activado con el id buscado
     Long idBuscado = 1L;
@@ -281,13 +305,138 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
         .isEqualTo(Boolean.FALSE);
   }
 
-  private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, String idRef, Boolean activo,
-      Instant fechaInicioEjecucion) {
+  @Test
+  public void create_WithDuplicatedAnio_ThrowsValidationException() {
+    // given: Un nuevo ConvocatoriaBaremacion con un anio que ya existe
+    ConvocatoriaBaremacion convocatoriaBaremacionNew = generarMockConvocatoriaBaremacion(null, 2022);
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L, 2022);
+
+    mockActivableIsActivo(ConvocatoriaBaremacion.class, convocatoriaBaremacion);
+    BDDMockito.given(repository.findByAnioAndActivoIsTrue(convocatoriaBaremacionNew.getAnio()))
+        .willReturn(Optional.of(convocatoriaBaremacion));
+
+    // when: Creamos el ConvocatoriaBaremacion
+    // then: Lanza una excepcion porque hay otro ConvocatoriaBaremacion con ese anio
+    Assertions.assertThatThrownBy(() -> service.create(convocatoriaBaremacionNew))
+        .isInstanceOf(ConstraintViolationException.class);
+  }
+
+  @Test
+  void create_WithId_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaBaremacion with id filled
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L);
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaBaremacion
+        () -> service.create(convocatoriaBaremacion))
+        // then: throw exception as id can't be provided
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void create_WithMinimumRequiredData_ReturnsConvocatoriaBaremacion() {
+    // given: new ConvocatoriaBaremacion with minimum required data
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(null);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaBaremacion>any()))
+        .willAnswer(new Answer<ConvocatoriaBaremacion>() {
+          @Override
+          public ConvocatoriaBaremacion answer(InvocationOnMock invocation) throws Throwable {
+            ConvocatoriaBaremacion givenData = invocation.getArgument(0, ConvocatoriaBaremacion.class);
+            ConvocatoriaBaremacion newData = new ConvocatoriaBaremacion();
+            BeanUtils.copyProperties(givenData, newData);
+            newData.setId(1L);
+            return newData;
+          }
+        });
+
+    // when: create ConvocatoriaBaremacion
+    ConvocatoriaBaremacion created = service.create(convocatoriaBaremacion);
+
+    // then: new ConvocatoriaBaremacion is created with minimum required data
+    Assertions.assertThat(created).as("isNotNull()").isNotNull();
+    Assertions.assertThat(created.getAnio()).as("getAnio()").isEqualTo(convocatoriaBaremacion.getAnio());
+    Assertions.assertThat(created.getAniosBaremables()).as("getAniosBaremables()")
+        .isEqualTo(convocatoriaBaremacion.getAniosBaremables());
+    Assertions.assertThat(created.getImporteTotal()).as("getImporteTotal()")
+        .isEqualTo(convocatoriaBaremacion.getImporteTotal());
+    Assertions.assertThat(created.getNombre()).as("getNombre()").isEqualTo(convocatoriaBaremacion.getNombre());
+    Assertions.assertThat(created.getUltimoAnio()).as("getUltimoAnio()").isEqualTo(
+        convocatoriaBaremacion.getUltimoAnio());
+  }
+
+  @Test
+  public void update_NoActivo_ThrowsValidationException() {
+    // given: Un ConvocatoriaBaremacion no activo
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L);
+
+    mockActivableIsActivo(ConvocatoriaBaremacion.class, null);
+    BDDMockito.given(entityManager.find(ConvocatoriaBaremacion.class, convocatoriaBaremacion.getId())).willReturn(null);
+    BDDMockito.given(repository.findByAnioAndActivoIsTrue(convocatoriaBaremacion.getAnio()))
+        .willReturn(Optional.empty());
+
+    // when: Actualizamos el ConvocatoriaBaremacion
+    // then: Lanza una excepcion porque el ConvocatoriaBaremacion no existe
+    Assertions.assertThatThrownBy(() -> service.update(convocatoriaBaremacion)).isInstanceOf(ValidationException.class);
+  }
+
+  @Test
+  public void update_WithDuplicatedAnio_ThrowsValidationException() {
+    // given: Un ConvocatoriaBaremacion actualizado con un año que ya existe
+    ConvocatoriaBaremacion convocatoriaBaremacionActualizado = generarMockConvocatoriaBaremacion(1L, 2022);
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(2L, 2022);
+
+    mockActivableIsActivo(ConvocatoriaBaremacion.class, convocatoriaBaremacion);
+    BDDMockito.given(entityManager.find(ConvocatoriaBaremacion.class, convocatoriaBaremacion.getId()))
+        .willReturn(convocatoriaBaremacion);
+    BDDMockito.given(repository.findByAnioAndActivoIsTrue(convocatoriaBaremacionActualizado.getAnio()))
+        .willReturn(Optional.of(convocatoriaBaremacion));
+
+    // when: Actualizamos el ConvocatoriaBaremacion
+    // then: Lanza una excepcion porque hay otro ConvocatoriaBaremacion con ese año
+    Assertions.assertThatThrownBy(() -> service.update(convocatoriaBaremacionActualizado))
+        .isInstanceOf(ValidationException.class);
+  }
+
+  @Test
+  public void update_ReturnsConvocatoriaBaremacion() {
+    // given: Un nuevo ConvocatoriaBaremacion con el nombre actualizado
+    ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L);
+    ConvocatoriaBaremacion convocatoriaBaremacionNombreActualizado = generarMockConvocatoriaBaremacion(1L,
+        "actualizado");
+
+    mockActivableIsActivo(ConvocatoriaBaremacion.class, convocatoriaBaremacion);
+    BDDMockito.given(entityManager.find(
+        ConvocatoriaBaremacion.class, convocatoriaBaremacion.getId()))
+        .willReturn(convocatoriaBaremacion);
+    BDDMockito.given(repository.findByAnioAndActivoIsTrue(convocatoriaBaremacionNombreActualizado.getAnio()))
+        .willReturn(Optional.empty());
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaBaremacion));
+    BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaBaremacion>any()))
+        .will(invocation -> invocation.getArgument(0));
+
+    // when: Actualizamos el ConvocatoriaBaremacion
+    ConvocatoriaBaremacion convocatoriaBaremacionActualizado = service.update(convocatoriaBaremacionNombreActualizado);
+
+    // then: El ConvocatoriaBaremacion se actualiza correctamente.
+    Assertions.assertThat(convocatoriaBaremacionActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getId()).as("getId()")
+        .isEqualTo(convocatoriaBaremacion.getId());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(convocatoriaBaremacionNombreActualizado.getNombre());
+    Assertions.assertThat(convocatoriaBaremacionActualizado.getActivo()).as("getActivo()")
+        .isEqualTo(convocatoriaBaremacion.getActivo());
+  }
+
+  private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, String nombreSuffix, Integer anio,
+      Boolean activo, Instant fechaInicioEjecucion) {
     ConvocatoriaBaremacion convocatoriaBaremacion = new ConvocatoriaBaremacion();
     convocatoriaBaremacion.setId(id);
-    convocatoriaBaremacion.setNombre(NOMBRE_PREFIX + idRef);
-    convocatoriaBaremacion.setAnio(2022);
-    convocatoriaBaremacion.setUltimoAnio(2023);
+    convocatoriaBaremacion.setNombre(NOMBRE_PREFIX + nombreSuffix);
+    convocatoriaBaremacion.setAnio(anio);
+    convocatoriaBaremacion.setAniosBaremables(3);
+    convocatoriaBaremacion.setUltimoAnio(2021);
     convocatoriaBaremacion.setImporteTotal(new BigDecimal(50000));
     convocatoriaBaremacion.setFechaInicioEjecucion(fechaInicioEjecucion);
     convocatoriaBaremacion.setActivo(activo);
@@ -296,14 +445,37 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id) {
-    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), Boolean.TRUE, null);
+    final String nombreSuffix = id != null ? String.format("%03d", id) : "001";
+    return generarMockConvocatoriaBaremacion(id, nombreSuffix, 2022, Boolean.TRUE, null);
+  }
+
+  private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, String nombreSuffix) {
+    return generarMockConvocatoriaBaremacion(id, nombreSuffix, 2022, Boolean.TRUE, null);
+  }
+
+  private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, Integer anio) {
+    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), anio, Boolean.TRUE, null);
   }
 
   private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, Boolean activo) {
-    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), activo, null);
+    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), 2022, activo, null);
   }
 
   private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, Instant fechaInicioEjecucion) {
-    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), Boolean.TRUE, fechaInicioEjecucion);
+    return generarMockConvocatoriaBaremacion(id, String.format("%03d", id), 2022, Boolean.TRUE, fechaInicioEjecucion);
+  }
+
+  private <T> void mockActivableIsActivo(Class<T> clazz, T object) {
+    BDDMockito.given(persistenceUnitUtil.getIdentifier(ArgumentMatchers.any(clazz)))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Object arg0 = invocation.getArgument(0);
+          if (arg0 == null) {
+            return null;
+          }
+          BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(arg0);
+          Object id = wrapper.getPropertyValue("id");
+          return id;
+        });
+    BDDMockito.given(entityManager.find(ArgumentMatchers.eq(clazz), ArgumentMatchers.anyLong())).willReturn(object);
   }
 }

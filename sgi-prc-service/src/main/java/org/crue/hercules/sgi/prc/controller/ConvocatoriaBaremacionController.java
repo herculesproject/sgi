@@ -3,7 +3,10 @@ package org.crue.hercules.sgi.prc.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionOutput;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
@@ -17,6 +20,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,6 +111,51 @@ public class ConvocatoriaBaremacionController {
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.desactivar(id);
     log.debug("desactivar(Long id) - end");
     return convert(returnValue);
+  }
+
+  /**
+   * Crea un nuevo {@link ConvocatoriaBaremacion}.
+   * 
+   * @param convocatoriaBaremacion {@link ConvocatoriaBaremacion} que se quiere
+   *                               crear.
+   * @return Nuevo {@link ConvocatoriaBaremacion} creado.
+   */
+  @PostMapping
+  @PreAuthorize("hasAuthority('PRC-CON-C')")
+  ResponseEntity<ConvocatoriaBaremacionOutput> create(
+      @Valid @RequestBody ConvocatoriaBaremacionInput convocatoriaBaremacion) {
+    log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - start");
+    ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.create(convert(convocatoriaBaremacion));
+    log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - end");
+    return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza la {@link ConvocatoriaBaremacion} con el id indicado.
+   * 
+   * @param convocatoriaBaremacion {@link ConvocatoriaBaremacion} a actualizar.
+   * @param id                     id {@link ConvocatoriaBaremacion} a actualizar.
+   * @return {@link ConvocatoriaBaremacion} actualizado.
+   */
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('PRC-CON-E')")
+  ConvocatoriaBaremacionOutput update(@Valid @RequestBody ConvocatoriaBaremacionInput convocatoriaBaremacion,
+      @PathVariable Long id) {
+    log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion, Long id) - start");
+    ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.update(convert(id, convocatoriaBaremacion));
+    log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion, Long id) - end");
+    return convert(returnValue);
+  }
+
+  private ConvocatoriaBaremacion convert(ConvocatoriaBaremacionInput convocatoriaBaremacionInput) {
+    return convert(null, convocatoriaBaremacionInput);
+  }
+
+  private ConvocatoriaBaremacion convert(Long id, ConvocatoriaBaremacionInput convocatoriaBaremacionInput) {
+    ConvocatoriaBaremacion convocatoriaBaremacion = modelMapper.map(convocatoriaBaremacionInput,
+        ConvocatoriaBaremacion.class);
+    convocatoriaBaremacion.setId(id);
+    return convocatoriaBaremacion;
   }
 
   private Page<ConvocatoriaBaremacionOutput> convert(Page<ConvocatoriaBaremacion> page) {

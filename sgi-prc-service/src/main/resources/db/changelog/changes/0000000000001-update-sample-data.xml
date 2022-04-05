@@ -2583,60 +2583,60 @@
     </insert>
     <insert tableName="convocatoria_baremacion">
       <column name="id" valueSequenceNext="convocatoria_baremacion_seq" />
-      <column name="anio" valueNumeric="2021" />
+      <column name="anio" valueNumeric="2022" />
       <column name="anios_baremables" valueNumeric="2" />
       <column name="importe_total" valueNumeric="150000.00" />
-      <column name="nombre" value="Convocatoria ACI2 2021" />
+      <column name="nombre" value="Convocatoria ACI2 2022" />
       <column name="partida_presupuestaria" value="11.1234.1234.12345" />
       <column name="punto_costes_indirectos" valueNumeric="null" />
       <column name="punto_produccion" valueNumeric="null" />
       <column name="punto_sexenio" valueNumeric="null" />
-      <column name="ultimo_anio" valueNumeric="2021" />
+      <column name="ultimo_anio" valueNumeric="2022" />
       <column name="fecha_fin_ejecucion" valueDate="null" />
       <column name="fecha_inicio_ejecucion" valueDate="2021-01-12T18:00:00" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria_baremacion">
       <column name="id" valueSequenceNext="convocatoria_baremacion_seq" />
-      <column name="anio" valueNumeric="2021" />
+      <column name="anio" valueNumeric="2022" />
       <column name="anios_baremables" valueNumeric="2" />
       <column name="importe_total" valueNumeric="150000.00" />
-      <column name="nombre" value="Convocatoria ACI2 2021" />
+      <column name="nombre" value="Convocatoria ACI2 2022" />
       <column name="partida_presupuestaria" value="11.1234.1234.12345" />
       <column name="punto_costes_indirectos" valueNumeric="null" />
       <column name="punto_produccion" valueNumeric="null" />
       <column name="punto_sexenio" valueNumeric="null" />
-      <column name="ultimo_anio" valueNumeric="2021" />
+      <column name="ultimo_anio" valueNumeric="2022" />
       <column name="fecha_fin_ejecucion" valueDate="null" />
       <column name="fecha_inicio_ejecucion" valueDate="null" />
       <column name="activo" valueBoolean="false" />
     </insert>
     <insert tableName="convocatoria_baremacion">
       <column name="id" valueSequenceNext="convocatoria_baremacion_seq" />
-      <column name="anio" valueNumeric="2022" />
+      <column name="anio" valueNumeric="2023" />
       <column name="anios_baremables" valueNumeric="2" />
       <column name="importe_total" valueNumeric="180000.00" />
-      <column name="nombre" value="Convocatoria ACI 2022" />
+      <column name="nombre" value="Convocatoria ACI 2023" />
       <column name="partida_presupuestaria" value="11.1234.1234.12345" />
       <column name="punto_costes_indirectos" valueNumeric="null" />
       <column name="punto_produccion" valueNumeric="null" />
       <column name="punto_sexenio" valueNumeric="null" />
-      <column name="ultimo_anio" valueNumeric="2021" />
+      <column name="ultimo_anio" valueNumeric="2023" />
       <column name="fecha_fin_ejecucion" valueDate="null" />
       <column name="fecha_inicio_ejecucion" valueDate="null" />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="convocatoria_baremacion">
       <column name="id" valueSequenceNext="convocatoria_baremacion_seq" />
-      <column name="anio" valueNumeric="2022" />
+      <column name="anio" valueNumeric="2024" />
       <column name="anios_baremables" valueNumeric="2" />
       <column name="importe_total" valueNumeric="180000.00" />
-      <column name="nombre" value="Convocatoria ACI2 2022" />
+      <column name="nombre" value="Convocatoria ACI 2024" />
       <column name="partida_presupuestaria" value="11.1234.1234.12345" />
       <column name="punto_costes_indirectos" valueNumeric="null" />
       <column name="punto_produccion" valueNumeric="null" />
       <column name="punto_sexenio" valueNumeric="null" />
-      <column name="ultimo_anio" valueNumeric="2021" />
+      <column name="ultimo_anio" valueNumeric="2024" />
       <column name="fecha_fin_ejecucion" valueDate="2022-03-12T23:00:00" />
       <column name="fecha_inicio_ejecucion" valueDate="2022-03-12T18:00:00" />
       <column name="activo" valueBoolean="true" />

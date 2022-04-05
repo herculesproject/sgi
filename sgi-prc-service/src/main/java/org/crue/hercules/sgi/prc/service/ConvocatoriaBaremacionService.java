@@ -2,6 +2,12 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -10,6 +16,7 @@ import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnActivar;
 import org.crue.hercules.sgi.prc.model.Modulador;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.Rango;
@@ -57,6 +64,7 @@ public class ConvocatoriaBaremacionService {
   private final ProduccionCientificaBuilderService produccionCientificaBuilderService;
 
   private final SgiConfigProperties sgiConfigProperties;
+  private final Validator validator;
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public ConvocatoriaBaremacion updateFechaInicioEjecucion(Long convocatoriaBaremacionId,
@@ -206,6 +214,13 @@ public class ConvocatoriaBaremacionService {
         return convocatoriaBaremacion;
       }
 
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<ConvocatoriaBaremacion>> result = validator.validate(convocatoriaBaremacion,
+          OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
+
       convocatoriaBaremacion.setActivo(true);
 
       ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
@@ -290,6 +305,61 @@ public class ConvocatoriaBaremacionService {
 
     produccionCientificaRepository.findByConvocatoriaBaremacionId(convocatoriaBaremacionId)
         .forEach(produccionCientificaBuilderService::deleteProduccionCientifica);
+  }
+
+  /*
+   * Guardar un nuevo {@link ConvocatoriaBaremacion}.
+   *
+   * @param convocatoriaBaremacion la entidad {@link ConvocatoriaBaremacion} a
+   * guardar.
+   * 
+   * @return la entidad {@link ConvocatoriaBaremacion} persistida.
+   */
+  @Transactional
+  @Validated({ ConvocatoriaBaremacion.OnCrear.class })
+  public ConvocatoriaBaremacion create(@Valid ConvocatoriaBaremacion convocatoriaBaremacion) {
+    log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - start");
+
+    Assert.isNull(convocatoriaBaremacion.getId(),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "isNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+
+    convocatoriaBaremacion.setActivo(true);
+    ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
+
+    log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualizar {@link ConvocatoriaBaremacion}.
+   *
+   * @param convocatoriaBaremacion la entidad {@link ConvocatoriaBaremacion} a
+   *                               actualizar.
+   * @return la entidad {@link ConvocatoriaBaremacion} persistida.
+   */
+  @Transactional
+  @Validated({ ConvocatoriaBaremacion.OnActualizar.class })
+  public ConvocatoriaBaremacion update(@Valid ConvocatoriaBaremacion convocatoriaBaremacion) {
+    log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion) - start");
+
+    return convocatoriaBaremacionRepository.findById(convocatoriaBaremacion.getId())
+        .map(convocatoriaBaremacionExistente -> {
+          // Establecemos los campos actualizables con los recibidos
+          convocatoriaBaremacionExistente.setAnio(convocatoriaBaremacion.getAnio());
+          convocatoriaBaremacionExistente.setAniosBaremables(convocatoriaBaremacion.getAniosBaremables());
+          convocatoriaBaremacionExistente.setImporteTotal(convocatoriaBaremacion.getImporteTotal());
+          convocatoriaBaremacionExistente.setNombre(convocatoriaBaremacion.getNombre());
+          convocatoriaBaremacionExistente.setPartidaPresupuestaria(convocatoriaBaremacion.getPartidaPresupuestaria());
+          convocatoriaBaremacionExistente.setUltimoAnio(convocatoriaBaremacion.getUltimoAnio());
+
+          // Actualizamos la entidad
+          ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacionExistente);
+          log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion) - end");
+          return returnValue;
+        }).orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacion.getId()));
   }
 
   private void deletePuntuacionGrupo(PuntuacionGrupo puntuacionGrupo) {
