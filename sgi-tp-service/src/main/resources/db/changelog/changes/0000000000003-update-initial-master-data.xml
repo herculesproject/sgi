@@ -31,6 +31,13 @@
       <column name="bean" value="sgiApiCallerTask" />
       <column name="method" value="call" />
     </insert>
+    <insert tableName="bean_method_tasks">
+      <column name="id" valueSequenceNext="bean_method_tasks_seq" />
+      <column name="schedule_type" value="CRON" />
+      <column name="description" value="Tarea de comprobación de convocatorias de baremación que han sobrepasado el tiempo límite de cálculo de baremación" />
+      <column name="bean" value="sgiApiCallerTask" />
+      <column name="method" value="call" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-bean_method_task_params">
@@ -82,6 +89,18 @@
       <column name="bean_method_tasks_id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Comunicado de aviso de inicio fin del período de justificación al socio colaborador')" />
       <column name="param" value="GET" />
     </insert>
+    <insert tableName="bean_method_task_params">
+      <column name="bean_method_tasks_id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Tarea de comprobación de convocatorias de baremación que han sobrepasado el tiempo límite de cálculo de baremación')" />
+      <column name="param" value="PRC" />
+    </insert>
+    <insert tableName="bean_method_task_params">
+      <column name="bean_method_tasks_id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Tarea de comprobación de convocatorias de baremación que han sobrepasado el tiempo límite de cálculo de baremación')" />
+      <column name="param" value="/baremacion/reset" />
+    </insert>
+    <insert tableName="bean_method_task_params">
+      <column name="bean_method_tasks_id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Tarea de comprobación de convocatorias de baremación que han sobrepasado el tiempo límite de cálculo de baremación')" />
+      <column name="param" value="POST" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-bean_method_cron_tasks">
@@ -104,6 +123,11 @@
       <column name="id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Comunicado de aviso de inicio fin del período de justificación al socio colaborador')" />
       <!-- Every day at 00:00:00 (second, minute, hour, day, month, weekday) -->
       <column name="cron_expression" value="0 0 0 * * ?" />
+    </insert>
+    <insert tableName="bean_method_cron_tasks">
+      <column name="id" valueComputed="(select id from ${schemaPrefix}bean_method_tasks where description='Tarea de comprobación de convocatorias de baremación que han sobrepasado el tiempo límite de cálculo de baremación')" />
+      <!-- Every 3 hour (second, minute, hour, day, month, weekday) -->
+      <column name="cron_expression" value="* * 0/3 * * ?" />
     </insert>
   </changeSet>
 </databaseChangeLog>
