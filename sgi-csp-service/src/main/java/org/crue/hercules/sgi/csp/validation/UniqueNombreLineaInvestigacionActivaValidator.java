@@ -26,8 +26,8 @@ public class UniqueNombreLineaInvestigacionActivaValidator
     if (value == null || value.getNombre() == null) {
       return false;
     }
-    Optional<LineaInvestigacion> fuenteFinancicacion = repository.findByNombreAndActivoIsTrue(value.getNombre());
-    boolean returnValue = (!fuenteFinancicacion.isPresent() || fuenteFinancicacion.get().getId().equals(value.getId()));
+    Optional<LineaInvestigacion> lineaInvestigacion = repository.findByNombreAndActivoIsTrue(value.getNombre());
+    boolean returnValue = (!lineaInvestigacion.isPresent() || lineaInvestigacion.get().getId().equals(value.getId()));
     if (!returnValue) {
       addEntityMessageParameter(context);
     }

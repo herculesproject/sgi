@@ -1,18 +1,32 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoDto;
 import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoUniqueException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.GrupoRepository;
+import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
@@ -22,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +54,9 @@ public class GrupoEquipoService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final GrupoEquipoRepository repository;
+  private final GrupoRepository grupoRepository;
+  private final Validator validator;
+  private final RolProyectoRepository rolProyectoRepository;
 
   /**
    * Guarda la entidad {@link GrupoEquipo}.
@@ -48,7 +66,7 @@ public class GrupoEquipoService {
    */
   @Transactional
   @Validated({ BaseEntity.Create.class })
-  public GrupoEquipo create(GrupoEquipo grupoEquipo) {
+  public GrupoEquipo create(@Valid GrupoEquipo grupoEquipo) {
     log.debug("create(GrupoEquipo grupoEquipo) - start");
 
     AssertHelper.idIsNull(grupoEquipo.getId(), GrupoEquipo.class);
@@ -146,7 +164,7 @@ public class GrupoEquipoService {
    * {@link Grupo} en el momento actual con mayor porcentaje de particitacion.
    *
    * Son investiador principales los {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * tiene el rol con el flag RolGrupo#rolPrincipal a
    * <code>true</code>. En caso de existir mas de un {@link GrupoEquipo}, se
    * recupera el que tenga el mayor porcentaje de dedicación al grupo
    * ({@link GrupoEquipo#participacion}) y en caso de que varios tengan la misma
@@ -173,7 +191,7 @@ public class GrupoEquipoService {
    * en el momento actual.
    *
    * Son investiador principales los {@link GrupoEquipo} que a fecha actual
-   * tiene el {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * tiene el rol con el flag RolGrupo#rolPrincipal a
    * <code>true</code>.
    * 
    * @param grupoId Identificador del {@link Grupo}.
@@ -220,6 +238,99 @@ public class GrupoEquipoService {
 
     Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
     return repository.findByGrupoIdAndAnio(grupoRef, fechaBaremacion);
+  }
+
+  /**
+   * Actualiza el listado de {@link GrupoEquipo} de la {@link Grupo} con el
+   * listado grupoEquipos añadiendo, editando o eliminando los elementos segun
+   * proceda.
+   *
+   * @param grupoId      Id de la {@link Grupo}.
+   * @param grupoEquipos lista con los nuevos {@link GrupoEquipo} a guardar.
+   * @return la entidad {@link GrupoEquipo} persistida.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Update.class })
+  public List<GrupoEquipo> update(Long grupoId, @Valid List<GrupoEquipo> grupoEquipos) {
+    log.debug("update(Long grupoId, List<GrupoEquipo> grupoEquipos) - start");
+
+    grupoRepository.findById(grupoId)
+        .orElseThrow(() -> new GrupoNotFoundException(grupoId));
+
+    List<GrupoEquipo> grupoEquiposBD = repository.findAllByGrupoId(grupoId);
+
+    // Miembros del equipo eliminados
+    List<GrupoEquipo> grupoEquiposEliminar = grupoEquiposBD.stream()
+        .filter(grupoEquipo -> grupoEquipos.stream().map(GrupoEquipo::getId)
+            .noneMatch(id -> Objects.equals(id, grupoEquipo.getId())))
+        .collect(Collectors.toList());
+
+    if (!grupoEquiposEliminar.isEmpty()) {
+      grupoEquiposEliminar.forEach(grupoEquipoEliminar -> {
+        Set<ConstraintViolation<GrupoEquipo>> resultValidateEliminar = validator.validate(
+            grupoEquipoEliminar,
+            GrupoEquipo.OnDelete.class);
+        if (!resultValidateEliminar.isEmpty()) {
+          throw new ConstraintViolationException(resultValidateEliminar);
+        }
+      });
+
+      repository.deleteAll(grupoEquiposEliminar);
+    }
+
+    this.validateGrupoEquipo(grupoEquipos);
+
+    List<GrupoEquipo> returnValue = repository.saveAll(grupoEquipos);
+    log.debug("update(Long grupoId, List<GrupoEquipo> grupoEquipos) - END");
+
+    return returnValue;
+  }
+
+  private void validateGrupoEquipo(List<GrupoEquipo> grupoEquipos) {
+
+    grupoEquipos.sort(
+        Comparator.comparing(GrupoEquipo::getFechaInicio, Comparator.nullsFirst(Comparator.naturalOrder())));
+
+    List<String> personasRef = grupoEquipos.stream().map(GrupoEquipo::getPersonaRef).distinct()
+        .collect(Collectors.toList());
+
+    for (String personaRef : personasRef) {
+      GrupoEquipo grupoEquipoAnterior = null;
+
+      List<GrupoEquipo> miembrosPersonaRef = grupoEquipos.stream()
+          .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
+
+      for (GrupoEquipo grupoEquipo : miembrosPersonaRef) {
+        Assert.notNull(grupoEquipo.getPersonaRef(),
+            () -> ProblemMessage.builder().key(Assert.class, "notNull")
+                .parameter("field", ApplicationContextSupport.getMessage("grupoEquipo.personaRef"))
+                .parameter("entity", ApplicationContextSupport.getMessage(GrupoEquipo.class)).build());
+
+        if (grupoEquipoAnterior != null
+            && grupoEquipoAnterior.getPersonaRef().equals(grupoEquipo.getPersonaRef())
+            && !(grupoEquipoAnterior.getFechaFin() != null
+                && grupoEquipoAnterior.getFechaFin().isBefore(grupoEquipo.getFechaInicio()))) {
+          throw new GrupoEquipoUniqueException();
+        }
+
+        if (grupoEquipo.getRol() == null
+            && grupoEquipo.getRol().getId() == null) {
+          Set<ConstraintViolation<GrupoEquipo>> result = validator.validate(grupoEquipo,
+              BaseEntity.Update.class);
+
+          if (!result.isEmpty()) {
+            throw new ConstraintViolationException(result);
+          }
+        }
+
+        if (!rolProyectoRepository.existsById(grupoEquipo.getRol().getId())) {
+          throw new RolProyectoNotFoundException(grupoEquipo.getRol().getId());
+        }
+
+        grupoEquipoAnterior = grupoEquipo;
+      }
+
+    }
   }
 
 }

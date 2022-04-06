@@ -450,4 +450,21 @@ public class GrupoController {
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si el {@link Grupo}
+   * puede ser modificado.
+   * 
+   * @param id Id del {@link Grupo}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-C', 'CSP-GIN-E', 'CSP-GIN-B')")
+  public ResponseEntity<Void> modificable(@PathVariable Long id) {
+    log.debug("modificable(Long id) - start");
+    boolean returnValue = service.modificable();
+    log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

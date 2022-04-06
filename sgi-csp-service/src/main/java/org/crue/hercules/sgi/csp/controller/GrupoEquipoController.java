@@ -8,12 +8,14 @@ import org.crue.hercules.sgi.csp.converter.GrupoEquipoConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
+import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -135,6 +137,27 @@ public class GrupoEquipoController {
     log.debug("findByGrupoIdAndAnio(grupoRef, anio) - end");
 
     return new ResponseEntity<>(gruposEquipos, HttpStatus.OK);
+  }
+
+  /**
+   * Actualiza el listado de {@link GrupoEquipo} del {@link Grupo} con el
+   * listado grupoEquipos añadiendo, editando o eliminando los elementos segun
+   * proceda.
+   * 
+   * @param id           Id del {@link Grupo}.
+   * @param grupoEquipos lista con los nuevos {@link GrupoEquipo} a guardar.
+   * @return Lista actualizada con los {@link GrupoEquipo}.
+   */
+  @PatchMapping(PATH_ID)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  public ResponseEntity<List<GrupoEquipoOutput>> update(@PathVariable Long id,
+      @Valid @RequestBody List<GrupoEquipoInput> grupoEquipos) {
+    log.debug("update(List<GrupoEquipoInput> grupoEquipos, grupoId) - start");
+    List<GrupoEquipoOutput> returnValue = converter
+        .convertGrupoEquipos(service.update(id, converter.convertGrupoEquipoInput(
+            grupoEquipos)));
+    log.debug("update(List<GrupoEquipoInput> grupoEquipos, grupoId) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
 }

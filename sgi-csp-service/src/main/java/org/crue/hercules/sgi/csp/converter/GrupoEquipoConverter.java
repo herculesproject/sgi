@@ -19,7 +19,7 @@ public class GrupoEquipoConverter {
   private final ModelMapper modelMapper;
 
   public GrupoEquipo convert(GrupoEquipoInput input) {
-    return convert(null, input);
+    return convert(input.getId(), input);
   }
 
   public GrupoEquipo convert(Long id, GrupoEquipoInput input) {
@@ -38,5 +38,15 @@ public class GrupoEquipoConverter {
 
   public List<GrupoEquipoOutput> convert(List<GrupoEquipo> list) {
     return list.stream().map(this::convert).collect(Collectors.toList());
+  }
+
+  public List<GrupoEquipoOutput> convertGrupoEquipos(List<GrupoEquipo> entityList) {
+    return entityList.stream()
+        .map(this::convert)
+        .collect(Collectors.toList());
+  }
+
+  public List<GrupoEquipo> convertGrupoEquipoInput(List<GrupoEquipoInput> inputList) {
+    return inputList.stream().map(this::convert).collect(Collectors.toList());
   }
 }
