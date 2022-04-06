@@ -11,7 +11,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Subscription } from 'rxjs';
+import { from, of, Subscription } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoConsultaPresupuestoExportModalComponent } from './export/proyecto-consulta-presupuesto-export-modal.component';
@@ -320,6 +320,9 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
         switchMap((anualidadesGastos) => {
           return from(anualidadesGastos).pipe(
             mergeMap(anualidadGasto => {
+              if (!anualidadGasto.codigoEconomico) {
+                return of(anualidadesGastos);
+              }
               return this.codigoEconomicoGastoService.findById(anualidadGasto.codigoEconomico.id).pipe(
                 map((value) => {
                   anualidadGasto.codigoEconomico = value;
