@@ -234,4 +234,15 @@ export class GrupoService extends _GrupoMixinBase {
     );
   }
 
+  /**
+   * Comprueba si tiene permisos de edición del grupo
+   *
+   * @param id Id del grupo
+   */
+  modificable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

@@ -35,9 +35,9 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     private readonly rolProyectoService: RolProyectoService,
     private readonly vinculacionService: VinculacionService,
     private readonly solicitudService: SolicitudService,
+    private readonly: boolean
   ) {
-    super(key, true);
-    this.setComplete(true);
+    super(key);
     this.grupo = !key ? {} as IGrupo : { id: key } as IGrupo;
   }
 
@@ -78,7 +78,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
 
   buildPatch(grupo: IGrupo): { [key: string]: any } {
     this.grupo = grupo;
-    return {
+    let formValues: { [key: string]: any } = {
       nombre: grupo.nombre,
       codigo: grupo.codigo,
       proyectoSge: grupo.proyectoSge,
@@ -86,8 +86,15 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       fechaFin: grupo.fechaFin,
       tipo: grupo.tipo,
       especialInvestigacion: grupo.especialInvestigacion,
-      solicitud: grupo.solicitud?.codigoRegistroInterno
     };
+
+    if (grupo.solicitud) {
+      formValues = {
+        ...formValues,
+        solicitud: grupo.solicitud.codigoRegistroInterno
+      };
+    }
+    return formValues;
   }
 
   getValue(): IGrupo {
@@ -145,7 +152,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   }
 
   private buildFormGroupEdit(): FormGroup {
-    return new FormGroup({
+    const form = new FormGroup({
       nombre: new FormControl(null, Validators.required),
       codigo: new FormControl(null, {
         validators: Validators.required,
@@ -163,6 +170,12 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
         DateValidator.isAfter('fechaInicio', 'fechaFin', false)
       ]
     });
+
+    if (this.readonly) {
+      form.disable();
+    }
+
+    return form;
   }
 
   private loadDepartamentoAndCodigoOnInvestigadorPrincipalChange(formGroup: FormGroup): void {
@@ -180,7 +193,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
               return this.grupoService.getNextCodigo(vinculacion.departamento.id).pipe(
                 tap(codigo => formGroup.controls.codigo.setValue(codigo, { emitEvent: false })),
                 map(() => vinculacion.departamento)
-              )
+              );
             })
           )
         )
