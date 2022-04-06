@@ -291,7 +291,9 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
 
     // Execute query
     selectQuery
-        .multiselect(joinProyectoAnualidad.get(ProyectoAnualidad_.id).alias("id"),
+        .distinct(true)
+        .multiselect(
+            joinProyectoAnualidad.get(ProyectoAnualidad_.id).alias("id"),
             joinProyectoAnualidad.get(ProyectoAnualidad_.anio).alias("anio"),
             joinProyecto.get(Proyecto_.fechaInicio).alias("proyectoFechaInicio"),
             joinProyecto.get(Proyecto_.fechaFin).alias("proyectoFechaFin"),
@@ -301,11 +303,7 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
             joinProyecto.get(Proyecto_.acronimo).alias("proyectoAcronimo"),
             joinProyecto.get(Proyecto_.estado).alias("proyectoEstado"),
             root.get(AnualidadGasto_.proyectoSgeRef).alias("proyectoSgeRef"),
-            joinProyectoAnualidad.get(ProyectoAnualidad_.enviadoSge).alias("enviadoSge"))
-        .groupBy(joinProyectoAnualidad.get(ProyectoAnualidad_.id), root.get(AnualidadGasto_.proyectoSgeRef),
-            joinProyecto.get(Proyecto_.fechaInicio), joinProyecto.get(Proyecto_.fechaFin),
-            joinProyecto.get(Proyecto_.id), joinProyecto.get(Proyecto_.titulo), joinProyecto.get(Proyecto_.acronimo),
-            joinProyecto.get(Proyecto_.estado));
+            joinProyectoAnualidad.get(ProyectoAnualidad_.enviadoSge).alias("enviadoSge"));
 
     return entityManager.createQuery(selectQuery).getResultList();
   }
@@ -357,21 +355,21 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
     selectQuery.where(listPredicates.toArray(new Predicate[] {}));
 
     // Execute query
-    selectQuery.multiselect(joinProyectoAnualidad.get(ProyectoAnualidad_.id).alias("id"),
-        joinProyectoAnualidad.get(ProyectoAnualidad_.anio).alias("anio"),
-        joinProyecto.get(Proyecto_.fechaInicio).alias("proyectoFechaInicio"),
-        joinProyecto.get(Proyecto_.fechaFin).alias("proyectoFechaFin"),
-        cb.literal(new BigDecimal(0)).alias("totalGastos"),
-        cb.coalesce(queryTotalIngreso.getSelection(), new BigDecimal(0)).alias("totalIngreso"),
-        joinProyecto.get(Proyecto_.id).alias("proyectoId"), joinProyecto.get(Proyecto_.titulo).alias("proyectoTitulo"),
-        joinProyecto.get(Proyecto_.acronimo).alias("proyectoAcronimo"),
-        joinProyecto.get(Proyecto_.estado).alias("proyectoEstado"),
-        root.get(AnualidadIngreso_.proyectoSgeRef).alias("proyectoSgeRef"),
-        joinProyectoAnualidad.get(ProyectoAnualidad_.enviadoSge).alias("enviadoSge"))
-        .groupBy(joinProyectoAnualidad.get(ProyectoAnualidad_.id), root.get(AnualidadIngreso_.proyectoSgeRef),
-            joinProyecto.get(Proyecto_.fechaInicio), joinProyecto.get(Proyecto_.fechaFin),
-            joinProyecto.get(Proyecto_.id), joinProyecto.get(Proyecto_.titulo), joinProyecto.get(Proyecto_.acronimo),
-            joinProyecto.get(Proyecto_.estado));
+    selectQuery
+        .distinct(true)
+        .multiselect(
+            joinProyectoAnualidad.get(ProyectoAnualidad_.id).alias("id"),
+            joinProyectoAnualidad.get(ProyectoAnualidad_.anio).alias("anio"),
+            joinProyecto.get(Proyecto_.fechaInicio).alias("proyectoFechaInicio"),
+            joinProyecto.get(Proyecto_.fechaFin).alias("proyectoFechaFin"),
+            cb.literal(new BigDecimal(0)).alias("totalGastos"),
+            cb.coalesce(queryTotalIngreso.getSelection(), new BigDecimal(0)).alias("totalIngreso"),
+            joinProyecto.get(Proyecto_.id).alias("proyectoId"),
+            joinProyecto.get(Proyecto_.titulo).alias("proyectoTitulo"),
+            joinProyecto.get(Proyecto_.acronimo).alias("proyectoAcronimo"),
+            joinProyecto.get(Proyecto_.estado).alias("proyectoEstado"),
+            root.get(AnualidadIngreso_.proyectoSgeRef).alias("proyectoSgeRef"),
+            joinProyectoAnualidad.get(ProyectoAnualidad_.enviadoSge).alias("enviadoSge"));
 
     return entityManager.createQuery(selectQuery).getResultList();
   }
