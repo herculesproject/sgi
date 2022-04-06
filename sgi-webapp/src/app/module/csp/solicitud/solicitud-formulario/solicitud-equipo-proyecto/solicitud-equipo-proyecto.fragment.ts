@@ -167,7 +167,12 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
         const current = this.proyectoEquipos$.value;
         current.push(wrapper);
         this.proyectoEquipos$.next(current);
-        this.setChanges(true);
+
+        if (!this.readonly) {
+          // No se marca como cambios si es un visor para el caso en el que aun no existe el solicitudProyecto
+          this.setChanges(true);
+        }
+
         return element;
       })
     );

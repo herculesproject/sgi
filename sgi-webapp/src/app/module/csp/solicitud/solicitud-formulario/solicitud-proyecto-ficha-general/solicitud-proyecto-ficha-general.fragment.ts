@@ -95,7 +95,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       form.addControl('tipoDesglosePresupuesto', new FormControl(undefined, [Validators.required]));
 
       this.subscriptions.push(
-        this.coordinadoValueChangeListener(form.controls.coordinado as FormControl, form.controls.coordinadorExterno as FormControl)
+        this.coordinadoValueChangeListener(form.controls.coordinado as FormControl, form.controls.coordinadorExterno as FormControl, form)
       );
 
       this.subscriptions.push(
@@ -116,7 +116,10 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     return form;
   }
 
-  private coordinadoValueChangeListener(coordinado: FormControl, coordinadorExterno: FormControl): Subscription {
+  private coordinadoValueChangeListener(coordinado: FormControl, coordinadorExterno: FormControl, form?: FormGroup): Subscription {
+    if (!form) {
+      form = this.getFormGroup();
+    }
 
     return coordinado.valueChanges.subscribe(
       (value) => {
@@ -129,9 +132,9 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         this.coordinado$.next(value);
 
         if (!value) {
-          this.getFormGroup().controls?.colaborativo.setValue(null);
+          form.controls?.colaborativo.setValue(null);
           coordinadorExterno.disable();
-          this.getFormGroup().controls?.coordinadorExterno.setValue('');
+          form.controls?.coordinadorExterno.setValue('');
           this.coordinadorExterno$.next(false);
           coordinadorExterno.setValidators([]);
           coordinadorExterno.updateValueAndValidity();
