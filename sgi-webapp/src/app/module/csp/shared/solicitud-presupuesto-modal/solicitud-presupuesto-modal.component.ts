@@ -112,7 +112,7 @@ export class SolicitiudPresupuestoModalComponent {
     presupuestos$.pipe(
       map(presupuestos => {
 
-        this.sortRows(presupuestos)
+        this.sortRows(presupuestos);
 
         const root = this.data.global ? this.toGlobal(presupuestos) : this.toEntidad(presupuestos);
         const regs: RowTreePresupuesto[] = [];
@@ -240,7 +240,10 @@ export class SolicitiudPresupuestoModalComponent {
 
   private sortRows(rows: ISolicitudProyectoPresupuesto[]): void {
     rows.sort((a, b) => {
-      return b.anualidad.toLocaleString().localeCompare(a.anualidad.toLocaleString())
+      const anualidadA = a.anualidad ?? '';
+      const anualidadB = b.anualidad ?? '';
+
+      return anualidadB.toLocaleString().localeCompare(anualidadA.toLocaleString())
         || a.conceptoGasto?.nombre.localeCompare(b.conceptoGasto?.nombre);
     });
   }

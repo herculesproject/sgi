@@ -15,7 +15,8 @@
           (click)="element.expanded ? element.collapse() : element.expand()">
           {{element.expanded ? 'expand_more' : 'chevron_right'}}
         </mat-icon>
-        {{element.level === 0 ? element.item.anualidad : '' }}
+        {{element.level === 0 ? (!element.item.anualidad ? ('csp.solicitud-proyecto-presupuesto.sin-anualidad' |
+        translate) : element.item.anualidad) : '' }}
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="nombre">

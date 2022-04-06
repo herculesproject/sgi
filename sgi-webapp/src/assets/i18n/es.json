@@ -1040,6 +1040,7 @@
   "csp.solicitud-proyecto-presupuesto.partida-gasto.importe-total-presupuestado": "Importe total presupuestado",
   "csp.solicitud-proyecto-presupuesto.partida-gasto.importe-total-solicitado": "Importe total solicitado",
   "csp.solicitud-proyecto-presupuesto.partida-gasto.observaciones": "Observaciones",
+  "csp.solicitud-proyecto-presupuesto.sin-anualidad": "Sin anualidad",
   "csp.solicitud-proyecto-presupuesto.title-informe": "Listado de presupuestos",
   "csp.solicitud-proyecto-presupuesto.titulo": "Presupuesto de solicitud",
   "csp.solicitud-proyecto-responsable-economico": "Responsable Económico",
