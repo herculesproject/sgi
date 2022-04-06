@@ -15,6 +15,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   documentosRequeridos$ = new BehaviorSubject<StatusWrapper<IDocumentoRequeridoSolicitud>[]>([]);
   private documentosRequeridosEliminados: StatusWrapper<IDocumentoRequeridoSolicitud>[] = [];
   public convocatoriaFases$: BehaviorSubject<IConvocatoriaFase[]> = new BehaviorSubject<IConvocatoriaFase[]>([]);
+  public fasePresentacionSolicitudes$ = new BehaviorSubject<IConvocatoriaFase>(null);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -63,6 +64,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           form.controls.fechaInicioFase.setValue(null);
           form.controls.fechaFinFase.setValue(null);
         }
+
+        this.fasePresentacionSolicitudes$.next(value);
       }
     ));
 

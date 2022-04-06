@@ -141,8 +141,7 @@ export class ConvocatoriaPlazosFaseModalComponent extends
     );
 
     this.formGroup.setValidators([
-      DateValidator.isAfter('fechaInicio', 'fechaFin'),
-      DateValidator.isBefore('fechaFin', 'fechaInicio'),
+      DateValidator.isAfter('fechaInicio', 'fechaFin', false),
       RangeValidator.notOverlaps('fechaInicio', 'fechaFin', rangoFechas)
     ]);
   }

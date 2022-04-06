@@ -19,9 +19,6 @@
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
-            {{'error.before.fecha-inicio' | translate}}
-          </mat-error>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
             {{'error.overlapping.record.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
