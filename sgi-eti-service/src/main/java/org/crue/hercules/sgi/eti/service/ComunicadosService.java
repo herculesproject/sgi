@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
+import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -23,12 +25,14 @@ public class ComunicadosService {
   private final SgiApiComService emailService;
   private final SgiApiSgpService personasService;
   private final EvaluadorService evaluadorService;
+  private final SgiConfigProperties sgiConfigProperties;
 
   public ComunicadosService(SgiApiComService emailService, SgiApiSgpService personasService,
-      EvaluadorService evaluadorService) {
+      EvaluadorService evaluadorService, SgiConfigProperties sgiConfigProperties) {
     this.emailService = emailService;
     this.personasService = personasService;
     this.evaluadorService = evaluadorService;
+    this.sgiConfigProperties = sgiConfigProperties;
   }
 
   public void enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion)
@@ -58,5 +62,48 @@ public class ComunicadosService {
           "enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion) - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion) - end");
+  }
+
+  public void enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite,
+      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug(
+        "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoActaFinalizada(
+          EtiComActaFinalizarActaData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .generoComite(generoComite)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug(
+        "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
+  }
+
+  /**
+   * Obtiene los emails de la personaRef recibida
+   * 
+   * @param personaRef id del proyecto
+   * @return lista @link{Recipient}
+   */
+  private List<Recipient> getRecipientsFromPersonaRef(String personaRef) {
+    List<Recipient> recipients = new ArrayList<>();
+    PersonaOutput persona = personasService.findById(personaRef);
+    if (persona != null) {
+      recipients = persona.getEmails().stream()
+          .map(email -> Recipient.builder().name(email.getEmail()).address(email.getEmail()).build())
+          .collect(Collectors.toList());
+    }
+    return recipients;
   }
 }
