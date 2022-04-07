@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { DEDICACION_MAP, IGrupoEquipo } from '@core/models/csp/grupo-equipo';
+import { Dedicacion, DEDICACION_MAP, IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
@@ -26,7 +26,7 @@ const MIEMBRO_EQUIPO_PROYECTO_EQUIPO_MIEMBRO_KEY = marker('csp.miembro-equipo-pr
 const MIEMBRO_EQUIPO_PROYECTO_EQUIPO_ROL_PARTICIPACION_KEY = marker('csp.miembro-equipo-proyecto.rol-participacion');
 const MIEMBRO_EQUIPO_PROYECTO_HORA_KEY = marker('csp.miembro-equipo-proyecto.hora');
 const GRUPO_EQUIPO_DEDICACION_KEY = marker('csp.grupo-equipo.dedicacion');
-const GRUPO_EQUIPO_PARTICIPACION_KEY = marker('csp.grupo-equipo.dedicacion');
+const GRUPO_EQUIPO_PARTICIPACION_KEY = marker('csp.grupo-equipo.participacion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface GrupoEquipoModalData {
@@ -107,6 +107,13 @@ export class GrupoEquipoModalComponent extends
         this.formGroup.get('fechaFin').valueChanges
       ).subscribe(() => this.checkRangesDates())
     );
+
+    this.subscriptions.push(
+      this.formGroup.get('dedicacion').valueChanges
+        .subscribe((dedicacion) => {
+          this.checkSelectedDedicacion(dedicacion);
+        })
+    );
   }
 
   private loadColectivosRolProyecto(rolProyectoId: number): void {
@@ -156,12 +163,12 @@ export class GrupoEquipoModalComponent extends
     this.translate.get(
       GRUPO_EQUIPO_DEDICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamDedicacionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamDedicacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       GRUPO_EQUIPO_PARTICIPACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamParticipacionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamParticipacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
 
     if (this.data?.entidad?.rol) {
@@ -195,14 +202,21 @@ export class GrupoEquipoModalComponent extends
           Validators.required
         ]),
         fechaInicio: new FormControl(this.data?.entidad?.fechaInicio, [
-          DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax),
+          this.data.fechaFinMax ? DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax) :
+            DateValidator.minDate(this.data.fechaInicioMin),
           Validators.required
         ]),
         fechaFin: new FormControl(this.data?.entidad?.fechaFin, [
-          DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax)
+          this.data.fechaFinMax ? DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax) :
+            DateValidator.minDate(this.data.fechaInicioMin)
         ]),
         dedicacion: new FormControl(this.data?.entidad?.dedicacion, Validators.required),
-        participacion: new FormControl(this.data?.entidad?.participacion, Validators.required)
+        participacion: new FormControl(this.data?.entidad?.participacion,
+          [
+            Validators.required,
+            Validators.pattern('^[0-9]*$'),
+            Validators.min(0),
+            Validators.max(100)])
       },
       {
         validators: [
@@ -210,6 +224,8 @@ export class GrupoEquipoModalComponent extends
         ]
       }
     );
+
+    this.checkSelectedDedicacion(this.data?.entidad?.dedicacion, formGroup);
 
     return formGroup;
   }
@@ -302,6 +318,18 @@ export class GrupoEquipoModalComponent extends
     }
     formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
+  }
+
+  private checkSelectedDedicacion(dedicacion: Dedicacion, formGroup?: FormGroup): void {
+    if (!formGroup) {
+      formGroup = this.formGroup;
+    }
+    if (dedicacion === Dedicacion.COMPLETA) {
+      formGroup.controls.participacion.setValue(100);
+      formGroup.controls.participacion.disable();
+    } else {
+      formGroup.controls.participacion.enable();
+    }
   }
 
 }

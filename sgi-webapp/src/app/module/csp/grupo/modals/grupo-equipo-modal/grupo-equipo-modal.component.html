@@ -55,7 +55,8 @@
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
             {{'error.overlapping.record.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
+          <mat-error
+            *ngIf="formGroup.controls.fechaInicio.errors?.invalid || formGroup.controls.fechaFin.errors?.minDate">
             {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
@@ -73,7 +74,7 @@
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
             {{'error.overlapping.record.entity' | translate:msgParamFechaFinEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid">
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid || formGroup.controls.fechaFin.errors?.minDate">
             {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
@@ -99,6 +100,15 @@
           <input matInput formControlName="participacion" type="number" required>
           <mat-error *ngIf="formGroup.controls.participacion.errors?.required">
             {{'error.required.entity' | translate:msgParamParticipacionEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.participacion.errors?.pattern">
+            {{'error.number.format.integer.entity' | translate:msgParamParticipacionEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.participacion.errors?.min">
+            {{ 'error.min.entity' | translate:msgParamParticipacionEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.participacion.errors?.max">
+            {{ 'error.max.entity' | translate:msgParamParticipacionEntity }}
           </mat-error>
         </mat-form-field>
       </div>

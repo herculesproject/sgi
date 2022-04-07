@@ -142,6 +142,7 @@ export class GrupoEquipoInvestigacionFragment extends Fragment {
               );
               value.persona = grupoEquipo.persona;
               value.categoriaProfesional = grupoEquipo.categoriaProfesional;
+              value.rol = grupoEquipo.rol;
               return value;
             });
         }),
