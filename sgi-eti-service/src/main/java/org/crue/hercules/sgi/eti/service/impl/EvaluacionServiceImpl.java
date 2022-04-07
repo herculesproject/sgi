@@ -326,24 +326,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @Override
-  public Page<Evaluacion> findByEvaluadorPersonaRef(String personaRef, String query, Pageable pageable) {
-    log.debug("findByEvaluador(String personaRef, String query, Pageable pageable) - start");
-    Assert.notNull(personaRef, "El userRefId de la evaluación no puede ser nulo para mostrar sus evaluaciones");
-    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluador(personaRef, query, pageable);
-    log.debug("findByEvaluador(String personaRef, String query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
-   * Devuelve una lista paginada y filtrada {@link Evaluacion} según su
-   * {@link Evaluador}.
-   * 
-   * @param personaRef Identificador del {@link Evaluacion}
-   * @param query      filtro de búsqueda.
-   * @param pageable   pageable
-   * @return la lista de entidades {@link Evaluacion} paginadas.
-   */
-  @Override
   public Page<Evaluacion> findByEvaluador(String personaRef, String query, Pageable pageable) {
     log.debug("findByEvaluador(String personaRef, String query, Pageable pageable) - start");
     Assert.notNull(personaRef, "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
