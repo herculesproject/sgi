@@ -94,9 +94,7 @@ public class ActaServiceImpl implements ActaService {
    * @param retrospectivaService     {@link RetrospectivaService}
    * @param reportService            {@link SgiApiRepService}
    * @param sgdocService             {@link SgdocService}
-   * @param ComunicadosService       {@link ComunicadosService}
-   * 
-   * 
+   * @param comunicadosService       {@link ComunicadosService}
    */
   @Autowired
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
