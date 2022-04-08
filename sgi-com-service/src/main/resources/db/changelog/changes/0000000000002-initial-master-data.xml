@@ -56,6 +56,42 @@
       <where>name='ETI_COM_ACTA_SIN_REV_MINIMA_CONTENT'</where>
     </update>
 
+    <!-- CSP Calendario Facturacion Notificar FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT'</where>
+    </update>
+
+    <!-- CSP Calendario Facturacion Notificar FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_NO_REQUISITO -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_NO_REQUISITO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_NO_REQUISITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_NO_REQUISITO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_NO_REQUISITO_CONTENT'</where>
+    </update>
+
+    <!-- CSP Calendario Facturacion Notificar FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST -->
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT'</where>
+    </update>
+
+    <!-- CSP Calendario Facturacion Notificar FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT'</where>
+    </update>
+
     <!-- CSP SOL Denegada provisional -->
     <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT_text.ftl" />
