@@ -19,6 +19,7 @@ mat-table {
   }
   .mat-column-anualidad {
     flex: 0.3;
+    min-width: 7em;
   }
   .mat-column-nombre {
     flex: 0.7;
