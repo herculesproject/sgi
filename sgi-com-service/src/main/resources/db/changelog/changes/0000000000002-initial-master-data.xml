@@ -55,6 +55,43 @@
       <column name="tpl_html" valueClobFile="clob/0000000000002/eti-com-acta/ETI_COM_ACTA_SIN_REV_MINIMA_CONTENT_html.ftl" />
       <where>name='ETI_COM_ACTA_SIN_REV_MINIMA_CONTENT'</where>
     </update>
+
+    <!-- CSP SOL Denegada provisional -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_DEN_PROV_CONTENT'</where>
+    </update>
+    <!-- CSP SOL Denegada -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_DEN_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/denegadas/CSP_COM_SOL_CAMB_EST_DEN_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_DEN_CONTENT'</where>
+    </update>
+    <!-- CSP SOL Excluida provisional -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_PROV_CONTENT'</where>
+    </update>
+    <!-- CSP SOL Excluida definitiva -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-contenttpl_param">
