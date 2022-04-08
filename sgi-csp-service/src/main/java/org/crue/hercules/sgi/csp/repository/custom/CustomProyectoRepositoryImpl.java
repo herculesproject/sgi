@@ -63,8 +63,6 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
   public Optional<ModeloEjecucion> getModeloEjecucion(Long id) {
     log.debug("getModeloEjecucion(Long id) - start");
 
-    Optional<ModeloEjecucion> returnValue = Optional.empty();
-
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<ModeloEjecucion> cq = cb.createQuery(ModeloEjecucion.class);
     Root<Proyecto> root = cq.from(Proyecto.class);
@@ -72,7 +70,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     Predicate finalPredicate = cb.equal(root.get(Proyecto_.id), id);
     cq.select(root.get(Proyecto_.modeloEjecucion)).where(finalPredicate);
 
-    returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
+    Optional<ModeloEjecucion> returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
 
     log.debug("getModeloEjecucion(Long id) - end");
     return returnValue;
@@ -87,7 +85,6 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    */
   public Optional<Boolean> getPermitePaquetesTrabajo(Long proyectoId) {
     log.debug("getPermitePaquetesTrabajo(Long id) - start");
-    Optional<Boolean> returnValue = Optional.empty();
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Boolean> cq = cb.createQuery(Boolean.class);
@@ -96,10 +93,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     Predicate finalPredicate = cb.equal(root.get(Proyecto_.id), proyectoId);
     cq.select(root.get(Proyecto_.permitePaquetesTrabajo)).where(finalPredicate);
 
-    try {
-      returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
-    } catch (NullPointerException e) {
-    }
+    Optional<Boolean> returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
 
     log.debug("getPermitePaquetesTrabajo(Long id) - stop");
     return returnValue;

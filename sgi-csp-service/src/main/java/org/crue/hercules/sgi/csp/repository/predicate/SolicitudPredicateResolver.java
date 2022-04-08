@@ -11,10 +11,10 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
+import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
-import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import io.github.perplexhub.rsql.RSQLOperators;
 
 public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Solicitud> {
@@ -51,16 +51,9 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
   }
 
   private static Predicate buildByReferenciaConvocatoria(ComparisonNode node, Root<Solicitud> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
-    ComparisonOperator operator = node.getOperator();
-    if (!operator.equals(RSQLOperators.IGNORE_CASE_LIKE)) {
-      // Unsupported Operator
-      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
-    }
-    if (node.getArguments().size() != 1) {
-      // Bad number of arguments
-      throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
-    }
+      CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.IGNORE_CASE_LIKE);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
 
     String referenciaConvocatoria = "%" + node.getArguments().get(0) + "%";
 
@@ -82,9 +75,14 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
   @Override
   public Predicate toPredicate(ComparisonNode node, Root<Solicitud> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
-    switch (Property.fromCode(node.getSelector())) {
+    Property property = Property.fromCode(node.getSelector());
+    if (property == null) {
+      return null;
+    }
+
+    switch (property) {
       case REFERENCIA_CONVOCATORIA:
-        return buildByReferenciaConvocatoria(node, root, query, criteriaBuilder);
+        return buildByReferenciaConvocatoria(node, root, criteriaBuilder);
       default:
         return null;
     }

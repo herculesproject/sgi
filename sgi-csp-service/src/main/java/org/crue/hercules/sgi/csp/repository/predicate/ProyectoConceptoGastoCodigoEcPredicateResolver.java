@@ -10,10 +10,10 @@ import javax.persistence.criteria.Root;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc_;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto_;
+import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
-import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import io.github.perplexhub.rsql.RSQLOperators;
 
 public class ProyectoConceptoGastoCodigoEcPredicateResolver
@@ -52,16 +52,9 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
   }
 
   private static Predicate buildByFechaInicio(ComparisonNode node, Root<ProyectoConceptoGastoCodigoEc> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
-    ComparisonOperator operator = node.getOperator();
-    if (!operator.equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
-      // Unsupported Operator
-      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
-    }
-    if (node.getArguments().size() != 1) {
-      // Bad number of arguments
-      throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
-    }
+      CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
 
     Instant fechaInicioAnualidad = Instant.parse(node.getArguments().get(0));
 
@@ -74,16 +67,9 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
   }
 
   private static Predicate buildByFechaFin(ComparisonNode node, Root<ProyectoConceptoGastoCodigoEc> root,
-      CriteriaQuery<?> query, CriteriaBuilder cb) {
-    ComparisonOperator operator = node.getOperator();
-    if (!operator.equals(RSQLOperators.LESS_THAN_OR_EQUAL)) {
-      // Unsupported Operator
-      throw new IllegalArgumentException("Unsupported operator: " + operator + " for " + node.getSelector());
-    }
-    if (node.getArguments().size() != 1) {
-      // Bad number of arguments
-      throw new IllegalArgumentException("Bad number of arguments for " + node.getSelector());
-    }
+      CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.LESS_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
 
     Instant fechaFinAnualidad = Instant.parse(node.getArguments().get(0));
 
@@ -103,11 +89,16 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
   @Override
   public Predicate toPredicate(ComparisonNode node, Root<ProyectoConceptoGastoCodigoEc> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
-    switch (Property.fromCode(node.getSelector())) {
+    Property property = Property.fromCode(node.getSelector());
+    if (property == null) {
+      return null;
+    }
+
+    switch (property) {
       case RANGO_PROYECTO_ANUALIDAD_INICIO:
-        return buildByFechaInicio(node, root, query, criteriaBuilder);
+        return buildByFechaInicio(node, root, criteriaBuilder);
       case RANGO_PROYECTO_ANUALIDAD_FIN:
-        return buildByFechaFin(node, root, query, criteriaBuilder);
+        return buildByFechaFin(node, root, criteriaBuilder);
 
       default:
         return null;
