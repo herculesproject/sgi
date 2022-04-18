@@ -128,7 +128,7 @@ public class GrupoController {
    * @return {@link Grupo} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
   public GrupoOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     GrupoOutput returnValue = converter.convert(service.findById(id));
@@ -288,7 +288,7 @@ public class GrupoController {
    *         {@link Grupo} en el momento actual.
    */
   @GetMapping(PATH_INVESTIGADORES_PRINCIPALES_MAX_PARTICIPACION)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
   public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(
       @PathVariable Long id) {
     log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
