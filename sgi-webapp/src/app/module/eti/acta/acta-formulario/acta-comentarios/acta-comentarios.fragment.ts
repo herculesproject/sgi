@@ -169,7 +169,9 @@ export class ActaComentariosFragment extends Fragment {
         return this.service.createComentarioActa(evaluacion.id, wrappedComentario.value).pipe(
           map((savedComentario) => {
             const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
-            this.comentarios$[index] = new StatusWrapper<IComentario>(savedComentario);
+            wrappedComentario.value.id = savedComentario.id;
+            this.comentarios$.value[index] = new StatusWrapper<IComentario>(wrappedComentario.value);
+            this.comentarios$.next(this.comentarios$.value);
             this.comentarios$.value.map((currentComentario) => {
               if (currentComentario === wrappedComentario) {
                 currentComentario.setEdited();

@@ -216,7 +216,9 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
           // TODO: Eliminar el casteo. Realmente existe la casuistica de que el backend no indica si el eliminable o no.
           map((savedEquipoTrabajo: IEquipoTrabajoWithIsEliminable) => {
             const index = this.equiposTrabajo$.value.findIndex((currentEquipoTrabajo) => currentEquipoTrabajo === wrappedEquipoTrabajo);
-            this.equiposTrabajo$[index] = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(savedEquipoTrabajo);
+            wrappedEquipoTrabajo.value.id = savedEquipoTrabajo.id;
+            this.equiposTrabajo$.value[index] = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(wrappedEquipoTrabajo.value);
+            this.equiposTrabajo$.next(this.equiposTrabajo$.value);
           })
         );
       }));

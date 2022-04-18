@@ -256,7 +256,9 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
         return this.documentoRequeridoSolicitudService.create(wrapped.value).pipe(
           map((createdEntidad) => {
             const index = this.documentosRequeridos$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
-            this.documentosRequeridos$[index] = new StatusWrapper<IDocumentoRequeridoSolicitud>(createdEntidad);
+            wrapped.value.id = createdEntidad.id;
+            this.documentosRequeridos$.value[index] = new StatusWrapper<IDocumentoRequeridoSolicitud>(wrapped.value);
+            this.documentosRequeridos$.next(this.documentosRequeridos$.value);
           })
         );
       })
