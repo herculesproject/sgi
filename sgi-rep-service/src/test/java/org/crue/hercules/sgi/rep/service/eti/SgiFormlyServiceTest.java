@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
-import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * SgiFormlyServiceTest
  */
-class SgiFormlyServiceTest extends BaseReportServiceTest {
+class SgiFormlyServiceTest extends BaseReportEtiServiceTest {
 
   private SgiFormlyService sgiFormlyService;
 

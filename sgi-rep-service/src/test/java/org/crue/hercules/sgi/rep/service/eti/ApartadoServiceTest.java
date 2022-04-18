@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
-import org.crue.hercules.sgi.rep.service.eti.ApartadoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * ApartadoServiceTest
  */
-class ApartadoServiceTest extends BaseReportServiceTest {
+class ApartadoServiceTest extends BaseReportEtiServiceTest {
 
   private ApartadoService apartadoService;
 

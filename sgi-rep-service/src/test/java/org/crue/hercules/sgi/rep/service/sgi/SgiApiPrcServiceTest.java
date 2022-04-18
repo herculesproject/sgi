@@ -1,20 +1,20 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.sgi;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
-import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgempService;
+import org.crue.hercules.sgi.rep.service.BaseReportServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * EmpresaServiceTest
+ * SgiApiPrcServiceTest
  */
-class EmpresaServiceTest extends BaseReportServiceTest {
+class SgiApiPrcServiceTest extends BaseReportServiceTest {
 
-  private SgiApiSgempService empresaService;
+  private SgiApiPrcService sgiApiPrcService;
 
   @Mock
   private RestApiProperties restApiProperties;
@@ -24,13 +24,15 @@ class EmpresaServiceTest extends BaseReportServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    empresaService = new SgiApiSgempService(restApiProperties, restTemplate);
+    sgiApiPrcService = new SgiApiPrcService(restApiProperties, restTemplate);
   }
 
   @Test
-  void findById_ReturnsException() throws Exception {
-    String empresaRef = "23242342";
-    Assertions.assertThatThrownBy(() -> empresaService.findById(empresaRef))
+  void getDataReportDetalleGrupo_ko() throws Exception {
+    Long grupoId = 1L;
+    Integer anio = 2022;
+    Assertions.assertThatThrownBy(() -> sgiApiPrcService.getDataReportDetalleGrupo(anio, grupoId))
         .isInstanceOf(GetDataReportException.class);
   }
+
 }

@@ -1,9 +1,8 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
-import org.crue.hercules.sgi.rep.service.eti.ComentarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * ComentarioServiceTest
  */
-class ComentarioServiceTest extends BaseReportServiceTest {
+class ComentarioServiceTest extends BaseReportEtiServiceTest {
 
   private ComentarioService comentarioService;
 

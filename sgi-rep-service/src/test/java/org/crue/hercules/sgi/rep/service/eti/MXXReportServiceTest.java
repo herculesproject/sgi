@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -13,13 +13,6 @@ import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportMXX;
 import org.crue.hercules.sgi.rep.dto.eti.TipoEstadoMemoriaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
-import org.crue.hercules.sgi.rep.service.eti.ApartadoService;
-import org.crue.hercules.sgi.rep.service.eti.BloqueService;
-import org.crue.hercules.sgi.rep.service.eti.MXXReportService;
-import org.crue.hercules.sgi.rep.service.eti.MemoriaService;
-import org.crue.hercules.sgi.rep.service.eti.PeticionEvaluacionService;
-import org.crue.hercules.sgi.rep.service.eti.RespuestaService;
-import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * MXXReportServiceTest
  */
-class MXXReportServiceTest extends BaseReportServiceTest {
+class MXXReportServiceTest extends BaseReportEtiServiceTest {
 
   private MXXReportService mxxReportService;
 

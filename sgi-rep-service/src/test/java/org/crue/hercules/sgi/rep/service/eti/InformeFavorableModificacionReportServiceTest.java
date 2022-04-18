@@ -1,13 +1,10 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableModificacion;
-import org.crue.hercules.sgi.rep.service.eti.ConvocatoriaReunionService;
-import org.crue.hercules.sgi.rep.service.eti.EvaluacionService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableModificacionReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * InformeFavorableModificacionReportServiceTest
  */
-class InformeFavorableModificacionReportServiceTest extends BaseReportServiceTest {
+class InformeFavorableModificacionReportServiceTest extends BaseReportEtiServiceTest {
 
   private InformeFavorableModificacionReportService informeFavorableModificacionReportService;
 

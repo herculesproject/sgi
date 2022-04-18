@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -12,9 +12,6 @@ import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto.EquipoTrabajoDto;
-import org.crue.hercules.sgi.rep.service.eti.EvaluacionService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableMemoriaReportService;
-import org.crue.hercules.sgi.rep.service.eti.PeticionEvaluacionService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * InformeFavorableMemoriaReportServiceTest
  */
-class InformeFavorableMemoriaReportServiceTest extends BaseReportServiceTest {
+class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest {
 
   private InformeFavorableMemoriaReportService informeFavorableMemoriaReportService;
 

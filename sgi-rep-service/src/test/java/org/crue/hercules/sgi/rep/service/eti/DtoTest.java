@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.model.BaseEntity;
+import org.crue.hercules.sgi.rep.service.BaseReportServiceTest;
 import org.junit.jupiter.api.Test;
 
 /**

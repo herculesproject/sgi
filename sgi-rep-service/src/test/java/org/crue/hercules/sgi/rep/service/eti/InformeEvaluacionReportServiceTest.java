@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -6,13 +6,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
-import org.crue.hercules.sgi.rep.service.eti.ApartadoService;
-import org.crue.hercules.sgi.rep.service.eti.BloqueService;
-import org.crue.hercules.sgi.rep.service.eti.ConfiguracionService;
-import org.crue.hercules.sgi.rep.service.eti.EvaluacionService;
-import org.crue.hercules.sgi.rep.service.eti.InformeEvaluacionReportService;
-import org.crue.hercules.sgi.rep.service.eti.RespuestaService;
-import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * InformeEvaluacionReportServiceTest
  */
-class InformeEvaluacionReportServiceTest extends BaseReportServiceTest {
+class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
 
   private InformeEvaluacionReportService informeEvaluacionReportService;
 

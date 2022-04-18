@@ -1,12 +1,13 @@
-package org.crue.hercules.sgi.rep.service;
+package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.Instant;
+
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableRatificacion;
-import org.crue.hercules.sgi.rep.service.eti.EvaluacionService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableRatificacionReportService;
+import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
+import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 
 /**
- * InformeFavorableRatificacionReportServiceTest
+ * InformeEvaluacionRetrospectivaReportServiceTest
  */
-class InformeFavorableRatificacionReportServiceTest extends BaseReportServiceTest {
+class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServiceTest {
 
-  private InformeFavorableRatificacionReportService informeFavorableRatificacionReportService;
+  private InformeEvaluacionRetrospectivaReportService informeEvaluacionRetrospectivaReportService;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
@@ -33,23 +34,25 @@ class InformeFavorableRatificacionReportServiceTest extends BaseReportServiceTes
 
   @BeforeEach
   public void setUp() throws Exception {
-    informeFavorableRatificacionReportService = new InformeFavorableRatificacionReportService(sgiConfigProperties,
+    informeEvaluacionRetrospectivaReportService = new InformeEvaluacionRetrospectivaReportService(sgiConfigProperties,
         personaService, evaluacionService);
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
-  void getInformeFavorableRatificacion_ReturnsResource() throws Exception {
+  void getInformeEvaluacionRetrospectiva_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
+    InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion)
+        .fecha(Instant.now()).build();
 
     BDDMockito.given(evaluacionService.findById(idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
     BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
 
-    ReportInformeFavorableRatificacion report = new ReportInformeFavorableRatificacion();
+    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva();
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
-        idEvaluacion);
+    byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
+        input);
     assertNotNull(reportContent);
 
   }
