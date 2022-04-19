@@ -432,12 +432,13 @@ INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, priorid
 VALUES(705, true, '050.030.010.000', 'Licencia explotación', 1, 'INVENCION_LICENCIA_EXPLOTACION', 'SGI', 'EXTRA', 700);
 
 INSERT INTO test.configuracion_baremo (id, activo, epigrafe_cvn, nombre, prioridad, tipo_baremo, tipo_fuente, tipo_puntos, configuracion_baremo_padre_id) 
-VALUES(706, true, '050.030.010.000', 'Licencia explotación', 1, 'INVENCION_LICENCIA_EXPLOTACION', 'CVN', 'EXTRA', 700);
+VALUES(706, true, '050.030.010.000', 'Licencia explotación TEST', 1, 'INVENCION_LICENCIA_EXPLOTACION', 'CVN', 'EXTRA', 700);
 
 update test.configuracion_baremo set mostrar_puntos = true;
 
-update test.configuracion_baremo set mostrar_puntos = false where tipo_baremo in ('COSTE_INDIRECTO', 'LIBRO_NUMERO_AUTORES', 'LIBRO_EDITORIAL_PRESTIGIO',
-'CONTRATO_CUANTIA', 'INVENCION_LICENCIA_EXPLOTACION', 'ARTICULO_NUMERO_AUTORES', 'ARTICULO_AREAS');
+update test.configuracion_baremo set mostrar_puntos = false where tipo_baremo in ('COSTE_INDIRECTO', 'PRODUCCION_CIENTIFICA', 'LIBROS','COMITES', 'LIBRO_NUMERO_AUTORES', 'LIBRO_EDITORIAL_PRESTIGIO',
+'ARTICULOS', 'ARTICULO_NUMERO_AUTORES', 'ARTICULO_AREAS', 'ARTICULO_EXCELENCIA', 'COMITES_EDITORIALES', 'CONGRESOS', 'DIRECCION_TESIS', 'PROYECTOS_INVESTIGACION',
+'CONTRATOS', 'OBRAS_ARTISTICAS', 'ORGANIZACION_ACTIVIDADES', 'INVENCIONES', 'INVENCION_LICENCIA_EXPLOTACION' );
 
 
 ALTER SEQUENCE test.configuracion_baremo_seq RESTART WITH 10000;

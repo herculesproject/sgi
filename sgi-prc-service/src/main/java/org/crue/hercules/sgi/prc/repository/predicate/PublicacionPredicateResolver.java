@@ -10,6 +10,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
 import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
@@ -215,6 +216,7 @@ public class PublicacionPredicateResolver extends ProduccionCientificaPredicateR
         cb.greaterThanOrEqualTo(joinEstado.get(Auditable_.lastModifiedDate), fechaModificacion),
         cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.epigrafeCVN),
             root.get(ProduccionCientifica_.epigrafeCVN)),
+        cb.isTrue(rootConfiguracionBaremo.get(Activable_.activo)),
         cb.or(cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.tipoFuente), TipoFuente.CVN),
             cb.equal(rootConfiguracionBaremo.get(ConfiguracionBaremo_.tipoFuente), TipoFuente.CVN_OTRO_SISTEMA)),
         cb.or(

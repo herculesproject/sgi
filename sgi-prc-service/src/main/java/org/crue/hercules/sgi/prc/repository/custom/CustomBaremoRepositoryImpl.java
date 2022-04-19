@@ -12,9 +12,11 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.Baremo_;
+import org.crue.hercules.sgi.prc.model.BaseActivableEntity;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo_;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
@@ -54,6 +56,8 @@ public class CustomBaremoRepositoryImpl implements CustomBaremoRepository {
     List<Predicate> listPredicates = new ArrayList<>();
 
     listPredicates.add(cb.equal(root.get(Baremo_.convocatoriaBaremacionId), (convocatoriaBaremacionId)));
+
+    listPredicates.add(cb.isTrue(joinConfiguracionBaremo.get(Activable_.activo)));
 
     listPredicates.add(cb.and(joinConfiguracionBaremo.get(ConfiguracionBaremo_.tipoFuente)
         .in(Arrays.asList(ConfiguracionBaremo.TipoFuente.CVN, ConfiguracionBaremo.TipoFuente.CVN_OTRO_SISTEMA))));

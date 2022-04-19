@@ -80,7 +80,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Repository para gestionar el API de {@link ProduccionCientifica} procedente
+ * Service para gestionar el API de {@link ProduccionCientifica} procedente
  * del CVN.
  */
 @Service
@@ -525,7 +525,7 @@ public class ProduccionCientificaApiService {
 
       Integer anio = getAnioIsAutorBaremable(produccionCientifica);
 
-      if (null != anio && sgiApiCspService.isPersonaBaremable(personaRef, anio)) {
+      if (null != anio) {
         sgiApiCspService.findAllGruposByAnio(anio).stream().forEach(
             grupo -> saveAutorGrupo(autorId, grupo.getId(), produccionCientifica.getEstado().getEstado()));
       }

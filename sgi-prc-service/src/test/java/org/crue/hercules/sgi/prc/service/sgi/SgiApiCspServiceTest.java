@@ -36,6 +36,13 @@ class SgiApiCspServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void findGrupoById_ko() throws Exception {
+    Long grupoRef = 2L;
+    Assertions.assertThatThrownBy(() -> sgiApiCspService.findGrupoById(grupoRef))
+        .isInstanceOf(MicroserviceCallException.class);
+  }
+
+  @Test
   void isGrupoBaremable_ko() throws Exception {
     Long grupoRef = 2L;
     Integer anio = 2022;
@@ -91,6 +98,15 @@ class SgiApiCspServiceTest extends BaseServiceTest {
   void findProyectosSGEByProyectoId_ko() throws Exception {
     Long proyectoId = 1L;
     Assertions.assertThatThrownBy(() -> sgiApiCspService.findProyectosSgeByProyectoId(proyectoId))
+        .isInstanceOf(MicroserviceCallException.class);
+  }
+
+  @Test
+  void findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion_ko() throws Exception {
+    Long grupoRef = 1L;
+    Assertions
+        .assertThatThrownBy(
+            () -> sgiApiCspService.findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(grupoRef))
         .isInstanceOf(MicroserviceCallException.class);
   }
 

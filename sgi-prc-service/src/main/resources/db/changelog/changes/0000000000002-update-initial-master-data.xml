@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet context="!test" author="master" id="0000000000002-configuracion_baremo">
+    <update tableName="configuracion_baremo">
+      <column name="mostrar_puntos" valueBoolean="false" />
+      <where>tipo_baremo in ('COSTE_INDIRECTO', 'PRODUCCION_CIENTIFICA', 'LIBROS','COMITES', 'LIBRO_NUMERO_AUTORES', 'LIBRO_EDITORIAL_PRESTIGIO',
+            'ARTICULOS', 'ARTICULO_NUMERO_AUTORES', 'ARTICULO_AREAS', 'ARTICULO_EXCELENCIA', 'COMITES_EDITORIALES', 'CONGRESOS', 'DIRECCION_TESIS', 'PROYECTOS_INVESTIGACION'
+            'CONTRATOS', 'OBRAS_ARTISTICAS', 'ORGANIZACION_ACTIVIDADES', 'INVENCIONES', 'INVENCION_LICENCIA_EXPLOTACION')
+      </where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

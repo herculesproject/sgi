@@ -12,6 +12,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoBaremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion_;
@@ -106,7 +107,6 @@ public class CustomConvocatoriaBaremacionRepositoryImpl implements CustomConvoca
    */
   @Override
   public Long findIdByMaxAnio() {
-    // TODO incluir filtro activo
     log.debug("findIdByMaxAnio - start");
     Long convocatoriaBaremacionId = null;
 
@@ -121,6 +121,7 @@ public class CustomConvocatoriaBaremacionRepositoryImpl implements CustomConvoca
     cq.select(root.get(ConvocatoriaBaremacion_.id));
 
     // Where
+    cq.where(cb.isTrue(root.get(Activable_.activo)));
 
     // Order
     List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, ConvocatoriaBaremacion_.ANIO), root, cb);

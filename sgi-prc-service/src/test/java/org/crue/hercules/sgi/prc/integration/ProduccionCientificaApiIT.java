@@ -467,7 +467,7 @@ class ProduccionCientificaApiIT extends ProduccionCientificaBaseIT {
     // first page, 3 elements per page sorted
     HttpHeaders headers = new HttpHeaders();
 
-    // when: find Proyecto
+    // when: find epigrafes
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH_API + "/epigrafes")
         .buildAndExpand(produccionCientificaId).toUri();
