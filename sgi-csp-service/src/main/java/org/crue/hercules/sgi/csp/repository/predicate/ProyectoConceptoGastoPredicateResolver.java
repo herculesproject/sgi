@@ -7,16 +7,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
-import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoCodigoEcSpecifications;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import io.github.perplexhub.rsql.RSQLOperators;
 
-public class ProyectoConceptoGastoCodigoEcPredicateResolver
-    implements SgiRSQLPredicateResolver<ProyectoConceptoGastoCodigoEc> {
+public class ProyectoConceptoGastoPredicateResolver
+    implements SgiRSQLPredicateResolver<ProyectoConceptoGasto> {
   private enum Property {
     RANGO_PROYECTO_ANUALIDAD("inRangoProyectoAnualidad");
 
@@ -36,20 +36,20 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
     }
   }
 
-  private static ProyectoConceptoGastoCodigoEcPredicateResolver instance;
+  private static ProyectoConceptoGastoPredicateResolver instance;
 
-  private ProyectoConceptoGastoCodigoEcPredicateResolver() {
+  private ProyectoConceptoGastoPredicateResolver() {
     // Do nothing. Hide external instanciation
   }
 
-  public static ProyectoConceptoGastoCodigoEcPredicateResolver getInstance() {
+  public static ProyectoConceptoGastoPredicateResolver getInstance() {
     if (instance == null) {
-      instance = new ProyectoConceptoGastoCodigoEcPredicateResolver();
+      instance = new ProyectoConceptoGastoPredicateResolver();
     }
     return instance;
   }
 
-  private static Predicate buildByRangoProyectoAnualidad(ComparisonNode node, Root<ProyectoConceptoGastoCodigoEc> root,
+  private static Predicate buildByRangoProyectoAnualidad(ComparisonNode node, Root<ProyectoConceptoGasto> root,
       CriteriaQuery<?> query, CriteriaBuilder cb) {
     PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.BETWEEN);
     PredicateResolverUtil.validateOperatorArgumentNumber(node, 2);
@@ -57,7 +57,7 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
     Instant fechaInicioAnualidad = Instant.parse(node.getArguments().get(0));
     Instant fechaFinAnualidad = Instant.parse(node.getArguments().get(1));
 
-    return ProyectoConceptoGastoCodigoEcSpecifications.byRangoFechaSolapados(fechaInicioAnualidad, fechaFinAnualidad)
+    return ProyectoConceptoGastoSpecifications.byRangoFechasSolapados(fechaInicioAnualidad, fechaFinAnualidad)
         .toPredicate(root, query, cb);
   }
 
@@ -68,7 +68,7 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
   }
 
   @Override
-  public Predicate toPredicate(ComparisonNode node, Root<ProyectoConceptoGastoCodigoEc> root, CriteriaQuery<?> query,
+  public Predicate toPredicate(ComparisonNode node, Root<ProyectoConceptoGasto> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     Property property = Property.fromCode(node.getSelector());
     if (property == null) {
@@ -80,5 +80,6 @@ public class ProyectoConceptoGastoCodigoEcPredicateResolver
     } else {
       return null;
     }
+
   }
 }
