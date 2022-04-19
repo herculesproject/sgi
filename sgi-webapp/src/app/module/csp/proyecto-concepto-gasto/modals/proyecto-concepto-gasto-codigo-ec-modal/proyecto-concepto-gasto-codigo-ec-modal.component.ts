@@ -57,22 +57,11 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoConceptoGastoCodigoEcModalComponent>,
-    codigoEconomicoGastoService: CodigoEconomicoGastoService,
+    private codigoEconomicoGastoService: CodigoEconomicoGastoService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoConceptoGastoCodigoEcDataModal,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
-
-    this.codigosEconomicos$ = codigoEconomicoGastoService.findAll().pipe(
-      map(response => response.items),
-      tap(response => {
-        this.codigosEconomicos = response;
-
-        if (!this.formGroup.disabled) {
-          this.disabledSave = false;
-        }
-      })
-    );
   }
 
   ngOnInit(): void {
@@ -80,11 +69,20 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     this.setupI18N();
     this.textSaveOrUpdate = this.data.proyectoConceptoGastoCodigoEc?.codigoEconomico ? MSG_ACEPTAR : MSG_ANADIR;
 
-    this.subscriptions.push(this.codigosEconomicos$.subscribe(
-      (codigosEconomicos) => this.formGroup.controls.codigoEconomico.setValidators(
-        SelectValidator.isSelectOption(codigosEconomicos.map(cod => cod.id), true)
-      )
-    ));
+    this.codigosEconomicos$ = this.codigoEconomicoGastoService.findAll().pipe(
+      map(response => response.items),
+      tap(response => {
+        this.codigosEconomicos = response;
+
+        this.formGroup.controls.codigoEconomico.setValidators(
+          SelectValidator.isSelectOption(this.codigosEconomicos.map(cod => cod.id), true)
+        );
+
+        if (!this.formGroup.disabled) {
+          this.disabledSave = false;
+        }
+      })
+    );
 
     this.subscriptions.push(this.formGroup.controls.codigoEconomico.valueChanges.subscribe(
       (value) => {

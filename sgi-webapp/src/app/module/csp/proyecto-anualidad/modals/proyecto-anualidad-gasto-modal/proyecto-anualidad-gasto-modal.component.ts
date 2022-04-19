@@ -173,7 +173,13 @@ export class ProyectoAnualidadGastoModalComponent extends
     this.translate.get(
       CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) =>
+      this.msgParamConceptoGastoEntity = {
+        entity: value,
+        ...MSG_PARAMS.GENDER.MALE,
+        ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
+    );
 
     this.translate.get(
       CODIGO_ECONOMICO_PERMITIDO_KEY,
@@ -340,13 +346,20 @@ export class ProyectoAnualidadGastoModalComponent extends
     if (conceptoGastoTipo === ConceptoGastoTipo.PERMITIDO) {
       const queryOptionsConceptoGasto: SgiRestFindOptions = {
         filter: new RSQLSgiRestFilter('permitido', SgiRestFilterOperator.EQUALS, 'true')
-          .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaInicioAnualidad))
-          .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaFinAnualidad))
+          .and(
+            'inRangoProyectoAnualidad',
+            SgiRestFilterOperator.BETWEEN,
+            [LuxonUtils.toBackend(this.data.fechaInicioAnualidad), LuxonUtils.toBackend(this.data.fechaFinAnualidad)]
+          )
           .and('proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString())
       };
 
       conceptosGasto$ = this.proyectoConceptoGastoService.findAll(queryOptionsConceptoGasto).pipe(
-        map(response => response.items.map(proyectoConceptoGasto => proyectoConceptoGasto.conceptoGasto))
+        map(response =>
+          response.items
+            .map(proyectoConceptoGasto => proyectoConceptoGasto.conceptoGasto)
+            .filter((c, i, conceptosGasto) => conceptosGasto.findIndex(c2 => (c2.id === c.id)) === i)
+        )
       );
     } else {
       if (!this.conceptosGastoTodos) {
@@ -491,8 +504,11 @@ export class ProyectoAnualidadGastoModalComponent extends
 
   private buildFilterCodigosEconomicos(conceptoGastoId: number, permitido: boolean): SgiRestFilter {
     return new RSQLSgiRestFilter('proyectoConceptoGasto.permitido', SgiRestFilterOperator.EQUALS, permitido.toString())
-      .and('inRangoProyectoAnualidadInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaInicioAnualidad))
-      .and('inRangoProyectoAnualidadFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaFinAnualidad))
+      .and(
+        'inRangoProyectoAnualidad',
+        SgiRestFilterOperator.BETWEEN,
+        [LuxonUtils.toBackend(this.data.fechaInicioAnualidad), LuxonUtils.toBackend(this.data.fechaFinAnualidad)]
+      )
       .and('proyectoConceptoGasto.conceptoGasto.id', SgiRestFilterOperator.EQUALS, conceptoGastoId.toString())
       .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
   }

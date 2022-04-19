@@ -19,7 +19,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export enum HelpIconClass {
   DANGER = 'danger',
@@ -111,6 +111,13 @@ export class ProyectoEquipoFragment extends Fragment {
       const id = this.getKey() as number;
       this.subscriptions.push(
         this.proyectoService.findAllProyectoEquipo(id).pipe(
+          switchMap(result => {
+            if (!this.convocatoriaId) {
+              return of(result);
+            }
+
+            return this.getRequisitosConvocatoria(this.convocatoriaId).pipe(map(() => result));
+          }),
           switchMap(result => {
             return from(result.items).pipe(
               mergeMap(element => {
@@ -228,7 +235,7 @@ export class ProyectoEquipoFragment extends Fragment {
         }),
         switchMap((results) => {
           return from(results).pipe(
-            mergeMap(element => {
+            concatMap(element => {
               return this.validateRequisitosConvocatoria(element.value.proyectoEquipo, this.convocatoriaId).pipe(
                 map(response => {
                   this.buildHelpIconIfNeeded(response, element);
@@ -335,7 +342,7 @@ export class ProyectoEquipoFragment extends Fragment {
 
         return of(response);
       })
-    )
+    );
   }
 
   private getRequisitosConvocatoria(convocatoriaId: number): Observable<RequisitosConvocatoria> {
@@ -651,7 +658,7 @@ export class ProyectoEquipoFragment extends Fragment {
         miembroEquipo.persona.sexo?.id === requisitosConvocatoria.requisitosEquipo.sexo.id
       ).length;
 
-      const ratioSexo = numMiembrosSexo / miembrosEquipoNoPrincipales.length * 100
+      const ratioSexo = numMiembrosSexo / miembrosEquipoNoPrincipales.length * 100;
       if (ratioSexo < requisitosConvocatoria.requisitosEquipo.ratioSexo) {
         return of(ValidacionRequisitosEquipoIp.RATIO_SEXO);
       }
