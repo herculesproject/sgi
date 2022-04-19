@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
@@ -495,5 +496,17 @@ public class ActaServiceImpl implements ActaService {
     // Se sube el informe a sgdoc
     String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
     return sgdocService.uploadInforme(fileName, informePdf);
+  }
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en algun {@link Acta}
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public Boolean hasAssignedActasByEvaluador(String personaRef) {
+    log.debug("hasAssignedActasByEvaluador(String personaRef) - end");
+    return actaRepository.hasAssignedActasByEvaluador(personaRef);
   }
 }

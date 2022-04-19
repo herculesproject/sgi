@@ -37,7 +37,7 @@
         }
       },
       {
-        "template": "ESSSEspecificar colectivos de personas especialmente vulnerables",
+        "template": "Especificar colectivos de personas especialmente vulnerables",
         "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
       },
       {
