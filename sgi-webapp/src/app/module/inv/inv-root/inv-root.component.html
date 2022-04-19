@@ -13,9 +13,11 @@
       *sgiHasAnyAuthorityForAnyUO="['ETI-MEM-INV-VR', 'ETI-MEM-INV-ER', 'ETI-MEM-INV-BR', 'ETI-MEM-INV-ESCR', 'ETI-MEM-INV-ERTR']"
       [route]="[INV_ROUTE_NAMES.MEMORIAS]" title="{{'menu.principal.inv.memorias' | translate}}">
     </sgi-menu-subitem>
-    <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['ETI-ACT-INV-ER', 'ETI-ACT-ER']" [route]="[INV_ROUTE_NAMES.ACTAS]"
-      title="{{'menu.principal.inv.actas' | translate}}">
-    </sgi-menu-subitem>
+    <ng-container *ngIf="showActas">
+      <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['ETI-ACT-INV-ER', 'ETI-ACT-ER']" [route]="[INV_ROUTE_NAMES.ACTAS]"
+        title="{{'menu.principal.inv.actas' | translate}}">
+      </sgi-menu-subitem>
+    </ng-container>
     <ng-container *ngIf="showEvaluaciones">
       <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR']"
         [route]="[INV_ROUTE_NAMES.EVALUACIONES]" title="{{'menu.principal.inv.evaluaciones' | translate}}">
