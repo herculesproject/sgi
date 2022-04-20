@@ -526,8 +526,8 @@ public class ProduccionCientificaApiService {
       Integer anio = getAnioIsAutorBaremable(produccionCientifica);
 
       if (null != anio) {
-        sgiApiCspService.findAllGruposByAnio(anio).stream().forEach(
-            grupo -> saveAutorGrupo(autorId, grupo.getId(), produccionCientifica.getEstado().getEstado()));
+        sgiApiCspService.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, anio).stream().forEach(
+            grupoId -> saveAutorGrupo(autorId, grupoId, produccionCientifica.getEstado().getEstado()));
       }
     }
   }

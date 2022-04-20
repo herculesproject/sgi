@@ -204,6 +204,40 @@ public class SgiApiCspService extends SgiApiBaseService {
   }
 
   /**
+   * Lista de {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
+   * baremación
+   *
+   * @param personaRef      personaRef
+   * @param fechaBaremacion fecha de baremación
+   * @return {@link GrupoEquipo}
+   */
+  public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Integer anio) {
+    List<Long> result = new ArrayList<>();
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({},{})- start", personaRef, anio);
+
+    try {
+
+      ServiceType serviceType = ServiceType.CSP;
+      String relativeUrl = "/gruposequipos/{grupoRef}/{anio}";
+      HttpMethod httpMethod = HttpMethod.GET;
+      String mergedURL = buildUri(serviceType, relativeUrl);
+
+      result = super.<List<Long>>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<List<Long>>() {
+          },
+          personaRef, anio)
+          .getBody();
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({},{})- end", personaRef, anio);
+
+    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
+  }
+
+  /**
    * Devuelve una lista de {@link ProyectoDto} que se incorporarán a la baremación
    * de producción científica
    * 

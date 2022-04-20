@@ -36,6 +36,15 @@ class SgiApiCspServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void findGrupoEquipoByPersonaRefAndFechaBaremacion_ko() throws Exception {
+    String personaRef = "43234234";
+    Integer anio = 2022;
+    Assertions
+        .assertThatThrownBy(() -> sgiApiCspService.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, anio))
+        .isInstanceOf(MicroserviceCallException.class);
+  }
+
+  @Test
   void findGrupoById_ko() throws Exception {
     Long grupoRef = 2L;
     Assertions.assertThatThrownBy(() -> sgiApiCspService.findGrupoById(grupoRef))
