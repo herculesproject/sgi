@@ -204,12 +204,13 @@ public class SgiApiCspService extends SgiApiBaseService {
   }
 
   /**
-   * Lista de {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
+   * Lista de ids {@link GrupoEquipoDto} cuyo personaRef está dentro de la fecha
+   * de
    * baremación
    *
-   * @param personaRef      personaRef
-   * @param fechaBaremacion fecha de baremación
-   * @return {@link GrupoEquipo}
+   * @param personaRef personaRef
+   * @param anio       anio
+   * @return lista de ids {@link GrupoEquipoDto}
    */
   public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Integer anio) {
     List<Long> result = new ArrayList<>();

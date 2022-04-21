@@ -26,6 +26,7 @@ public class ConvocatoriaBaremacionSpecifications {
    * {@link ConvocatoriaBaremacion} necesita resetear porque no ha finalizado la
    * baremación en el tiempo establecido.
    * 
+   * @param fechaLimiteFinBaremacion fecha limite
    * @return specification para obtener los {@link ConvocatoriaBaremacion} que
    *         necesitan resetearse
    */
