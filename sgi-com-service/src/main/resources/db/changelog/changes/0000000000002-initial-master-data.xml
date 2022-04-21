@@ -128,6 +128,24 @@
       <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/excluidas/CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT_html.ftl" />
       <where>name='CSP_COM_SOL_CAMB_EST_EXCL_DEF_CONTENT'</where>
     </update>
+    <!-- CSP SOL Concedida provisional -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_PROV_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_PROV_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_PROV_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_PROV_CONTENT'</where>
+    </update>
+    <!-- CSP SOL Concedida -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_CONTENT_text.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/csp-com-solicitud-cambio-estado/concedidas/CSP_COM_SOL_CAMB_EST_CONC_CONTENT_html.ftl" />
+      <where>name='CSP_COM_SOL_CAMB_EST_CONC_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-contenttpl_param">
