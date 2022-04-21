@@ -344,14 +344,23 @@ export class ProyectoAnualidadGastoModalComponent extends
     let conceptosGasto$: Observable<IConceptoGasto[]>;
 
     if (conceptoGastoTipo === ConceptoGastoTipo.PERMITIDO) {
+      const filter = new RSQLSgiRestFilter('permitido', SgiRestFilterOperator.EQUALS, 'true')
+        .and('proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
+
+      if (this.data.fechaInicioAnualidad && this.data.fechaFinAnualidad) {
+        filter.and(
+          'inRangoProyectoAnualidad',
+          SgiRestFilterOperator.BETWEEN,
+          [LuxonUtils.toBackend(this.data.fechaInicioAnualidad), LuxonUtils.toBackend(this.data.fechaFinAnualidad)]
+        );
+      } else {
+        filter
+          .and('fechaInicioAnualidadMin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaInicioAnualidad))
+          .and('fechaFinAnualidadMax', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaFinAnualidad));
+      }
+
       const queryOptionsConceptoGasto: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('permitido', SgiRestFilterOperator.EQUALS, 'true')
-          .and(
-            'inRangoProyectoAnualidad',
-            SgiRestFilterOperator.BETWEEN,
-            [LuxonUtils.toBackend(this.data.fechaInicioAnualidad), LuxonUtils.toBackend(this.data.fechaFinAnualidad)]
-          )
-          .and('proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString())
+        filter
       };
 
       conceptosGasto$ = this.proyectoConceptoGastoService.findAll(queryOptionsConceptoGasto).pipe(
@@ -503,14 +512,23 @@ export class ProyectoAnualidadGastoModalComponent extends
   }
 
   private buildFilterCodigosEconomicos(conceptoGastoId: number, permitido: boolean): SgiRestFilter {
-    return new RSQLSgiRestFilter('proyectoConceptoGasto.permitido', SgiRestFilterOperator.EQUALS, permitido.toString())
-      .and(
+    const filter = new RSQLSgiRestFilter('proyectoConceptoGasto.permitido', SgiRestFilterOperator.EQUALS, permitido.toString())
+      .and('proyectoConceptoGasto.conceptoGasto.id', SgiRestFilterOperator.EQUALS, conceptoGastoId.toString())
+      .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
+
+    if (this.data.fechaInicioAnualidad && this.data.fechaFinAnualidad) {
+      filter.and(
         'inRangoProyectoAnualidad',
         SgiRestFilterOperator.BETWEEN,
         [LuxonUtils.toBackend(this.data.fechaInicioAnualidad), LuxonUtils.toBackend(this.data.fechaFinAnualidad)]
-      )
-      .and('proyectoConceptoGasto.conceptoGasto.id', SgiRestFilterOperator.EQUALS, conceptoGastoId.toString())
-      .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
+      );
+    } else {
+      filter
+        .and('fechaInicioAnualidadMin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaInicioAnualidad))
+        .and('fechaFinAnualidadMax', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.data.fechaFinAnualidad));
+    }
+
+    return filter;
   }
 
   loadCodigosEconomicosCombo(codigoEconomicoTipo?: CodigoEconomicoTipo, codigoEconomicoSeleccionado?: ICodigoEconomicoGasto) {
