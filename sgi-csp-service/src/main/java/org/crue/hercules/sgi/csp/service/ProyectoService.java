@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersona;
 import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -190,5 +191,13 @@ public interface ProyectoService {
    *         paginadas y filtradas.
    */
   Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable);
+
+  /**
+   * Obtiene los datos de proyectos competitivos de la persona.
+   *
+   * @param personaRef Id de la persona.
+   * @return el {@ProyectosCompetitivosPersona}.
+   */
+  ProyectosCompetitivosPersona getProyectosCompetitivosPersona(String personaRef);
 
 }

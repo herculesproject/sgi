@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
@@ -62,4 +63,26 @@ public interface CustomProyectoRepository {
    */
   List<ProyectoDto> findProyectosProduccionCientifica(Instant fechaInicioBaremacion,
       Instant fechaFinBaremacion);
+
+  /**
+   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
+   * rol principal en la fecha indicada
+   *
+   * @param personaRef Id de la persona.
+   * @return el numero de {@link Proyecto}.
+   */
+  Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn);
+
+  /**
+   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
+   * rol principal en la fecha indicada
+   *
+   * @param personaRef Id de la persona.
+   * @param fecha      fecha.
+   * @return el numero de {@link Proyecto}.
+   */
+  Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha);
+
 }

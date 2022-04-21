@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.repository.custom;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,14 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad_;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -60,6 +65,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * @param id Id de la {@link Proyecto}.
    * @return {@link ModeloEjecucion} asignado
    */
+  @Override
   public Optional<ModeloEjecucion> getModeloEjecucion(Long id) {
     log.debug("getModeloEjecucion(Long id) - start");
 
@@ -83,6 +89,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
    *         permiten {@link ProyectoPaqueteTrabajo}
    */
+  @Override
   public Optional<Boolean> getPermitePaquetesTrabajo(Long proyectoId) {
     log.debug("getPermitePaquetesTrabajo(Long id) - start");
 
@@ -227,6 +234,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * 
    * @return Lista de {@link ProyectoDto}
    */
+  @Override
   public List<ProyectoDto> findProyectosProduccionCientifica(Instant fechaInicioBaremacion,
       Instant fechaFinBaremacion) {
 
@@ -283,4 +291,68 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     return result;
   }
+
+  /**
+   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
+   * rol principal
+   *
+   * @param personaRef Id de la persona.
+   * @return el numero de {@link Proyecto}.
+   */
+  @Override
+  public Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) {
+    log.debug("countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) - start");
+    Long returnValue = countProyectosClasificacionCvnPersona(personaRef, clasificacionCvn, null);
+    log.debug("countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
+   * rol principal en la fecha indicada
+   *
+   * @param personaRef Id de la persona.
+   * @param fecha      fecha.
+   * @return el numero de {@link Proyecto}.
+   */
+  @Override
+  public Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn,
+      Instant fecha) {
+    log.debug(
+        "countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha) - start");
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+    Root<Proyecto> root = cq.from(Proyecto.class);
+    Join<Proyecto, ProyectoEquipo> joinProyectoEquipo = root.join(Proyecto_.equipo);
+    Join<ProyectoEquipo, RolProyecto> joinRolProyecto = joinProyectoEquipo.join(ProyectoEquipo_.rolProyecto);
+
+    List<Predicate> listPredicates = new ArrayList<>();
+    listPredicates.add(cb.equal(root.get(Proyecto_.clasificacionCVN), clasificacionCvn));
+    listPredicates.add(cb.equal(joinProyectoEquipo.get(ProyectoEquipo_.personaRef), personaRef));
+    listPredicates.add(cb.isTrue(joinRolProyecto.get(RolProyecto_.rolPrincipal)));
+
+    if (fecha != null) {
+      listPredicates.add(
+          cb.and(
+              cb.or(cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio)),
+                  cb.lessThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio), fecha)),
+              cb.or(cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin)),
+                  cb.greaterThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin), fecha))));
+    }
+
+    cq.select(cb.count(root.get(Proyecto_.id)));
+    cq.where(listPredicates.toArray(new Predicate[] {}));
+
+    // Execute query
+    Long returnValue = entityManager.createQuery(cq).getResultList()
+        .stream().findFirst().orElse(0L);
+
+    log.debug(
+        "countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha) - end");
+    return returnValue;
+  }
+
 }

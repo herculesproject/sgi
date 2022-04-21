@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersona;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -96,22 +97,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * ProyectoController
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(ProyectoController.REQUEST_MAPPING)
 @Slf4j
 public class ProyectoController {
 
   /** El path que gestiona este controlador */
-  public static final String REQUEST_MAPPING = "/proyectos";
-  public static final String PATH_ID = "/{id}";
-  public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + "/investigadoresprincipales";
+  public static final String PATH_SEPARATOR = "/";
+  public static final String REQUEST_MAPPING = PATH_SEPARATOR + "proyectos";
+  public static final String PATH_ID = PATH_SEPARATOR + "{id}";
+  public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
+  public static final String PATH_PROYECTOS_COMPETITIVOS_PERSONA = PATH_SEPARATOR + "competitivos" + PATH_SEPARATOR
+      + "persona"
+      + PATH_SEPARATOR + "{personaRef}";
 
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
   /** Proyecto service */
   private final ProyectoService service;
@@ -195,90 +202,6 @@ public class ProyectoController {
 
   /** Convocatoria service */
   private final ConvocatoriaService convocatoriaService;
-
-  /**
-   * Instancia un nuevo ProyectoController.
-   * 
-   * @param modelMapper                                       {@link ModelMapper}.
-   * @param proyectoService                                   {@link ProyectoService}.
-   * @param proyectoHitoService                               {@link ProyectoHitoService}.
-   * @param proyectoFaseService                               {@link ProyectoFaseService}.
-   * @param proyectoPaqueteTrabajoService                     {@link ProyectoPaqueteTrabajoService}.
-   * @param proyectoSocioService                              {@link ProyectoSocioService}.
-   * @param proyectoEntidadFinanciadoraService                {@link ProyectoEntidadFinanciadoraService}.
-   * @param proyectoPeriodoSeguimientoService                 {@link ProyectoPeriodoSeguimientoService}
-   * @param proyectoEntidadGestoraService                     {@link ProyectoEntidadGestoraService}
-   * @param proyectoEquipoService                             {@link ProyectoEquipoService}.
-   * @param estadoProyectoService                             {@link EstadoProyectoService}.
-   * @param proyectoProrrogaService                           {@link ProyectoProrrogaService}.
-   * @param proyectoDocumentoService                          {@link ProyectoDocumentoService}.
-   * @param prorrogaDocumentoService                          {@link ProrrogaDocumentoService}.
-   * @param proyectoPeriodoSeguimientoDocumentoService        {@link ProyectoPeriodoSeguimientoDocumentoService}.
-   * @param proyectoSocioPeriodoJustificacionDocumentoService {@link ProyectoSocioPeriodoJustificacionDocumentoService}.
-   * @param proyectoClasificacionService                      {@link ProyectoClasificacionService}.
-   * @param proyectoAreaConocimientoService                   {@link ProyectoAreaConocimientoService}.
-   * @param proyectoProyectoSgeService                        {@link ProyectoProyectoSgeService}.
-   * @param proyectoAnualidadService                          {@link ProyectoAnualidadService}.
-   * @param proyectoPartidaService                            {@link ProyectoPartidaService}.
-   * @param proyectoConceptoGastoService                      {@link ProyectoConceptoGastoService}.
-   * @param proyectoResponsableEconomicoService               {@link ProyectoResponsableEconomicoService}.
-   * @param proyectoAgrupacionGastoService                    {@link ProyectoAgrupacionGastoService}.
-   * @param proyectoPeriodoJustificacionService               {@link ProyectoPeriodoJustificacionService}.
-   * @param anualidadGastoService                             {@link AnualidadGastoService}
-   * @param proyectoPalabraClaveService                       {@link ProyectoPalabraClaveService}
-   * @param notificacionProyectoExternoCVNService             {@link NotificacionProyectoExternoCVNService}
-   * @param convocatoriaService                               {@link ConvocatoriaService}
-   */
-  public ProyectoController(ModelMapper modelMapper, ProyectoService proyectoService,
-      ProyectoHitoService proyectoHitoService, ProyectoFaseService proyectoFaseService,
-      ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService, ProyectoEquipoService proyectoEquipoService,
-      ProyectoSocioService proyectoSocioService, ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
-      ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
-      ProyectoProrrogaService proyectoProrrogaService, ProyectoEntidadGestoraService proyectoEntidadGestoraService,
-      ProyectoDocumentoService proyectoDocumentoService, EstadoProyectoService estadoProyectoService,
-      ProrrogaDocumentoService prorrogaDocumentoService,
-      ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService,
-      ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService,
-      ProyectoClasificacionService proyectoClasificacionService,
-      ProyectoAreaConocimientoService proyectoAreaConocimientoService,
-      ProyectoProyectoSgeService proyectoProyectoSgeService, ProyectoPartidaService proyectoPartidaService,
-      ProyectoConceptoGastoService proyectoConceptoGastoService, ProyectoAnualidadService proyectoAnualidadService,
-      ProyectoResponsableEconomicoService proyectoResponsableEconomicoService,
-      ProyectoAgrupacionGastoService proyectoAgrupacionGastoService,
-      ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService,
-      AnualidadGastoService anualidadGastoService, ProyectoPalabraClaveService proyectoPalabraClaveService,
-      NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService,
-      ConvocatoriaService convocatoriaService) {
-    this.modelMapper = modelMapper;
-    this.service = proyectoService;
-    this.proyectoHitoService = proyectoHitoService;
-    this.proyectoFaseService = proyectoFaseService;
-    this.proyectoPaqueteTrabajoService = proyectoPaqueteTrabajoService;
-    this.proyectoSocioService = proyectoSocioService;
-    this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
-    this.proyectoDocumentoService = proyectoDocumentoService;
-    this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
-    this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
-    this.proyectoEquipoService = proyectoEquipoService;
-    this.proyectoProrrogaService = proyectoProrrogaService;
-    this.estadoProyectoService = estadoProyectoService;
-    this.prorrogaDocumentoService = prorrogaDocumentoService;
-    this.proyectoPeriodoSeguimientoDocumentoService = proyectoPeriodoSeguimientoDocumentoService;
-    this.proyectoSocioPeriodoJustificacionDocumentoService = proyectoSocioPeriodoJustificacionDocumentoService;
-    this.proyectoClasificacionService = proyectoClasificacionService;
-    this.proyectoAreaConocimientoService = proyectoAreaConocimientoService;
-    this.proyectoProyectoSgeService = proyectoProyectoSgeService;
-    this.proyectoAnualidadService = proyectoAnualidadService;
-    this.proyectoPartidaService = proyectoPartidaService;
-    this.proyectoConceptoGastoService = proyectoConceptoGastoService;
-    this.proyectoResponsableEconomicoService = proyectoResponsableEconomicoService;
-    this.proyectoAgrupacionGastoService = proyectoAgrupacionGastoService;
-    this.proyectoPeriodoJustificacionService = proyectoPeriodoJustificacionService;
-    this.anualidadGastoService = anualidadGastoService;
-    this.proyectoPalabraClaveService = proyectoPalabraClaveService;
-    this.notificacionProyectoExternoCVNService = notificacionProyectoExternoCVNService;
-    this.convocatoriaService = convocatoriaService;
-  }
 
   /**
    * Crea nuevo {@link Proyecto}
@@ -1573,6 +1496,21 @@ public class ProyectoController {
     log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - end");
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene los datos de proyectos competitivos de la persona.
+   *
+   * @param personaRef Id de la persona.
+   * @return el {@ProyectosCompetitivosPersona}.
+   */
+  @GetMapping(PATH_PROYECTOS_COMPETITIVOS_PERSONA)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<ProyectosCompetitivosPersona> getProyectosCompetitivosPersona(@PathVariable String personaRef) {
+    log.debug("getProyectosCompetitivosPersona(personaRef) - start");
+    ProyectosCompetitivosPersona returnValue = service.getProyectosCompetitivosPersona(personaRef);
+    log.debug("getProyectosCompetitivosPersona(personaRef) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
