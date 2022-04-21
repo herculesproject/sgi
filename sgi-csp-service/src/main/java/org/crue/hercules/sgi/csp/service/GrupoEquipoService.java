@@ -243,8 +243,8 @@ public class GrupoEquipoService {
    * Lista de ids {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
    * baremación
    *
-   * @param personaRef      personaRef
-   * @param fechaBaremacion fecha de baremación
+   * @param personaRef personaRef
+   * @param anio       anio
    * @return lista de ids {@link GrupoEquipo}
    */
   public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Integer anio) {
