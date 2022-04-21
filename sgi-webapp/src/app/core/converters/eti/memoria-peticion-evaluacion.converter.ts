@@ -1,5 +1,6 @@
 import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
+import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { RETROSPECTIVA_CONVERTER } from './retrospectiva.converter';
@@ -21,7 +22,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
       fechaLimite: LuxonUtils.fromBackend(value.fechaLimite),
       isResponsable: value.isResponsable,
       activo: value.activo,
-      solicitanteRef: value.solicitanteRef
+      solicitante: { id: value.solicitanteRef } as IPersona
     };
   }
 
@@ -41,7 +42,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
       fechaLimite: LuxonUtils.toBackend(value.fechaLimite),
       isResponsable: value.isResponsable,
       activo: value.activo,
-      solicitanteRef: value.solicitanteRef
+      solicitanteRef: value.solicitante.id
     };
   }
 }

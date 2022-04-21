@@ -79,6 +79,15 @@
     <table mat-table [dataSource]="memorias$ | async" matSort matSortActive="id" matSortDirection="asc"
       matSortDisableClear>
 
+      <!-- Nombre y apellidos persona -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.conflicto-interes.persona' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria">
+          {{memoria.solicitante?.nombre}} {{memoria.solicitante?.apellidos}}
+        </td>
+      </ng-container>
+
       <!-- Referencia memoria -->
       <ng-container matColumnDef="numReferencia">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.memoria.referencia' | translate}}

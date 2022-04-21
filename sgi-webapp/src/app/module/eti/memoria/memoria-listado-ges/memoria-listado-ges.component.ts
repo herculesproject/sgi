@@ -20,9 +20,12 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
-import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
+import { IPersona } from '@core/models/sgp/persona';
+import { PersonaService } from '@core/services/sgp/persona.service';
+import { NGXLogger } from 'ngx-logger';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -64,12 +67,14 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly dialogService: DialogService,
     private readonly memoriaService: MemoriaService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly personaService: PersonaService
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -126,8 +131,42 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     // TODO: Eliminar casteo cuando se solucion la respuesta del back
     return observable$ as unknown as Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>>;
   }
+
+  /**
+   * Devuelve los datos rellenos de los responsabes de las memorias
+   * @param memorias el listado de memorias
+   * returns los responsables de memorias con todos sus datos
+   */
+  getDatosResponsablesMemorias(memorias: IMemoriaPeticionEvaluacion[]): IMemoriaPeticionEvaluacion[] {
+    memorias.forEach((memoria) => {
+      // cambiar en futuro pasando las referencias de las personas
+      memoria = this.loadDatosResponsable(memoria);
+    });
+    return memorias;
+  }
+
+  /**
+   * Devuelve los datos de persona de la memoria
+   * @param memoria la memoria
+   * returns la memoria con los datos del responsable
+   */
+  loadDatosResponsable(memoria: IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacion {
+    const personaServiceOneSubscription = this.personaService.findById(memoria.solicitante.id)
+      .subscribe(
+        (persona: IPersona) => {
+          memoria.solicitante = persona;
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR);
+        }
+      );
+    this.suscripciones.push(personaServiceOneSubscription);
+    return memoria;
+  }
+
   protected initColumns(): void {
-    this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+    this.displayedColumns = ['nombre', 'numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   }
 
   protected createFilter(): SgiRestFilter {
@@ -140,7 +179,23 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
 
   protected loadTable(reset?: boolean) {
-    this.memorias$ = this.getObservableLoadTable(reset);
+    this.memorias$ = this.getObservableLoadTable(reset).pipe(
+      map((response) => {
+        // Reset pagination to first page
+        if (reset) {
+          this.paginator.pageIndex = 0;
+        }
+        // Return the values
+        return this.getDatosResponsablesMemorias(response as unknown as IMemoriaPeticionEvaluacion[]);
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        // On error reset pagination values
+        this.paginator.firstPage();
+        this.snackBarService.showError(MSG_ERROR);
+        return of([]);
+      })
+    );
   }
 
   /**
