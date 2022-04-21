@@ -518,13 +518,16 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
             cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
       }
 
-      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(predicateEvaluacion,
+      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.comite)).where(predicateEvaluacion,
           cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
               cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
-      listPredicates.add(
-          cb.or(cb.in(queryEvaluadores).value(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef)),
-              cb.in(queryEvaluadores).value(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef))));
+      listPredicates
+          .add(cb.or(
+              cb.in(queryEvaluadores).value(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.comite).get(
+                  Comite_.comite)),
+              cb.in(queryEvaluadores).value(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.comite)
+                  .get(Comite_.comite))));
     }
 
     Predicate memoriaVersion = cb.equal(rootEvaluacion.get(Evaluacion_.version),
@@ -664,13 +667,15 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
             cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
       }
 
-      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.personaRef)).where(predicateEvaluacion,
+      queryEvaluadores.select(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.comite)).where(predicateEvaluacion,
           cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
               cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
 
       listPredicates
-          .add(cb.or(cb.in(queryEvaluadores).value(root.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef)),
-              cb.in(queryEvaluadores).value(root.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef))));
+          .add(cb.or(cb.in(queryEvaluadores).value(root.get(Evaluacion_.evaluador1).get(Evaluador_.comite).get(
+              Comite_.comite)),
+              cb.in(queryEvaluadores).value(root.get(Evaluacion_.evaluador2).get(Evaluador_.comite)
+                  .get(Comite_.comite))));
     }
 
     listPredicates.add(cb.equal(root.get(Evaluacion_.version), root.get(Evaluacion_.memoria).get(Memoria_.version)));
