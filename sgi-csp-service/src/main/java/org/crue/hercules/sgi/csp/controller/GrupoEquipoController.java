@@ -35,11 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class GrupoEquipoController {
-
-  public static final String REQUEST_MAPPING = "/gruposequipos";
-  public static final String PATH_PERSONA_BAREMABLE_PERSONA_REF_ANIO = "/persona-baremable/{personaRef}/{anio}";
-  public static final String PATH_BAREMABLES_GRUPO_REF_ANIO = "/baremables/{grupoRef}/{anio}";
-  public static final String PATH_ID = "/{id}";
+  public static final String PATH_DELIMITER = "/";
+  public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposequipos";
+  public static final String PATH_PERSONA_BAREMABLE_PERSONA_REF_ANIO = PATH_DELIMITER
+      + "persona-baremable/{personaRef}/{anio}";
+  public static final String PATH_GRUPOS_PERSONA_REF_ANIO = PATH_DELIMITER + "/{personaRef}/{anio}";
+  public static final String PATH_BAREMABLES_GRUPO_REF_ANIO = PATH_DELIMITER + "baremables/{grupoRef}/{anio}";
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
 
   private final GrupoEquipoService service;
   private final GrupoEquipoConverter converter;
@@ -135,6 +137,32 @@ public class GrupoEquipoController {
     }
 
     log.debug("findByGrupoIdAndAnio(grupoRef, anio) - end");
+
+    return new ResponseEntity<>(gruposEquipos, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista de ids {@link GrupoEquipo} pertenecientes a un
+   * determinado personaRef y que estén a 31 de diciembre del año de baremación
+   *
+   * @param personaRef personaRef
+   * @param anio       año de baremación
+   * @return lista de ids {@link GrupoEquipo}
+   */
+  @GetMapping(PATH_GRUPOS_PERSONA_REF_ANIO)
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
+  public ResponseEntity<List<Long>> findGrupoEquipoByPersonaRefAndFechaBaremacion(@PathVariable String personaRef,
+      @PathVariable Integer anio) {
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({},{}) - start", personaRef, anio);
+    List<Long> gruposEquipos = service.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, anio);
+
+    if (gruposEquipos.isEmpty()) {
+      log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({},{}) - end", personaRef, anio);
+
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({},{}) - end", personaRef, anio);
 
     return new ResponseEntity<>(gruposEquipos, HttpStatus.OK);
   }

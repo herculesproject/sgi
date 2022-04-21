@@ -172,6 +172,40 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
   }
 
   /**
+   * Lista de ids {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
+   * baremación
+   *
+   * @param personaRef      personaRef
+   * @param fechaBaremacion fecha de baremación
+   * @return lista de ids {@link GrupoEquipo}
+   */
+  @Override
+  public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Instant fechaBaremacion) {
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({}, {}) - start", personaRef, fechaBaremacion);
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+    Root<GrupoEquipo> root = cq.from(GrupoEquipo.class);
+
+    Predicate predicateGrupoEquipoInFechaBaremacion = cb.and(
+        cb.lessThanOrEqualTo(root.get(GrupoEquipo_.fechaInicio), fechaBaremacion),
+        cb.and(cb.or(cb.isNull(root.get(GrupoEquipo_.fechaFin)),
+            cb.greaterThanOrEqualTo(root.get(GrupoEquipo_.fechaFin), fechaBaremacion))));
+
+    Predicate predicateIsPersonaRef = cb.equal(root.get(GrupoEquipo_.personaRef), personaRef);
+
+    Predicate predicateFinal = cb.and(
+        predicateIsPersonaRef,
+        predicateGrupoEquipoInFechaBaremacion);
+
+    cq.select(root.get(GrupoEquipo_.grupoId)).where(predicateFinal);
+
+    log.debug("findGrupoEquipoByPersonaRefAndFechaBaremacion({}, {}) - end", personaRef, fechaBaremacion);
+
+    return entityManager.createQuery(cq).getResultList();
+  }
+
+  /**
    * Devuelve una lista de {@link GrupoEquipo} pertenecientes a un determinado
    * grupo y que estén a 31 de diciembre del año de baremación
    *

@@ -72,4 +72,14 @@ public interface CustomGrupoEquipoRepository {
    */
   List<GrupoEquipoDto> findByGrupoIdAndAnio(Long grupoRef, Instant fechaBaremacion);
 
+  /**
+   * Lista de ids {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
+   * baremación
+   *
+   * @param personaRef      personaRef
+   * @param fechaBaremacion fecha de baremación
+   * @return lista de ids {@link GrupoEquipo}
+   */
+  List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Instant fechaBaremacion);
+
 }

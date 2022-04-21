@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -21,16 +20,16 @@ import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -238,6 +237,20 @@ public class GrupoEquipoService {
 
     Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
     return repository.findByGrupoIdAndAnio(grupoRef, fechaBaremacion);
+  }
+
+  /**
+   * Lista de ids {@link GrupoEquipo} cuyo personaRef está dentro de la fecha de
+   * baremación
+   *
+   * @param personaRef      personaRef
+   * @param fechaBaremacion fecha de baremación
+   * @return lista de ids {@link GrupoEquipo}
+   */
+  public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Integer anio) {
+
+    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
+    return repository.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, fechaBaremacion);
   }
 
   /**
