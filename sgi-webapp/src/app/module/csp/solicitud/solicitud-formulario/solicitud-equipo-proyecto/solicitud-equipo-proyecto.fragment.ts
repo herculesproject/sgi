@@ -1,4 +1,5 @@
 import { ValidacionRequisitosEquipoIp } from '@core/enums/validaciones-requisitos-equipo-ip';
+import { IConvocatoriaRequisito } from '@core/models/csp/convocatoria-requisito';
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
@@ -11,6 +12,7 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -20,7 +22,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
-import { filter, map, mergeMap, share, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, share, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 
 export enum HelpIconClass {
@@ -65,6 +67,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     private vinculacionService: VinculacionService,
     private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     private datosPersonalesService: DatosPersonalesService,
+    private proyectoService: ProyectoService,
     public isInvestigador: boolean,
     public readonly: boolean
   ) {
@@ -103,8 +106,15 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
               new StatusWrapper<ISolicitudProyectoEquipoListado>({ solicitudProyectoEquipo } as ISolicitudProyectoEquipoListado))));
         }),
         switchMap(result => {
+          if (!this.convocatoriaId) {
+            return of(result);
+          }
+
+          return this.getRequisitosConvocatoria(this.convocatoriaId).pipe(map(() => result));
+        }),
+        switchMap(result => {
           return from(result).pipe(
-            mergeMap(element => {
+            concatMap(element => {
               return this.validateRequisitosConvocatoria(element.value.solicitudProyectoEquipo, this.convocatoriaId).pipe(
                 map(response => {
                   if (response) {
@@ -263,12 +273,16 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     if (this.requisitosConvocatoria) {
       return of(this.requisitosConvocatoria);
     } else {
-      let nivelesAcademicosRequisitosEquipo$ = this.isInvestigador && this.solicitudId ? this.solicitudService.findRequisitosEquipoNivelesAcademicos(this.solicitudId) : this.convocatoriaService.findRequisitosEquipoNivelesAcademicos(convocatoriaId);
+      let nivelesAcademicosRequisitosEquipo$ = this.isInvestigador
+        && this.solicitudId ? this.solicitudService.findRequisitosEquipoNivelesAcademicos(this.solicitudId)
+        : this.convocatoriaService.findRequisitosEquipoNivelesAcademicos(convocatoriaId);
       nivelesAcademicosRequisitosEquipo$ = nivelesAcademicosRequisitosEquipo$.pipe(
         tap(nivelesAcademicos => requisitosConvocatoria.nivelesAcademicosRequisitosEquipo = nivelesAcademicos)
       );
 
-      let nivelesAcademicosRequisitosIp$ = this.isInvestigador && this.solicitudId ? this.solicitudService.findRequisitosIpNivelesAcademicos(this.solicitudId) : this.convocatoriaService.findRequisitosIpNivelesAcademicos(convocatoriaId);
+      let nivelesAcademicosRequisitosIp$ = this.isInvestigador
+        && this.solicitudId ? this.solicitudService.findRequisitosIpNivelesAcademicos(this.solicitudId)
+        : this.convocatoriaService.findRequisitosIpNivelesAcademicos(convocatoriaId);
       nivelesAcademicosRequisitosIp$ = nivelesAcademicosRequisitosIp$.pipe(
         tap(nivelesAcademicos => requisitosConvocatoria.nivelesAcademicosRequisitosIp = nivelesAcademicos)
       );
@@ -279,7 +293,9 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
             requisitosConvocatoria.categoriasProfesionalesRequisitosEquipo = categorias.map(element => element.categoriaProfesional))
         );
 
-      let categoriasProfesionalesRequisitosIp$ = this.isInvestigador && this.solicitudId ? this.solicitudService.findRequisitosIpCategoriasProfesionales(this.solicitudId) : this.convocatoriaService.findRequisitosIpCategoriasProfesionales(convocatoriaId);
+      let categoriasProfesionalesRequisitosIp$ = this.isInvestigador
+        && this.solicitudId ? this.solicitudService.findRequisitosIpCategoriasProfesionales(this.solicitudId)
+        : this.convocatoriaService.findRequisitosIpCategoriasProfesionales(convocatoriaId);
       categoriasProfesionalesRequisitosIp$ = categoriasProfesionalesRequisitosIp$.pipe(
         tap(categorias =>
           requisitosConvocatoria.categoriasProfesionalesRequisitosIp = categorias.map(element => element.categoriaProfesional))
@@ -317,7 +333,14 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   ): Observable<ValidacionRequisitosEquipoIp> {
     return this.getRequisitosConvocatoria(convocatoriaId).pipe(
       switchMap(() => {
-        return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        return this.validateRequisitosIpProyectosCompetitivos(solicitudProyectoEquipo, this.requisitosConvocatoria.requisitosEquipo);
+      }),
+      switchMap(response => {
+        if (!response) {
+          return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        }
+
+        return of(response);
       }),
       switchMap(response => {
         if (!response) {
@@ -459,7 +482,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
         miembroEquipo.persona.sexo?.id === requisitosConvocatoria.requisitosEquipo.sexo.id
       ).length;
 
-      const ratioSexo = numMiembrosSexo / miembrosEquipoNoPrincipales.length * 100
+      const ratioSexo = numMiembrosSexo / miembrosEquipoNoPrincipales.length * 100;
       if (ratioSexo < requisitosConvocatoria.requisitosEquipo.ratioSexo) {
         return of(ValidacionRequisitosEquipoIp.RATIO_SEXO);
       }
@@ -474,7 +497,14 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   ): Observable<ValidacionRequisitosEquipoIp> {
     return this.getRequisitosConvocatoria(convocatoriaId).pipe(
       switchMap(() => {
-        return this.validateRequisitosIpDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        return this.validateRequisitosIpProyectosCompetitivos(solicitudProyectoEquipo, this.requisitosConvocatoria.requisitosIp);
+      }),
+      switchMap(response => {
+        if (!response) {
+          return this.validateRequisitosIpDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        }
+
+        return of(response);
       }),
       switchMap(response => {
         if (!response) {
@@ -628,6 +658,41 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     return of(null);
   }
 
+  private validateRequisitosIpProyectosCompetitivos(
+    solicitudProyectoEquipo: ISolicitudProyectoEquipo,
+    requisitosProyectosCompetitivos: IConvocatoriaRequisito
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    if (!requisitosProyectosCompetitivos?.numMaximoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMaximoNoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMinimoCompetitivos
+      && !requisitosProyectosCompetitivos?.numMinimoNoCompetitivos
+    ) {
+      return of(null);
+    }
+
+    return this.proyectoService.getProyectoCompetitivosPersona(solicitudProyectoEquipo.persona.id).pipe(
+      map(response => {
+        if (requisitosProyectosCompetitivos.numMaximoCompetitivosActivos
+          && response.numProyectosCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoCompetitivosActivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES;
+        } else if (requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos
+          && response.numProyectosNoCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_NO_COMPETITIVOS_ACTUALES;
+        } else if (requisitosProyectosCompetitivos.numMinimoCompetitivos
+          && response.numProyectosCompetitivos < requisitosProyectosCompetitivos.numMinimoCompetitivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_COMPETITIVOS;
+        } else if (requisitosProyectosCompetitivos.numMinimoNoCompetitivos
+          && response.numProyectosNoCompetitivos < requisitosProyectosCompetitivos.numMinimoNoCompetitivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_NO_COMPETITIVOS;
+        }
+
+        return null;
+      })
+    );
+
+  }
+
   private validateRequisitosConvocatoria(
     solicitudProyectoEquipo: ISolicitudProyectoEquipo,
     convocatoriaId: number
@@ -667,7 +732,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
 
         return of(response);
       })
-    )
+    );
   }
 
 }

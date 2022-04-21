@@ -1,4 +1,5 @@
 import { ValidacionRequisitosEquipoIp } from '@core/enums/validaciones-requisitos-equipo-ip';
+import { IConvocatoriaRequisito } from '@core/models/csp/convocatoria-requisito';
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
@@ -277,13 +278,55 @@ export class ProyectoEquipoFragment extends Fragment {
     }
   }
 
+  private validateRequisitosIpProyectosCompetitivos(
+    proyectoEquipo: IProyectoEquipo,
+    requisitosProyectosCompetitivos: IConvocatoriaRequisito
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    if (!requisitosProyectosCompetitivos?.numMaximoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMaximoNoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMinimoCompetitivos
+      && !requisitosProyectosCompetitivos?.numMinimoNoCompetitivos
+    ) {
+      return of(null);
+    }
+
+    return this.proyectoService.getProyectoCompetitivosPersona(proyectoEquipo.persona.id).pipe(
+      map(response => {
+        if (requisitosProyectosCompetitivos.numMaximoCompetitivosActivos
+          && response.numProyectosCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoCompetitivosActivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES;
+        } else if (requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos
+          && response.numProyectosNoCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_NO_COMPETITIVOS_ACTUALES;
+        } else if (requisitosProyectosCompetitivos.numMinimoCompetitivos
+          && response.numProyectosCompetitivos < requisitosProyectosCompetitivos.numMinimoCompetitivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_COMPETITIVOS;
+        } else if (requisitosProyectosCompetitivos.numMinimoNoCompetitivos
+          && response.numProyectosNoCompetitivos < requisitosProyectosCompetitivos.numMinimoNoCompetitivos) {
+          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_NO_COMPETITIVOS;
+        }
+
+        return null;
+      })
+    );
+
+  }
+
   private validateRequisitosIp(
     proyectoEquipo: IProyectoEquipo,
     convocatoriaId: number
   ): Observable<ValidacionRequisitosEquipoIp> {
     return this.getRequisitosConvocatoria(convocatoriaId).pipe(
       switchMap(() => {
-        return this.validateRequisitosIpDatosPersonales(proyectoEquipo, this.requisitosConvocatoria);
+        return this.validateRequisitosIpProyectosCompetitivos(proyectoEquipo, this.requisitosConvocatoria.requisitosIp);
+      }),
+      switchMap(response => {
+        if (!response) {
+          return this.validateRequisitosIpDatosPersonales(proyectoEquipo, this.requisitosConvocatoria);
+        }
+
+        return of(response);
       }),
       switchMap(response => {
         if (!response) {
@@ -308,7 +351,14 @@ export class ProyectoEquipoFragment extends Fragment {
   ): Observable<ValidacionRequisitosEquipoIp> {
     return this.getRequisitosConvocatoria(convocatoriaId).pipe(
       switchMap(() => {
-        return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        return this.validateRequisitosIpProyectosCompetitivos(solicitudProyectoEquipo, this.requisitosConvocatoria.requisitosEquipo);
+      }),
+      switchMap(response => {
+        if (!response) {
+          return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
+        }
+
+        return of(response);
       }),
       switchMap(response => {
         if (!response) {
