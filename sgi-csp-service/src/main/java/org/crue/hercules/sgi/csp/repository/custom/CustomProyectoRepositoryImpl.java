@@ -297,7 +297,8 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal
    *
-   * @param personaRef Id de la persona.
+   * @param personaRef       Id de la persona.
+   * @param clasificacionCvn la clasificacion.
    * @return el numero de {@link Proyecto}.
    */
   @Override
@@ -313,8 +314,9 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal en la fecha indicada
    *
-   * @param personaRef Id de la persona.
-   * @param fecha      fecha.
+   * @param personaRef       Id de la persona.
+   * @param clasificacionCvn la clasificacion.
+   * @param fecha            fecha.
    * @return el numero de {@link Proyecto}.
    */
   @Override

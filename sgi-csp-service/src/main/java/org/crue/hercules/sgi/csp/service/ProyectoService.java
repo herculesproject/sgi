@@ -196,7 +196,7 @@ public interface ProyectoService {
    * Obtiene los datos de proyectos competitivos de la persona.
    *
    * @param personaRef Id de la persona.
-   * @return el {@ProyectosCompetitivosPersona}.
+   * @return el {@link ProyectosCompetitivosPersona}.
    */
   ProyectosCompetitivosPersona getProyectosCompetitivosPersona(String personaRef);
 

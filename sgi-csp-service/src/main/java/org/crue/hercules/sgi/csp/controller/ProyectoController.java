@@ -1502,7 +1502,7 @@ public class ProyectoController {
    * Obtiene los datos de proyectos competitivos de la persona.
    *
    * @param personaRef Id de la persona.
-   * @return el {@ProyectosCompetitivosPersona}.
+   * @return el {@link ProyectosCompetitivosPersona}.
    */
   @GetMapping(PATH_PROYECTOS_COMPETITIVOS_PERSONA)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")

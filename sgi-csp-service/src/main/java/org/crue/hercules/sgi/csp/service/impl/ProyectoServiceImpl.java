@@ -1867,7 +1867,7 @@ public class ProyectoServiceImpl implements ProyectoService {
    * Obtiene los datos de proyectos competitivos de la persona.
    *
    * @param personaRef Id de la persona.
-   * @return el {@ProyectosCompetitivosPersona}.
+   * @return el {@link ProyectosCompetitivosPersona}.
    */
   @Override
   public ProyectosCompetitivosPersona getProyectosCompetitivosPersona(String personaRef) {
