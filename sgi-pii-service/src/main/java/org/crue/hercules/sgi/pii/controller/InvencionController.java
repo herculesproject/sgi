@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
@@ -447,10 +448,10 @@ public class InvencionController {
   @GetMapping("/{invencionId}/solicitudesproteccion")
   @PreAuthorize("hasAuthority('PII-INV-E')")
   ResponseEntity<Page<SolicitudProteccionOutput>> findSolicitudesProteccionByInvencionId(@PathVariable Long invencionId,
-      @RequestPageable(sort = "s") Pageable paging) {
+      @RequestPageable(sort = "s") Pageable paging, @RequestParam(required = false, name = "q") String query) {
 
     Page<SolicitudProteccionOutput> page = convertToPageSolicitudProteccion(
-        solicitudProteccionService.findByInvencionId(invencionId, paging));
+        solicitudProteccionService.findByInvencionId(invencionId, query, paging));
 
     return page.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(page);
   }
