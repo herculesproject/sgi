@@ -222,6 +222,7 @@ export class PartidaPresupuestariaModalComponent
       }
     };
   }
+
   private loadConfiguracion() {
     const configuracionFindSubscription = this.configuracionService.getConfiguracion().subscribe(
       configuracion => {
