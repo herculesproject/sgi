@@ -53,8 +53,6 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       outputType: new FormControl(OutputReport.XLSX, Validators.required),
-      reportTitle: new FormControl(this.reportTitle, Validators.required),
-
       showSolicitudesDeProteccion: new FormControl(true),
       showEquipoInventor: new FormControl(true),
     });
@@ -62,7 +60,7 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
 
   protected getReportOptions(): IReportConfig<IInvencionReportOptions> {
     const reportModalData: IReportConfig<IInvencionReportOptions> = {
-      title: this.formGroup.controls.reportTitle.value,
+      title: this.translate.instant('pii.invencion.titulo'),
       outputType: this.formGroup.controls.outputType.value,
       reportOptions: {
         findOptions: this.modalData.findOptions,

@@ -4,6 +4,7 @@ import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
+import { IPais } from '@core/models/sgo/pais';
 import { IPersona } from '@core/models/sgp/persona';
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
@@ -23,13 +24,17 @@ export interface IInventorMiembro {
   vinculacion: IVinculacion;
 }
 export interface IInvencionReportData extends IInvencion {
-  solicitudesDeProteccion?: ISolicitudProteccion[];
+  solicitudesDeProteccion?: ISolicitudProteccionReport[];
   equipoInventor?: IInventorMiembro[];
 }
 
 export interface IInvencionReportOptions extends IReportOptions {
   showSolicitudesDeProteccion: boolean;
   showEquipoInventor: boolean;
+}
+
+export interface ISolicitudProteccionReport extends ISolicitudProteccion {
+  pais?: IPais;
 }
 
 @Injectable()

@@ -3,17 +3,19 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
+import { IPais } from '@core/models/sgo/pais';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
+import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { IInvencionReportData, IInvencionReportOptions } from './invencion-listado-export.service';
+import { from, Observable, of } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
+import { IInvencionReportData, IInvencionReportOptions, ISolicitudProteccionReport } from './invencion-listado-export.service';
 
 const SOLICITUD_PROTECCION_ESTADO_FIELD = 'estado';
 const SOLICITUD_PROTECCION_FECHA_PRIORIDAD_FIELD = 'fechaPrioridad';
@@ -46,7 +48,8 @@ export class InvencionSolicitudesProteccionListadoExportService extends
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private luxonDatePipe: LuxonDatePipe,
-    private readonly invencionService: InvencionService
+    private readonly invencionService: InvencionService,
+    private readonly paisService: PaisService
   ) {
     super(translate);
   }
@@ -63,6 +66,22 @@ export class InvencionSolicitudesProteccionListadoExportService extends
         invencionData.solicitudesDeProteccion = responseSolicitudes.items;
         return of(invencionData);
 
+      }), switchMap((data: IInvencionReportData) => {
+        if (!data.solicitudesDeProteccion) {
+          return of(data);
+        }
+        return from(data.solicitudesDeProteccion).pipe(
+          mergeMap(solicitud => {
+            if (!solicitud.paisProteccion?.id) {
+              return of(data);
+            }
+            return this.paisService.findById(solicitud.paisProteccion.id).pipe(
+              map((paisResponse: IPais) => {
+                solicitud.pais = paisResponse;
+                return data;
+              }));
+          })
+        );
       })
     );
   }
@@ -184,11 +203,11 @@ export class InvencionSolicitudesProteccionListadoExportService extends
     return elementsRow;
   }
 
-  private fillRowsExcel(elementsRow: any[], solicitud: ISolicitudProteccion) {
+  private fillRowsExcel(elementsRow: any[], solicitud: ISolicitudProteccionReport) {
     if (solicitud) {
       elementsRow.push(LuxonUtils.toBackend(solicitud.fechaPrioridadSolicitud) ?? '');
       elementsRow.push(solicitud.viaProteccion?.nombre ?? '');
-      elementsRow.push(solicitud.paisProteccion?.nombre ?? '');
+      elementsRow.push(solicitud.pais?.nombre ?? '');
       elementsRow.push(solicitud.numeroSolicitud ? solicitud.numeroSolicitud.toString() : '');
       elementsRow.push(this.translate.instant(ESTADO_MAP.get(solicitud.estado)) ?? '');
       elementsRow.push(this.notIsNullAndNotUndefined(solicitud.fechaFinPriorPresFasNacRec) ? 'S' : 'N');
