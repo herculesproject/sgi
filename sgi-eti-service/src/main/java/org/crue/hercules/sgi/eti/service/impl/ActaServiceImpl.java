@@ -328,22 +328,7 @@ public class ActaServiceImpl implements ActaService {
 
       // Enviar comunicado de cada evaluación al finalizar un acta
       if (!evaluacionMinima) {
-        try {
-          String tipoActividad;
-          if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
-              .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-            tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
-          } else {
-            tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
-          }
-          this.comunicadosService.enviarComunicadoActaEvaluacionFinalizada(
-              evaluacion.getMemoria().getComite().getNombreInvestigacion(),
-              evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
-              tipoActividad,
-              evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
-        } catch (Exception e) {
-          log.debug("finishActa(Long id) - Error al enviar el comunicado", e);
-        }
+        sendComunicadoActaFinalizada(evaluacion);
       }
 
     }
@@ -394,6 +379,8 @@ public class ActaServiceImpl implements ActaService {
         default:
           break;
       }
+      // Enviar comunicado de cada evaluación al finalizar un acta
+      sendComunicadoActaFinalizada(evaluacion);
 
     });
 
@@ -422,6 +409,8 @@ public class ActaServiceImpl implements ActaService {
           break;
       }
 
+      // Enviar comunicado de cada evaluación al finalizar un acta
+      sendComunicadoActaFinalizada(evaluacion);
     });
 
     // Se crea el nuevo estado acta 2:"Finalizado"
@@ -508,5 +497,26 @@ public class ActaServiceImpl implements ActaService {
   public Boolean hasAssignedActasByEvaluador(String personaRef) {
     log.debug("hasAssignedActasByEvaluador(String personaRef) - end");
     return actaRepository.hasAssignedActasByEvaluador(personaRef);
+  }
+
+  private void sendComunicadoActaFinalizada(Evaluacion evaluacion) {
+    log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Start");
+    try {
+      String tipoActividad;
+      if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+      this.comunicadosService.enviarComunicadoActaEvaluacionFinalizada(
+          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
+          tipoActividad,
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+      log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - End");
+    } catch (Exception e) {
+      log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Error al enviar el comunicado", e);
+    }
   }
 }
