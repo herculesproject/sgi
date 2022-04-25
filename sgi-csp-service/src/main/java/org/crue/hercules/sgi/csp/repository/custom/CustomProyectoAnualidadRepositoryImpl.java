@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -34,6 +35,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad_;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida_;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -119,6 +122,21 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
     queryTotalIngreso.select(cb.sum(subqRootIngreso.get(AnualidadIngreso_.importeConcedido)))
         .where(cb.equal(subqRootIngreso.get(AnualidadIngreso_.proyectoAnualidadId), root.get(ProyectoAnualidad_.id)));
 
+    // AnualidadGasto
+    Subquery<Long> queryAnualidadGasto = cq.subquery(Long.class);
+    Root<AnualidadGasto> rootAnualidadGasto = queryAnualidadGasto.from(AnualidadGasto.class);
+    queryAnualidadGasto.select(cb.count(rootAnualidadGasto.get(AnualidadGasto_.id)))
+        .where(cb.equal(rootAnualidadGasto.get(AnualidadGasto_.proyectoAnualidadId), root.get(ProyectoAnualidad_.id)));
+
+    // AnualidadIngreso
+    Subquery<Long> queryAnualidadIngreso = cq.subquery(Long.class);
+    Root<AnualidadIngreso> rootAnualidadIngreso = queryAnualidadIngreso
+        .from(AnualidadIngreso.class);
+    queryAnualidadIngreso.select(cb.count(rootAnualidadIngreso.get(AnualidadIngreso_.id))).where(
+        cb.equal(rootAnualidadIngreso.get(AnualidadIngreso_.proyectoAnualidadId), root.get(ProyectoAnualidad_.id)));
+
+    Predicate relacionesProyectoAnualidad = cb.or(cb.gt(queryAnualidadGasto, 0L), cb.gt(queryAnualidadIngreso, 0L));
+
     // Execute query
     cq.multiselect(root.get(ProyectoAnualidad_.id).alias(ProyectoAnualidad_.ID),
         root.get(ProyectoAnualidad_.anio).alias(ProyectoAnualidad_.ANIO),
@@ -128,7 +146,8 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
         cb.coalesce(queryTotalGastoConcedido.getSelection(), new BigDecimal(0)).alias(ALIAS_TOTAL_GASTOS_CONCEDIDO),
         cb.coalesce(queryTotalIngreso.getSelection(), new BigDecimal(0)).alias(ALIAS_TOTAL_INGRESOS),
         root.get(ProyectoAnualidad_.presupuestar).alias(ProyectoAnualidad_.PRESUPUESTAR),
-        root.get(ProyectoAnualidad_.enviadoSge).alias(ALIAS_ENVIADO_SGE));
+        root.get(ProyectoAnualidad_.enviadoSge).alias(ALIAS_ENVIADO_SGE),
+        cb.selectCase().when(cb.isTrue(relacionesProyectoAnualidad), true).otherwise(false));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
@@ -453,6 +472,77 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
     log.debug("getTotalImporteConcedidoAnualidadGastoCostesIndirectos(Long proyectoId) - end");
 
     return result;
+  }
+
+  /**
+   * Elimina el {@link ProyectoAnualidad} indicado y los {@link AnualidadGasto},
+   * {@link AnualidadIngreso} y {@link ProyectoPeriodoAmortizacion} asociados.
+   * 
+   * @param id Identificador del {@link ProyectoAnualidad}.
+   * @return el número de registros eliminados.
+   */
+  @Override
+  public int deleteByIdCascade(Long id) {
+    log.debug("deleteByIdCascade(Long id) - start");
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    deleteAnualidadGastoByProyectoAnualidadId(cb, id);
+    deleteAnualidadIngresoByProyectoAnualidadId(cb, id);
+    deletePeriodoAmortizacionByProyectoAnualidadId(cb, id);
+
+    // Crete query
+    CriteriaDelete<ProyectoAnualidad> query = cb.createCriteriaDelete(ProyectoAnualidad.class);
+    Root<ProyectoAnualidad> root = query.from(ProyectoAnualidad.class);
+    query.where(cb.equal(root.get(ProyectoAnualidad_.id), id));
+
+    // Execute query
+    int returnValue = entityManager.createQuery(query).executeUpdate();
+
+    log.debug("deleteByIdCascade(Long id) - end");
+    return returnValue;
+  }
+
+  private int deleteAnualidadGastoByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) {
+    log.debug("deleteAnualidadGastoByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - start");
+
+    CriteriaDelete<AnualidadGasto> queryAnualidadGasto = cb.createCriteriaDelete(AnualidadGasto.class);
+    Root<AnualidadGasto> rootAnualidadGasto = queryAnualidadGasto.from(AnualidadGasto.class);
+    queryAnualidadGasto
+        .where(cb.equal(rootAnualidadGasto.get(AnualidadGasto_.proyectoAnualidadId), proyectoAnualidadId));
+    int returnValue = entityManager.createQuery(queryAnualidadGasto).executeUpdate();
+
+    log.debug("deleteAnualidadGastoByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - end");
+    return returnValue;
+  }
+
+  private int deleteAnualidadIngresoByProyectoAnualidadId(CriteriaBuilder cb, long proyectoAnualidadId) {
+    log.debug("deleteAnualidadIngresoByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - start");
+
+    CriteriaDelete<AnualidadIngreso> queryAnualidadIngreso = cb.createCriteriaDelete(AnualidadIngreso.class);
+    Root<AnualidadIngreso> rootAnualidadIngreso = queryAnualidadIngreso.from(AnualidadIngreso.class);
+    queryAnualidadIngreso
+        .where(cb.equal(rootAnualidadIngreso.get(AnualidadIngreso_.proyectoAnualidadId), proyectoAnualidadId));
+    int returnValue = entityManager.createQuery(queryAnualidadIngreso).executeUpdate();
+
+    log.debug("deleteAnualidadIngresoByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - end");
+    return returnValue;
+  }
+
+  private int deletePeriodoAmortizacionByProyectoAnualidadId(CriteriaBuilder cb, long proyectoAnualidadId) {
+    log.debug("deletePeriodoAmortizacionByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - start");
+
+    CriteriaDelete<ProyectoPeriodoAmortizacion> queryPeriodoAmortizacion = cb
+        .createCriteriaDelete(ProyectoPeriodoAmortizacion.class);
+    Root<ProyectoPeriodoAmortizacion> rootPeriodoAmortizacion = queryPeriodoAmortizacion
+        .from(ProyectoPeriodoAmortizacion.class);
+    queryPeriodoAmortizacion
+        .where(cb.equal(rootPeriodoAmortizacion.get(ProyectoPeriodoAmortizacion_.proyectoAnualidadId),
+            proyectoAnualidadId));
+    int returnValue = entityManager.createQuery(queryPeriodoAmortizacion).executeUpdate();
+
+    log.debug("deletePeriodoAmortizacionByProyectoAnualidadId(CriteriaBuilder cb, Long proyectoAnualidadId) - end");
+    return returnValue;
   }
 
 }

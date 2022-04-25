@@ -20,7 +20,6 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad.OnCrear;
 import org.crue.hercules.sgi.csp.repository.AnualidadGastoRepository;
-import org.crue.hercules.sgi.csp.repository.AnualidadIngresoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAnualidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
@@ -51,17 +50,14 @@ public class ProyectoAnualidadService {
   private final ProyectoAnualidadRepository repository;
   private final ProyectoRepository proyectoRepository;
   private final AnualidadGastoRepository anualidadGastoRepository;
-  private final AnualidadIngresoRepository anualidadIngresoRepository;
 
   public ProyectoAnualidadService(Validator validator, ProyectoAnualidadRepository proyectoAnualidadepository,
-      ProyectoRepository proyectoRepository, AnualidadGastoRepository anualidadGastoRepository,
-      AnualidadIngresoRepository anualidadIngresoRepository) {
+      ProyectoRepository proyectoRepository, AnualidadGastoRepository anualidadGastoRepository) {
 
     this.validator = validator;
     this.repository = proyectoAnualidadepository;
     this.proyectoRepository = proyectoRepository;
     this.anualidadGastoRepository = anualidadGastoRepository;
-    this.anualidadIngresoRepository = anualidadIngresoRepository;
   }
 
   /**
@@ -126,10 +122,7 @@ public class ProyectoAnualidadService {
       throw new ProyectoAnualidadNotFoundException(id);
     }
 
-    anualidadGastoRepository.deleteByProyectoAnualidadId(id);
-    anualidadIngresoRepository.deleteByProyectoAnualidadId(id);
-
-    repository.deleteById(id);
+    repository.deleteByIdCascade(id);
     log.debug("delete(Long id) - end");
   }
 
