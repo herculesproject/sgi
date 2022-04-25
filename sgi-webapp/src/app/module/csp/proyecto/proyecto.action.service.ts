@@ -412,7 +412,18 @@ export class ProyectoActionService extends ActionService {
           }
         }));
         this.subscriptions.push(this.entidadesFinanciadoras.entidadesFinanciadorasSincronizadas$.subscribe(entidadesFinanciadoras => {
-          this.amortizacionFondos.entidadesFinanciadoras$.next(entidadesFinanciadoras)
+          this.amortizacionFondos.entidadesFinanciadoras$.next(entidadesFinanciadoras);
+        }));
+
+        // Sincronización periodosAmortizacion
+        this.subscriptions.push(this.presupuesto.initialized$.subscribe(value => {
+          if (value) {
+            this.amortizacionFondos.initialize();
+          }
+        }));
+        this.subscriptions.push(this.amortizacionFondos.periodosAmortizacion$.subscribe(periodosAmortizacion => {
+          this.presupuesto.anualidadesWithPeriodoAmortizacion$
+            .next(periodosAmortizacion.map(periodoAmortizacion => periodoAmortizacion.value.proyectoAnualidad.id));
         }));
 
         // Sincronización de las vinculaciones sobre modelo de ejecución

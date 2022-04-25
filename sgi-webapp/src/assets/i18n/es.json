@@ -1767,6 +1767,7 @@
   "msg.csp.proyecto-concepto-gasto.listado.codigo-economico.delete": "Existen códigos económicos asignados al concepto de gasto del proyecto. ¿Desea eliminar el concepto de gasto asignado al proyecto?",
   "msg.csp.proyecto-partida-presupuestaria.vinculaciones": "No se puede modificar ni eliminar la partida porque está siendo usada en uno de los presupuestos del proyecto y la anualidad se ha enviado al SGE",
   "msg.csp.proyecto-periodo-seguimiento-cientifico.documento.delete": "Existen documentos asociados a este periodo de seguimiento ¿Desea continuar?",
+  "msg.csp.proyecto-presupuesto.delete": "La anualidad tiene partidas presupuestarias asociadas. Las partidas y sus datos también serán eliminadas, ¿desea continuar?",
   "msg.csp.proyecto-presupuesto.enviar-sge": "Se enviará la notificación del presupuesto al Sistema de gestión económica ¿desea continuar?",
   "msg.csp.proyecto-presupuesto.info": "En caso de que no hayan sido introducidos los detalles del presupuesto y/o socios, puede introducir manualmente los importes. Éstos prevalecerán sobre los valores calculados.",
   "msg.csp.proyecto-presupuesto.warn": "El valor introducido manualmente no coincide con el valor calculado a partir de los datos de detalle del proyecto. Si quiere que prevalezca el valor calculado debe eliminar el valor introducido manualmente, vaciando el contenido de este campo.",
