@@ -8,15 +8,9 @@
       [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
       <!-- Comité -->
       <div class="col">
-        <mat-form-field class="input-form">
+        <mat-form-field>
           <mat-label>{{'label.eti.comite' | translate}}</mat-label>
-          <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
-            formControlName="comite" [matAutocomplete]="autocompleteComite">
-          <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
-            <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
-              {{comite.comite}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-comite #selectComite formControlName="comite"></sgi-select-comite>
         </mat-form-field>
       </div>
 
@@ -45,17 +39,10 @@
 
       <!-- Convocatoria -->
       <div class="col">
-        <mat-form-field class="input-form">
+        <mat-form-field>
           <mat-label>{{'eti.convocatoria-reunion.tipo' | translate}}</mat-label>
-          <input type="text" [placeholder]="'eti.convocatoria-reunion.tipo' | translate" arial-label="Number" matInput
-            formControlName="tipoConvocatoriaReunion" [matAutocomplete]="autocompleteTipoConvocatoriaReunion">
-          <mat-autocomplete #autocompleteTipoConvocatoriaReunion="matAutocomplete"
-            [displayWith]="getTipoConvocatoriaReunion">
-            <mat-option *ngFor="let tipoConvocatoriaReunion of filteredTiposConvocatoriaReunion | async"
-              [value]="tipoConvocatoriaReunion">
-              {{tipoConvocatoriaReunion.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-tipo-convocatoria-reunion formControlName="tipoConvocatoriaReunion">
+          </sgi-select-tipo-convocatoria-reunion>
         </mat-form-field>
       </div>
     </div>

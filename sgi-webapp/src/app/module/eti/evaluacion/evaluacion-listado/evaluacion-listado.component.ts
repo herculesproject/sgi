@@ -4,24 +4,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
-import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
-import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
+import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 
 const MSG_ERROR = marker('error.load');
 
@@ -43,13 +36,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
   evaluaciones$: Observable<IEvaluacion[]> = of();
 
-  private comiteListado: IComite[];
-  private tipoEvaluacionListado: TipoEvaluacion[];
-  private tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
-
-  filteredComites: Observable<IComite[]>;
-  filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
-  filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
   buscadorFormGrou: FormGroup;
 
   get tipoColectivoSolicitante() {
@@ -57,12 +43,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   constructor(
-    private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    private readonly comiteService: ComiteService,
-    private readonly tipoEvaluacionService: TipoEvaluacionService,
-    private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     protected readonly personaService: PersonaService
 
   ) {
@@ -89,18 +71,14 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     super.ngOnInit();
 
     this.formGroup = new FormGroup({
-      comite: new FormControl('', []),
+      comite: new FormControl(null, []),
       fechaEvaluacionInicio: new FormControl(null, []),
       fechaEvaluacionFin: new FormControl(null, []),
       referenciaMemoria: new FormControl('', []),
-      tipoConvocatoriaReunion: new FormControl('', []),
+      tipoConvocatoriaReunion: new FormControl(null, []),
       solicitante: new FormControl('', []),
-      tipoEvaluacion: new FormControl('', [])
+      tipoEvaluacion: new FormControl(null, [])
     });
-
-    this.loadComites();
-    this.loadTipoEvaluaciones();
-    this.loadTipoConvocatoriasReunion();
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluacion>> {
@@ -149,137 +127,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
         );
       })
     );
-  }
-
-  /**
-   * Devuelve el nombre de un comité.
-   * @param comite comité
-   * returns nombre comité
-   */
-  getComite(comite: IComite): string {
-    return comite?.comite;
-  }
-
-  /**
-   * Devuelve el nombre de un tipo evaluacion.
-   * @param tipoEvaluacion tipo de evaluación
-   * @returns nombre de un tipo de evaluación
-   */
-  getTipoEvaluacion(tipoEvaluacion: TipoEvaluacion): string {
-    return tipoEvaluacion?.nombre;
-  }
-
-  /**
-   * Devuelve el nombre de un tipo convocatoria reunión.
-   * @param convocatoria tipo convocatoria reunión.
-   * returns nombre tipo convocatoria reunión.
-   */
-  getTipoConvocatoriaReunion(convocatoria: TipoConvocatoriaReunion): string {
-    return convocatoria?.nombre;
-  }
-
-  /**
-   * Recupera un listado de los comités que hay en el sistema.
-   */
-  loadComites(): void {
-    this.suscripciones.push(this.comiteService.findAll().subscribe(
-      (response) => {
-        this.comiteListado = response.items;
-
-        this.filteredComites = this.formGroup.controls.comite.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filterComite(value))
-          );
-      }));
-  }
-
-  /**
-   * Recupera un listado de los tipos de evaluacion que hay en el sistema.
-   */
-  loadTipoEvaluaciones(): void {
-    this.suscripciones.push(this.tipoEvaluacionService.findTipoEvaluacionMemoriaRetrospectiva().subscribe(
-      (response) => {
-        this.tipoEvaluacionListado = response.items;
-
-        this.filteredTipoEvaluacion = this.formGroup.controls.tipoEvaluacion.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filterTipoEvaluacion(value))
-          );
-      }));
-  }
-
-  /**
-   * Recupera un listado de los tipos convocatoria que hay en el sistema.
-   */
-  loadTipoConvocatoriasReunion(): void {
-    this.suscripciones.push(this.tipoConvocatoriaReunionService.findAll().subscribe(
-      (response) => {
-        this.tipoConvocatoriaReunionListado = response.items;
-
-        this.filteredTipoConvocatoriaReunion = this.formGroup.controls.tipoConvocatoriaReunion.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filterTipoConvocatoriaReunion(value))
-          );
-      },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR);
-      }
-    ));
-  }
-
-  /**
-   * Filtro de campo autocompletable comité.
-   * @param value value a filtrar (string o nombre comité).
-   * @returns lista de comités filtrados.
-   */
-  private filterComite(value: string | IComite): IComite[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.comite.toLowerCase();
-    }
-
-    return this.comiteListado.filter
-      (comite => comite.comite.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Filtro de campo autocompletable tipo evaluación.
-   * @param value value a filtrar (string o nombre tipo evaluación).
-   * @returns lista de tipo evaluación filtrados.
-   */
-  private filterTipoEvaluacion(value: string | TipoEvaluacion): TipoEvaluacion[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.nombre.toLowerCase();
-    }
-
-    return this.tipoEvaluacionListado.filter
-      (tipoEvaluacion => tipoEvaluacion.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Filtro de campo autocompletable tipo convocatoria reunión.
-   * @param value value a filtrar (string o nombre tipo convocatoria reunion).
-   * @returns lista de tipos de convocatorias filtrados.
-   */
-  private filterTipoConvocatoriaReunion(value: string | TipoConvocatoriaReunion): TipoConvocatoriaReunion[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.nombre.toLowerCase();
-    }
-
-    return this.tipoConvocatoriaReunionListado.filter
-      (tipoConvocatoriaReunion => tipoConvocatoriaReunion.nombre.toLowerCase().includes(filterValue));
   }
 
   /**

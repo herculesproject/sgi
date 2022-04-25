@@ -2,22 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR = marker('error.load');
 
@@ -30,17 +25,11 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   evaluaciones: IEvaluacion[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  comiteListado: IComite[];
-  comitesFiltrados: Observable<IComite[]>;
-  tipoEvaluacionListado: TipoEvaluacion[];
-  tipoEvaluacionFiltrados: Observable<TipoEvaluacion[]>;
 
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly personaService: PersonaService,
-    private readonly comiteService: ComiteService,
-    private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly evaluadorService: EvaluadorService
   ) {
     super(snackBarService, MSG_ERROR);
@@ -59,15 +48,13 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   ngOnInit() {
     super.ngOnInit();
     this.formGroup = new FormGroup({
-      comite: new FormControl(''),
+      comite: new FormControl(null),
       fechaEvaluacionInicio: new FormControl(null),
       fechaEvaluacionFin: new FormControl(null),
       memoriaNumReferencia: new FormControl(''),
       tipoConvocatoria: new FormControl(''),
-      tipoEvaluacion: new FormControl('')
+      tipoEvaluacion: new FormControl(null)
     });
-    this.loadComites();
-    this.loadTipoEvaluacion();
   }
 
   onClearFilters(): void {
@@ -135,96 +122,5 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
 
     return filter;
-  }
-
-  /**
-   * Carga todas los comites existentes
-   */
-  private loadComites(): void {
-    this.suscripciones.push(
-      this.comiteService.findAll().subscribe(
-        (res: SgiRestListResult<IComite>) => {
-          if (res) {
-            this.comiteListado = res.items;
-            this.comitesFiltrados = this.formGroup.controls.comite.valueChanges
-              .pipe(
-                startWith(''),
-                map(valor => this.filterComites(valor))
-              );
-          } else {
-            this.comiteListado = [];
-          }
-        })
-    );
-  }
-
-  /**
-   * Carga los tipos de evaluacion: Seguimiento Anual y Seguimiento Final
-   */
-  private loadTipoEvaluacion(): void {
-    this.suscripciones.push(
-      this.tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal().subscribe(
-        (res: SgiRestListResult<TipoEvaluacion>) => {
-          if (res) {
-            this.tipoEvaluacionListado = res.items;
-            this.tipoEvaluacionFiltrados = this.formGroup.controls.tipoEvaluacion.valueChanges
-              .pipe(
-                startWith(''),
-                map(valor => this.filterTipoEvaluacion(valor))
-              );
-          } else {
-            this.tipoEvaluacionListado = [];
-          }
-        })
-    );
-  }
-
-  /**
-   * Filtro de campo autocompletable comité.
-   *
-   * @param filtro valor a filtrar (string o nombre comité).
-   * @return lista de comités filtrados.
-   */
-  private filterComites(filtro: string | IComite): IComite[] {
-    const valorLog = filtro instanceof String ? filtro : JSON.stringify(filtro);
-    const result = this.comiteListado.filter(
-      (comite: IComite) => comite.comite.toLowerCase().includes(
-        typeof filtro === 'string' ? filtro.toLowerCase() : filtro.comite.toLowerCase()
-      )
-    );
-    return result;
-  }
-
-  /**
-   * Filtro de campo autocompletable tipo evaluacion.
-   *
-   * @param filtro valor a filtrar (string o nombre tipo evaluacion).
-   * @return lista de tipo evaluacion filtrados.
-   */
-  private filterTipoEvaluacion(filtro: string | TipoEvaluacion): TipoEvaluacion[] {
-    const result = this.tipoEvaluacionListado.filter(
-      (tipoEvaluacion: TipoEvaluacion) => tipoEvaluacion.nombre.toLowerCase().includes(
-        typeof filtro === 'string' ? filtro.toLowerCase() : filtro.nombre.toLowerCase()
-      )
-    );
-    return result;
-  }
-
-  /**
-   * Devuelve el nombre de un comité.
-   * @param comite comité
-   * @returns nombre comité
-   */
-  getNombreComite(comite: IComite): string {
-    return comite?.comite;
-  }
-
-  /**
-   * Devuelve el nombre de un tipo evaluacion.
-   * @param tipoEvaluacion tipo de evaluación
-   * @returns nombre de un tipo de evaluación
-   */
-  getNombreTipoEvaluacion(tipoEvaluacion: TipoEvaluacion): string {
-    return tipoEvaluacion?.nombre;
   }
 }

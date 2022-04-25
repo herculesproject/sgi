@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '@shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { EvaluadorDatosGeneralesComponent } from './evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
-import { EvaluadorListadoComponent } from './evaluador-listado/evaluador-listado.component';
+import { SharedModule } from '@shared/shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { EtiSharedModule } from '../shared/eti-shared.module';
 import { EvaluadorCrearComponent } from './evaluador-crear/evaluador-crear.component';
 import { EvaluadorEditarComponent } from './evaluador-editar/evaluador-editar.component';
-import { EvaluadorRoutingModule } from './evaluador-routing.module';
-import { EvaluadorResolver } from './evaluador.resolver';
 import { EvaluadorConflictosInteresListadoComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-listado/evaluador-conflictos-interes-listado.component';
 import { EvaluadorConflictosInteresModalComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-modal/evaluador-conflictos-interes-modal.component';
-import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { EvaluadorDatosGeneralesComponent } from './evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
+import { EvaluadorListadoComponent } from './evaluador-listado/evaluador-listado.component';
+import { EvaluadorRoutingModule } from './evaluador-routing.module';
+import { EvaluadorResolver } from './evaluador.resolver';
+
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule,
-    SgpSharedModule
+    SgpSharedModule,
+    EtiSharedModule
   ],
   providers: [
     EvaluadorResolver

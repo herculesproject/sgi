@@ -23,13 +23,8 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'eti.comentario.bloque' | translate}}</mat-label>
-        <input matInput formControlName="bloque" type="text" placeholder="{{'eti.comentario.bloque' | translate}}"
-          required arial-label="Number" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombreBloque">
-          <mat-option *ngFor="let apartado of apartado$ | async" [value]="apartado">
-            {{apartado.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity formControlName="bloque" [options]="apartado$ | async" required>
+        </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.bloque.errors?.required">
           {{'error.required.entity' | translate:msgParamBloqueEntity}}
         </mat-error>

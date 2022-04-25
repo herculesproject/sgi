@@ -13,6 +13,7 @@ import { EvaluacionFormularioModule } from '../evaluacion-formulario/evaluacion-
 import { EvaluacionEvaluadorEvaluarComponent } from './evaluacion-evaluador-evaluar/evaluacion-evaluador-evaluar.component';
 import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
 import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
+import { EtiSharedModule } from '../shared/eti-shared.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
     FormsModule,
     ReactiveFormsModule,
     ComentarioModule,
-    DocumentacionMemoriaModule
+    DocumentacionMemoriaModule,
+    EtiSharedModule
   ],
   providers: [
     EvaluacionEvaluadorResolver
