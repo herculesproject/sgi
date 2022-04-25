@@ -15,10 +15,11 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
+import { ISolicitudProteccionListadoModalData, SolicitudProteccionListadoExportModalComponent } from '../../modals/solicitud-proteccion-listado-export-modal/solicitud-proteccion-listado-export-modal.component';
 import { SolicitudProteccionFragment } from './solicitud-proteccion.fragment';
 
 const MSG_CREATE = marker('btn.add.entity');
@@ -99,6 +100,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
   }
 
   public showPaisSelector = new BehaviorSubject<boolean>(false);
+  findOptions: SgiRestFindOptions;
 
   constructor(
     public actionService: InvencionActionService,
@@ -384,9 +386,37 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
       .and('paisProteccionRef', SgiRestFilterOperator.EQUALS, controls.pais.value?.id?.toString())
       .and('estado', SgiRestFilterOperator.EQUALS, controls.estado?.value?.toString());
 
-    return {
-      filter
-    };
+    return this.getFindOptions(filter, true);
   }
 
+  public openExportModal(): void {
+    const data: ISolicitudProteccionListadoModalData = {
+      findOptions: this.createFilterOptions(),
+      invencionId: this.formPart.getKey() as number
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(SolicitudProteccionListadoExportModalComponent, config);
+  }
+
+  /**
+   * Crea las opciones para el listado que devuelve el servidor.
+   * Hay que añadirlo al método del servicio que llamamos
+   *
+   * @param reset Indica la pagina actual es la primera o no
+   */
+  private getFindOptions(filter: SgiRestFilter, reset?: boolean): SgiRestFindOptions {
+    const options: SgiRestFindOptions = {
+      page: {
+        index: reset ? 0 : this.paginator?.pageIndex,
+        size: this.paginator?.pageSize,
+      },
+      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      filter,
+    };
+    this.findOptions = options;
+    return options;
+  }
 }

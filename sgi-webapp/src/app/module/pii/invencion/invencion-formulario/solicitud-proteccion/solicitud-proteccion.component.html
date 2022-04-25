@@ -228,9 +228,14 @@
       </tr>
       <tr mat-row *matRowDef="let row; columns: getSuitableColumnsDef(formPart?.invencionTipoPropiedad);"></tr>
     </table>
-
-    <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
-    </mat-paginator>
+    <div class="paginator-export">
+      <button mat-button matTooltip="{{'btn.export' | translate}}" (click)="openExportModal()"
+        [disabled]="totalElementos<=0">
+        <mat-icon color="primary">insert_chart_outlined</mat-icon>
+      </button>
+      <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+      </mat-paginator>
+    </div>
   </div>
   <ng-container *sgiHasAuthorityForAnyUO="'PII-INV-E'">
     <div class="separation-button">

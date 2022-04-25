@@ -41,6 +41,9 @@ import { PeriodoTitularidadModalComponent } from './modals/periodo-titularidad-m
 import { PeriodoTitularidadTitularModalComponent } from './modals/periodo-titularidad-titular-modal/periodo-titularidad-titular-modal.component';
 import { SectorAplicacionModalComponent } from './modals/sector-aplicacion-modal/sector-aplicacion-modal.component';
 import { SectorLicenciadoModalComponent } from './modals/sector-licenciado-modal/sector-licenciado-modal.component';
+import { SolicitudProteccionListadoExportModalComponent } from './modals/solicitud-proteccion-listado-export-modal/solicitud-proteccion-listado-export-modal.component';
+import { SolicitudProteccionGeneralListadoExportService } from './solicitud-proteccion-general-listado-export.service';
+import { SolicitudProteccionListadoExportService } from './solicitud-proteccion-listado-export.service';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,8 @@ import { SectorLicenciadoModalComponent } from './modals/sector-licenciado-modal
     InvencionContratosComponent,
     SectorLicenciadoModalComponent,
     InvencionRepartosComponent,
-    InvencionListadoExportModalComponent
+    InvencionListadoExportModalComponent,
+    SolicitudProteccionListadoExportModalComponent
   ],
   imports: [
     CommonModule,
@@ -90,7 +94,9 @@ import { SectorLicenciadoModalComponent } from './modals/sector-licenciado-modal
     InvencionGeneralListadoExportService,
     InvencionEquipoInventorListadoExportService,
     InvencionSolicitudesProteccionListadoExportService,
-    LuxonDatePipe
+    LuxonDatePipe,
+    SolicitudProteccionListadoExportService,
+    SolicitudProteccionGeneralListadoExportService
   ]
 })
 export class InvencionModule { }
