@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
+import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.CampoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica_;
@@ -102,6 +103,8 @@ public class CustomPublicacionRepositoryImpl implements CustomPublicacionReposit
     List<Predicate> listPredicatesCount = new ArrayList<>();
 
     listPredicates.add(cb.isNull(root.get(ProduccionCientifica_.convocatoriaBaremacionId)));
+    listPredicates.add(cb.equal(root.get(ProduccionCientifica_.epigrafeCVN), EpigrafeCVN.E060_010_010_000));
+
     listPredicates.add(cb.and(
         cb.equal(joinCamposTituloPublicacion.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E060_010_010_030)));
     listPredicates.add(cb.and(
@@ -110,6 +113,8 @@ public class CustomPublicacionRepositoryImpl implements CustomPublicacionReposit
         cb.equal(joinCamposFechaPublicacion.get(CampoProduccionCientifica_.codigoCVN), CodigoCVN.E060_010_010_140)));
 
     listPredicatesCount.add(cb.isNull(rootCount.get(ProduccionCientifica_.convocatoriaBaremacionId)));
+    listPredicatesCount.add(cb.equal(rootCount.get(ProduccionCientifica_.epigrafeCVN), EpigrafeCVN.E060_010_010_000));
+
     listPredicatesCount.add(cb.and(
         cb.equal(joinCamposTituloPublicacionCount.get(CampoProduccionCientifica_.codigoCVN),
             CodigoCVN.E060_010_010_030)));

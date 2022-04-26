@@ -303,8 +303,10 @@ class ProduccionCientificaBaseIT extends BaseIT {
     produccionCientifica.getCampos().add(addValores(codigoCVN1));
     String codigoCVN2 = CodigoCVN.E060_010_010_030.getCode();
     produccionCientifica.getCampos().add(addValores(codigoCVN2));
-    String codigoCVN3 = CodigoCVN.E060_010_010_090.getCode();
-    produccionCientifica.getCampos().add(addValores(codigoCVN3));
+    CampoProduccionCientificaInput campoFecha = new CampoProduccionCientificaInput();
+    campoFecha.setCodigoCVN(CodigoCVN.E060_010_010_140.getCode());
+    campoFecha.setValores(Stream.of("2021-02-15", "2022-02-15").collect(Collectors.toList()));
+    produccionCientifica.getCampos().add(campoFecha);
 
     produccionCientifica.setAutores(new ArrayList<>());
     AutorInput autor = new AutorInput();
