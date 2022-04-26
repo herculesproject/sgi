@@ -23,8 +23,10 @@ import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersona;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
+import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAgrupacionGasto;
@@ -51,8 +53,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
+import org.crue.hercules.sgi.csp.service.AnualidadIngresoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
+import org.crue.hercules.sgi.csp.service.GastoProyectoService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoAgrupacionGastoService;
@@ -115,8 +119,10 @@ public class ProyectoController {
   public static final String PATH_ID = PATH_SEPARATOR + "{id}";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
   public static final String PATH_PROYECTOS_COMPETITIVOS_PERSONA = PATH_SEPARATOR + "competitivos" + PATH_SEPARATOR
-      + "persona"
-      + PATH_SEPARATOR + "{personaRef}";
+      + "persona" + PATH_SEPARATOR + "{personaRef}";
+  private static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
+  private static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
+  private static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
 
   private final ModelMapper modelMapper;
 
@@ -193,6 +199,10 @@ public class ProyectoController {
   private final ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService;
 
   private final AnualidadGastoService anualidadGastoService;
+
+  private final AnualidadIngresoService anualidadIngresoService;
+
+  private final GastoProyectoService gastoProyectoService;
 
   /** ProyectoPalabraClaveService */
   private final ProyectoPalabraClaveService proyectoPalabraClaveService;
@@ -1511,6 +1521,54 @@ public class ProyectoController {
     ProyectosCompetitivosPersona returnValue = service.getProyectosCompetitivosPersona(personaRef);
     log.debug("getProyectosCompetitivosPersona(personaRef) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link AnualidadGasto}
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = PATH_ANUALIDAD_GASTOS, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-INV-VR' )")
+  public ResponseEntity<Void> hasAnualidadGastos(@PathVariable Long id) {
+    log.debug("hasAnualidadGastos(Long id) - start");
+    boolean returnValue = anualidadGastoService.existsByProyecto(id);
+    log.debug("hasAnualidadGastos(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link AnualidadIngreso}
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = PATH_ANUALIDAD_INGRESOS, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-INV-VR' )")
+  public ResponseEntity<Void> hasAnualidadIngresos(@PathVariable Long id) {
+    log.debug("hasAnualidadIngresos(Long id) - start");
+    boolean returnValue = anualidadIngresoService.existsByProyecto(id);
+    log.debug("hasAnualidadIngresos(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link GastoProyecto}
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = PATH_GASTOS_PROYECTO, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-INV-VR' )")
+  public ResponseEntity<Void> hasGastosProyecto(@PathVariable Long id) {
+    log.debug("hasGastosProyecto(Long id) - start");
+    boolean returnValue = gastoProyectoService.existsByProyecto(id);
+    log.debug("hasGastosProyecto(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
