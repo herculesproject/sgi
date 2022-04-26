@@ -6,11 +6,13 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { IPersona } from '@core/models/sgp/persona';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { delay, filter, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 
 const INVENCION_INVENTOR_KEY = marker('pii.invencion.inventor');
@@ -78,6 +80,18 @@ export class InvencionInventorModalComponent
           if (this.data.inventoresNotAllowed.some(elem => elem.id === inventorSelected.id)) {
             this.formGroup.controls.inventor.setValue(null);
             this.snackBarService.showError(this.msgInventorInUseError);
+          } else {
+            if (inventorSelected.entidadPropia?.id && !inventorSelected.entidadPropia.nombre) {
+              this.subscriptions.push(
+                this.empresaService.findById(inventorSelected.entidadPropia.id).pipe(
+                  map(empresa => inventorSelected.entidadPropia = empresa),
+                  catchError(err => {
+                    this.logger.error(err);
+                    return of(err);
+                  })
+                ).subscribe()
+              );
+            }
           }
         })
       )
@@ -91,7 +105,8 @@ export class InvencionInventorModalComponent
     public matDialogRef: MatDialogRef<InvencionInventorModalComponent>,
     protected readonly snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: InvencionInventorModalData,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly empresaService: EmpresaService
   ) {
     super(snackBarService, matDialogRef, data.invencionInventor);
 
