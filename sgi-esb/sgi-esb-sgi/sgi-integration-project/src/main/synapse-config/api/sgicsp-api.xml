@@ -236,6 +236,16 @@
 
   <resource methods="POST" url-mapping="/notificaciones-proyectos">
     <inSequence>
+      <!-- Get URL from HTTP transport properties-->
+      <property name="url" expression="get-property('axis2','REST_URL_POSTFIX')" />
+      <!-- Rewrite get URL property as input and modify the same input property as output -->
+      <rewrite inProperty="url" outProperty="url">
+        <rewriterule>
+          <action type="replace" regex="notificaciones-proyectos" value="notificacionesproyectosexternoscvn" fragment="path" />
+        </rewriterule>
+      </rewrite>
+      <!-- Set URL HTTP transport properties by rewrited value -->
+      <property name="REST_URL_POSTFIX" scope="axis2" expression="get-property('url')" />
       <send>
         <endpoint key="sgicsp-endpoint" />
       </send>
