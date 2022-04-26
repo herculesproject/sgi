@@ -811,4 +811,40 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     );
   }
 
+  /**
+   * Comprueba si Proyecto tiene AnualidadGastos relacionado
+   *
+   * @param id Proyecto
+   */
+  hasAnualidadGastos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/anualidad-gastos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si Proyecto tiene AnualidadIngresos relacionado
+   *
+   * @param id Proyecto
+   */
+  hasAnualidadIngresos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/anualidad-ingresos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si Proyecto tiene GastosProyecto relacionado
+   *
+   * @param id Proyecto
+   */
+  hasGastosProyecto(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/gastos-proyecto`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }
