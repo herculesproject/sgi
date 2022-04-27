@@ -31,6 +31,12 @@ export interface IReportConfig<T> {
   fieldOrientation?: FieldOrientation;
 
   /**
+   * Indica si se mostrarán las cabeceras de los subreport si no contiene elementos
+   * Solo aplicable en pdf con disposición vertical;
+   */
+  hideBlocksIfNoData?: boolean;
+
+  /**
    * Opciones de configuración del informe
    */
   reportOptions?: T;
@@ -68,6 +74,7 @@ export abstract class AbstractTableExportService<T, R extends IReportOptions> im
       outputType: reportConfig.outputType,
       fieldOrientation: this.getFieldOrientationByExportType(reportConfig),
       columnMinWidth: reportConfig.reportOptions?.columnMinWidth,
+      hideBlocksIfNoData: reportConfig.hideBlocksIfNoData,
       title: reportConfig.title,
       filters: [],
       groupBy: this.getGroupBy(),
