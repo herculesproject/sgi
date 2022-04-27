@@ -914,8 +914,10 @@ public class SgiDynamicReportService extends SgiReportService {
   private boolean isSubReportVisible(SgiDynamicReportDto reportDto, Integer rowIndex, Integer columnIndex) {
     SgiColumReportDto subReportColumn = reportDto.getColumns().get(columnIndex);
 
-    boolean isVisible = null == subReportColumn.getVisibleIfSubReportEmpty()
-        || Boolean.TRUE.equals(subReportColumn.getVisibleIfSubReportEmpty());
+    boolean isVisible = (null == subReportColumn.getVisibleIfSubReportEmpty()
+        || Boolean.TRUE.equals(subReportColumn.getVisibleIfSubReportEmpty()))
+        && (null == reportDto.getHideBlocksIfNoData()
+            || Boolean.FALSE.equals(reportDto.getHideBlocksIfNoData()));
 
     if (!isVisible) {
       LinkedHashMap<String, List<Object>> elementsSubreport = (LinkedHashMap<String, List<Object>>) reportDto

@@ -27,6 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class InformeDetalleGrupoReportService extends SgiReportService {
 
+  private static final String IMPORTE = "importe";
+  private static final String PUNTOS = "puntos";
+  private static final String NUMERO = "numero";
+
   private final SgiApiPrcService sgiApiPrcService;
 
   public InformeDetalleGrupoReportService(SgiConfigProperties sgiConfigProperties, SgiApiPrcService sgiApiPrcService) {
@@ -89,9 +93,9 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
 
-    columnsData.add("numero");
-    columnsData.add("puntos");
-    columnsData.add("importe");
+    columnsData.add(NUMERO);
+    columnsData.add(PUNTOS);
+    columnsData.add(IMPORTE);
 
     Vector<Object> elementsRow = new Vector<>();
     elementsRow.add(detalleGrupo.getSexenios().getNumero());
@@ -110,9 +114,9 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     Vector<Vector<Object>> rowsData = new Vector<>();
 
     columnsData.add("tipo");
-    columnsData.add("numero");
-    columnsData.add("puntos");
-    columnsData.add("importe");
+    columnsData.add(NUMERO);
+    columnsData.add(PUNTOS);
+    columnsData.add(IMPORTE);
 
     detalleGrupo.getProduccionesCientificas().stream().forEach(prc -> {
       Vector<Object> elementsRow = new Vector<>();
@@ -133,9 +137,9 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     Vector<Object> columnsData = new Vector<>();
     Vector<Vector<Object>> rowsData = new Vector<>();
 
-    columnsData.add("numero");
-    columnsData.add("puntos");
-    columnsData.add("importe");
+    columnsData.add(NUMERO);
+    columnsData.add(PUNTOS);
+    columnsData.add(IMPORTE);
 
     Vector<Object> elementsRow = new Vector<>();
     elementsRow.add(detalleGrupo.getCostesIndirectos().getNumero());
@@ -154,7 +158,7 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     Vector<Vector<Object>> rowsData = new Vector<>();
 
     columnsData.add("tipo");
-    columnsData.add("importe");
+    columnsData.add(IMPORTE);
 
     detalleGrupo.getProduccionesCientificas().stream().forEach(prc -> {
       Vector<Object> elementsRow = new Vector<>();
