@@ -249,8 +249,12 @@ public class GrupoEquipoService {
    */
   public List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Integer anio) {
 
-    Instant fechaBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio, sgiConfigProperties.getTimeZone());
-    return repository.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, fechaBaremacion);
+    Instant fechaInicioBaremacion = PeriodDateUtil.calculateFechaInicioBaremacionByAnio(anio,
+        sgiConfigProperties.getTimeZone());
+    Instant fechaFinBaremacion = PeriodDateUtil.calculateFechaFinBaremacionByAnio(anio,
+        sgiConfigProperties.getTimeZone());
+    return repository.findGrupoEquipoByPersonaRefAndFechaBaremacion(personaRef, fechaInicioBaremacion,
+        fechaFinBaremacion);
   }
 
   /**
