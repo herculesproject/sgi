@@ -2,6 +2,7 @@ import { ValidacionRequisitosEquipoIp } from '@core/enums/validaciones-requisito
 import { IConvocatoriaRequisito } from '@core/models/csp/convocatoria-requisito';
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
+import { IProyectosCompetitivosPersonas } from '@core/models/csp/proyectos-competitivos-personas';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
@@ -22,7 +23,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
-import { concatMap, filter, map, mergeMap, share, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, reduce, share, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 
 export enum HelpIconClass {
@@ -333,14 +334,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   ): Observable<ValidacionRequisitosEquipoIp> {
     return this.getRequisitosConvocatoria(convocatoriaId).pipe(
       switchMap(() => {
-        return this.validateRequisitosIpProyectosCompetitivos(solicitudProyectoEquipo, this.requisitosConvocatoria.requisitosEquipo);
-      }),
-      switchMap(response => {
-        if (!response) {
-          return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
-        }
-
-        return of(response);
+        return this.validateRequisitosEquipoDatosPersonales(solicitudProyectoEquipo, this.requisitosConvocatoria);
       }),
       switchMap(response => {
         if (!response) {
@@ -488,7 +482,33 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
       }
     }
 
-    return of(null);
+    return this.validateRequisitosEquipoProyectosCompetitivos(requisitosConvocatoria.requisitosEquipo);
+  }
+
+  private validateRequisitosEquipoProyectosCompetitivos(
+    requisitosProyectosCompetitivos: IConvocatoriaRequisito
+  ): Observable<ValidacionRequisitosEquipoIp> {
+
+    if (!requisitosProyectosCompetitivos?.numMaximoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMaximoNoCompetitivosActivos
+      && !requisitosProyectosCompetitivos?.numMinimoCompetitivos
+      && !requisitosProyectosCompetitivos?.numMinimoNoCompetitivos
+    ) {
+      return of(null);
+    }
+
+    const miembrosEquipo = this.proyectoEquipos$.value
+      .map(miembroWraper => miembroWraper.value.solicitudProyectoEquipo.persona.id)
+      .filter((personaId, index, personasIds) => personasIds.indexOf(personaId) === index);
+
+    if (miembrosEquipo.length === 0) {
+      return of(null);
+    }
+
+    return this.proyectoService.getProyectoCompetitivosPersona(miembrosEquipo).pipe(
+      map(response => this.validateRequisitosProyectosCompetitivos(requisitosProyectosCompetitivos, response))
+    );
+
   }
 
   private validateRequisitosIp(
@@ -671,26 +691,31 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
       return of(null);
     }
 
-    return this.proyectoService.getProyectoCompetitivosPersona(solicitudProyectoEquipo.persona.id).pipe(
-      map(response => {
-        if (requisitosProyectosCompetitivos.numMaximoCompetitivosActivos
-          && response.numProyectosCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoCompetitivosActivos) {
-          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES;
-        } else if (requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos
-          && response.numProyectosNoCompetitivosActuales > requisitosProyectosCompetitivos.numMaximoNoCompetitivosActivos) {
-          return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_NO_COMPETITIVOS_ACTUALES;
-        } else if (requisitosProyectosCompetitivos.numMinimoCompetitivos
-          && response.numProyectosCompetitivos < requisitosProyectosCompetitivos.numMinimoCompetitivos) {
-          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_COMPETITIVOS;
-        } else if (requisitosProyectosCompetitivos.numMinimoNoCompetitivos
-          && response.numProyectosNoCompetitivos < requisitosProyectosCompetitivos.numMinimoNoCompetitivos) {
-          return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_NO_COMPETITIVOS;
-        }
-
-        return null;
-      })
+    return this.proyectoService.getProyectoCompetitivosPersona(solicitudProyectoEquipo.persona.id, true).pipe(
+      map(response => this.validateRequisitosProyectosCompetitivos(requisitosProyectosCompetitivos, response))
     );
 
+  }
+
+  private validateRequisitosProyectosCompetitivos(
+    requisitos: IConvocatoriaRequisito,
+    proyectosCompetitivosPersonas: IProyectosCompetitivosPersonas
+  ): ValidacionRequisitosEquipoIp {
+    if (requisitos.numMaximoCompetitivosActivos
+      && proyectosCompetitivosPersonas.numProyectosCompetitivosActuales > requisitos.numMaximoCompetitivosActivos) {
+      return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES;
+    } else if (requisitos.numMaximoNoCompetitivosActivos
+      && proyectosCompetitivosPersonas.numProyectosNoCompetitivosActuales > requisitos.numMaximoNoCompetitivosActivos) {
+      return ValidacionRequisitosEquipoIp.NUM_MAX_PROYECTOS_NO_COMPETITIVOS_ACTUALES;
+    } else if (requisitos.numMinimoCompetitivos
+      && proyectosCompetitivosPersonas.numProyectosCompetitivos < requisitos.numMinimoCompetitivos) {
+      return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_COMPETITIVOS;
+    } else if (requisitos.numMinimoNoCompetitivos
+      && proyectosCompetitivosPersonas.numProyectosNoCompetitivos < requisitos.numMinimoNoCompetitivos) {
+      return ValidacionRequisitosEquipoIp.NUM_MIN_PROYECTOS_NO_COMPETITIVOS;
+    } else {
+      return null;
+    }
   }
 
   private validateRequisitosConvocatoria(

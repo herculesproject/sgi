@@ -1,4 +1,4 @@
-export interface IProyectosCompetitivosPersona {
+export interface IProyectosCompetitivosPersonasResponse {
   numProyectosCompetitivos: number;
   numProyectosCompetitivosActuales: number;
   numProyectosNoCompetitivos: number;

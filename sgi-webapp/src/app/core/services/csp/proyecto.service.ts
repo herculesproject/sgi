@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_PROYECTO_CONVERTER } from '@core/converters/csp/estado-proyecto.converter';
 import { PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-area-conocimiento.converter';
@@ -69,7 +69,7 @@ import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { IProyectosCompetitivosPersona } from '@core/models/csp/proyectos-competitivos-persona';
+import { IProyectosCompetitivosPersonas } from '@core/models/csp/proyectos-competitivos-personas';
 import { environment } from '@env';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
@@ -101,8 +101,8 @@ import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justif
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
-import { IProyectosCompetitivosPersonaResponse } from './proyectos-competitivos-persona/proyectos-competitivos-persona-response';
-import { PROYECTOS_COMPETITIVOS_PERSONA_RESPONSE_CONVERTER } from './proyectos-competitivos-persona/proyectos-competitivos-persona-response.converter';
+import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response';
+import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -803,11 +803,30 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * para usuarios con perfil investigador
    * @param id Id del proyecto
    */
-  getProyectoCompetitivosPersona(personaRef: string): Observable<IProyectosCompetitivosPersona> {
-    return this.http.get<IProyectosCompetitivosPersonaResponse>(
-      `${this.endpointUrl}/competitivos/persona/${personaRef}`
-    ).pipe(
-      map(response => PROYECTOS_COMPETITIVOS_PERSONA_RESPONSE_CONVERTER.toTarget(response))
+  getProyectoCompetitivosPersona(
+    personasRef: string | string[],
+    onlyAsRolPrincipal = false,
+    exludedProyectoId?: number
+  ): Observable<IProyectosCompetitivosPersonas> {
+    const url = `${this.endpointUrl}/competitivos-personas`;
+
+    let params = new HttpParams();
+    if (Array.isArray(personasRef)) {
+      personasRef.forEach(personaRef =>
+        params = params.append('personasRef', personaRef)
+      );
+    } else {
+      params = params.append('personasRef', personasRef);
+    }
+
+    if (exludedProyectoId) {
+      params = params.append('exludedProyectoId', exludedProyectoId.toString());
+    }
+
+    params = params.append('onlyAsRolPrincipal', onlyAsRolPrincipal.toString());
+
+    return this.http.get<IProyectosCompetitivosPersonasResponse>(url, { params }).pipe(
+      map(response => PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 
