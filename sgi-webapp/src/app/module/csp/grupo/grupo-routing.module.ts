@@ -13,6 +13,7 @@ import { GrupoDataResolver, GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
+import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
 
@@ -82,6 +83,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.EQUIPO_INVESTIGACION,
         component: GrupoEquipoInvestigacionComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.RESPONSABLE_ECONOMICO,
+        component: GrupoResponsableEconomicoComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

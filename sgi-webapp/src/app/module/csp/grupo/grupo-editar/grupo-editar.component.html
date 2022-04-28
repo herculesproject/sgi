@@ -9,6 +9,11 @@
       [title]="'csp.grupo-equipo.equipo-investigacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_INVESTIGACION)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E']"
+      [route]="[GRUPO_ROUTE_NAMES.RESPONSABLE_ECONOMICO]"
+      [title]="'csp.grupo-responsable-economico' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.RESPONSABLE_ECONOMICO)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoEditar" [actionService]="actionService">

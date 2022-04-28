@@ -13,9 +13,11 @@ import { GrupoDataResolver } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
+import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GrupoRoutingModule } from './grupo-routing.module';
 import { GrupoEquipoModalComponent } from './modals/grupo-equipo-modal/grupo-equipo-modal.component';
+import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsable-economico-modal/grupo-responsable-economico-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { GrupoEquipoModalComponent } from './modals/grupo-equipo-modal/grupo-equ
     GrupoListadoComponent,
     GrupoDatosGeneralesComponent,
     GrupoEquipoInvestigacionComponent,
-    GrupoEquipoModalComponent
+    GrupoEquipoModalComponent,
+    GrupoResponsableEconomicoComponent,
+    GrupoResponsableEconomicoModalComponent,
   ],
   imports: [
     CommonModule,
