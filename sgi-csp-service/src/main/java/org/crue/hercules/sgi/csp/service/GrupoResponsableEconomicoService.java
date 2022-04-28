@@ -1,0 +1,234 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.Validator;
+
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoUniqueException;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
+import org.crue.hercules.sgi.csp.model.Grupo;
+import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
+import org.crue.hercules.sgi.csp.repository.GrupoRepository;
+import org.crue.hercules.sgi.csp.repository.GrupoResponsableEconomicoRepository;
+import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.GrupoResponsableEconomicoSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Service para la gestión de {@link GrupoResponsableEconomico}.
+ */
+@Service
+@Slf4j
+@Transactional(readOnly = true)
+@Validated
+@RequiredArgsConstructor
+public class GrupoResponsableEconomicoService {
+
+  private final SgiConfigProperties sgiConfigProperties;
+  private final GrupoResponsableEconomicoRepository repository;
+  private final GrupoRepository grupoRepository;
+  private final Validator validator;
+  private final RolProyectoRepository rolProyectoRepository;
+
+  /**
+   * Guarda la entidad {@link GrupoResponsableEconomico}.
+   * 
+   * @param grupoResponsableEconomico la entidad {@link GrupoResponsableEconomico}
+   *                                  a guardar.
+   * @return la entidad {@link GrupoResponsableEconomico} persistida.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Create.class })
+  public GrupoResponsableEconomico create(@Valid GrupoResponsableEconomico grupoResponsableEconomico) {
+    log.debug("create(GrupoResponsableEconomico grupoResponsableEconomico) - start");
+
+    AssertHelper.idIsNull(grupoResponsableEconomico.getId(), GrupoResponsableEconomico.class);
+    GrupoResponsableEconomico returnValue = repository.save(grupoResponsableEconomico);
+
+    log.debug("create(GrupoResponsableEconomico grupoResponsableEconomico) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza los datos del {@link GrupoResponsableEconomico}.
+   *
+   * @param grupoResponsableEconomicoActualizar {@link GrupoResponsableEconomico}
+   *                                            con los datos actualizados.
+   * @return {@link GrupoResponsableEconomico} actualizado.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Update.class })
+  public GrupoResponsableEconomico update(@Valid GrupoResponsableEconomico grupoResponsableEconomicoActualizar) {
+    log.debug("update(GrupoResponsableEconomico grupoResponsableEconomicoActualizar) - start");
+
+    AssertHelper.idNotNull(grupoResponsableEconomicoActualizar.getId(), GrupoResponsableEconomico.class);
+
+    return repository.findById(grupoResponsableEconomicoActualizar.getId()).map(data -> {
+      data.setFechaInicio(grupoResponsableEconomicoActualizar.getFechaInicio());
+      data.setFechaFin(grupoResponsableEconomicoActualizar.getFechaFin());
+      data.setPersonaRef(grupoResponsableEconomicoActualizar.getPersonaRef());
+
+      GrupoResponsableEconomico returnValue = repository.save(data);
+
+      log.debug("update(GrupoResponsableEconomico grupoResponsableEconomicoActualizar) - end");
+      return returnValue;
+    }).orElseThrow(() -> new GrupoResponsableEconomicoNotFoundException(grupoResponsableEconomicoActualizar.getId()));
+  }
+
+  /**
+   * Obtiene una entidad {@link GrupoResponsableEconomico} por id.
+   * 
+   * @param id Identificador de la entidad {@link GrupoResponsableEconomico}.
+   * @return la entidad {@link GrupoResponsableEconomico}.
+   */
+  public GrupoResponsableEconomico findById(Long id) {
+    log.debug("findById(Long id) - start");
+
+    AssertHelper.idNotNull(id, GrupoResponsableEconomico.class);
+    final GrupoResponsableEconomico returnValue = repository.findById(id)
+        .orElseThrow(() -> new GrupoResponsableEconomicoNotFoundException(id));
+
+    log.debug("findById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Elimina el {@link GrupoResponsableEconomico}.
+   *
+   * @param id Id del {@link GrupoResponsableEconomico}.
+   */
+  @Transactional
+  public void delete(Long id) {
+    log.debug("delete(Long id) - start");
+
+    AssertHelper.idNotNull(id, GrupoResponsableEconomico.class);
+
+    if (!repository.existsById(id)) {
+      throw new GrupoResponsableEconomicoNotFoundException(id);
+    }
+
+    repository.deleteById(id);
+    log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtener todas las entidades {@link GrupoResponsableEconomico} paginadas y/o
+   * filtradas del
+   * {@link Grupo}.
+   *
+   * @param grupoId Identificador de la entidad {@link Grupo}.
+   * @param paging  la información de la paginación.
+   * @param query   la información del filtro.
+   * @return la lista de entidades {@link GrupoResponsableEconomico} paginadas y/o
+   *         filtradas.
+   */
+  public Page<GrupoResponsableEconomico> findAllByGrupo(Long grupoId, String query, Pageable paging) {
+    log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    Specification<GrupoResponsableEconomico> specs = GrupoResponsableEconomicoSpecifications.byGrupoId(grupoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<GrupoResponsableEconomico> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(Long grupoId, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza el listado de {@link GrupoResponsableEconomico} de la {@link Grupo}
+   * con el
+   * listado grupoResponsableEconomicos añadiendo, editando o eliminando los
+   * elementos segun
+   * proceda.
+   *
+   * @param grupoId                    Id de la {@link Grupo}.
+   * @param grupoResponsableEconomicos lista con los nuevos
+   *                                   {@link GrupoResponsableEconomico} a
+   *                                   guardar.
+   * @return la entidad {@link GrupoResponsableEconomico} persistida.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Update.class })
+  public List<GrupoResponsableEconomico> update(Long grupoId,
+      @Valid List<GrupoResponsableEconomico> grupoResponsableEconomicos) {
+    log.debug("update(Long grupoId, List<GrupoResponsableEconomico> grupoResponsableEconomicos) - start");
+
+    grupoRepository.findById(grupoId)
+        .orElseThrow(() -> new GrupoNotFoundException(grupoId));
+
+    List<GrupoResponsableEconomico> grupoResponsableEconomicosBD = repository.findAllByGrupoId(grupoId);
+
+    // Miembros del responsableEconomico eliminados
+    List<GrupoResponsableEconomico> grupoResponsableEconomicosEliminar = grupoResponsableEconomicosBD.stream()
+        .filter(grupoResponsableEconomico -> grupoResponsableEconomicos.stream().map(GrupoResponsableEconomico::getId)
+            .noneMatch(id -> Objects.equals(id, grupoResponsableEconomico.getId())))
+        .collect(Collectors.toList());
+
+    if (!grupoResponsableEconomicosEliminar.isEmpty()) {
+      repository.deleteAll(grupoResponsableEconomicosEliminar);
+    }
+
+    this.validateGrupoResponsableEconomico(grupoResponsableEconomicos);
+
+    List<GrupoResponsableEconomico> returnValue = repository.saveAll(grupoResponsableEconomicos);
+    log.debug("update(Long grupoId, List<GrupoResponsableEconomico> grupoResponsableEconomicos) - END");
+
+    return returnValue;
+  }
+
+  private void validateGrupoResponsableEconomico(List<GrupoResponsableEconomico> grupoResponsableEconomicos) {
+
+    grupoResponsableEconomicos.sort(
+        Comparator.comparing(GrupoResponsableEconomico::getFechaInicio,
+            Comparator.nullsFirst(Comparator.naturalOrder())));
+
+    List<String> personasRef = grupoResponsableEconomicos.stream().map(GrupoResponsableEconomico::getPersonaRef)
+        .distinct()
+        .collect(Collectors.toList());
+
+    for (String personaRef : personasRef) {
+      GrupoResponsableEconomico grupoResponsableEconomicoAnterior = null;
+
+      List<GrupoResponsableEconomico> miembrosPersonaRef = grupoResponsableEconomicos.stream()
+          .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
+
+      for (GrupoResponsableEconomico grupoResponsableEconomico : miembrosPersonaRef) {
+        Assert.notNull(grupoResponsableEconomico.getPersonaRef(),
+            () -> ProblemMessage.builder().key(Assert.class, "notNull")
+                .parameter("field", ApplicationContextSupport.getMessage("grupoResponsableEconomico.personaRef"))
+                .parameter("entity", ApplicationContextSupport.getMessage(GrupoResponsableEconomico.class)).build());
+
+        if (grupoResponsableEconomicoAnterior != null
+            && grupoResponsableEconomicoAnterior.getPersonaRef().equals(grupoResponsableEconomico.getPersonaRef())
+            && !(grupoResponsableEconomicoAnterior.getFechaFin() != null
+                && grupoResponsableEconomicoAnterior.getFechaFin()
+                    .isBefore(grupoResponsableEconomico.getFechaInicio()))) {
+          throw new GrupoResponsableEconomicoUniqueException();
+        }
+
+        grupoResponsableEconomicoAnterior = grupoResponsableEconomico;
+      }
+
+    }
+  }
+
+}
