@@ -14,7 +14,7 @@ import javax.validation.Validator;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
-import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersona;
+import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
 import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -1864,29 +1864,31 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Obtiene los datos de proyectos competitivos de la persona.
+   * Obtiene los datos de proyectos competitivos de las personas.
    *
-   * @param personaRef Id de la persona.
-   * @return el {@link ProyectosCompetitivosPersona}.
+   * @param personasRef Lista de id de las personas.
+   * @param onlyAsRolPrincipal Indica si solo se comprueba la participacion con un rol principal
+   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
+   * @return el {@link ProyectosCompetitivosPersonas}.
    */
   @Override
-  public ProyectosCompetitivosPersona getProyectosCompetitivosPersona(String personaRef) {
-    log.debug("getProyectosCompetitivosPersona(String personaRef) - start");
+  public ProyectosCompetitivosPersonas getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) {
+    log.debug("getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - start");
 
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
-    ProyectosCompetitivosPersona proyectosCompetitivosPersona = ProyectosCompetitivosPersona.builder()
+    ProyectosCompetitivosPersonas proyectosCompetitivosPersona = ProyectosCompetitivosPersonas.builder()
         .numProyectosCompetitivos(
-            repository.countProyectosClasificacionCvnPersona(personaRef, ClasificacionCVN.COMPETITIVOS))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId))
         .numProyectosCompetitivosActuales(
-            repository.countProyectosClasificacionCvnPersona(personaRef, ClasificacionCVN.COMPETITIVOS, fechaActual))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId, fechaActual))
         .numProyectosNoCompetitivos(
-            repository.countProyectosClasificacionCvnPersona(personaRef, ClasificacionCVN.NO_COMPETITIVOS))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId))
         .numProyectosNoCompetitivosActuales(
-            repository.countProyectosClasificacionCvnPersona(personaRef, ClasificacionCVN.NO_COMPETITIVOS, fechaActual))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId, fechaActual))
         .build();
 
-    log.debug("getProyectosCompetitivosPersona(String personaRef) - end");
+    log.debug("getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - end");
     return proyectosCompetitivosPersona;
   }
 

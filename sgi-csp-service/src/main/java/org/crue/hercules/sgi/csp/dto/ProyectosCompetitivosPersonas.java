@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProyectosCompetitivosPersona implements Serializable {
+public class ProyectosCompetitivosPersonas implements Serializable {
   private Long numProyectosCompetitivos;
   private Long numProyectosCompetitivosActuales;
   private Long numProyectosNoCompetitivos;

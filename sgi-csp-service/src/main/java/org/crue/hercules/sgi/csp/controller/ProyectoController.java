@@ -20,7 +20,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
-import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersona;
+import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
@@ -118,8 +118,7 @@ public class ProyectoController {
   public static final String REQUEST_MAPPING = PATH_SEPARATOR + "proyectos";
   public static final String PATH_ID = PATH_SEPARATOR + "{id}";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
-  public static final String PATH_PROYECTOS_COMPETITIVOS_PERSONA = PATH_SEPARATOR + "competitivos" + PATH_SEPARATOR
-      + "persona" + PATH_SEPARATOR + "{personaRef}";
+  public static final String PATH_PROYECTOS_COMPETITIVOS_PERSONAS = PATH_SEPARATOR + "competitivos-personas";
   private static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
   private static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
   private static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
@@ -1511,15 +1510,24 @@ public class ProyectoController {
   /**
    * Obtiene los datos de proyectos competitivos de la persona.
    *
-   * @param personaRef Id de la persona.
-   * @return el {@link ProyectosCompetitivosPersona}.
+   * @param personasRef        Id de la persona.
+   * @param onlyAsRolPrincipal Indica si solo se comprueba la participacion con un
+   *                           rol principal
+   * @param exludedProyectoId  Excluye el {@link Proyecto} de la consulta
+   * @return el {@link ProyectosCompetitivosPersonas}.
    */
-  @GetMapping(PATH_PROYECTOS_COMPETITIVOS_PERSONA)
+  @GetMapping(PATH_PROYECTOS_COMPETITIVOS_PERSONAS)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
-  public ResponseEntity<ProyectosCompetitivosPersona> getProyectosCompetitivosPersona(@PathVariable String personaRef) {
-    log.debug("getProyectosCompetitivosPersona(personaRef) - start");
-    ProyectosCompetitivosPersona returnValue = service.getProyectosCompetitivosPersona(personaRef);
-    log.debug("getProyectosCompetitivosPersona(personaRef) - end");
+  public ResponseEntity<ProyectosCompetitivosPersonas> getProyectosCompetitivosPersona(
+      @RequestParam List<String> personasRef,
+      @RequestParam Boolean onlyAsRolPrincipal,
+      @RequestParam(required = false) Long exludedProyectoId) {
+    log.debug(
+        "getProyectosCompetitivosPersona(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - start");
+    ProyectosCompetitivosPersonas returnValue = service.getProyectosCompetitivosPersonas(personasRef,
+        onlyAsRolPrincipal, exludedProyectoId);
+    log.debug(
+        "getProyectosCompetitivosPersona(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 

@@ -293,37 +293,48 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
   }
 
   /**
-   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * Obtiene el numero de {@link Proyecto} de una lista de personas del tipo de
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal
    *
-   * @param personaRef       Id de la persona.
-   * @param clasificacionCvn la clasificacion.
+   * @param personasRef       Lista de id de las personas.
+   * @param clasificacionCvn  la clasificacion.
+   * @param rolPrincipal      Flag para tener en cuenta solo las participaciones
+   *                          como miembto con un rol principal
+   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
    * @return el numero de {@link Proyecto}.
    */
   @Override
-  public Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) {
-    log.debug("countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) - start");
-    Long returnValue = countProyectosClasificacionCvnPersona(personaRef, clasificacionCvn, null);
-    log.debug("countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn) - end");
+  public Long countProyectosClasificacionCvnPersonas(
+      List<String> personasRef, ClasificacionCVN clasificacionCvn,
+      boolean rolPrincipal, Long exludedProyectoId) {
+    log.debug(
+        "countProyectosClasificacionCvnPersona(List<String> personaRef, ClasificacionCVN clasificacionCvn, boolean rolPrincipal, Long exludedProyectoId) - start");
+    Long returnValue = countProyectosClasificacionCvnPersonas(personasRef, clasificacionCvn, rolPrincipal,
+        exludedProyectoId, null);
+    log.debug(
+        "countProyectosClasificacionCvnPersona(List<String> personaRef, ClasificacionCVN clasificacionCvn, boolean rolPrincipal, Long exludedProyectoId) - end");
     return returnValue;
   }
 
   /**
-   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * Obtiene el numero de {@link Proyecto} de una lista de personas del tipo de
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal en la fecha indicada
    *
-   * @param personaRef       Id de la persona.
-   * @param clasificacionCvn la clasificacion.
-   * @param fecha            fecha.
+   * @param personasRef       Lista de id de las personas.
+   * @param clasificacionCvn  la clasificacion.
+   * @param rolPrincipal      Flag para tener en cuenta solo las participaciones
+   *                          como miembto con un rol principal
+   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
+   * @param fecha             fecha.
    * @return el numero de {@link Proyecto}.
    */
   @Override
-  public Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn,
-      Instant fecha) {
+  public Long countProyectosClasificacionCvnPersonas(List<String> personasRef, ClasificacionCVN clasificacionCvn,
+      boolean rolPrincipal, Long exludedProyectoId, Instant fecha) {
     log.debug(
-        "countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha) - start");
+        "countProyectosClasificacionCvnPersona(List<String> personaRef, ClasificacionCVN clasificacionCvn, boolean rolPrincipal, Long exludedProyectoId, Instant fecha) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Long> cq = cb.createQuery(Long.class);
@@ -333,19 +344,40 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     List<Predicate> listPredicates = new ArrayList<>();
     listPredicates.add(cb.equal(root.get(Proyecto_.clasificacionCVN), clasificacionCvn));
-    listPredicates.add(cb.equal(joinProyectoEquipo.get(ProyectoEquipo_.personaRef), personaRef));
-    listPredicates.add(cb.isTrue(joinRolProyecto.get(RolProyecto_.rolPrincipal)));
+    listPredicates.add(joinProyectoEquipo.get(ProyectoEquipo_.personaRef).in(personasRef));
 
-    if (fecha != null) {
-      listPredicates.add(
-          cb.and(
-              cb.or(cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio)),
-                  cb.lessThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio), fecha)),
-              cb.or(cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin)),
-                  cb.greaterThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin), fecha))));
+    if (rolPrincipal) {
+      listPredicates.add(cb.isTrue(joinRolProyecto.get(RolProyecto_.rolPrincipal)));
     }
 
-    cq.select(cb.count(root.get(Proyecto_.id)));
+    if (exludedProyectoId != null) {
+      listPredicates.add(cb.equal(root.get(Proyecto_.id), exludedProyectoId).not());
+    }
+
+    if (fecha != null) {
+      Predicate fechaInicioMiembroEquipoLess = cb.or(
+          cb.lessThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio), fecha),
+          cb.and(
+              cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaInicio)),
+              cb.lessThanOrEqualTo(root.get(Proyecto_.fechaInicio), fecha)));
+
+      Predicate fechaFinMiembroEquipoGreater = cb.or(
+          cb.greaterThanOrEqualTo(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin), fecha),
+          cb.and(
+              cb.isNull(joinProyectoEquipo.get(ProyectoEquipo_.fechaFin)),
+              cb.or(
+                  cb.and(
+                      cb.isNull(root.get(Proyecto_.fechaFinDefinitiva)),
+                      cb.lessThanOrEqualTo(root.get(Proyecto_.fechaFin), fecha)),
+                  cb.lessThanOrEqualTo(root.get(Proyecto_.fechaFinDefinitiva), fecha))));
+
+      listPredicates.add(
+          cb.and(
+              fechaInicioMiembroEquipoLess,
+              fechaFinMiembroEquipoGreater));
+    }
+
+    cq.select(cb.countDistinct(root.get(Proyecto_.id)));
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
     // Execute query
@@ -353,7 +385,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
         .stream().findFirst().orElse(0L);
 
     log.debug(
-        "countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha) - end");
+        "countProyectosClasificacionCvnPersona(List<String> personaRef, ClasificacionCVN clasificacionCvn, boolean rolPrincipal, Long exludedProyectoId, Instant fecha) - end");
     return returnValue;
   }
 

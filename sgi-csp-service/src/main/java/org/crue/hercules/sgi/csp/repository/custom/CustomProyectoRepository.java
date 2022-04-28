@@ -65,26 +65,34 @@ public interface CustomProyectoRepository {
       Instant fechaFinBaremacion);
 
   /**
-   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * Obtiene el numero de {@link Proyecto} de una lista de personas del tipo de
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal en la fecha indicada
    *
-   * @param personaRef       Id de la persona.
-   * @param clasificacionCvn la clasificacion.
+   * @param personasRef       Lista de id de las personas.
+   * @param clasificacionCvn  la clasificacion.
+   * @param rolPrincipal      Flag para tener en cuenta solo las participaciones
+   *                          como miembto con un rol principal
+   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
    * @return el numero de {@link Proyecto}.
    */
-  Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn);
+  Long countProyectosClasificacionCvnPersonas(List<String> personasRef, ClasificacionCVN clasificacionCvn,
+      boolean rolPrincipal, Long exludedProyectoId);
 
   /**
-   * Obtiene el numero de {@link Proyecto} de una persona del tipo de
+   * Obtiene el numero de {@link Proyecto} de una lista de personas del tipo de
    * {@link ClasificacionCVN} en los que forma parte del equipo de proyecto con un
    * rol principal en la fecha indicada
    *
-   * @param personaRef       Id de la persona.
-   * @param clasificacionCvn la clasificacion.
-   * @param fecha            fecha.
+   * @param personasRef       Lista de id de las personas.
+   * @param clasificacionCvn  la clasificacion.
+   * @param rolPrincipal      Flag para tener en cuenta solo las participaciones
+   *                          como miembto con un rol principal
+   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
+   * @param fecha             fecha.
    * @return el numero de {@link Proyecto}.
    */
-  Long countProyectosClasificacionCvnPersona(String personaRef, ClasificacionCVN clasificacionCvn, Instant fecha);
+  Long countProyectosClasificacionCvnPersonas(List<String> personasRef, ClasificacionCVN clasificacionCvn,
+      boolean rolPrincipal, Long exludedProyectoId, Instant fecha);
 
 }
