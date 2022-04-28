@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.prc.integration;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.crue.hercules.sgi.prc.model.PuntuacionBaremoItem;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupoInvestigador;
 import org.crue.hercules.sgi.prc.model.PuntuacionItemInvestigador;
+import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -131,7 +133,9 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
   }
 
   protected void mockSexenio(Integer anio, String personaRef, String numeroSexenios) {
-    BDDMockito.given(getSgiApiSgpService().findSexeniosByAnio(anio))
+    Instant fechaFinBaremacion = ProduccionCientificaFieldFormatUtil.calculateFechaFinBaremacionByAnio(anio,
+        getSgiConfigProperties().getTimeZone());
+    BDDMockito.given(getSgiApiSgpService().findSexeniosByFecha(fechaFinBaremacion))
         .willReturn((Arrays.asList(generarMockSexenio(personaRef, numeroSexenios))));
   }
 

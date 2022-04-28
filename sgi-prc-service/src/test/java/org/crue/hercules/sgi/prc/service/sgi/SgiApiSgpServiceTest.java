@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
+import java.time.Instant;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;
@@ -55,7 +57,7 @@ class SgiApiSgpServiceTest extends BaseServiceTest {
 
   @Test
   void findSexeniosByPersonaId_ReturnsException() throws Exception {
-    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findSexeniosByAnio(2021))
+    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findSexeniosByFecha(Instant.now()))
         .isInstanceOf(MicroserviceCallException.class);
   }
 

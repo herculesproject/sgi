@@ -1,12 +1,9 @@
 package org.crue.hercules.sgi.prc.controller;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
@@ -14,7 +11,6 @@ import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.DetalleGrupoInvestigacionOutput;
 import org.crue.hercules.sgi.prc.dto.DetalleProduccionInvestigadorOutput;
 import org.crue.hercules.sgi.prc.dto.ResumenPuntuacionGrupoAnioOutput;
-import org.crue.hercules.sgi.prc.dto.ResumenPuntuacionGrupoAnioOutput.ResumenPuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacionLog_;

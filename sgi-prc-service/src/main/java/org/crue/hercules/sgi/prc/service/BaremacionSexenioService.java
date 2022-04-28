@@ -182,8 +182,16 @@ public class BaremacionSexenioService extends BaremacionCommonService {
 
     try {
       IntStream.range(anioInicio, anioFin)
-          .forEach(anio -> getSgiApiCspService().findAllGruposByAnio(anio).stream()
-              .forEach(grupo -> getSexeniosByPersonasEquipo(grupo, anio)));
+          .forEach(
+              anio -> {
+                Instant fechaFinBaremacion = ProduccionCientificaFieldFormatUtil.calculateFechaFinBaremacionByAnio(anio,
+                    getSgiConfigProperties().getTimeZone());
+                List<SexenioDto> sexeniosAnio = getSgiApiSgpService().findSexeniosByFecha(fechaFinBaremacion);
+
+                getSgiApiCspService().findAllGruposByAnio(anio).stream()
+                    .forEach(grupo -> getSexeniosByPersonasEquipo(grupo, anio, sexeniosAnio));
+
+              });
     } catch (Exception e) {
       log.error(e.getMessage());
     }
@@ -191,9 +199,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     log.debug("copySexenios(anioInicio, anioFin) - end");
   }
 
-  private void getSexeniosByPersonasEquipo(GrupoDto grupo, Integer anio) {
-
-    List<SexenioDto> sexeniosAnio = getSgiApiSgpService().findSexeniosByAnio(anio);
+  private void getSexeniosByPersonasEquipo(GrupoDto grupo, Integer anio, List<SexenioDto> sexeniosAnio) {
 
     List<String> personasEquipo = getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(grupo.getId(), anio)
         .stream()

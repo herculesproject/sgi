@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -171,30 +172,31 @@ public class SgiApiSgpService extends SgiApiBaseService {
    * Devuelve los sexenios de todos las personas de un determinado año a través de
    * una consulta al ESB
    *
-   * @param anio Integer
+   * @param fechaFinBaremacion Fecha fin de baremación
    * @return Lista de {@link SexenioDto}
    * 
    */
-  public List<SexenioDto> findSexeniosByAnio(Integer anio) {
-    log.debug("findSexeniosByAnio(anio)- start");
+  public List<SexenioDto> findSexeniosByFecha(Instant fechaFinBaremacion) {
+    log.debug("findSexeniosByAnio({})- start", fechaFinBaremacion);
     List<SexenioDto> result = new ArrayList<>();
 
     try {
       ServiceType serviceType = ServiceType.SGP;
       HttpMethod httpMethod = HttpMethod.GET;
       StringBuilder relativeUrl = new StringBuilder();
-      relativeUrl.append("/sexenios/{anio}");
+      relativeUrl.append("/sexenios?q=fecha=");
+      relativeUrl.append(fechaFinBaremacion.toString());
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
       result = super.<List<SexenioDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<SexenioDto>>() {
-          }, anio).getBody();
+          }).getBody();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new MicroserviceCallException();
     }
-    log.debug("findSexeniosByAnio(anio)- end");
+    log.debug("findSexeniosByAnio({})- end", fechaFinBaremacion);
 
     return ObjectUtils.defaultIfNull(result, new ArrayList<>());
 
