@@ -31,4 +31,32 @@
     <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_responsable_economico" constraintName="FK_GRUPORESPONSABLEECONOMICO_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000007-4">
+    <createSequence incrementBy="1" sequenceName="grupo_equipo_instrumental_seq" startValue="1" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000007-5">
+    <createTable tableName="grupo_equipo_instrumental">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_equipo_instrumentalPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(100)">
+        <constraints nullable="false" />
+      </column>
+      <column name="num_registro" type="VARCHAR(50)" />
+      <column name="descripcion" type="VARCHAR(250)" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000007-6">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_equipo_instrumental" constraintName="FK_GRUPOEQUIPOINSTRUMENTAL_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

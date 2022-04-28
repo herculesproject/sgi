@@ -46,4 +46,38 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000007-grupo-equipo-instrumental">
+    <insert tableName="grupo_equipo_instrumental">
+      <column name="id" valueSequenceNext="grupo_equipo_instrumental_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
+      <column name="nombre" value="Prueba 1" />
+      <column name="num_registro" value="REG-1" />
+      <column name="descripcion" value="Descripción prueba 1, registro 1 del grupo 1" />
+    </insert>
+
+    <insert tableName="grupo_equipo_instrumental">
+      <column name="id" valueSequenceNext="grupo_equipo_instrumental_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
+      <column name="nombre" value="Prueba 2" />
+      <column name="num_registro" value="REG-2" />
+      <column name="descripcion" value="Descripción prueba 2, registro 2 del grupo 1" />
+    </insert>
+
+    <insert tableName="grupo_equipo_instrumental">
+      <column name="id" valueSequenceNext="grupo_equipo_instrumental_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 2')" />
+      <column name="nombre" value="Prueba 1" />
+      <column name="num_registro" value="REG-1" />
+      <column name="descripcion" value="Descripción prueba 1, registro 1 del grupo 2" />
+    </insert>
+
+    <insert tableName="grupo_equipo_instrumental">
+      <column name="id" valueSequenceNext="grupo_equipo_instrumental_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
+      <column name="nombre" value="Prueba 1" />
+      <column name="num_registro" value="REG-1" />
+      <column name="descripcion" value="Descripción prueba 1, registro 1 del grupo 3" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
