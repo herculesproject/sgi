@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
+import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
@@ -12,6 +13,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGrupoEquipoInstrumentalResponse } from '../grupo-equipo-instrumental/grupo-equipo-instrumental-response';
+import { GRUPO_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER } from '../grupo-equipo-instrumental/grupo-equipo-instrumental-response.converter';
 import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
 import { GRUPO_EQUIPO_RESPONSE_CONVERTER } from '../grupo-equipo/grupo-equipo-response.converter';
 import { IGrupoEspecialInvestigacionResponse } from '../grupo-especial-investigacion/grupo-especial-investigacion-response';
@@ -243,6 +246,20 @@ export class GrupoService extends _GrupoMixinBase {
     const url = `${this.endpointUrl}/${id}/modificable`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera la lista de equipos instrumentales
+   *
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findEquiposInstrumentales(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoEquipoInstrumental>> {
+    return this.find<IGrupoEquipoInstrumentalResponse, IGrupoEquipoInstrumental>(
+      `${this.endpointUrl}/${id}/equipos-instrumentales`,
+      options,
+      GRUPO_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER
     );
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IGrupo } from '@core/models/csp/grupo';
 import { ActionService } from '@core/services/action-service';
+import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
 import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-responsable-economico/grupo-responsable-economico.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
@@ -15,6 +16,7 @@ import { NGXLogger } from 'ngx-logger';
 import { GRUPO_ROUTE_PARAMS } from './autorizacion-route-params';
 import { GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoDatosGeneralesFragment } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.fragment';
+import { GrupoEquipoInstrumentalFragment } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.fragment';
 import { GrupoEquipoInvestigacionFragment } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.fragment';
 import { GrupoResponsableEconomicoFragment } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.fragment';
 
@@ -29,12 +31,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
     EQUIPO_INVESTIGACION: 'equipo-investigacion',
-    RESPONSABLE_ECONOMICO: 'responsable-economico'
+    RESPONSABLE_ECONOMICO: 'responsable-economico',
+    EQUIPO_INSTRUMENTAL: 'equipo-instrumental'
   };
 
   private datosGenerales: GrupoDatosGeneralesFragment;
   private equiposInvestigacion: GrupoEquipoInvestigacionFragment;
   private responsablesEconomicos: GrupoResponsableEconomicoFragment;
+  private equiposInstrumentales: GrupoEquipoInstrumentalFragment;
 
   private readonly data: IGrupoData;
   public readonly id: number;
@@ -63,6 +67,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     personaService: PersonaService,
     sgiAuthService: SgiAuthService,
     grupoResponsableEconomicoService: GrupoResponsableEconomicoService,
+    grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(GRUPO_ROUTE_PARAMS.ID));
@@ -75,10 +80,12 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.datosGenerales = new GrupoDatosGeneralesFragment(logger, this.id, grupoService, grupoEquipoService, palabraClaveService, rolProyectoService, vinculacionService, solicitudService, this.data?.readonly);
     this.equiposInvestigacion = new GrupoEquipoInvestigacionFragment(logger, this.id, grupoService, grupoEquipoService, personaService, vinculacionService, sgiAuthService, this.data?.readonly);
     this.responsablesEconomicos = new GrupoResponsableEconomicoFragment(logger, this.id, grupoService, grupoResponsableEconomicoService, personaService, sgiAuthService, this.data?.readonly);
+    this.equiposInstrumentales = new GrupoEquipoInstrumentalFragment(logger, this.id, grupoService, grupoEquipoInstrumentalService, this.data?.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.EQUIPO_INVESTIGACION, this.equiposInvestigacion);
     this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsablesEconomicos);
+    this.addFragment(this.FRAGMENT.EQUIPO_INSTRUMENTAL, this.equiposInstrumentales);
 
     this.datosGenerales.initialize();
   }
