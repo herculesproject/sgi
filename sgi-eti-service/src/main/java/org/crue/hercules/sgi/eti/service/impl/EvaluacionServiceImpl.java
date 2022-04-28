@@ -16,7 +16,6 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
@@ -28,6 +27,7 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
+import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
@@ -89,6 +89,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** SGDOC service */
   private final SgdocService sgdocService;
 
+  /** Comunicado service */
+  private final ComunicadosService comunicadosService;
+
+  private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
+
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
@@ -105,13 +110,15 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    *                                      {@link SgiApiRepService}
    * @param sgdocService                  servicio gestor documental
    *                                      {@link SgdocService}
+   * @param comunicadosService            {@link ComunicadosService}
    */
   @Autowired
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
-      EvaluacionConverter evaluacionConverter, SgiApiRepService reportService, SgdocService sgdocService) {
+      EvaluacionConverter evaluacionConverter, SgiApiRepService reportService, SgdocService sgdocService,
+      ComunicadosService comunicadosService) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -123,6 +130,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.evaluacionConverter = evaluacionConverter;
     this.reportService = reportService;
     this.sgdocService = sgdocService;
+    this.comunicadosService = comunicadosService;
   }
 
   /**
@@ -482,6 +490,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       evaluacion.setComentario(evaluacionActualizar.getComentario());
 
       Evaluacion returnValue = evaluacionRepository.save(evaluacion);
+
+      // Se envía comunicado para evaluación con dictamen de evaluación de revisión
+      // mínima disponible
+      if (returnValue.getEsRevMinima().booleanValue()) {
+        sendComunicadoDictamenEvaluacionRevMin(evaluacion);
+      }
+
       log.debug("update(Evaluacion evaluacionActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionActualizar.getId()));
@@ -749,5 +764,26 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion) {
     log.debug("findFirstFechaEnvioSecretariaByIdEvaluacion(String idEvaluacion) - end");
     return evaluacionRepository.findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion);
+  }
+
+  private void sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) {
+    log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Start");
+    try {
+      String tipoActividad;
+      if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+      this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
+          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
+          tipoActividad,
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+      log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - End");
+    } catch (Exception e) {
+      log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Error al enviar el comunicado", e);
+    }
   }
 }

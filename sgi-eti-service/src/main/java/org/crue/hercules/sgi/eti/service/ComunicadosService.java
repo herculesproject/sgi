@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
 import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -88,6 +89,32 @@ public class ComunicadosService {
     }
     log.debug(
         "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
+  }
+
+  public void enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite,
+      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug(
+        "enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoEvaluacionMemoriaRevMin(
+          EtiComDictamenEvaluacionRevMinData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .generoComite(generoComite)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug(
+        "enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
   }
 
   /**
