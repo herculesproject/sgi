@@ -3,11 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
@@ -29,15 +27,11 @@ export interface GrupoEquipoInstrumentalModalData {
   templateUrl: './grupo-equipo-instrumental-modal.component.html',
   styleUrls: ['./grupo-equipo-instrumental-modal.component.scss']
 })
-export class GrupoEquipoInstrumentalModalComponent extends
-  BaseModalComponent<GrupoEquipoInstrumentalModalData, GrupoEquipoInstrumentalModalComponent> implements OnInit {
+export class GrupoEquipoInstrumentalModalComponent extends DialogFormComponent<GrupoEquipoInstrumentalModalData> implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-  fxLayoutProperties: FxLayoutProperties;
 
   textSaveOrUpdate: string;
-
-  saveDisabled = false;
 
   msgParamNumRegistroEntity = {};
   msgParamNombreEntity = {};
@@ -45,16 +39,11 @@ export class GrupoEquipoInstrumentalModalComponent extends
   title: string;
 
   constructor(
-    protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<GrupoEquipoInstrumentalModalComponent>,
+    matDialogRef: MatDialogRef<GrupoEquipoInstrumentalModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GrupoEquipoInstrumentalModalData,
-    private readonly translate: TranslateService) {
-    super(snackBarService, matDialogRef, data);
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row';
-    this.fxLayoutProperties.xs = 'row';
-
+    private readonly translate: TranslateService
+  ) {
+    super(matDialogRef, !!data?.isEdit);
   }
 
   ngOnInit(): void {
@@ -101,7 +90,7 @@ export class GrupoEquipoInstrumentalModalComponent extends
     }
   }
 
-  protected getFormGroup(): FormGroup {
+  protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
         nombre: new FormControl(this.data?.entidad?.nombre, [Validators.required, Validators.maxLength(100)]),
@@ -113,7 +102,7 @@ export class GrupoEquipoInstrumentalModalComponent extends
     return formGroup;
   }
 
-  protected getDatosForm(): GrupoEquipoInstrumentalModalData {
+  protected getValue(): GrupoEquipoInstrumentalModalData {
     this.data.entidad.nombre = this.formGroup.get('nombre').value;
     this.data.entidad.descripcion = this.formGroup.get('descripcion').value;
     this.data.entidad.numRegistro = this.formGroup.get('numRegistro').value;

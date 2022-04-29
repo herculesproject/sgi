@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { SelectValue } from '@core/component/select-common/select-common.component';
 import { TipoPartida } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
@@ -21,7 +21,6 @@ import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyect
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
@@ -73,9 +72,7 @@ const CODIGO_ECONOMICO_TIPO_MAP: Map<CodigoEconomicoTipo, string> = new Map([
   templateUrl: './proyecto-anualidad-gasto-modal.component.html',
   styleUrls: ['./proyecto-anualidad-gasto-modal.component.scss']
 })
-export class ProyectoAnualidadGastoModalComponent extends
-  BaseModalComponent<ProyectoAnualidadGastoModalData, ProyectoAnualidadGastoModalComponent>
-  implements OnInit {
+export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<ProyectoAnualidadGastoModalData> implements OnInit {
 
   textSaveOrUpdate: string;
   msgParamCodigosEconomicosPermitidos = {};
@@ -122,8 +119,7 @@ export class ProyectoAnualidadGastoModalComponent extends
   }
 
   constructor(
-    protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<ProyectoAnualidadGastoModalComponent>,
+    matDialogRef: MatDialogRef<ProyectoAnualidadGastoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoAnualidadGastoModalData,
     private readonly translate: TranslateService,
     private readonly proyectoService: ProyectoService,
@@ -132,7 +128,7 @@ export class ProyectoAnualidadGastoModalComponent extends
     private readonly proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private readonly codigoEconomicoGastoService: CodigoEconomicoGastoService
   ) {
-    super(snackBarService, matDialogRef, data);
+    super(matDialogRef, data.isEdit);
 
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
 
@@ -213,7 +209,7 @@ export class ProyectoAnualidadGastoModalComponent extends
     });
   }
 
-  protected getDatosForm(): ProyectoAnualidadGastoModalData {
+  protected getValue(): ProyectoAnualidadGastoModalData {
     this.data.anualidadGasto.proyectoSgeRef = this.formGroup.controls.identificadorSge.value.proyectoSge.id;
     this.data.anualidadGasto.codigoEconomico = this.formGroup.controls.codigoEconomico.value;
     this.data.anualidadGasto.importeConcedido = this.formGroup.controls.importeConcedido.value;
@@ -225,7 +221,7 @@ export class ProyectoAnualidadGastoModalComponent extends
     return this.data;
   }
 
-  protected getFormGroup(): FormGroup {
+  protected buildFormGroup(): FormGroup {
     const identificadorSge = this.data.anualidadGasto?.proyectoSgeRef
       ? {
         proyectoSge:

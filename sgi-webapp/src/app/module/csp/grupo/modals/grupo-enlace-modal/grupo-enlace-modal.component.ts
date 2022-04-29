@@ -3,10 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
@@ -27,15 +26,11 @@ export interface GrupoEnlaceModalData {
   templateUrl: './grupo-enlace-modal.component.html',
   styleUrls: ['./grupo-enlace-modal.component.scss']
 })
-export class GrupoEnlaceModalComponent extends
-  BaseModalComponent<GrupoEnlaceModalData, GrupoEnlaceModalComponent> implements OnInit {
+export class GrupoEnlaceModalComponent extends DialogFormComponent<GrupoEnlaceModalData> implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-  fxLayoutProperties: FxLayoutProperties;
 
   textSaveOrUpdate: string;
-
-  saveDisabled = false;
 
   msgParamEnlaceEntity = {};
   title: string;
@@ -44,13 +39,9 @@ export class GrupoEnlaceModalComponent extends
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<GrupoEnlaceModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GrupoEnlaceModalData,
-    private readonly translate: TranslateService) {
-    super(snackBarService, matDialogRef, data);
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row';
-    this.fxLayoutProperties.xs = 'row';
-
+    private readonly translate: TranslateService
+  ) {
+    super(matDialogRef, !!data?.isEdit);
   }
 
   ngOnInit(): void {
@@ -87,7 +78,7 @@ export class GrupoEnlaceModalComponent extends
     }
   }
 
-  protected getFormGroup(): FormGroup {
+  protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
         enlace: new FormControl(this.data?.entidad?.enlace, [Validators.required, Validators.maxLength(100)]),
@@ -97,7 +88,7 @@ export class GrupoEnlaceModalComponent extends
     return formGroup;
   }
 
-  protected getDatosForm(): GrupoEnlaceModalData {
+  protected getValue(): GrupoEnlaceModalData {
     this.data.entidad.enlace = this.formGroup.get('enlace').value;
     return this.data;
   }

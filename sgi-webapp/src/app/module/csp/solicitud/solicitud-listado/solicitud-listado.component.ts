@@ -44,9 +44,7 @@ const MSG_REACTIVE = marker('msg.csp.reactivate');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const MSG_SUCCESS_CREAR_PROYECTO = marker('msg.csp.solicitud.crear.proyecto');
-const MSG_ERROR_CREAR_PROYECTO = marker('error.csp.solicitud.crear.proyecto');
 const MSG_SUCCESS_CREAR_GRUPO = marker('msg.csp.solicitud.crear.grupo');
-const MSG_ERROR_CREAR_GRUPO = marker('error.csp.solicitud.crear.grupo');
 const SOLICITUD_KEY = marker('csp.solicitud');
 const GRUPO_KEY = marker('csp.grupo');
 
@@ -536,31 +534,14 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.suscripciones.push(this.solicitudService.findSolicitudProyecto(solicitud.id).pipe(
       map(solicitudProyectoDatos => {
         const config = {
-          panelClass: 'sgi-dialog-container',
           data: { solicitud, solicitudProyecto: solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
         };
         const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);
         dialogRef.afterClosed().subscribe(
           (result: IProyecto) => {
             if (result) {
-              const subscription = this.proyectoService.crearProyectoBySolicitud(solicitud.id, result);
-
-              subscription.subscribe(
-                () => {
-                  this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_PROYECTO);
-                  this.loadTable();
-                },
-                (error) => {
-                  this.logger.error(error);
-                  if (error instanceof SgiError) {
-                    this.snackBarService.showError(error);
-                  }
-                  else {
-                    this.snackBarService.showError(MSG_ERROR_CREAR_PROYECTO);
-                  }
-                }
-              );
-
+              this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_PROYECTO);
+              this.loadTable();
             }
           }
         );
@@ -588,7 +569,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     } as ISolicitudGrupo;
 
     const config = {
-      panelClass: 'sgi-dialog-container',
       data
     };
 
@@ -596,16 +576,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       .pipe(
         filter(solicitudGrupo => solicitudGrupo)
       ).subscribe(
-        () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_GRUPO);
-          this.loadTable();
-        },
-        (error) => {
-          this.logger.error(error);
-          if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
-          } else {
-            this.snackBarService.showError(MSG_ERROR_CREAR_GRUPO);
+        (result) => {
+          if (result) {
+            this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_GRUPO);
+            this.loadTable();
           }
         }
       );

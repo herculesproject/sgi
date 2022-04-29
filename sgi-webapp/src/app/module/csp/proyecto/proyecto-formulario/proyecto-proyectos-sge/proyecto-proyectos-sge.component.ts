@@ -115,7 +115,6 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     };
 
     const config = {
-      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(SearchProyectoEconomicoModalComponent, config);

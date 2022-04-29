@@ -125,8 +125,6 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
     }
 
     const config: MatDialogConfig = {
-      panelClass: 'sgi-dialog-container',
-      minWidth: '700px',
       data
     };
     const dialogRef = this.matDialog.open(GrupoEnlaceModalComponent, config);

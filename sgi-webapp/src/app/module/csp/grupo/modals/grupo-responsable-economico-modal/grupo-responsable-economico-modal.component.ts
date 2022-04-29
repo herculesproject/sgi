@@ -3,13 +3,10 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { PersonaService } from '@core/services/sgp/persona.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,16 +35,14 @@ export interface GrupoResponsableEconomicoModalData {
   templateUrl: './grupo-responsable-economico-modal.component.html',
   styleUrls: ['./grupo-responsable-economico-modal.component.scss']
 })
-export class GrupoResponsableEconomicoModalComponent extends
-  BaseModalComponent<GrupoResponsableEconomicoModalData, GrupoResponsableEconomicoModalComponent> implements OnInit {
+export class GrupoResponsableEconomicoModalComponent extends DialogFormComponent<GrupoResponsableEconomicoModalData> implements OnInit {
+
   TIPO_COLECTIVO = TipoColectivo;
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-  fxLayoutProperties: FxLayoutProperties;
 
   textSaveOrUpdate: string;
 
-  saveDisabled = false;
   rolesGrupo$: Observable<IRolProyecto[]>;
   colectivosIdRolParticipacion: string[];
 
@@ -65,16 +60,11 @@ export class GrupoResponsableEconomicoModalComponent extends
   }
 
   constructor(
-    protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<GrupoResponsableEconomicoModalComponent>,
+    matDialogRef: MatDialogRef<GrupoResponsableEconomicoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GrupoResponsableEconomicoModalData,
-    private personaService: PersonaService,
-    private readonly translate: TranslateService) {
-    super(snackBarService, matDialogRef, data);
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row';
-    this.fxLayoutProperties.xs = 'row';
+    private readonly translate: TranslateService
+  ) {
+    super(matDialogRef, !!data?.isEdit);
   }
 
   ngOnInit(): void {
@@ -131,7 +121,7 @@ export class GrupoResponsableEconomicoModalComponent extends
     }
   }
 
-  protected getFormGroup(): FormGroup {
+  protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
         miembro: new FormControl(this.data?.entidad?.persona, [
@@ -157,7 +147,7 @@ export class GrupoResponsableEconomicoModalComponent extends
     return formGroup;
   }
 
-  protected getDatosForm(): GrupoResponsableEconomicoModalData {
+  protected getValue(): GrupoResponsableEconomicoModalData {
     this.data.entidad.persona = this.formGroup.get('miembro').value;
     this.data.entidad.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.entidad.fechaFin = this.formGroup.get('fechaFin').value;

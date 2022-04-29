@@ -143,8 +143,6 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     }
 
     const config: MatDialogConfig = {
-      panelClass: 'sgi-dialog-container',
-      minWidth: '700px',
       data
     };
     const dialogRef = this.matDialog.open(GrupoEquipoModalComponent, config);

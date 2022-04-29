@@ -8,6 +8,9 @@ import { Subscription } from 'rxjs';
 
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 
+/**
+ * @deprecated Use DialogFormComponent or DialogCommonComponent
+ */
 @Directive()
 // tslint:disable-next-line: directive-class-suffix
 export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {

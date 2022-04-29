@@ -135,7 +135,6 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
     };
 
     const config = {
-      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(PartidaPresupuestariaModalComponent, config);

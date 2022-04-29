@@ -136,8 +136,6 @@ export class GrupoResponsableEconomicoComponent extends FragmentComponent implem
     }
 
     const config: MatDialogConfig = {
-      panelClass: 'sgi-dialog-container',
-      minWidth: '700px',
       data
     };
     const dialogRef = this.matDialog.open(GrupoResponsableEconomicoModalComponent, config);

@@ -2,17 +2,14 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { BaseModalComponent } from '@core/component/base-modal.component';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { SelectValue } from '@core/component/select-common/select-common.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPeriodoAmortizacion } from '@core/models/csp/proyecto-periodo-amortizacion';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
@@ -46,10 +43,7 @@ export interface IProyectoPeriodoAmortizacionModalData {
   styleUrls: ['./proyecto-periodo-amortizacion-fondos-modal.component.scss']
 })
 export class ProyectoPeriodoAmortizacionModalComponent
-  extends BaseModalComponent<IProyectoPeriodoAmortizacionModalData, ProyectoPeriodoAmortizacionModalComponent> implements OnInit {
-
-  fxFlexProperties: FxFlexProperties;
-  fxFlexPropertiesInline: FxFlexProperties;
+  extends DialogFormComponent<IProyectoPeriodoAmortizacionModalData> implements OnInit {
 
   anualidades$ = new BehaviorSubject<IProyectoAnualidad[]>([]);
 
@@ -88,30 +82,12 @@ export class ProyectoPeriodoAmortizacionModalComponent
   readonly displayerAnualidad = (proyectoAnualidad: IProyectoAnualidad): string => proyectoAnualidad?.anio?.toString() ?? '';
 
   constructor(
-    protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<ProyectoPeriodoAmortizacionModalComponent>,
+    matDialogRef: MatDialogRef<ProyectoPeriodoAmortizacionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IProyectoPeriodoAmortizacionModalData,
     private proyectoService: ProyectoService,
     private readonly translate: TranslateService
   ) {
-    super(snackBarService, matDialogRef, data);
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '3';
-
-    this.fxFlexPropertiesInline = new FxFlexProperties();
-    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexPropertiesInline.order = '2';
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
+    super(matDialogRef, !!data.periodoAmortizacion?.proyectoEntidadFinanciadora);
   }
 
   ngOnInit(): void {
@@ -126,7 +102,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
       }
     ));
 
-    if (this.data.proyectosSGE.length == 1) {
+    if (this.data.proyectosSGE.length === 1) {
       this.formGroup.controls.identificadorSge.setValue(this.data.proyectosSGE[0]);
     }
 
@@ -145,7 +121,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
   }
 
 
-  protected getFormGroup(): FormGroup {
+  protected buildFormGroup(): FormGroup {
     const identificadorSge = this.data.periodoAmortizacion?.proyectoSGE
       ? {
         proyectoSge:
@@ -180,7 +156,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
     );
   }
 
-  protected getDatosForm(): IProyectoPeriodoAmortizacionModalData {
+  protected getValue(): IProyectoPeriodoAmortizacionModalData {
     this.data.periodoAmortizacion.proyectoSGE = this.formGroup.controls.identificadorSge.value?.proyectoSge;
     this.data.periodoAmortizacion.proyectoEntidadFinanciadora = this.formGroup.controls.entidadFinanciadora.value;
     this.data.periodoAmortizacion.proyectoAnualidad = this.formGroup.controls.anualidad.value;

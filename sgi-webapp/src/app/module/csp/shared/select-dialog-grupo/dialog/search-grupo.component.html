@@ -1,12 +1,5 @@
-<div class="sgi-dialog-header" fxLayout="row" fxLayoutGap="20px">
-  <span fxFlexAlign="center" mat-mat-dialog-title role="heading" aria-level="3" fxFlex>
-    {{'csp.grupo' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
-  </span>
-  <button fxFlex="nogrow" mat-icon-button mat-dialog-close>
-    <mat-icon class="close-icon">close</mat-icon>
-  </button>
-</div>
-<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
+<sgi-dialog-header title="{{'csp.grupo' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}"></sgi-dialog-header>
+<sgi-dialog-content fxLayout="column" fxLayoutGap="20px">
   <form [formGroup]="formGroup" fxLayout="column">
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Nombre -->
@@ -148,7 +141,7 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
     </mat-paginator>
   </div>
-</mat-dialog-content>
+</sgi-dialog-content>
 <mat-dialog-actions>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>
     {{'btn.cancel' | translate}}

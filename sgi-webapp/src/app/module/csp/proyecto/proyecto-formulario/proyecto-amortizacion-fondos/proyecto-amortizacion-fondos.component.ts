@@ -156,7 +156,6 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
       proyectosSGE: this.formPart.proyectosSGE$.value
     };
     const config = {
-      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ProyectoPeriodoAmortizacionModalComponent, config);

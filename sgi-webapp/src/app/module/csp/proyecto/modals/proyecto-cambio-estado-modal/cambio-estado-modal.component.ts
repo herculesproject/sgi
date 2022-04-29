@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -8,7 +8,6 @@ import { SgiProblem } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -42,10 +41,7 @@ export interface ProyectoCambioEstadoModalComponentData {
   templateUrl: './cambio-estado-modal.component.html',
   styleUrls: ['./cambio-estado-modal.component.scss']
 })
-export class CambioEstadoModalComponent
-  extends DialogActionComponent<IEstadoProyecto> {
-
-  fxLayoutProperties: FxLayoutProperties;
+export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoProyecto> implements OnInit {
 
   msgParamComentarioEntity = {};
   msgParamNuevoEstadoEntity = {};
@@ -69,13 +65,9 @@ export class CambioEstadoModalComponent
     protected snackBarService: SnackBarService,
     private readonly translate: TranslateService,
     private confirmDialogService: DialogService,
-    private proyectoService: ProyectoService) {
+    private proyectoService: ProyectoService
+  ) {
     super(matDialogRef, true);
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
 
     const estados = new Map<string, string>();
     ESTADO_MAP.forEach((value, key) => {
@@ -88,6 +80,7 @@ export class CambioEstadoModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.matDialogRef.updateSize('20vw');
     this.setupI18N();
   }
 

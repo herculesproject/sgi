@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,7 +10,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -69,10 +68,7 @@ ESTADO_MAP_INVESTIGADOR.set(Estado.DENEGADA, new Map([
   templateUrl: './cambio-estado-modal.component.html',
   styleUrls: ['./cambio-estado-modal.component.scss']
 })
-export class CambioEstadoModalComponent
-  extends DialogActionComponent<IEstadoSolicitud> {
-
-  fxLayoutProperties: FxLayoutProperties;
+export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSolicitud> implements OnInit {
 
   msgParamComentarioEntity = {};
   msgParamFechaEstadoEntity = {};
@@ -96,11 +92,6 @@ export class CambioEstadoModalComponent
     private readonly translate: TranslateService) {
     super(matDialogRef, true);
 
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
-
     if (this.data?.isInvestigador) {
       this.estadosNuevos = ESTADO_MAP_INVESTIGADOR.get(this.data.estadoActual);
     } else {
@@ -117,6 +108,7 @@ export class CambioEstadoModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.matDialogRef.updateSize('30vw');
     this.setupI18N();
   }
 
