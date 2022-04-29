@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
+import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
@@ -14,6 +15,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGrupoEnlaceResponse } from '../grupo-enlace/grupo-enlace-response';
+import { GRUPO_ENLACE_RESPONSE_CONVERTER } from '../grupo-enlace/grupo-enlace-response.converter';
 import { IGrupoEquipoInstrumentalResponse } from '../grupo-equipo-instrumental/grupo-equipo-instrumental-response';
 import { GRUPO_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER } from '../grupo-equipo-instrumental/grupo-equipo-instrumental-response.converter';
 import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
@@ -267,8 +270,7 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
-   * Recupera la lista de responsables económicos del equipo del grupo
-   *
+   * Recupera la lista de responsables económicos
    * @param id Identificador del grupo
    * @param options opciones de búsqueda.
    */
@@ -277,6 +279,19 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/responsables-economicos`,
       options,
       GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+ * Recupera la lista de enlaces
+ * @param id Identificador del grupo
+ * @param options opciones de búsqueda.
+ */
+  findEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoEnlace>> {
+    return this.find<IGrupoEnlaceResponse, IGrupoEnlace>(
+      `${this.endpointUrl}/${id}/enlaces`,
+      options,
+      GRUPO_ENLACE_RESPONSE_CONVERTER
     );
   }
 }
