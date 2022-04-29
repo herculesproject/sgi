@@ -39,9 +39,9 @@
     </insert>
     <insert tableName="grupo_responsable_economico">
       <column name="id" valueSequenceNext="grupo_responsable_economico_seq" />
-      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 2')" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
       <column name="persona_ref" value="01889311" />
-      <column name="fecha_inicio" valueDate="2022-02-14T23:00:00" />
+      <column name="fecha_inicio" valueDate="2022-04-14T23:00:00" />
       <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
     </insert>
   </changeSet>

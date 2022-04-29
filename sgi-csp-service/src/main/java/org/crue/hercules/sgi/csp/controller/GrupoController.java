@@ -84,7 +84,7 @@ public class GrupoController {
   public static final String PATH_BAREMABLES_ANIO = "/baremables/{anio}";
   public static final String PATH_GRUPO_TIPO = PATH_ID + "/tipos";
   public static final String PATH_GRUPO_ESPECIAL_INVESTIGACION = PATH_ID + "/especiales-investigacion";
-  public static final String PATH_GRUPO_RESPONSABLE_ECONOMICO = PATH_ID + "/responsableseconomicos";
+  public static final String PATH_GRUPO_RESPONSABLE_ECONOMICO = PATH_ID + "/responsables-economicos";
   public static final String PATH_GRUPO_EQUIPO_INSTRUMENTAL = PATH_ID + "/equipos-instrumentales";
 
   // Services
