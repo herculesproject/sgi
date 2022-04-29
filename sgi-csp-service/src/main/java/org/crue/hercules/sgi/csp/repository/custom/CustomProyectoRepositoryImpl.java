@@ -368,8 +368,8 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
               cb.or(
                   cb.and(
                       cb.isNull(root.get(Proyecto_.fechaFinDefinitiva)),
-                      cb.lessThanOrEqualTo(root.get(Proyecto_.fechaFin), fecha)),
-                  cb.lessThanOrEqualTo(root.get(Proyecto_.fechaFinDefinitiva), fecha))));
+                      cb.greaterThanOrEqualTo(root.get(Proyecto_.fechaFin), fecha)),
+                  cb.greaterThanOrEqualTo(root.get(Proyecto_.fechaFinDefinitiva), fecha))));
 
       listPredicates.add(
           cb.and(
