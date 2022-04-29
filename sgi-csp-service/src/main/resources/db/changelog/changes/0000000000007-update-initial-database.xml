@@ -59,4 +59,30 @@
     <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_equipo_instrumental" constraintName="FK_GRUPOEQUIPOINSTRUMENTAL_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000007-7">
+    <createSequence incrementBy="1" sequenceName="grupo_enlace_seq" startValue="1" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000007-8">
+    <createTable tableName="grupo_enlace">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_enlacePK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="enlace" type="VARCHAR(100)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000007-9">
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_enlace" constraintName="FK_GRUPOENLACE_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

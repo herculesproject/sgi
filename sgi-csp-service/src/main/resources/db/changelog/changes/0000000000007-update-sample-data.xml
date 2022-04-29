@@ -80,4 +80,29 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000007-grupo-enlace">
+    <insert tableName="grupo_enlace">
+      <column name="id" valueSequenceNext="grupo_enlace_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
+      <column name="enlace" value="www.enlace1.com" />
+    </insert>
+
+    <insert tableName="grupo_enlace">
+      <column name="id" valueSequenceNext="grupo_enlace_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1')" />
+      <column name="enlace" value="www.enlace2.com" />
+    </insert>
+
+    <insert tableName="grupo_enlace">
+      <column name="id" valueSequenceNext="grupo_enlace_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 2')" />
+      <column name="enlace" value="www.enlace1.com" />
+    </insert>
+
+    <insert tableName="grupo_enlace">
+      <column name="id" valueSequenceNext="grupo_enlace_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
+      <column name="enlace" value="www.enlace1.com" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
