@@ -1166,7 +1166,7 @@
   "csp.validacion-requisitos-equipo-ip.FECHA_OBTENCION_NIVEL_ACADEMICO_MIN": "La fecha de obtención del nivel académico es inferior la fecha mínima",
   "csp.validacion-requisitos-equipo-ip.NO_CATEGORIA_PROFESIONAL": "No tiene la categoría profesional requerida",
   "csp.validacion-requisitos-equipo-ip.NO_NIVEL_ACADEMICO": "No tiene el nivel académico requerido",
-  "csp.validacion-requisitos-equipo-ip.NUM_MAX_IP": "Se superan el número de IPs establecidos por la convocatoria, ¿desea continuar incluyendo esta distribución de roles en el equipo?",
+  "csp.validacion-requisitos-equipo-ip.NUM_MAX_IP": "Se supera el número de IPs establecidos por la convocatoria, ¿desea continuar incluyendo esta distribución de roles en el equipo?",
   "csp.validacion-requisitos-equipo-ip.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES_EQUIPO": "Se supera el número máximo de proyectos competitivos en curso establecidos por la convocatoria para el equipo, ¿desea continuar incluyendo este equipo de proyecto?",
   "csp.validacion-requisitos-equipo-ip.NUM_MAX_PROYECTOS_COMPETITIVOS_ACTUALES_IP": "Se supera el número máximo de proyectos competitivos en curso permitidos",
   "csp.validacion-requisitos-equipo-ip.NUM_MAX_PROYECTOS_NO_COMPETITIVOS_ACTUALES_EQUIPO": "Se supera el número máximo de proyectos no competitivos en curso establecidos por la convocatoria para el equipo, ¿desea continuar incluyendo este equipo de proyecto?",
