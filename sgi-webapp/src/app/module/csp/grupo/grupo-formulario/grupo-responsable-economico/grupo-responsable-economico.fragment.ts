@@ -30,7 +30,7 @@ export class GrupoResponsableEconomicoFragment extends Fragment {
     if (this.getKey()) {
       const id = this.getKey() as number;
       this.subscriptions.push(
-        this.grupoService.findMiembrosEquipo(id).pipe(
+        this.grupoService.findResponsablesEconomicos(id).pipe(
           switchMap(result => {
             return from(result.items).pipe(
               mergeMap(element => {

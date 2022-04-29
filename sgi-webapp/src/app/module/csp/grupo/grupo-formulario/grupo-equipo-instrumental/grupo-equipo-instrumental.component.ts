@@ -42,6 +42,10 @@ export class GrupoEquipoInstrumentalComponent extends FragmentComponent implemen
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected proyectoService: GrupoService,
     public actionService: GrupoActionService,
@@ -110,7 +114,7 @@ export class GrupoEquipoInstrumentalComponent extends FragmentComponent implemen
       titleEntity: this.modalTitleEntity,
       entidad: wrapper?.value ?? {} as IGrupoEquipoInstrumental,
       selectedEntidades: this.dataSource.data.map(element => element.value),
-      isEdit: this.formPart.isEdit()
+      isEdit: Boolean(wrapper)
     };
 
     if (wrapper) {

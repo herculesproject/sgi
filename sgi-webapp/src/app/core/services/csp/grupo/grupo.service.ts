@@ -5,6 +5,7 @@ import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
+import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { environment } from '@env';
 import {
@@ -22,6 +23,8 @@ import { GRUPO_ESPECIAL_INVESTIGACION_RESPONSE_CONVERTER } from '../grupo-especi
 import { GRUPO_PALABRACLAVE_REQUEST_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-request.converter';
 import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra-clave-response';
 import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
+import { IGrupoResponsableEconomicoResponse } from '../grupo-responsable-economico/grupo-responsable-economico-response';
+import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from '../grupo-responsable-economico/grupo-responsable-economico-response.converter';
 import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
 import { GRUPO_TIPO_RESPONSE_CONVERTER } from '../grupo-tipo/grupo-tipo-response.converter';
 import { IGrupoRequest } from './grupo-request';
@@ -260,6 +263,20 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/equipos-instrumentales`,
       options,
       GRUPO_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de responsables económicos del equipo del grupo
+   *
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findResponsablesEconomicos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoResponsableEconomico>> {
+    return this.find<IGrupoResponsableEconomicoResponse, IGrupoResponsableEconomico>(
+      `${this.endpointUrl}/${id}/responsables-economicos`,
+      options,
+      GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
     );
   }
 }
