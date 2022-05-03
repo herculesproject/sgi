@@ -1,23 +1,26 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
-import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoUniqueException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoOverlapRangeException;
+import org.crue.hercules.sgi.csp.exceptions.GrupoResponsableEconomicoProjectRangeException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoResponsableEconomicoRepository;
-import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -44,11 +47,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GrupoResponsableEconomicoService {
 
-  private final SgiConfigProperties sgiConfigProperties;
   private final GrupoResponsableEconomicoRepository repository;
   private final GrupoRepository grupoRepository;
   private final Validator validator;
-  private final RolProyectoRepository rolProyectoRepository;
 
   /**
    * Guarda la entidad {@link GrupoResponsableEconomico}.
@@ -172,7 +173,7 @@ public class GrupoResponsableEconomicoService {
       @Valid List<GrupoResponsableEconomico> grupoResponsableEconomicos) {
     log.debug("update(Long grupoId, List<GrupoResponsableEconomico> grupoResponsableEconomicos) - start");
 
-    grupoRepository.findById(grupoId)
+    Grupo grupo = grupoRepository.findById(grupoId)
         .orElseThrow(() -> new GrupoNotFoundException(grupoId));
 
     List<GrupoResponsableEconomico> grupoResponsableEconomicosBD = repository.findAllByGrupoId(grupoId);
@@ -187,7 +188,7 @@ public class GrupoResponsableEconomicoService {
       repository.deleteAll(grupoResponsableEconomicosEliminar);
     }
 
-    this.validateGrupoResponsableEconomico(grupoResponsableEconomicos);
+    this.validateGrupoResponsableEconomico(grupoResponsableEconomicos, grupo);
 
     List<GrupoResponsableEconomico> returnValue = repository.saveAll(grupoResponsableEconomicos);
     log.debug("update(Long grupoId, List<GrupoResponsableEconomico> grupoResponsableEconomicos) - END");
@@ -195,39 +196,66 @@ public class GrupoResponsableEconomicoService {
     return returnValue;
   }
 
-  private void validateGrupoResponsableEconomico(List<GrupoResponsableEconomico> grupoResponsableEconomicos) {
+  private void validateGrupoResponsableEconomico(List<GrupoResponsableEconomico> grupoResponsableEconomicos,
+      Grupo grupo) {
 
-    grupoResponsableEconomicos.sort(
-        Comparator.comparing(GrupoResponsableEconomico::getFechaInicio,
-            Comparator.nullsFirst(Comparator.naturalOrder())));
+    // Ordena los responsables por fechaInicial
+    grupoResponsableEconomicos.sort(Comparator.comparing(GrupoResponsableEconomico::getFechaInicio));
 
-    List<String> personasRef = grupoResponsableEconomicos.stream().map(GrupoResponsableEconomico::getPersonaRef)
-        .distinct()
-        .collect(Collectors.toList());
+    Instant lastEnd = null;
+    boolean emptyFechaInicio = false;
+    boolean emptyFechaFin = false;
+    for (GrupoResponsableEconomico responsableEconomico : grupoResponsableEconomicos) {
 
-    for (String personaRef : personasRef) {
-      GrupoResponsableEconomico grupoResponsableEconomicoAnterior = null;
+      Assert.notNull(responsableEconomico.getGrupoId(),
+          () -> ProblemMessage.builder().key(Assert.class, "notNull")
+              .parameter("field", ApplicationContextSupport.getMessage("id"))
+              .parameter("entity", ApplicationContextSupport.getMessage(Grupo.class)).build());
 
-      List<GrupoResponsableEconomico> miembrosPersonaRef = grupoResponsableEconomicos.stream()
-          .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
+      Assert.notNull(responsableEconomico.getPersonaRef(),
+          () -> ProblemMessage.builder().key(Assert.class, "notNull")
+              .parameter("field", ApplicationContextSupport.getMessage("grupoResponsableEconomico.personaRef"))
+              .parameter("entity", ApplicationContextSupport.getMessage(GrupoResponsableEconomico.class)).build());
 
-      for (GrupoResponsableEconomico grupoResponsableEconomico : miembrosPersonaRef) {
-        Assert.notNull(grupoResponsableEconomico.getPersonaRef(),
-            () -> ProblemMessage.builder().key(Assert.class, "notNull")
-                .parameter("field", ApplicationContextSupport.getMessage("grupoResponsableEconomico.personaRef"))
-                .parameter("entity", ApplicationContextSupport.getMessage(GrupoResponsableEconomico.class)).build());
+      Instant fechaFinGrupo = grupo.getFechaFin();
 
-        if (grupoResponsableEconomicoAnterior != null
-            && grupoResponsableEconomicoAnterior.getPersonaRef().equals(grupoResponsableEconomico.getPersonaRef())
-            && !(grupoResponsableEconomicoAnterior.getFechaFin() != null
-                && grupoResponsableEconomicoAnterior.getFechaFin()
-                    .isBefore(grupoResponsableEconomico.getFechaInicio()))) {
-          throw new GrupoResponsableEconomicoUniqueException();
-        }
-
-        grupoResponsableEconomicoAnterior = grupoResponsableEconomico;
+      if (emptyFechaInicio && responsableEconomico.getFechaInicio() == null) {
+        // Solo puede haber un registro con la fecha de inicio vacia
+        throw new GrupoResponsableEconomicoOverlapRangeException();
+      }
+      if (emptyFechaFin && responsableEconomico.getFechaFin() == null) {
+        // Solo puede haber un registro con la fecha de fin vacia
+        throw new GrupoResponsableEconomicoOverlapRangeException();
+      }
+      if (!emptyFechaInicio && responsableEconomico.getFechaInicio() == null) {
+        emptyFechaInicio = true;
+      }
+      if (!emptyFechaFin && responsableEconomico.getFechaFin() == null) {
+        emptyFechaFin = true;
       }
 
+      if ((responsableEconomico.getFechaInicio() != null
+          && responsableEconomico.getFechaInicio().isBefore(grupo.getFechaInicio()))
+          || (responsableEconomico.getFechaFin() != null
+              && responsableEconomico.getFechaFin().isAfter(fechaFinGrupo))) {
+        throw new GrupoResponsableEconomicoProjectRangeException(responsableEconomico.getFechaInicio(),
+            fechaFinGrupo);
+      }
+
+      if (lastEnd != null && responsableEconomico.getFechaInicio() != null
+          && responsableEconomico.getFechaInicio().isBefore(lastEnd)) {
+        // La fecha de inicio no puede ser anterior a la fecha fin del anterior elemento
+        throw new GrupoResponsableEconomicoOverlapRangeException();
+      }
+
+      Set<ConstraintViolation<GrupoResponsableEconomico>> result = validator.validate(responsableEconomico,
+          GrupoResponsableEconomico.Update.class);
+
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
+
+      lastEnd = responsableEconomico.getFechaFin() != null ? responsableEconomico.getFechaFin() : fechaFinGrupo;
     }
   }
 

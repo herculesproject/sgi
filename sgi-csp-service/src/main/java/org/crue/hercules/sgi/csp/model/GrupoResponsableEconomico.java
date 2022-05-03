@@ -59,8 +59,7 @@ public class GrupoResponsableEconomico extends BaseEntity {
   private String personaRef;
 
   /** Fecha inicio */
-  @Column(name = "fecha_inicio", nullable = false)
-  @NotNull
+  @Column(name = "fecha_inicio", nullable = true)
   private Instant fechaInicio;
 
   /** Fecha fin */
