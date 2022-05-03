@@ -24,18 +24,17 @@
       <div fxFlex>
         <mat-form-field color="primary">
           <mat-label>{{'csp.grupo-responsable-economico.fecha-inicio' | translate}}</mat-label>
-          <input matInput formControlName="fechaInicio" [matDatepicker]="picker1" required>
+          <input matInput formControlName="fechaInicio" [matDatepicker]="picker1" [required]="requiredFechaInicio">
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
-            {{'error.overlapping.record.entity' | translate:msgParamFechaInicioEntity}}
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlaps">
+            {{'error.overlapping.record.entity' | translate:msgParamMiembroEntity}}
           </mat-error>
-          <mat-error
-            *ngIf="formGroup.controls.fechaInicio.errors?.invalid || formGroup.controls.fechaFin.errors?.minDate">
-            {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
+            {{'error.csp.proyecto-responsable-economico.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -43,17 +42,17 @@
       <div fxFlex>
         <mat-form-field color="primary" sgiEndDate>
           <mat-label>{{'csp.grupo-responsable-economico.fecha-fin' | translate}}</mat-label>
-          <input matInput formControlName="fechaFin" [matDatepicker]="picker2">
+          <input matInput formControlName="fechaFin" [matDatepicker]="picker2" [required]="requiredFechaFin">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
             {{'error.after.fecha-fin' | translate}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
-            {{'error.overlapping.record.entity' | translate:msgParamFechaFinEntity}}
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlaps">
+            {{'error.overlapping.record.entity' | translate:msgParamMiembroEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid || formGroup.controls.fechaFin.errors?.minDate">
-            {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid">
+            {{'error.csp.proyecto-responsable-economico.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
       </div>

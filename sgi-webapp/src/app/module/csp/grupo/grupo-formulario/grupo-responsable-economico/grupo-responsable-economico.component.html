@@ -64,10 +64,13 @@
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-GIN-E'">
     <div class="separation-button">
       <!-- Botón añadir equipos -->
-      <button color="three" mat-button mat-raised-button (click)="openModal()">
+      <button color="three" mat-button mat-raised-button (click)="openModal()" [disabled]="disabledAdd">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>
+      <sgi-field-info [visible]="disabledAdd"
+        [message]="'msg.csp.proyecto.responsable-economico.sin-vigencia' | translate">
+      </sgi-field-info>
     </div>
   </ng-container>
 </sgi-fragment>

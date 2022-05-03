@@ -39,6 +39,8 @@ export class GrupoResponsableEconomicoComponent extends FragmentComponent implem
   msgParamEntity = {};
   textoDelete: string;
 
+  disabledAdd = false;
+
   dataSource = new MatTableDataSource<StatusWrapper<IGrupoResponsableEconomico>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -81,6 +83,7 @@ export class GrupoResponsableEconomicoComponent extends FragmentComponent implem
       };
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.responsablesEconomicos$.subscribe(elements => {
+      this.disabledAdd = elements.length === 1 && !!!elements[0].value.fechaInicio;
       this.dataSource.data = elements;
     }));
   }

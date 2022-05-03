@@ -10,7 +10,7 @@ import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { DateValidator } from '@core/validators/date-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import { merge, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
@@ -46,6 +46,9 @@ export class GrupoResponsableEconomicoModalComponent extends DialogFormComponent
   rolesGrupo$: Observable<IRolProyecto[]>;
   colectivosIdRolParticipacion: string[];
 
+  readonly requiredFechaInicio;
+  requiredFechaFin;
+
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamMiembroEntity = {};
@@ -65,22 +68,22 @@ export class GrupoResponsableEconomicoModalComponent extends DialogFormComponent
     private readonly translate: TranslateService
   ) {
     super(matDialogRef, !!data?.isEdit);
+
+    this.textSaveOrUpdate = this.data?.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.data.selectedEntidades?.sort((a, b) => {
+      if (!!!a.fechaInicio) {
+        return -1;
+      }
+      return a.fechaInicio.toMillis() - b.fechaInicio.toMillis();
+    });
+    this.requiredFechaInicio = !!this.data.selectedEntidades?.length;
+    this.requiredFechaFin = this.data.selectedEntidades?.some(select => !!!select.fechaFin);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-
     this.setupI18N();
-
-    this.textSaveOrUpdate = this.data?.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
-
-    this.subscriptions.push(
-      merge(
-        this.formGroup.get('miembro').valueChanges,
-        this.formGroup.get('fechaInicio').valueChanges,
-        this.formGroup.get('fechaFin').valueChanges
-      ).subscribe(() => this.checkRangesDates())
-    );
   }
 
   private setupI18N(): void {
@@ -124,27 +127,82 @@ export class GrupoResponsableEconomicoModalComponent extends DialogFormComponent
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
-        miembro: new FormControl(this.data?.entidad?.persona, [
-          Validators.required
-        ]),
-        fechaInicio: new FormControl(this.data?.entidad?.fechaInicio, [
-          this.data.fechaFinMax ? DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax) :
-            DateValidator.minDate(this.data.fechaInicioMin),
-          Validators.required
-        ]),
-        fechaFin: new FormControl(this.data?.entidad?.fechaFin, [
-          this.data.fechaFinMax ? DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax) :
-            DateValidator.minDate(this.data.fechaInicioMin)
-        ]),
-      },
-      {
-        validators: [
-          DateValidator.isAfter('fechaInicio', 'fechaFin', false)
-        ]
+        miembro: new FormControl(this.data?.entidad?.persona, [Validators.required]),
+        fechaInicio: new FormControl(this.data?.entidad?.fechaInicio),
+        fechaFin: new FormControl(this.data?.entidad?.fechaFin),
       }
     );
 
+    this.setupValidators(formGroup);
+
+    this.subscriptions.push(formGroup.controls.fechaInicio.valueChanges.subscribe(
+      (value: DateTime) => {
+        if (
+          this.requiredFechaInicio
+          && this.data.selectedEntidades.length > 0
+          && value
+          && value.toMillis() <= this.data.selectedEntidades[0].fechaInicio.toMillis()
+        ) {
+          this.requiredFechaFin = true;
+        }
+        else {
+          this.requiredFechaFin = this.data.selectedEntidades.some(select => !!!select.fechaFin);
+        }
+      }
+    ));
+
+    this.subscriptions.push(formGroup.controls.fechaInicio.statusChanges.subscribe(
+      () => {
+        if (formGroup.controls.fechaFin.value) {
+          formGroup.controls.fechaFin.markAsTouched();
+          formGroup.controls.fechaFin.updateValueAndValidity();
+        }
+      }
+    ));
+
     return formGroup;
+  }
+
+  private setupValidators(formGroup: FormGroup): void {
+    const intervals: Interval[] = this.data.selectedEntidades?.map(responsableEconomico => {
+      return Interval.fromDateTimes(
+        responsableEconomico.fechaInicio ? responsableEconomico.fechaInicio : this.data.fechaInicioMin,
+        responsableEconomico.fechaFin ? responsableEconomico.fechaFin : this.data.fechaFinMax
+      );
+    });
+
+    if (this.requiredFechaInicio) {
+      formGroup.controls.fechaInicio.setValidators([
+        Validators.required,
+        DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax),
+        DateValidator.notOverlaps(intervals),
+        DateValidator.notOverlapsDependentForStart(intervals, formGroup.controls.fechaFin)
+      ]);
+    }
+    else {
+      formGroup.controls.fechaInicio.setValidators([
+        DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax),
+        DateValidator.notOverlaps(intervals),
+        DateValidator.notOverlapsDependentForStart(intervals, formGroup.controls.fechaFin)
+      ]);
+    }
+    if (this.requiredFechaFin) {
+      formGroup.controls.fechaFin.setValidators([
+        Validators.required,
+        DateValidator.isAfterOther(formGroup.controls.fechaInicio),
+        DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax),
+        DateValidator.notOverlaps(intervals),
+        DateValidator.notOverlapsDependentForEnd(intervals, formGroup.controls.fechaInicio)
+      ]);
+    }
+    else {
+      formGroup.controls.fechaFin.setValidators([
+        DateValidator.isAfterOther(formGroup.controls.fechaInicio),
+        DateValidator.isBetween(this.data.fechaInicioMin, this.data.fechaFinMax),
+        DateValidator.notOverlaps(intervals),
+        DateValidator.notOverlapsDependentForEnd(intervals, formGroup.controls.fechaInicio)
+      ]);
+    }
   }
 
   protected getValue(): GrupoResponsableEconomicoModalData {
@@ -152,58 +210,6 @@ export class GrupoResponsableEconomicoModalComponent extends DialogFormComponent
     this.data.entidad.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.entidad.fechaFin = this.formGroup.get('fechaFin').value;
     return this.data;
-  }
-
-  private checkRangesDates(): void {
-    const miembroForm = this.formGroup.get('miembro');
-    const fechaInicioForm = this.formGroup.get('fechaInicio');
-    const fechaFinForm = this.formGroup.get('fechaFin');
-
-    const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
-    const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
-    const ranges = this.data.selectedEntidades.filter(element => element.persona.id === miembroForm.value?.id)
-      .map(value => {
-        const range: IRange = {
-          inicio: value.fechaInicio ? value.fechaInicio.toMillis() : Number.MIN_VALUE,
-          fin: value.fechaFin ? value.fechaFin.toMillis() : Number.MAX_VALUE,
-        };
-        return range;
-      });
-
-    if (ranges.some(range => (fechaInicio <= range.fin && range.inicio <= fechaFin))) {
-      if (fechaInicioForm.value) {
-        this.addError(fechaInicioForm, 'range');
-      }
-      if (fechaFinForm.value) {
-        this.addError(fechaFinForm, 'range');
-      }
-      if (!fechaInicioForm.value && !fechaFinForm.value) {
-        this.addError(miembroForm, 'contains');
-      } else if (miembroForm.errors) {
-        this.deleteError(miembroForm, 'contains');
-      }
-    } else {
-      this.deleteError(fechaInicioForm, 'range');
-      this.deleteError(fechaFinForm, 'range');
-      this.deleteError(miembroForm, 'contains');
-    }
-  }
-
-  private deleteError(formControl: AbstractControl, errorName: string): void {
-    if (formControl.errors) {
-      delete formControl.errors[errorName];
-      if (Object.keys(formControl.errors).length === 0) {
-        formControl.setErrors(null);
-      }
-    }
-  }
-
-  private addError(formControl: AbstractControl, errorName: string): void {
-    if (!formControl.errors) {
-      formControl.setErrors({});
-    }
-    formControl.errors[errorName] = true;
-    formControl.markAsTouched({ onlySelf: true });
   }
 
 }

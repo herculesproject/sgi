@@ -107,7 +107,7 @@ export class GrupoResponsableEconomicoFragment extends Fragment {
             (value: IGrupoResponsableEconomico) => {
               const grupoResponsableEconomico = values.find(
                 equipo => equipo.persona.id === value.persona.id
-                  && equipo.fechaInicio.toMillis() === value.fechaInicio.toMillis()
+                  && equipo.fechaInicio?.toMillis() === value.fechaInicio?.toMillis()
                   && equipo.fechaFin?.toMillis() === value.fechaFin?.toMillis()
               );
               value.persona = grupoResponsableEconomico.persona;
