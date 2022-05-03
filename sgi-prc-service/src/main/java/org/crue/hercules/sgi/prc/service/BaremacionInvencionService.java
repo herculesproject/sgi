@@ -295,7 +295,7 @@ public class BaremacionInvencionService extends BaremacionCommonService {
   public void copyInvenciones(Integer anioInicio, Integer anioFin) {
     log.debug("copyInvenciones(anioInicio, anioFin) - start");
 
-    String universidadId = sgiApiCnfService.findByName("entidad-implantacion");
+    String universidadId = sgiApiCnfService.findByName("id-entidad-sgemp");
 
     sgiApiPiiService.findInvencionesProduccionCientifica(anioInicio, anioFin, universidadId).stream()
         .forEach(invencion -> {
@@ -308,7 +308,7 @@ public class BaremacionInvencionService extends BaremacionCommonService {
               .produccionCientificaRef(produccionCientificaRef)
               .build();
 
-          Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientifaAndEstado(
+          Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientificaAndEstado(
               produccionCientifica,
               TipoEstadoProduccion.VALIDADO);
 

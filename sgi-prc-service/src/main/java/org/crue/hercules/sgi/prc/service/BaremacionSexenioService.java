@@ -236,7 +236,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
             .produccionCientificaRef(produccionCientificaRef)
             .build();
 
-        Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientifaAndEstado(
+        Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientificaAndEstado(
             produccionCientifica, TipoEstadoProduccion.VALIDADO);
 
         // NUMERO_SEXENIOS

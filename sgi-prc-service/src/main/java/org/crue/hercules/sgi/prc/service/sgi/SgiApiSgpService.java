@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.dto.sgp.DatosContactoDto;
+import org.crue.hercules.sgi.prc.dto.sgp.DireccionTesisDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.DatosAcademicosDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.VinculacionDto;
@@ -184,7 +185,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       HttpMethod httpMethod = HttpMethod.GET;
       StringBuilder relativeUrl = new StringBuilder();
-      relativeUrl.append("/sexenios?q=fecha=");
+      relativeUrl.append("/sexenios?fecha=");
       relativeUrl.append(fechaFinBaremacion.toString());
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
@@ -197,6 +198,41 @@ public class SgiApiSgpService extends SgiApiBaseService {
       throw new MicroserviceCallException();
     }
     log.debug("findSexeniosByAnio({})- end", fechaFinBaremacion);
+
+    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
+
+  }
+
+  /**
+   * Devuelve las direcciones de tesis de todos las personas de un determinado año
+   * a través de
+   * una consulta al ESB
+   *
+   * @param anio año de baremación
+   * @return Lista de {@link DireccionTesisDto}
+   * 
+   */
+  public List<DireccionTesisDto> findTesisByAnio(Integer anio) {
+    log.debug("findTesisByAnio({})- start", anio);
+    List<DireccionTesisDto> result = new ArrayList<>();
+
+    try {
+      ServiceType serviceType = ServiceType.SGP;
+      HttpMethod httpMethod = HttpMethod.GET;
+      StringBuilder relativeUrl = new StringBuilder();
+      relativeUrl.append("direccion-tesis?anioDefensa=");
+      relativeUrl.append(anio.toString());
+      String mergedURL = buildUri(serviceType, relativeUrl.toString());
+
+      result = super.<List<DireccionTesisDto>>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<List<DireccionTesisDto>>() {
+          }).getBody();
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findTesisByAnio({})- end", anio);
 
     return ObjectUtils.defaultIfNull(result, new ArrayList<>());
 
