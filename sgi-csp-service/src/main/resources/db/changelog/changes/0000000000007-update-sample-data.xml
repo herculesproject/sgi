@@ -105,4 +105,9 @@
       <column name="enlace" value="www.enlace1.com" />
     </insert>
   </changeSet>
+
+  <!-- Eliminación de columna de configuracion.codigoUniversidad -->
+  <changeSet author="user (generated)" id="0000000000007-configuracion">
+    <dropColumn columnName="cod_universidad" tableName="configuracion" />
+  </changeSet>
 </databaseChangeLog>
