@@ -348,6 +348,8 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     if (rolPrincipal) {
       listPredicates.add(cb.isTrue(joinRolProyecto.get(RolProyecto_.rolPrincipal)));
+    } else {
+      listPredicates.add(cb.isFalse(joinRolProyecto.get(RolProyecto_.rolPrincipal)));
     }
 
     if (exludedProyectoId != null) {
