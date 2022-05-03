@@ -64,7 +64,7 @@ export class ProyectoSolicitudListadoExportService extends AbstractTableExportFi
     if (!this.isExcelOrCsv(reportConfig.outputType)) {
       return this.getColumnsSolicitudNotExcel();
     } else {
-      const prefixTitleSolicitud = this.translate.instant(SOLICITUD_KEY) + ': ';
+      const prefixTitleSolicitud = this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR) + ': ';
       return this.getColumnsSolicitud(prefixTitleSolicitud, false);
     }
   }
@@ -72,7 +72,7 @@ export class ProyectoSolicitudListadoExportService extends AbstractTableExportFi
   private getColumnsSolicitudNotExcel(): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = this.getColumnsSolicitud('', true);
 
-    const titleI18n = this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
+    const titleI18n = this.translate.instant(SOLICITUD_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR);
 
     const columnSolicitud: ISgiColumnReport = {
       name: SOLICITUD_FIELD,
