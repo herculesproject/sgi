@@ -41,10 +41,9 @@ public class PrcReportController {
    * @return Resource
    */
   @GetMapping("/informedetallegrupo/{anio}/{grupoRef}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("hasAuthority('PRC-INF-G')")
   public ResponseEntity<Resource> getInformeDetalleGrupo(@PathVariable Integer anio, @PathVariable Long grupoRef) {
 
-    // TODO meter permisos
     log.debug("getInformeDetalleGrupo({}, {}) - start", anio, grupoRef);
 
     ReportInformeDetalleGrupo report = new ReportInformeDetalleGrupo();

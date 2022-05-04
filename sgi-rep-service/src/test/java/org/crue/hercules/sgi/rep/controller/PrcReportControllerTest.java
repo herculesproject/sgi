@@ -30,10 +30,9 @@ class PrcReportControllerTest extends BaseControllerTest {
   private final static String CONTENT_REPORT_TEST = "TEST";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEM-INV-ESCR", "ETI-MEM-INV-ERTR" })
+  @WithMockUser(username = "user", authorities = { "PRC-INF-G" })
   void getReportDetalleGrupo_ReturnsResource() throws Exception {
 
-    // TODO comprobar permisos
     Long grupoId = 1L;
     Integer anio = 2021;
 
