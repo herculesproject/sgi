@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -17,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { IPeticionEvaluacionListadoModalData, PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 
 const MSG_ERROR = marker('error.load');
 const MSG_FOOTER = marker('btn.add.entity');
@@ -53,7 +55,8 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     private readonly peticionesEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private matDialog: MatDialog
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -167,4 +170,14 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
   }
 
+  public openExportModal() {
+    const data: IPeticionEvaluacionListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(PeticionEvaluacionListadoExportModalComponent, config);
+  }
 }

@@ -56,7 +56,7 @@ export class InvencionListadoExportService extends AbstractTableExportService<II
     Observable<ISgiRowReport[]> {
     const requestsRow: Observable<ISgiRowReport>[] = [];
 
-    invenciones.forEach((proyecto, index) => {
+    invenciones.forEach((invencion, index) => {
       requestsRow.push(this.getRowsInner(invenciones, index, reportConfig));
     });
     return zip(...requestsRow);

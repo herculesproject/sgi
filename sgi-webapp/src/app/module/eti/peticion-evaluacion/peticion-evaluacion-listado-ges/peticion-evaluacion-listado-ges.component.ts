@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -21,6 +22,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { IPeticionEvaluacionListadoModalData, PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -63,7 +65,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     protected readonly snackBarService: SnackBarService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly personaService: PersonaService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private matDialog: MatDialog
   ) {
     super(snackBarService, MSG_ERROR);
 
@@ -164,5 +167,16 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   protected loadTable(reset?: boolean) {
     this.peticionesEvaluacion$ = this.getObservableLoadTable(reset);
+  }
+
+  public openExportModal() {
+    const data: IPeticionEvaluacionListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(PeticionEvaluacionListadoExportModalComponent, config);
   }
 }

@@ -68,7 +68,7 @@ export class SolicitudProteccionListadoExportModalComponent extends BaseExportMo
       reportOptions: {
         findOptions: this.modalData.findOptions,
         invencionId: this.modalData.invencionId,
-        columnMinWidth: 120
+        columnMinWidth: 200
       }
     };
     return reportModalData;
