@@ -1,0 +1,73 @@
+<sgi-menu-content>
+  <ng-container *ngIf="problems?.length">
+    <sgi-problem-panel [problems]="problems"></sgi-problem-panel>
+  </ng-container>
+
+  <form [formGroup]="formGroup" fxLayout="column">
+
+    <!-- Convocatorias -->
+    <div fxLayout="row">
+      <mat-form-field fxFlex="25">
+        <mat-label>{{'prc.convocatoria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</mat-label>
+        <sgi-select formControlName="convocatoria" [options]="anios$ | async" [compareWith]="comparerAnios"
+          [displayWith]="displayerAnios" [sortWith]="sorterAnios" required>
+        </sgi-select>
+        <mat-error *ngIf="formGroup.controls.convocatoria.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamConvocatoriaEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Tipo Informe -->
+    <div fxLayout="row">
+      <mat-label>{{'prc.informe.tipo' | translate}}</mat-label>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px" class="margin-bottom">
+      <mat-radio-group class="radio-inline" formControlName="tipoInforme">
+        <mat-radio-button color="primary" class="radio" [value]="TipoInforme.RESUMEN_PUNTUACION_GRUPOS">
+          {{TIPO_INFORME_MAP.get(TipoInforme.RESUMEN_PUNTUACION_GRUPOS) | translate}}
+        </mat-radio-button>
+        <mat-radio-button color="primary" class="radio" [value]="TipoInforme.DETALLE_GRUPO">
+          {{TIPO_INFORME_MAP.get(TipoInforme.DETALLE_GRUPO) | translate}}
+        </mat-radio-button>
+        <mat-radio-button color="primary" class="radio" [value]="TipoInforme.DETALLE_PRODUCCION_POR_INVESTIGADOR">
+          {{TIPO_INFORME_MAP.get(TipoInforme.DETALLE_PRODUCCION_POR_INVESTIGADOR) | translate}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout="row" formGroupName="detalleInvestigador" *ngIf="formGroup.get('detalleInvestigador').enabled">
+      <!-- Investigador/a principal -->
+      <mat-form-field>
+        <mat-label>{{'prc.informe.investigador' | translate}}</mat-label>
+        <sgi-select-persona formControlName="investigador" [tipoColectivo]="TIPO_COLECTIVO.AUTOR_PRC" required>
+        </sgi-select-persona>
+        <mat-error *ngIf="formGroup.hasError('required','detalleInvestigador.investigador')">
+          {{ 'error.required.entity' | translate:msgParamInvestigadorEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Grupo investigación -->
+    <div fxLayout="row" formGroupName="detalleGrupo" *ngIf="formGroup.get('detalleGrupo').enabled">
+      <mat-form-field>
+        <mat-label>{{'prc.publicacion.grupo-investigacion' | translate}}</mat-label>
+        <sgi-select-dialog-grupo placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}"
+          formControlName="grupo" required>
+        </sgi-select-dialog-grupo>
+        <mat-error *ngIf="formGroup.hasError('required','detalleGrupo.grupo')">
+          {{ 'error.required.entity' | translate:msgParamGrupoEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </form>
+
+  <ng-container>
+    <div class="separation-button">
+      <button color="three" mat-raised-button [disabled]="!formGroup.valid" (click)="generarInforme()">
+        {{ 'prc.informe.generar' | translate }}
+      </button>
+    </div>
+  </ng-container>

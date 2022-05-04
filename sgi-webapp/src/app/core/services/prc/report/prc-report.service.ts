@@ -10,24 +10,14 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiDynamicReport } from '@core/models/rep/sgi-dynamic-report';
 import { ISgiFilterReport } from '@core/models/rep/sgi-filter-report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
+import { ReportPrcService } from '@core/services/rep/report-prc/report-prc.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { BaremacionService } from '../baremacion/baremacion.service';
-
-export function triggerDownloadToUser(file: Blob, fileName: string) {
-  const downloadLink = document.createElement('a');
-  const href = window.URL.createObjectURL(file);
-  downloadLink.href = href;
-  downloadLink.download = fileName;
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-  window.URL.revokeObjectURL(href);
-}
 
 const RESUMEN_PUNTUACION_GRUPOS_CONVOCATORIA_KEY = marker('prc.report.resumen-puntuacion-grupos.convocatoria');
 const RESUMEN_PUNTUACION_GRUPOS_GRUPO_KEY = marker('prc.report.resumen-puntuacion-grupos.grupo');
@@ -51,15 +41,25 @@ export class PrcReportService {
     protected readonly translate: TranslateService,
     private readonly baremacionService: BaremacionService,
     protected reportService: ReportService,
+    protected reportPrcService: ReportPrcService,
     private readonly decimalPipe: DecimalPipe
   ) {
+  }
+
+  /**
+   * Visualiza el informe de detalle de grupo.
+   * @param anio Año de la convocatoria.
+   * @param grupoId identificador del grupo.
+   */
+  getInformeDetalleGrupo(anio: number, grupoId: number): Observable<Blob> {
+    return this.reportPrcService.getInformeDetalleGrupo(anio, grupoId);
   }
 
   /**
    * Visualiza el informe de resumen de puntuacion de grupos.
    * @param anio Año de la convocatoria
    */
-  visualizarInformeResumenPuntuacionGrupos(anio: number): void {
+  getInformeResumenPuntuacionGrupos(anio: number): Observable<Blob> {
 
     const report: ISgiDynamicReport = {
       outputType: OutputReport.PDF,
@@ -114,11 +114,11 @@ export class PrcReportService {
       rows: []
     };
 
-    this.baremacionService.resumenPuntuacionGrupos(anio).pipe(
+    return this.baremacionService.resumenPuntuacionGrupos(anio).pipe(
       switchMap((reportData: IResumenPuntuacionGrupoAnio) => {
         const rowsReport: ISgiRowReport[] = [];
 
-        reportData.puntuacionesGrupos?.forEach(resumenPuntuacionGrupo => {
+        reportData?.puntuacionesGrupos?.forEach(resumenPuntuacionGrupo => {
           const puntGrupoElementsRow: any[] = [];
 
           puntGrupoElementsRow.push(resumenPuntuacionGrupo.grupo);
@@ -139,9 +139,7 @@ export class PrcReportService {
       switchMap((dynamicReport: ISgiDynamicReport) => {
         return this.reportService.downloadDynamicReport(dynamicReport);
       })
-    ).subscribe(response => {
-      triggerDownloadToUser(response, 'resumenPuntuacionGrupos.pdf');
-    });
+    );
   }
 
   /**
@@ -149,7 +147,7 @@ export class PrcReportService {
    * @param anio Año de la convocatoria
    * @param personaRef Id de la persona
    */
-  visualizarDetalleProduccionInvestigador(anio: number, personaRef: string): void {
+  getInformeDetalleProduccionInvestigador(anio: number, personaRef: string): Observable<Blob> {
 
     const report: ISgiDynamicReport = {
       outputType: OutputReport.PDF,
@@ -165,12 +163,12 @@ export class PrcReportService {
       rows: []
     };
 
-    this.baremacionService.detalleProduccionInvestigador(anio, personaRef).pipe(
+    return this.baremacionService.detalleProduccionInvestigador(anio, personaRef).pipe(
       switchMap((reportData: IDetalleProduccionInvestigador) => {
 
         report.filters = this.getFiltersDetalleProduccionInvestigador(reportData);
 
-        if (reportData.tipos?.length !== 0) {
+        if (reportData?.tipos?.length !== 0) {
 
           const columnsReport: ISgiColumnReport[] = [];
           const rowsReport: ISgiRowReport[] = [];
@@ -225,9 +223,7 @@ export class PrcReportService {
       switchMap((dynamicReport: ISgiDynamicReport) => {
         return this.reportService.downloadDynamicReport(dynamicReport);
       })
-    ).subscribe(response => {
-      triggerDownloadToUser(response, 'detalleProduccionInvestigador.pdf');
-    });
+    );
   }
 
   private getFiltersDetalleProduccionInvestigador(reportData: IDetalleProduccionInvestigador): ISgiFilterReport[] {

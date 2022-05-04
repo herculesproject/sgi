@@ -73,4 +73,12 @@ export class ConvocatoriaBaremacionService extends _ConvocatoriaBaremacionMixinB
   desactivar(id: number): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, { id });
   }
+
+  /**
+   * Obtiene la lista de años en los que hay ConvocatoriaBaremacion
+   */
+  findAniosWithConvocatoriasBaremacion(): Observable<number[]> {
+    return this.get<number[]>(`${this.endpointUrl}/anios`);
+  }
+
 }
