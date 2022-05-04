@@ -108,7 +108,7 @@ public class PublicacionPredicateResolver extends ProduccionCientificaPredicateR
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String tituloPublicacion = "%" + node.getArguments().get(0) + "%";
+    String tituloPublicacion = "%" + node.getArguments().get(0).toLowerCase() + "%";
 
     Subquery<String> queryTituloPublicacion = buildSubqueryValorCampoProduccionCientifica(
         cb, query, root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_010_030, operator, tituloPublicacion);
@@ -128,7 +128,7 @@ public class PublicacionPredicateResolver extends ProduccionCientificaPredicateR
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String isbn = "%" + node.getArguments().get(0) + "%";
+    String isbn = "%" + node.getArguments().get(0).toLowerCase() + "%";
 
     Subquery<String> queryISBN = buildSubqueryValorCampoProduccionCientifica(cb, query,
         root.get(ProduccionCientifica_.id), CodigoCVN.E060_010_010_160, operator, isbn);
@@ -187,7 +187,7 @@ public class PublicacionPredicateResolver extends ProduccionCientificaPredicateR
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
 
-    String investigador = "%" + node.getArguments().get(0) + "%";
+    String investigador = "%" + node.getArguments().get(0).toLowerCase() + "%";
 
     Subquery<Long> queryInvestigador = getSubqueryAutor(cb, query, root.get(ProduccionCientifica_.id), investigador);
     return cb.and(cb.exists(queryInvestigador));
