@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.prc.integration;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +20,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -36,6 +40,18 @@ class BaremacionReportIT extends BaremacionBaseIT {
 
   @MockBean
   private ProduccionCientificaReportService produccionCientificaReportService;
+
+  protected HttpEntity<Void> buildRequestBaremacionReport(HttpHeaders headers, Void entity)
+      throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "PRC-INF-G")));
+
+    HttpEntity<Void> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
@@ -69,7 +85,8 @@ class BaremacionReportIT extends BaremacionBaseIT {
         .willReturn(generateMockResumenPuntuacionGrupoAnioOutput(anio));
 
     final ResponseEntity<ResumenPuntuacionGrupoAnioOutput> responseReportData = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_REPORT_RESUMEN_GRUPOS, HttpMethod.GET, buildRequestBaremacion(null, null),
+        CONTROLLER_BASE_PATH + PATH_REPORT_RESUMEN_GRUPOS, HttpMethod.GET,
+        buildRequestBaremacionReport(null, null),
         ResumenPuntuacionGrupoAnioOutput.class, anio);
 
     Assertions.assertThat(responseReportData.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -135,7 +152,8 @@ class BaremacionReportIT extends BaremacionBaseIT {
         .willReturn(generateMockDetalleProduccionInvestigadorOutput(anio));
 
     final ResponseEntity<DetalleProduccionInvestigadorOutput> responseReportData = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_REPORT_DETALLE_INVESTIGADOR, HttpMethod.GET, buildRequestBaremacion(null, null),
+        CONTROLLER_BASE_PATH + PATH_REPORT_DETALLE_INVESTIGADOR, HttpMethod.GET,
+        buildRequestBaremacionReport(null, null),
         DetalleProduccionInvestigadorOutput.class, anio, personaRef);
 
     Assertions.assertThat(responseReportData.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -198,7 +216,8 @@ class BaremacionReportIT extends BaremacionBaseIT {
         .willReturn(generateMockDetalleGrupoInvestigacionOutput(anio, nombreGrupo));
 
     final ResponseEntity<DetalleGrupoInvestigacionOutput> responseReportData = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_REPORT_DETALLE_GRUPO, HttpMethod.GET, buildRequestBaremacion(null, null),
+        CONTROLLER_BASE_PATH + PATH_REPORT_DETALLE_GRUPO, HttpMethod.GET,
+        buildRequestBaremacionReport(null, null),
         DetalleGrupoInvestigacionOutput.class, anio, grupoId);
 
     Assertions.assertThat(responseReportData.getStatusCode()).isEqualTo(HttpStatus.OK);

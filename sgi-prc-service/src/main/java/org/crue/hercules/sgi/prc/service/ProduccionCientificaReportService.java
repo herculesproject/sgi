@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
@@ -107,7 +108,17 @@ public class ProduccionCientificaReportService {
                 .byGrupoRef(grupo.getId())
                 .and(PuntuacionGrupoSpecifications.byConvocatoriaBaremacionAnio(anio));
 
-            PuntuacionGrupo puntuacionGrupo = puntuacionGrupoRepository.findAll(specs).get(0);
+            List<PuntuacionGrupo> puntuacionesGruposByGrupoRef = puntuacionGrupoRepository.findAll(specs);
+
+            PuntuacionGrupo puntuacionGrupo = PuntuacionGrupo.builder()
+                .puntosSexenios(new BigDecimal("0.00"))
+                .puntosCostesIndirectos(new BigDecimal("0.00"))
+                .puntosProduccion(new BigDecimal("0.00"))
+                .build();
+
+            if (!CollectionUtils.isEmpty(puntuacionesGruposByGrupoRef)) {
+              puntuacionGrupo = puntuacionesGruposByGrupoRef.get(0);
+            }
 
             return ResumenPuntuacionGrupo.builder()
                 .grupo(grupo.getNombre())
@@ -116,7 +127,10 @@ public class ProduccionCientificaReportService {
                 .puntosCostesIndirectos(puntuacionGrupo.getPuntosCostesIndirectos())
                 .puntosProduccion(puntuacionGrupo.getPuntosProduccion())
                 .build();
-          }).collect(Collectors.toList());
+
+          })
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
 
       return ResumenPuntuacionGrupoAnioOutput.builder().puntuacionesGrupos(puntuacionesGrupos).anio(anio).build();
 

@@ -147,6 +147,20 @@ public class ConvocatoriaBaremacionController {
     return convert(returnValue);
   }
 
+  /**
+   * Obtiene los años en los que hay alguna {@link ConvocatoriaBaremacion}
+   * 
+   * @return lista de años en los hay alguna {@link ConvocatoriaBaremacion}
+   */
+  @GetMapping("/anios")
+  @PreAuthorize("hasAuthority('PRC-INF-G')")
+  ResponseEntity<List<Integer>> findAniosWithConvocatoriasBaremacion() {
+    log.debug("findAniosWithConvocatoriasBaremacion() - start");
+    List<Integer> anios = convocatoriaBaremacionService.findAniosWithConvocatoriasBaremacion();
+    log.debug("findAniosWithConvocatoriasBaremacion() - end");
+    return anios.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(anios, HttpStatus.OK);
+  }
+
   private ConvocatoriaBaremacion convert(ConvocatoriaBaremacionInput convocatoriaBaremacionInput) {
     return convert(null, convocatoriaBaremacionInput);
   }

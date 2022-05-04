@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepositor
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.RangoRepository;
 import org.crue.hercules.sgi.prc.repository.specification.ConvocatoriaBaremacionSpecifications;
+import org.crue.hercules.sgi.prc.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -201,14 +203,10 @@ public class ConvocatoriaBaremacionService {
   public ConvocatoriaBaremacion activar(Long id) {
     log.debug("activar(Long id) - start");
 
-    Assert.notNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter(FIELD, ApplicationContextSupport.getMessage("id"))
-            .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+    AssertHelper.idNotNull(id, ConvocatoriaBaremacion.class);
 
     return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
-      if (convocatoriaBaremacion.getActivo()) {
+      if (Boolean.TRUE.equals(convocatoriaBaremacion.getActivo())) {
         log.debug("enable(Long id) - end");
         // Si esta activo no se hace nada
         return convocatoriaBaremacion;
@@ -239,11 +237,7 @@ public class ConvocatoriaBaremacionService {
   public ConvocatoriaBaremacion desactivar(Long id) {
     log.debug("desactivar(Long id) - start");
 
-    Assert.notNull(id,
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter(FIELD, ApplicationContextSupport.getMessage("id"))
-            .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+    AssertHelper.idNotNull(id, ConvocatoriaBaremacion.class);
 
     return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
       // Una ConvocatoriaBaremacion con baremación ya realizada no se puede desactivar
@@ -253,7 +247,7 @@ public class ConvocatoriaBaremacionService {
               .parameter(FIELD, ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
               .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
 
-      if (!convocatoriaBaremacion.getActivo()) {
+      if (Boolean.FALSE.equals(convocatoriaBaremacion.getActivo())) {
         log.debug("desactivar(Long id) - end");
         // Si no esta activo no se hace nada
         return convocatoriaBaremacion;
@@ -320,11 +314,7 @@ public class ConvocatoriaBaremacionService {
   public ConvocatoriaBaremacion create(@Valid ConvocatoriaBaremacion convocatoriaBaremacion) {
     log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - start");
 
-    Assert.isNull(convocatoriaBaremacion.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "isNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+    AssertHelper.idIsNull(convocatoriaBaremacion.getId(), ConvocatoriaBaremacion.class);
 
     convocatoriaBaremacion.setActivo(true);
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionRepository.save(convocatoriaBaremacion);
@@ -360,6 +350,18 @@ public class ConvocatoriaBaremacionService {
           log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion) - end");
           return returnValue;
         }).orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacion.getId()));
+  }
+
+  /**
+   * Obtiene los años en los que hay alguna {@link ConvocatoriaBaremacion}
+   * 
+   * @return lista de años en los hay alguna {@link ConvocatoriaBaremacion}
+   */
+  public List<Integer> findAniosWithConvocatoriasBaremacion() {
+    log.debug("findAniosWithConvocatoriasBaremacion() - start");
+    List<Integer> anios = convocatoriaBaremacionRepository.findAniosWithConvocatoriasBaremacion();
+    log.debug("findAniosWithConvocatoriasBaremacion() - end");
+    return anios;
   }
 
   private void deletePuntuacionGrupo(PuntuacionGrupo puntuacionGrupo) {
