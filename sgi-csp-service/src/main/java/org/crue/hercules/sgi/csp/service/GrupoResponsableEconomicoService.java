@@ -52,51 +52,6 @@ public class GrupoResponsableEconomicoService {
   private final Validator validator;
 
   /**
-   * Guarda la entidad {@link GrupoResponsableEconomico}.
-   * 
-   * @param grupoResponsableEconomico la entidad {@link GrupoResponsableEconomico}
-   *                                  a guardar.
-   * @return la entidad {@link GrupoResponsableEconomico} persistida.
-   */
-  @Transactional
-  @Validated({ BaseEntity.Create.class })
-  public GrupoResponsableEconomico create(@Valid GrupoResponsableEconomico grupoResponsableEconomico) {
-    log.debug("create(GrupoResponsableEconomico grupoResponsableEconomico) - start");
-
-    AssertHelper.idIsNull(grupoResponsableEconomico.getId(), GrupoResponsableEconomico.class);
-    GrupoResponsableEconomico returnValue = repository.save(grupoResponsableEconomico);
-
-    log.debug("create(GrupoResponsableEconomico grupoResponsableEconomico) - end");
-    return returnValue;
-  }
-
-  /**
-   * Actualiza los datos del {@link GrupoResponsableEconomico}.
-   *
-   * @param grupoResponsableEconomicoActualizar {@link GrupoResponsableEconomico}
-   *                                            con los datos actualizados.
-   * @return {@link GrupoResponsableEconomico} actualizado.
-   */
-  @Transactional
-  @Validated({ BaseEntity.Update.class })
-  public GrupoResponsableEconomico update(@Valid GrupoResponsableEconomico grupoResponsableEconomicoActualizar) {
-    log.debug("update(GrupoResponsableEconomico grupoResponsableEconomicoActualizar) - start");
-
-    AssertHelper.idNotNull(grupoResponsableEconomicoActualizar.getId(), GrupoResponsableEconomico.class);
-
-    return repository.findById(grupoResponsableEconomicoActualizar.getId()).map(data -> {
-      data.setFechaInicio(grupoResponsableEconomicoActualizar.getFechaInicio());
-      data.setFechaFin(grupoResponsableEconomicoActualizar.getFechaFin());
-      data.setPersonaRef(grupoResponsableEconomicoActualizar.getPersonaRef());
-
-      GrupoResponsableEconomico returnValue = repository.save(data);
-
-      log.debug("update(GrupoResponsableEconomico grupoResponsableEconomicoActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new GrupoResponsableEconomicoNotFoundException(grupoResponsableEconomicoActualizar.getId()));
-  }
-
-  /**
    * Obtiene una entidad {@link GrupoResponsableEconomico} por id.
    * 
    * @param id Identificador de la entidad {@link GrupoResponsableEconomico}.
@@ -111,25 +66,6 @@ public class GrupoResponsableEconomicoService {
 
     log.debug("findById(Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Elimina el {@link GrupoResponsableEconomico}.
-   *
-   * @param id Id del {@link GrupoResponsableEconomico}.
-   */
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    AssertHelper.idNotNull(id, GrupoResponsableEconomico.class);
-
-    if (!repository.existsById(id)) {
-      throw new GrupoResponsableEconomicoNotFoundException(id);
-    }
-
-    repository.deleteById(id);
-    log.debug("delete(Long id) - end");
   }
 
   /**

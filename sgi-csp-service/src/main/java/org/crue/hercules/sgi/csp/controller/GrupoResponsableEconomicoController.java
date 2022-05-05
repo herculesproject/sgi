@@ -16,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,41 +37,6 @@ public class GrupoResponsableEconomicoController {
 
   private final GrupoResponsableEconomicoService service;
   private final GrupoResponsableEconomicoConverter converter;
-
-  /**
-   * Crea nuevo {@link GrupoResponsableEconomico}
-   * 
-   * @param grupoResponsableEconomico {@link GrupoResponsableEconomico} que se
-   *                                  quiere crear.
-   * @return Nuevo {@link GrupoResponsableEconomico} creado.
-   */
-  @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-C', 'CSP-GIN-E')")
-  public ResponseEntity<GrupoResponsableEconomicoOutput> create(
-      @Valid @RequestBody GrupoResponsableEconomicoInput grupoResponsableEconomico) {
-    log.debug("create(GrupoResponsableEconomicoInput grupoResponsableEconomico) - start");
-    GrupoResponsableEconomicoOutput returnValue = converter
-        .convert(service.create(converter.convert(grupoResponsableEconomico)));
-    log.debug("create(GrupoResponsableEconomicoInput grupoResponsableEconomico) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link GrupoResponsableEconomico}.
-   * 
-   * @param grupo {@link GrupoResponsableEconomico} a actualizar.
-   * @param id    Identificador {@link GrupoResponsableEconomico} a actualizar.
-   * @return {@link GrupoResponsableEconomico} actualizado
-   */
-  @PutMapping(PATH_ID)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-GIN-E')")
-  public GrupoResponsableEconomicoOutput update(@Valid @RequestBody GrupoResponsableEconomicoInput grupo,
-      @PathVariable Long id) {
-    log.debug("update(GrupoResponsableEconomicoInput grupoResponsableEconomico, Long id) - start");
-    GrupoResponsableEconomicoOutput returnValue = converter.convert(service.update(converter.convert(id, grupo)));
-    log.debug("update(GrupoResponsableEconomicoInput grupoResponsableEconomico, Long id) - end");
-    return returnValue;
-  }
 
   /**
    * Devuelve el {@link GrupoResponsableEconomico} con el id indicado.

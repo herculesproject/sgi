@@ -83,4 +83,8 @@
     <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_enlace" constraintName="FK_GRUPOENLACE_GRUPO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000007-10">
+    <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="fecha_inicio" tableName="grupo_persona_autorizada" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoEquipoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoInstrumentalConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEspecialInvestigacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPalabraClaveConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoTipoConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
+import org.crue.hercules.sgi.csp.dto.GrupoPersonaAutorizadaOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoTipoOutput;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
@@ -39,6 +41,7 @@ import org.crue.hercules.sgi.csp.service.GrupoEquipoInstrumentalService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
 import org.crue.hercules.sgi.csp.service.GrupoEspecialInvestigacionService;
 import org.crue.hercules.sgi.csp.service.GrupoPalabraClaveService;
+import org.crue.hercules.sgi.csp.service.GrupoPersonaAutorizadaService;
 import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.GrupoService;
 import org.crue.hercules.sgi.csp.service.GrupoTipoService;
@@ -91,6 +94,7 @@ public class GrupoController {
   public static final String PATH_GRUPO_RESPONSABLE_ECONOMICO = PATH_ID + "/responsables-economicos";
   public static final String PATH_GRUPO_EQUIPO_INSTRUMENTAL = PATH_ID + "/equipos-instrumentales";
   public static final String PATH_GRUPO_ENLACE = PATH_ID + "/enlaces";
+  public static final String PATH_GRUPO_PERSONA_AUTORIZADA = PATH_ID + "/personas-autorizadas";
 
   // Services
   private final GrupoService service;
@@ -101,6 +105,7 @@ public class GrupoController {
   private final GrupoResponsableEconomicoService grupoResponsableEconomicoService;
   private final GrupoEquipoInstrumentalService grupoEquipoInstrumentalService;
   private final GrupoEnlaceService grupoEnlaceService;
+  private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
   // Converters
   private final GrupoConverter converter;
   private final GrupoEquipoConverter grupoEquipoConverter;
@@ -110,6 +115,7 @@ public class GrupoController {
   private final GrupoResponsableEconomicoConverter grupoResponsableEconomicoConverter;
   private final GrupoEquipoInstrumentalConverter grupoEquipoInstrumentalConverter;
   private final GrupoEnlaceConverter grupoEnlaceConverter;
+  private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
 
   /**
    * Crea nuevo {@link Grupo}
@@ -554,6 +560,28 @@ public class GrupoController {
     Page<GrupoEnlaceOutput> page = grupoEnlaceConverter
         .convert(grupoEnlaceService.findAllByGrupo(id, query, paging));
     log.debug("findAllGrupoEnlace(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoPersonaAutorizada}
+   * del
+   * {@link Grupo}.
+   * 
+   * @param id     Identificador del {@link GrupoPersonaAutorizada}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link GrupoPersonaAutorizada} paginadas y
+   *         filtradas del {@link Grupo}.
+   */
+  @GetMapping(PATH_GRUPO_PERSONA_AUTORIZADA)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  public ResponseEntity<Page<GrupoPersonaAutorizadaOutput>> findAllGrupoPersonaAutorizada(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoPersonaAutorizada(Long id, String query, Pageable paging) - start");
+    Page<GrupoPersonaAutorizadaOutput> page = grupoPersonaAutorizadaConverter
+        .convert(grupoPersonaAutorizadaService.findAllByGrupo(id, query, paging));
+    log.debug("findAllGrupoPersonaAutorizada(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
