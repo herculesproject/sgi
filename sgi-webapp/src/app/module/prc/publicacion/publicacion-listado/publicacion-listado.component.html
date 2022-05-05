@@ -122,7 +122,11 @@
           {{'prc.publicacion.tipo-produccion' | translate}}
         </th>
         <td mat-cell *matCellDef="let publicacion">
-          {{TIPO_PRODUCCION_MAP.get(publicacion.tipoProduccion) | translate }}</td>
+          {{ TIPO_PRODUCCION_MAP.get(publicacion.tipoProduccion) | translate }}
+          <span *ngIf="!TIPO_PRODUCCION_MAP.get(publicacion.tipoProduccion)">
+            {{publicacion.tipoProduccion}}
+          </span>
+        </td>
       </ng-container>
 
       <!--Estado-->
@@ -131,7 +135,8 @@
           {{'prc.publicacion.estado' | translate}}
         </th>
         <td mat-cell *matCellDef="let publicacion">
-          {{ TIPO_ESTADO_PRODUCCION_MAP.get(publicacion.estado.estado) | translate }}</td>
+          {{ TIPO_ESTADO_PRODUCCION_MAP.get(publicacion.estado.estado) | translate }}
+        </td>
       </ng-container>
 
       <!-- Acciones -->

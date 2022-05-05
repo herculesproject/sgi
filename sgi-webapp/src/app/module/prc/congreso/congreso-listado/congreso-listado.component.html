@@ -121,7 +121,11 @@
           {{'prc.congreso.tipo-evento' | translate}}
         </th>
         <td mat-cell *matCellDef="let congreso">
-          {{TIPO_EVENTO_MAP.get(congreso.tipoEvento) | translate }}</td>
+          {{TIPO_EVENTO_MAP.get(congreso.tipoEvento) | translate }}
+          <span *ngIf="!TIPO_EVENTO_MAP.get(congreso.tipoEvento)">
+            {{congreso.tipoEvento}}
+          </span>
+        </td>
       </ng-container>
 
       <!--Estado-->
