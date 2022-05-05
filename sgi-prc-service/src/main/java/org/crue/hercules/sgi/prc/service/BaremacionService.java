@@ -184,10 +184,14 @@ public class BaremacionService {
       evaluatePuntosConvocatoriaBaremacion(convocatoriaBaremacionId);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
+
+      // TODO Lanzar comunicado error algoritmo
       throw e;
     } finally {
       convocatoriaBaremacionLogService.save(convocatoriaBaremacionId, "Fin");
       convocatoriaBaremacionService.updateFechaInicioEjecucion(convocatoriaBaremacionId, null);
+
+      // TODO Lanzar comunicado algoritmo completado
     }
     log.debug("baremacion(convocatoriaBaremacion) - end");
   }

@@ -159,9 +159,11 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
   }
 
   private void addCampoTesisTitulo(DireccionTesisDto tesis, Long produccionCientificaId) {
-    getProduccionCientificaBuilderService()
-        .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_030,
-            tesis.getTituloTrabajo());
+    if (StringUtils.hasText(tesis.getTituloTrabajo())) {
+      getProduccionCientificaBuilderService()
+          .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_030,
+              tesis.getTituloTrabajo());
+    }
   }
 
   private void addCampoTesisFecha(DireccionTesisDto tesis, Long produccionCientificaId) {
@@ -174,9 +176,12 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
   }
 
   private void addCampoTesisAlumno(DireccionTesisDto tesis, Long produccionCientificaId) {
-    getProduccionCientificaBuilderService()
-        .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_120,
-            tesis.getAlumno());
+    String alumno = getSgiApiSgpService().findPersonaById(tesis.getAlumno())
+        .map(persona -> persona.getNombre() + " " + persona.getApellidos()).orElse(null);
+    if (StringUtils.hasText(alumno)) {
+      getProduccionCientificaBuilderService()
+          .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_120, alumno);
+    }
   }
 
   private void addCampoTesisTipoProyecto(DireccionTesisDto tesis, Long produccionCientificaId) {
