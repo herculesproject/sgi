@@ -15,6 +15,7 @@ import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-gen
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
+import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
@@ -100,6 +101,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.ENLACE,
         component: GrupoEnlaceComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.PERSONA_AUTORIZADA,
+        component: GrupoPersonaAutorizadaComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

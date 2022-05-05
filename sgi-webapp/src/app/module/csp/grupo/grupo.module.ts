@@ -15,12 +15,14 @@ import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-gen
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
+import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GrupoRoutingModule } from './grupo-routing.module';
 import { GrupoEnlaceModalComponent } from './modals/grupo-enlace-modal/grupo-enlace-modal.component';
 import { GrupoEquipoInstrumentalModalComponent } from './modals/grupo-equipo-instrumental-modal/grupo-equipo-instrumental-modal.component';
 import { GrupoEquipoModalComponent } from './modals/grupo-equipo-modal/grupo-equipo-modal.component';
+import { GrupoPersonaAutorizadaModalComponent } from './modals/grupo-persona-autorizada-modal/grupo-persona-autorizada-modal.component';
 import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsable-economico-modal/grupo-responsable-economico-modal.component';
 
 @NgModule({
@@ -36,7 +38,9 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoEquipoInstrumentalComponent,
     GrupoEquipoInstrumentalModalComponent,
     GrupoEnlaceComponent,
-    GrupoEnlaceModalComponent
+    GrupoEnlaceModalComponent,
+    GrupoPersonaAutorizadaComponent,
+    GrupoPersonaAutorizadaModalComponent,
   ],
   imports: [
     CommonModule,

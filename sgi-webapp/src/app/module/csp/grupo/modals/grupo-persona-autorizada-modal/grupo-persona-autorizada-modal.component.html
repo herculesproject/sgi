@@ -5,10 +5,9 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>
-          {{'csp.grupo-responsable-economico' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
+          {{'csp.grupo-persona-autorizada' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
         </mat-label>
-        <sgi-select-persona
-          placeholder="{{'csp.grupo-responsable-economico' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
+        <sgi-select-persona placeholder="{{'csp.grupo-persona-autorizada' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
           formControlName="miembro" [tipoColectivo]="TIPO_COLECTIVO.RESPONSABLE_ECONOMICO_CSP" required>
         </sgi-select-persona>
         <mat-error *ngIf="formGroup.controls.miembro.errors?.required">
@@ -23,7 +22,7 @@
       <!-- Fecha inicio -->
       <div fxFlex>
         <mat-form-field color="primary">
-          <mat-label>{{'csp.grupo-responsable-economico.fecha-inicio' | translate}}</mat-label>
+          <mat-label>{{'csp.grupo-persona-autorizada.fecha-inicio' | translate}}</mat-label>
           <input matInput formControlName="fechaInicio" [matDatepicker]="picker1" [required]="requiredFechaInicio">
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
@@ -34,14 +33,14 @@
             {{'error.overlapping.record.entity' | translate:msgParamMiembroEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
-            {{'error.csp.proyecto-responsable-economico.fecha.invalid' | translate}}
+            {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
       <!-- Fecha fin -->
       <div fxFlex>
         <mat-form-field color="primary" sgiEndDate>
-          <mat-label>{{'csp.grupo-responsable-economico.fecha-fin' | translate}}</mat-label>
+          <mat-label>{{'csp.grupo-persona-autorizada.fecha-fin' | translate}}</mat-label>
           <input matInput formControlName="fechaFin" [matDatepicker]="picker2" [required]="requiredFechaFin">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
@@ -55,7 +54,7 @@
             {{'error.overlapping.record.entity' | translate:msgParamMiembroEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid">
-            {{'error.csp.proyecto-responsable-economico.fecha.invalid' | translate}}
+            {{'error.csp.miembro-equipo-grupo.fecha.invalid' | translate}}
           </mat-error>
         </mat-form-field>
       </div>

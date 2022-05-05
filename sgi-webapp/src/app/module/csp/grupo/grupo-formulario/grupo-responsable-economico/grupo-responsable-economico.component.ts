@@ -9,6 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -54,7 +55,7 @@ export class GrupoResponsableEconomicoComponent extends FragmentComponent implem
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.RESPONSABLE_ECONOMICO, actionService);
     this.formPart = this.fragment as GrupoResponsableEconomicoFragment;
@@ -128,7 +129,7 @@ export class GrupoResponsableEconomicoComponent extends FragmentComponent implem
       entidad: wrapper?.value ?? {} as IGrupoResponsableEconomico,
       selectedEntidades: this.dataSource.data.map(element => element.value),
       fechaInicioMin: this.actionService.grupo.fechaInicio,
-      fechaFinMax: this.actionService.grupo.fechaFin,
+      fechaFinMax: this.actionService.grupo.fechaFin ?? LuxonUtils.fromBackend('2500-01-01T23:59:59Z'),
       isEdit: Boolean(wrapper),
     };
 

@@ -2,29 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IGrupoResponsableEconomicoRequest } from './grupo-responsable-economico-request';
 import { GRUPO_RESPONSABLE_ECONOMICO_REQUEST_CONVERTER } from './grupo-responsable-economico-request.converter';
 import { IGrupoResponsableEconomicoResponse } from './grupo-responsable-economico-response';
 import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './grupo-responsable-economico-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _GrupoResponsableEconomicoMixinBase:
-  CreateCtor<IGrupoResponsableEconomico, IGrupoResponsableEconomico, IGrupoResponsableEconomicoRequest, IGrupoResponsableEconomicoResponse> &
-  UpdateCtor<number, IGrupoResponsableEconomico, IGrupoResponsableEconomico, IGrupoResponsableEconomicoRequest, IGrupoResponsableEconomicoResponse> &
   FindByIdCtor<number, IGrupoResponsableEconomico, IGrupoResponsableEconomicoResponse> &
   typeof SgiRestBaseService = mixinFindById(
-    mixinUpdate(
-      mixinCreate(
-        SgiRestBaseService,
-        GRUPO_RESPONSABLE_ECONOMICO_REQUEST_CONVERTER,
-        GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
-      ),
-      GRUPO_RESPONSABLE_ECONOMICO_REQUEST_CONVERTER,
-      GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
-    ),
+    SgiRestBaseService,
     GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER
   );
 
@@ -39,10 +28,6 @@ export class GrupoResponsableEconomicoService extends _GrupoResponsableEconomico
       `${environment.serviceServers.csp}${GrupoResponsableEconomicoService.MAPPING}`,
       http,
     );
-  }
-
-  public deleteById(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.endpointUrl}/${id}`);
   }
 
   /**

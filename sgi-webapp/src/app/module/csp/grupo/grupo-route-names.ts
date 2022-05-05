@@ -3,5 +3,6 @@ export const GRUPO_ROUTE_NAMES = {
   EQUIPO_INVESTIGACION: 'equipo-investigacion',
   RESPONSABLE_ECONOMICO: 'responsable-economico',
   EQUIPO_INSTRUMENTAL: 'equipo-instrumental',
-  ENLACE: 'enlace'
+  ENLACE: 'enlace',
+  PERSONA_AUTORIZADA: 'persona-autorizada'
 };

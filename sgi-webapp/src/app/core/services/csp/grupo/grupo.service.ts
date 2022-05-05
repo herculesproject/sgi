@@ -6,6 +6,7 @@ import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
+import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { environment } from '@env';
@@ -26,6 +27,8 @@ import { GRUPO_ESPECIAL_INVESTIGACION_RESPONSE_CONVERTER } from '../grupo-especi
 import { GRUPO_PALABRACLAVE_REQUEST_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-request.converter';
 import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra-clave-response';
 import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
+import { IGrupoPersonaAutorizadaResponse } from '../grupo-persona-autorizada/grupo-persona-autorizada-response';
+import { GRUPO_PERSONA_AUTORIZADA_RESPONSE_CONVERTER } from '../grupo-persona-autorizada/grupo-persona-autorizada-response.converter';
 import { IGrupoResponsableEconomicoResponse } from '../grupo-responsable-economico/grupo-responsable-economico-response';
 import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from '../grupo-responsable-economico/grupo-responsable-economico-response.converter';
 import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
@@ -283,15 +286,28 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
- * Recupera la lista de enlaces
- * @param id Identificador del grupo
- * @param options opciones de búsqueda.
- */
+   * Recupera la lista de enlaces
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
   findEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoEnlace>> {
     return this.find<IGrupoEnlaceResponse, IGrupoEnlace>(
       `${this.endpointUrl}/${id}/enlaces`,
       options,
       GRUPO_ENLACE_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de personas autorizadas
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findPersonasAutorizadas(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoPersonaAutorizada>> {
+    return this.find<IGrupoPersonaAutorizadaResponse, IGrupoPersonaAutorizada>(
+      `${this.endpointUrl}/${id}/personas-autorizadas`,
+      options,
+      GRUPO_PERSONA_AUTORIZADA_RESPONSE_CONVERTER
     );
   }
 }

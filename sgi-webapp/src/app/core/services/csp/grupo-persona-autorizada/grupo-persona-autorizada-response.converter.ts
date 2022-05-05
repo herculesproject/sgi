@@ -1,15 +1,15 @@
 import { IGrupo } from '@core/models/csp/grupo';
-import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
+import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { IGrupoResponsableEconomicoRequest } from './grupo-responsable-economico-request';
+import { IGrupoPersonaAutorizadaResponse } from './grupo-persona-autorizada-response';
 
-class GrupoResponsableEconomicoRequestConverter
-  extends SgiBaseConverter<IGrupoResponsableEconomicoRequest, IGrupoResponsableEconomico> {
-  toTarget(value: IGrupoResponsableEconomicoRequest): IGrupoResponsableEconomico {
+class GrupoPersonaAutorizadaResponseConverter
+  extends SgiBaseConverter<IGrupoPersonaAutorizadaResponse, IGrupoPersonaAutorizada> {
+  toTarget(value: IGrupoPersonaAutorizadaResponse): IGrupoPersonaAutorizada {
     if (!value) {
-      return value as unknown as IGrupoResponsableEconomico;
+      return value as unknown as IGrupoPersonaAutorizada;
     }
     return {
       id: value.id,
@@ -20,9 +20,9 @@ class GrupoResponsableEconomicoRequestConverter
     };
   }
 
-  fromTarget(value: IGrupoResponsableEconomico): IGrupoResponsableEconomicoRequest {
+  fromTarget(value: IGrupoPersonaAutorizada): IGrupoPersonaAutorizadaResponse {
     if (!value) {
-      return value as unknown as IGrupoResponsableEconomicoRequest;
+      return value as unknown as IGrupoPersonaAutorizadaResponse;
     }
     return {
       id: value.id,
@@ -34,4 +34,4 @@ class GrupoResponsableEconomicoRequestConverter
   }
 }
 
-export const GRUPO_RESPONSABLE_ECONOMICO_REQUEST_CONVERTER = new GrupoResponsableEconomicoRequestConverter();
+export const GRUPO_PERSONA_AUTORIZADA_RESPONSE_CONVERTER = new GrupoPersonaAutorizadaResponseConverter();
