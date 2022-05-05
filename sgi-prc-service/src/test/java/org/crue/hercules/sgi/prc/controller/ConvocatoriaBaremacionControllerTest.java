@@ -279,6 +279,43 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
             .value(convocatoriaBaremacion.getPartidaPresupuestaria()));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-CON-C" })
+  void clone_WithNoExistingId_Returns500() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      Long paramId = invocation.getArgument(0);
+      throw new ConvocatoriaBaremacionNotFoundException(paramId);
+    });
+
+    // when: clone by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/clone", id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError()).
+        // then: HTTP code 404 NotFound present
+        andExpect(MockMvcResultMatchers.status().isInternalServerError());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-CON-C" })
+  void clone_ok() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(service.clone(id, "Clonada - ", 1)).will((InvocationOnMock invocation) -> {
+      return ConvocatoriaBaremacion.builder().id(2L).build();
+    });
+
+    // when: clone by existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/clone", id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$").value(2L));
+  }
+
   private ConvocatoriaBaremacion generarMockConvocatoriaBaremacion(Long id, String idRef, Boolean activo) {
     ConvocatoriaBaremacion convocatoriaBaremacion = new ConvocatoriaBaremacion();
     convocatoriaBaremacion.setId(id);

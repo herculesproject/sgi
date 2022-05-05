@@ -161,6 +161,19 @@ public class ConvocatoriaBaremacionController {
     return anios.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(anios, HttpStatus.OK);
   }
 
+  /**
+   * Clona la convocatoria cuya fuente es la correspondiente al id pasado por el
+   * path
+   * 
+   * @param id id de la {@link ConvocatoriaBaremacion}
+   * @return Convocatoria devuelve una {@link ConvocatoriaBaremacion}
+   */
+  @PostMapping("/{id}/clone")
+  @PreAuthorize("hasAuthorityForAnyUO('PRC-CON-C')")
+  public ResponseEntity<Long> clone(@PathVariable Long id) {
+    return new ResponseEntity<>(convocatoriaBaremacionService.clone(id, "Clonada - ", 1).getId(), HttpStatus.CREATED);
+  }
+
   private ConvocatoriaBaremacion convert(ConvocatoriaBaremacionInput convocatoriaBaremacionInput) {
     return convert(null, convocatoriaBaremacionInput);
   }
