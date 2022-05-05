@@ -81,4 +81,9 @@ export class ConvocatoriaBaremacionService extends _ConvocatoriaBaremacionMixinB
     return this.get<number[]>(`${this.endpointUrl}/anios`);
   }
 
+  clone(convocatoriaId: number): Observable<number> {
+    const url = `${this.endpointUrl}/${convocatoriaId}/clone`;
+    return this.http.post<number>(url, {});
+  }
+
 }

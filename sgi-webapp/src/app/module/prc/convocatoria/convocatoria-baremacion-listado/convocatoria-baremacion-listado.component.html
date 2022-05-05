@@ -114,6 +114,12 @@
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
           </ng-container>
+          <ng-container *sgiHasAuthority="'PRC-CON-C'">
+            <button *ngIf="convocatoriaBaremacion.activo===true" mat-icon-button color="primary"
+              matTooltip="{{'btn.clone' | translate}}" (click)="clone(convocatoriaBaremacion.id)">
+              <mat-icon>control_point_duplicate</mat-icon>
+            </button>
+          </ng-container>
           <ng-template #editButton>
             <a mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[convocatoriaBaremacion.id]">
               <mat-icon color="primary">border_color</mat-icon>
