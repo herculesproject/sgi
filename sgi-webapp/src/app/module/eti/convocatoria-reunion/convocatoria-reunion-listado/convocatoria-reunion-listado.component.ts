@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -18,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ConvocatoriaReunionListadoExportModalComponent, IConvocatoriaReunionListadoModalData } from '../modals/convocatoria-reunion-listado-export-modal/convocatoria-reunion-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -65,7 +67,8 @@ export class ConvocatoriaReunionListadoComponent
     private readonly dialogService: DialogService,
     protected readonly snackBarService: SnackBarService,
     private formBuilder: FormBuilder,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private matDialog: MatDialog
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -253,5 +256,16 @@ export class ConvocatoriaReunionListadoComponent
         this.snackBarService.showError(this.textoEnviadoError);
       }
     );
+  }
+
+  public openExportModal() {
+    const data: IConvocatoriaReunionListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(ConvocatoriaReunionListadoExportModalComponent, config);
   }
 }
