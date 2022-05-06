@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoPalabraClave;
+import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada;
 import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;

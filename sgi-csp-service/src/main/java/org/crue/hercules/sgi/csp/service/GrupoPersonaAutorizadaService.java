@@ -172,7 +172,7 @@ public class GrupoPersonaAutorizadaService {
 
       if ((personaAutorizada.getFechaInicio() != null
           && personaAutorizada.getFechaInicio().isBefore(grupo.getFechaInicio()))
-          || (personaAutorizada.getFechaFin() != null
+          || (personaAutorizada.getFechaFin() != null && fechaFinGrupo != null
               && personaAutorizada.getFechaFin().isAfter(fechaFinGrupo))) {
         throw new GrupoPersonaAutorizadaProjectRangeException(personaAutorizada.getFechaInicio(),
             fechaFinGrupo);

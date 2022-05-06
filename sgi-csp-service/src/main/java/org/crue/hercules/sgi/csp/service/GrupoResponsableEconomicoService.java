@@ -172,7 +172,7 @@ public class GrupoResponsableEconomicoService {
 
       if ((responsableEconomico.getFechaInicio() != null
           && responsableEconomico.getFechaInicio().isBefore(grupo.getFechaInicio()))
-          || (responsableEconomico.getFechaFin() != null
+          || (responsableEconomico.getFechaFin() != null && fechaFinGrupo != null
               && responsableEconomico.getFechaFin().isAfter(fechaFinGrupo))) {
         throw new GrupoResponsableEconomicoProjectRangeException(responsableEconomico.getFechaInicio(),
             fechaFinGrupo);
