@@ -69,7 +69,7 @@ export class ConvocatoriaReunionListadoExportModalComponent extends
 
   protected getReportOptions(): IReportConfig<IConvocatoriaReunionReportOptions> {
     const reportModalData: IReportConfig<IConvocatoriaReunionReportOptions> = {
-      title: this.translate.instant('eti.peticion-evaluacion.report.title'),
+      title: this.translate.instant('eti.convocatoria-reunion.report.title'),
       outputType: this.formGroup.controls.outputType.value,
       hideBlocksIfNoData: this.formGroup.controls.hideBlocksIfNoData.value,
       reportOptions: {

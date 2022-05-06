@@ -138,7 +138,7 @@ export class PeticionEvaluacionMemoriasListadoExportService extends
     if (memorias) {
       elementsRow.push(memorias.referencia ?? '');
       elementsRow.push(memorias.comite ?? '');
-      elementsRow.push(memorias.estado ?? '');
+      elementsRow.push(this.translate.instant(memorias.estado) ?? '');
       elementsRow.push(LuxonUtils.toBackend(memorias.fechaEvaluacion) ?? '');
     } else {
       elementsRow.push('');

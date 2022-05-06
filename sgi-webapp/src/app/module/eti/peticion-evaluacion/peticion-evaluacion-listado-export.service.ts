@@ -207,7 +207,7 @@ export class PeticionEvaluacionListadoExportService extends
     if (reportConfig.reportOptions?.showAsignacionTareas) {
       columns.push(... this.peticionEvaluacionAsignacionTareasListadoExportService.fillColumns(resultados, reportConfig));
     }
-    if (reportConfig.reportOptions?.showAsignacionTareas) {
+    if (reportConfig.reportOptions?.showMemorias) {
       columns.push(... this.peticionEvaluacionMemoriasListadoExportService.fillColumns(resultados, reportConfig));
     }
     return of(columns);
