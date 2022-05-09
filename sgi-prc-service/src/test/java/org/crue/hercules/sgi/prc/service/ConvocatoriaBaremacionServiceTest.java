@@ -15,6 +15,7 @@ import javax.validation.ValidationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
+import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotUpdatableException;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionRepository;
@@ -245,16 +246,16 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void desactivar_WithFechaFinEjecucionNotNull_ThrowsIllegalArgumentException() {
+  void desactivar_WithFechaFinEjecucionNotNull_ThrowsConvocatoriaBaremacionNotUpdatableException() {
     // given: Un id buscado
     Long idBuscado = 1L;
     // when: ConvocatoriaBaremacion con ese id tiene fechaFinEjecucion not
     // null
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(generarMockConvocatoriaBaremacion(idBuscado, Instant.now())));
-    // then: Throws IllegalArgumentException
+    // then: Throws ConvocatoriaBaremacionNotUpdatableException
     Assertions.assertThatThrownBy(() -> this.service.desactivar(idBuscado))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(ConvocatoriaBaremacionNotUpdatableException.class);
   }
 
   @Test

@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
+import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotUpdatableException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnActivar;
@@ -241,11 +242,7 @@ public class ConvocatoriaBaremacionService {
 
     return convocatoriaBaremacionRepository.findById(id).map(convocatoriaBaremacion -> {
       // Una ConvocatoriaBaremacion con baremación ya realizada no se puede desactivar
-      Assert.isNull(convocatoriaBaremacion.getFechaInicioEjecucion(),
-          // Defer message resolution untill is needed
-          () -> ProblemMessage.builder().key(Assert.class, "isNull")
-              .parameter(FIELD, ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
-              .parameter(ENTITY, ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class)).build());
+      checkConvocatoriaBaremacionUpdatable(convocatoriaBaremacion);
 
       if (Boolean.FALSE.equals(convocatoriaBaremacion.getActivo())) {
         log.debug("desactivar(Long id) - end");
@@ -337,6 +334,9 @@ public class ConvocatoriaBaremacionService {
 
     return convocatoriaBaremacionRepository.findById(convocatoriaBaremacion.getId())
         .map(convocatoriaBaremacionExistente -> {
+          // Una ConvocatoriaBaremacion con baremación ya realizada no se puede actualizar
+          checkConvocatoriaBaremacionUpdatable(convocatoriaBaremacionExistente);
+
           // Establecemos los campos actualizables con los recibidos
           convocatoriaBaremacionExistente.setAnio(convocatoriaBaremacion.getAnio());
           convocatoriaBaremacionExistente.setAniosBaremables(convocatoriaBaremacion.getAniosBaremables());
@@ -370,4 +370,23 @@ public class ConvocatoriaBaremacionService {
     puntuacionGrupoRepository.deleteById(puntuacionGrupoId);
   }
 
+  /**
+   * Comprueba si la {@link ConvocatoriaBaremacion} es actualizable.
+   * 
+   * @param id de la {@link ConvocatoriaBaremacion}
+   */
+  public void checkConvocatoriaBaremacionUpdatable(Long id) {
+    final ConvocatoriaBaremacion convocatoriaBaremacionToCheck = findById(id);
+    checkConvocatoriaBaremacionUpdatable(convocatoriaBaremacionToCheck);
+  }
+
+  private void checkConvocatoriaBaremacionUpdatable(ConvocatoriaBaremacion convocatoriaBaremacionToCheck) {
+    if (!isConvocatoriaBaremacionUpdatable(convocatoriaBaremacionToCheck)) {
+      throw new ConvocatoriaBaremacionNotUpdatableException();
+    }
+  }
+
+  private boolean isConvocatoriaBaremacionUpdatable(ConvocatoriaBaremacion convocatoriaBaremacion) {
+    return convocatoriaBaremacion.getFechaInicioEjecucion() == null;
+  }
 }

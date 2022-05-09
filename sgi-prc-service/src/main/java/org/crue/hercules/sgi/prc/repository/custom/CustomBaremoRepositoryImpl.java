@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -74,4 +75,24 @@ public class CustomBaremoRepositoryImpl implements CustomBaremoRepository {
     return result;
   }
 
+  @Override
+  public int deleteInBulkByConvocatoriaBaremacionId(long convocatoriaBaremacionId) {
+    log.debug("deleteInBulkByConvocatoriaBaremacionId(long convocatoriaBaremacionId) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaDelete<Baremo> query = cb.createCriteriaDelete(Baremo.class);
+
+    // Define FROM Baremo clause
+    Root<Baremo> root = query.from(Baremo.class);
+
+    // Set WHERE restrictions
+    query.where(cb.equal(root.get(Baremo_.convocatoriaBaremacionId), convocatoriaBaremacionId));
+
+    // Execute query
+    int returnValue = entityManager.createQuery(query).executeUpdate();
+
+    log.debug("deleteInBulkByConvocatoriaBaremacionId(long convocatoriaBaremacionId) - end");
+    return returnValue;
+  }
 }
