@@ -32,7 +32,6 @@ public class SgiDynamicReportDto extends SgiReportDto {
   // TODO validar toda la estructura completamente: nº columnas = nº de elementos
   // en cada fila, tamaño de columnas correcto, etc
 
-  @NotBlank
   private String title;
 
   @Valid
