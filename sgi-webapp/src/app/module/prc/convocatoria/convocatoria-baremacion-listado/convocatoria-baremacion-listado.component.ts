@@ -9,6 +9,7 @@ import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacio
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
+import { BaremacionService } from '@core/services/prc/baremacion/baremacion.service';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -29,6 +30,9 @@ const MSG_SUCCESS_DEACTIVATE = marker('msg.deactivate.entity.success');
 const CONVOCATORIA_BAREMACION_KEY = marker('prc.convocatoria');
 const MSG_SUCCESS_CLONED = marker('msg.cloned.entity.success');
 const MSG_ERROR_CLONING = marker('error.cloning.entity');
+const MSG_BAREMATION_CALL = marker('msg.prc.baremationCall.entity');
+const MSG_SUCCESS_BAREMATION_CALL = marker('msg.baremationCall.entity.success');
+const MSG_ERROR_BAREMATION_CALL = marker('error.baremationCall.entity');
 
 @Component({
   selector: 'sgi-convocatoria-baremacion-listado',
@@ -41,11 +45,14 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
 
   textoCrear: string;
   textoDesactivar: string;
+  textoBaremationCall: string;
   textoReactivar: string;
   textoErrorDesactivar: string;
   textoSuccessDesactivar: string;
   textoSuccessReactivar: string;
   textoErrorReactivar: string;
+  textoErrorBaremationCall: string;
+  textoSuccessBaremationCall: string;
   private textErrorCloning: string;
   private textSuccessClonation: string;
 
@@ -56,6 +63,7 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly convocatoriaBaremacionService: ConvocatoriaBaremacionService,
+    private readonly baremacionService: BaremacionService,
     private readonly translate: TranslateService,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -273,6 +281,42 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
         );
       })
     ).subscribe((value) => this.textErrorCloning = value);
+
+    this.translate.get(
+      CONVOCATORIA_BAREMACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BAREMATION_CALL,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoBaremationCall = value);
+
+    this.translate.get(
+      CONVOCATORIA_BAREMACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_BAREMATION_CALL,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessBaremationCall = value);
+
+    this.translate.get(
+      CONVOCATORIA_BAREMACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_BAREMATION_CALL,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorBaremationCall = value);
   }
 
   private initFlexProperties(): void {
@@ -297,5 +341,40 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
             this.snackBarService.showError(this.textErrorCloning);
           }
         }));
+  }
+
+  canBaremationCall(convocatoriaBaremacion: IConvocatoriaBaremacion): boolean {
+    const currentYear = new Date().getFullYear();
+    return convocatoriaBaremacion.activo &&
+      convocatoriaBaremacion.anio === currentYear &&
+      (convocatoriaBaremacion.fechaInicioEjecucion === null ||
+        (convocatoriaBaremacion.fechaInicioEjecucion !== null && convocatoriaBaremacion.fechaFinEjecucion !== null)
+      );
+  }
+
+  baremationCall(convocatoriaBaremacionId: number): void {
+    const subcription = this.dialogService.showConfirmation(this.textoBaremationCall)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          return this.baremacionService.createTaskBaremacion(convocatoriaBaremacionId);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(this.textoSuccessBaremationCall);
+          this.loadTable();
+        },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof SgiError) {
+            this.snackBarService.showError(error);
+          }
+          else {
+            this.snackBarService.showError(this.textoErrorBaremationCall);
+          }
+        }
+      );
+    this.suscripciones.push(subcription);
   }
 }

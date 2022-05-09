@@ -24,4 +24,12 @@ export class BaremacionService {
   detalleProduccionInvestigador(anio: number, personaRef: string): Observable<IDetalleProduccionInvestigador> {
     return this.http.get<IDetalleProduccionInvestigador>(`${this.endpointUrl}/detalleproduccioninvestigador/${anio}/${personaRef}`);
   }
+
+  /**
+   * Lanza el proceso de baremación
+   * @param id id de la ConvocatoriaBaremacion.
+   */
+  createTaskBaremacion(id: number): Observable<number> {
+    return this.http.post<number>(`${this.endpointUrl}/createTask/${id}`, { id });
+  }
 }

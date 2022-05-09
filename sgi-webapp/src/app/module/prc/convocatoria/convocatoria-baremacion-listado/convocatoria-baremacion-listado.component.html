@@ -120,6 +120,12 @@
               <mat-icon>control_point_duplicate</mat-icon>
             </button>
           </ng-container>
+          <ng-container *sgiHasAuthority="'PRC-CON-BAR'">
+            <button *ngIf="canBaremationCall(convocatoriaBaremacion)" mat-icon-button color="primary"
+              matTooltip="{{'btn.baremation-call' | translate}}" (click)="baremationCall(convocatoriaBaremacion.id)">
+              <mat-icon>multiline_chart</mat-icon>
+            </button>
+          </ng-container>
           <ng-template #editButton>
             <a mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[convocatoriaBaremacion.id]">
               <mat-icon color="primary">border_color</mat-icon>
