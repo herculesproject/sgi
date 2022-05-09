@@ -12,6 +12,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
     }
     return {
       id: value.id,
+      responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
       titulo: value.titulo,
       comite: value.comite,
@@ -32,6 +33,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
     }
     return {
       id: value.id,
+      responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
       titulo: value.titulo,
       comite: value.comite,

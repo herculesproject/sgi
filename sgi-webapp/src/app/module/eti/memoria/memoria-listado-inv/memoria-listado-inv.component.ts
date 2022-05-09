@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -24,6 +25,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
+import { IMemoriaListadoModalData, MemoriaListadoExportModalComponent } from '../modals/memoria-listado-export-modal/memoria-listado-export-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -77,7 +79,8 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     protected readonly snackBarService: SnackBarService,
     protected readonly dialogService: DialogService,
     private readonly translate: TranslateService,
-    private authService: SgiAuthService
+    private authService: SgiAuthService,
+    private matDialog: MatDialog
   ) {
     super(snackBarService, MSG_ERROR);
 
@@ -312,6 +315,18 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
   private isUserSolicitantePeticionEvaluacion(userRef: string): boolean {
     return userRef === this.authService.authStatus$.value.userRefId;
+  }
+
+  public openExportModal() {
+    const data: IMemoriaListadoModalData = {
+      findOptions: this.findOptions,
+      isInvestigador: true
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(MemoriaListadoExportModalComponent, config);
   }
 
 }

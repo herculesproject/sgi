@@ -12,20 +12,19 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { InvencionEquipoInventorListadoExportService } from '../../invencion-equipo-inventor-listado-export.service';
-import { InvencionGeneralListadoExportService } from '../../invencion-general-listado-export.service';
-import { InvencionListadoExportService } from '../../invencion-listado-export.service';
-import { InvencionSolicitudesProteccionListadoExportService } from '../../invencion-solicitudes-proteccion-listado-export.service';
-import { IInvencionListadoModalData, InvencionListadoExportModalComponent } from './invencion-listado-export-modal.component';
+import { MemoriaEvaluacionesListadoExportService } from '../../memoria-evaluaciones-listado-export.service';
+import { MemoriaGeneralListadoExportService } from '../../memoria-general-listado-export.service';
+import { MemoriaListadoExportService } from '../../memoria-listado-export.service';
+import { IMemoriaListadoModalData, MemoriaListadoExportModalComponent } from './memoria-listado-export-modal.component';
 
-describe('InvencionListadoExportModalComponent', () => {
-  let component: InvencionListadoExportModalComponent;
-  let fixture: ComponentFixture<InvencionListadoExportModalComponent>;
+describe('MemoriaListadoExportModalComponent', () => {
+  let component: MemoriaListadoExportModalComponent;
+  let fixture: ComponentFixture<MemoriaListadoExportModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        InvencionListadoExportModalComponent
+        MemoriaListadoExportModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -42,19 +41,18 @@ describe('InvencionListadoExportModalComponent', () => {
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: TestUtils.buildDialogActionMatDialogRef() },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IInvencionListadoModalData },
+        { provide: MAT_DIALOG_DATA, useValue: {} as IMemoriaListadoModalData },
         SgiAuthService,
-        InvencionListadoExportService,
-        InvencionGeneralListadoExportService,
-        InvencionSolicitudesProteccionListadoExportService,
-        InvencionEquipoInventorListadoExportService,
+        MemoriaListadoExportService,
+        MemoriaGeneralListadoExportService,
+        MemoriaEvaluacionesListadoExportService,
         LuxonDatePipe
       ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InvencionListadoExportModalComponent);
+    fixture = TestBed.createComponent(MemoriaListadoExportModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

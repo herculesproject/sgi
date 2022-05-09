@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseExportModalComponent } from '@core/component/base-export/base-export-modal.component';
@@ -8,13 +9,13 @@ import { OutputReport } from '@core/models/rep/output-report.enum';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiRestFindOptions } from '@sgi/framework/http';
-import { IInvencionReportOptions, InvencionListadoExportService } from '../../invencion-listado-export.service';
+import { IMemoriaReportOptions, MemoriaListadoExportService } from '../../memoria-listado-export.service';
 
-const INVENCION_KEY = marker('pii.invencion');
-const REPORT_TITLE_KEY = marker('pii.invencion.export.title');
+const REPORT_TITLE_KEY = marker('eti.memoria.report.title');
 
-export interface IInvencionListadoModalData {
+export interface IMemoriaListadoModalData {
   findOptions: SgiRestFindOptions;
+  isInvestigador: boolean;
 }
 
 export const OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP: Map<OutputReport, string> = new Map([
@@ -23,10 +24,11 @@ export const OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP: Map<OutputReport, string> = new M
 ]);
 
 @Component({
-  templateUrl: './invencion-listado-export-modal.component.html',
-  styleUrls: ['./invencion-listado-export-modal.component.scss']
+  templateUrl: './memoria-listado-export-modal.component.html',
+  styleUrls: ['./memoria-listado-export-modal.component.scss']
 })
-export class InvencionListadoExportModalComponent extends BaseExportModalComponent<IInvencionReportOptions> implements OnInit {
+export class MemoriaListadoExportModalComponent extends
+  BaseExportModalComponent<IMemoriaReportOptions> implements OnInit {
 
   readonly OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP = OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP;
   private reportTitle: string;
@@ -36,12 +38,15 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
   }
 
   constructor(
-    matDialogRef: MatDialogRef<InvencionListadoExportModalComponent>,
+    matDialogRef: MatDialogRef<MemoriaListadoExportModalComponent>,
     translate: TranslateService,
-    invencionListadoExportService: InvencionListadoExportService,
-    @Inject(MAT_DIALOG_DATA) private modalData: IInvencionListadoModalData
+    memoriaListadoExportService: MemoriaListadoExportService,
+    @Inject(MAT_DIALOG_DATA) private modalData: IMemoriaListadoModalData
   ) {
-    super(invencionListadoExportService, translate, matDialogRef);
+
+    super(memoriaListadoExportService, translate, matDialogRef);
+
+    memoriaListadoExportService.isInvestigador = modalData.isInvestigador;
   }
 
   ngOnInit(): void {
@@ -50,22 +55,31 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
     this.formGroup = this.buildFormGroup();
   }
 
-  protected buildFormGroup(): FormGroup {
-    return new FormGroup({
-      outputType: new FormControl(OutputReport.XLSX, Validators.required),
-      showSolicitudesDeProteccion: new FormControl(true),
-      showEquipoInventor: new FormControl(true),
+  selectUnselectAll($event: MatCheckboxChange): void {
+    Object.keys(this.formGroup.controls).forEach(key => {
+      if (key.startsWith('show')) {
+        this.formGroup.get(key).patchValue($event.checked);
+      }
     });
   }
 
-  protected getReportOptions(): IReportConfig<IInvencionReportOptions> {
-    const reportModalData: IReportConfig<IInvencionReportOptions> = {
+  protected buildFormGroup(): FormGroup {
+    return new FormGroup({
+      outputType: new FormControl(OutputReport.XLSX, Validators.required),
+      hideBlocksIfNoData: new FormControl(true),
+      showEvaluaciones: new FormControl(true),
+    });
+  }
+
+  protected getReportOptions(): IReportConfig<IMemoriaReportOptions> {
+    const reportModalData: IReportConfig<IMemoriaReportOptions> = {
+      title: this.translate.instant('pii.invencion.titulo'),
       outputType: this.formGroup.controls.outputType.value,
+      hideBlocksIfNoData: this.formGroup.controls.hideBlocksIfNoData.value,
       reportOptions: {
         findOptions: this.modalData.findOptions,
-        showSolicitudesDeProteccion: this.formGroup.controls.showSolicitudesDeProteccion.value,
-        showEquipoInventor: this.formGroup.controls.showEquipoInventor.value,
-        columnMinWidth: 120
+        showEvaluaciones: this.formGroup.controls.showEvaluaciones.value,
+        columnMinWidth: 200
       }
     };
     return reportModalData;
@@ -79,6 +93,4 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
   protected getGender() {
     return MSG_PARAMS.GENDER.MALE;
   }
-
-
 }
