@@ -28,15 +28,17 @@ import org.springframework.test.context.jdbc.Sql;
 class BaremacionIT extends BaremacionBaseIT {
 
   protected static final String PATH_PARAMETER_ID = "/{id}";
+  protected static final String PATH_CREATE_TASK = "/createTask";
   protected static final String CONTROLLER_BASE_PATH = BaremacionController.MAPPING;
 
   @Test
   void baremacion_without_baremacion() throws Exception {
     Long idBaremacion = 1L;
 
-    final ResponseEntity<Void> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.POST, buildRequestBaremacion(null, null),
-        Void.class, idBaremacion);
+    final ResponseEntity<ConvocatoriaBaremacion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_CREATE_TASK + PATH_PARAMETER_ID, HttpMethod.POST,
+        buildRequestBaremacion(null, null),
+        ConvocatoriaBaremacion.class, idBaremacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -83,9 +85,10 @@ class BaremacionIT extends BaremacionBaseIT {
 
     updateConvocatoriaBaremacionFechaInicioEjecucion(idBaremacion, Instant.now());
 
-    final ResponseEntity<Void> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.POST, buildRequestBaremacion(null, null),
-        Void.class, idBaremacion);
+    final ResponseEntity<ConvocatoriaBaremacion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_CREATE_TASK + PATH_PARAMETER_ID, HttpMethod.POST,
+        buildRequestBaremacion(null, null),
+        ConvocatoriaBaremacion.class, idBaremacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 

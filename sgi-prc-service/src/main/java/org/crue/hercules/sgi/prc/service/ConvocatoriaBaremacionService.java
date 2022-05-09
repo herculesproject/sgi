@@ -68,10 +68,10 @@ public class ConvocatoriaBaremacionService {
   private final SgiConfigProperties sgiConfigProperties;
   private final Validator validator;
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Transactional
   public ConvocatoriaBaremacion updateFechaInicioEjecucion(Long convocatoriaBaremacionId,
       Instant fechaInicioEjecucion) {
-    log.debug("updateFechaInicioEjecucion(convocatoriaBaremacionId, fechaInicioEjecucion) - start");
+    log.debug("updateFechaInicioEjecucion({},{}) - start", convocatoriaBaremacionId, fechaInicioEjecucion);
 
     return convocatoriaBaremacionRepository
         .findById(convocatoriaBaremacionId).map(convocatoria -> {

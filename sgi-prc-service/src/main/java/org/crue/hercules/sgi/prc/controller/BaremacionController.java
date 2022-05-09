@@ -64,6 +64,10 @@ public class BaremacionController {
   public Long createBaremacionTask(@PathVariable Long convocatoriaBaremacionId) {
     log.debug("createBaremacionTask({}) - start", convocatoriaBaremacionId);
 
+    service.checkInitBaremacion(convocatoriaBaremacionId);
+
+    convocatoriaBaremacionService.updateFechaInicioEjecucion(convocatoriaBaremacionId, Instant.now());
+
     Instant fechaBaremacion = Instant.now().plusSeconds(10);
     return sgiApiTpService.createCallBaremacionTaskId(convocatoriaBaremacionId, fechaBaremacion);
   }

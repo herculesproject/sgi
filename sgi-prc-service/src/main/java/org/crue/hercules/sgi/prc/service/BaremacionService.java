@@ -78,39 +78,12 @@ public class BaremacionService {
 
   @Transactional
   public synchronized void baremacion(Long convocatoriaBaremacionId) {
-    log.debug("baremacion(convocatoriaBaremacionId) - start");
+    log.debug("baremacion({}) - start", convocatoriaBaremacionId);
 
-    checkInitBaremacion(convocatoriaBaremacionId);
-
-    // Open a new transaction to evict a new call before finishing
-    ConvocatoriaBaremacion convocatoriaBaremacionUpdate = convocatoriaBaremacionService.updateFechaInicioEjecucion(
-        convocatoriaBaremacionId,
-        Instant.now());
-
-    this.baremacionIntern(convocatoriaBaremacionUpdate);
-
-  }
-
-  private void checkInitBaremacion(Long convocatoriaBaremacionId) {
-    log.debug("checkInitBaremacion(convocatoriaBaremacionId) - start");
-
-    ConvocatoriaBaremacion convocatoriaBaremacion = convocatoriaBaremacionRepository.findById(convocatoriaBaremacionId)
-        .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId));
-
-    Assert.isNull(convocatoriaBaremacion.getFechaInicioEjecucion(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("fechaInicioEjecucion"))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
-                ApplicationContextSupport.getMessage(ConvocatoriaBaremacion.class))
-            .build());
-    log.debug("checkInitBaremacion(convocatoriaBaremacionId) - end");
-  }
-
-  private void baremacionIntern(ConvocatoriaBaremacion convocatoriaBaremacion) {
-    log.debug("baremacion(convocatoriaBaremacion) - start");
-    Long convocatoriaBaremacionId = convocatoriaBaremacion.getId();
     try {
+      ConvocatoriaBaremacion convocatoriaBaremacion = convocatoriaBaremacionRepository
+          .findById(convocatoriaBaremacionId)
+          .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId));
 
       convocatoriaBaremacionService.deleteItemsConvocatoriaBaremacion(convocatoriaBaremacion);
 
@@ -193,7 +166,26 @@ public class BaremacionService {
 
       // TODO Lanzar comunicado algoritmo completado
     }
-    log.debug("baremacion(convocatoriaBaremacion) - end");
+    log.debug("baremacion({}) - end", convocatoriaBaremacionId);
+  }
+
+  public void checkInitBaremacion(Long convocatoriaBaremacionId) {
+    log.debug("checkInitBaremacion(convocatoriaBaremacionId) - start");
+
+    ConvocatoriaBaremacion convocatoriaBaremacion = convocatoriaBaremacionRepository.findById(convocatoriaBaremacionId)
+        .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId));
+
+    Integer currentYear = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).getYear();
+    Assert.isTrue(null != convocatoriaBaremacion.getActivo() &&
+        convocatoriaBaremacion.getActivo().equals(Boolean.TRUE) &&
+        convocatoriaBaremacion.getAnio().compareTo(currentYear) == 0 &&
+        (convocatoriaBaremacion.getFechaInicioEjecucion() == null ||
+            (convocatoriaBaremacion.getFechaInicioEjecucion() != null
+                && convocatoriaBaremacion.getFechaFinEjecucion() != null)),
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key("org.crue.hercules.sgi.prc.exceptions.BaremationCallException.message")
+            .build());
+    log.debug("checkInitBaremacion(convocatoriaBaremacionId) - end");
   }
 
   private void evaluatePuntosConvocatoriaBaremacion(Long convocatoriaBaremacionId) {
