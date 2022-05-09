@@ -9,7 +9,7 @@ import { ReportService } from '@core/services/rep/report.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 
 const REPORT_NAME = 'report';
@@ -18,7 +18,7 @@ export interface IReportConfig<T> {
   /**
    * Título del informe
    */
-  title: string;
+  title?: string;
 
   /**
    * Tipo de exportación: PDF, EXCEL, HTML, CSV, etc
@@ -99,7 +99,7 @@ export abstract class AbstractTableExportService<T, R extends IReportOptions> im
           })
         );
       }),
-      switchMap((reportFill) => {
+      switchMap(() => {
         return this.reportService.downloadDynamicReport(report);
       }),
       map((data: Blob) => {
