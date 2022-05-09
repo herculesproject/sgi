@@ -10,15 +10,20 @@ import { EvaluacionFormularioModule } from '../evaluacion-formulario/evaluacion-
 import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionResolver } from '../evaluacion/evaluacion.resolver';
 import { EtiSharedModule } from '../shared/eti-shared.module';
+import { EvaluacionEvaluacionesAnterioresListadoExportService } from './evaluacion-evaluaciones-anteriores-listado-export.service';
 import { EvaluacionEvaluarComponent } from './evaluacion-evaluar/evaluacion-evaluar.component';
+import { EvaluacionGeneralListadoExportService } from './evaluacion-general-listado-export.service';
+import { EvaluacionListadoExportService } from './evaluacion-listado-export.service';
 import { EvaluacionListadoComponent } from './evaluacion-listado/evaluacion-listado.component';
 import { EvaluacionRoutingModule } from './evaluacion-routing.module';
+import { EvaluacionListadoExportModalComponent } from './modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
 
 
 @NgModule({
   declarations: [
     EvaluacionListadoComponent,
     EvaluacionEvaluarComponent,
+    EvaluacionListadoExportModalComponent
   ],
   imports: [
     SharedModule,
@@ -37,7 +42,10 @@ import { EvaluacionRoutingModule } from './evaluacion-routing.module';
     EvaluacionListadoAnteriorMemoriaComponent,
   ],
   providers: [
-    EvaluacionResolver
+    EvaluacionResolver,
+    EvaluacionListadoExportService,
+    EvaluacionGeneralListadoExportService,
+    EvaluacionEvaluacionesAnterioresListadoExportService
   ]
 })
 export class EvaluacionModule { }

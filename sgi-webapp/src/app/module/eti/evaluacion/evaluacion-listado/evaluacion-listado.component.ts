@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -15,6 +16,8 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { TipoComentario } from '../evaluacion-listado-export.service';
+import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
 
 const MSG_ERROR = marker('error.load');
 
@@ -45,8 +48,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   constructor(
     private readonly evaluacionesService: EvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    protected readonly personaService: PersonaService
-
+    protected readonly personaService: PersonaService,
+    private matDialog: MatDialog
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -136,6 +139,18 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     super.onClearFilters();
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
+  }
+
+  public openExportModal() {
+    const data: IEvaluacionListadoModalData = {
+      findOptions: this.findOptions,
+      tipoComentario: TipoComentario.GESTOR
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(EvaluacionListadoExportModalComponent, config);
   }
 
 }

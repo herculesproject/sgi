@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IConfiguracion } from '@core/models/eti/configuracion';
@@ -16,6 +17,8 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { TipoComentario } from '../../evaluacion/evaluacion-listado-export.service';
+import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../../evaluacion/modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
 
 const MSG_ERROR = marker('error.load');
 
@@ -37,7 +40,8 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     private readonly evaluadorService: EvaluadorService,
     private readonly personaService: PersonaService,
     protected readonly snackBarService: SnackBarService,
-    private readonly configuracionService: ConfiguracionService
+    private readonly configuracionService: ConfiguracionService,
+    private matDialog: MatDialog
   ) {
     super(snackBarService, MSG_ERROR);
 
@@ -120,7 +124,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('memoria.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+    return new RSQLSgiRestFilter('memoria.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and(
         'convocatoriaReunion.fechaEvaluacion',
         SgiRestFilterOperator.GREATHER_OR_EQUAL,
@@ -132,8 +136,6 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
       ).and('memoria.numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.memoriaNumReferencia.value)
       .and('convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoria.value?.id?.toString())
       .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
-
-    return filter;
   }
 
   /**
@@ -164,5 +166,17 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     );
 
     this.suscripciones.push(configSusbscription);
+  }
+
+  public openExportModal() {
+    const data: IEvaluacionListadoModalData = {
+      findOptions: this.findOptions,
+      tipoComentario: TipoComentario.EVALUADOR
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(EvaluacionListadoExportModalComponent, config);
   }
 }

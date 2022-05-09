@@ -8,15 +8,17 @@
     </mat-form-field>
 
     <!-- Columns visibility -->
-    <mat-label>{{'export.columns' | translate}}</mat-label>
+    <div class="row-visibility-header">
+      <mat-label>{{'export.columns' | translate}}</mat-label>
+      <mat-checkbox color="primary" class="checkbox" checked="true" (change)="selectUnselectAll($event)">
+        <mat-label>{{'label.todos' | translate}}</mat-label>
+      </mat-checkbox>
+    </div>
 
     <div class="row-visibility">
       <div class="columns-visibility">
-        <mat-checkbox color="primary" class="checkbox" formControlName="showSolicitudesDeProteccion">
-          {{'pii.invencion-solicitudes-proteccion' | translate}}
-        </mat-checkbox>
-        <mat-checkbox color="primary" class="checkbox" formControlName="showEquipoInventor">
-          {{'pii.invencion-equipo-inventor' | translate}}
+        <mat-checkbox color="primary" class="checkbox" formControlName="showEvaluacionesAnteriores">
+          {{'eti.evaluacion.report.modal.evaluaciones-anteriores' | translate}}
         </mat-checkbox>
       </div>
     </div>

@@ -62,7 +62,8 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
     ] as ISgiColumnReport[];
   }
 
-  public fillRows(convocatorias: IConvocatoriaReunionReportData[],
+  public fillRows(
+    convocatorias: IConvocatoriaReunionReportData[],
     index: number, reportConfig: IReportConfig<IConvocatoriaReunionReportOptions>): any[] {
 
     const convocatoriaData = convocatorias[index];

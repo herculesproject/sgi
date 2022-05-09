@@ -14,6 +14,9 @@ import { EvaluacionEvaluadorEvaluarComponent } from './evaluacion-evaluador-eval
 import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
 import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
 import { EtiSharedModule } from '../shared/eti-shared.module';
+import { EvaluacionListadoExportService } from '../evaluacion/evaluacion-listado-export.service';
+import { EvaluacionGeneralListadoExportService } from '../evaluacion/evaluacion-general-listado-export.service';
+import { EvaluacionEvaluacionesAnterioresListadoExportService } from '../evaluacion/evaluacion-evaluaciones-anteriores-listado-export.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { EtiSharedModule } from '../shared/eti-shared.module';
     EtiSharedModule
   ],
   providers: [
-    EvaluacionEvaluadorResolver
+    EvaluacionEvaluadorResolver,
+    EvaluacionListadoExportService,
+    EvaluacionGeneralListadoExportService,
+    EvaluacionEvaluacionesAnterioresListadoExportService
   ]
 
 })
