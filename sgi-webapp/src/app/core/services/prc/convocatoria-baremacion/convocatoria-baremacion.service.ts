@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IBaremo } from '@core/models/prc/baremo';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { environment } from '@env';
 import {
@@ -8,6 +9,10 @@ import {
   SgiRestFindOptions, SgiRestListResult, UpdateCtor
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { BAREMO_REQUEST_CONVERTER } from '../baremo/baremo-request.converter';
+import { IBaremoResponse } from '../baremo/baremo-response';
+import { BAREMO_RESPONSE_CONVERTER } from '../baremo/baremo-response.converter';
 import { IConvocatoriaBaremacionRequest } from './convocatoria-baremacion-request';
 import { CONVOCATORIA_BAREMACION_REQUEST_CONVERTER } from './convocatoria-baremacion-request.converter';
 import { IConvocatoriaBaremacionResponse } from './convocatoria-baremacion-response';
@@ -36,7 +41,7 @@ const _ConvocatoriaBaremacionMixinBase:
 })
 export class ConvocatoriaBaremacionService extends _ConvocatoriaBaremacionMixinBase {
 
-  private static readonly MAPPING = '/convocatoriabaremacion';
+  private static readonly MAPPING = '/convocatoriasbaremacion';
 
   constructor(protected http: HttpClient) {
     super(
@@ -86,4 +91,31 @@ export class ConvocatoriaBaremacionService extends _ConvocatoriaBaremacionMixinB
     return this.http.post<number>(url, {});
   }
 
+  /**
+   * Busca todos los Baremo asociados a una ConvocatoriaBaremacion
+   *
+   * @param id id de la ConvocatoriaBaremacion
+   * @param options opciones de búsqueda.
+   */
+  findBaremos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IBaremo>> {
+    return this.find<IBaremoResponse, IBaremo>(
+      `${this.endpointUrl}/${id}/baremos`,
+      options,
+      BAREMO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Actualiza los Baremo asociadas a la ConvocatoriaBaremacion con el id indicado
+   * @param id id de la ConvocatoriaBaremacion
+   * @param baremos los Baremo a actualizar
+   */
+  updateBaremos(id: number, baremos: IBaremo[]): Observable<IBaremo[]> {
+    return this.http.patch<IBaremoResponse[]>(
+      `${this.endpointUrl}/${id}/baremos`,
+      BAREMO_REQUEST_CONVERTER.fromTargetArray(baremos)
+    ).pipe(
+      map((response => BAREMO_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
+  }
 }

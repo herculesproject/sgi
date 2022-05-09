@@ -10,13 +10,25 @@ import { ConvocatoriaBaremacionListadoComponent } from './convocatoria-baremacio
 import { ConvocatoriaBaremacionCrearComponent } from './convocatoria-baremacion-crear/convocatoria-baremacion-crear.component';
 import { ConvocatoriaBaremacionEditarComponent } from './convocatoria-baremacion-editar/convocatoria-baremacion-editar.component';
 import { ConvocatoriaBaremacionDatosGeneralesComponent } from './convocatoria-baremacion-formulario/convocatoria-baremacion-datos-generales/convocatoria-baremacion-datos-generales.component';
+import { ConvocatoriaBaremacionBaremosPuntuacionesComponent } from './convocatoria-baremacion-formulario/convocatoria-baremacion-baremos-puntuaciones/convocatoria-baremacion-baremos-puntuaciones.component';
+import { BaremoPesoPuntosComponent } from './components/baremo-peso-puntos/baremo-peso-puntos.component';
+import { BaremoPesoCuantiaComponent } from './components/baremo-peso-cuantia/baremo-peso-cuantia.component';
+import { BaremoPesoComponent } from './components/baremo-peso/baremo-peso.component';
+import { BaremoPuntosComponent } from './components/baremo-puntos/baremo-puntos.component';
+import { BaremoDirective } from './components/baremo.directive';
 
 @NgModule({
   declarations: [
     ConvocatoriaBaremacionListadoComponent,
     ConvocatoriaBaremacionCrearComponent,
     ConvocatoriaBaremacionEditarComponent,
-    ConvocatoriaBaremacionDatosGeneralesComponent
+    ConvocatoriaBaremacionDatosGeneralesComponent,
+    ConvocatoriaBaremacionBaremosPuntuacionesComponent,
+    BaremoPesoPuntosComponent,
+    BaremoPesoCuantiaComponent,
+    BaremoPesoComponent,
+    BaremoPuntosComponent,
+    BaremoDirective
   ],
   imports: [
     CommonModule,
