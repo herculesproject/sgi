@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
@@ -13,6 +14,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { ISeguimientoListadoModalData, SeguimientoListadoExportModalComponent } from '../modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
+import { RolPersona } from '../seguimiento-listado-export.service';
 
 const MSG_ERROR = marker('error.load');
 
@@ -30,7 +33,8 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly personaService: PersonaService,
-    private readonly evaluadorService: EvaluadorService
+    private readonly evaluadorService: EvaluadorService,
+    private matDialog: MatDialog
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -122,5 +126,17 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
 
     return filter;
+  }
+
+  public openExportModal() {
+    const data: ISeguimientoListadoModalData = {
+      findOptions: this.findOptions,
+      rolPersona: RolPersona.EVALUADOR
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(SeguimientoListadoExportModalComponent, config);
   }
 }

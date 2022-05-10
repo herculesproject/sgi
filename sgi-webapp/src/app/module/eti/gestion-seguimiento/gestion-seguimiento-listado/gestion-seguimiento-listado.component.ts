@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -16,6 +17,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { ISeguimientoListadoModalData, SeguimientoListadoExportModalComponent } from '../../seguimiento/modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
+import { RolPersona } from '../../seguimiento/seguimiento-listado-export.service';
 
 const MSG_ERROR = marker('error.load');
 
@@ -44,7 +47,8 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    protected readonly personaService: PersonaService
+    protected readonly personaService: PersonaService,
+    private matDialog: MatDialog
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -153,6 +157,18 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     super.onClearFilters();
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
+  }
+
+  public openExportModal() {
+    const data: ISeguimientoListadoModalData = {
+      findOptions: this.findOptions,
+      rolPersona: RolPersona.GESTOR
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(SeguimientoListadoExportModalComponent, config);
   }
 
 }

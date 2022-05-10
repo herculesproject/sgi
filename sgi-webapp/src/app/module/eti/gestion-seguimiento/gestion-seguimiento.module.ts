@@ -8,6 +8,9 @@ import { SharedModule } from '@shared/shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { SeguimientoFormularioModule } from '../seguimiento-formulario/seguimiento-formulario.module';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-formulario/seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { SeguimientoEvaluacionesAnterioresListadoExportService } from '../seguimiento/seguimiento-evaluaciones-anteriores-listado-export.service';
+import { SeguimientoGeneralListadoExportService } from '../seguimiento/seguimiento-general-listado-export.service';
+import { SeguimientoListadoExportService } from '../seguimiento/seguimiento-listado-export.service';
 import { EtiSharedModule } from '../shared/eti-shared.module';
 import { GestionSeguimientoEvaluarComponent } from './gestion-seguimiento-evaluar/gestion-seguimiento-evaluar.component';
 import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';
@@ -38,7 +41,10 @@ import { GestionSeguimientoResolver } from './gestion-seguimiento.resolver';
     SeguimientoListadoAnteriorMemoriaComponent,
   ],
   providers: [
-    GestionSeguimientoResolver
+    GestionSeguimientoResolver,
+    SeguimientoListadoExportService,
+    SeguimientoGeneralListadoExportService,
+    SeguimientoEvaluacionesAnterioresListadoExportService
   ]
 })
 export class GestionSeguimientoModule { }

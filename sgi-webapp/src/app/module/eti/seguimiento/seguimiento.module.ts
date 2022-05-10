@@ -9,7 +9,11 @@ import { DocumentacionMemoriaModule } from '../documentacion-memoria/documentaci
 import { EvaluacionModule } from '../evaluacion/evaluacion.module';
 import { SeguimientoFormularioModule } from '../seguimiento-formulario/seguimiento-formulario.module';
 import { EtiSharedModule } from '../shared/eti-shared.module';
+import { SeguimientoListadoExportModalComponent } from './modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
+import { SeguimientoEvaluacionesAnterioresListadoExportService } from './seguimiento-evaluaciones-anteriores-listado-export.service';
 import { SeguimientoEvaluarComponent } from './seguimiento-evaluar/seguimiento-evaluar.component';
+import { SeguimientoGeneralListadoExportService } from './seguimiento-general-listado-export.service';
+import { SeguimientoListadoExportService } from './seguimiento-listado-export.service';
 import { SeguimientoListadoComponent } from './seguimiento-listado/seguimiento-listado.component';
 import { SeguimientoRoutingModule } from './seguimiento-routing.module';
 import { SeguimientoResolver } from './seguimiento.resolver';
@@ -19,6 +23,7 @@ import { SeguimientoResolver } from './seguimiento.resolver';
   declarations: [
     SeguimientoListadoComponent,
     SeguimientoEvaluarComponent,
+    SeguimientoListadoExportModalComponent
   ],
   imports: [
     SharedModule,
@@ -36,6 +41,9 @@ import { SeguimientoResolver } from './seguimiento.resolver';
   ],
   providers: [
     SeguimientoResolver,
+    SeguimientoListadoExportService,
+    SeguimientoGeneralListadoExportService,
+    SeguimientoEvaluacionesAnterioresListadoExportService
   ]
 })
 export class SeguimientoModule { }
