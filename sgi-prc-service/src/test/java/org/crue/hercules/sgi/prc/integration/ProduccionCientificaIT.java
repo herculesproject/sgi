@@ -455,7 +455,7 @@ class ProduccionCientificaIT extends BaseIT {
   @ParameterizedTest
   @ValueSource(strings = { "descripcion=ik=1",
       "nombreExposicion=ik=1" })
-  public void findAllObrasArtisticasByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllObrasArtisticasByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";
@@ -504,7 +504,7 @@ class ProduccionCientificaIT extends BaseIT {
   @ValueSource(strings = {
       "fechaInicioDesde=ge=2021-01-01T00:00:00Z;fechaInicioHasta=le=2021-02-01T00:00:00Z"
   })
-  public void findAllActividadesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllActividadesByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";
@@ -553,7 +553,7 @@ class ProduccionCientificaIT extends BaseIT {
   @ValueSource(strings = {
       "fechaDefensaDesde=ge=2021-01-01T00:00:00Z;fechaDefensaHasta=le=2021-02-01T00:00:00Z"
   })
-  public void findAllDireccionesTesisByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
+  void findAllDireccionesTesisByFilter_WithPagingSortingAndFiltering_ReturnsProduccionCientificaSubList(
       String filter)
       throws Exception {
     String roles = "PRC-VAL-V";

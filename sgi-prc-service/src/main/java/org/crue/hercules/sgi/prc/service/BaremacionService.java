@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
@@ -46,10 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequiredArgsConstructor
 public class BaremacionService {
-  private static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_PARAMETER_ENTITY = "entity";
-  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
-
   private final BaremoRepository baremoRepository;
   private final PuntuacionItemInvestigadorRepository puntuacionItemInvestigadorRepository;
   private final PuntuacionGrupoRepository puntuacionGrupoRepository;

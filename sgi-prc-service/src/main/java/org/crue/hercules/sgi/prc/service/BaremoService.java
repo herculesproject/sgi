@@ -91,7 +91,7 @@ public class BaremoService {
     repository.deleteInBulkByConvocatoriaBaremacionId(convocatoriaBaremacionId);
 
     List<Baremo> returnValue = new ArrayList<>();
-    if (baremos != null && !baremos.isEmpty()) {
+    if (!baremos.isEmpty()) {
       // Eliminamos duplicados de la nueva lista
       List<Baremo> uniqueBaremos = baremos.stream().distinct()
           .collect(Collectors.toList());

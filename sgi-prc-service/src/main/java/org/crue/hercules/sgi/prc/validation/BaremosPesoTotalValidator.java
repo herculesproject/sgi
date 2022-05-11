@@ -21,7 +21,7 @@ public class BaremosPesoTotalValidator implements ConstraintValidator<BaremosPes
   @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
   public boolean isValid(List<BaremoInput> value, ConstraintValidatorContext context) {
     final Integer pesoTotal = ListUtils.emptyIfNull(value).stream()
-        .filter((baremo) -> baremo.getPeso() != null)
+        .filter(baremo -> baremo.getPeso() != null)
         .map(BaremoInput::getPeso)
         .reduce(Integer::sum).orElse(0);
     boolean returnValue = REQUIRED_PESO_TOTAL.equals(pesoTotal);

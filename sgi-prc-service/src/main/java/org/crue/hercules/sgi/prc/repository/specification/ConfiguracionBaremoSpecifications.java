@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.prc.repository.specification;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoFuente;
@@ -85,8 +86,6 @@ public class ConfiguracionBaremoSpecifications {
    * @return specification para obtener las {@link ConfiguracionBaremo} activos.
    */
   public static Specification<ConfiguracionBaremo> activos() {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(ConfiguracionBaremo_.activo), Boolean.TRUE);
-    };
+    return (root, query, cb) -> cb.equal(root.get(Activable_.activo), Boolean.TRUE);
   }
 }

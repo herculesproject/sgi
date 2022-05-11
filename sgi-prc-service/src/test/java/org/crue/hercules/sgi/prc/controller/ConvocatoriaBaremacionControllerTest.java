@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
+import org.crue.hercules.sgi.prc.converter.ModuladorConverter;
+import org.crue.hercules.sgi.prc.converter.RangoConverter;
 import org.crue.hercules.sgi.prc.dto.BaremoInput;
 import org.crue.hercules.sgi.prc.dto.BaremoOutput;
 import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionInput;
@@ -17,10 +19,12 @@ import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionOutput;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotFoundException;
 import org.crue.hercules.sgi.prc.exceptions.ConvocatoriaBaremacionNotUpdatableException;
 import org.crue.hercules.sgi.prc.model.Baremo;
-import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.Baremo.TipoCuantia;
+import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.service.BaremoService;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
+import org.crue.hercules.sgi.prc.service.ModuladorService;
+import org.crue.hercules.sgi.prc.service.RangoService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -45,15 +49,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConvocatoriaBaremacionControllerTest
  */
 @WebMvcTest(ConvocatoriaBaremacionController.class)
-public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
+class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaBaremacionService service;
   @MockBean
   private BaremoService baremoService;
+  @MockBean
+  private ModuladorService moduladorService;
+  @MockBean
+  private RangoService rangoService;
+  @MockBean
+  private ModuladorConverter moduladorConverter;
+  @MockBean
+  private RangoConverter rangoConverter;
 
-  private static final String CONTROLLER_BASE_PATH = ConvocatoriaBaremacionController.REQUEST_MAPPING;
-  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONTROLLER_BASE_PATH = ConvocatoriaBaremacionController.MAPPING;
+  private static final String PATH_ID = ConvocatoriaBaremacionController.PATH_ID;
   private static final String PATH_BAREMOS = ConvocatoriaBaremacionController.PATH_BAREMOS;
   private static final Integer DEFAULT_DATA_PESO = 100;
   private static final BigDecimal DEFAULT_DATA_PUNTOS = new BigDecimal(20.5);
@@ -166,7 +178,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: find by existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
@@ -186,7 +198,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: find by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound present
@@ -206,7 +218,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: activar by existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/activar", id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_ID + "/activar", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
@@ -228,7 +240,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: activar by existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/desactivar", id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_ID + "/desactivar", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: response is OK
@@ -239,7 +251,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-C" })
-  public void create_ReturnsConvocatoriaBaremacion() throws Exception {
+  void create_ReturnsConvocatoriaBaremacion() throws Exception {
     // given: new ConvocatoriaBaremacion
     ConvocatoriaBaremacionInput convocatoriaBaremacion = generarMockConvocatoriaBaremacionInput();
 
@@ -271,7 +283,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-E" })
-  public void update_ReturnsConvocatoriaBaremacion() throws Exception {
+  void update_ReturnsConvocatoriaBaremacion() throws Exception {
     // given: Existing ConvocatoriaBaremacion to be updated
     Long id = 1L;
     ConvocatoriaBaremacionInput convocatoriaBaremacion = generarMockConvocatoriaBaremacionInput();
@@ -282,7 +294,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: update ConvocatoriaBaremacion
     mockMvc
-        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(convocatoriaBaremacion)))
         .andDo(SgiMockMvcResultHandlers.printOnError())
@@ -309,7 +321,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: clone by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/clone", id)
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_ID + "/clone", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError()).
         // then: HTTP code 404 NotFound present
@@ -327,7 +339,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
     // when: clone by existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/clone", id)
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH + PATH_ID + "/clone", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -372,7 +384,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-V", "PRC-CON-C", "PRC-CON-E" })
-  public void findBaremos_ReturnsPage() throws Exception {
+  void findBaremos_ReturnsPage() throws Exception {
     // given: Una lista con 37 Baremo
     Long convocatoriaBaremacionId = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;
     List<Baremo> baremos = new ArrayList<>();
@@ -432,7 +444,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-V", "PRC-CON-C", "PRC-CON-E" })
-  public void updateBaremos_Returns403ConvocatoriaBaremacionNotUpdatableException() throws Exception {
+  void updateBaremos_Returns403ConvocatoriaBaremacionNotUpdatableException() throws Exception {
     // given: Una lista de Baremo asignados una ConvocatoriaBaremacion no editable
     final Long convocatoriaBaremacionId = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;
     List<BaremoInput> baremos = new ArrayList<>();
@@ -453,7 +465,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-V", "PRC-CON-C", "PRC-CON-E" })
-  public void updateBaremos_Returns400NoRelatedEntitiesException() throws Exception {
+  void updateBaremos_Returns400NoRelatedEntitiesException() throws Exception {
     // given: Una lista de Baremo asignados una ConvocatoriaBaremacion diferente de
     // la esperada
     final Long convocatoriaBaremacionIdExpected = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;
@@ -475,7 +487,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-V", "PRC-CON-C", "PRC-CON-E" })
-  public void updateBaremos_Returns400() throws Exception {
+  void updateBaremos_Returns400() throws Exception {
     // given: Una lista de Baremo asignados una ConvocatoriaBaremacion con peso
     // total menor que 100
     final Long convocatoriaBaremacionId = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;
@@ -497,7 +509,7 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-CON-V", "PRC-CON-C", "PRC-CON-E" })
-  public void updateBaremos_ReturnsBaremoList() throws Exception {
+  void updateBaremos_ReturnsBaremoList() throws Exception {
     // given: Una lista de Baremo asignados una ConvocatoriaBaremacion con peso
     // total menor que 100
     final Long convocatoriaBaremacionId = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;
@@ -570,12 +582,6 @@ public class ConvocatoriaBaremacionControllerTest extends BaseControllerTest {
     return this.generarMockBaremoInput(
         peso, null, null, null,
         configuracionBaremoId, convocatoriaBaremacionId);
-  }
-
-  private BaremoInput generarMockBaremoInputPuntos(Long convocatoriaBaremacionId) {
-    return this.generarMockBaremoInput(
-        null, DEFAULT_DATA_PUNTOS, null, null,
-        DEFAULT_DATA_CONFIGURACION_BAREMO_ID, convocatoriaBaremacionId);
   }
 
   private BaremoInput generarMockBaremoInputPuntos(Long convocatoriaBaremacionId, Long configuracionBaremoId) {

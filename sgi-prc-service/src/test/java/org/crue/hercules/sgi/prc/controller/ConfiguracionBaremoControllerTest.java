@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConfiguracionBaremoControllerTest
  */
 @WebMvcTest(ConfiguracionBaremoController.class)
-public class ConfiguracionBaremoControllerTest extends BaseControllerTest {
+class ConfiguracionBaremoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConfiguracionBaremoService service;

@@ -62,17 +62,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ProduccionCientificaController {
-  public static final String MAPPING = "/producciones-cientificas";
-  public static final String PATH_PUBLICACIONES = "/publicaciones";
-  public static final String PATH_COMITES_EDITORIALES = "/comites-editoriales";
-  public static final String PATH_CONGRESOS = "/congresos";
-  public static final String PATH_OBRAS_ARTISTICAS = "/obras-artisticas";
-  public static final String PATH_ACTIVIDADES = "/actividades";
-  public static final String PATH_DIRECCIONES_TESIS = "/direcciones-tesis";
-  public static final String PATH_INDICES_IMPACTO = "/{id}/indices-impacto";
-  public static final String PATH_AUTORES = "/{id}/autores";
-  public static final String PATH_PROYECTOS = "/{id}/proyectos";
-  public static final String PATH_ACREDITACIONES = "/{id}/acreditaciones";
+  public static final String PATH_DELIMITER = "/";
+  public static final String MAPPING = PATH_DELIMITER + "producciones-cientificas";
+  public static final String PATH_PUBLICACIONES = PATH_DELIMITER + "publicaciones";
+  public static final String PATH_COMITES_EDITORIALES = PATH_DELIMITER + "comites-editoriales";
+  public static final String PATH_CONGRESOS = PATH_DELIMITER + "congresos";
+  public static final String PATH_OBRAS_ARTISTICAS = PATH_DELIMITER + "obras-artisticas";
+  public static final String PATH_ACTIVIDADES = PATH_DELIMITER + "actividades";
+  public static final String PATH_DIRECCIONES_TESIS = PATH_DELIMITER + "direcciones-tesis";
+  public static final String PATH_INDICES_IMPACTO = PATH_DELIMITER + "{id}/indices-impacto";
+  public static final String PATH_AUTORES = PATH_DELIMITER + "{id}/autores";
+  public static final String PATH_PROYECTOS = PATH_DELIMITER + "{id}/proyectos";
+  public static final String PATH_ACREDITACIONES = PATH_DELIMITER + "{id}/acreditaciones";
 
   private final ProduccionCientificaService service;
   private final IndiceImpactoService indiceImpactoService;

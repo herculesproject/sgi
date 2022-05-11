@@ -141,7 +141,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllPublicaciones_ReturnsPage() {
+  void findAllPublicaciones_ReturnsPage() {
     // given: Una lista con 37 PublicacionResumen
     List<PublicacionResumen> publicaciones = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -183,7 +183,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllComitesEditoriales_ReturnsPage() {
+  void findAllComitesEditoriales_ReturnsPage() {
     // given: Una lista con 37 ComiteEditorialResumen
     List<ComiteEditorialResumen> comitesEditoriales = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -225,7 +225,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllCongresos_ReturnsPage() {
+  void findAllCongresos_ReturnsPage() {
     // given: Una lista con 37 CongresoResumen
     List<CongresoResumen> congresos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -267,7 +267,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllObrasArtisticas_ReturnsPage() {
+  void findAllObrasArtisticas_ReturnsPage() {
     // given: Una lista con 37 ObraArtisticaResumen
     List<ObraArtisticaResumen> obrasArtisticas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -309,7 +309,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllActividades_ReturnsPage() {
+  void findAllActividades_ReturnsPage() {
     // given: Una lista con 37 ActividadResumen
     List<ActividadResumen> actividades = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -351,7 +351,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllDireccionesTesis_ReturnsPage() {
+  void findAllDireccionesTesis_ReturnsPage() {
     // given: Una lista con 37 DireccionTesisResumen
     List<DireccionTesisResumen> direccionesTesis = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {

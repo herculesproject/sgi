@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.Baremo_;
-import org.crue.hercules.sgi.prc.model.BaseActivableEntity;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
 import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo_;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;

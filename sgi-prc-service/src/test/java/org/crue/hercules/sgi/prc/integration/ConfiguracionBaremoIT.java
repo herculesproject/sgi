@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ConfiguracionBaremo.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ConfiguracionBaremoIT extends BaseIT {
+class ConfiguracionBaremoIT extends BaseIT {
 
   private static final String CONTROLLER_BASE_PATH = ConfiguracionBaremoController.MAPPING;
 

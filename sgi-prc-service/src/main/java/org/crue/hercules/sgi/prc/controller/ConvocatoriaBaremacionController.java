@@ -7,15 +7,26 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.crue.hercules.sgi.prc.converter.ModuladorConverter;
+import org.crue.hercules.sgi.prc.converter.RangoConverter;
 import org.crue.hercules.sgi.prc.dto.BaremoInput;
 import org.crue.hercules.sgi.prc.dto.BaremoOutput;
 import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionInput;
 import org.crue.hercules.sgi.prc.dto.ConvocatoriaBaremacionOutput;
+import org.crue.hercules.sgi.prc.dto.ModuladorOutput;
+import org.crue.hercules.sgi.prc.dto.RangoInput;
+import org.crue.hercules.sgi.prc.dto.RangoOutput;
 import org.crue.hercules.sgi.prc.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
+import org.crue.hercules.sgi.prc.model.Modulador;
+import org.crue.hercules.sgi.prc.model.Modulador.TipoModulador;
+import org.crue.hercules.sgi.prc.model.Rango;
+import org.crue.hercules.sgi.prc.model.Rango.TipoRango;
 import org.crue.hercules.sgi.prc.service.BaremoService;
 import org.crue.hercules.sgi.prc.service.ConvocatoriaBaremacionService;
+import org.crue.hercules.sgi.prc.service.ModuladorService;
+import org.crue.hercules.sgi.prc.service.RangoService;
 import org.crue.hercules.sgi.prc.validation.BaremosNoRepetido;
 import org.crue.hercules.sgi.prc.validation.BaremosPesoTotal;
 import org.modelmapper.ModelMapper;
@@ -43,20 +54,27 @@ import lombok.extern.slf4j.Slf4j;
  * ConvocatoriaBaremacionController
  */
 @RestController
-@RequestMapping(ConvocatoriaBaremacionController.REQUEST_MAPPING)
+@RequestMapping(ConvocatoriaBaremacionController.MAPPING)
 @Slf4j
 @RequiredArgsConstructor
 @Validated
 public class ConvocatoriaBaremacionController {
-
-  public static final String REQUEST_MAPPING = "/convocatoriasbaremacion";
-  public static final String PATH_BAREMOS = "/{id}/baremos";
+  public static final String PATH_DELIMITER = "/";
+  public static final String MAPPING = PATH_DELIMITER + "convocatoriasbaremacion";
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_BAREMOS = PATH_DELIMITER + "{id}/baremos";
+  public static final String PATH_MODULADORES = PATH_DELIMITER + "{id}/moduladores/{tipoModulador}";
+  public static final String PATH_RANGOS = PATH_DELIMITER + "{id}/rangos/{tipoRango}";
 
   private final ConvocatoriaBaremacionService convocatoriaBaremacionService;
 
   private final BaremoService baremoService;
+  private final ModuladorService moduladorService;
+  private final RangoService rangoService;
 
   private final ModelMapper modelMapper;
+  private final ModuladorConverter moduladorConverter;
+  private final RangoConverter rangoConverter;
 
   /**
    * Devuelve una lista paginada y filtrada {@link ConvocatoriaBaremacion}.
@@ -68,7 +86,8 @@ public class ConvocatoriaBaremacionController {
    */
   @GetMapping("/todos")
   @PreAuthorize("hasAnyAuthority('PRC-CON-V', 'PRC-CON-E', 'PRC-CON-B', 'PRC-CON-R')")
-  ResponseEntity<Page<ConvocatoriaBaremacionOutput>> findAll(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<ConvocatoriaBaremacionOutput>> findAll(
+      @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
     Page<ConvocatoriaBaremacion> page = convocatoriaBaremacionService.findAll(query, paging);
@@ -88,9 +107,9 @@ public class ConvocatoriaBaremacionController {
    * @param id Identificador de {@link ConvocatoriaBaremacion}.
    * @return {@link ConvocatoriaBaremacion} correspondiente al id.
    */
-  @GetMapping("/{id}")
+  @GetMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthority('PRC-CON-V', 'PRC-CON-E')")
-  ConvocatoriaBaremacionOutput findById(@PathVariable Long id) {
+  public ConvocatoriaBaremacionOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.findById(id);
     log.debug("findById(Long id) - end");
@@ -105,7 +124,7 @@ public class ConvocatoriaBaremacionController {
    */
   @PatchMapping("/{id}/activar")
   @PreAuthorize("hasAuthority('PRC-CON-R')")
-  ConvocatoriaBaremacionOutput activar(@PathVariable Long id) {
+  public ConvocatoriaBaremacionOutput activar(@PathVariable Long id) {
     log.debug("activar(Long id) - start");
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.activar(id);
     log.debug("activar(Long id) - end");
@@ -119,7 +138,7 @@ public class ConvocatoriaBaremacionController {
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PRC-CON-B')")
-  ConvocatoriaBaremacionOutput desactivar(@PathVariable Long id) {
+  public ConvocatoriaBaremacionOutput desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.desactivar(id);
     log.debug("desactivar(Long id) - end");
@@ -135,7 +154,7 @@ public class ConvocatoriaBaremacionController {
    */
   @PostMapping
   @PreAuthorize("hasAuthority('PRC-CON-C')")
-  ResponseEntity<ConvocatoriaBaremacionOutput> create(
+  public ResponseEntity<ConvocatoriaBaremacionOutput> create(
       @Valid @RequestBody ConvocatoriaBaremacionInput convocatoriaBaremacion) {
     log.debug("create(ConvocatoriaBaremacion convocatoriaBaremacion) - start");
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.create(convert(convocatoriaBaremacion));
@@ -152,7 +171,7 @@ public class ConvocatoriaBaremacionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PRC-CON-E')")
-  ConvocatoriaBaremacionOutput update(@Valid @RequestBody ConvocatoriaBaremacionInput convocatoriaBaremacion,
+  public ConvocatoriaBaremacionOutput update(@Valid @RequestBody ConvocatoriaBaremacionInput convocatoriaBaremacion,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaBaremacion convocatoriaBaremacion, Long id) - start");
     ConvocatoriaBaremacion returnValue = convocatoriaBaremacionService.update(convert(id, convocatoriaBaremacion));
@@ -167,7 +186,7 @@ public class ConvocatoriaBaremacionController {
    */
   @GetMapping("/anios")
   @PreAuthorize("hasAuthority('PRC-INF-G')")
-  ResponseEntity<List<Integer>> findAniosWithConvocatoriasBaremacion() {
+  public ResponseEntity<List<Integer>> findAniosWithConvocatoriasBaremacion() {
     log.debug("findAniosWithConvocatoriasBaremacion() - start");
     List<Integer> anios = convocatoriaBaremacionService.findAniosWithConvocatoriasBaremacion();
     log.debug("findAniosWithConvocatoriasBaremacion() - end");
@@ -262,6 +281,72 @@ public class ConvocatoriaBaremacionController {
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
+  /* MODULADOR */
+
+  /**
+   * Devuelve los {@link Modulador} asociados a la {@link ConvocatoriaBaremacion}
+   * con
+   * el id indicado
+   * 
+   * @param id     Identificador de {@link ConvocatoriaBaremacion}
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return {@link Modulador} correspondientes al id de la
+   *         {@link ConvocatoriaBaremacion}
+   */
+  @GetMapping(PATH_MODULADORES)
+  @PreAuthorize("hasAnyAuthority('PRC-CON-V', 'PRC-CON-C', 'PRC-CON-E')")
+  public List<ModuladorOutput> findModuladores(@PathVariable Long id, @PathVariable TipoModulador tipoModulador) {
+    log.debug("findModuladores(@PathVariable Long id, String query, Pageable paging) - start");
+    List<ModuladorOutput> returnValue = moduladorConverter.convertModuladors(
+        moduladorService.findByConvocatoriaBaremacionIdAndTipo(id, tipoModulador));
+    log.debug("findModuladores(@PathVariable Long id, String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /* RANGO */
+
+  /**
+   * Obtiene el listado de {@link Rango} del {@link ConvocatoriaBaremacion} y
+   * {@link TipoRango}.
+   * 
+   * @param convocatoriaBaremacionId Id del {@link ConvocatoriaBaremacion}.
+   * @param tipoRango                {@link TipoRango}.
+   * @return Lista de {@link Rango}.
+   */
+  @GetMapping(PATH_RANGOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('PRC-CON-C', 'PRC-CON-E')")
+  public ResponseEntity<List<RangoOutput>> findByConvocatoriaBaremacionIdAndTipoRango(
+      @PathVariable Long id,
+      @PathVariable TipoRango tipoRango) {
+    log.debug("findByConvocatoriaBaremacionIdAndTipoRango({},{}) - start", id, tipoRango);
+    List<RangoOutput> returnValue = rangoConverter
+        .convertRangos(rangoService.findByConvocatoriaBaremacionIdAndTipoRango(id, tipoRango));
+    log.debug("findByConvocatoriaBaremacionIdAndTipoRango({},{}) - end", id, tipoRango);
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Actualiza el listado de {@link Rango} del {@link ConvocatoriaBaremacion} y
+   * {@link TipoRango} con el listado de rangos añadiendo, editando o eliminando
+   * los elementos segun proceda.
+   * 
+   * @param convocatoriaBaremacionId Id del {@link ConvocatoriaBaremacion}.
+   * @param tipoRango                {@link TipoRango}.
+   * @param rangos                   lista con los nuevos {@link Rango} a guardar.
+   * @return Lista actualizada con los {@link Rango}.
+   */
+  @PatchMapping(PATH_RANGOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('PRC-CON-C', 'PRC-CON-E')")
+  public ResponseEntity<List<RangoOutput>> update(@PathVariable Long id,
+      @PathVariable TipoRango tipoRango, @Valid @RequestBody List<RangoInput> rangos) {
+    log.debug("update({},{}) - start", id, tipoRango);
+    List<RangoOutput> returnValue = rangoConverter
+        .convertRangos(rangoService.update(id, tipoRango, rangoConverter.convertRangoInput(rangos)));
+    log.debug("update({},{}) - end", id, tipoRango);
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
   private Page<BaremoOutput> convertBaremos(Page<Baremo> page) {
     List<BaremoOutput> content = page.getContent().stream()
         .map(this::convert).collect(Collectors.toList());
@@ -289,4 +374,5 @@ public class ConvocatoriaBaremacionController {
     entity.setConvocatoriaBaremacionId(convocatoriaBaremacionId);
     return entity;
   }
+
 }

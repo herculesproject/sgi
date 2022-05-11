@@ -331,11 +331,8 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
     int numPuntuaciones = puntuacionBaremoItems.size();
     Assertions.assertThat(numPuntuaciones).as("numPuntuaciones").isEqualTo(2);
 
-    Assertions.assertThat(puntuacionBaremoItems.get(0).getBaremoId()).as("BaremoId").isEqualTo(6L);
-    Assertions.assertThat(puntuacionBaremoItems.get(0).getPuntos()).as("Puntos").isEqualTo(new BigDecimal("6.00"));
-
-    Assertions.assertThat(puntuacionBaremoItems.get(1).getBaremoId()).as("BaremoId").isEqualTo(29L);
-    Assertions.assertThat(puntuacionBaremoItems.get(1).getPuntos()).as("Puntos").isEqualTo(new BigDecimal("1.30"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 6L, new BigDecimal("6.00"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 29L, new BigDecimal("1.30"));
 
     List<PuntuacionItemInvestigador> puntuacionItemsInvestigador = getPuntuacionItemInvestigadorRepository()
         .findAll();
@@ -343,10 +340,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
     int numPuntuacionesItemsInvestigador = puntuacionItemsInvestigador.size();
     Assertions.assertThat(numPuntuacionesItemsInvestigador).as("numPuntuacionesItemsInvestigador").isEqualTo(1);
 
-    Assertions.assertThat(puntuacionItemsInvestigador.get(0).getPersonaRef()).as("PersonaRef")
-        .isEqualTo(personaRef);
-    Assertions.assertThat(puntuacionItemsInvestigador.get(0).getPuntos()).as("Puntos")
-        .isEqualTo(new BigDecimal("7.80"));
+    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("7.80"));
 
     List<PuntuacionGrupoInvestigador> puntuacionGrupoInvestigador = getPuntuacionGrupoInvestigadorRepository()
         .findAll();

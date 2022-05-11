@@ -40,8 +40,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(CampoProduccionCientificaController.MAPPING)
 @Slf4j
 public class CampoProduccionCientificaController {
-  public static final String MAPPING = "/campos-producciones-cientificas";
-  public static final String PATH_VALORES = "/{id}/valores";
+  public static final String PATH_DELIMITER = "/";
+  public static final String MAPPING = PATH_DELIMITER + "campos-producciones-cientificas";
+  public static final String PATH_VALORES = PATH_DELIMITER + "{id}/valores";
 
   private ModelMapper modelMapper;
 

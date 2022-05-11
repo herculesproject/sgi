@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
  * CampoProduccionCientificaServiceTest
  */
 @Import({ CampoProduccionCientificaService.class, ApplicationContextSupport.class })
-public class CampoProduccionCientificaServiceTest extends BaseServiceTest {
+class CampoProduccionCientificaServiceTest extends BaseServiceTest {
 
   private static final CodigoCVN DEFAULT_DATA_CODIGO_CVN = CodigoCVN.COLECTIVA;
   private static final Long DEFAULT_DATA_PRODUCCION_CIENTIFICA_ID = 1L;
@@ -62,7 +62,7 @@ public class CampoProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAll_ReturnsPage() {
+  void findAll_ReturnsPage() {
     // given: Una lista con 37 CampoProduccionCientifica
     List<CampoProduccionCientifica> camposProduccionesCientificas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -106,7 +106,7 @@ public class CampoProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsCampoProduccionCientifica() {
+  void findById_ReturnsCampoProduccionCientifica() {
     // given: CampoProduccionCientifica con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado))
@@ -125,7 +125,7 @@ public class CampoProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsCampoProduccionCientificaNotFoundException() {
+  void findById_WithIdNotExist_ThrowsCampoProduccionCientificaNotFoundException() {
     // given: Ningun CampoProduccionCientifica con el id buscado
     Long idBuscado = 33L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
@@ -137,7 +137,7 @@ public class CampoProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByProduccionCientificaId_ReturnsList() {
+  void findAllByProduccionCientificaId_ReturnsList() {
     // given: Una lista con 7 CampoProduccionCientifica y un produccionCientificaId
     Long produccionCientificaId = 1L;
     List<CampoProduccionCientifica> camposProduccionesCientificas = new ArrayList<>();

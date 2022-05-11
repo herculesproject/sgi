@@ -30,8 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(AutorController.MAPPING)
 @Slf4j
 public class AutorController {
-  public static final String MAPPING = "/autores";
-  public static final String PATH_GRUPOS = "/{id}/grupos";
+  public static final String PATH_DELIMITER = "/";
+  public static final String MAPPING = PATH_DELIMITER + "autores";
+  public static final String PATH_GRUPOS = PATH_DELIMITER + "{id}/grupos";
 
   private ModelMapper modelMapper;
 

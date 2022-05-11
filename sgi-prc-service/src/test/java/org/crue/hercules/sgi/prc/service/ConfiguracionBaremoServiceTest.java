@@ -33,7 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ConfiguracionBaremoServiceTest
  */
 @Import({ ConfiguracionBaremoService.class, ApplicationContextSupport.class })
-public class ConfiguracionBaremoServiceTest extends BaseServiceTest {
+class ConfiguracionBaremoServiceTest extends BaseServiceTest {
 
   private static final EpigrafeCVN DEFAULT_DATA_EPIGRAFE_CVN = EpigrafeCVN.E030_040_000_000;
   private static final String DEFAULT_DATA_NOMBRE = "Configuracion Baremo";
@@ -63,7 +63,7 @@ public class ConfiguracionBaremoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findActivos_ReturnsPage() {
+  void findActivos_ReturnsPage() {
     // given: Una lista con 37 ConfiguracionBaremo
     List<ConfiguracionBaremo> configuracionesBaremo = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
@@ -94,7 +94,8 @@ public class ConfiguracionBaremoServiceTest extends BaseServiceTest {
     Page<ConfiguracionBaremo> page = service.findActivos(null, paging);
 
     // then: Devuelve la pagina 3 con los ConfiguracionBaremo del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    int numResult = page.getContent().size();
+    Assertions.assertThat(numResult).as("getContent().size()").isEqualTo(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);

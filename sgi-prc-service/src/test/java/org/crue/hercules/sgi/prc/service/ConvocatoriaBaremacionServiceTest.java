@@ -47,7 +47,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ConvocatoriaBaremacionServiceTest
  */
 @Import({ ConvocatoriaBaremacionService.class, ApplicationContextSupport.class })
-public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
+class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
 
   @MockBean
   private ConvocatoriaBaremacionRepository repository;
@@ -181,7 +181,7 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void activar_WithDuplicatedAnio_ThrowsValidationException() {
+  void activar_WithDuplicatedAnio_ThrowsValidationException() {
     // given: Un ConvocatoriaBaremacion inactivo con un año que ya existe activo
     Long id = 1L;
     ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(id, 2022);
@@ -307,7 +307,7 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDuplicatedAnio_ThrowsValidationException() {
+  void create_WithDuplicatedAnio_ThrowsValidationException() {
     // given: Un nuevo ConvocatoriaBaremacion con un anio que ya existe
     ConvocatoriaBaremacion convocatoriaBaremacionNew = generarMockConvocatoriaBaremacion(null, 2022);
     ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L, 2022);
@@ -367,7 +367,7 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_NoActivo_ThrowsValidationException() {
+  void update_NoActivo_ThrowsValidationException() {
     // given: Un ConvocatoriaBaremacion no activo
     ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L);
 
@@ -382,7 +382,7 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithDuplicatedAnio_ThrowsValidationException() {
+  void update_WithDuplicatedAnio_ThrowsValidationException() {
     // given: Un ConvocatoriaBaremacion actualizado con un año que ya existe
     ConvocatoriaBaremacion convocatoriaBaremacionActualizado = generarMockConvocatoriaBaremacion(1L, 2022);
     ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(2L, 2022);
@@ -400,7 +400,7 @@ public class ConvocatoriaBaremacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_ReturnsConvocatoriaBaremacion() {
+  void update_ReturnsConvocatoriaBaremacion() {
     // given: Un nuevo ConvocatoriaBaremacion con el nombre actualizado
     ConvocatoriaBaremacion convocatoriaBaremacion = generarMockConvocatoriaBaremacion(1L);
     ConvocatoriaBaremacion convocatoriaBaremacionNombreActualizado = generarMockConvocatoriaBaremacion(1L,

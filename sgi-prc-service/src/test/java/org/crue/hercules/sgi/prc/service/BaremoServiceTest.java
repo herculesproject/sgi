@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.prc.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,18 +13,14 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.prc.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.Baremo.TipoCuantia;
-import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo;
-import org.crue.hercules.sgi.prc.model.ConfiguracionBaremo.TipoNodo;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
 import org.crue.hercules.sgi.prc.repository.ConfiguracionBaremoRepository;
-import org.crue.hercules.sgi.prc.repository.specification.ConfiguracionBaremoSpecifications;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -39,7 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
  * BaremoServiceTest
  */
 @Import({ BaremoService.class, ApplicationContextSupport.class })
-public class BaremoServiceTest extends BaseServiceTest {
+class BaremoServiceTest extends BaseServiceTest {
 
   private static final Integer DEFAULT_DATA_PESO = 100;
   private static final BigDecimal DEFAULT_DATA_PUNTOS = new BigDecimal(20.5);
@@ -74,7 +69,7 @@ public class BaremoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findByConvocatoriaBaremacionId_ReturnsPage() {
+  void findByConvocatoriaBaremacionId_ReturnsPage() {
     // given: Una lista con 37 Baremo y un id de ConvocatoriaBaremacion
     final Long convocatoriaBaremacionId = 1L;
     List<Baremo> baremos = new ArrayList<>();
@@ -106,7 +101,8 @@ public class BaremoServiceTest extends BaseServiceTest {
     Page<Baremo> page = service.findByConvocatoriaBaremacionId(convocatoriaBaremacionId, null, paging);
 
     // then: Devuelve la pagina 3 con los Baremo del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    int numResult = page.getContent().size();
+    Assertions.assertThat(numResult).as("getContent().size()").isEqualTo(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
@@ -119,7 +115,7 @@ public class BaremoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void updateBaremos_ThrowsNoRelatedEntitiesException() {
+  void updateBaremos_ThrowsNoRelatedEntitiesException() {
     // given: Una lista de Baremo asignados una ConvocatoriaBaremacion diferente de
     // la esperada
     final Long convocatoriaBaremacionIdExpected = DEFAULT_DATA_CONVOCATORIA_BAREMACION_ID;

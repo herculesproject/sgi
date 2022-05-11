@@ -63,7 +63,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ProduccionCientificaControllerTest
  */
 @WebMvcTest(ProduccionCientificaController.class)
-public class ProduccionCientificaControllerTest extends BaseControllerTest {
+class ProduccionCientificaControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProduccionCientificaService service;

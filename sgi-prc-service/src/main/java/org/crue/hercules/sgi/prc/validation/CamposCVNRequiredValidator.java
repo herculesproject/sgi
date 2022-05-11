@@ -29,7 +29,7 @@ public class CamposCVNRequiredValidator
 
   @Override
   public void initialize(CamposCVNRequired camposCVNRequired) {
-    Map<String, List<String>> mapCamposCVNRequired = new HashMap<>();
+    mapCamposCVNRequired = new HashMap<>();
 
     mapCamposCVNRequired.put(EpigrafeCVN.E060_010_010_000.getCode(),
         Arrays.asList(CodigoCVN.E060_010_010_030.getCode(),
@@ -57,8 +57,6 @@ public class CamposCVNRequiredValidator
         Arrays.asList(CodigoCVN.E050_020_030_010.getCode(),
             CodigoCVN.E050_020_030_120.getCode()));
 
-    this.mapCamposCVNRequired = mapCamposCVNRequired;
-
   }
 
   /**
@@ -85,7 +83,7 @@ public class CamposCVNRequiredValidator
     } catch (Exception e) {
       log.debug(e.getMessage());
     } finally {
-      addEntityMessageParameter(prcCreateinput, camposNotFilledParameter, constraintValidatorContext);
+      addEntityMessageParameter(camposNotFilledParameter, constraintValidatorContext);
     }
     return false;
   }
@@ -94,15 +92,14 @@ public class CamposCVNRequiredValidator
     List<String> camposCVNError = new ArrayList<>();
     if (mapCamposCVNRequired.containsKey(prcCreateinput.getEpigrafeCVN())) {
       camposCVNError = mapCamposCVNRequired.get(prcCreateinput.getEpigrafeCVN()).stream()
-          .filter(campoCVNRequired -> !ListUtils.emptyIfNull(prcCreateinput.getCampos()).stream()
-              .anyMatch(campoCVN -> campoCVN.getCodigoCVN().equals(campoCVNRequired)))
+          .filter(campoCVNRequired -> ListUtils.emptyIfNull(prcCreateinput.getCampos()).stream()
+              .noneMatch(campoCVN -> campoCVN.getCodigoCVN().equals(campoCVNRequired)))
           .collect(Collectors.toList());
     }
     return camposCVNError;
   }
 
-  private void addEntityMessageParameter(
-      ProduccionCientificaApiCreateInput value, String camposNotFilledParameter,
+  private void addEntityMessageParameter(String camposNotFilledParameter,
       ConstraintValidatorContext context) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
