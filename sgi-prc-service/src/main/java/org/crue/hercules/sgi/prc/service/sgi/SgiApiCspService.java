@@ -414,4 +414,35 @@ public class SgiApiCspService extends SgiApiBaseService {
     return ObjectUtils.defaultIfNull(result, new ArrayList<>());
   }
 
+  /**
+   * Devuelve una lista de {@link GrupoDto} donde la personaRef es investigador
+   * principal o persona autorizada para la fecha actual
+   * 
+   * 
+   * @param personaRef identificador externo de la persona.
+   * @return lista de {@link GrupoDto}
+   */
+  public List<GrupoDto> findAllGruposByPersonaRef(String personaRef) {
+    List<GrupoDto> result = new ArrayList<>();
+    log.debug("findAllGruposByPersonaRef(String personaRef)- start");
+
+    try {
+      ServiceType serviceType = ServiceType.CSP;
+      String relativeUrl = "/grupos?q=responsable==" + personaRef + ",personaAutorizada==" + personaRef;
+      HttpMethod httpMethod = HttpMethod.GET;
+      String mergedURL = buildUri(serviceType, relativeUrl);
+
+      result = super.<List<GrupoDto>>callEndpoint(mergedURL, httpMethod,
+          new ParameterizedTypeReference<List<GrupoDto>>() {
+          }).getBody();
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
+    log.debug("findAllGruposByPersonaRef(String personaRef)- end");
+
+    return ObjectUtils.defaultIfNull(result, new ArrayList<>());
+  }
+
 }

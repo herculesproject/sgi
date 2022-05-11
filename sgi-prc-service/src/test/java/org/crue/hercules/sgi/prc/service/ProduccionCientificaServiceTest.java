@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -37,6 +38,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ProduccionCientificaServiceTest
@@ -58,6 +60,9 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
 
   @MockBean
   private EstadoProduccionCientificaService estadoProduccionCientificaService;
+
+  @MockBean
+  private SgiApiCspService sgiApiCspService;
 
   // This bean must be created by Spring so validations can be applied
   @Autowired
@@ -141,6 +146,7 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-V" })
   void findAllPublicaciones_ReturnsPage() {
     // given: Una lista con 37 PublicacionResumen
     List<PublicacionResumen> publicaciones = new ArrayList<>();
@@ -149,12 +155,14 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     }
 
     BDDMockito.given(
-        repository.findAllPublicaciones(ArgumentMatchers.<String>any(),
+        repository.findAllPublicaciones(
+            ArgumentMatchers.<Specification<ProduccionCientifica>>any(),
+            ArgumentMatchers.<String>any(),
             ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<PublicacionResumen>>() {
           @Override
           public Page<PublicacionResumen> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;

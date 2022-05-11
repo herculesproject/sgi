@@ -119,4 +119,12 @@ class SgiApiCspServiceTest extends BaseServiceTest {
         .isInstanceOf(MicroserviceCallException.class);
   }
 
+  @Test
+  void findAllGruposByPersonaRef_ko() throws Exception {
+    String personaRef = "22222";
+    Assertions
+        .assertThatThrownBy(
+            () -> sgiApiCspService.findAllGruposByPersonaRef(personaRef))
+        .isInstanceOf(MicroserviceCallException.class);
+  }
 }

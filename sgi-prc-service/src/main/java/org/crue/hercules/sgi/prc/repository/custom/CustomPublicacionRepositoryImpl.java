@@ -55,8 +55,10 @@ public class CustomPublicacionRepositoryImpl implements CustomPublicacionReposit
   private EntityManager entityManager;
 
   @Override
-  public Page<PublicacionResumen> findAllPublicaciones(String query, Pageable pageable) {
-    log.debug("findAllPublicaciones(String query, Pageable pageable) - start");
+  public Page<PublicacionResumen> findAllPublicaciones(Specification<ProduccionCientifica> specIsInvestigador,
+      String query, Pageable pageable) {
+    log.debug(
+        "findAllPublicaciones(Specification<ProduccionCientifica> specIsInvestigador, String query, Pageable pageable) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<PublicacionResumen> cq = cb.createQuery(PublicacionResumen.class);
@@ -131,6 +133,11 @@ public class CustomPublicacionRepositoryImpl implements CustomPublicacionReposit
       listPredicatesCount.add(spec.toPredicate(rootCount, countQuery, cb));
     }
 
+    if (specIsInvestigador != null) {
+      listPredicates.add(specIsInvestigador.toPredicate(root, cq, cb));
+      listPredicatesCount.add(specIsInvestigador.toPredicate(rootCount, countQuery, cb));
+    }
+
     Path<Long> pathProduccionCientificaId = root.get(ProduccionCientifica_.id);
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
@@ -170,7 +177,8 @@ public class CustomPublicacionRepositoryImpl implements CustomPublicacionReposit
     List<PublicacionResumen> result = typedQuery.getResultList();
     Page<PublicacionResumen> returnValue = new PageImpl<>(result, pageable, count);
 
-    log.debug("findAllPublicaciones(String query, Pageable pageable) - end");
+    log.debug(
+        "findAllPublicaciones(Specification<ProduccionCientifica> specIsInvestigador, String query, Pageable pageable) - end");
 
     return returnValue;
   }

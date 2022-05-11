@@ -1,7 +1,11 @@
 package org.crue.hercules.sgi.prc.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.prc.dto.ActividadResumen;
 import org.crue.hercules.sgi.prc.dto.ComiteEditorialResumen;
@@ -9,14 +13,19 @@ import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
+import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
+import org.crue.hercules.sgi.prc.repository.specification.ProduccionCientificaSpecifications;
+import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -35,12 +44,15 @@ public class ProduccionCientificaService {
 
   private final ProduccionCientificaRepository repository;
   private final EstadoProduccionCientificaService estadoProduccionCientificaService;
+  private final SgiApiCspService sgiApiCspService;
 
   public ProduccionCientificaService(
       ProduccionCientificaRepository produccionCientificaRepository,
-      EstadoProduccionCientificaService estadoProduccionCientificaService) {
+      EstadoProduccionCientificaService estadoProduccionCientificaService,
+      SgiApiCspService sgiApiCspService) {
     this.repository = produccionCientificaRepository;
     this.estadoProduccionCientificaService = estadoProduccionCientificaService;
+    this.sgiApiCspService = sgiApiCspService;
   }
 
   /**
@@ -54,7 +66,7 @@ public class ProduccionCientificaService {
   public Page<PublicacionResumen> findAllPublicaciones(String query, Pageable pageable) {
     log.debug("findAllPublicaciones(String query, Pageable pageable) - start");
 
-    Page<PublicacionResumen> returnValue = repository.findAllPublicaciones(query, pageable);
+    Page<PublicacionResumen> returnValue = repository.findAllPublicaciones(createInvestigadorFilter(), query, pageable);
     log.debug("findAllPublicaciones(String query, Pageable pageable) - end");
     return returnValue;
   }
@@ -142,6 +154,28 @@ public class ProduccionCientificaService {
     Page<DireccionTesisResumen> returnValue = repository.findAllDireccionesTesis(query, pageable);
     log.debug("findAllDireccionesTesis(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  private Specification<ProduccionCientifica> createInvestigadorFilter() {
+    Specification<ProduccionCientifica> specIsInvestigador = null;
+    if (isInvestigador()) {
+      List<Long> gruposRef = sgiApiCspService.findAllGruposByPersonaRef(this.getUserPersonaRef()).stream()
+          .map(GrupoDto::getId).collect(Collectors.toList());
+      specIsInvestigador = ProduccionCientificaSpecifications.byExistsSubqueryGrupoRefIn(gruposRef);
+    }
+    return specIsInvestigador;
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
+  }
+
+  private boolean isInvestigador() {
+    return SgiSecurityContextHolder.hasAuthority("PRC-VAL-INV-ER");
   }
 
   /**
