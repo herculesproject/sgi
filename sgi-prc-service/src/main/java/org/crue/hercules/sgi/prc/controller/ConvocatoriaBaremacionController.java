@@ -135,6 +135,7 @@ public class ConvocatoriaBaremacionController {
    * Desactiva la {@link ConvocatoriaBaremacion} con id indicado.
    * 
    * @param id Identificador de {@link ConvocatoriaBaremacion}.
+   * @return {@link ConvocatoriaBaremacion} actualizada.
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PRC-CON-B')")
@@ -288,9 +289,8 @@ public class ConvocatoriaBaremacionController {
    * con
    * el id indicado
    * 
-   * @param id     Identificador de {@link ConvocatoriaBaremacion}
-   * @param query  filtro de búsqueda.
-   * @param paging pageable.
+   * @param id            Identificador de {@link ConvocatoriaBaremacion}
+   * @param tipoModulador {@link TipoModulador}.
    * @return {@link Modulador} correspondientes al id de la
    *         {@link ConvocatoriaBaremacion}
    */
@@ -310,8 +310,8 @@ public class ConvocatoriaBaremacionController {
    * Obtiene el listado de {@link Rango} del {@link ConvocatoriaBaremacion} y
    * {@link TipoRango}.
    * 
-   * @param convocatoriaBaremacionId Id del {@link ConvocatoriaBaremacion}.
-   * @param tipoRango                {@link TipoRango}.
+   * @param id        Id del {@link ConvocatoriaBaremacion}.
+   * @param tipoRango {@link TipoRango}.
    * @return Lista de {@link Rango}.
    */
   @GetMapping(PATH_RANGOS)
@@ -331,9 +331,9 @@ public class ConvocatoriaBaremacionController {
    * {@link TipoRango} con el listado de rangos añadiendo, editando o eliminando
    * los elementos segun proceda.
    * 
-   * @param convocatoriaBaremacionId Id del {@link ConvocatoriaBaremacion}.
-   * @param tipoRango                {@link TipoRango}.
-   * @param rangos                   lista con los nuevos {@link Rango} a guardar.
+   * @param id        Id del {@link ConvocatoriaBaremacion}.
+   * @param tipoRango {@link TipoRango}.
+   * @param rangos    lista con los nuevos {@link Rango} a guardar.
    * @return Lista actualizada con los {@link Rango}.
    */
   @PatchMapping(PATH_RANGOS)
