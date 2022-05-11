@@ -20,6 +20,7 @@ const MSG_CONVOCATORIAS_TITLE = marker('menu.principal.inv.convocatorias');
 const MSG_PROYECTOS_TITLE = marker('menu.principal.inv.proyectos');
 const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
 const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
+const MSG_PUBLICACION_TITLE = marker('prc.publicacion');
 
 const routes: SgiRoutes = [
   {
@@ -157,6 +158,19 @@ const routes: SgiRoutes = [
           title: MSG_AUTORIZACIONES_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthorityForAnyUO: ['CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR'],
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_PUBLICACIONES,
+        loadChildren: () =>
+          import('../prc/publicacion/publicacion-inv.module').then(
+            (m) => m.PublicacionInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PUBLICACION_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
         }
       },
       { path: '**', component: null }
