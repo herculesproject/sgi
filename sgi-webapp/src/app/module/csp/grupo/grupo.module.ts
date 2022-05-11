@@ -15,6 +15,7 @@ import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-gen
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
+import { GrupoLineaInvestigacionComponent } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.component';
 import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
@@ -41,6 +42,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoEnlaceModalComponent,
     GrupoPersonaAutorizadaComponent,
     GrupoPersonaAutorizadaModalComponent,
+    GrupoLineaInvestigacionComponent,
   ],
   imports: [
     CommonModule,

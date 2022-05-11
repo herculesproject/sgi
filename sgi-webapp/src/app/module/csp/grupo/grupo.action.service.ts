@@ -5,9 +5,11 @@ import { ActionService } from '@core/services/action-service';
 import { GrupoEnlaceService } from '@core/services/csp/grupo-enlace/grupo-enlace.service';
 import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
+import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
 import { GrupoPersonaAutorizadaService } from '@core/services/csp/grupo-persona-autorizada/grupo-persona-autorizada.service';
 import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-responsable-economico/grupo-responsable-economico.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
@@ -21,10 +23,12 @@ import { GrupoDatosGeneralesFragment } from './grupo-formulario/grupo-datos-gene
 import { GrupoEnlaceFragment } from './grupo-formulario/grupo-enlace/grupo-enlace.fragment';
 import { GrupoEquipoInstrumentalFragment } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.fragment';
 import { GrupoEquipoInvestigacionFragment } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.fragment';
+import { GrupoLineaInvestigacionFragment } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.fragment';
 import { GrupoPersonaAutorizadaFragment } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.fragment';
 import { GrupoResponsableEconomicoFragment } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.fragment';
 
 export interface IGrupoData {
+  grupo: IGrupo;
   isInvestigador: boolean;
   readonly: boolean;
 }
@@ -39,6 +43,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     EQUIPO_INSTRUMENTAL: 'equipo-instrumental',
     ENLACE: 'enlace',
     PERSONA_AUTORIZADA: 'persona-autorizada',
+    LINEA_INVESTIGACION: 'linea-investigacion'
   };
 
   private datosGenerales: GrupoDatosGeneralesFragment;
@@ -47,6 +52,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
   private equiposInstrumentales: GrupoEquipoInstrumentalFragment;
   private enlaces: GrupoEnlaceFragment;
   private personasAutorizadas: GrupoPersonaAutorizadaFragment;
+  private lineasInvestigacion: GrupoLineaInvestigacionFragment;
 
   private readonly data: IGrupoData;
   public readonly id: number;
@@ -78,6 +84,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
     grupoEnlaceService: GrupoEnlaceService,
     grupoPersonaAutorizadaService: GrupoPersonaAutorizadaService,
+    grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
+    lineaInvestigacionService: LineaInvestigacionService
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(GRUPO_ROUTE_PARAMS.ID));
@@ -93,7 +101,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.equiposInstrumentales = new GrupoEquipoInstrumentalFragment(logger, this.id, grupoService, grupoEquipoInstrumentalService, this.data?.readonly);
     this.enlaces = new GrupoEnlaceFragment(logger, this.id, grupoService, grupoEnlaceService, this.data?.readonly);
     this.personasAutorizadas = new GrupoPersonaAutorizadaFragment(logger, this.id, grupoService, grupoPersonaAutorizadaService, personaService, sgiAuthService, this.data?.readonly);
-
+    this.lineasInvestigacion = new GrupoLineaInvestigacionFragment(logger, this.id, grupoService, grupoLineaInvestigacionService, lineaInvestigacionService, this.data?.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.EQUIPO_INVESTIGACION, this.equiposInvestigacion);
@@ -101,6 +109,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.addFragment(this.FRAGMENT.EQUIPO_INSTRUMENTAL, this.equiposInstrumentales);
     this.addFragment(this.FRAGMENT.ENLACE, this.enlaces);
     this.addFragment(this.FRAGMENT.PERSONA_AUTORIZADA, this.personasAutorizadas);
+    this.addFragment(this.FRAGMENT.LINEA_INVESTIGACION, this.lineasInvestigacion);
 
     this.datosGenerales.initialize();
   }

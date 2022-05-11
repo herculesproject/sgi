@@ -28,6 +28,11 @@
       [title]="'csp.grupo-persona-autorizada' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.PERSONA_AUTORIZADA)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E']"
+      [route]="[GRUPO_ROUTE_NAMES.LINEA_INVESTIGACION]"
+      [title]="'csp.grupo-linea-investigacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.LINEA_INVESTIGACION)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoEditar" [actionService]="actionService">

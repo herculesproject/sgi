@@ -5,6 +5,7 @@ import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
+import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
@@ -24,6 +25,8 @@ import { IGrupoEquipoResponse } from '../grupo-equipo/grupo-equipo-response';
 import { GRUPO_EQUIPO_RESPONSE_CONVERTER } from '../grupo-equipo/grupo-equipo-response.converter';
 import { IGrupoEspecialInvestigacionResponse } from '../grupo-especial-investigacion/grupo-especial-investigacion-response';
 import { GRUPO_ESPECIAL_INVESTIGACION_RESPONSE_CONVERTER } from '../grupo-especial-investigacion/grupo-especial-investigacion-response.converter';
+import { IGrupoLineaInvestigacionResponse } from '../grupo-linea-investigacion/grupo-linea-investigacion-response';
+import { GRUPO_LINEA_INVESTIGACION_RESPONSE_CONVERTER } from '../grupo-linea-investigacion/grupo-linea-investigacion-response.converter';
 import { GRUPO_PALABRACLAVE_REQUEST_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-request.converter';
 import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra-clave-response';
 import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
@@ -308,6 +311,19 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/personas-autorizadas`,
       options,
       GRUPO_PERSONA_AUTORIZADA_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de líneas de investigación
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda.
+   */
+  findLineasInvestigacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoLineaInvestigacion>> {
+    return this.find<IGrupoLineaInvestigacionResponse, IGrupoLineaInvestigacion>(
+      `${this.endpointUrl}/${id}/lineas-investigacion`,
+      options,
+      GRUPO_LINEA_INVESTIGACION_RESPONSE_CONVERTER
     );
   }
 }
