@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoEnlaceConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoInstrumentalConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEspecialInvestigacionConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPalabraClaveConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
@@ -19,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoEquipoInstrumentalOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoEspecialInvestigacionOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoInput;
+import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
@@ -31,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.GrupoEnlace;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoPalabraClave;
 import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada;
 import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
@@ -41,6 +44,7 @@ import org.crue.hercules.sgi.csp.service.GrupoEnlaceService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoInstrumentalService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
 import org.crue.hercules.sgi.csp.service.GrupoEspecialInvestigacionService;
+import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigacionService;
 import org.crue.hercules.sgi.csp.service.GrupoPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.GrupoPersonaAutorizadaService;
 import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
@@ -96,6 +100,7 @@ public class GrupoController {
   public static final String PATH_GRUPO_EQUIPO_INSTRUMENTAL = PATH_ID + "/equipos-instrumentales";
   public static final String PATH_GRUPO_ENLACE = PATH_ID + "/enlaces";
   public static final String PATH_GRUPO_PERSONA_AUTORIZADA = PATH_ID + "/personas-autorizadas";
+  public static final String PATH_GRUPO_LINEA_INVESTIGACION = PATH_ID + "/lineas-investigacion";
 
   // Services
   private final GrupoService service;
@@ -107,6 +112,7 @@ public class GrupoController {
   private final GrupoEquipoInstrumentalService grupoEquipoInstrumentalService;
   private final GrupoEnlaceService grupoEnlaceService;
   private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
+  private final GrupoLineaInvestigacionService grupoLineaInvestigacionService;
   // Converters
   private final GrupoConverter converter;
   private final GrupoEquipoConverter grupoEquipoConverter;
@@ -117,6 +123,7 @@ public class GrupoController {
   private final GrupoEquipoInstrumentalConverter grupoEquipoInstrumentalConverter;
   private final GrupoEnlaceConverter grupoEnlaceConverter;
   private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
+  private final GrupoLineaInvestigacionConverter grupoLineaInvestigacionConverter;
 
   /**
    * Crea nuevo {@link Grupo}
@@ -583,6 +590,27 @@ public class GrupoController {
     Page<GrupoPersonaAutorizadaOutput> page = grupoPersonaAutorizadaConverter
         .convert(grupoPersonaAutorizadaService.findAllByGrupo(id, query, paging));
     log.debug("findAllGrupoPersonaAutorizada(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoLineaInvestigacion}
+   * del {@link Grupo}.
+   * 
+   * @param id     Identificador del {@link GrupoLineaInvestigacion}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link GrupoLineaInvestigacion} paginadas y
+   *         filtradas del {@link Grupo}.
+   */
+  @GetMapping(PATH_GRUPO_LINEA_INVESTIGACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  public ResponseEntity<Page<GrupoLineaInvestigacionOutput>> findAllGrupoLineaInvestigacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoLineaInvestigacion(Long id, String query, Pageable paging) - start");
+    Page<GrupoLineaInvestigacionOutput> page = grupoLineaInvestigacionConverter
+        .convert(grupoLineaInvestigacionService.findAllByGrupo(id, query, paging));
+    log.debug("findAllGrupoLineaInvestigacion(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 

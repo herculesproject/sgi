@@ -173,7 +173,7 @@ public class LineaInvestigacionController {
    * @return LineaInvestigacion {@link LineaInvestigacion} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-LIN-E', 'CSP-GIN-V', 'CSP-GIN-E')")
   public LineaInvestigacionOutput findById(@PathVariable Long id) {
     log.debug("LineaInvestigacion findById(Long id) - start");
     LineaInvestigacion returnValue = service.findById(id);

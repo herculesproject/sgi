@@ -127,4 +127,14 @@
       <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000007-grupo-linea-investigacion">
+    <insert tableName="grupo_linea_investigacion">
+      <column name="id" valueSequenceNext="grupo_linea_investigacion_seq" />
+      <column name="grupo_id" valueComputed="(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 3')" />
+      <column name="linea_investigacion_id" valueComputed="(select id from ${schemaPrefix}linea_investigacion where nombre='Psicología Laboral u Organizacional')" />
+      <column name="fecha_inicio" valueDate="2022-04-14T23:00:00" />
+      <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
