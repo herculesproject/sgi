@@ -42,7 +42,7 @@
     </update>
     <update tableName="configuracion_baremo">
       <column name="tipo_nodo" value="SIN_PUNTOS" />
-      <where>tipo_baremo in ('LIBRO_NUMERO_AUTORES', 'LIBRO_EDITORIAL_PRESTIGIO', 'ARTICULO_NUMERO_AUTORES', 
+      <where>tipo_baremo in ('LIBRO_NUMERO_AUTORES', 'ARTICULO_NUMERO_AUTORES', 
         'ARTICULO_AREAS', 'CONTRATO_CUANTIA', 'INVENCION_LICENCIA_EXPLOTACION')
       </where>
     </update>
