@@ -33,8 +33,6 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesComponent extends Fragment
   treeControl: FlatTreeControl<NodeConfiguracionBaremo>;
   private treeFlattener: MatTreeFlattener<NodeConfiguracionBaremo, NodeConfiguracionBaremo>;
   dataSource: MatTreeFlatDataSource<NodeConfiguracionBaremo, NodeConfiguracionBaremo>;
-  /** The selection for baremos */
-  checklistSelection = new SelectionModel<NodeConfiguracionBaremo>(true /* multiple */);
 
   private getLevel = (node: NodeConfiguracionBaremo) => node.level;
   private isExpandable = (node: NodeConfiguracionBaremo) =>
@@ -52,6 +50,10 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesComponent extends Fragment
 
   get isEditPerm(): boolean {
     return this.formPart.isEditPerm;
+  }
+
+  get checklistSelection(): SelectionModel<NodeConfiguracionBaremo> {
+    return this.formPart.checklistSelection;
   }
 
   get treeDisabled(): boolean {
@@ -79,26 +81,12 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesComponent extends Fragment
     this.subscriptions.push(
       this.formPart.getBaremoConfiguracionNodes$().subscribe(nodes => {
         this.dataSource.data = nodes;
-        // On new data, node with baremo should be selected
-        this.initChecklistSelection(nodes);
-        this.formPart.checklistSelectionInitialization(this.checklistSelection.selected);
       })
     );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  private initChecklistSelection(rootNodes: NodeConfiguracionBaremo[]): void {
-    const rootNodesToBeSelected = rootNodes.filter(rootNode => rootNode.baremo);
-    const descendantsNodesToBeSelected: NodeConfiguracionBaremo[] = [];
-    rootNodesToBeSelected.forEach(node => {
-      const descendantsNodes = this.treeControl.getDescendants(node);
-      descendantsNodesToBeSelected.push(...descendantsNodes.filter(descendantNode => descendantNode.baremo));
-    });
-    this.checklistSelection.select(...rootNodesToBeSelected);
-    this.checklistSelection.select(...descendantsNodesToBeSelected);
   }
 
   /** Toggle the root node selection. Select/deselect all the descendants node */

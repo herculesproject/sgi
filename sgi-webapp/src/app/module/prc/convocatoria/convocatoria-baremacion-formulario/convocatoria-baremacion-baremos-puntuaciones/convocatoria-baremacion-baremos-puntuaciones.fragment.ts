@@ -1,6 +1,7 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IBaremo } from '@core/models/prc/baremo';
-import { IConfiguracionBaremo, TIPO_NODOS_PESO, TipoNodo } from '@core/models/prc/configuracion-baremo';
+import { IBaremo, TipoCuantia } from '@core/models/prc/baremo';
+import { IConfiguracionBaremo, TIPO_NODOS_PESO, TipoNodo, TipoBaremo } from '@core/models/prc/configuracion-baremo';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { Fragment } from '@core/services/action-service';
 import { ConfiguracionBaremoService } from '@core/services/prc/configuracion-baremo/configuracion-baremo.service';
@@ -85,11 +86,20 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
   private readonly PESO_REQUIRED = 100;
   private configuracionBaremoNodes$ = new BehaviorSubject<NodeConfiguracionBaremo[]>([]);
   private baremoLookup: Map<number, IBaremo>;
-  private selectedNodes: NodeConfiguracionBaremo[];
+  private selectedNodes$ = new BehaviorSubject<NodeConfiguracionBaremo[]>([]);
   hasErrorNoneSelectedNode = false;
+
+  /** The selection for baremos */
+  checklistSelection = new SelectionModel<NodeConfiguracionBaremo>(true /* multiple */);
 
   get convocatoriaBaremacion(): IConvocatoriaBaremacion {
     return this._convocatoriaBaremacion;
+  }
+
+  // tslint:disable-next-line: variable-name
+  private _hasCostesIndirectosTipoRango$ = new BehaviorSubject<boolean>(false);
+  get hasCostesIndirectosTipoRango$(): Observable<boolean> {
+    return this._hasCostesIndirectosTipoRango$.asObservable();
   }
 
   constructor(
@@ -119,8 +129,29 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
           this.createNodeBaremable(configuracionBaremo, null)
         )),
         mergeMap(configuracionBaremoNodes => this.getChildrenNodes(configuracionBaremoNodes)),
-      ).subscribe(configuracionBaremoNodes => this.configuracionBaremoNodes$.next(configuracionBaremoNodes));
+      ).subscribe(configuracionBaremoNodes => {
+        this.configuracionBaremoNodes$.next(configuracionBaremoNodes);
+        this.initChecklistSelection(configuracionBaremoNodes);
+      });
     }
+
+    this.initSubscribeToSelectedNodes();
+  }
+
+  private initChecklistSelection(rootNodes: NodeConfiguracionBaremo[]): void {
+    const nodesSelected = rootNodes.reduce(function recur(accumulator, node: NodeConfiguracionBaremo) {
+
+      accumulator.push(node);
+
+      if (node.childs.length) {
+        return accumulator.concat(node.childs.reduce(recur, []));
+      }
+
+      return accumulator;
+    }, []).filter(rootNode => rootNode.baremo);
+
+    this.checklistSelection.select(...nodesSelected);
+    this.checklistSelectionInitialization(nodesSelected);
   }
 
   private buildBaremoLookup(baremos: IBaremo[]): void {
@@ -188,16 +219,17 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
   editBaremo(node: NodeConfiguracionBaremo, baremo: IBaremo) {
     baremo.convocatoriaBaremacion = this.convocatoriaBaremacion;
     node.baremo = baremo;
-    this.setErrors(this.checkPesoTotalEqualsToPesoRequired(this.selectedNodes));
+    this.setErrors(this.checkPesoTotalEqualsToPesoRequired(this.selectedNodes$.value));
     this.setChanges(true);
+    this.checkHasCostesIndirectosTipoRango(this.selectedNodes$.value);
   }
 
   checklistSelectionInitialization(selectedNodes: NodeConfiguracionBaremo[]): void {
-    this.selectedNodes = selectedNodes;
+    this.selectedNodes$.next(selectedNodes);
   }
 
   checklistSelectionChanged(selectedNodes: NodeConfiguracionBaremo[]): void {
-    this.selectedNodes = selectedNodes;
+    this.selectedNodes$.next(selectedNodes);
     this.checkSelectionValid(selectedNodes);
     this.setChanges(true);
   }
@@ -246,7 +278,7 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
   }
 
   saveOrUpdate(action?: any): Observable<string | number | void> {
-    const baremosToSave = this.selectedNodes.map(node => node.baremo);
+    const baremosToSave = this.selectedNodes$.value.map(node => node.baremo);
     this.convocatoriaBaremacionService.updateBaremos(this.convocatoriaBaremacion.id, baremosToSave);
     return this.convocatoriaBaremacionService.updateBaremos(this.convocatoriaBaremacion.id, baremosToSave)
       .pipe(
@@ -277,4 +309,17 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
       this.refreshChildrenNodesConfiguracionBaremoData(child);
     });
   }
+
+  private initSubscribeToSelectedNodes(): void {
+    this.subscriptions.push(
+      this.selectedNodes$.subscribe(nodes => this.checkHasCostesIndirectosTipoRango(nodes))
+    );
+  }
+
+  private checkHasCostesIndirectosTipoRango(nodes: NodeConfiguracionBaremo[]): void {
+    const hasCostesIndirectosTipoRango = nodes.some(node =>
+      node.configuracionBaremo.tipoBaremo === TipoBaremo.COSTE_INDIRECTO && node.baremo.tipoCuantia === TipoCuantia.RANGO);
+    this._hasCostesIndirectosTipoRango$.next(hasCostesIndirectosTipoRango);
+  }
+
 }
