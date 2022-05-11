@@ -5,7 +5,7 @@ import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacio
 import { Fragment } from '@core/services/action-service';
 import { ConfiguracionBaremoService } from '@core/services/prc/configuracion-baremo/configuracion-baremo.service';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
@@ -107,7 +107,8 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
   protected onInitialize(): void | Observable<any> {
     if (this.getKey()) {
       const findOptions: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('padreId', SgiRestFilterOperator.IS_NULL, '')
+        filter: new RSQLSgiRestFilter('padreId', SgiRestFilterOperator.IS_NULL, ''),
+        sort: new RSQLSgiRestSort('id', SgiRestSortDirection.ASC)
       };
       forkJoin({
         baremos: this.convocatoriaBaremacionService.findBaremos(Number(this.getKey())),
@@ -138,7 +139,8 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesFragment extends Fragment 
   fetchChildrenNodes(parentNode: NodeConfiguracionBaremo): Observable<NodeConfiguracionBaremo> {
     if (this.hasNodeChildren(parentNode)) {
       const findOptions: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('padreId', SgiRestFilterOperator.EQUALS, parentNode?.configuracionBaremo?.id?.toString())
+        filter: new RSQLSgiRestFilter('padreId', SgiRestFilterOperator.EQUALS, parentNode?.configuracionBaremo?.id?.toString()),
+        sort: new RSQLSgiRestSort('id', SgiRestSortDirection.ASC)
       };
       return this.configuracionBaremoService.findAll(findOptions).pipe(
         map(configuracionesBaremo =>
