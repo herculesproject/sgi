@@ -65,6 +65,7 @@ public class ConvocatoriaBaremacionController {
   public static final String PATH_BAREMOS = PATH_DELIMITER + "{id}/baremos";
   public static final String PATH_MODULADORES = PATH_DELIMITER + "{id}/moduladores/{tipoModulador}";
   public static final String PATH_RANGOS = PATH_DELIMITER + "{id}/rangos/{tipoRango}";
+  public static final String PATH_ANIOS = PATH_DELIMITER + "anios";
 
   private final ConvocatoriaBaremacionService convocatoriaBaremacionService;
 
@@ -185,8 +186,8 @@ public class ConvocatoriaBaremacionController {
    * 
    * @return lista de años en los hay alguna {@link ConvocatoriaBaremacion}
    */
-  @GetMapping("/anios")
-  @PreAuthorize("hasAuthority('PRC-INF-G')")
+  @GetMapping(PATH_ANIOS)
+  @PreAuthorize("hasAnyAuthority('PRC-INF-G', 'PRC-INF-INV-GR')")
   public ResponseEntity<List<Integer>> findAniosWithConvocatoriasBaremacion() {
     log.debug("findAniosWithConvocatoriasBaremacion() - start");
     List<Integer> anios = convocatoriaBaremacionService.findAniosWithConvocatoriasBaremacion();
