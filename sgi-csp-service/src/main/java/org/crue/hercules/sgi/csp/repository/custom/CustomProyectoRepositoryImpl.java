@@ -256,7 +256,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
         root.get(Proyecto_.fechaInicio),
         root.get(Proyecto_.fechaFin),
         root.get(Proyecto_.fechaFinDefinitiva),
-        root.get(Proyecto_.clasificacionCVN),
+        root.get(Proyecto_.modeloEjecucion).get(ModeloEjecucion_.contrato),
         root.get(Proyecto_.importeConcedido),
         root.get(Proyecto_.totalImporteConcedido),
         root.get(Proyecto_.ambitoGeografico).get(TipoAmbitoGeografico_.id),
@@ -264,13 +264,10 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     Predicate predicateModeloEjecucionExternoFalse = cb.equal(joinModeloEjecucion.get(ModeloEjecucion_.externo),
         Boolean.FALSE);
+
     Predicate predicateProyectoIsActivo = cb.equal(root.get(Proyecto_.activo), Boolean.TRUE);
 
     Predicate predicateEstadoConcedido = cb.equal(joinEstado.get(EstadoProyecto_.estado), Estado.CONCEDIDO);
-
-    Predicate predicateClasificacionCVN = cb.or(
-        cb.equal(root.get(Proyecto_.clasificacionCVN), ClasificacionCVN.COMPETITIVOS),
-        cb.equal(root.get(Proyecto_.clasificacionCVN), ClasificacionCVN.NO_COMPETITIVOS));
 
     Predicate predicateFechasBaremacion = cb.and(
         cb.lessThanOrEqualTo(root.get(Proyecto_.fechaInicio), fechaFinBaremacion),
@@ -280,7 +277,6 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     cq.where(cb.and(
         predicateProyectoIsActivo,
         predicateModeloEjecucionExternoFalse,
-        predicateClasificacionCVN,
         predicateEstadoConcedido,
         predicateFechasBaremacion));
 

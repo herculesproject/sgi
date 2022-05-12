@@ -1465,7 +1465,7 @@ public class ProyectoController {
    * @return suma de puntos del campo importeConcedido
    */
   @GetMapping("/produccioncientifica/totalimporteconcedido/{proyectoId}")
-  @PreAuthorize("hasAuthority('CSP-PRO-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAuthority('CSP-PRO-PRC-V')")
   public BigDecimal getTotalImporteConcedidoAnualidadGasto(@PathVariable Long proyectoId) {
     log.debug("findProyectosProduccionCientifica(proyectoId) - start");
     return proyectoAnualidadService.getTotalImporteConcedidoAnualidadGasto(proyectoId);
