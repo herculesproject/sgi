@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -22,6 +23,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
+import { EvaluadorListadoExportModalComponent, IEvaluadorListadoModalData } from '../modals/evaluador-listado-export-modal/evaluador-listado-export-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -67,7 +69,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     protected readonly snackBarService: SnackBarService,
     private readonly personaService: PersonaService,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private matDialog: MatDialog
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -268,5 +271,16 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         aceptado = false;
       });
     this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
+  }
+
+  public openExportModal() {
+    const data: IEvaluadorListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(EvaluadorListadoExportModalComponent, config);
   }
 }
