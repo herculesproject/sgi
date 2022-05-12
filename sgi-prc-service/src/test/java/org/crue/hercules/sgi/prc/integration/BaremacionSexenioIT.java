@@ -135,7 +135,9 @@ class BaremacionSexenioIT extends BaremacionBaseIT {
   protected void mockSexenio(Integer anio, String personaRef, String numeroSexenios) {
     Instant fechaFinBaremacion = ProduccionCientificaFieldFormatUtil.calculateFechaFinBaremacionByAnio(anio,
         getSgiConfigProperties().getTimeZone());
-    BDDMockito.given(getSgiApiSgpService().findSexeniosByFecha(fechaFinBaremacion))
+    String strFechaFinBaremacion = ProduccionCientificaFieldFormatUtil.formatInstantToStringWithTimeZoneAndPattern(
+        fechaFinBaremacion, getSgiConfigProperties().getTimeZone(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    BDDMockito.given(getSgiApiSgpService().findSexeniosByFecha(strFechaFinBaremacion))
         .willReturn((Arrays.asList(generarMockSexenio(personaRef, numeroSexenios))));
   }
 

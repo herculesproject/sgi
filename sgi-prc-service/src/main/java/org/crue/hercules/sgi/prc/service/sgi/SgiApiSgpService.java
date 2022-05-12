@@ -177,7 +177,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
    * @return Lista de {@link SexenioDto}
    * 
    */
-  public List<SexenioDto> findSexeniosByFecha(Instant fechaFinBaremacion) {
+  public List<SexenioDto> findSexeniosByFecha(String fechaFinBaremacion) {
     log.debug("findSexeniosByAnio({})- start", fechaFinBaremacion);
     List<SexenioDto> result = new ArrayList<>();
 
@@ -186,7 +186,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       HttpMethod httpMethod = HttpMethod.GET;
       StringBuilder relativeUrl = new StringBuilder();
       relativeUrl.append("/sexenios?fecha=");
-      relativeUrl.append(fechaFinBaremacion.toString());
+      relativeUrl.append(fechaFinBaremacion);
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 
       result = super.<List<SexenioDto>>callEndpoint(mergedURL, httpMethod,
@@ -220,7 +220,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
       ServiceType serviceType = ServiceType.SGP;
       HttpMethod httpMethod = HttpMethod.GET;
       StringBuilder relativeUrl = new StringBuilder();
-      relativeUrl.append("direccion-tesis?anioDefensa=");
+      relativeUrl.append("/direccion-tesis?anioDefensa=");
       relativeUrl.append(anio.toString());
       String mergedURL = buildUri(serviceType, relativeUrl.toString());
 

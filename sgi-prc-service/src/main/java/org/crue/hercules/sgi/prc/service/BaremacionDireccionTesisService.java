@@ -46,9 +46,11 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class BaremacionDireccionTesisService extends BaremacionCommonService {
 
+  public static final String PREFIX_TESIS = "TES_";
+
+  private static final EpigrafeCVN EPIGRAFE_CVN_DIRECCION_TESIS = EpigrafeCVN.E030_040_000_000;
   private static final String TRUE = "true";
   private static final String FALSE = "false";
-  private static final String PREFIX_TESIS = "TES_";
 
   public BaremacionDireccionTesisService(
       AliasEnumeradoRepository aliasEnumeradoRepository,
@@ -116,6 +118,10 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
   public void copyTesis(Integer anioInicio, Integer anioFin) {
     log.debug("copyTesis(anioInicio, anioFin) - start");
 
+    // Delete all tesis
+    getProduccionCientificaRepository().findByEpigrafeCVNAndConvocatoriaBaremacionIdIsNull(EPIGRAFE_CVN_DIRECCION_TESIS)
+        .forEach(getProduccionCientificaBuilderService()::deleteProduccionCientifica);
+
     try {
       IntStream.range(anioInicio, anioFin)
           .forEach(anio -> getSgiApiSgpService().findTesisByAnio(anio).stream().forEach(tesis -> {
@@ -123,7 +129,7 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
             String produccionCientificaRef = PREFIX_TESIS + tesisId;
 
             ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
-                .epigrafeCVN(EpigrafeCVN.E030_040_000_000)
+                .epigrafeCVN(EPIGRAFE_CVN_DIRECCION_TESIS)
                 .produccionCientificaRef(produccionCientificaRef)
                 .build();
 

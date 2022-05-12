@@ -57,7 +57,7 @@ class SgiApiSgpServiceTest extends BaseServiceTest {
 
   @Test
   void findSexeniosByPersonaId_ReturnsException() throws Exception {
-    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findSexeniosByFecha(Instant.now()))
+    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findSexeniosByFecha("2021-05-01T12:10:55Z"))
         .isInstanceOf(MicroserviceCallException.class);
   }
 

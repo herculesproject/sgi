@@ -9,7 +9,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.controller.BaremacionController;
 import org.crue.hercules.sgi.prc.dto.csp.ProyectoDto;
-import org.crue.hercules.sgi.prc.dto.csp.ProyectoDto.ClasificacionCVN;
 import org.crue.hercules.sgi.prc.dto.csp.ProyectoEquipoDto;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.model.Autor;
@@ -84,7 +83,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -153,7 +152,8 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.NO_COMPETITIVOS)
+        .contrato(Boolean.TRUE)
+
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -223,7 +223,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -245,7 +245,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido2)
         .importeConcedido(importeConcedido2)
         .ambitoGeograficoId(1L)
@@ -310,7 +310,8 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.NO_COMPETITIVOS)
+        .contrato(Boolean.TRUE)
+
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -332,7 +333,8 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.NO_COMPETITIVOS)
+        .contrato(Boolean.TRUE)
+
         .totalImporteConcedido(totalImporteConcedido2)
         .importeConcedido(importeConcedido2)
         .ambitoGeograficoId(1L)
@@ -397,7 +399,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -420,7 +422,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio2 + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio2 + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio2 + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido2)
         .importeConcedido(importeConcedido2)
         .ambitoGeograficoId(1L)
@@ -486,7 +488,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -509,7 +511,8 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio2 + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio2 + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio2 + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.NO_COMPETITIVOS)
+        .contrato(Boolean.TRUE)
+
         .totalImporteConcedido(totalImporteConcedido2)
         .importeConcedido(importeConcedido2)
         .ambitoGeograficoId(1L)
@@ -574,7 +577,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(null)
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)
@@ -641,7 +644,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(null)
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(null)
         .importeConcedido(null)
         .ambitoGeograficoId(1L)
@@ -698,7 +701,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
     List<CampoProduccionCientifica> campos = getCampoProduccionCientificaRepository()
         .findAllByProduccionCientificaId(produccionCientificaId);
 
-    Integer numCampos = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+    Integer numCampos = !isContrato(proyecto)
         ? (StringUtils.hasText(ambitoMapeoTipos) ? 7 : 6)
         : 5;
     numCampos = null == importeConcedido ? numCampos - 1 : numCampos;
@@ -706,13 +709,13 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
     int numCamposReal = campos.size();
     Assertions.assertThat(numCamposReal).as("number of campos created").isEqualTo(numCampos);
 
-    CodigoCVN codigoCVN = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+    CodigoCVN codigoCVN = !isContrato(proyecto)
         ? CodigoCVN.E050_020_010_010
         : CodigoCVN.E050_020_020_010;
     ValorCampo valorCampo = getValorCampoByCodigoCVN(campos, codigoCVN);
     Assertions.assertThat(valorCampo.getValor()).as(codigoCVN.name()).isEqualTo(proyecto.getTitulo());
 
-    codigoCVN = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+    codigoCVN = !isContrato(proyecto)
         ? CodigoCVN.E050_020_010_270
         : CodigoCVN.E050_020_020_180;
     valorCampo = getValorCampoByCodigoCVN(campos, codigoCVN);
@@ -720,7 +723,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         proyecto.getFechaInicio().toString());
 
     Instant fechaFin = ObjectUtils.defaultIfNull(proyecto.getFechaFinDefinitiva(), proyecto.getFechaFin());
-    codigoCVN = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+    codigoCVN = !isContrato(proyecto)
         ? CodigoCVN.E050_020_010_410
         : CodigoCVN.FECHA_FIN_CONTRATO;
     valorCampo = getValorCampoByCodigoCVN(campos, codigoCVN);
@@ -728,7 +731,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
 
     if (null != totalImporteConcedido) {
 
-      codigoCVN = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+      codigoCVN = !isContrato(proyecto)
           ? CodigoCVN.E050_020_010_290
           : CodigoCVN.E050_020_020_200;
       valorCampo = getValorCampoByCodigoCVN(campos, codigoCVN);
@@ -739,7 +742,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
       Assertions.assertThat(valorCampo.getValor()).as(codigoCVN.name()).isEqualTo(valorTotalImporteConcedido);
     }
 
-    if (proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)) {
+    if (!isContrato(proyecto)) {
       String excelencia = Boolean.TRUE
           .equals(ObjectUtils.defaultIfNull(proyecto.getConvocatoriaExcelencia(), Boolean.FALSE)) ? "true" : "false";
       valorCampo = getValorCampoByCodigoCVN(campos, CodigoCVN.CONVOCATORIA_EXCELENCIA);
@@ -752,7 +755,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
     }
 
     if (null != importeConcedido) {
-      codigoCVN = proyecto.getClasificacionCVN().equals(ClasificacionCVN.COMPETITIVOS)
+      codigoCVN = !isContrato(proyecto)
           ? CodigoCVN.CUANTIA_COSTES_INDIRECTOS_PROYECTO
           : CodigoCVN.CUANTIA_COSTES_INDIRECTOS_CONTRATO;
       valorCampo = getValorCampoByCodigoCVN(campos, codigoCVN);
@@ -772,6 +775,10 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
       Assertions.assertThat(personaFound).as("PersonaRefInAutores").isTrue();
     });
 
+  }
+
+  private boolean isContrato(ProyectoDto proyecto) {
+    return null != proyecto.getContrato() && proyecto.getContrato().equals(Boolean.TRUE);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -818,7 +825,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(4L)
@@ -888,7 +895,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(4L)
@@ -960,7 +967,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(4L)
@@ -1037,7 +1044,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(4L)
@@ -1109,7 +1116,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse(anio + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(4L)
@@ -1180,7 +1187,7 @@ class BaremacionProyectoIT extends BaremacionBaseIT {
         .fechaInicio(Instant.parse((anio - 1) + "-01-15T00:00:00Z"))
         .fechaFin(Instant.parse(anio + "-12-31T00:00:00Z"))
         .fechaFinDefinitiva(Instant.parse(anio + "-12-31T00:00:00Z"))
-        .clasificacionCVN(ClasificacionCVN.COMPETITIVOS)
+        .contrato(Boolean.FALSE)
         .totalImporteConcedido(totalImporteConcedido)
         .importeConcedido(importeConcedido)
         .ambitoGeograficoId(1L)

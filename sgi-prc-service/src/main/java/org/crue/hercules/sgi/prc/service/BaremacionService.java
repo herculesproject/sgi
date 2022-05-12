@@ -90,7 +90,7 @@ public class BaremacionService {
       baremacionInvencionService.copyInvenciones(anioInicio, anioFin);
       baremacionProyectoService.copyProyectos(anioInicio, anioFin);
       baremacionSexenioService.copySexenios(anioInicio, anioFin);
-      baremacionDireccionTesisService.copyTesis(anioInicio, anioFin);
+      // baremacionDireccionTesisService.copyTesis(anioInicio, anioFin);
 
       IntStream.range(anioInicio, anioFin).forEach(anio -> {
         BaremacionInput baremacionInput = ProduccionCientificaFieldFormatUtil.createBaremacionInput(anio,
@@ -263,7 +263,7 @@ public class BaremacionService {
 
           Specification<PuntuacionItemInvestigador> specs = PuntuacionItemInvestigadorSpecifications
               .byPersonaRef(grupoEquipo.getPersonaRef())
-              .and(PuntuacionItemInvestigadorSpecifications.byConvocatoriaBaremacionAnio(anio))
+              .and(PuntuacionItemInvestigadorSpecifications.byAnio(anio))
               .and(PuntuacionItemInvestigadorSpecifications.byConvocatoriaBaremacionId(convocatoriaBaremacionId));
 
           puntuacionItemInvestigadorRepository.findAll(specs).stream().forEach(puntuacionItemInvestigador -> {

@@ -79,6 +79,7 @@ public class BaremacionInvencionService extends BaremacionCommonService {
   public static final String TIPO_PROTECCION_MARCA = "122";
   public static final String TIPO_PROTECCION_PROPIEDAD_INTELECTUAL = "OTHERS";
 
+  private static final EpigrafeCVN EPIGRAFE_CVN_INVENCION = EpigrafeCVN.E050_030_010_000;
   private static final CodigoCVN CODIGO_CVN_TIPO_PROTECCCION = CodigoCVN.E050_030_010_030;
   private static final CodigoCVN CODIGO_CVN_AMBITO_EUROPA = CodigoCVN.E050_030_010_170;
   private static final CodigoCVN CODIGO_CVN_AMBITO_ESPANIA = CodigoCVN.E050_030_010_160;
@@ -295,6 +296,10 @@ public class BaremacionInvencionService extends BaremacionCommonService {
   public void copyInvenciones(Integer anioInicio, Integer anioFin) {
     log.debug("copyInvenciones(anioInicio, anioFin) - start");
 
+    // Delete all invenciones
+    getProduccionCientificaRepository().findByEpigrafeCVNAndConvocatoriaBaremacionIdIsNull(EPIGRAFE_CVN_INVENCION)
+        .forEach(getProduccionCientificaBuilderService()::deleteProduccionCientifica);
+
     String universidadId = sgiApiCnfService.findByName("id-entidad-sgemp");
 
     sgiApiPiiService.findInvencionesProduccionCientifica(anioInicio, anioFin, universidadId).stream()
@@ -304,7 +309,7 @@ public class BaremacionInvencionService extends BaremacionCommonService {
           String produccionCientificaRef = PREFIX_INVENCIONES + invencionId;
 
           ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
-              .epigrafeCVN(EpigrafeCVN.E050_030_010_000)
+              .epigrafeCVN(EPIGRAFE_CVN_INVENCION)
               .produccionCientificaRef(produccionCientificaRef)
               .build();
 

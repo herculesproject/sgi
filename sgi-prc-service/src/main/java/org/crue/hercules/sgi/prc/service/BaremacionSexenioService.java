@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.LongPredicate;
@@ -180,16 +181,36 @@ public class BaremacionSexenioService extends BaremacionCommonService {
   public void copySexenios(Integer anioInicio, Integer anioFin) {
     log.debug("copySexenios(anioInicio, anioFin) - start");
 
+    // Delete all sexenios
+    getProduccionCientificaRepository().findByEpigrafeCVNAndConvocatoriaBaremacionIdIsNull(EPIGRAFE_CVN_SEXENIO)
+        .forEach(getProduccionCientificaBuilderService()::deleteProduccionCientifica);
+
     try {
       IntStream.range(anioInicio, anioFin)
           .forEach(
               anio -> {
                 Instant fechaFinBaremacion = ProduccionCientificaFieldFormatUtil.calculateFechaFinBaremacionByAnio(anio,
                     getSgiConfigProperties().getTimeZone());
-                List<SexenioDto> sexeniosAnio = getSgiApiSgpService().findSexeniosByFecha(fechaFinBaremacion);
+                String strFechaFinBaremacion = ProduccionCientificaFieldFormatUtil
+                    .formatInstantToStringWithTimeZoneAndPattern(
+                        fechaFinBaremacion, getSgiConfigProperties().getTimeZone(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+                List<SexenioDto> sexeniosAnio = getSgiApiSgpService().findSexeniosByFecha(strFechaFinBaremacion);
 
+                List<String> personasEquipo = new ArrayList<>();
                 getSgiApiCspService().findAllGruposByAnio(anio).stream()
-                    .forEach(grupo -> getSexeniosByPersonasEquipo(grupo, anio, sexeniosAnio));
+                    .map(grupo -> getSexeniosByPersonasEquipo(grupo, anio))
+                    .forEach(personasEquipo::addAll);
+
+                personasEquipo = personasEquipo.stream().distinct().collect(Collectors.toList());
+
+                personasEquipo.forEach(personaRef -> {
+                  Optional<SexenioDto> optSexenio = sexeniosAnio.stream()
+                      .filter(sexenio -> sexenio.getPersonaRef().equals(personaRef))
+                      .findFirst();
+                  if (optSexenio.isPresent()) {
+                    saveSexenio(optSexenio.get(), anio);
+                  }
+                });
 
               });
     } catch (Exception e) {
@@ -199,22 +220,12 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     log.debug("copySexenios(anioInicio, anioFin) - end");
   }
 
-  private void getSexeniosByPersonasEquipo(GrupoDto grupo, Integer anio, List<SexenioDto> sexeniosAnio) {
-
-    List<String> personasEquipo = getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(grupo.getId(), anio)
+  private List<String> getSexeniosByPersonasEquipo(GrupoDto grupo, Integer anio) {
+    return getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(grupo.getId(), anio)
         .stream()
         .map(GrupoEquipoDto::getPersonaRef)
         .distinct()
         .collect(Collectors.toList());
-
-    personasEquipo.forEach(personaRef -> {
-      Optional<SexenioDto> optSexenio = sexeniosAnio.stream()
-          .filter(sexenio -> sexenio.getPersonaRef().equals(personaRef))
-          .findFirst();
-      if (optSexenio.isPresent()) {
-        saveSexenio(optSexenio.get(), anio);
-      }
-    });
   }
 
   private void saveSexenio(SexenioDto sexenioDto, Integer anio) {

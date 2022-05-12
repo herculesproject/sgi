@@ -66,7 +66,7 @@ public class BaremacionController {
 
     service.checkInitBaremacion(convocatoriaBaremacionId);
 
-    convocatoriaBaremacionService.updateFechaInicioEjecucion(convocatoriaBaremacionId, Instant.now());
+    convocatoriaBaremacionService.initFechasBaremacion(convocatoriaBaremacionId);
 
     Instant fechaBaremacion = Instant.now().plusSeconds(10);
     return sgiApiTpService.createCallBaremacionTaskId(convocatoriaBaremacionId, fechaBaremacion);

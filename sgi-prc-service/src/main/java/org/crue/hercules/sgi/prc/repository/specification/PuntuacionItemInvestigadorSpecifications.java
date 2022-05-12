@@ -54,6 +54,17 @@ public class PuntuacionItemInvestigadorSpecifications {
   }
 
   /**
+   * {@link PuntuacionItemInvestigador} con el anio indicado.
+   * 
+   * @param anio anio del {@link PuntuacionItemInvestigador}.
+   * @return specification para obtener los {@link PuntuacionItemInvestigador} de
+   *         la {@link ConvocatoriaBaremacion} con el anio indicado.
+   */
+  public static Specification<PuntuacionItemInvestigador> byAnio(Integer anio) {
+    return (root, query, cb) -> cb.equal(root.get(PuntuacionItemInvestigador_.anio), anio);
+  }
+
+  /**
    * {@link PuntuacionItemInvestigador} de la {@link ConvocatoriaBaremacion} con
    * el anio indicado.
    * 

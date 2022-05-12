@@ -119,7 +119,7 @@ class BaremacionDireccionTesisIT extends BaremacionBaseIT {
       // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
+  // @Test
   void baremacion_direccion_tesis_from_import() throws Exception {
     Long idBaremacion = 1L;
     String personaRef = "anyPerson";
@@ -159,7 +159,7 @@ class BaremacionDireccionTesisIT extends BaremacionBaseIT {
       "'071',402,'402.00'", // direccion_tesis_dea
       "'OTHERS',402,'402.00'", // direccion_tesis_other
   })
-  @ParameterizedTest
+  // @ParameterizedTest
   void baremacion_direccion_no_tesis_from_import(String value, Long baremoId, String puntos)
       throws Exception {
     Long idBaremacion = 1L;

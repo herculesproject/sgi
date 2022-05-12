@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -98,10 +102,13 @@ public class ProduccionCientificaReportService {
     log.debug("getDataReportResumenPuntuacionGrupos({}) - start", anio);
 
     try {
-      List<ResumenPuntuacionGrupo> puntuacionesGrupos = sgiApiCspService.findAllGruposByAnio(anio - 1).stream().map(
+      List<ResumenPuntuacionGrupo> puntuacionesGrupos = getGruposBaremacion(anio).stream().map(
           grupo -> {
             String personaResponsable = sgiApiCspService
                 .findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(grupo.getId()).stream()
+                .map(principalInvestigador -> sgiApiSgpService.findPersonaById(principalInvestigador)
+                    .map(persona -> persona.getNombre() + " " + persona.getApellidos())
+                    .orElse(principalInvestigador))
                 .collect(Collectors.joining(", "));
 
             Specification<PuntuacionGrupo> specs = PuntuacionGrupoSpecifications
@@ -138,6 +145,29 @@ public class ProduccionCientificaReportService {
       log.error(e.getMessage());
       return null;
     }
+  }
+
+  private Collection<GrupoDto> getGruposBaremacion(Integer anio) {
+
+    Map<Long, GrupoDto> grupos = new HashMap<>();
+    return convocatoriaBaremacionRepository.findByAnioAndActivoIsTrue(anio).map(convocatoriaBaremacion -> {
+
+      Integer anioInicio = convocatoriaBaremacion.getUltimoAnio() - convocatoriaBaremacion.getAniosBaremables() + 1;
+      Integer anioFin = convocatoriaBaremacion.getUltimoAnio() + 1;
+
+      IntStream.range(anioInicio, anioFin)
+          .forEach(anioBaremacion -> addGrupos(grupos, sgiApiCspService.findAllGruposByAnio(anioBaremacion)));
+
+      return grupos.values();
+    }).orElse(new ArrayList<>());
+  }
+
+  private void addGrupos(Map<Long, GrupoDto> grupos, List<GrupoDto> gruposByAnio) {
+    gruposByAnio.stream().forEach(grupoAnio -> {
+      if (!grupos.containsKey(grupoAnio.getId())) {
+        grupos.put(grupoAnio.getId(), grupoAnio);
+      }
+    });
   }
 
   /**
@@ -312,12 +342,19 @@ public class ProduccionCientificaReportService {
 
     log.debug("getDataReportDetalleGrupo({},{}) - start", anio, grupoId);
 
+    DetalleGrupoInvestigacionOutput output = DetalleGrupoInvestigacionOutput.builder()
+        .anio(anio)
+        .precioPuntoProduccion(new BigDecimal("0.00"))
+        .precioPuntoCostesIndirectos(new BigDecimal("0.00"))
+        .precioPuntoSexenio(new BigDecimal("0.00"))
+        .build();
     try {
       String grupo = sgiApiCspService.findGrupoById(grupoId)
           .map(GrupoDto::getNombre)
           .orElseThrow(() -> new NotFoundException(ProblemMessage.builder().key(NotFoundException.class)
               .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(GrupoDto.class))
               .parameter(MESSAGE_KEY_ID, grupoId).build()));
+      output.setGrupo(grupo);
 
       Specification<PuntuacionGrupo> puntuacionGrupoSpecs = PuntuacionGrupoSpecifications
           .byGrupoRef(grupoId)
@@ -357,10 +394,10 @@ public class ProduccionCientificaReportService {
                 .costesIndirectos(costesIndirectos)
                 .totales(totales)
                 .build();
-          }).orElse(null);
+          }).orElse(output);
     } catch (Exception e) {
       log.error(e.getMessage());
-      return null;
+      return output;
     }
   }
 
@@ -375,11 +412,6 @@ public class ProduccionCientificaReportService {
     totales.add(ResumenTotalOutput.builder()
         .tipo(ApplicationContextSupport.getMessage("informeDetalleGrupo.totalSexenios"))
         .importe(totalSexenios)
-        .build());
-
-    totales.add(ResumenTotalOutput.builder()
-        .tipo(ApplicationContextSupport.getMessage("informeDetalleGrupo.totalCostesIndirectos"))
-        .importe(totalCostesIndirectos)
         .build());
 
     totales.add(ResumenTotalOutput.builder()
@@ -440,14 +472,16 @@ public class ProduccionCientificaReportService {
     List<Baremo> baremos = baremoRepository.findAll(specs);
 
     BigDecimal puntos = new BigDecimal("0.00");
-    Integer numeroPRCs = 0;
+    Integer numeroSexenios = 0;
     if (!CollectionUtils.isEmpty(baremos)) {
       puntos = getPuntosByTipoPuntuacion(puntuacionesGrupoInvestigadores, TipoPuntuacion.SEXENIO);
-      numeroPRCs = puntos.divide(baremos.get(0).getPuntos(), 1, RoundingMode.HALF_UP).intValue();
+      BigDecimal puntosSexeniosPuntuacionItemInvestigador = getPuntosSexenios(puntuacionesGrupoInvestigadores);
+      numeroSexenios = puntosSexeniosPuntuacionItemInvestigador
+          .divide(baremos.get(0).getPuntos(), 1, RoundingMode.HALF_UP).intValue();
     }
 
     return ResumenSexenioOutput.builder()
-        .numero(numeroPRCs)
+        .numero(numeroSexenios)
         .puntos(puntos)
         .importe(puntos.multiply(convocatoriaBaremacion.getPuntoSexenio()))
         .build();
@@ -575,6 +609,14 @@ public class ProduccionCientificaReportService {
         .puntos(puntos)
         .importe(puntos.multiply(convocatoriaBaremacion.getPuntoProduccion()))
         .build();
+  }
+
+  private BigDecimal getPuntosSexenios(List<PuntuacionGrupoInvestigador> puntuacionesGrupoInvestigadores) {
+    return puntuacionesGrupoInvestigadores.stream()
+        .filter(puntuacionGrupoInvestigador -> puntuacionGrupoInvestigador.getPuntuacionItemInvestigador()
+            .getTipoPuntuacion().equals(TipoPuntuacion.SEXENIO))
+        .map(puntuacionGrupoInvestigador -> puntuacionGrupoInvestigador.getPuntuacionItemInvestigador().getPuntos())
+        .reduce(new BigDecimal("0.00"), BigDecimal::add);
   }
 
   private BigDecimal getPuntosByTipoPuntuacion(List<PuntuacionGrupoInvestigador> puntuacionesGrupoInvestigadores,
