@@ -157,7 +157,7 @@ public class BaremacionService {
       throw e;
     } finally {
       convocatoriaBaremacionLogService.save(convocatoriaBaremacionId, "Fin");
-      convocatoriaBaremacionService.updateFechaInicioEjecucion(convocatoriaBaremacionId, null);
+      convocatoriaBaremacionService.closeFechaBaremacion(convocatoriaBaremacionId);
 
       // TODO Lanzar comunicado algoritmo completado
     }

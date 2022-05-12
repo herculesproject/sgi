@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import org.crue.hercules.sgi.prc.model.Baremo;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion.OnActivar;
 import org.crue.hercules.sgi.prc.model.Modulador;
-import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.PuntuacionGrupo;
 import org.crue.hercules.sgi.prc.model.Rango;
 import org.crue.hercules.sgi.prc.repository.BaremoRepository;
@@ -31,7 +29,6 @@ import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoInvestigadorRepositor
 import org.crue.hercules.sgi.prc.repository.PuntuacionGrupoRepository;
 import org.crue.hercules.sgi.prc.repository.RangoRepository;
 import org.crue.hercules.sgi.prc.repository.specification.ConvocatoriaBaremacionSpecifications;
-import org.crue.hercules.sgi.prc.repository.specification.ProduccionCientificaSpecifications;
 import org.crue.hercules.sgi.prc.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,13 +76,12 @@ public class ConvocatoriaBaremacionService {
   }
 
   @Transactional
-  public ConvocatoriaBaremacion updateFechaInicioEjecucion(Long convocatoriaBaremacionId,
-      Instant fechaInicioEjecucion) {
-    log.debug("updateFechaInicioEjecucion({},{}) - start", convocatoriaBaremacionId, fechaInicioEjecucion);
+  public ConvocatoriaBaremacion closeFechaBaremacion(Long convocatoriaBaremacionId) {
+    log.debug("closeFechaBaremacion({}) - start", convocatoriaBaremacionId);
 
     return convocatoriaBaremacionRepository
         .findById(convocatoriaBaremacionId).map(convocatoria -> {
-          convocatoria.setFechaInicioEjecucion(fechaInicioEjecucion);
+          convocatoria.setFechaFinEjecucion(Instant.now());
           return convocatoriaBaremacionRepository.save(convocatoria);
         }).orElse(null);
   }
