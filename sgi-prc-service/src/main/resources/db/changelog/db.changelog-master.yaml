@@ -19,4 +19,6 @@ databaseChangeLog:
   - include:
       file: classpath*:db/changelog/changes/0000000000002-update-initial-master-data.xml
   - include:
-      file: classpath*:db/changelog/changes/0000000000002-fixup-initial-database.xml
+      file: classpath*:db/changelog/changes/0000000000002-update-data.xml    
+  - include:
+      file: classpath*:db/changelog/changes/0000000000002-fixup-initial-database.xml        
