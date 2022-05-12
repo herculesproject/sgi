@@ -4,9 +4,12 @@ import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.collections4.ListUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput;
+import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenCosteIndirectoOutput;
+import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenSexenioOutput;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiPrcService;
@@ -75,7 +78,7 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     columnsData.add("puntosCostesIndirectos");
     columnsData.add("puntosProduccion");
 
-    detalleGrupo.getInvestigadores().stream().forEach(investigador -> {
+    ListUtils.emptyIfNull(detalleGrupo.getInvestigadores()).stream().forEach(investigador -> {
       Vector<Object> elementsRow = new Vector<>();
       elementsRow.add(investigador.getInvestigador());
       elementsRow.add(investigador.getPuntosCostesIndirectos());
@@ -98,6 +101,9 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     columnsData.add(IMPORTE);
 
     Vector<Object> elementsRow = new Vector<>();
+    if (null == detalleGrupo.getSexenios()) {
+      detalleGrupo.setSexenios(ResumenSexenioOutput.builder().build());
+    }
     elementsRow.add(detalleGrupo.getSexenios().getNumero());
     elementsRow.add(detalleGrupo.getSexenios().getPuntos());
     elementsRow.add(detalleGrupo.getSexenios().getImporte());
@@ -118,7 +124,7 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     columnsData.add(PUNTOS);
     columnsData.add(IMPORTE);
 
-    detalleGrupo.getProduccionesCientificas().stream().forEach(prc -> {
+    ListUtils.emptyIfNull(detalleGrupo.getProduccionesCientificas()).stream().forEach(prc -> {
       Vector<Object> elementsRow = new Vector<>();
       elementsRow.add(prc.getTipo());
       elementsRow.add(prc.getNumero());
@@ -142,6 +148,9 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     columnsData.add(IMPORTE);
 
     Vector<Object> elementsRow = new Vector<>();
+    if (null == detalleGrupo.getCostesIndirectos()) {
+      detalleGrupo.setCostesIndirectos(ResumenCosteIndirectoOutput.builder().build());
+    }
     elementsRow.add(detalleGrupo.getCostesIndirectos().getNumero());
     elementsRow.add(detalleGrupo.getCostesIndirectos().getPuntos());
     elementsRow.add(detalleGrupo.getCostesIndirectos().getImporte());
@@ -160,7 +169,7 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
     columnsData.add("tipo");
     columnsData.add(IMPORTE);
 
-    detalleGrupo.getProduccionesCientificas().stream().forEach(prc -> {
+    ListUtils.emptyIfNull(detalleGrupo.getProduccionesCientificas()).stream().forEach(prc -> {
       Vector<Object> elementsRow = new Vector<>();
       elementsRow.add(prc.getTipo());
       elementsRow.add(prc.getImporte());
@@ -168,7 +177,7 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
       rowsData.add(elementsRow);
     });
 
-    detalleGrupo.getTotales().stream().forEach(total -> {
+    ListUtils.emptyIfNull(detalleGrupo.getTotales()).stream().forEach(total -> {
       Vector<Object> elementsRow = new Vector<>();
       elementsRow.add(total.getTipo());
       elementsRow.add(total.getImporte());
