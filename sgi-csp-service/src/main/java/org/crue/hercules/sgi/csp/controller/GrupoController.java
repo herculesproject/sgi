@@ -79,21 +79,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class GrupoController {
+  public static final String PATH_DELIMITER = "/";
+  public static final String REQUEST_MAPPING = PATH_DELIMITER + "grupos";
 
-  public static final String REQUEST_MAPPING = "/grupos";
-  public static final String PATH_ID = "/{id}";
+  public static final String PATH_TODOS = PATH_DELIMITER + "todos";
+  public static final String PATH_CODIGO_DUPLICADO = PATH_DELIMITER + "codigoduplicado";
+  public static final String PATH_NEXT_CODIGO = PATH_DELIMITER + "nextcodigo";
+  public static final String PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO = PATH_DELIMITER + "grupo-baremable/{grupoRef}/{anio}";
+  public static final String PATH_BAREMABLES_ANIO = PATH_DELIMITER + "baremables/{anio}";
+  public static final String PATH_GRUPOS_INVESTIGADOR = PATH_DELIMITER + "investigador";
+
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_ACTIVAR = PATH_ID + "/activar";
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
   public static final String PATH_GRUPO_EQUIPO = PATH_ID + "/miembrosequipo";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + "/investigadoresprincipales";
   public static final String PATH_INVESTIGADORES_PRINCIPALES_MAX_PARTICIPACION = PATH_ID
       + "/investigadoresprincipalesmaxparticipacion";
-  public static final String PATH_TODOS = "/todos";
-  public static final String PATH_CODIGO_DUPLICADO = "/codigoduplicado";
-  public static final String PATH_NEXT_CODIGO = "/nextcodigo";
   public static final String PATH_PALABRAS_CLAVE = PATH_ID + "/palabrasclave";
-  public static final String PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO = "/grupo-baremable/{grupoRef}/{anio}";
-  public static final String PATH_BAREMABLES_ANIO = "/baremables/{anio}";
   public static final String PATH_GRUPO_TIPO = PATH_ID + "/tipos";
   public static final String PATH_GRUPO_ESPECIAL_INVESTIGACION = PATH_ID + "/especiales-investigacion";
   public static final String PATH_GRUPO_RESPONSABLE_ECONOMICO = PATH_ID + "/responsables-economicos";
@@ -202,6 +205,22 @@ public class GrupoController {
     log.debug("findAll(String query, Pageable paging) - start");
     Page<GrupoOutput> page = converter.convert(service.findAll(query, paging));
     log.debug("findAll(String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve la lista de {@link Grupo} a los que pertenece el usario actual.
+   *
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Grupo} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_GRUPOS_INVESTIGADOR)
+  @PreAuthorize("hasAuthority('PRC-INF-INV-GR')")
+  public ResponseEntity<Page<GrupoOutput>> findGruposInvestigador(@RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findGruposInvestigador() - start");
+    Page<GrupoOutput> page = converter.convert(service.findGruposUsuario(paging));
+    log.debug("findGruposInvestigador() - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 

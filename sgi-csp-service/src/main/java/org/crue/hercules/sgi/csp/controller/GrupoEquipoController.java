@@ -37,10 +37,13 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoEquipoController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposequipos";
+
   public static final String PATH_PERSONA_BAREMABLE_PERSONA_REF_ANIO = PATH_DELIMITER
       + "persona-baremable/{personaRef}/{anio}";
   public static final String PATH_GRUPOS_PERSONA_REF_ANIO = PATH_DELIMITER + "/{personaRef}/{anio}";
   public static final String PATH_BAREMABLES_GRUPO_REF_ANIO = PATH_DELIMITER + "baremables/{grupoRef}/{anio}";
+  public static final String PATH_MIEMBROS_EQUIPO_INVESTIGADOR = PATH_DELIMITER + "investigador";
+
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
 
   private final GrupoEquipoService service;
@@ -186,6 +189,22 @@ public class GrupoEquipoController {
             grupoEquipos)));
     log.debug("update(List<GrupoEquipoInput> grupoEquipos, grupoId) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoEquipo} cuya persona
+   * Ref sea el usuario actual o formen parte de un grupo en el que la persona sea
+   * un investigador principal.
+   * 
+   * @return el listado de personaRef de los {@link GrupoEquipo}.
+   */
+  @GetMapping(PATH_MIEMBROS_EQUIPO_INVESTIGADOR)
+  @PreAuthorize("hasAuthority('PRC-INF-INV-GR')")
+  public ResponseEntity<List<String>> findMiembrosEquipoUsuario() {
+    log.debug("findMiembrosEquipoUsuario() - start");
+    List<String> result = service.findMiembrosEquipoUsuario();
+    log.debug("findMiembrosEquipoUsuario() - end");
+    return result.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(result, HttpStatus.OK);
   }
 
 }

@@ -43,6 +43,8 @@ import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextH
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -315,6 +317,25 @@ public class GrupoService {
   }
 
   /**
+   * Obtener todas las entidades {@link Grupo} activas paginadas y/o filtradas.
+   *
+   * @param paging la información de la paginación.
+   * @return la lista de entidades {@link Grupo} activas paginadas y/o
+   *         filtradas.
+   */
+  public Page<Grupo> findGruposUsuario(Pageable paging) {
+    log.debug("findGruposUsuario(Pageable paging) - start");
+
+    Specification<Grupo> specs = GrupoSpecifications.distinct()
+        .and(GrupoSpecifications.activos())
+        .and(GrupoSpecifications.byPersona(getUserPersonaRef()));
+    Page<Grupo> returnValue = repository.findAll(specs, paging);
+
+    log.debug("findGruposUsuario(Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
    * Desactiva el {@link Grupo}.
    *
    * @param id Id del {@link Grupo}.
@@ -575,6 +596,14 @@ public class GrupoService {
    */
   public boolean modificable() {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-GIN-E");
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 
 }

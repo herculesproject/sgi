@@ -33,6 +33,8 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -159,6 +161,22 @@ public class GrupoEquipoService {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoEquipo} cuya persona
+   * Ref sea el usuario actual o formen parte de un grupo en el que la persona sea
+   * un investigador principal.
+   *
+   * @return la lista de personaRefs
+   */
+  public List<String> findMiembrosEquipoUsuario() {
+    log.debug("findMiembrosEquipoUsuario() - start");
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    List<String> returnValue = repository.findMiembrosEquipoUsuario(getUserPersonaRef(), fechaActual);
+    log.debug("findMiembrosEquipoUsuario() - end");
+    return returnValue;
+  }
+
+  /**
    * Devuelve una lista filtrada de investigadores principales del
    * {@link Grupo} en el momento actual con mayor porcentaje de particitacion.
    *
@@ -271,8 +289,9 @@ public class GrupoEquipoService {
   public List<GrupoEquipo> update(Long grupoId, @Valid List<GrupoEquipo> grupoEquipos) {
     log.debug("update(Long grupoId, List<GrupoEquipo> grupoEquipos) - start");
 
-    grupoRepository.findById(grupoId)
-        .orElseThrow(() -> new GrupoNotFoundException(grupoId));
+    if (!grupoRepository.existsById(grupoId)) {
+      throw new GrupoNotFoundException(grupoId);
+    }
 
     List<GrupoEquipo> grupoEquiposBD = repository.findAllByGrupoId(grupoId);
 
@@ -348,6 +367,14 @@ public class GrupoEquipoService {
       }
 
     }
+  }
+
+  /**
+   * Recupera el personaRef del usuario actual
+   */
+  private String getUserPersonaRef() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication.getName();
   }
 
 }

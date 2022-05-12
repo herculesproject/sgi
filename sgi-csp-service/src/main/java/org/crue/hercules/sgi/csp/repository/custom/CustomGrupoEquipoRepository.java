@@ -84,4 +84,14 @@ public interface CustomGrupoEquipoRepository {
   List<Long> findGrupoEquipoByPersonaRefAndFechaBaremacion(String personaRef, Instant fechaInicioBaremacion,
       Instant fechaFinBaremacion);
 
+  /**
+   * Devuelve una lista de personaRef de los {@link GrupoEquipo} que cumplan la
+   * specification.
+   *
+   * @param personaRef persona ref de {@link GrupoEquipo}
+   * @param fecha      fecha para la que se hace la comprobracion
+   * @return la lista de personaRefs
+   */
+  List<String> findMiembrosEquipoUsuario(String personaRef, Instant fecha);
+
 }

@@ -87,12 +87,29 @@ public class GrupoSpecifications {
 
   /**
    * {@link Grupo} para los que la persona esta
+   * en su {@link GrupoEquipo}
+   * 
+   * @param personaRef Identificador de la persona
+   * @return specification para obtener los {@link Grupo} para los que la persona
+   *         esta en su {@link GrupoEquipo}
+   */
+  public static Specification<Grupo> byPersona(String personaRef) {
+    return (root, query, cb) -> {
+      Join<Grupo, GrupoEquipo> joinPersonasAutorizadas = root.join(Grupo_.miembrosEquipo, JoinType.LEFT);
+
+      return cb.equal(joinPersonasAutorizadas.get(GrupoEquipo_.personaRef),
+          personaRef);
+    };
+  }
+
+  /**
+   * {@link Grupo} para los que la persona esta
    * entre las {@link GrupoPersonaAutorizada} en la fecha indicada
    * 
    * @param personaRef Identificador de la persona
    * @param fecha      fecha para la que se hace la comprobracion
-   * @return specification para obtener los {@link Grupo} con id distinto del
-   *         indicado.
+   * @return specification para obtener los {@link Grupo} para los que la persona
+   *         esta entre las {@link GrupoPersonaAutorizada} en la fecha indicada
    */
   public static Specification<Grupo> byPersonaAutorizada(String personaRef, Instant fecha) {
     return (root, query, cb) -> {
@@ -117,13 +134,14 @@ public class GrupoSpecifications {
   }
 
   /**
-   * {@link Grupo} para los que la persona esta
-   * entre las {@link GrupoPersonaAutorizada} en la fecha indicada
+   * {@link Grupo} para los que la persona esta entre las {@link GrupoEquipo} con
+   * un rol principal en la fecha indicada
    * 
    * @param personaRef Identificador de la persona
    * @param fecha      fecha para la que se hace la comprobracion
-   * @return specification para obtener los {@link Grupo} con id distinto del
-   *         indicado.
+   * @return specification para obtener los {@link Grupo} para los que la persona
+   *         esta entre las {@link GrupoEquipo} con un rol principal en la fecha
+   *         indicada
    */
   public static Specification<Grupo> byResponsable(String personaRef, Instant fecha) {
     return (root, query, cb) -> {
