@@ -2205,7 +2205,7 @@
   "prc.baremo": "Baremo{count,plural,=0{s} one{} other{s}}",
   "prc.baremo.cuantia": "Cuantía por punto",
   "prc.baremo.peso": "Peso",
-  "prc.baremo.peso-ponderacion": "Peso/Ponderaciónn",
+  "prc.baremo.peso-ponderacion": "Peso/Ponderación",
   "prc.baremo.ponderacion": "Ponderación",
   "prc.baremo.puntos": "Puntos",
   "prc.baremo.tipo-cuantia": "Tipo de cuantía",
