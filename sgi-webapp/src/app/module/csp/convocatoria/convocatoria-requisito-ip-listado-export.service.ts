@@ -53,6 +53,7 @@ const REQUISITO_IP_NUM_MINIMO_NO_COMPETITIVO_FIELD = 'numMinimoNoCompetitivoIP';
 const REQUISITO_IP_NUM_MAXIMO_COMPETITIVO_FIELD = 'numMaximoCompetitivoIP';
 const REQUISITO_IP_NUM_MAXIMO_NO_COMPETITIVO_FIELD = 'numMaximoNoCompetitivoIP';
 
+const COLUMN_VALUE_PREFIX = ': ';
 @Injectable()
 export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions>{
 
@@ -179,21 +180,21 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
 
     const columnNumMaximoIP: ISgiColumnReport = {
       name: REQUISITO_IP_NUMERO_MAXIMO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_NUMERO_MAXIMO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_NUMERO_MAXIMO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnNumMaximoIP);
 
     const columnEdadMaxima: ISgiColumnReport = {
       name: REQUISITO_IP_EDAD_MAXIMA_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_EDAD_MAXIMA_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_EDAD_MAXIMA_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnEdadMaxima);
 
     const columnSexo: ISgiColumnReport = {
       name: REQUISITO_IP_SEXO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_SEXO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_SEXO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnSexo);
@@ -202,7 +203,7 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       const idNivelesAcademicos: string = String(i + 1);
       const columnNivelAcademicoIP: ISgiColumnReport = {
         name: REQUISITO_IP_NIVEL_ACADEMICO_FIELD + idNivelesAcademicos,
-        title: prefix + titleNivelAcademico + idNivelesAcademicos,
+        title: prefix + titleNivelAcademico + idNivelesAcademicos + this.getValuePrefix(prefix),
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
@@ -210,21 +211,22 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
 
     const columnPosteriorA: ISgiColumnReport = {
       name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_POSTERIOR_FIELD,
-      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
+      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY) + this.getValuePrefix(prefix),
       type: allString ? ColumnType.STRING : ColumnType.DATE,
     };
     columns.push(columnPosteriorA);
 
     const columnAnteriorA: ISgiColumnReport = {
       name: REQUISITO_IP_NIVEL_ACADEMICO_FECHA_ANTERIOR_FIELD,
-      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
+      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY) + this.getValuePrefix(prefix),
       type: allString ? ColumnType.STRING : ColumnType.DATE,
     };
     columns.push(columnAnteriorA);
 
     const columnVinculacion: ISgiColumnReport = {
       name: REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_FIELD,
-      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY),
+      title: prefix + titleNivelAcademico + ' ' + this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_VINCULACION_UNIVERSIDAD_KEY) +
+        this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnVinculacion);
@@ -233,7 +235,7 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       const idCategoriaProfesional: string = String(i + 1);
       const columnNivelAcademicoIP: ISgiColumnReport = {
         name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FIELD + idCategoriaProfesional,
-        title: prefix + titleCategoriaProfesional + idCategoriaProfesional,
+        title: prefix + titleCategoriaProfesional + idCategoriaProfesional + this.getValuePrefix(prefix),
         type: ColumnType.STRING,
       };
       columns.push(columnNivelAcademicoIP);
@@ -241,42 +243,44 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
 
     const columnCatPosteriorA: ISgiColumnReport = {
       name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_POSTERIOR_FIELD,
-      title: prefix + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY),
+      title: prefix + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_POSTERIOR_KEY) +
+        this.getValuePrefix(prefix),
       type: allString ? ColumnType.STRING : ColumnType.DATE,
     };
     columns.push(columnCatPosteriorA);
 
     const columnCatAnteriorA: ISgiColumnReport = {
       name: REQUISITO_IP_CATEGORIA_PROFESIONAL_FECHA_ANTERIOR_FIELD,
-      title: prefix + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY),
+      title: prefix + titleCategoriaProfesional + ' ' + this.translate.instant(REQUISITO_IP_FECHA_ANTERIOR_KEY) +
+        this.getValuePrefix(prefix),
       type: allString ? ColumnType.STRING : ColumnType.DATE,
     };
     columns.push(columnCatAnteriorA);
 
     const columnNumMinCompetitivos: ISgiColumnReport = {
       name: REQUISITO_IP_NUM_MINIMO_COMPETITIVO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MINIMO_COMPETITIVO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MINIMO_COMPETITIVO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnNumMinCompetitivos);
 
     const columnNumMinNoCompetitivos: ISgiColumnReport = {
       name: REQUISITO_IP_NUM_MINIMO_NO_COMPETITIVO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MINIMO_NO_COMPETITIVO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MINIMO_NO_COMPETITIVO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnNumMinNoCompetitivos);
 
     const columnNumMaxCompetitivos: ISgiColumnReport = {
       name: REQUISITO_IP_NUM_MAXIMO_COMPETITIVO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MAXIMO_COMPETITIVO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MAXIMO_COMPETITIVO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnNumMaxCompetitivos);
 
     const columnNumMaxNoCompetitivos: ISgiColumnReport = {
       name: REQUISITO_IP_NUM_MAXIMO_NO_COMPETITIVO_FIELD,
-      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MAXIMO_NO_COMPETITIVO_KEY),
+      title: prefix + this.translate.instant(REQUISITO_IP_NUM_MAXIMO_NO_COMPETITIVO_KEY) + this.getValuePrefix(prefix),
       type: ColumnType.STRING,
     };
     columns.push(columnNumMaxNoCompetitivos);
@@ -318,7 +322,7 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       requisitoIPElementsRow.push(convocatoria?.requisitoIP.sexo ? convocatoria.requisitoIP?.sexo.id ?? '' : '');
 
       convocatoria.nivelesAcademicos?.filter(n => n.requisitoIP.id === convocatoria.requisitoIP.id).forEach((nivelAcademicoIP, index) => {
-        requisitoIPElementsRow.push((this.translate.instant(REQUISITO_IP_NIVEL_ACADEMICO_KEY) + (index + 1) + ': ') + (nivelAcademicoIP.nivelAcademico ? nivelAcademicoIP.nivelAcademico.nombre ?? '' : ''));
+        requisitoIPElementsRow.push(nivelAcademicoIP.nivelAcademico ? nivelAcademicoIP.nivelAcademico.nombre ?? '' : '');
       });
 
 
@@ -332,7 +336,7 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
         ? this.getI18nBooleanYesNo(convocatoria.requisitoIP.vinculacionUniversidad) ?? '' : '');
 
       convocatoria.categoriasProfesionales?.filter(c => c.requisitoIP.id === convocatoria.requisitoIP.id).forEach((categoriaProfesionalIP, index) => {
-        requisitoIPElementsRow.push((this.translate.instant(REQUISITO_IP_CATEGORIA_PROFESIONAL_KEY) + (index + 1) + ': ') + (categoriaProfesionalIP.categoriaProfesional ? categoriaProfesionalIP.categoriaProfesional.nombre ?? '' : ''));
+        requisitoIPElementsRow.push(categoriaProfesionalIP.categoriaProfesional ? categoriaProfesionalIP.categoriaProfesional.nombre ?? '' : '');
       });
 
       requisitoIPElementsRow.push(convocatoria.requisitoIP.fechaMinimaCategoriaProfesional
@@ -429,5 +433,12 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
       elementsRow.push('');
       elementsRow.push('');
     }
+  }
+
+  private getValuePrefix(prefix: string): string {
+    if (!prefix) {
+      return COLUMN_VALUE_PREFIX;
+    }
+    return '';
   }
 }

@@ -74,7 +74,6 @@ export class ConvocatoriaListadoExportModalComponent extends BaseExportModalComp
     });
   }
 
-
   protected getReportOptions(): IReportConfig<IConvocatoriaReportOptions> {
     const reportModalData: IReportConfig<IConvocatoriaReportOptions> = {
       title: this.formGroup.controls.reportTitle.value,
@@ -95,7 +94,7 @@ export class ConvocatoriaListadoExportModalComponent extends BaseExportModalComp
         showElegibilidad: this.formGroup.controls.showElegibilidad.value,
         showPartidasPresupuestarias: this.formGroup.controls.showPartidasPresupuestarias.value,
         showConfiguracionSolicitudes: this.formGroup.controls.showConfiguracionSolicitudes.value,
-        columnMinWidth: 120
+        columnMinWidth: 200
       }
     };
     return reportModalData;
