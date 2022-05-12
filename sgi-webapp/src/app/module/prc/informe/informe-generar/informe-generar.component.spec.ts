@@ -11,6 +11,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { PersonaNombreCompletoPipe } from 'src/app/esb/sgp/shared/pipes/persona-nombre-completo.pipe';
 
 import { InformeGenerarComponent } from './informe-generar.component';
 
@@ -38,7 +39,8 @@ describe('InformeGenerarComponent', () => {
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         PrcReportService,
         DecimalPipe,
-        SgiAuthService
+        SgiAuthService,
+        PersonaNombreCompletoPipe
       ],
     })
       .compileComponents();

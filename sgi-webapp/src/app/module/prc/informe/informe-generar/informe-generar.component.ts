@@ -2,17 +2,24 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SelectValue } from '@core/component/select-common/select-common.component';
-import { SgiError, SgiProblem, toSgiProblem } from '@core/errors/sgi-error';
+import { SgiError, SgiProblem } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
+import { IGrupo } from '@core/models/csp/grupo';
+import { IPersona } from '@core/models/sgp/persona';
 import { ROUTE_NAMES } from '@core/route.names';
+import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
 import { PrcReportService } from '@core/services/prc/report/prc-report.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { IAuthStatus, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { PersonaNombreCompletoPipe } from 'src/app/esb/sgp/shared/pipes/persona-nombre-completo.pipe';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 
 export enum TipoInforme {
@@ -48,7 +55,6 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
     return this.problems$?.value;
   }
 
-
   ROUTE_NAMES = ROUTE_NAMES;
   TIPO_COLECTIVO = TipoColectivo;
 
@@ -59,6 +65,13 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
   msgParamInvestigadorEntity = {};
 
   anios$: Observable<number[]>;
+
+  get authStatus$(): Observable<IAuthStatus> {
+    return this.authService.authStatus$.asObservable();
+  }
+
+  gruposInvestigador: IGrupo[] = [];
+  investigadoresInvestigador: IPersona[] = [];
 
   get TipoInforme() {
     return TipoInforme;
@@ -72,6 +85,9 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
     return MSG_PARAMS;
   }
 
+  displayerInvestigador = (persona: IPersona): string => this.personaNombreCompletoPipe.transform(persona);
+  displayerGrupo = (grupo: IGrupo): string => `${grupo.codigo} - ${grupo.nombre}`;
+
   displayerAnios = (anio: number): string => anio?.toString();
   comparerAnios = (anio1: number, anio2: number): boolean => anio1 === anio2;
   sorterAnios = (anio1: SelectValue<number>, anio2: SelectValue<number>): number => anio2?.displayText.localeCompare(anio1?.displayText);
@@ -82,6 +98,11 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
     private readonly convocatoriaBaremacionService: ConvocatoriaBaremacionService,
     private readonly prcReportService: PrcReportService,
     private readonly translate: TranslateService,
+    private readonly authService: SgiAuthService,
+    private readonly grupoService: GrupoService,
+    private readonly grupoEquipoService: GrupoEquipoService,
+    private readonly personaService: PersonaService,
+    private readonly personaNombreCompletoPipe: PersonaNombreCompletoPipe
   ) {
     this.problems$ = new BehaviorSubject<SgiProblem[]>([]);
   }
@@ -91,6 +112,7 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
     this.initFormGroup();
     this.anios$ = this.convocatoriaBaremacionService.findAniosWithConvocatoriasBaremacion();
     this.subscribeTipoInformeValueChanges();
+    this.initObservablesInvestigador();
   }
 
   ngOnDestroy(): void {
@@ -179,6 +201,41 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  private initObservablesInvestigador() {
+    this.authStatus$.subscribe(auth => {
+      if (auth.isInvestigador) {
+        this.initGruposInvestigador();
+        this.initInvestigadoresInvestigador();
+      }
+    });
+  }
+
+  private initGruposInvestigador(): void {
+    this.grupoService.findGruposInvestigador().pipe(
+      map(response => response.items)
+    ).subscribe(grupos => {
+      if (grupos.length === 1) {
+        (this.formGroup.controls.detalleGrupo as FormGroup).controls.grupo.setValue(grupos[0]);
+      }
+
+      this.gruposInvestigador = grupos;
+    });
+  }
+
+  private initInvestigadoresInvestigador(): void {
+    this.grupoEquipoService.findMiembrosEquipoInvestigador().pipe(
+      filter(investigadores => !!investigadores),
+      switchMap(investigadores => this.personaService.findAllByIdIn(investigadores)),
+      map(response => response.items)
+    ).subscribe(investigadores => {
+      if (investigadores.length === 1) {
+        (this.formGroup.controls.detalleInvestigador as FormGroup).controls.investigador.setValue(investigadores[0]);
+      }
+
+      this.investigadoresInvestigador = investigadores;
+    });
   }
 
   private setupI18N(): void {

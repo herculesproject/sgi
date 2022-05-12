@@ -39,10 +39,18 @@
 
     <div fxLayout="row" formGroupName="detalleInvestigador" *ngIf="formGroup.get('detalleInvestigador').enabled">
       <!-- Investigador/a principal -->
-      <mat-form-field>
+      <mat-form-field fxFlex="50">
         <mat-label>{{'prc.informe.investigador' | translate}}</mat-label>
-        <sgi-select-persona formControlName="investigador" [tipoColectivo]="TIPO_COLECTIVO.AUTOR_PRC" required>
-        </sgi-select-persona>
+        <ng-container *ngIf="authStatus$ | async as authStatus">
+          <sgi-select-entity *ngIf="authStatus.isInvestigador; else investigadoresGestor"
+            placeholder="{{'prc.informe.investigador' | translate}}" formControlName="investigador"
+            [options]="investigadoresInvestigador" [displayWith]="displayerInvestigador" required>
+          </sgi-select-entity>
+        </ng-container>
+        <ng-template #investigadoresGestor>
+          <sgi-select-persona formControlName="investigador" [tipoColectivo]="TIPO_COLECTIVO.AUTOR_PRC" required>
+          </sgi-select-persona>
+        </ng-template>
         <mat-error *ngIf="formGroup.hasError('required','detalleInvestigador.investigador')">
           {{ 'error.required.entity' | translate:msgParamInvestigadorEntity }}
         </mat-error>
@@ -51,11 +59,21 @@
 
     <!-- Grupo investigación -->
     <div fxLayout="row" formGroupName="detalleGrupo" *ngIf="formGroup.get('detalleGrupo').enabled">
-      <mat-form-field>
+      <mat-form-field fxFlex="50">
         <mat-label>{{'prc.publicacion.grupo-investigacion' | translate}}</mat-label>
-        <sgi-select-dialog-grupo placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}"
-          formControlName="grupo" required>
-        </sgi-select-dialog-grupo>
+
+        <ng-container *ngIf="authStatus$ | async as authStatus">
+          <sgi-select-entity *ngIf="authStatus.isInvestigador; else gruposGestor"
+            placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}" formControlName="grupo"
+            [options]="gruposInvestigador" [displayWith]="displayerGrupo" required>
+          </sgi-select-entity>
+        </ng-container>
+        <ng-template #gruposGestor>
+          <sgi-select-dialog-grupo placeholder="{{'prc.publicacion.grupo-investigacion' | translate}}"
+            formControlName="grupo" required>
+          </sgi-select-dialog-grupo>
+        </ng-template>
+
         <mat-error *ngIf="formGroup.hasError('required','detalleGrupo.grupo')">
           {{ 'error.required.entity' | translate:msgParamGrupoEntity }}
         </mat-error>

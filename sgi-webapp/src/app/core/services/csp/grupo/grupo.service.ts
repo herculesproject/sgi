@@ -90,6 +90,19 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
+   * Muestra los grupos a los que pertenece el investigador actual
+   *
+   * @param options opciones de búsqueda.
+   */
+  findGruposInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupo>> {
+    return this.find<IGrupoResponse, IGrupo>(
+      `${this.endpointUrl}/investigador`,
+      options,
+      GRUPO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
    * Comprueba si existe el grupo
    *
    * @param id Identificador del grupo

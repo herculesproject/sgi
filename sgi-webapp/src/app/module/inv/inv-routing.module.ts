@@ -173,6 +173,19 @@ const routes: SgiRoutes = [
           hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
         }
       },
+      {
+        path: INV_ROUTE_NAMES.INFORMES,
+        loadChildren: () =>
+          import('../prc/informe/informe-inv.module').then(
+            (m) => m.InformeInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PUBLICACION_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-INF-INV-GR'
+        }
+      },
       { path: '**', component: null }
     ]
   }

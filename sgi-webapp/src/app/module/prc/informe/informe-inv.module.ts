@@ -9,17 +9,15 @@ import { SharedModule } from '@shared/shared.module';
 import { PersonaNombreCompletoPipe } from 'src/app/esb/sgp/shared/pipes/persona-nombre-completo.pipe';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
-import { InformeGenerarComponent } from './informe-generar/informe-generar.component';
-import { InformeRoutingModule } from './informe-routing.module';
+import { InformeInvRoutingModule } from './informe-inv-routing.module';
 
 @NgModule({
   declarations: [
-    InformeGenerarComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    InformeRoutingModule,
+    InformeInvRoutingModule,
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
@@ -34,4 +32,4 @@ import { InformeRoutingModule } from './informe-routing.module';
     PersonaNombreCompletoPipe
   ]
 })
-export class InformeModule { }
+export class InformeInvModule { }

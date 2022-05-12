@@ -60,4 +60,11 @@ export class GrupoEquipoService extends _GrupoEquipoMixinBase {
     );
   }
 
+  /**
+   * Devuelve el personaRef del usuario actual y de todos los miembros de los equipos en los que sea investigador principal
+   */
+  findMiembrosEquipoInvestigador(): Observable<string[]> {
+    return this.get<string[]>(`${this.endpointUrl}/investigador`);
+  }
+
 }
