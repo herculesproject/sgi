@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
+import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGrupoLineaInvestigadorResponse } from '../grupo-linea-investigador/grupo-linea-investigador-response';
+import { GRUPO_LINEA_INVESTIGADOR_RESPONSE_CONVERTER } from '../grupo-linea-investigador/grupo-linea-investigador-response.converter';
 import { IGrupoLineaInvestigacionRequest } from './grupo-linea-investigacion-request';
 import { GRUPO_LINEA_INVESTIGACION_REQUEST_CONVERTER } from './grupo-linea-investigacion-request.converter';
 import { IGrupoLineaInvestigacionResponse } from './grupo-linea-investigacion-response';
@@ -81,6 +84,19 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
     const url = `${this.endpointUrl}/${id}/modificable`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera la lista de líneas de investigadores
+   * @param id Identificador del grupo de investigación
+   * @param options opciones de búsqueda.
+   */
+  findLineasInvestigadores(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoLineaInvestigador>> {
+    return this.find<IGrupoLineaInvestigadorResponse, IGrupoLineaInvestigador>(
+      `${this.endpointUrl}/${id}/lineas-investigadores`,
+      options,
+      GRUPO_LINEA_INVESTIGADOR_RESPONSE_CONVERTER
     );
   }
 

@@ -7,7 +7,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { DEDICACION_MAP, IGrupoEquipo } from '@core/models/csp/grupo-equipo';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
+import { GrupoLineaInvestigadorService } from '@core/services/csp/grupo-linea-investigador/grupo-linea-investigador.service';
 import { DialogService } from '@core/services/dialog.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -20,8 +21,9 @@ import { GrupoEquipoModalComponent, GrupoEquipoModalData } from '../../modals/gr
 import { GrupoEquipoInvestigacionFragment, IGrupoEquipoListado } from './grupo-equipo-investigacion.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const PROYECTO_EQUIPO_MIEMBRO_KEY = marker('csp.grupo-equipo.miembro');
+const GRUPO_EQUIPO_MIEMBRO_KEY = marker('csp.grupo-equipo.miembro');
 const MODAL_TITLE_KEY = marker('csp.grupo-equipo.miembro-equipo');
+const MSG_NO_DELETE = marker('csp.grupo-equipo.adscrito');
 
 @Component({
   selector: 'sgi-grupo-equipo-investigacion',
@@ -39,6 +41,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
   modalTitleEntity: string;
   msgParamEntity = {};
   textoDelete: string;
+  textoNoDelete: string;
 
   dataSource = new MatTableDataSource<StatusWrapper<IGrupoEquipoListado>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -49,7 +52,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
   }
 
   constructor(
-    protected proyectoService: GrupoService,
+    protected grupoEquipoService: GrupoEquipoService,
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
@@ -96,7 +99,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_EQUIPO_MIEMBRO_KEY,
+      GRUPO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
@@ -106,7 +109,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     ).subscribe((value) => this.modalTitleEntity = value);
 
     this.translate.get(
-      PROYECTO_EQUIPO_MIEMBRO_KEY,
+      GRUPO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -116,6 +119,11 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      MSG_NO_DELETE,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.textoNoDelete = value);
 
   }
 
@@ -170,15 +178,21 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
    * Eliminar grupo equipo
    */
   deleteEquipo(wrapper: StatusWrapper<IGrupoEquipoListado>) {
-    this.subscriptions.push(
-      this.dialogService.showConfirmation(this.textoDelete).subscribe(
-        (aceptado) => {
-          if (aceptado) {
-            this.formPart.deleteGrupoEquipoInvestigacion(wrapper);
-          }
-        }
-      )
-    );
+    this.grupoEquipoService.existsLineaInvestigadorInFechasGrupoEquipo(wrapper.value.id).subscribe(res => {
+      if (res) {
+        this.subscriptions.push(this.dialogService.showConfirmation(this.textoNoDelete).subscribe());
+      } else {
+        this.subscriptions.push(
+          this.dialogService.showConfirmation(this.textoDelete).subscribe(
+            (aceptado) => {
+              if (aceptado) {
+                this.formPart.deleteGrupoEquipoInvestigacion(wrapper);
+              }
+            }
+          )
+        );
+      }
+    });
   }
 
 }

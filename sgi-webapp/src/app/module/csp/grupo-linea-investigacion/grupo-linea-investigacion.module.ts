@@ -12,13 +12,17 @@ import { GrupoLineaInvestigacionCrearComponent } from './grupo-linea-investigaci
 import { GrupoLineaInvestigacionDataResolver } from './grupo-linea-investigacion-data.resolver';
 import { GrupoLineaInvestigacionEditarComponent } from './grupo-linea-investigacion-editar/grupo-linea-investigacion-editar.component';
 import { GrupoLineaInvestigacionDatosGeneralesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-datos-generales/grupo-linea-investigacion-datos-generales.component';
+import { GrupoLineaInvestigadorComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-linea-investigador/grupo-linea-investigador.component';
 import { GrupoLineaInvestigacionRouting } from './grupo-linea-investigacion-routing.module';
+import { GrupoLineaInvestigadorModalComponent } from './modals/grupo-linea-investigador-modal/grupo-linea-investigador-modal.component';
 
 @NgModule({
   declarations: [
     GrupoLineaInvestigacionEditarComponent,
     GrupoLineaInvestigacionCrearComponent,
-    GrupoLineaInvestigacionDatosGeneralesComponent
+    GrupoLineaInvestigacionDatosGeneralesComponent,
+    GrupoLineaInvestigadorComponent,
+    GrupoLineaInvestigadorModalComponent
   ],
   imports: [
     CommonModule,

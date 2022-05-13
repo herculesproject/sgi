@@ -11,6 +11,7 @@ import { GrupoLineaInvestigacionCrearComponent } from './grupo-linea-investigaci
 import { GrupoLineaInvestigacionDataResolver, GRUPO_LINEA_INVESTIGACION_DATA_KEY } from './grupo-linea-investigacion-data.resolver';
 import { GrupoLineaInvestigacionEditarComponent } from './grupo-linea-investigacion-editar/grupo-linea-investigacion-editar.component';
 import { GrupoLineaInvestigacionDatosGeneralesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-datos-generales/grupo-linea-investigacion-datos-generales.component';
+import { GrupoLineaInvestigadorComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-linea-investigador/grupo-linea-investigador.component';
 import { GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES } from './grupo-linea-investigacion-route-names';
 import { GRUPO_LINEA_INVESTIGACION_ROUTE_PARAMS } from './grupo-linea-investigacion-route-params';
 
@@ -67,6 +68,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES.DATOS_GENERALES,
         component: GrupoLineaInvestigacionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES.LINEA_INVESTIGADOR,
+        component: GrupoLineaInvestigadorComponent,
         canDeactivate: [FragmentGuard]
       },
     ]
