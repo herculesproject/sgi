@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Import;
  * RangoServiceTest
  */
 @Import({ RangoService.class, ApplicationContextSupport.class })
-public class RangoServiceTest extends BaseServiceTest {
+class RangoServiceTest extends BaseServiceTest {
 
   @MockBean
   private RangoRepository repository;
@@ -41,7 +41,7 @@ public class RangoServiceTest extends BaseServiceTest {
   private RangoService rangoService;
 
   @Test
-  public void validateRangosEmpty() {
+  void validateRangosEmpty() {
     List<Rango> rangos = new ArrayList<>();
 
     Assertions.assertThatThrownBy(() -> rangoService.validateRangos(rangos))
@@ -49,14 +49,14 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosNull() {
+  void validateRangosNull() {
     List<Rango> rangos = null;
     Assertions.assertThatThrownBy(() -> rangoService.validateRangos(rangos))
         .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void validateRangosPuntosNull() {
+  void validateRangosPuntosNull() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -81,7 +81,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosPuntosZero() {
+  void validateRangosPuntosZero() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -108,7 +108,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosPuntosNegative() {
+  void validateRangosPuntosNegative() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -135,7 +135,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosConvocatoriaBaremacionIdNull() {
+  void validateRangosConvocatoriaBaremacionIdNull() {
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
         .id(null)
@@ -160,7 +160,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosTwoTemporalidadInicial() {
+  void validateRangosTwoTemporalidadInicial() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -187,7 +187,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosTwoTemporalidadFinal() {
+  void validateRangosTwoTemporalidadFinal() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -214,7 +214,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosTwoNullDesde() {
+  void validateRangosTwoNullDesde() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -241,7 +241,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosTwoNullHasta() {
+  void validateRangosTwoNullHasta() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -268,7 +268,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosDesdeEqualsHasta() {
+  void validateRangosDesdeEqualsHasta() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -295,7 +295,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosOverlapped() {
+  void validateRangosOverlapped() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -331,7 +331,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosOverlapped2() {
+  void validateRangosOverlapped2() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -367,7 +367,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosDesdeGapHasta() {
+  void validateRangosDesdeGapHasta() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -394,7 +394,7 @@ public class RangoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void validateRangosOk() {
+  void validateRangosOk() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -417,11 +417,12 @@ public class RangoServiceTest extends BaseServiceTest {
         .build());
 
     rangoService.validateRangos(rangos);
-    Assertions.assertThat(rangos).isEqualTo(rangos);
+    int numRangos = rangos.size();
+    Assertions.assertThat(numRangos).isEqualTo(2);
   }
 
   @Test
-  public void validateRangosOk2() {
+  void validateRangosOk2() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -453,11 +454,12 @@ public class RangoServiceTest extends BaseServiceTest {
         .build());
 
     rangoService.validateRangos(rangos);
-    Assertions.assertThat(rangos).isEqualTo(rangos);
+    int numRangos = rangos.size();
+    Assertions.assertThat(numRangos).isEqualTo(3);
   }
 
   @Test
-  public void validateRangosOk3() {
+  void validateRangosOk3() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -489,11 +491,12 @@ public class RangoServiceTest extends BaseServiceTest {
         .build());
 
     rangoService.validateRangos(rangos);
-    Assertions.assertThat(rangos).isEqualTo(rangos);
+    int numRangos = rangos.size();
+    Assertions.assertThat(numRangos).isEqualTo(3);
   }
 
   @Test
-  public void validateRangosOk4() {
+  void validateRangosOk4() {
     Long convocatoriaBaremacionId = 1L;
     List<Rango> rangos = new ArrayList<>();
     rangos.add(Rango.builder()
@@ -525,7 +528,8 @@ public class RangoServiceTest extends BaseServiceTest {
         .build());
 
     rangoService.validateRangos(rangos);
-    Assertions.assertThat(rangos).isEqualTo(rangos);
+    int numRangos = rangos.size();
+    Assertions.assertThat(numRangos).isEqualTo(3);
   }
 
 }

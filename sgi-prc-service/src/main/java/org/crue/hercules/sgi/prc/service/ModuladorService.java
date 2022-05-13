@@ -146,8 +146,9 @@ public class ModuladorService {
   public List<Modulador> findByConvocatoriaBaremacionId(Long convocatoriaBaremacionId) {
     log.debug("findByConvocatoriaBaremacionId({})  - start", convocatoriaBaremacionId);
 
-    convocatoriaBaremacionRepository.findById(convocatoriaBaremacionId)
-        .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId));
+    if (!convocatoriaBaremacionRepository.existsById(convocatoriaBaremacionId)) {
+      throw new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId);
+    }
 
     final List<Modulador> returnValue = repository
         .findByConvocatoriaBaremacionId(convocatoriaBaremacionId);
@@ -166,8 +167,9 @@ public class ModuladorService {
   public List<Modulador> findByConvocatoriaBaremacionIdAndTipo(Long convocatoriaBaremacionId, TipoModulador tipo) {
     log.debug("findByConvocatoriaBaremacionIdAndTipo({},{})  - start", convocatoriaBaremacionId, tipo);
 
-    convocatoriaBaremacionRepository.findById(convocatoriaBaremacionId)
-        .orElseThrow(() -> new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId));
+    if (!convocatoriaBaremacionRepository.existsById(convocatoriaBaremacionId)) {
+      throw new ConvocatoriaBaremacionNotFoundException(convocatoriaBaremacionId);
+    }
 
     final List<Modulador> returnValue = repository
         .findByConvocatoriaBaremacionIdAndTipo(convocatoriaBaremacionId, tipo);

@@ -33,7 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ValorCampoServiceTest
  */
 @Import({ ValorCampoService.class, ApplicationContextSupport.class })
-public class ValorCampoServiceTest extends BaseServiceTest {
+class ValorCampoServiceTest extends BaseServiceTest {
 
   private static final String VALOR_PREFIX = "Valor-";
   private static final String DEFAULT_DATA_VALOR = VALOR_PREFIX + "default";

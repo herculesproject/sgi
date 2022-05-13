@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.prc.service.sgi;
 
-import java.time.Instant;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.prc.config.RestApiProperties;
 import org.crue.hercules.sgi.prc.exceptions.MicroserviceCallException;

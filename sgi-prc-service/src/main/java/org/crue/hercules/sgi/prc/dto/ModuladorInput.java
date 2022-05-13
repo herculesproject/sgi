@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@UniqueFieldsValues(groups = { Modulador.Create.class }, entityClass = Modulador.class, fieldsNames = {
+@UniqueFieldsValues(groups = { BaseEntity.Create.class }, entityClass = Modulador.class, fieldsNames = {
     Modulador_.TIPO, Modulador_.CONVOCATORIA_BAREMACION_ID, Modulador_.AREA_REF })
 public class ModuladorInput implements Serializable {
   private Long id;

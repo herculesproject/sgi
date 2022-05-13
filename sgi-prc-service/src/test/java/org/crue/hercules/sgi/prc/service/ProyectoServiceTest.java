@@ -33,7 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ProyectoServiceTest
  */
 @Import({ ProyectoService.class, ApplicationContextSupport.class })
-public class ProyectoServiceTest extends BaseServiceTest {
+class ProyectoServiceTest extends BaseServiceTest {
 
   private static final Long DEFAULT_DATA_PRODUCCION_CIENTIFICA_ID = 1L;
   private static final Long DEFAULT_DATA_PROYECTO_REF = 1L;

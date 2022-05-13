@@ -73,7 +73,7 @@ public class ProduccionCientificaFieldFormatUtil {
     return Instant.now().atZone(timeZone.toZoneId())
         .withYear(anio)
         .with(TemporalAdjusters.lastDayOfYear())
-        .with(LocalTime.MAX).toInstant();
+        .with(LocalTime.NOON).toInstant();
   }
 
   public static Pair<Instant, Instant> calculateFechasInicioFinBaremacionByAnio(Integer anio, TimeZone timeZone) {
