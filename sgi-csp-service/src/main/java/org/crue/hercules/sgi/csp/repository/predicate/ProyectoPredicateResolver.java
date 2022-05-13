@@ -153,7 +153,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
       return cb.and(cb.equal(joinProrrogas.get(ProyectoProrroga_.proyectoId), root.get(Proyecto_.id)));
     } else {
       List<Long> idsProyectoWithProrrogas = this.proyectoProrrogaRepository.findAll().stream()
-          .map(prorroga -> prorroga.getProyectoId()).collect(Collectors.toList());
+          .map(ProyectoProrroga::getProyectoId).collect(Collectors.toList());
       return cb.and(cb.not(root.get(Proyecto_.id).in(idsProyectoWithProrrogas)));
     }
   }

@@ -458,6 +458,26 @@ public class GrupoService {
   }
 
   /**
+   * Obtiene los ids de {@link Grupo} modificados que esten activos y que cumplan
+   * las condiciones indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Grupo}.
+   */
+  public List<Long> findIdsGruposModificados(String query) {
+    log.debug("findIdsGruposModificados(String query) - start");
+
+    Specification<Grupo> specs = GrupoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsGruposModificados(String query) - end");
+
+    return returnValue;
+  }
+
+  /**
    * Comprueba si ya existe un grupo con el
    * codigo indicado
    * 

@@ -88,6 +88,7 @@ public class GrupoController {
   public static final String PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO = PATH_DELIMITER + "grupo-baremable/{grupoRef}/{anio}";
   public static final String PATH_BAREMABLES_ANIO = PATH_DELIMITER + "baremables/{anio}";
   public static final String PATH_GRUPOS_INVESTIGADOR = PATH_DELIMITER + "investigador";
+  public static final String PATH_MODIFICADOS_IDS = PATH_DELIMITER + "modificados-ids";
 
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_ACTIVAR = PATH_ID + "/activar";
@@ -184,9 +185,9 @@ public class GrupoController {
   @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
-    log.debug("Convocatoria exists(Long id) - start");
+    log.debug("exists(Long id) - start");
     boolean exists = service.existsById(id);
-    log.debug("Convocatoria exists(Long id) - end");
+    log.debug("exists(Long id) - end");
     return exists ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -631,6 +632,24 @@ public class GrupoController {
         .convert(grupoLineaInvestigacionService.findAllByGrupo(id, query, paging));
     log.debug("findAllGrupoLineaInvestigacion(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene los ids de {@link Grupo} modificados que esten activos y que cumplan
+   * las condiciones indicadas en el filtro de búsqueda
+   * 
+   * @param query filtro de búsqueda.
+   * @return lista de ids de {@link Grupo}.
+   */
+  @GetMapping("/modificados-ids")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  public ResponseEntity<List<Long>> findIdsGruposModificados(
+      @RequestParam(name = "q", required = false) String query) {
+    log.debug("findIdsGruposModificados(String query) - start");
+    List<Long> returnValue = service.findIdsGruposModificados(query);
+    log.debug("findIdsGruposModificados(String query) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

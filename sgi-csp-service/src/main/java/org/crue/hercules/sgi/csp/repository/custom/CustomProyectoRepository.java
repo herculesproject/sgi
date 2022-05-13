@@ -45,7 +45,7 @@ public interface CustomProyectoRepository {
   ProyectoPresupuestoTotales getTotales(Long proyectoId);
 
   /**
-   * * Obtiene los ids de proyectos que cumplen con la specification recibida.
+   * Obtiene los ids de proyectos que cumplen con la specification recibida.
    * 
    * @param specification condiciones que deben cumplir.
    * @return lista de ids de {@link Proyecto}.
