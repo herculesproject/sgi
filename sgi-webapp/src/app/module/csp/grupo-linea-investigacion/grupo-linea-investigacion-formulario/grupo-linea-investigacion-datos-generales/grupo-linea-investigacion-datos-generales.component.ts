@@ -3,7 +3,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
-import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -21,8 +20,6 @@ const GRUPO_LINEA_INVESTIGACION_FECHA_FIN_KEY = marker('csp.grupo-linea-investig
 })
 export class GrupoLineaInvestigacionDatosGeneralesComponent extends FormFragmentComponent<IGrupoLineaInvestigacion> implements OnInit, OnDestroy {
   MSG_PARAMS = MSG_PARAMS;
-
-  readonly lineasInvestigacion$ = new BehaviorSubject<ILineaInvestigacion[]>([]);
   gruposLineasInvestigacion$: Subject<IGrupoLineaInvestigacion[]> = new BehaviorSubject<IGrupoLineaInvestigacion[]>([]);
 
   datosGeneralesFragment: GrupoLineaInvestigacionDatosGeneralesFragment;
@@ -40,11 +37,6 @@ export class GrupoLineaInvestigacionDatosGeneralesComponent extends FormFragment
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.datosGeneralesFragment = this.fragment as GrupoLineaInvestigacionDatosGeneralesFragment;
-
-    this.subscriptions.push(
-      this.lineaInvestigacionService.findAll()
-        .subscribe(response => this.lineasInvestigacion$.next(response.items))
-    );
   }
 
   ngOnInit(): void {

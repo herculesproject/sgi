@@ -35,9 +35,11 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
       },
     );
 
-    fechaFinValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
     fechaFinValidators.push(DateValidator.isAfterOther(form.controls.fechaInicio));
-    fechaInicioValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
+    if (this.grupo?.fechaFin) {
+      fechaFinValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
+      fechaInicioValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
+    }
 
     form.controls.fechaInicio.setValidators(fechaInicioValidators);
     form.controls.fechaFin.setValidators(fechaFinValidators);

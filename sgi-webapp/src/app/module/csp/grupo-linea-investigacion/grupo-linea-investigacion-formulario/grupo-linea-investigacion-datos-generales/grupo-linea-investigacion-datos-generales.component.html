@@ -5,8 +5,8 @@
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <mat-form-field fxFlex="50%">
         <mat-label>{{'csp.grupo-linea-investigacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-        <sgi-select-entity formControlName="lineaInvestigacion" [options]="lineasInvestigacion$ | async" required>
-        </sgi-select-entity>
+        <sgi-select-linea-investigacion formControlName="lineaInvestigacion" required>
+        </sgi-select-linea-investigacion>
         <mat-error *ngIf="formGroup.controls.lineaInvestigacion.errors?.required">
           {{'error.required.entity' | translate:msgParamLineaInvestigacionEntity}}
         </mat-error>
