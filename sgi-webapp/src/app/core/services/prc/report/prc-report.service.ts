@@ -87,7 +87,7 @@ export class PrcReportService {
           title: this.translate.instant(RESUMEN_PUNTUACION_GRUPOS_PERSONA_RESPONSABLE_KEY),
           type: ColumnType.STRING,
           horizontalOptions: {
-            customWidth: 34
+            customWidth: 32
           }
         }, {
           name: 'puntosSexenios',
@@ -108,7 +108,7 @@ export class PrcReportService {
           title: this.translate.instant(RESUMEN_PUNTUACION_GRUPOS_PUNTOS_PROD_KEY),
           type: ColumnType.STRING,
           horizontalOptions: {
-            customWidth: 14
+            customWidth: 16
           }
         }],
       rows: []
