@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
+import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,11 +44,12 @@ public class GrupoEquipoController {
   public static final String PATH_GRUPOS_PERSONA_REF_ANIO = PATH_DELIMITER + "/{personaRef}/{anio}";
   public static final String PATH_BAREMABLES_GRUPO_REF_ANIO = PATH_DELIMITER + "baremables/{grupoRef}/{anio}";
   public static final String PATH_MIEMBROS_EQUIPO_INVESTIGADOR = PATH_DELIMITER + "investigador";
-
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_GRUPO_LINEA_INVESTIGADOR = PATH_ID + PATH_DELIMITER + "gruposlineasinvestigadores";
 
   private final GrupoEquipoService service;
   private final GrupoEquipoConverter converter;
+  private final GrupoLineaInvestigadorService grupoLineaInevestigadorService;
 
   /**
    * Crea nuevo {@link GrupoEquipo}
@@ -205,6 +207,23 @@ public class GrupoEquipoController {
     List<String> result = service.findMiembrosEquipoUsuario();
     log.debug("findMiembrosEquipoUsuario() - end");
     return result.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba la existencia de un Grupo Equipo adscrito al
+   * {@link GrupoLineaInvestigador} con el id en las fechas del grupo equipo
+   *
+   * @param id Identificador de Grupo Equipo
+   * @return {@link HttpStatus#OK} si existe y {@link HttpStatus#NO_CONTENT} si
+   *         no.
+   */
+  @RequestMapping(path = PATH_GRUPO_LINEA_INVESTIGADOR, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  public ResponseEntity<Void> existsLineaInvestigadorInFechasGrupoEquipo(@PathVariable Long id) {
+    log.debug("GrupoEquipo existsLineaInvestigadorInFechasGrupoEquipo(Long id) - start");
+    boolean exists = grupoLineaInevestigadorService.existsLineaInvestigadorInFechasGrupoEquipo(id);
+    log.debug("GrupoEquipo existsLineaInvestigadorInFechasGrupoEquipo(Long id) - end");
+    return exists ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

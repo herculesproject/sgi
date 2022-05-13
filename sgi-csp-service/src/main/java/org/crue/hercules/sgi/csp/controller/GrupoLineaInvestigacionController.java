@@ -3,10 +3,17 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigacionConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigadorConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionInput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionOutput;
+import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigadorOutput;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador;
 import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigacionService;
+import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +43,15 @@ public class GrupoLineaInvestigacionController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposlineasinvestigacion";
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_GRUPO_LINEA_INVESTIGADOR = PATH_ID + "/lineas-investigadores";
 
+  // Services
   private final GrupoLineaInvestigacionService service;
+  private final GrupoLineaInvestigadorService grupoLineaInvestigadorService;
+
+  // Converters
   private final GrupoLineaInvestigacionConverter converter;
+  private final GrupoLineaInvestigadorConverter grupoLineaInvestigadorConverter;
 
   /**
    * Crea nuevo {@link GrupoLineaInvestigacion}
@@ -135,6 +149,28 @@ public class GrupoLineaInvestigacionController {
     boolean returnValue = service.modificable();
     log.debug("modificable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoLineaInvestigador}
+   * del
+   * {@link GrupoLineaInvestigacion}.
+   * 
+   * @param id     Identificador del {@link GrupoLineaInvestigador}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link GrupoLineaInvestigador} paginadas y
+   *         filtradas del {@link GrupoLineaInvestigacion}.
+   */
+  @GetMapping(PATH_GRUPO_LINEA_INVESTIGADOR)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  public ResponseEntity<Page<GrupoLineaInvestigadorOutput>> findAllGrupoLineaInvestigador(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoLineaInvestigador(Long id, String query, Pageable paging) - start");
+    Page<GrupoLineaInvestigadorOutput> page = grupoLineaInvestigadorConverter
+        .convert(grupoLineaInvestigadorService.findAllByGrupoLineaInvestigacion(id, query, paging));
+    log.debug("findAllGrupoLineaInvestigador(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }
