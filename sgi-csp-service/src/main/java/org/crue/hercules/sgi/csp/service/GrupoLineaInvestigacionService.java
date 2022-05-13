@@ -169,7 +169,7 @@ public class GrupoLineaInvestigacionService {
 
     if ((lineaInvestigacion.getFechaInicio() != null
         && lineaInvestigacion.getFechaInicio().isBefore(grupo.getFechaInicio()))
-        || (lineaInvestigacion.getFechaFin() != null
+        || (lineaInvestigacion.getFechaFin() != null && fechaFinGrupo != null
             && lineaInvestigacion.getFechaFin().isAfter(fechaFinGrupo))) {
       throw new GrupoLineaInvestigacionProjectRangeException(lineaInvestigacion.getFechaInicio(),
           fechaFinGrupo);
