@@ -24,7 +24,7 @@ public class ProyectoDto implements Serializable {
   private Instant fechaFinDefinitiva;
   private Boolean contrato;
   private BigDecimal totalImporteConcedido;
-  private BigDecimal importeConcedido;
+  private BigDecimal importeConcedidoCostesIndirectos;
   private Long ambitoGeograficoId;
   private Boolean convocatoriaExcelencia;
 

@@ -201,7 +201,7 @@ public class BaremacionProyectoService extends BaremacionCommonService {
 
                 Baremo baremoEvaluated = evaluateAutorTipoBaremoPrincipalAdditional(baremacionInputNew, autor.getIp());
 
-                BigDecimal puntosInvestigadorAdicional = puntos;
+                BigDecimal puntosInvestigadorAdicional = puntosInvestigador;
                 if (null != baremoEvaluated) {
                   saveOrUpdateMapPuntuacionBaremo(mapPuntuacionBaremo, baremoEvaluated);
                   puntosInvestigadorAdicional = puntosInvestigadorAdicional.add(baremoEvaluated.getPuntos());
@@ -386,14 +386,14 @@ public class BaremacionProyectoService extends BaremacionCommonService {
         ? CodigoCVN.CUANTIA_COSTES_INDIRECTOS_PROYECTO
         : CodigoCVN.CUANTIA_COSTES_INDIRECTOS_CONTRATO;
 
-    if (null == proyecto.getImporteConcedido()) {
-      proyecto.setImporteConcedido(
+    if (null == proyecto.getImporteConcedidoCostesIndirectos()) {
+      proyecto.setImporteConcedidoCostesIndirectos(
           getSgiApiCspService().getTotalImporteConcedidoAnualidadGastoCostesIndirectos(proyecto.getId()));
     }
 
-    if (null != proyecto.getImporteConcedido()) {
+    if (null != proyecto.getImporteConcedidoCostesIndirectos()) {
       String importeConcedido = ProduccionCientificaFieldFormatUtil
-          .formatNumber(proyecto.getImporteConcedido().toString());
+          .formatNumber(proyecto.getImporteConcedidoCostesIndirectos().toString());
       getProduccionCientificaBuilderService().addCampoProduccionCientificaAndValor(produccionCientificaId, codigoCVN,
           importeConcedido);
     }
