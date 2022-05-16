@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
 import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
@@ -115,6 +116,33 @@ public class ComunicadosService {
     }
     log.debug(
         "enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
+  }
+
+  public void enviarComunicadoInformeRetrospectivaCeeaPendiente(String nombreInvestigacion, String generoComite,
+      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String codigoOrganoCompetente,
+      String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - start");
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoAvisoRetrospectiva(
+          EtiComAvisoRetrospectivaData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .generoComite(generoComite)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion)
+              .codigoOrganoCompetente(codigoOrganoCompetente).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoInformeRetrospectivaCeeaPendiente() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - end");
   }
 
   /**

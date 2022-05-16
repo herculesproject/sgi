@@ -40,4 +40,6 @@ databaseChangeLog:
   - include:
       file: classpath*:db/changelog/changes/0000000000006-update-initial-database.xml
   - include:
-      file: classpath*:db/changelog/changes/0000000000006-update-initial-master-data.xml
+      file: classpath*:db/changelog/changes/0000000000006-update-sample-data.xml
+  - include:
+      file: classpath*:db/changelog/changes/0000000000006-fixup-initial-database.xml

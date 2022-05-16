@@ -5,4 +5,13 @@
   <changeSet author="user (generated)" id="0000000000006-1">
     <dropNotNullConstraint columnDataType="VARCHAR(4000)" columnName="resumen" tableName="evaluador" />
   </changeSet>
+
+  <!-- Se añade parametro para configurar el número de días para enviar comunicado de evaluacion de retrospectiva en la tabla de configuración -->
+  <changeSet author="user (generated)" id="0000000000006-2">
+    <addColumn tableName="configuracion">
+      <column name="dias_aviso_retrospectiva" type="bigint"></column>
+    </addColumn>
+    <addUniqueConstraint columnNames="dias_aviso_retrospectiva" constraintName="UC_CONFIGURACIONDIAS_AVISO_RETROSPECTIVA_COL" tableName="configuracion" />
+  </changeSet>
+
 </databaseChangeLog>
