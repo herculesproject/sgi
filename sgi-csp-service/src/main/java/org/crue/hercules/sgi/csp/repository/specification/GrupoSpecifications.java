@@ -118,18 +118,26 @@ public class GrupoSpecifications {
 
       Predicate personaRefEquals = cb.equal(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.personaRef),
           personaRef);
-      Predicate greaterThanFechaInicio = cb
-          .lessThanOrEqualTo(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaInicio), fecha);
-      Predicate lowerThanFechaFin = cb.or(cb.isNull(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaFin)),
-          cb.greaterThanOrEqualTo(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaFin), fecha));
 
-      Predicate fechaLowerThanFechaInicioGrupo = cb.greaterThan(root.get(Grupo_.fechaInicio), fecha);
-      Predicate fechaGreaterThanFechaFinGrupo = cb.lessThan(root.get(Grupo_.fechaFin), fecha);
+      Predicate greaterThanFechaInicio = cb.or(
+          cb.lessThanOrEqualTo(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaInicio), fecha),
+          cb.and(
+              cb.isNull(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaInicio)),
+              cb.or(
+                  cb.lessThanOrEqualTo(root.get(Grupo_.fechaInicio), fecha))));
+
+      Predicate lowerThanFechaFin = cb.or(
+          cb.greaterThanOrEqualTo(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaFin), fecha),
+          cb.and(
+              cb.isNull(joinPersonasAutorizadas.get(GrupoPersonaAutorizada_.fechaFin)),
+              cb.or(
+                  cb.isNull(root.get(Grupo_.fechaFin)),
+                  cb.greaterThanOrEqualTo(root.get(Grupo_.fechaFin), fecha))));
 
       return cb.and(
           personaRefEquals,
-          cb.or(fechaLowerThanFechaInicioGrupo, greaterThanFechaInicio),
-          cb.or(fechaGreaterThanFechaFinGrupo, lowerThanFechaFin));
+          greaterThanFechaInicio,
+          lowerThanFechaFin);
     };
   }
 
@@ -149,18 +157,26 @@ public class GrupoSpecifications {
 
       Predicate personaRefEquals = cb.equal(joinEquipos.get(GrupoEquipo_.personaRef), personaRef);
       Predicate rolPrincipal = cb.equal(joinEquipos.get(GrupoEquipo_.rol).get(RolProyecto_.rolPrincipal), true);
-      Predicate greaterThanFechaInicio = cb.lessThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaInicio), fecha);
-      Predicate lowerThanFechaFin = cb.or(cb.isNull(joinEquipos.get(GrupoEquipo_.fechaFin)),
-          cb.greaterThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaFin), fecha));
 
-      Predicate fechaLowerThanFechaInicioGrupo = cb.greaterThan(root.get(Grupo_.fechaInicio), fecha);
-      Predicate fechaGreaterThanFechaFinGrupo = cb.lessThan(root.get(Grupo_.fechaFin), fecha);
+      Predicate greaterThanFechaInicio = cb.or(
+          cb.lessThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaInicio), fecha),
+          cb.and(
+              cb.isNull(joinEquipos.get(GrupoEquipo_.fechaInicio)),
+              cb.lessThanOrEqualTo(root.get(Grupo_.fechaInicio), fecha)));
+
+      Predicate lowerThanFechaFin = cb.or(
+          cb.greaterThanOrEqualTo(joinEquipos.get(GrupoEquipo_.fechaFin), fecha),
+          cb.and(
+              cb.isNull(joinEquipos.get(GrupoEquipo_.fechaFin)),
+              cb.or(
+                  cb.isNull(root.get(Grupo_.fechaFin)),
+                  cb.greaterThanOrEqualTo(root.get(Grupo_.fechaFin), fecha))));
 
       return cb.and(
           personaRefEquals,
           rolPrincipal,
-          cb.or(fechaLowerThanFechaInicioGrupo, greaterThanFechaInicio),
-          cb.or(fechaGreaterThanFechaFinGrupo, lowerThanFechaFin));
+          greaterThanFechaInicio,
+          lowerThanFechaFin);
     };
   }
 
