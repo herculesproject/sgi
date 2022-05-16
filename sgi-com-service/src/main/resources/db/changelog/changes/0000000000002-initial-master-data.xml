@@ -26,6 +26,18 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_COM_INF_RETRO_PENDIENTE_DATA" />
+      <column name="description" value="JSON con formato: {&quot;nombre de investigacion&quot;&quot;genero de comite&quot;,&quot;referencia de memoria&quot;,&quot;tipo de actividad&quot;,&quot;titulo solicitud evaluacion&quot;,&quot;enlace de aplicacion&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-subject_tpl">
@@ -52,6 +64,18 @@
       <column name="tpl" valueClobFile="clob/0000000000002/eti-com-dictamen/ETI_COM_DICT_EVA_REV_MINIMA_SUBJECT.ftl" />
       <where>name='ETI_COM_DICT_EVA_REV_MINIMA_SUBJECT'</where>
     </update>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="ETI_COM_INF_RETRO_PENDIENTE_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de comunicados de aviso de evaluación retrospectiva pendiente" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000002/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_SUBJECT.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-subjecttpl_param">
@@ -65,6 +89,12 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_DICT_EVA_REV_MINIMA_DATA')" />
+    </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_RETRO_PENDIENTE_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_RETRO_PENDIENTE_DATA')" />
     </insert>
   </changeSet>
 
@@ -101,6 +131,23 @@
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/0000000000002/eti-com-dictamen/ETI_COM_DICT_EVA_REV_MINIMA_CONTENT_html.ftl" />
       <where>name='ETI_COM_DICT_EVA_REV_MINIMA_CONTENT'</where>
+    </update>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="ETI_COM_INF_RETRO_PENDIENTE_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de comunicados de aviso de evaluación retrospectiva pendiente" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_CONTENT_text.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_CONTENT_html.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT'</where>
     </update>
 
     <!-- CSP Calendario Facturacion Notificar FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST -->
@@ -207,6 +254,12 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_DICT_EVA_REV_MINIMA_DATA')" />
     </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_RETRO_PENDIENTE_DATA')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-email_tpl">
@@ -231,6 +284,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="ETI_COM_INF_RETRO_PENDIENTE" />
+      <column name="description" value="Aviso de evaluación retrospectiva pendiente(texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-emailtpl_subjecttpl">
@@ -245,6 +309,12 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA_SUBJECT')" />
     </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_RETRO_PENDIENTE')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_RETRO_PENDIENTE_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-emailtpl_contenttpl">
@@ -258,6 +328,12 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_DICT_EVA_REV_MINIMA_CONTENT')" />
+    </insert>
+
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_RETRO_PENDIENTE')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
