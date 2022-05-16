@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.AreaTematicaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AreaTematicaSpecifications;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -241,7 +242,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public Page<AreaTematica> findAll(String query, Pageable pageable) {
     log.debug("findAll(String query, Pageable pageable) - start");
     Specification<AreaTematica> specs = AreaTematicaSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query));
+        .and(SgiRSQLJPASupport.toSpecification(query, AreaTematicaPredicateResolver.getInstance()));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
