@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
@@ -88,6 +87,9 @@ import lombok.extern.slf4j.Slf4j;
 public class InvencionController {
   public static final String PATH_SEPARATOR = "/";
   public static final String MAPPING = PATH_SEPARATOR + "invenciones";
+  public static final String PATH_MODIFICADOS_IDS = PATH_SEPARATOR + "modificados-ids";
+  public static final String PATH_PRC = PATH_SEPARATOR + "produccioncientifica/{anioInicio}/{anioFin}/{universidadId}";
+
   public static final String PATH_SECTORES = PATH_SEPARATOR + "{id}/sectoresaplicacion";
   public static final String PATH_AREAS = PATH_SEPARATOR + "{id}/areasconocimiento";
   public static final String PATH_INFORMESPATENTABILIDAD = PATH_SEPARATOR + "{id}/informespatentabilidad";
@@ -98,7 +100,6 @@ public class InvencionController {
   public static final String PATH_PERIODOTITULARIDAD_TITULAR = PATH_PERIODOSTITULARIDAD + "{periodotitularidadId}";
   public static final String PATH_REPARTO = PATH_SEPARATOR + "{invencionId}/repartos";
   public static final String PATH_PALABRAS_CLAVE = PATH_SEPARATOR + "{invencionId}/palabrasclave";
-  public static final String PATH_PRC = PATH_SEPARATOR + "produccioncientifica/{anioInicio}/{anioFin}/{universidadId}";
 
   private final ModelMapper modelMapper;
 
@@ -652,6 +653,25 @@ public class InvencionController {
 
     log.debug("findInvencionesProduccionCientifica(anioInicio, anioFin, universidadId) - end");
     return new ResponseEntity<>(invenciones, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene los ids de {@link Invencion} modificados que esten activos y que
+   * cumplan
+   * las condiciones indicadas en el filtro de búsqueda
+   * 
+   * @param query filtro de búsqueda.
+   * @return lista de ids de {@link Invencion}.
+   */
+  @GetMapping("/modificados-ids")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('PII-INV-E', 'PII-INV-V')")
+  public ResponseEntity<List<Long>> findIdsInvencionesModificadas(
+      @RequestParam(name = "q", required = false) String query) {
+    log.debug("findIdsInvencionesModificadas(String query) - start");
+    List<Long> returnValue = service.findIdsInvencionesModificadas(query);
+    log.debug("findIdsInvencionesModificadas(String query) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
   private BigDecimal getParticipacionTitularByAnio(Long invencionId, Integer anio, String universidadId) {
