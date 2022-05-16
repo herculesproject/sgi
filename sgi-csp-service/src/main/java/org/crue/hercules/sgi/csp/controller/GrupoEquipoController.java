@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoEquipoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoOutput;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
 import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
 import org.springframework.http.HttpStatus;
