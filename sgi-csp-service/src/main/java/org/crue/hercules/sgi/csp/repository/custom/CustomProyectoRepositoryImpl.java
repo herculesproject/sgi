@@ -257,8 +257,8 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
         root.get(Proyecto_.fechaFin),
         root.get(Proyecto_.fechaFinDefinitiva),
         root.get(Proyecto_.modeloEjecucion).get(ModeloEjecucion_.contrato),
-        root.get(Proyecto_.importeConcedido),
         root.get(Proyecto_.totalImporteConcedido),
+        root.get(Proyecto_.importeConcedidoCostesIndirectos),
         root.get(Proyecto_.ambitoGeografico).get(TipoAmbitoGeografico_.id),
         joinConvocatoria.get(Convocatoria_.excelencia));
 
