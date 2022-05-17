@@ -7,5 +7,12 @@
       <column name="description" value="Identificador de la entidad donde esta instalada la aplicación en el sistema de gestión de empresas" />
       <column name="value" value="Q3018001" />
     </insert>
+
+    <!-- Destinatarios defecto PII COM Fin Fecha Prioridad Solicitud Protección OTRI -->
+    <insert tableName="config">
+      <column name="name" value="pii-com-fecha-fin-pri-sol-prot-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto PII COM Fin Fecha Prioridad Solicitud Protección OTRI" />
+      <column name="value" value="[&quot;venc.periodo.pago.socio.otri@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
