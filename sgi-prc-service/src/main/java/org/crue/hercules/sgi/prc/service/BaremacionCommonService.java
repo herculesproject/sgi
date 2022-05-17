@@ -16,6 +16,8 @@ import java.util.stream.LongStream;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput.BaremoInput;
+import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
+import org.crue.hercules.sgi.prc.dto.csp.GrupoEquipoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.DepartamentoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.PersonaDto.VinculacionDto;
 import org.crue.hercules.sgi.prc.enums.TablaMaestraCVN;
@@ -549,6 +551,24 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
       return Boolean.TRUE;
     }
     return Boolean.FALSE;
+  }
+
+  private List<String> getPersonasByGrupoBaremableAndAnio(GrupoDto grupo, Integer anio) {
+    return getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(grupo.getId(), anio)
+        .stream()
+        .map(GrupoEquipoDto::getPersonaRef)
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  protected List<String> getAllPersonasInGruposBaremablesByAnio(Integer anio) {
+    List<String> personasEquipo = new ArrayList<>();
+
+    getSgiApiCspService().findAllGruposByAnio(anio).stream()
+        .map(grupo -> getPersonasByGrupoBaremableAndAnio(grupo, anio))
+        .forEach(personasEquipo::addAll);
+
+    return personasEquipo.stream().distinct().collect(Collectors.toList());
   }
 
 }

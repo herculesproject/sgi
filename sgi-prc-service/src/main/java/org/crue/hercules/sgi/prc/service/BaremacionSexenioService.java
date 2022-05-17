@@ -196,12 +196,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
                         fechaFinBaremacion, getSgiConfigProperties().getTimeZone(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
                 List<SexenioDto> sexeniosAnio = getSgiApiSgpService().findSexeniosByFecha(strFechaFinBaremacion);
 
-                List<String> personasEquipo = new ArrayList<>();
-                getSgiApiCspService().findAllGruposByAnio(anio).stream()
-                    .map(grupo -> getSexeniosByPersonasEquipo(grupo, anio))
-                    .forEach(personasEquipo::addAll);
-
-                personasEquipo = personasEquipo.stream().distinct().collect(Collectors.toList());
+                List<String> personasEquipo = getAllPersonasInGruposBaremablesByAnio(anio);
 
                 personasEquipo.forEach(personaRef -> {
                   Optional<SexenioDto> optSexenio = sexeniosAnio.stream()
@@ -218,14 +213,6 @@ public class BaremacionSexenioService extends BaremacionCommonService {
     }
 
     log.debug("copySexenios(anioInicio, anioFin) - end");
-  }
-
-  private List<String> getSexeniosByPersonasEquipo(GrupoDto grupo, Integer anio) {
-    return getSgiApiCspService().findAllGruposEquipoByGrupoIdAndAnio(grupo.getId(), anio)
-        .stream()
-        .map(GrupoEquipoDto::getPersonaRef)
-        .distinct()
-        .collect(Collectors.toList());
   }
 
   private void saveSexenio(SexenioDto sexenioDto, Integer anio) {
@@ -265,7 +252,7 @@ public class BaremacionSexenioService extends BaremacionCommonService {
             personaRef, Boolean.FALSE);
       }
     } catch (Exception e) {
-      log.debug(e.getMessage());
+      log.error(e.getMessage());
     }
   }
 

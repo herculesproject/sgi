@@ -90,7 +90,7 @@ public class BaremacionService {
       baremacionInvencionService.copyInvenciones(anioInicio, anioFin);
       baremacionProyectoService.copyProyectos(anioInicio, anioFin);
       baremacionSexenioService.copySexenios(anioInicio, anioFin);
-      // baremacionDireccionTesisService.copyTesis(anioInicio, anioFin);
+      baremacionDireccionTesisService.copyTesis(anioInicio, anioFin);
 
       IntStream.range(anioInicio, anioFin).forEach(anio -> {
         BaremacionInput baremacionInput = ProduccionCientificaFieldFormatUtil.createBaremacionInput(anio,

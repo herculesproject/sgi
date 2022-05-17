@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.prc.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.LongPredicate;
 import java.util.stream.IntStream;
 
@@ -26,10 +29,12 @@ import org.crue.hercules.sgi.prc.repository.ProduccionCientificaRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionBaremoItemRepository;
 import org.crue.hercules.sgi.prc.repository.PuntuacionItemInvestigadorRepository;
 import org.crue.hercules.sgi.prc.repository.ValorCampoRepository;
+import org.crue.hercules.sgi.prc.repository.specification.ProduccionCientificaSpecifications;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.prc.util.ProduccionCientificaFieldFormatUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -119,49 +124,79 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
     log.debug("copyTesis(anioInicio, anioFin) - start");
 
     // Delete all tesis
-    getProduccionCientificaRepository().findByEpigrafeCVNAndConvocatoriaBaremacionIdIsNull(EPIGRAFE_CVN_DIRECCION_TESIS)
+    Specification<ProduccionCientifica> specs = ProduccionCientificaSpecifications
+        .byEpigrafeCVNIn(Arrays.asList(EPIGRAFE_CVN_DIRECCION_TESIS))
+        .and(ProduccionCientificaSpecifications.byConvocatoriaBaremacionIsNull())
+        .and(ProduccionCientificaSpecifications.byProduccionCientificaRefStartWith(PREFIX_TESIS));
+
+    getProduccionCientificaRepository().findAll(specs)
         .forEach(getProduccionCientificaBuilderService()::deleteProduccionCientifica);
 
     try {
       IntStream.range(anioInicio, anioFin)
-          .forEach(anio -> getSgiApiSgpService().findTesisByAnio(anio).stream().forEach(tesis -> {
-            String tesisId = tesis.getId();
-            String produccionCientificaRef = PREFIX_TESIS + tesisId;
+          .forEach(anio -> {
 
-            ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
-                .epigrafeCVN(EPIGRAFE_CVN_DIRECCION_TESIS)
-                .produccionCientificaRef(produccionCientificaRef)
-                .build();
+            List<DireccionTesisDto> direccionTesisAnio = getSgiApiSgpService().findTesisByAnio(anio);
 
-            Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientificaAndEstado(
-                produccionCientifica, TipoEstadoProduccion.VALIDADO);
+            List<String> personasEquipo = getAllPersonasInGruposBaremablesByAnio(anio);
 
-            addCampoTesisTitulo(tesis, produccionCientificaId);
-            addCampoTesisFecha(tesis, produccionCientificaId);
-            addCampoTesisAlumno(tesis, produccionCientificaId);
-            addCampoTesisTipoProyecto(tesis, produccionCientificaId);
-            addCampoTesisMencionCalidad(tesis, produccionCientificaId);
-            addCampoTesisFechaMencionCalidad(tesis, produccionCientificaId);
-            addCampoTesisDoctoradoEuropeo(tesis, produccionCientificaId);
-            addCampoTesisFechaMencionDoctoradoEuropeo(tesis, produccionCientificaId);
-            addCampoTesisMencionInternacional(tesis, produccionCientificaId);
-            addCampoTesisMencionIndustrial(tesis, produccionCientificaId);
-
-            if (StringUtils.hasText(tesis.getPersonaRef())) {
-              getProduccionCientificaBuilderService().addAutorByPersonaRefAndIp(produccionCientificaId,
-                  tesis.getPersonaRef(), Boolean.FALSE);
-            }
-
-            if (StringUtils.hasText(tesis.getCoDirectorTesisRef())) {
-              getProduccionCientificaBuilderService().addAutorByPersonaRefAndIp(produccionCientificaId,
-                  tesis.getCoDirectorTesisRef(), Boolean.FALSE);
-            }
-          }));
+            personasEquipo.forEach(personaRef -> {
+              Optional<DireccionTesisDto> optTesis = direccionTesisAnio.stream()
+                  .filter(tesis -> isDirectorOrCoDirectorTesis(tesis, personaRef))
+                  .findFirst();
+              if (optTesis.isPresent()) {
+                saveTesis(optTesis.get());
+              }
+            });
+          });
     } catch (Exception e) {
       log.error(e.getMessage());
     }
 
     log.debug("copyTesis(anioInicio, anioFin) - end");
+  }
+
+  private void saveTesis(DireccionTesisDto tesis) {
+    try {
+      String tesisId = tesis.getId();
+      String produccionCientificaRef = PREFIX_TESIS + tesisId;
+
+      ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+          .epigrafeCVN(EPIGRAFE_CVN_DIRECCION_TESIS)
+          .produccionCientificaRef(produccionCientificaRef)
+          .build();
+
+      Long produccionCientificaId = getProduccionCientificaBuilderService().addProduccionCientificaAndEstado(
+          produccionCientifica, TipoEstadoProduccion.VALIDADO);
+
+      addCampoTesisTitulo(tesis, produccionCientificaId);
+      addCampoTesisFecha(tesis, produccionCientificaId);
+      addCampoTesisAlumno(tesis, produccionCientificaId);
+      addCampoTesisTipoProyecto(tesis, produccionCientificaId);
+      addCampoTesisMencionCalidad(tesis, produccionCientificaId);
+      addCampoTesisFechaMencionCalidad(tesis, produccionCientificaId);
+      addCampoTesisDoctoradoEuropeo(tesis, produccionCientificaId);
+      addCampoTesisFechaMencionDoctoradoEuropeo(tesis, produccionCientificaId);
+      addCampoTesisMencionInternacional(tesis, produccionCientificaId);
+      addCampoTesisMencionIndustrial(tesis, produccionCientificaId);
+
+      if (StringUtils.hasText(tesis.getPersonaRef())) {
+        getProduccionCientificaBuilderService().addAutorByPersonaRefAndIp(produccionCientificaId,
+            tesis.getPersonaRef(), Boolean.FALSE);
+      }
+
+      if (StringUtils.hasText(tesis.getCoDirectorTesisRef())) {
+        getProduccionCientificaBuilderService().addAutorByPersonaRefAndIp(produccionCientificaId,
+            tesis.getCoDirectorTesisRef(), Boolean.FALSE);
+      }
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+  }
+
+  private boolean isDirectorOrCoDirectorTesis(DireccionTesisDto tesis, String personaRef) {
+    return (StringUtils.hasText(tesis.getPersonaRef()) && tesis.getPersonaRef().equals(personaRef)) ||
+        (StringUtils.hasText(tesis.getPersonaRef()) && tesis.getCoDirectorTesisRef().equals(personaRef));
   }
 
   private void addCampoTesisTitulo(DireccionTesisDto tesis, Long produccionCientificaId) {
@@ -182,11 +217,9 @@ public class BaremacionDireccionTesisService extends BaremacionCommonService {
   }
 
   private void addCampoTesisAlumno(DireccionTesisDto tesis, Long produccionCientificaId) {
-    String alumno = getSgiApiSgpService().findPersonaById(tesis.getAlumno())
-        .map(persona -> persona.getNombre() + " " + persona.getApellidos()).orElse(null);
-    if (StringUtils.hasText(alumno)) {
+    if (StringUtils.hasText(tesis.getAlumno())) {
       getProduccionCientificaBuilderService()
-          .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_120, alumno);
+          .addCampoProduccionCientificaAndValor(produccionCientificaId, CodigoCVN.E030_040_000_120, tesis.getAlumno());
     }
   }
 

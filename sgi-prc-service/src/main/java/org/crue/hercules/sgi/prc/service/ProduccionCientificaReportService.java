@@ -446,7 +446,8 @@ public class ProduccionCientificaReportService {
     produccionesCientificas.add(getResumenProduccionCientifica(puntuacionesGrupoInvestigadores,
         "obrasArtisticas", TipoPuntuacion.OBRAS_ARTISTICAS, convocatoriaBaremacion, EpigrafeCVN.E050_020_030_000));
     produccionesCientificas.add(getResumenProduccionCientifica(puntuacionesGrupoInvestigadores,
-        "comitesEditoriales", TipoPuntuacion.DIRECCION_TESIS, convocatoriaBaremacion, EpigrafeCVN.E060_030_030_000));
+        "comitesEditoriales", TipoPuntuacion.COMITES_EDITORIALES, convocatoriaBaremacion,
+        EpigrafeCVN.E060_030_030_000));
     produccionesCientificas.add(getResumenProduccionCientifica(puntuacionesGrupoInvestigadores,
         "organizacionActividades", TipoPuntuacion.ORGANIZACION_ACTIVIDADES, convocatoriaBaremacion,
         EpigrafeCVN.E060_020_030_000));

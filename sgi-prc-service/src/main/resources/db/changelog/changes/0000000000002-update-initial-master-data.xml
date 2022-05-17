@@ -61,4 +61,12 @@
       </where>
     </update>
   </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000002-mapeo_tipos">
+    <update tableName="mapeo_tipos">
+      <column name="valor" value="true" />
+      <where>codigo_cvn = '050.030.010.170' and id_tipo_ref = 2
+      </where>
+    </update>
+  </changeSet>
 </databaseChangeLog>

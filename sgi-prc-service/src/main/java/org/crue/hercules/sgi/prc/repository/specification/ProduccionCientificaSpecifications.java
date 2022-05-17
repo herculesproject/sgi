@@ -38,6 +38,29 @@ public class ProduccionCientificaSpecifications {
   }
 
   /**
+   * {@link ProduccionCientifica} de la {@link ConvocatoriaBaremacion} con
+   * el id null.
+   * 
+   * @return specification para obtener los {@link ProduccionCientifica} de
+   *         la {@link ConvocatoriaBaremacion} con el id null.
+   */
+  public static Specification<ProduccionCientifica> byConvocatoriaBaremacionIsNull() {
+    return (root, query, cb) -> cb.isNull(root.get(ProduccionCientifica_.convocatoriaBaremacionId));
+  }
+
+  /**
+   * {@link ProduccionCientifica} con produccionCientificaRef que empieza por el
+   * prefijo indicado
+   * 
+   * @param prefix prefijo.
+   * @return specification para obtener los {@link ProduccionCientifica} con
+   *         produccionCientificaRef que empieza por el prefijo indicado
+   */
+  public static Specification<ProduccionCientifica> byProduccionCientificaRefStartWith(String prefix) {
+    return (root, query, cb) -> cb.like(root.get(ProduccionCientifica_.produccionCientificaRef), prefix + "%");
+  }
+
+  /**
    * {@link ProduccionCientifica} con el {@link EpigrafeCVN} indicado.
    * 
    * @param epigrafeCVN {@link EpigrafeCVN}.
