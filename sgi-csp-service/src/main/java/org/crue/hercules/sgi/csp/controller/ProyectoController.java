@@ -1212,7 +1212,7 @@ public class ProyectoController {
    * @return lista de ids de {@link Proyecto}.
    */
   @GetMapping("/modificados-ids")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   public ResponseEntity<List<Long>> findIdsProyectosModificados(
       @RequestParam(name = "q", required = false) String query) {
     log.debug("findIdsProyectosModificados(String query) - start");
@@ -1347,7 +1347,7 @@ public class ProyectoController {
    *         {@link Proyecto}.
    */
   @GetMapping("/{id}/notificacionesproyectos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   public ResponseEntity<List<NotificacionProyectoExternoCVNOutput>> findAllNotificacionProyectoExternoCVN(
       @PathVariable Long id) {
 
