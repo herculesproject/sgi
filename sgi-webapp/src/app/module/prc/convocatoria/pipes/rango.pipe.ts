@@ -15,9 +15,9 @@ export class RangoPipe implements PipeTransform {
       case TipoTemporalidad.INICIAL:
         return `<= ${this.formatNumber(value.hasta)}`;
       case TipoTemporalidad.INTERMEDIO:
-        return `${this.formatNumber(value.desde)} - ${this.formatNumber(value.hasta)}`;
+        return `${this.formatNumber(value.desde ?? 0)} - ${this.formatNumber(value.hasta)}`;
       case TipoTemporalidad.FINAL:
-        return `>=  ${this.formatNumber(value.desde)}`;
+        return `>=  ${this.formatNumber(value.desde ?? 0)}`;
       default:
         return '';
     }

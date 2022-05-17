@@ -9,7 +9,6 @@ import { Tipo } from '@core/models/prc/modulador';
 import { IRango, TipoRango, TipoTemporalidad, TIPO_TEMPORALIDAD_MAP } from '@core/models/prc/rango';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -64,7 +63,7 @@ export class ModuladoresRangosComponent extends FormFragmentComponent<Moduladore
   @ViewChild('sortModuladoresAutoresArea', { static: true }) sortModuladoresAutoresArea: MatSort;
 
   rangosCuantiaCostesIndirectosDataSource = new MatTableDataSource<StatusWrapper<IRango>>();
-  @ViewChild('sortRangosCuantiaCostesIndirectos', { static: true }) sortRangosCuantiaCostesIndirectos: MatSort;
+  @ViewChild('sortRangosCuantiaCostesIndirectos', { static: false }) sortRangosCuantiaCostesIndirectos: MatSort;
 
   rangosCuantiaContratosDataSource = new MatTableDataSource<StatusWrapper<IRango>>();
   @ViewChild('sortRangosCuantiaContratos', { static: true }) sortRangosCuantiaContratos: MatSort;
@@ -85,8 +84,7 @@ export class ModuladoresRangosComponent extends FormFragmentComponent<Moduladore
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
-    private readonly snackBarService: SnackBarService,
-    private readonly convocatoriaBaremacionService: ConvocatoriaBaremacionService
+    private readonly snackBarService: SnackBarService
   ) {
     super(actionService.FRAGMENT.MODULADORES_RANGOS, actionService);
     this.formPart = this.fragment as ModuladoresRangosFragment;
@@ -99,16 +97,22 @@ export class ModuladoresRangosComponent extends FormFragmentComponent<Moduladore
     this.configSortModuladores(Tipo.NUMERO_AUTORES);
     this.subscribeToModuladores(Tipo.NUMERO_AUTORES);
     this.configSortRangos(TipoRango.CUANTIA_CONTRATOS);
-    this.configSortRangos(TipoRango.CUANTIA_COSTES_INDIRECTOS);
     this.configSortRangos(TipoRango.LICENCIA);
     this.subscribeToRangos(TipoRango.CUANTIA_CONTRATOS);
     this.subscribeToRangos(TipoRango.CUANTIA_COSTES_INDIRECTOS);
     this.subscribeToRangos(TipoRango.LICENCIA);
     this.setupI18N();
-  }
 
-  showRangosCostesIndirectos(): void {
-    this.convocatoriaBaremacionService.findBaremos(this.formPart.getKey() as number);
+    this.subscriptions.push(
+      this.formPart.hasCostesIndirectosTipoRango$.subscribe(value => {
+        if (value) {
+          setTimeout(() => {
+            this.configSortRangos(TipoRango.CUANTIA_COSTES_INDIRECTOS);
+          }, 0);
+        }
+      })
+    );
+
   }
 
   openModalRango(tipoRango: TipoRango, wrapper?: StatusWrapper<IRango>): void {
