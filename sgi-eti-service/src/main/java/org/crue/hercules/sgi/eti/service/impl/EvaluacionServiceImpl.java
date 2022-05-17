@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion.Tipo;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
@@ -491,10 +492,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
       Evaluacion returnValue = evaluacionRepository.save(evaluacion);
 
-      // Se envía comunicado para evaluación con dictamen de evaluación de revisión
-      // mínima disponible
       if (returnValue.getEsRevMinima().booleanValue()) {
-        sendComunicadoDictamenEvaluacionRevMin(evaluacion);
+        // Se envía comunicado para evaluación con Dictamen de evaluación de seguimiento
+        // de memoria de revisión mínima disponible
+        if (returnValue.getDictamen().getTipoEvaluacion() != null
+            && (returnValue.getDictamen().getTipoEvaluacion().getTipo() == Tipo.SEGUIMIENTO_ANUAL
+                || returnValue.getDictamen().getTipoEvaluacion().getTipo() == Tipo.SEGUIMIENTO_FINAL)) {
+          sendComunicadoDictamenEvaluacionSeguimientoRevMin(evaluacion);
+          // Se envía comunicado para evaluación con dictamen de evaluación de revisión
+          // mínima disponible
+        } else {
+          sendComunicadoDictamenEvaluacionRevMin(evaluacion);
+        }
       }
 
       log.debug("update(Evaluacion evaluacionActualizar) - end");
@@ -784,6 +793,29 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - End");
     } catch (Exception e) {
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Error al enviar el comunicado", e);
+    }
+  }
+
+  private void sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) {
+    log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - Start");
+    try {
+      String tipoActividad;
+      if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+      this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
+          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
+          tipoActividad,
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+      log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - End");
+    } catch (Exception e) {
+      log.debug(
+          "sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - Error al enviar el comunicado",
+          e);
     }
   }
 }

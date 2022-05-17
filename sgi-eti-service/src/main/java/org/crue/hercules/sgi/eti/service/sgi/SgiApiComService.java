@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.dto.com.EmailParam;
 import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionSeguimientoRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.com.Status;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
@@ -60,6 +61,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_ETI_COM_INF_RETRO_PENDIENTE = "ETI_COM_INF_RETRO_PENDIENTE";
   private static final String TEMPLATE_ETI_COM_INF_RETRO_PENDIENTE_PARAM = TEMPLATE_ETI_COM_INF_RETRO_PENDIENTE
+      + DATA;
+
+  private static final String TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA = "ETI_COM_DICT_EVA_SEG_REV_MINIMA";
+  private static final String TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA_PARAM = TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA
       + DATA;
 
   private final SgiConfigProperties sgiConfigProperties;
@@ -264,6 +269,14 @@ public class SgiApiComService extends SgiApiBaseService {
       List<Recipient> recipients) throws JsonProcessingException {
     return this.createComunicado(data, recipients,
         TEMPLATE_ETI_COM_INF_RETRO_PENDIENTE, TEMPLATE_ETI_COM_INF_RETRO_PENDIENTE_PARAM);
+  }
+
+  public EmailOutput createComunicadoEvaluacionSeguimientoMemoriaRevMin(
+      EtiComDictamenEvaluacionSeguimientoRevMinData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA,
+        TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA_PARAM);
   }
 
   /**
