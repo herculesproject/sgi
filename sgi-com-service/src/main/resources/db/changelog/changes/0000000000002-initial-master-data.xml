@@ -54,7 +54,7 @@
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
-      <column name="name" value="PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_DATA" />
+      <column name="name" value="PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DATA" />
       <column name="description" value="JSON con formato: {&quot;solicitudTitle&quot;:&quot;Solicitud 1&quot;,&quot;monthsBeforeFechaFinPrioridad&quot;:6,&quot;fechaFinPrioridad&quot;:&quot;2022-01-01T00:00:00Z&quot;}" />
       <column name="type" value="JSON" />
       <column name="created_by" value="master" />
@@ -115,13 +115,13 @@
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
-      <column name="name" value="PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT" />
+      <column name="name" value="PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT" />
       <column name="description" value="Plantilla de asunto para el envío de aviso vencimiento Fin Fecha Prioridad Solicitud de Protección" />
       <column name="tpl" value=" " />
     </insert>
     <update tableName="subject_tpl">
-      <column name="tpl" valueClobFile="clob/0000000000002/pii-com-fin-fecha-prioridad-solicitud-proteccion/PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT.ftl" />
-      <where>name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT'</where>
+      <column name="tpl" valueClobFile="clob/0000000000002/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT.ftl" />
+      <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT'</where>
     </update>
   </changeSet>
 
@@ -152,8 +152,8 @@
 
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="subjecttpl_param">
-      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
-      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
     </insert>
   </changeSet>
 
@@ -320,18 +320,18 @@
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
-      <column name="name" value="PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT" />
+      <column name="name" value="PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT" />
       <column name="description" value="Plantilla de contenido para el envio de avisos de vencimiento de fin de fecha de prioridad de unsa solicitud de protección" />
       <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
     <update tableName="content_tpl">
-      <column name="tpl_text" valueClobFile="clob/0000000000002/pii-com-fin-fecha-prioridad-solicitud-proteccion/PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_text.ftl" />
-      <where>name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
+      <column name="tpl_text" valueClobFile="clob/0000000000002/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_text.ftl" />
+      <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
     </update>
     <update tableName="content_tpl">
-      <column name="tpl_html" valueClobFile="clob/0000000000002/pii-com-fin-fecha-prioridad-solicitud-proteccion/PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
-      <where>name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
+      <column name="tpl_html" valueClobFile="clob/0000000000002/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
+      <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
     </update>
   </changeSet>
 
@@ -362,8 +362,8 @@
 
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="contenttpl_param">
-      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
-      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
     </insert>
   </changeSet>
 
@@ -415,7 +415,7 @@
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
-      <column name="name" value="PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION" />
+      <column name="name" value="PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION" />
       <column name="description" value="Aviso de finalizacion de fin fecha prioridad de una solicitud de protección (texto + HTML)" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -451,8 +451,8 @@
 
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="emailtpl_subjecttpl">
-      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION')" />
-      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
     </insert>
   </changeSet>
 
@@ -483,8 +483,8 @@
 
     <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
     <insert tableName="emailtpl_contenttpl">
-      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION')" />
-      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_FIN_FECHA_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
