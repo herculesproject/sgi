@@ -11,6 +11,7 @@ import { CspSharedModule } from '../shared/csp-shared.module';
 import { GrupoLineaInvestigacionCrearComponent } from './grupo-linea-investigacion-crear/grupo-linea-investigacion-crear.component';
 import { GrupoLineaInvestigacionDataResolver } from './grupo-linea-investigacion-data.resolver';
 import { GrupoLineaInvestigacionEditarComponent } from './grupo-linea-investigacion-editar/grupo-linea-investigacion-editar.component';
+import { GrupoLineaClasificacionesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.component';
 import { GrupoLineaInvestigacionDatosGeneralesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-datos-generales/grupo-linea-investigacion-datos-generales.component';
 import { GrupoLineaInvestigadorComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-linea-investigador/grupo-linea-investigador.component';
 import { GrupoLineaInvestigacionRouting } from './grupo-linea-investigacion-routing.module';
@@ -22,7 +23,8 @@ import { GrupoLineaInvestigadorModalComponent } from './modals/grupo-linea-inves
     GrupoLineaInvestigacionCrearComponent,
     GrupoLineaInvestigacionDatosGeneralesComponent,
     GrupoLineaInvestigadorComponent,
-    GrupoLineaInvestigadorModalComponent
+    GrupoLineaInvestigadorModalComponent,
+    GrupoLineaClasificacionesComponent
   ],
   imports: [
     CommonModule,

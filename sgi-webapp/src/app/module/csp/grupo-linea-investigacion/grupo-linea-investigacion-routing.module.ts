@@ -10,6 +10,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { GrupoLineaInvestigacionCrearComponent } from './grupo-linea-investigacion-crear/grupo-linea-investigacion-crear.component';
 import { GrupoLineaInvestigacionDataResolver, GRUPO_LINEA_INVESTIGACION_DATA_KEY } from './grupo-linea-investigacion-data.resolver';
 import { GrupoLineaInvestigacionEditarComponent } from './grupo-linea-investigacion-editar/grupo-linea-investigacion-editar.component';
+import { GrupoLineaClasificacionesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.component';
 import { GrupoLineaInvestigacionDatosGeneralesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-datos-generales/grupo-linea-investigacion-datos-generales.component';
 import { GrupoLineaInvestigadorComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-linea-investigador/grupo-linea-investigador.component';
 import { GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES } from './grupo-linea-investigacion-route-names';
@@ -73,6 +74,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES.LINEA_INVESTIGADOR,
         component: GrupoLineaInvestigadorComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES.CLASIFICACIONES,
+        component: GrupoLineaClasificacionesComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

@@ -1,11 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IGrupoLineaClasificacion } from '@core/models/csp/grupo-linea-clasificacion';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import {
+  CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
+} from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGrupoLineaClasificacionResponse } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response';
+import { GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response.converter';
 import { IGrupoLineaInvestigadorResponse } from '../grupo-linea-investigador/grupo-linea-investigador-response';
 import { GRUPO_LINEA_INVESTIGADOR_RESPONSE_CONVERTER } from '../grupo-linea-investigador/grupo-linea-investigador-response.converter';
 import { IGrupoLineaInvestigacionRequest } from './grupo-linea-investigacion-request';
@@ -16,7 +21,13 @@ import { GRUPO_LINEA_INVESTIGACION_RESPONSE_CONVERTER } from './grupo-linea-inve
 // tslint:disable-next-line: variable-name
 const _GrupoLineaInvestigacionMixinBase:
   CreateCtor<IGrupoLineaInvestigacion, IGrupoLineaInvestigacion, IGrupoLineaInvestigacionRequest, IGrupoLineaInvestigacionResponse> &
-  UpdateCtor<number, IGrupoLineaInvestigacion, IGrupoLineaInvestigacion, IGrupoLineaInvestigacionRequest, IGrupoLineaInvestigacionResponse> &
+  UpdateCtor<
+    number,
+    IGrupoLineaInvestigacion,
+    IGrupoLineaInvestigacion,
+    IGrupoLineaInvestigacionRequest,
+    IGrupoLineaInvestigacionResponse
+  > &
   FindByIdCtor<number, IGrupoLineaInvestigacion, IGrupoLineaInvestigacionResponse> &
   typeof SgiRestBaseService = mixinFindById(
     mixinUpdate(
@@ -97,6 +108,22 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
       `${this.endpointUrl}/${id}/lineas-investigadores`,
       options,
       GRUPO_LINEA_INVESTIGADOR_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera los IGrupoLineaClasificacion del IGrupoLineaInvestigacion
+   *
+   * @param id Identificador del grupo de investigación
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IGrupoLineaClasificacion del IGrupoLineaInvestigacion
+   */
+  findClasificaciones(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IGrupoLineaClasificacion>> {
+    return this.find<IGrupoLineaClasificacionResponse, IGrupoLineaClasificacion>(
+      `${this.endpointUrl}/${id}/clasificaciones`,
+      options,
+      GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER
     );
   }
 
