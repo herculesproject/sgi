@@ -69,4 +69,12 @@
       </where>
     </update>
   </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000002-baremo">
+    <update tableName="baremo">
+      <column name="puntos" valueNumeric="2.00" />
+      <where>configuracion_baremo_id = (select id from ${schemaPrefix}configuracion_baremo where tipo_baremo='LIBRO_EDITORIAL_PRESTIGIO')
+      </where>
+    </update>
+  </changeSet>
 </databaseChangeLog>
