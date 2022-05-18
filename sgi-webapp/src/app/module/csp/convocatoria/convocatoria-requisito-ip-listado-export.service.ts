@@ -16,8 +16,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { IConvocatoriaReportData, IConvocatoriaReportOptions } from './convocatoria-listado-export.service';
 
 const REQUISITO_IP_KEY = marker('csp.convocatoria-requisito-ip');
@@ -55,7 +55,8 @@ const REQUISITO_IP_NUM_MAXIMO_NO_COMPETITIVO_FIELD = 'numMaximoNoCompetitivoIP';
 
 const COLUMN_VALUE_PREFIX = ': ';
 @Injectable()
-export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions>{
+export class ConvocatoriaRequisitoIPListadoExportService extends
+  AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions>{
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -74,69 +75,71 @@ export class ConvocatoriaRequisitoIPListadoExportService extends AbstractTableEx
         convocatoriaData.requisitoIP = responseRequisitosIP;
         return convocatoriaData;
       }),
-      switchMap(() => {
-        if (convocatoriaData.requisitoIP) {
-          return this.convocatoriaRequisitoIPService.findNivelesAcademicos(convocatoriaData.requisitoIP.id).pipe(
-            map((requisitoIpNivelesAcademicos) => {
-              if (requisitoIpNivelesAcademicos.length === 0) {
-                return convocatoriaData;
-              }
-              if (requisitoIpNivelesAcademicos) {
-                convocatoriaData.nivelesAcademicos = [];
-                requisitoIpNivelesAcademicos.forEach(requisitoIpNivelAcademico => {
-                  return this.nivelAcademicoService.findById(requisitoIpNivelAcademico.nivelAcademico.id).subscribe(
-                    (nivelAcademico => {
-                      const reqNivAcademico = {
-                        id: requisitoIpNivelAcademico.id,
-                        nivelAcademico,
-                        requisitoIP: convocatoriaData.requisitoIP
-                      } as IRequisitoIPNivelAcademico;
-                      convocatoriaData.nivelesAcademicos.push(reqNivAcademico);
-                      return convocatoriaData;
-                    })
-                  );
-                });
-              }
-
-              return convocatoriaData;
-            })
-          );
-        } else {
-          return of(convocatoriaData);
+      switchMap((data) => {
+        if (!data.requisitoIP) {
+          return of(data);
         }
+        return this.convocatoriaRequisitoIPService.findNivelesAcademicos(data.requisitoIP.id).pipe(
+          mergeMap((requisitoIpNivelesAcademicos) => this.getNivelesAcademicos(data, requisitoIpNivelesAcademicos)));
       }),
-      switchMap(() => {
-        if (convocatoriaData.requisitoIP) {
-          return this.convocatoriaRequisitoIPService.findCategoriaProfesional(convocatoriaData.requisitoIP.id).pipe(
-            map((requisitoIpCategorias) => {
-              if (requisitoIpCategorias.length === 0) {
-                return convocatoriaData;
-              }
-              if (requisitoIpCategorias) {
-                convocatoriaData.categoriasProfesionales = [];
-                requisitoIpCategorias.forEach(requisitoIpCategoriaProfesional => {
-                  return this.categoriaProfesionalService.findById(requisitoIpCategoriaProfesional.categoriaProfesional.id).subscribe(
-                    (categoriaProfesional => {
-                      const reqCatProfesional = {
-                        id: requisitoIpCategoriaProfesional.id,
-                        categoriaProfesional,
-                        requisitoIP: convocatoriaData.requisitoIP
-                      } as IRequisitoIPCategoriaProfesional;
-                      convocatoriaData.categoriasProfesionales.push(reqCatProfesional);
-                      return convocatoriaData;
-                    })
-                  );
-                });
-              }
-
-              return convocatoriaData;
-            })
-          );
-        } else {
-          return of(convocatoriaData);
+      switchMap((data) => {
+        if (!data.requisitoIP) {
+          return of(data);
         }
+        return this.convocatoriaRequisitoIPService.findCategoriaProfesional(data.requisitoIP.id).pipe(
+          mergeMap((requisitoIpCategorias) => this.getCategoriasProfesionales(data, requisitoIpCategorias))
+        );
       })
     );
+  }
+
+  private getCategoriasProfesionales(
+    data: IConvocatoriaReportData,
+    requisitoIpCategorias: IRequisitoIPCategoriaProfesional[]): Observable<IConvocatoriaReportData> {
+
+    if (requisitoIpCategorias.length === 0) {
+      return of(data);
+    }
+    data.categoriasProfesionales = [];
+    return from(requisitoIpCategorias).pipe(
+      mergeMap(requisitoIpCategoriaProfesional => {
+        return this.categoriaProfesionalService.findById(requisitoIpCategoriaProfesional.categoriaProfesional.id).pipe(
+          map(categoriaProfesional => {
+            const reqCatProfesional = {
+              id: requisitoIpCategoriaProfesional.id,
+              categoriaProfesional,
+              requisitoIP: data.requisitoIP
+            } as IRequisitoIPCategoriaProfesional;
+            data.categoriasProfesionales.push(reqCatProfesional);
+            return data;
+          })
+        );
+      })
+    );
+  }
+
+  private getNivelesAcademicos(
+    data: IConvocatoriaReportData,
+    requisitoIpNivelesAcademicos: IRequisitoIPNivelAcademico[]): Observable<IConvocatoriaReportData> {
+    if (!requisitoIpNivelesAcademicos || requisitoIpNivelesAcademicos.length === 0) {
+      return of(data);
+    }
+    data.nivelesAcademicos = [];
+
+    return from(requisitoIpNivelesAcademicos).pipe(
+      mergeMap(requisitoIpNivelAcademico => {
+        return this.nivelAcademicoService.findById(requisitoIpNivelAcademico.nivelAcademico.id).pipe(
+          map(nivelAcademico => {
+            const reqNivAcademico = {
+              id: requisitoIpNivelAcademico.id,
+              nivelAcademico,
+              requisitoIP: data.requisitoIP
+            } as IRequisitoIPNivelAcademico;
+            data.nivelesAcademicos.push(reqNivAcademico);
+            return data;
+          })
+        );
+      }));
   }
 
   public fillColumns(
