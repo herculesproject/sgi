@@ -87,4 +87,31 @@
     <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="fecha_inicio" tableName="grupo_persona_autorizada" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000007-11">
+    <createSequence incrementBy="1" sequenceName="grupo_linea_clasificacion_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-12">
+    <createTable tableName="grupo_linea_clasificacion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_linea_clasificacionPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="clasificacion_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_linea_investigacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-13">
+    <addUniqueConstraint columnNames="grupo_linea_investigacion_id, clasificacion_ref" constraintName="UK_GRUPOLINEACLASIFICACION_GRUPOLINEAINVESTIGACION_CLASIFICACION" tableName="grupo_linea_clasificacion" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-14">
+    <addForeignKeyConstraint baseColumnNames="grupo_linea_investigacion_id" baseTableName="grupo_linea_clasificacion" constraintName="FK_GRUPOLINEACLASIFICACION_GRUPOLINEAINVESTIGACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_linea_investigacion" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

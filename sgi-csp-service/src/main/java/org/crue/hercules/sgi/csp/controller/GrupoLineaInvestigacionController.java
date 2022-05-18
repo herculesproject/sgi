@@ -2,13 +2,17 @@ package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.converter.GrupoLineaClasificacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigadorConverter;
+import org.crue.hercules.sgi.csp.dto.GrupoLineaClasificacionOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionInput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigadorOutput;
+import org.crue.hercules.sgi.csp.model.GrupoLineaClasificacion;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador;
+import org.crue.hercules.sgi.csp.service.GrupoLineaClasificacionService;
 import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigacionService;
 import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -44,14 +48,17 @@ public class GrupoLineaInvestigacionController {
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposlineasinvestigacion";
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_GRUPO_LINEA_INVESTIGADOR = PATH_ID + "/lineas-investigadores";
+  public static final String PATH_CLASIFICACIONES = PATH_ID + "/clasificaciones";
 
   // Services
   private final GrupoLineaInvestigacionService service;
   private final GrupoLineaInvestigadorService grupoLineaInvestigadorService;
+  private final GrupoLineaClasificacionService grupoLineaClasificacionService;
 
   // Converters
   private final GrupoLineaInvestigacionConverter converter;
   private final GrupoLineaInvestigadorConverter grupoLineaInvestigadorConverter;
+  private final GrupoLineaClasificacionConverter grupoLineaClasificacionConverter;
 
   /**
    * Crea nuevo {@link GrupoLineaInvestigacion}
@@ -153,10 +160,9 @@ public class GrupoLineaInvestigacionController {
 
   /**
    * Devuelve una lista paginada y filtrada de {@link GrupoLineaInvestigador}
-   * del
-   * {@link GrupoLineaInvestigacion}.
+   * del {@link GrupoLineaInvestigacion}.
    * 
-   * @param id     Identificador del {@link GrupoLineaInvestigador}.
+   * @param id     Identificador del {@link GrupoLineaInvestigacion}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    * @return el listado de entidades {@link GrupoLineaInvestigador} paginadas y
@@ -170,6 +176,27 @@ public class GrupoLineaInvestigacionController {
     Page<GrupoLineaInvestigadorOutput> page = grupoLineaInvestigadorConverter
         .convert(grupoLineaInvestigadorService.findAllByGrupoLineaInvestigacion(id, query, paging));
     log.debug("findAllGrupoLineaInvestigador(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoLineaClasificacion}
+   * del {@link GrupoLineaInvestigacion}.
+   * 
+   * @param id     Identificador del {@link GrupoLineaInvestigacion}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link GrupoLineaClasificacion} paginadas y
+   *         filtradas del {@link GrupoLineaInvestigacion}.
+   */
+  @GetMapping(PATH_CLASIFICACIONES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  public ResponseEntity<Page<GrupoLineaClasificacionOutput>> findAllGrupoLineaClasificacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoLineaClasificacion(Long id, String query, Pageable paging) - start");
+    Page<GrupoLineaClasificacionOutput> page = grupoLineaClasificacionConverter
+        .convert(grupoLineaClasificacionService.findAllByGrupoLineaInvestigacion(id, query, paging));
+    log.debug("findAllGrupoLineaClasificacion(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 

@@ -137,4 +137,13 @@
       <column name="fecha_fin" valueDate="2022-11-01T22:59:59" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000007-grupo-linea-clasificacion">
+    <insert tableName="grupo_linea_clasificacion">
+      <column name="id" valueSequenceNext="grupo_linea_clasificacion_seq" />
+      <column name="grupo_linea_investigacion_id" valueComputed="(select gl.id from ${schemaPrefix}grupo_linea_investigacion gl join ${schemaPrefix}grupo g on gl.grupo_id=g.id where nombre='Grupo investigación 1')" />
+      <column name="clasificacion_ref" value="666" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

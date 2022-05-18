@@ -1,3 +1,9 @@
+-- DEPENDENCIAS
+/*scripts = {
+    // @formatter:off    
+      "classpath:scripts/rol_proyecto.sql"
+    // @formatter:on  
+  }*/
 INSERT INTO test.grupo (id, activo, codigo, grupo_especial_investigacion_id, fecha_inicio, fecha_fin, nombre, proyecto_sge_ref, departamento_origen_ref, solicitud_id, grupo_tipo_id, last_modified_date)
 VALUES
 (1, true, 'U006-1', NULL, '2021-01-01 22:59:59.000', '2022-10-07 23:00:00.000', 'Grupo investigación 1', '34123', 'U006', NULL, NULL, '2021-01-01 22:59:59.000'),
