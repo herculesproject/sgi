@@ -25,7 +25,8 @@
         <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
         </mat-error>
-        <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
+        <mat-error
+          *ngIf="formGroup.controls.fechaInicio.errors?.invalid || formGroup.controls.fechaInicio.errors?.minDate">
           {{'error.csp.grupo-linea-investigacion.fecha.invalid' | translate}}
         </mat-error>
       </mat-form-field>

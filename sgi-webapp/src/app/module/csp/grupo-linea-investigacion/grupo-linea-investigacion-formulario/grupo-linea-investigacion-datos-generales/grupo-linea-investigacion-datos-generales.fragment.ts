@@ -39,6 +39,8 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
     if (this.grupo?.fechaFin) {
       fechaFinValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
       fechaInicioValidators.push(DateValidator.isBetween(this.grupo?.fechaInicio, this.grupo?.fechaFin));
+    } else {
+      fechaInicioValidators.push(DateValidator.minDate(this.grupo?.fechaInicio));
     }
 
     form.controls.fechaInicio.setValidators(fechaInicioValidators);
