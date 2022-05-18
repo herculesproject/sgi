@@ -299,16 +299,25 @@ public class ProduccionCientificaReportService {
         .map(PuntuacionItemInvestigador::getPuntos)
         .reduce(new BigDecimal("0.00"), BigDecimal::add);
 
-    List<TipoProduccionInvestigadorOutput> prcs = new ArrayList<>();
+    final List<TipoProduccionInvestigadorOutput> prcs = new ArrayList<>();
 
     if (null != codigoCVNTitulo) {
-      prcs = puntuaciones.stream().map(puntuacionItemInvestigador -> TipoProduccionInvestigadorOutput.builder()
-          .titulo(getTituloProduccionCientifica(
-              puntuacionItemInvestigador.getProduccionCientificaId(), codigoCVNTitulo))
-          .puntos(puntuacionItemInvestigador.getPuntos())
-          .produccionesCientificas(new ArrayList<>())
-          .build())
-          .collect(Collectors.toList());
+      Map<Long, List<PuntuacionItemInvestigador>> mapPuntuacionesByProduccionCientificaId = puntuaciones.stream()
+          .collect(Collectors.groupingBy(PuntuacionItemInvestigador::getProduccionCientificaId));
+
+      mapPuntuacionesByProduccionCientificaId
+          .forEach((produccionCientificaId, puntuacionesByProduccionCientificaId) -> {
+
+            BigDecimal puntosByProduccionCientificaId = puntuacionesByProduccionCientificaId.stream()
+                .map(PuntuacionItemInvestigador::getPuntos)
+                .reduce(new BigDecimal("0.00"), BigDecimal::add);
+
+            prcs.add(TipoProduccionInvestigadorOutput.builder()
+                .titulo(getTituloProduccionCientifica(produccionCientificaId, codigoCVNTitulo))
+                .puntos(puntosByProduccionCientificaId)
+                .produccionesCientificas(new ArrayList<>())
+                .build());
+          });
     }
 
     return TipoProduccionInvestigadorOutput.builder()

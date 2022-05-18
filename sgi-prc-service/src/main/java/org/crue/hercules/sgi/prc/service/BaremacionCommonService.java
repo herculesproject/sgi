@@ -493,7 +493,7 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
         .orElse(codigoCVN.getCode());
     return findValoresByCampoProduccionCientificaId(codigoCVN, produccionCientificaId).stream()
         .anyMatch(valorCampo -> (codigoCVNCode + "." + valorCampo.getValor())
-            .equals(tablaMaestraCVN.getCode()));
+            .equalsIgnoreCase(tablaMaestraCVN.getCode()));
   }
 
   protected boolean isValorEqualsStringValue(CodigoCVN codigoCVN, String stringValue, Long produccionCientificaId) {

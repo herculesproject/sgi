@@ -2,17 +2,13 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.LongPredicate;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.BaremacionInput;
-import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
-import org.crue.hercules.sgi.prc.dto.csp.GrupoEquipoDto;
 import org.crue.hercules.sgi.prc.dto.sgp.SexenioDto;
 import org.crue.hercules.sgi.prc.enums.CodigoCVN;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
