@@ -114,4 +114,31 @@
     <addForeignKeyConstraint baseColumnNames="grupo_linea_investigacion_id" baseTableName="grupo_linea_clasificacion" constraintName="FK_GRUPOLINEACLASIFICACION_GRUPOLINEAINVESTIGACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_linea_investigacion" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000007-15">
+    <createSequence incrementBy="1" sequenceName="grupo_linea_equipo_instrumental_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-16">
+    <createTable tableName="grupo_linea_equipo_instrumental">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_linea_equipo_instrumentalPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_linea_investigacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="grupo_equipo_instrumental_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-17">
+    <addForeignKeyConstraint baseColumnNames="grupo_linea_investigacion_id" baseTableName="grupo_linea_equipo_instrumental" constraintName="FK_GRUPOLINEAEQUIPOINSTRUMENTAL_GRUPOLINEAINVESTIGACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_linea_investigacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000007-18">
+    <addForeignKeyConstraint baseColumnNames="grupo_equipo_instrumental_id" baseTableName="grupo_linea_equipo_instrumental" constraintName="FK_GRUPOLINEAEQUIPOINSTRUMENTAL_GRUPOEQUIPOINSTRUMENTAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="grupo_equipo_instrumental" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -146,4 +146,11 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000007-grupo-linea-equipo-instrumental">
+    <insert tableName="grupo_linea_equipo_instrumental">
+      <column name="id" valueSequenceNext="grupo_linea_equipo_instrumental_seq" />
+      <column name="grupo_linea_investigacion_id" valueComputed="(select id from ${schemaPrefix}grupo_linea_investigacion where grupo_id =(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1') and linea_investigacion_id=(select id from ${schemaPrefix}linea_investigacion where nombre='Psicología Laboral u Organizacional'))" />
+      <column name="grupo_equipo_instrumental_id" valueComputed="(select id from ${schemaPrefix}grupo_equipo_instrumental where grupo_id =(select id from ${schemaPrefix}grupo where nombre='Grupo investigación 1') and num_registro='REG-1')" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -9,7 +9,9 @@ import org.crue.hercules.sgi.csp.dto.GrupoEquipoInstrumentalInput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoInstrumentalOutput;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
+import org.crue.hercules.sgi.csp.model.GrupoLineaEquipoInstrumental;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoInstrumentalService;
+import org.crue.hercules.sgi.csp.service.GrupoLineaEquipoInstrumentalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -36,8 +39,14 @@ public class GrupoEquipoInstrumentalController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposequiposinstrumentales";
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_GRUPO_LINEA_EQUIPO_INSTRUMENTAL = PATH_ID + PATH_DELIMITER
+      + "gruposlineasequiposinstrumentales";
 
+  // Services
   private final GrupoEquipoInstrumentalService service;
+  private final GrupoLineaEquipoInstrumentalService grupoLineaEquipoInstrumentalService;
+
+  // Converters
   private final GrupoEquipoInstrumentalConverter converter;
 
   /**
@@ -109,6 +118,24 @@ public class GrupoEquipoInstrumentalController {
             grupoEquiposInstrumentales)));
     log.debug("update(List<GrupoEquipoInstrumentalInput> grupoEquiposInstrumentales, grupoId) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Comprueba la existencia de un Grupo Equipo Instrumental presente en el
+   * {@link GrupoLineaEquipoInstrumental} con el id
+   *
+   * @param id Identificador de Grupo Equipo Instrumental
+   * @return {@link HttpStatus#OK} si existe y {@link HttpStatus#NO_CONTENT} si
+   *         no.
+   */
+  @RequestMapping(path = PATH_GRUPO_LINEA_EQUIPO_INSTRUMENTAL, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  public ResponseEntity<Void> existsGrupoEquipoInstrumentalInGrupoLineaEquipoInstrumental(@PathVariable Long id) {
+    log.debug("GrupoEquipo existsGrupoEquipoInstrumentalInGrupoLineaEquipoInstrumental(Long id) - start");
+    boolean exists = grupoLineaEquipoInstrumentalService
+        .existsGrupoLineaEquipoInstrumentalInGrupoEquipoInstrumental(id);
+    log.debug("GrupoEquipo existsGrupoEquipoInstrumentalInGrupoLineaEquipoInstrumental(Long id) - end");
+    return exists ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }
