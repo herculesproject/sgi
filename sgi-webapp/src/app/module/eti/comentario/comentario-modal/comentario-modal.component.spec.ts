@@ -9,7 +9,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { FormularioService } from '@core/services/eti/formulario.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
@@ -17,7 +16,6 @@ import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { EtiSharedModule } from '../../shared/eti-shared.module';
 import { ComentarioModalComponent } from './comentario-modal.component';
-
 
 describe('ComentarioModalComponent', () => {
   let component: ComentarioModalComponent;
@@ -54,8 +52,7 @@ describe('ComentarioModalComponent', () => {
         EtiSharedModule
       ],
       providers: [
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: snapshotData },
+        { provide: MatDialogRef, useValue: TestUtils.buildDialogCommonMatDialogRef() },
         { provide: MAT_DIALOG_DATA, useValue: snapshotData },
         { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
         FormularioService,

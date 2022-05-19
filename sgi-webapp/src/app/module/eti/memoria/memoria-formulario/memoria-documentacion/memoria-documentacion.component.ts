@@ -193,7 +193,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
       comite: this.actionService.getComite()
     };
     const config = {
-      panelClass: 'sgi-dialog-container',
       data
     };
 

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -117,12 +117,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
    * Abre la ventana modal para añadir una persona al equipo de trabajo
    */
   openModalAddEquipoTrabajo(): void {
-    const config: MatDialogConfig = {
-      panelClass: 'sgi-dialog-container',
-      minWidth: '700px',
-    };
-
-    const dialogRef = this.matDialog.open(EquipoInvestigadorCrearModalComponent, config);
+    const dialogRef = this.matDialog.open(EquipoInvestigadorCrearModalComponent);
 
     dialogRef.afterClosed().subscribe(
       (equipoTrabajoAniadido: IEquipoTrabajoWithIsEliminable) => {

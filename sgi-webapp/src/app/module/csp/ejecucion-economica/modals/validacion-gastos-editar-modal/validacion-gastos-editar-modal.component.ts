@@ -203,6 +203,7 @@ export class ValidacionGastosEditarModalComponent extends DialogFormComponent<Ga
   doAction(): void {
     this.formGroup.markAllAsTouched();
     if (this.formGroup.valid) {
+      this.clearProblems();
       const gastoProyecto: IGastoProyecto = {
         id: this.data.gastoProyecto?.id ?? null,
         proyectoId: Number(this.formGroup.controls.identificadorSgi.value?.proyecto.id),
