@@ -221,4 +221,12 @@ public interface EvaluacionService {
    * @return El documento del informe de la ficha del Evaluador
    */
   public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion);
+
+  /**
+   * Permite enviar el comunicado de {@link Evaluacion}
+   *
+   * @param id Id del {@link Evaluacion}.
+   * @return true si puede ser enviado / false si no puede ser enviado
+   */
+  Boolean enviarComunicado(Long id);
 }

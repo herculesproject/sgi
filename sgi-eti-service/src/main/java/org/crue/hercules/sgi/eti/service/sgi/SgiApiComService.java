@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionSeguimientoRevMinData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.com.Status;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
@@ -65,6 +66,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA = "ETI_COM_DICT_EVA_SEG_REV_MINIMA";
   private static final String TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA_PARAM = TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA
+      + DATA;
+
+  private static final String TEMPLATE_ETI_COM_EVA_MODIFICADA = "ETI_COM_EVA_MODIFICADA";
+  private static final String TEMPLATE_ETI_COM_EVA_MODIFICADA_PARAM = TEMPLATE_ETI_COM_EVA_MODIFICADA
       + DATA;
 
   private final SgiConfigProperties sgiConfigProperties;
@@ -277,6 +282,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA,
         TEMPLATE_ETI_COM_DICT_EVA_SEG_REV_MINIMA_PARAM);
+  }
+
+  public EmailOutput createComunicadoCambiosEvaluacion(
+      EtiComEvaluacionModificadaData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_ETI_COM_EVA_MODIFICADA,
+        TEMPLATE_ETI_COM_EVA_MODIFICADA_PARAM);
   }
 
   /**

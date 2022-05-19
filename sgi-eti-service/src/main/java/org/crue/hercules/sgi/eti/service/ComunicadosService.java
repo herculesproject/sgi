@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
 import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -169,6 +170,43 @@ public class ComunicadosService {
           "enviarComunicadoInformeRetrospectivaCeeaPendiente() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - end");
+  }
+
+  public void enviarComunicadoCambiosEvaluacionEti(String comite, String nombreInvestigacion, String referenciaMemoria,
+      String tituloSolicitudEvaluacion) throws JsonProcessingException {
+    log.debug("enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - start");
+    List<Evaluador> evaluadoresMemoria = evaluadorService
+        .findAllByComite(comite);
+
+    List<String> idsPersonaRef = evaluadoresMemoria.stream().map(evaluador -> evaluador.getPersonaRef())
+        .collect(Collectors.toList());
+
+    if (idsPersonaRef != null) {
+      List<PersonaOutput> personas = personasService.findAllByIdIn(idsPersonaRef);
+      List<Recipient> recipients = new ArrayList<Recipient>();
+      personas.stream().forEach(persona -> {
+        recipients.addAll(persona.getEmails().stream()
+            .map(email -> Recipient.builder().name(email.getEmail()).address(email.getEmail()).build())
+            .collect(Collectors.toList()));
+      });
+
+      if (recipients != null) {
+        EmailOutput emailOutput = emailService.createComunicadoCambiosEvaluacion(
+            EtiComEvaluacionModificadaData.builder()
+                .nombreInvestigacion(nombreInvestigacion)
+                .referenciaMemoria(referenciaMemoria)
+                .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+                .build(),
+            recipients);
+        emailService.sendEmail(emailOutput.getId());
+      } else {
+        log.debug(
+            "enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+      }
+    } else {
+      log.debug(
+          "enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
   }
 
   /**

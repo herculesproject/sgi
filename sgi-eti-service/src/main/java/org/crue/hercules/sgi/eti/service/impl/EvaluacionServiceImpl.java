@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -816,6 +818,29 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       log.debug(
           "sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - Error al enviar el comunicado",
           e);
+    }
+  }
+
+  /**
+   * Permite enviar el comunicado de {@link Evaluacion}
+   *
+   * @param idEvaluacion Id del {@link Evaluacion}.
+   * @return true si puede ser enviado / false si no puede ser enviado
+   */
+  @Override
+  @Transactional
+  public Boolean enviarComunicado(Long idEvaluacion) {
+    log.debug("enviarComunicado(Long idEvaluacion) - start");
+    Evaluacion evaluacion = this.findById(idEvaluacion);
+    try {
+      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getMemoria().getComite().getComite(),
+          evaluacion.getMemoria().getComite().getNombreInvestigacion(), evaluacion.getMemoria().getNumReferencia(),
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+      log.debug("enviarComunicado(Long idEvaluacion) - end");
+      return true;
+    } catch (JsonProcessingException e) {
+      log.debug("Error - enviarComunicado(Long idEvaluacion)", e);
+      return false;
     }
   }
 }
