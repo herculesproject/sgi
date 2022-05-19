@@ -10,6 +10,7 @@ import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
+import { ISolicitud } from '@core/models/csp/solicitud';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
@@ -36,6 +37,8 @@ import { IGrupoResponsableEconomicoResponse } from '../grupo-responsable-economi
 import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from '../grupo-responsable-economico/grupo-responsable-economico-response.converter';
 import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
 import { GRUPO_TIPO_RESPONSE_CONVERTER } from '../grupo-tipo/grupo-tipo-response.converter';
+import { ISolicitudResumenResponse } from '../solicitud/solicitud-resumen-response';
+import { SOLICITUD_RESUMEN_RESPONSE_CONVERTER } from '../solicitud/solicitud-resumen-response.converter';
 import { IGrupoRequest } from './grupo-request';
 import { GRUPO_REQUEST_CONVERTER } from './grupo-request.converter';
 import { IGrupoResponse } from './grupo-response';
@@ -339,4 +342,18 @@ export class GrupoService extends _GrupoMixinBase {
       GRUPO_LINEA_INVESTIGACION_RESPONSE_CONVERTER
     );
   }
+
+  /**
+   * Devuelve los datos de la solicitud del grupo
+   *
+   * @param id Id del grupo
+   */
+  findSolicitud(id: number): Observable<ISolicitud> {
+    return this.http.get<ISolicitudResumenResponse>(
+      `${this.endpointUrl}/${id}/solicitud`
+    ).pipe(
+      map(response => SOLICITUD_RESUMEN_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
 }

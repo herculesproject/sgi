@@ -14,6 +14,7 @@ export const INV_ROUTE_NAMES = {
   SOLICITUDES: 'solicitudes',
   PROYECTOS: 'proyectos',
   AUTORIZACIONES: 'autorizaciones',
+  GRUPOS: 'grupos',
   VALIDACION_PUBLICACIONES: 'validacion-publicaciones',
   VALIDACION_CONGRESOS: 'validacion-congresos',
   VALIDACION_OBRAS_ARTISTICAS: 'validacion-obras-artisticas',

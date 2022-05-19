@@ -36,7 +36,7 @@ const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const GRUPO_KEY = marker('csp.grupo');
 
 interface IGrupoListado extends IGrupo {
-  investigadoresPrincipales: IPersona[]
+  investigadoresPrincipales: IPersona[];
 }
 
 @Component({
@@ -136,23 +136,27 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+    const rsqlFilter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('miembrosEquipo.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value)
-      .and('lineasInvestigacion.id', SgiRestFilterOperator.EQUALS, controls.lineaInvestigacion.value?.id ? controls.lineaInvestigacion.value?.id.toString() : null);
+      .and(
+        'lineasInvestigacion.id',
+        SgiRestFilterOperator.EQUALS,
+        controls.lineaInvestigacion.value?.id ? controls.lineaInvestigacion.value?.id.toString() : null
+      );
     if (controls.activo.value !== 'todos') {
-      filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
+      rsqlFilter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
-    filter.and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
+    rsqlFilter.and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
       .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value));
 
     const palabrasClave = controls.palabrasClave.value as string[];
     if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
-      filter.and(this.createPalabrasClaveFilter(palabrasClave));
+      rsqlFilter.and(this.createPalabrasClaveFilter(palabrasClave));
     }
 
-    return filter;
+    return rsqlFilter;
   }
 
   private createPalabrasClaveFilter(palabrasClave: string[]): SgiRestFilter {
@@ -241,13 +245,13 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
         this.logger.error(error);
         return EMPTY;
       })
-    )
+    );
   }
 
   private loadColectivosBusqueda(): void {
     this.suscripciones.push(
       this.rolProyectoColectivoService.findColectivosActivos().subscribe(colectivos => {
-        this.colectivosBusqueda = colectivos
+        this.colectivosBusqueda = colectivos;
       })
     );
   }

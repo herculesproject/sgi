@@ -95,13 +95,63 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data = route.snapshot.data[GRUPO_DATA_KEY];
     }
 
-    this.datosGenerales = new GrupoDatosGeneralesFragment(logger, this.id, grupoService, grupoEquipoService, palabraClaveService, rolProyectoService, vinculacionService, solicitudService, this.data?.readonly);
-    this.equiposInvestigacion = new GrupoEquipoInvestigacionFragment(logger, this.id, grupoService, grupoEquipoService, personaService, vinculacionService, sgiAuthService, this.data?.readonly);
-    this.responsablesEconomicos = new GrupoResponsableEconomicoFragment(logger, this.id, grupoService, grupoResponsableEconomicoService, personaService, sgiAuthService, this.data?.readonly);
-    this.equiposInstrumentales = new GrupoEquipoInstrumentalFragment(logger, this.id, grupoService, grupoEquipoInstrumentalService, this.data?.readonly);
+    this.datosGenerales = new GrupoDatosGeneralesFragment(
+      logger,
+      this.id, grupoService,
+      grupoEquipoService,
+      palabraClaveService,
+      rolProyectoService,
+      vinculacionService,
+      this.data?.readonly
+    );
+    this.equiposInvestigacion = new GrupoEquipoInvestigacionFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoEquipoService,
+      personaService,
+      vinculacionService,
+      sgiAuthService,
+      this.data?.readonly
+    );
+
+    this.responsablesEconomicos = new GrupoResponsableEconomicoFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoResponsableEconomicoService,
+      personaService,
+      sgiAuthService,
+      this.data?.readonly
+    );
+
+    this.equiposInstrumentales = new GrupoEquipoInstrumentalFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoEquipoInstrumentalService,
+      this.data?.readonly
+    );
+
     this.enlaces = new GrupoEnlaceFragment(logger, this.id, grupoService, grupoEnlaceService, this.data?.readonly);
-    this.personasAutorizadas = new GrupoPersonaAutorizadaFragment(logger, this.id, grupoService, grupoPersonaAutorizadaService, personaService, sgiAuthService, this.data?.readonly);
-    this.lineasInvestigacion = new GrupoLineaInvestigacionFragment(logger, this.id, grupoService, grupoLineaInvestigacionService, lineaInvestigacionService, this.data?.readonly);
+
+    this.personasAutorizadas = new GrupoPersonaAutorizadaFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoPersonaAutorizadaService,
+      personaService, sgiAuthService,
+      this.data?.readonly
+    );
+
+    this.lineasInvestigacion = new GrupoLineaInvestigacionFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoLineaInvestigacionService,
+      lineaInvestigacionService,
+      this.data?.readonly
+    );
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.EQUIPO_INVESTIGACION, this.equiposInvestigacion);

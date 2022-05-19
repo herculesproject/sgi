@@ -56,7 +56,7 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_EDIT_TITLE,
-      hasAuthorityForAnyUO: 'CSP-GIN-E'
+      hasAnyAuthorityForAnyUO: ['CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR']
     },
     resolve: {
       [GRUPO_LINEA_INVESTIGACION_DATA_KEY]: GrupoLineaInvestigacionDataResolver

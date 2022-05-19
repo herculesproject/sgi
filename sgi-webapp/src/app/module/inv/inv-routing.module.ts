@@ -161,6 +161,19 @@ const routes: SgiRoutes = [
         }
       },
       {
+        path: INV_ROUTE_NAMES.GRUPOS,
+        loadChildren: () =>
+          import('../csp/grupo/grupo-inv.module').then(
+            (m) => m.GrupoInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_AUTORIZACIONES_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'CSP-GIN-INV-VR',
+        }
+      },
+      {
         path: INV_ROUTE_NAMES.VALIDACION_PUBLICACIONES,
         loadChildren: () =>
           import('../prc/publicacion/publicacion-inv.module').then(

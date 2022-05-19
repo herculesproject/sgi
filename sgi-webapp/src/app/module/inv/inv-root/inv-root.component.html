@@ -45,6 +45,9 @@
       title="{{'menu.csp.autorizaciones-proyectos-externos' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}"
       [route]="[INV_ROUTE_NAMES.AUTORIZACIONES]">
     </sgi-menu-subitem>
+    <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-INV-VR'] "
+      title="{{'csp.grupo' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}" [route]="[INV_ROUTE_NAMES.GRUPOS]">
+    </sgi-menu-subitem>
   </sgi-menu-group>
 
   <!-- PRC -->

@@ -66,7 +66,7 @@ export class GrupoLineaInvestigacionActionService extends ActionService {
     if (route.snapshot.data.grupoLineaInvestigacionData) {
       this.grupoLineaInvestigacion = route.snapshot.data.grupoLineaInvestigacionData;
       this.enableEdit();
-      this.readonly = route.snapshot.data.readonly;
+      this.readonly = route.snapshot.data.grupoLineaInvestigacionData.readonly;
     }
 
     this.datosGenerales = new GrupoLineaInvestigacionDatosGeneralesFragment(
