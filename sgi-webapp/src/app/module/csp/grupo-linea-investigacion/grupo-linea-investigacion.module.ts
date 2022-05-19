@@ -12,9 +12,11 @@ import { GrupoLineaInvestigacionCrearComponent } from './grupo-linea-investigaci
 import { GrupoLineaInvestigacionDataResolver } from './grupo-linea-investigacion-data.resolver';
 import { GrupoLineaInvestigacionEditarComponent } from './grupo-linea-investigacion-editar/grupo-linea-investigacion-editar.component';
 import { GrupoLineaClasificacionesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.component';
+import { GrupoLineaEquipoInstrumentalComponent } from './grupo-linea-investigacion-formulario/grupo-linea-equipo-instrumental/grupo-linea-equipo-instrumental.component';
 import { GrupoLineaInvestigacionDatosGeneralesComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-datos-generales/grupo-linea-investigacion-datos-generales.component';
 import { GrupoLineaInvestigadorComponent } from './grupo-linea-investigacion-formulario/grupo-linea-investigacion-linea-investigador/grupo-linea-investigador.component';
 import { GrupoLineaInvestigacionRouting } from './grupo-linea-investigacion-routing.module';
+import { GrupoLineaEquipoInstrumentalModalComponent } from './modals/grupo-linea-equipo-instrumental-modal/grupo-linea-equipo-instrumental-modal.component';
 import { GrupoLineaInvestigadorModalComponent } from './modals/grupo-linea-investigador-modal/grupo-linea-investigador-modal.component';
 
 @NgModule({
@@ -24,7 +26,9 @@ import { GrupoLineaInvestigadorModalComponent } from './modals/grupo-linea-inves
     GrupoLineaInvestigacionDatosGeneralesComponent,
     GrupoLineaInvestigadorComponent,
     GrupoLineaInvestigadorModalComponent,
-    GrupoLineaClasificacionesComponent
+    GrupoLineaClasificacionesComponent,
+    GrupoLineaEquipoInstrumentalComponent,
+    GrupoLineaEquipoInstrumentalModalComponent,
   ],
   imports: [
     CommonModule,

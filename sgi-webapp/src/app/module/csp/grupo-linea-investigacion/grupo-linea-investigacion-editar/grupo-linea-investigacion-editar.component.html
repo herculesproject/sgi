@@ -12,6 +12,10 @@
       [title]="'csp.grupo-linea-clasificacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.CLASIFICACIONES)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item [route]="[GRUPO_LINEA_INVESTIGACION_ROUTE_NAMES.EQUIPO_INSTRUMENTAL]"
+      [title]="'csp.grupo-linea-equipo-instrumental' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_INSTRUMENTAL)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoActualizar" [actionService]="actionService">

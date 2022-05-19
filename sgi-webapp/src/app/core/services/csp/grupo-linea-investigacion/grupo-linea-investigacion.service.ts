@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoLineaClasificacion } from '@core/models/csp/grupo-linea-clasificacion';
+import { IGrupoLineaEquipoInstrumental } from '@core/models/csp/grupo-linea-equipo-instrumental';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { environment } from '@env';
@@ -11,6 +12,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoLineaClasificacionResponse } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response';
 import { GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response.converter';
+import { IGrupoLineaEquipoInstrumentalResponse } from '../grupo-linea-equipo-instrumental/grupo-linea-equipo-instrumental-response';
+import { GRUPO_LINEA_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER } from '../grupo-linea-equipo-instrumental/grupo-linea-equipo-instrumental-response.converter';
 import { IGrupoLineaInvestigadorResponse } from '../grupo-linea-investigador/grupo-linea-investigador-response';
 import { GRUPO_LINEA_INVESTIGADOR_RESPONSE_CONVERTER } from '../grupo-linea-investigador/grupo-linea-investigador-response.converter';
 import { IGrupoLineaInvestigacionRequest } from './grupo-linea-investigacion-request';
@@ -124,6 +127,20 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
       `${this.endpointUrl}/${id}/clasificaciones`,
       options,
       GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de equipos instrumentales
+   *
+   * @param id Identificador del grupo de investigación
+   * @param options opciones de búsqueda.
+   */
+  findLineasEquiposInstrumentales(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoLineaEquipoInstrumental>> {
+    return this.find<IGrupoLineaEquipoInstrumentalResponse, IGrupoLineaEquipoInstrumental>(
+      `${this.endpointUrl}/${id}/lineas-equipos-instrumentales`,
+      options,
+      GRUPO_LINEA_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER
     );
   }
 

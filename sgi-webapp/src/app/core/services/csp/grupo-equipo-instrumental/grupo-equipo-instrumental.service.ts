@@ -60,4 +60,16 @@ export class GrupoEquipoInstrumentalService extends _GrupoEquipoInstrumentalMixi
     );
   }
 
+  /**
+   * Comprueba si existe un equipo instrumental en linea equipo instrumental
+   *
+   * @param idGrupoEquipo Identificador del grupo equipo instrumental
+   */
+  existsGrupoEquipoInstrumentalInGrupoLineaEquipoInstrumental(idGrupoEquipo: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idGrupoEquipo}/gruposlineasequiposinstrumentales`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }
