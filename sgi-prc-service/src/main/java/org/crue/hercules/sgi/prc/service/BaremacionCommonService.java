@@ -516,19 +516,13 @@ public abstract class BaremacionCommonService implements BaremacionItemService {
         produccionCientificaId).and(AutorSpecifications.byPersonaRefIsNotNull())
         .and(AutorSpecifications.byRangoFechaInFechaBaremacion(fechaBaremacion));
 
-    return getAutorRepository().findAll(
-        specs,
-        page).getContent().stream()
+    return getAutorRepository().findAll(specs, page).getContent().stream()
         .filter(autor -> isPersonaRefAndBaremable(autor.getPersonaRef()))
         .collect(Collectors.toList());
   }
 
   protected Boolean isPersonaRefAndBaremable(String personaRef) {
-    return isPersonaRef(personaRef) && isPersonaRefBaremable(personaRef);
-  }
-
-  protected Boolean isPersonaRef(String personaRef) {
-    return getSgiApiSgpService().findPersonaById(personaRef).isPresent();
+    return StringUtils.hasText(personaRef) && isPersonaRefBaremable(personaRef);
   }
 
   protected Boolean isPersonaRefBaremable(String personaRef) {

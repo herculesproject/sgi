@@ -332,7 +332,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
     Assertions.assertThat(numPuntuaciones).as("numPuntuaciones").isEqualTo(2);
 
     checkPuntuacionBaremoItem(puntuacionBaremoItems, 6L, new BigDecimal("6.00"));
-    checkPuntuacionBaremoItem(puntuacionBaremoItems, 29L, new BigDecimal("1.30"));
+    checkPuntuacionBaremoItem(puntuacionBaremoItems, 29L, new BigDecimal("2.30"));
 
     List<PuntuacionItemInvestigador> puntuacionItemsInvestigador = getPuntuacionItemInvestigadorRepository()
         .findAll();
@@ -340,7 +340,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
     int numPuntuacionesItemsInvestigador = puntuacionItemsInvestigador.size();
     Assertions.assertThat(numPuntuacionesItemsInvestigador).as("numPuntuacionesItemsInvestigador").isEqualTo(1);
 
-    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("7.80"));
+    checkPuntuacionItemInvestigador(puntuacionItemsInvestigador, personaRef, new BigDecimal("6.90"));
 
     List<PuntuacionGrupoInvestigador> puntuacionGrupoInvestigador = getPuntuacionGrupoInvestigadorRepository()
         .findAll();
@@ -349,7 +349,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
     Assertions.assertThat(numPuntuacionesGrupoInvestigador).as("numPuntuacionesGrupoInvestigador").isEqualTo(1);
 
     Assertions.assertThat(puntuacionGrupoInvestigador.get(0).getPuntos()).as("PuntosGrupoInvestigador")
-        .isEqualTo(new BigDecimal("4.68"));
+        .isEqualTo(new BigDecimal("4.14"));
 
     List<PuntuacionGrupo> puntuacionGrupo = getPuntuacionGrupoRepository().findAll();
 
@@ -363,7 +363,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
         .isEqualTo(new BigDecimal("0.00"));
 
     Assertions.assertThat(puntuacionGrupo.get(0).getPuntosProduccion()).as("PuntosGrupoProduccion")
-        .isEqualTo(new BigDecimal("4.68"));
+        .isEqualTo(new BigDecimal("4.14"));
 
     ConvocatoriaBaremacion convocatoriaBaremacion = getConvocatoriaBaremacionRepository().findById(idBaremacion).get();
 
@@ -375,7 +375,7 @@ public class BaremacionBaseIT extends ProduccionCientificaBaseIT {
         .isEqualTo(new BigDecimal("0.00"));
 
     Assertions.assertThat(convocatoriaBaremacion.getPuntoProduccion()).as("PuntosBaremacionProduccion")
-        .isEqualTo(new BigDecimal("24038.46"));
+        .isEqualTo(new BigDecimal("27173.91"));
   }
 
 }
