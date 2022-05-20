@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@sgi/framework/auth';
-import { GRUPO_ROUTE_PARAMS } from './autorizacion-route-params';
+import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 import { GrupoDataResolver, GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';

@@ -11,13 +11,11 @@ import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-respo
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { GRUPO_ROUTE_PARAMS } from './autorizacion-route-params';
 import { GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoDatosGeneralesFragment } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.fragment';
 import { GrupoEnlaceFragment } from './grupo-formulario/grupo-enlace/grupo-enlace.fragment';
@@ -26,6 +24,7 @@ import { GrupoEquipoInvestigacionFragment } from './grupo-formulario/grupo-equip
 import { GrupoLineaInvestigacionFragment } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.fragment';
 import { GrupoPersonaAutorizadaFragment } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.fragment';
 import { GrupoResponsableEconomicoFragment } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.fragment';
+import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 
 export interface IGrupoData {
   grupo: IGrupo;
@@ -77,7 +76,6 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     palabraClaveService: PalabraClaveService,
     rolProyectoService: RolProyectoService,
     vinculacionService: VinculacionService,
-    solicitudService: SolicitudService,
     personaService: PersonaService,
     sgiAuthService: SgiAuthService,
     grupoResponsableEconomicoService: GrupoResponsableEconomicoService,

@@ -9,7 +9,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { GRUPO_ROUTE_PARAMS } from './autorizacion-route-params';
+import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 import { IGrupoData } from './grupo.action.service';
 
 const MSG_NOT_FOUND = marker('error.load');

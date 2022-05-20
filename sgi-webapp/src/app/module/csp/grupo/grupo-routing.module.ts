@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
-import { GRUPO_ROUTE_PARAMS } from './autorizacion-route-params';
+import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
 import { GrupoDataResolver, GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';

@@ -20,6 +20,7 @@ const MSG_CONVOCATORIAS_TITLE = marker('menu.principal.inv.convocatorias');
 const MSG_PROYECTOS_TITLE = marker('menu.principal.inv.proyectos');
 const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
 const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
+const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_PUBLICACION_TITLE = marker('prc.publicacion');
 
 const routes: SgiRoutes = [
@@ -168,7 +169,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_AUTORIZACIONES_TITLE,
+          title: MSG_GRUPO_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAuthorityForAnyUO: 'CSP-GIN-INV-VR',
         }
