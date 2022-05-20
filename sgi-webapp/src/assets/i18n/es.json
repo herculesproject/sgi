@@ -30,6 +30,7 @@
   "btn.export": "Exportar",
   "btn.load": "Cargar",
   "btn.next": "Siguiente",
+  "btn.notify": "Notificar",
   "btn.ok": "Aceptar",
   "btn.presentar.entity": "Presentar {entity}",
   "btn.process": "Tramitar",

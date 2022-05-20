@@ -162,6 +162,12 @@
               <mat-icon>border_color</mat-icon>
             </a>
           </ng-container>
+          <ng-container *ngIf="evaluacion.esRevMinima">
+            <button *sgiHasAuthorityForAnyUO="'ETI-EVC-EVAL'" color="primary" mat-button
+              matTooltip="{{'btn.notify' | translate}}" (click)="notificarCambiosMemoria(evaluacion.id, $event)">
+              <mat-icon>add_alert</mat-icon>
+            </button>
+          </ng-container>
         </td>
       </ng-container>
 

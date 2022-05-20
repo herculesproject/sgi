@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -12,6 +13,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap } from 'rxjs/operators';
@@ -20,6 +22,9 @@ import { TipoComentario } from '../evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
 
 const MSG_ERROR = marker('error.load');
+const EVALUACION_KEY = marker('eti.evaluacion');
+const MSG_SUCCESS_ENVIADO = marker('msg.envio-comunicado.entity.success');
+const MSG_ERROR_ENVIADO = marker('msg.envio-comunicado.entity.error');
 
 @Component({
   selector: 'sgi-evaluacion-listado',
@@ -33,6 +38,9 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
   displayedColumns: string[];
   totalElementos: number;
+
+  textoEnviadoSuccess: string;
+  textoEnviadoError: string;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -49,6 +57,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     private readonly evaluacionesService: EvaluacionService,
     protected readonly snackBarService: SnackBarService,
     protected readonly personaService: PersonaService,
+    private readonly translate: TranslateService,
     private matDialog: MatDialog
   ) {
 
@@ -72,6 +81,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     this.formGroup = new FormGroup({
       comite: new FormControl(null, []),
@@ -82,6 +92,32 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       solicitante: new FormControl('', []),
       tipoEvaluacion: new FormControl(null, [])
     });
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_ENVIADO,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoEnviadoSuccess = value);
+
+    this.translate.get(
+      EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_ENVIADO,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoEnviadoError = value);
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluacion>> {
@@ -151,6 +187,27 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       data
     };
     this.matDialog.open(EvaluacionListadoExportModalComponent, config);
+  }
+
+  /**
+ * Notificar de cambios en la memoria realizados
+ * @param evaluacionId id de la evaluación modificada que se quiere notificar.
+ * @param event evento lanzado.
+ */
+  notificarCambiosMemoria(evaluacionId: number, $event: Event): void {
+    this.evaluacionesService.enviarComunicado(evaluacionId).subscribe(
+      (response) => {
+        if (response) {
+          this.snackBarService.showSuccess(this.textoEnviadoSuccess);
+          this.loadTable();
+        } else {
+          this.snackBarService.showError(this.textoEnviadoError);
+        }
+      },
+      (error) => {
+        this.snackBarService.showError(this.textoEnviadoError);
+      }
+    );
   }
 
 }
