@@ -21,12 +21,6 @@
         <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.required">
           {{'error.required.entity' | translate:msgParamFechaPrevistaEntity}}
         </mat-error>
-        <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.minDate">
-          {{'error.csp.proyecto-socio.periodo-pago.fecha-prevista.min' | translate}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.maxDate">
-          {{'error.csp.proyecto-socio.periodo-pago.fecha-prevista.max' | translate}}
-        </mat-error>
       </mat-form-field>
     </div>
     <!-- importe -->

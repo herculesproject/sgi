@@ -102,11 +102,10 @@ export class ProyectoSocioPeriodoPagoModalComponent extends DialogFormComponent<
           [Validators.required]
         ),
         fechaPrevistaPago: new FormControl(
-          this.data.proyectoSocioPeriodoPago.fechaPrevistaPago, [
-          Validators.required,
-          DateValidator.minDate(this.data.fechaInicioProyectoSocio),
-          DateValidator.maxDate(this.data.fechaFinProyectoSocio)
-        ]
+          this.data.proyectoSocioPeriodoPago.fechaPrevistaPago,
+          [
+            Validators.required
+          ]
         ),
         importe: new FormControl(
           this.data.proyectoSocioPeriodoPago.importe,
