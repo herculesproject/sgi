@@ -74,6 +74,18 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_DATA" />
+      <column name="description" value="JSON con formato: {&quot;solicitudTitle&quot;:&quot;Solicitud 1&quot;,&quot;monthsBeforeFechaFinPrioridad&quot;:6,&quot;fechaFinPrioridad&quot;:&quot;2022-01-01T00:00:00Z&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-subject_tpl">
@@ -148,6 +160,18 @@
       <column name="tpl" valueClobFile="clob/0000000000002/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT.ftl" />
       <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT'</where>
     </update>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de aviso vencimiento Fin Fecha Prioridad Solicitud de Protección" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000002/pii-com-aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion/PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_SUBJECT.ftl" />
+      <where>name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-subjecttpl_param">
@@ -185,6 +209,12 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
+    </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_DATA')" />
     </insert>
   </changeSet>
 
@@ -381,6 +411,23 @@
       <column name="tpl_html" valueClobFile="clob/0000000000002/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
       <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
     </update>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envio de avisos de vencimiento del plazo para entrar en las fases nacionales/regionales de una solicitud de protección" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000002/pii-com-aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion/PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT_text.ftl" />
+      <where>name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/pii-com-aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion/PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
+      <where>name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-contenttpl_param">
@@ -418,6 +465,12 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DATA')" />
+    </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_DATA')" />
     </insert>
   </changeSet>
 
@@ -487,6 +540,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION" />
+      <column name="description" value="Aviso del plazo de entrada en fase nacional/regional para una solicitud de protección (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-emailtpl_subjecttpl">
@@ -525,6 +589,12 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_SUBJECT')" />
     </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000002-emailtpl_contenttpl">
@@ -556,6 +626,12 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT')" />
+    </insert>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
