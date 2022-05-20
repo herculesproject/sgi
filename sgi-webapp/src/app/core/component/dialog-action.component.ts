@@ -1,6 +1,7 @@
 import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SgiProblem, toSgiProblem } from '@core/errors/sgi-error';
+import { SgiProblem } from '@core/errors/sgi-error';
+import { ErrorUtils } from '@core/utils/error-utils';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { DialogFormComponent } from './dialog-form.component';
@@ -31,10 +32,9 @@ export abstract class DialogActionComponent<R> extends DialogFormComponent<R> im
           if (Array.isArray(error)) {
             errors.push(...error);
           } else {
-            errors.push(toSgiProblem(error));
+            errors.push(ErrorUtils.toSgiProblem(error));
           }
-
-          errors.forEach(e => {
+          errors.filter((e) => !e.managed).forEach(e => {
             e.managed = true;
             this.pushProblems(e);
           });

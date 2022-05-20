@@ -4,18 +4,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { SgiHttpProblem, ValidationHttpError } from '@core/errors/http-problem';
-import { SgiProblem } from '@core/errors/sgi-error';
+import { SgiError, ValidationError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { ErrorUtils } from '@core/utils/error-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { Observable, of, throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 
 const SOLICITUD_CAMBIO_ESTADO_COMENTARIO = marker('csp.solicitud.estado-solicitud.comentario');
 const SOLICITUD_CAMBIO_ESTADO_FECHA_ESTADO = marker('csp.solicitud.estado-solicitud.fecha');
@@ -25,6 +26,8 @@ const MSG_DOCUMENTOS_CONVOCATORIA_REQUIRED = marker('msg.csp.solicitud.documento
 const SOLICITUD_PROYECTO_COORDINADO = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-coordinado');
 const SOLICITUD_PROYECTO_COORDINADOR_EXTERNO = marker('csp.solicitud-datos-proyecto-ficha-general.coordinador-externo');
 const MSG_SOLICITUD_EQUIPO_SOLICITANTE_REQUIRED = marker('msg.csp.solicitud.solicitante-miembro-equipo');
+const MSG_CAMBIO_ESTADO_CONFIRMACION = marker('confirmacion.csp.solicitud.cambio-estado');
+const MSG_CAMBIO_ESTADO_ERROR = marker('msg.csp.solicitud.cambio-estado.error');
 
 export interface SolicitudCambioEstadoModalComponentData {
   estadoActual: Estado;
@@ -76,9 +79,9 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
   msgSolicitudProyectoCoordinadoRequired: string;
   msgSolicitudProyectoCoordinadorExternoRequired: string;
   msgSolicitudEquipoSolicitanteRequired: string;
+  msgCambioEstadoError: string;
 
   readonly estadosNuevos: Map<string, string>;
-  confirmDialogService: any;
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -89,7 +92,9 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     @Inject(MAT_DIALOG_DATA) public data: SolicitudCambioEstadoModalComponentData,
     protected snackBarService: SnackBarService,
     private solicitudService: SolicitudService,
-    private readonly translate: TranslateService) {
+    private confirmDialogService: DialogService,
+    private readonly translate: TranslateService
+  ) {
     super(matDialogRef, true);
 
     if (this.data?.isInvestigador) {
@@ -137,6 +142,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
       { field: this.translate.instant(SOLICITUD_PROYECTO_COORDINADOR_EXTERNO) }
     );
     this.msgSolicitudEquipoSolicitanteRequired = this.translate.instant(MSG_SOLICITUD_EQUIPO_SOLICITANTE_REQUIRED);
+    this.msgCambioEstadoError = this.translate.instant(MSG_CAMBIO_ESTADO_ERROR);
   }
 
   protected getValue(): IEstadoSolicitud {
@@ -161,38 +167,47 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
   protected saveOrUpdate(): Observable<IEstadoSolicitud> {
     const estadoNew = this.getValue();
 
-    return this.validateCambioEstado(estadoNew.estado).pipe(
+    return this.confirmDialogService.showConfirmation(MSG_CAMBIO_ESTADO_CONFIRMACION).pipe(
+      filter(aceptado => !!aceptado),
+      switchMap(() => this.validateCambioEstado(estadoNew.estado)),
       switchMap(() => this.solicitudService.cambiarEstado(this.data.solicitud.id, estadoNew)),
+      catchError((error) => {
+        if (error instanceof SgiError) {
+          error.managed = true;
+          this.snackBarService.showError(error);
+        }
+        return throwError(error);
+      }),
       map(() => estadoNew)
     );
   }
 
   private validateCambioEstado(estado: Estado): Observable<never | void> {
-    const problems: SgiProblem[] = [];
+    const validationErrors: ValidationError[] = [];
 
     if (![Estado.DESISTIDA, Estado.RENUNCIADA].includes(estado)) {
-      problems.push(...this.validateRequiredDocumentos());
+      validationErrors.push(...this.validateRequiredDocumentos());
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
-        problems.push(...this.validateSolicitudProyecto());
+        validationErrors.push(...this.validateSolicitudProyecto());
       }
     }
 
-    if (problems.length > 0) {
-      return throwError(problems);
+    if (validationErrors.length > 0) {
+      return throwError(ErrorUtils.toValidationProblem(this.msgCambioEstadoError, validationErrors));
     }
 
     return of(void 0);
   }
 
-  private validateRequiredDocumentos(): SgiProblem[] {
-    const problems: SgiProblem[] = [];
+  private validateRequiredDocumentos(): ValidationError[] {
+    const problems: ValidationError[] = [];
     if (!this.data.hasRequiredDocumentos) {
-      problems.push(this.buildValidationProblem(this.msgDocumentosConvocatoriaRequired));
+      problems.push(this.buildValidationError(this.msgDocumentosConvocatoriaRequired));
     }
     return problems;
   }
 
-  private validateSolicitudProyecto(): SgiProblem[] {
+  private validateSolicitudProyecto(): ValidationError[] {
     if (this.data.isInvestigador) {
       return this.validateSolicitudProyectoInvestigador();
     } else {
@@ -200,7 +215,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     }
   }
 
-  private validateSolicitudProyectoUnidadGestion(): SgiProblem[] {
+  private validateSolicitudProyectoUnidadGestion(): ValidationError[] {
     return [
       ...this.validateCoordinadoFilled(),
       ...this.validateCoordinadorExternoFilled(),
@@ -208,44 +223,46 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     ];
   }
 
-  private validateSolicitudProyectoInvestigador(): SgiProblem[] {
+  private validateSolicitudProyectoInvestigador(): ValidationError[] {
     return [
       ...this.validateSolicitanteInSolicitudEquipo()
     ];
   }
 
-  private validateCoordinadoFilled(): SgiProblem[] {
-    const problems: SgiProblem[] = [];
+  private validateCoordinadoFilled(): ValidationError[] {
+    const problems: ValidationError[] = [];
     if (this.data.solicitudProyecto.coordinado === undefined || this.data.solicitudProyecto.coordinado === null) {
-      problems.push(this.buildValidationProblem(this.msgSolicitudProyectoCoordinadoRequired));
+      problems.push(this.buildValidationError(this.msgSolicitudProyectoCoordinadoRequired));
     }
 
     return problems;
   }
 
-  private validateCoordinadorExternoFilled(): SgiProblem[] {
-    const problems: SgiProblem[] = [];
-
+  private validateCoordinadorExternoFilled(): ValidationError[] {
+    const problems: ValidationError[] = [];
     if (!!this.data.solicitudProyecto.coordinado
       && (this.data.solicitudProyecto.coordinadorExterno === undefined || this.data.solicitudProyecto.coordinadorExterno === null)) {
-      problems.push(this.buildValidationProblem(this.msgSolicitudProyectoCoordinadorExternoRequired));
+      problems.push(this.buildValidationError(this.msgSolicitudProyectoCoordinadorExternoRequired));
     }
 
     return problems;
   }
 
-  private validateSolicitanteInSolicitudEquipo(): SgiProblem[] {
-    const problems: SgiProblem[] = [];
+  private validateSolicitanteInSolicitudEquipo(): ValidationError[] {
+    const problems: ValidationError[] = [];
 
     if (!this.data.isSolicitanteInSolicitudEquipo) {
-      problems.push(this.buildValidationProblem(this.msgSolicitudEquipoSolicitanteRequired));
+      problems.push(this.buildValidationError(this.msgSolicitudEquipoSolicitanteRequired));
     }
 
     return problems;
   }
 
-  private buildValidationProblem(msgError: string): ValidationHttpError {
-    return new ValidationHttpError({ title: msgError } as SgiHttpProblem);
+  private buildValidationError(msgError: string): ValidationError {
+    return {
+      error: msgError,
+      field: undefined
+    };
   }
 
 }
