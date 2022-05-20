@@ -8,10 +8,17 @@
       <column name="value" value="Q3018001" />
     </insert>
 
-    <!-- Destinatarios defecto PII COM Fin Fecha Prioridad Solicitud Protección OTRI -->
+    <!-- Destinatarios defecto PII COM meses hasta Fin Fecha Prioridad Solicitud Protección OTRI -->
     <insert tableName="config">
-      <column name="name" value="pii-com-fecha-fin-pri-sol-prot-destinatarios-1" />
+      <column name="name" value="pii-com-fecha-fin-pri-sol-prot-destinatarios" />
       <column name="description" value="Destinatarios defecto PII COM Fin Fecha Prioridad Solicitud Protección OTRI" />
+      <column name="value" value="[&quot;venc.periodo.pago.socio.otri@sgi.es&quot;]" />
+    </insert>
+
+    <!-- Destinatarios defecto PII COM Aviso fin de plazo de entrada en fases nacionales/regionales de una Solicitud Protección OTRI -->
+    <insert tableName="config">
+      <column name="name" value="fin-plaz-fases-nac-reg-sol-prot-destinatarios" />
+      <column name="description" value="Destinatarios defecto PII COM Aviso fin de plazo de entrada en fases nacionales/regionales de una Solicitud Protección OTRI" />
       <column name="value" value="[&quot;venc.periodo.pago.socio.otri@sgi.es&quot;]" />
     </insert>
   </changeSet>
