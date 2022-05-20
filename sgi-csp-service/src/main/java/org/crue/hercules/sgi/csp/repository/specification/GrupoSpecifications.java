@@ -5,12 +5,19 @@ import java.time.Instant;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo_;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion_;
 import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada;
 import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada_;
+import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
+import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico_;
 import org.crue.hercules.sgi.csp.model.Grupo_;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
@@ -86,19 +93,17 @@ public class GrupoSpecifications {
   }
 
   /**
-   * {@link Grupo} para los que la persona esta
-   * en su {@link GrupoEquipo}
+   * {@link Grupo} para los que la persona esta en su {@link GrupoEquipo}
    * 
    * @param personaRef Identificador de la persona
    * @return specification para obtener los {@link Grupo} para los que la persona
    *         esta en su {@link GrupoEquipo}
    */
-  public static Specification<Grupo> byPersona(String personaRef) {
+  public static Specification<Grupo> byPersonaInGrupoEquipo(String personaRef) {
     return (root, query, cb) -> {
-      Join<Grupo, GrupoEquipo> joinPersonasAutorizadas = root.join(Grupo_.miembrosEquipo, JoinType.LEFT);
+      Join<Grupo, GrupoEquipo> joinGrupoEquipo = root.join(Grupo_.miembrosEquipo, JoinType.LEFT);
 
-      return cb.equal(joinPersonasAutorizadas.get(GrupoEquipo_.personaRef),
-          personaRef);
+      return cb.equal(joinGrupoEquipo.get(GrupoEquipo_.personaRef), personaRef);
     };
   }
 
@@ -177,6 +182,67 @@ public class GrupoSpecifications {
           rolPrincipal,
           greaterThanFechaInicio,
           lowerThanFechaFin);
+    };
+  }
+
+  /**
+   * {@link Grupo} para los que la persona esta
+   * entre los {@link GrupoResponsableEconomico} en la fecha indicada
+   * 
+   * @param personaRef Identificador de la persona
+   * @param fecha      fecha para la que se hace la comprobracion
+   * @return specification para obtener los {@link Grupo} para los que la persona
+   *         esta entre los {@link GrupoResponsableEconomico} en la fecha indicada
+   */
+  public static Specification<Grupo> byResponsableEconomico(String personaRef, Instant fecha) {
+    return (root, query, cb) -> {
+      Join<Grupo, GrupoResponsableEconomico> joinResponsablesEconomicos = root.join(Grupo_.responsableEconomicos,
+          JoinType.LEFT);
+
+      Predicate personaRefEquals = cb.equal(joinResponsablesEconomicos.get(GrupoResponsableEconomico_.personaRef),
+          personaRef);
+
+      Predicate greaterThanFechaInicio = cb.or(
+          cb.lessThanOrEqualTo(joinResponsablesEconomicos.get(GrupoResponsableEconomico_.fechaInicio), fecha),
+          cb.and(
+              cb.isNull(joinResponsablesEconomicos.get(GrupoResponsableEconomico_.fechaInicio)),
+              cb.or(
+                  cb.lessThanOrEqualTo(root.get(Grupo_.fechaInicio), fecha))));
+
+      Predicate lowerThanFechaFin = cb.or(
+          cb.greaterThanOrEqualTo(joinResponsablesEconomicos.get(GrupoResponsableEconomico_.fechaFin), fecha),
+          cb.and(
+              cb.isNull(joinResponsablesEconomicos.get(GrupoResponsableEconomico_.fechaFin)),
+              cb.or(
+                  cb.isNull(root.get(Grupo_.fechaFin)),
+                  cb.greaterThanOrEqualTo(root.get(Grupo_.fechaFin), fecha))));
+
+      return cb.and(
+          personaRefEquals,
+          greaterThanFechaInicio,
+          lowerThanFechaFin);
+    };
+  }
+
+  /**
+   * {@link Grupo} de la {@link GrupoLineaInvestigacion} con el id
+   * indicado.
+   * 
+   * @param grupoLineaInvestigacionId identificador de la
+   *                                  {@link Grupo}.
+   * @return specification para obtener las {@link Convocatoria} de
+   *         la {@link GrupoLineaInvestigacion} con el id indicado.
+   */
+  public static Specification<Grupo> byGrupoLineaInvestigacionId(Long grupoLineaInvestigacionId) {
+    return (root, query, cb) -> {
+      Subquery<Long> queryGrupoLineaInvestigacion = query.subquery(Long.class);
+      Root<GrupoLineaInvestigacion> queryGrupoLineaInvestigacionRoot = queryGrupoLineaInvestigacion
+          .from(GrupoLineaInvestigacion.class);
+      queryGrupoLineaInvestigacion.select(queryGrupoLineaInvestigacionRoot.get(
+          GrupoLineaInvestigacion_.grupoId))
+          .where(
+              cb.equal(queryGrupoLineaInvestigacionRoot.get(GrupoLineaInvestigacion_.id), grupoLineaInvestigacionId));
+      return root.get(Grupo_.id).in(queryGrupoLineaInvestigacion);
     };
   }
 

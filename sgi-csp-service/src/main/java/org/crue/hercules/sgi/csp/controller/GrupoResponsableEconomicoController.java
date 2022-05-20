@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoResponsableEconomicoController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoResponsableEconomicoController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposresponsableseconomicos";
@@ -69,12 +71,12 @@ public class GrupoResponsableEconomicoController {
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoResponsableEconomicoOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoResponsableEconomicoInput> grupoResponsableEconomicos) {
-    log.debug("update(List<GrupoResponsableEconomicoInput> grupoResponsableEconomicos, grupoId) - start");
+      @RequestBody List<@Valid GrupoResponsableEconomicoInput> grupoResponsableEconomicos) {
+    log.debug("update(Long id, List<GrupoResponsableEconomicoInput> grupoResponsableEconomicos) - start");
     List<GrupoResponsableEconomicoOutput> returnValue = converter
         .convertGrupoResponsableEconomicos(service.update(id, converter.convertGrupoResponsableEconomicoInput(
             grupoResponsableEconomicos)));
-    log.debug("update(List<GrupoResponsableEconomicoInput> grupoResponsableEconomicos, grupoId) - end");
+    log.debug("update(Long id, List<GrupoResponsableEconomicoInput> grupoResponsableEconomicos) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 

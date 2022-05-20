@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionInput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigacionOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoLineaInvestigadorOutput;
 import org.crue.hercules.sgi.csp.model.GrupoLineaClasificacion;
+import org.crue.hercules.sgi.csp.model.GrupoLineaEquipoInstrumental;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador;
 import org.crue.hercules.sgi.csp.service.GrupoLineaClasificacionService;
@@ -122,7 +123,7 @@ public class GrupoLineaInvestigacionController {
    * @return {@link GrupoLineaInvestigacion} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public GrupoLineaInvestigacionOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     GrupoLineaInvestigacionOutput returnValue = converter.convert(service.findById(id));
@@ -139,7 +140,7 @@ public class GrupoLineaInvestigacionController {
    *         no.
    */
   @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("GrupoLineaInvestigacion exists(Long id) - start");
     boolean exists = service.existsById(id);
@@ -156,7 +157,7 @@ public class GrupoLineaInvestigacionController {
    *         modificación
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-B')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-B', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Void> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable();
@@ -175,7 +176,7 @@ public class GrupoLineaInvestigacionController {
    *         filtradas del {@link GrupoLineaInvestigacion}.
    */
   @GetMapping(PATH_GRUPO_LINEA_INVESTIGADOR)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoLineaInvestigadorOutput>> findAllGrupoLineaInvestigador(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoLineaInvestigador(Long id, String query, Pageable paging) - start");
@@ -196,7 +197,7 @@ public class GrupoLineaInvestigacionController {
    *         filtradas del {@link GrupoLineaInvestigacion}.
    */
   @GetMapping(PATH_CLASIFICACIONES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoLineaClasificacionOutput>> findAllGrupoLineaClasificacion(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoLineaClasificacion(Long id, String query, Pageable paging) - start");
@@ -220,7 +221,7 @@ public class GrupoLineaInvestigacionController {
    *         filtradas del {@link GrupoLineaInvestigacion}.
    */
   @GetMapping(PATH_GRUPO_LINEA_EQUIPO_INSTRUMENTAL)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoLineaEquipoInstrumentalOutput>> findAllGrupoLineaEquipoInstrumental(
       @PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {

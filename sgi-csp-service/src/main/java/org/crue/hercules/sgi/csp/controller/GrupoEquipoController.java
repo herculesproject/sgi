@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoEquipoController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoEquipoController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposequipos";
@@ -185,7 +187,7 @@ public class GrupoEquipoController {
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoEquipoOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoEquipoInput> grupoEquipos) {
+      @RequestBody List<@Valid GrupoEquipoInput> grupoEquipos) {
     log.debug("update(List<GrupoEquipoInput> grupoEquipos, grupoId) - start");
     List<GrupoEquipoOutput> returnValue = converter
         .convertGrupoEquipos(service.update(id, converter.convertGrupoEquipoInput(

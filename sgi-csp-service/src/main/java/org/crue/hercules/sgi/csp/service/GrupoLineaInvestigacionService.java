@@ -18,9 +18,9 @@ import org.crue.hercules.sgi.csp.repository.GrupoLineaInvestigacionRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoLineaInvestigacionSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoLineaInvestigacionAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +46,7 @@ public class GrupoLineaInvestigacionService {
   private final GrupoLineaInvestigacionRepository repository;
   private final GrupoRepository grupoRepository;
   private final Validator validator;
+  private final GrupoLineaInvestigacionAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link GrupoLineaInvestigacion}.
@@ -58,6 +59,8 @@ public class GrupoLineaInvestigacionService {
   @Validated({ BaseEntity.Create.class })
   public GrupoLineaInvestigacion create(@Valid GrupoLineaInvestigacion grupoLineaInvestigacion) {
     log.debug("create(GrupoLineaInvestigacion grupoLineaInvestigacion) - start");
+
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoLineaInvestigacion.getGrupoId());
 
     AssertHelper.idIsNull(grupoLineaInvestigacion.getId(), GrupoLineaInvestigacion.class);
     GrupoLineaInvestigacion returnValue = repository.save(grupoLineaInvestigacion);
@@ -77,6 +80,8 @@ public class GrupoLineaInvestigacionService {
   @Validated({ BaseEntity.Update.class })
   public GrupoLineaInvestigacion update(@Valid GrupoLineaInvestigacion grupoLineaInvestigacionActualizar) {
     log.debug("update(GrupoLineaInvestigacion grupoLineaInvestigacionActualizar) - start");
+
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionActualizar.getId());
 
     validateGrupoLineaInvestigacion(grupoLineaInvestigacionActualizar);
 
@@ -102,6 +107,8 @@ public class GrupoLineaInvestigacionService {
     log.debug("findById(Long id) - start");
 
     AssertHelper.idNotNull(id, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(id);
+
     final GrupoLineaInvestigacion returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoLineaInvestigacionNotFoundException(id));
 
@@ -119,6 +126,7 @@ public class GrupoLineaInvestigacionService {
     log.debug("delete(Long id) - start");
 
     AssertHelper.idNotNull(id, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(id);
 
     if (!repository.existsById(id)) {
       throw new GrupoLineaInvestigacionNotFoundException(id);
@@ -142,6 +150,8 @@ public class GrupoLineaInvestigacionService {
   public Page<GrupoLineaInvestigacion> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoLineaInvestigacion> specs = GrupoLineaInvestigacionSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -176,7 +186,7 @@ public class GrupoLineaInvestigacionService {
     }
 
     Set<ConstraintViolation<GrupoLineaInvestigacion>> result = validator.validate(lineaInvestigacion,
-        GrupoLineaInvestigacion.Update.class);
+        BaseEntity.Update.class);
 
     if (!result.isEmpty()) {
       throw new ConstraintViolationException(result);
@@ -208,7 +218,7 @@ public class GrupoLineaInvestigacionService {
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   public boolean modificable() {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-GIN-E");
+    return authorityHelper.hasAuthorityEditUnidadGestion();
   }
 
 }

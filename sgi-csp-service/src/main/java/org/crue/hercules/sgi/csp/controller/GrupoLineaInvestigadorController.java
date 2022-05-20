@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigadorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoLineaInvestigadorController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoLineaInvestigadorController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposlineasinvestigadores";
@@ -70,12 +72,12 @@ public class GrupoLineaInvestigadorController {
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoLineaInvestigadorOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoLineaInvestigadorInput> grupoLineasInvestigadores) {
-    log.debug("update(List<GrupoLineaInvestigadorInput> grupoLineaInvestigadors, grupoId) - start");
+      @RequestBody List<@Valid GrupoLineaInvestigadorInput> grupoLineasInvestigadores) {
+    log.debug("update(Long id, List<GrupoLineaInvestigadorInput> grupoLineasInvestigadores) - start");
     List<GrupoLineaInvestigadorOutput> returnValue = converter
         .convertGrupoLineaInvestigadors(service.update(id, converter.convertGrupoLineaInvestigadorInput(
             grupoLineasInvestigadores)));
-    log.debug("update(List<GrupoLineaInvestigadorInput> grupoLineaInvestigadors, grupoId) - end");
+    log.debug("update(Long id, List<GrupoLineaInvestigadorInput> grupoLineasInvestigadores) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 

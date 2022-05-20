@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
+import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
@@ -60,6 +61,7 @@ import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSoli
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -103,6 +105,7 @@ public class SolicitudService {
   private final ComunicadosService comunicadosService;
   private final SgiApiSgpService personasService;
   private final SolicitudAuthorityHelper solicitudAuthorityHelper;
+  private final GrupoAuthorityHelper grupoAuthorityHelper;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -119,7 +122,8 @@ public class SolicitudService {
       ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
       ComunicadosService comunicadosService,
       SgiApiSgpService personasService,
-      SolicitudAuthorityHelper solicitudAuthorityHelper) {
+      SolicitudAuthorityHelper solicitudAuthorityHelper,
+      GrupoAuthorityHelper grupoAuthorityHelper) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -138,6 +142,7 @@ public class SolicitudService {
     this.comunicadosService = comunicadosService;
     this.personasService = personasService;
     this.solicitudAuthorityHelper = solicitudAuthorityHelper;
+    this.grupoAuthorityHelper = grupoAuthorityHelper;
   }
 
   /**
@@ -814,6 +819,26 @@ public class SolicitudService {
   public boolean modificableEstadoAndDocumentosByInvestigador(Long id) {
     return modificableEstadoAndDocumentosByInvestigador(
         repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id)));
+  }
+
+  /**
+   * Devuelve la {@link Solicitud} asociada al {@link Grupo} con el id
+   * indicado si el usuario que realiza la peticion puede acceder al
+   * {@link Grupo}.
+   * 
+   * @param grupoId Identificador de {@link Grupo}.
+   * @return {@link Solicitud} correspondiente al {@link Grupo}.
+   */
+  public Solicitud findByGrupoIdAndUserInGrupo(Long grupoId) {
+    log.debug("findByGrupoIdAndUserInGrupo(Long autorizacionId) - start");
+
+    grupoAuthorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
+    final Solicitud returnValue = repository.findOne(SolicitudSpecifications.byGrupoId(grupoId))
+        .orElseThrow(() -> new SolicitudNotFoundException(grupoId));
+
+    log.debug("findByGrupoIdAndUserInGrupo(Long grupoId) - end");
+    return returnValue;
   }
 
   /**

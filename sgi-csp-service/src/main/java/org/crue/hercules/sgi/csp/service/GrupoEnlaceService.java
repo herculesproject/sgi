@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.exceptions.GrupoEnlaceNotFoundException;
@@ -9,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.GrupoEnlace;
 import org.crue.hercules.sgi.csp.repository.GrupoEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoEnlaceService {
 
   private final GrupoEnlaceRepository repository;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link GrupoEnlace}.
@@ -44,6 +48,8 @@ public class GrupoEnlaceService {
     log.debug("create(GrupoEnlace grupoEnlace) - start");
 
     AssertHelper.idIsNull(grupoEnlace.getId(), GrupoEnlace.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEnlace.getGrupoId());
+
     GrupoEnlace returnValue = repository.save(grupoEnlace);
 
     log.debug("create(GrupoEnlace grupoEnlace) - end");
@@ -63,6 +69,7 @@ public class GrupoEnlaceService {
     log.debug("update(GrupoEnlace grupoEnlaceActualizar) - start");
 
     AssertHelper.idNotNull(grupoEnlaceActualizar.getId(), GrupoEnlace.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEnlaceActualizar.getGrupoId());
 
     return repository.findById(grupoEnlaceActualizar.getId()).map(data -> {
       data.setEnlace(grupoEnlaceActualizar.getEnlace());
@@ -87,6 +94,8 @@ public class GrupoEnlaceService {
     final GrupoEnlace returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoEnlaceNotFoundException(id));
 
+    authorityHelper.checkUserHasAuthorityViewGrupo(returnValue.getGrupoId());
+
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -102,7 +111,11 @@ public class GrupoEnlaceService {
 
     AssertHelper.idNotNull(id, GrupoEnlace.class);
 
-    if (!repository.existsById(id)) {
+    Optional<GrupoEnlace> grupoEnlace = repository.findById(id);
+
+    if (grupoEnlace.isPresent()) {
+      authorityHelper.checkUserHasAuthorityViewGrupo(grupoEnlace.get().getGrupoId());
+    } else {
       throw new GrupoEnlaceNotFoundException(id);
     }
 
@@ -124,6 +137,8 @@ public class GrupoEnlaceService {
   public Page<GrupoEnlace> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoEnlace> specs = GrupoEnlaceSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

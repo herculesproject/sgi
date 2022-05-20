@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.service.GrupoPersonaAutorizadaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoPersonaAutorizadaController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoPersonaAutorizadaController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "grupospersonasautorizadas";
@@ -69,12 +71,12 @@ public class GrupoPersonaAutorizadaController {
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoPersonaAutorizadaOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoPersonaAutorizadaInput> grupoPersonasAutorizadas) {
-    log.debug("update(List<GrupoPersonaAutorizadaInput> grupoPersonaAutorizadas, grupoId) - start");
+      @RequestBody List<@Valid GrupoPersonaAutorizadaInput> grupoPersonasAutorizadas) {
+    log.debug("update(Long id, List<GrupoPersonaAutorizadaInput> grupoPersonaAutorizadas) - start");
     List<GrupoPersonaAutorizadaOutput> returnValue = converter
         .convertGrupoPersonaAutorizadas(service.update(id, converter.convertGrupoPersonaAutorizadaInput(
             grupoPersonasAutorizadas)));
-    log.debug("update(List<GrupoPersonaAutorizadaInput> grupoPersonaAutorizadas, grupoId) - end");
+    log.debug("update(Long id, List<GrupoPersonaAutorizadaInput> grupoPersonaAutorizadas) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 

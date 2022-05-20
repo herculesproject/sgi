@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoPalabraClaveConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoTipoConverter;
+import org.crue.hercules.sgi.csp.converter.SolicitudConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoEnlaceOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoInstrumentalOutput;
@@ -27,6 +28,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPersonaAutorizadaOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoTipoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudResumenOutput;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEnlace;
@@ -40,6 +42,7 @@ import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.GrupoEnlaceService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoInstrumentalService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
@@ -50,6 +53,7 @@ import org.crue.hercules.sgi.csp.service.GrupoPersonaAutorizadaService;
 import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.GrupoService;
 import org.crue.hercules.sgi.csp.service.GrupoTipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
@@ -105,6 +109,8 @@ public class GrupoController {
   public static final String PATH_GRUPO_ENLACE = PATH_ID + "/enlaces";
   public static final String PATH_GRUPO_PERSONA_AUTORIZADA = PATH_ID + "/personas-autorizadas";
   public static final String PATH_GRUPO_LINEA_INVESTIGACION = PATH_ID + "/lineas-investigacion";
+  public static final String PATH_SOLICITUD = PATH_ID + "/solicitud";
+  public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
 
   // Services
   private final GrupoService service;
@@ -117,6 +123,7 @@ public class GrupoController {
   private final GrupoEnlaceService grupoEnlaceService;
   private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
   private final GrupoLineaInvestigacionService grupoLineaInvestigacionService;
+  private final SolicitudService solicitudService;
   // Converters
   private final GrupoConverter converter;
   private final GrupoEquipoConverter grupoEquipoConverter;
@@ -128,6 +135,7 @@ public class GrupoController {
   private final GrupoEnlaceConverter grupoEnlaceConverter;
   private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
   private final GrupoLineaInvestigacionConverter grupoLineaInvestigacionConverter;
+  private final SolicitudConverter solicitudConverter;
 
   /**
    * Crea nuevo {@link Grupo}
@@ -167,7 +175,7 @@ public class GrupoController {
    * @return {@link Grupo} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V','CSP-SOL-C','CSP-SOL-E','CSP-SOL-INV-C')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-INV-C', 'CSP-GIN-INV-VR')")
   public GrupoOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     GrupoOutput returnValue = converter.convert(service.findById(id));
@@ -183,7 +191,7 @@ public class GrupoController {
    *         no.
    */
   @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("exists(Long id) - start");
     boolean exists = service.existsById(id);
@@ -234,12 +242,12 @@ public class GrupoController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-PRC-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+    log.debug("findActivos(String query, Pageable paging) - start");
     Page<GrupoOutput> page = converter.convert(service.findActivos(query, paging));
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findActivos(String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -318,7 +326,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_EQUIPO)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoEquipoOutput>> findAllGrupoEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoEquipo(Long id, String query, Pageable paging) - start");
@@ -343,7 +351,7 @@ public class GrupoController {
    *         {@link Grupo} en el momento actual.
    */
   @GetMapping(PATH_INVESTIGADORES_PRINCIPALES_MAX_PARTICIPACION)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-PRC-V', 'CSP-GIN-INV-VR')")
   public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(
       @PathVariable Long id) {
     log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
@@ -386,7 +394,7 @@ public class GrupoController {
    *         {@link Grupo}
    */
   @GetMapping(PATH_PALABRAS_CLAVE)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-C', 'CSP-GIN-INV-VR')")
   public Page<GrupoPalabraClaveOutput> findPalabrasClave(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findPalabrasClave(@PathVariable Long id, String query, Pageable paging) - start");
@@ -473,7 +481,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_TIPO)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoTipoOutput>> findAllGrupoTipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoTipo(Long id, String query, Pageable paging) - start");
@@ -495,7 +503,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_ESPECIAL_INVESTIGACION)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoEspecialInvestigacionOutput>> findAllGrupoEspecialInvestigacion(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoEspecialInvestigacion(Long id, String query, Pageable paging) - start");
@@ -513,8 +521,8 @@ public class GrupoController {
    * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
    *         modificación
    */
-  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-C', 'CSP-GIN-E', 'CSP-GIN-B')")
+  @RequestMapping(path = PATH_MODIFICABLE, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-C', 'CSP-GIN-E', 'CSP-GIN-B', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Void> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable();
@@ -534,7 +542,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_RESPONSABLE_ECONOMICO)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoResponsableEconomicoOutput>> findAllGrupoResponsableEconomico(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoResponsableEconomico(Long id, String query, Pageable paging) - start");
@@ -558,7 +566,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_EQUIPO_INSTRUMENTAL)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoEquipoInstrumentalOutput>> findAllGrupoEquipoInstrumental(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoEquipoInstrumental(Long id, String query, Pageable paging) - start");
@@ -581,7 +589,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_ENLACE)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoEnlaceOutput>> findAllGrupoEnlace(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoEnlace(Long id, String query, Pageable paging) - start");
@@ -603,7 +611,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_PERSONA_AUTORIZADA)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoPersonaAutorizadaOutput>> findAllGrupoPersonaAutorizada(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoPersonaAutorizada(Long id, String query, Pageable paging) - start");
@@ -624,7 +632,7 @@ public class GrupoController {
    *         filtradas del {@link Grupo}.
    */
   @GetMapping(PATH_GRUPO_LINEA_INVESTIGACION)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<GrupoLineaInvestigacionOutput>> findAllGrupoLineaInvestigacion(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllGrupoLineaInvestigacion(Long id, String query, Pageable paging) - start");
@@ -649,6 +657,25 @@ public class GrupoController {
     List<Long> returnValue = service.findIdsGruposModificados(query);
     log.debug("findIdsGruposModificados(String query) - end");
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve la {@link Solicitud} asociada al {@link Grupo} con el id
+   * indicado si el usuario que realiza la peticion puede acceder al
+   * {@link Grupo}.
+   * 
+   * @param id Identificador de {@link Grupo}.
+   * @return {@link Solicitud} correspondiente al {@link Grupo}.
+   */
+  @GetMapping(PATH_SOLICITUD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
+  public ResponseEntity<SolicitudResumenOutput> findSolicitudByGrupoIdAndUserInGrupo(@PathVariable Long id) {
+    log.debug("findSolicitudByGrupoId(Long id) - start");
+    SolicitudResumenOutput returnValue = solicitudConverter
+        .convertResumenOutput(solicitudService.findByGrupoIdAndUserInGrupo(id));
+    log.debug("findSolicitudByGrupoId(Long id) - end");
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 

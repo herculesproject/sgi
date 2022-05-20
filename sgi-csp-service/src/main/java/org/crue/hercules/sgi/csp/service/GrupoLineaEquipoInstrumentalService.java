@@ -5,29 +5,22 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoInstrumentalNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.GrupoLineaEquipoInstrumentalNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.GrupoLineaInvestigacionNotFoundException;
-import org.crue.hercules.sgi.csp.model.BaseEntity;
-import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
 import org.crue.hercules.sgi.csp.model.GrupoLineaEquipoInstrumental;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoInstrumentalRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoLineaEquipoInstrumentalRepository;
-import org.crue.hercules.sgi.csp.repository.GrupoLineaInvestigacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoLineaEquipoInstrumentalSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.util.GrupoLineaInvestigacionAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -44,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoLineaEquipoInstrumentalService {
 
   private final GrupoLineaEquipoInstrumentalRepository repository;
-  private final GrupoLineaInvestigacionRepository grupoLineaInvestigacionRepository;
   private final GrupoEquipoInstrumentalRepository grupoEquipoInstrumentalRepository;
+  private final GrupoLineaInvestigacionAuthorityHelper authorityHelper;
 
   /**
    * Obtiene una entidad {@link GrupoLineaEquipoInstrumental} por id.
@@ -59,6 +52,8 @@ public class GrupoLineaEquipoInstrumentalService {
     AssertHelper.idNotNull(id, GrupoLineaEquipoInstrumental.class);
     final GrupoLineaEquipoInstrumental returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoLineaEquipoInstrumentalNotFoundException(id));
+
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(returnValue.getGrupoLineaInvestigacionId());
 
     log.debug("findById(Long id) - end");
     return returnValue;
@@ -82,6 +77,8 @@ public class GrupoLineaEquipoInstrumentalService {
       Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoLineaInvestigacionId, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionId);
+
     Specification<GrupoLineaEquipoInstrumental> specs = GrupoLineaEquipoInstrumentalSpecifications
         .byGrupoLineaInvestigacionId(
             grupoLineaInvestigacionId)
@@ -111,11 +108,11 @@ public class GrupoLineaEquipoInstrumentalService {
   @Transactional
   public List<GrupoLineaEquipoInstrumental> update(Long grupoLineaInvestigacionId,
       @Valid List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales) {
-    log.debug("update(Long grupoId, List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales) - start");
+    log.debug(
+        "update(Long grupoLineaInvestigacionId, List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales) - start");
 
-    GrupoLineaInvestigacion grupoLineaInvestigacion = grupoLineaInvestigacionRepository.findById(
-        grupoLineaInvestigacionId)
-        .orElseThrow(() -> new GrupoLineaInvestigacionNotFoundException(grupoLineaInvestigacionId));
+    AssertHelper.idNotNull(grupoLineaInvestigacionId, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionId);
 
     List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentalesBD = repository
         .findAllByGrupoLineaInvestigacionId(
@@ -133,41 +130,24 @@ public class GrupoLineaEquipoInstrumentalService {
       repository.deleteAll(grupoLineasEquiposInstrumentalesEliminar);
     }
 
-    this.validateGrupoLineaEquipoInstrumental(grupoLineasEquiposInstrumentales, grupoLineaInvestigacion);
-
     List<GrupoLineaEquipoInstrumental> returnValue = repository.saveAll(grupoLineasEquiposInstrumentales);
-    log.debug("update(Long grupoId, List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales) - END");
+    log.debug(
+        "update(Long grupoLineaInvestigacionId, List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales) - end");
 
     return returnValue;
   }
 
-  private void validateGrupoLineaEquipoInstrumental(List<GrupoLineaEquipoInstrumental> grupoLineasEquiposInstrumentales,
-      GrupoLineaInvestigacion grupoLineaInvestigacion) {
-    for (GrupoLineaEquipoInstrumental equipoInstrumental : grupoLineasEquiposInstrumentales) {
-
-      Assert.notNull(equipoInstrumental.getGrupoLineaInvestigacionId(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("id"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoLineaInvestigacion.class)).build());
-
-      Assert.notNull(equipoInstrumental.getGrupoEquipoInstrumentalId(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("id"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoLineaEquipoInstrumental.class)).build());
-    }
-  }
-
   public boolean existsGrupoLineaEquipoInstrumentalInGrupoEquipoInstrumental(Long idGrupoEquipoInstrumental) {
-    grupoEquipoInstrumentalRepository.findById(idGrupoEquipoInstrumental)
-        .orElseThrow(() -> new GrupoEquipoInstrumentalNotFoundException(idGrupoEquipoInstrumental));
+    if (!grupoEquipoInstrumentalRepository.existsById(idGrupoEquipoInstrumental)) {
+      throw new GrupoEquipoInstrumentalNotFoundException(idGrupoEquipoInstrumental);
+    }
 
     Specification<GrupoLineaEquipoInstrumental> specGrupoEquipoInstrumental = GrupoLineaEquipoInstrumentalSpecifications
         .byGrupoEquipoInstrumentalId(idGrupoEquipoInstrumental);
     Specification<GrupoLineaEquipoInstrumental> specs = Specification.where(
         specGrupoEquipoInstrumental);
 
-    List<GrupoLineaEquipoInstrumental> returnValue = repository.findAll(specs);
-    return (returnValue.size() > 0);
+    return repository.count(specs) > 0;
   }
 
 }

@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.service.GrupoLineaEquipoInstrumentalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoEquipoInstrumentalController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoEquipoInstrumentalController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposequiposinstrumentales";
@@ -89,7 +91,7 @@ public class GrupoEquipoInstrumentalController {
    * @return {@link GrupoEquipoInstrumental} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public GrupoEquipoInstrumentalOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     GrupoEquipoInstrumentalOutput returnValue = converter.convert(service.findById(id));
@@ -111,7 +113,7 @@ public class GrupoEquipoInstrumentalController {
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoEquipoInstrumentalOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoEquipoInstrumentalInput> grupoEquiposInstrumentales) {
+      @RequestBody List<@Valid GrupoEquipoInstrumentalInput> grupoEquiposInstrumentales) {
     log.debug("update(List<GrupoEquipoInstrumentalInput> grupoEquiposInstrumentales, grupoId) - start");
     List<GrupoEquipoInstrumentalOutput> returnValue = converter
         .convertGrupoEquipoInstrumentals(service.update(id, converter.convertGrupoEquipoInstrumentalInput(

@@ -52,6 +52,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,10 +122,14 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SgiApiSgpService personasService;
 
+  @Mock
   private SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
+
+  @Mock
+  private GrupoAuthorityHelper grupoAuthorityHelper;
 
   private SolicitudService service;
 
@@ -137,7 +142,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
         convocatoriaEntidadFinanciadoraRepository, convocatoriaEnlaceRepository, comunicadosService, personasService,
-        solicitudAuthorityHelper);
+        solicitudAuthorityHelper, grupoAuthorityHelper);
   }
 
   @Test

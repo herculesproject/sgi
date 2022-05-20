@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.service.GrupoLineaEquipoInstrumentalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(GrupoLineaEquipoInstrumentalController.REQUEST_MAPPING)
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class GrupoLineaEquipoInstrumentalController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "gruposlineasequiposinstrumentales";
@@ -61,21 +63,22 @@ public class GrupoLineaEquipoInstrumentalController {
    * elementos segun
    * proceda.
    * 
-   * @param id                        Id del {@link GrupoLineaInvestigacion}.
-   * @param grupoLineasInvestigadores lista con los nuevos
-   *                                  {@link GrupoLineaEquipoInstrumental} a
-   *                                  guardar.
+   * @param id                               Id del
+   *                                         {@link GrupoLineaInvestigacion}.
+   * @param grupoLineasEquiposInstrumentales lista con los nuevos
+   *                                         {@link GrupoLineaEquipoInstrumental}
+   *                                         a guardar.
    * @return Lista actualizada con los {@link GrupoLineaEquipoInstrumental}.
    */
   @PatchMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V')")
   public ResponseEntity<List<GrupoLineaEquipoInstrumentalOutput>> update(@PathVariable Long id,
-      @Valid @RequestBody List<GrupoLineaEquipoInstrumentalInput> grupoLineasInvestigadores) {
-    log.debug("update(List<GrupoLineaEquipoInstrumentalInput> grupoLineaEquipoInstrumentals, grupoId) - start");
+      @RequestBody List<@Valid GrupoLineaEquipoInstrumentalInput> grupoLineasEquiposInstrumentales) {
+    log.debug("update(Long id, List<GrupoLineaEquipoInstrumentalInput> grupoLineasEquiposInstrumentales) - start");
     List<GrupoLineaEquipoInstrumentalOutput> returnValue = converter
         .convertGrupoLineaEquipoInstrumentals(service.update(id, converter.convertGrupoLineaEquipoInstrumentalInput(
-            grupoLineasInvestigadores)));
-    log.debug("update(List<GrupoLineaEquipoInstrumentalInput> grupoLineaEquipoInstrumentals, grupoId) - end");
+            grupoLineasEquiposInstrumentales)));
+    log.debug("update(Long id, List<GrupoLineaEquipoInstrumentalInput> grupoLineasEquiposInstrumentales) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 

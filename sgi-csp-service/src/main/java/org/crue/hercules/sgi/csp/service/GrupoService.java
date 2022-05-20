@@ -37,14 +37,13 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.GrupoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -70,6 +69,7 @@ public class GrupoService {
   private final SolicitudRepository solicitudRepository;
   private final RolProyectoService rolProyectoService;
   private final GrupoEquipoRepository grupoEquipoRepository;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link Grupo}.
@@ -135,6 +135,7 @@ public class GrupoService {
     log.debug("update(Grupo grupoActualizar) - start");
 
     AssertHelper.idNotNull(grupoActualizar.getId(), Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoActualizar.getId());
 
     return repository.findById(grupoActualizar.getId()).map(data -> {
       data.setNombre(grupoActualizar.getNombre());
@@ -255,6 +256,8 @@ public class GrupoService {
     log.debug("findById(Long id) - start");
 
     AssertHelper.idNotNull(id, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(id);
+
     final Grupo returnValue = repository.findById(id).orElseThrow(() -> new GrupoNotFoundException(id));
 
     log.debug("findById(Long id) - end");
@@ -310,6 +313,11 @@ public class GrupoService {
     Specification<Grupo> specs = GrupoSpecifications.distinct()
         .and(GrupoSpecifications.activos())
         .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+
+    if (authorityHelper.isUserInvestigador()) {
+      specs = specs.and(authorityHelper.getSpecificationsUserInvestigadorGruposCanView());
+    }
+
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
     log.debug("findActivos(String query, Pageable paging) - end");
@@ -328,7 +336,7 @@ public class GrupoService {
 
     Specification<Grupo> specs = GrupoSpecifications.distinct()
         .and(GrupoSpecifications.activos())
-        .and(GrupoSpecifications.byPersona(getUserPersonaRef()));
+        .and(GrupoSpecifications.byPersonaInGrupoEquipo(authorityHelper.getAuthenticationPersonaRef()));
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
     log.debug("findGruposUsuario(Pageable paging) - end");
@@ -346,6 +354,7 @@ public class GrupoService {
     log.debug("desactivar(Long id) - start");
 
     AssertHelper.idNotNull(id, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(id);
 
     return repository.findById(id).map(grupo -> {
       if (Boolean.FALSE.equals(grupo.getActivo())) {
@@ -372,6 +381,7 @@ public class GrupoService {
     log.debug("activar(Long id) - start");
 
     AssertHelper.idNotNull(id, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(id);
 
     return repository.findById(id).map(grupo -> {
       if (Boolean.TRUE.equals(grupo.getActivo())) {
@@ -616,14 +626,6 @@ public class GrupoService {
    */
   public boolean modificable() {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-GIN-E");
-  }
-
-  /**
-   * Recupera el personaRef del usuario actual
-   */
-  private String getUserPersonaRef() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication.getName();
   }
 
 }

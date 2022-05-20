@@ -26,15 +26,13 @@ import org.crue.hercules.sgi.csp.repository.GrupoLineaInvestigacionRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoLineaInvestigadorRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoLineaInvestigadorSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.util.GrupoLineaInvestigacionAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +52,7 @@ public class GrupoLineaInvestigadorService {
   private final GrupoLineaInvestigacionRepository grupoLineaInvestigacionRepository;
   private final GrupoEquipoRepository grupoEquipoRepository;
   private final Validator validator;
+  private final GrupoLineaInvestigacionAuthorityHelper authorityHelper;
 
   /**
    * Obtiene una entidad {@link GrupoLineaInvestigador} por id.
@@ -67,6 +66,8 @@ public class GrupoLineaInvestigadorService {
     AssertHelper.idNotNull(id, GrupoLineaInvestigador.class);
     final GrupoLineaInvestigador returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoLineaInvestigadorNotFoundException(id));
+
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(returnValue.getGrupoLineaInvestigacionId());
 
     log.debug("findById(Long id) - end");
     return returnValue;
@@ -87,6 +88,8 @@ public class GrupoLineaInvestigadorService {
       Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoLineaInvestigacionId, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionId);
+
     Specification<GrupoLineaInvestigador> specs = GrupoLineaInvestigadorSpecifications.byGrupoLineaInvestigacionId(
         grupoLineaInvestigacionId)
         .and(SgiRSQLJPASupport.toSpecification(query));
@@ -114,7 +117,10 @@ public class GrupoLineaInvestigadorService {
   @Validated({ BaseEntity.Update.class })
   public List<GrupoLineaInvestigador> update(Long grupoLineaInvestigacionId,
       @Valid List<GrupoLineaInvestigador> grupoLineasInvestigadores) {
-    log.debug("update(Long grupoId, List<GrupoLineaInvestigador> grupoLineasInvestigadores) - start");
+    log.debug("update(Long grupoLineaInvestigacionId, List<GrupoLineaInvestigador> grupoLineasInvestigadores) - start");
+
+    AssertHelper.idNotNull(grupoLineaInvestigacionId, GrupoLineaInvestigacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionId);
 
     GrupoLineaInvestigacion grupoLineaInvestigacion = grupoLineaInvestigacionRepository.findById(
         grupoLineaInvestigacionId)
@@ -136,7 +142,7 @@ public class GrupoLineaInvestigadorService {
     this.validateGrupoLineaInvestigador(grupoLineasInvestigadores, grupoLineaInvestigacion);
 
     List<GrupoLineaInvestigador> returnValue = repository.saveAll(grupoLineasInvestigadores);
-    log.debug("update(Long grupoId, List<GrupoLineaInvestigador> grupoLineasInvestigadores) - END");
+    log.debug("update(Long grupoLineaInvestigacionId, List<GrupoLineaInvestigador> grupoLineasInvestigadores) - END");
 
     return returnValue;
   }
@@ -151,17 +157,6 @@ public class GrupoLineaInvestigadorService {
     boolean emptyFechaInicio = false;
     boolean emptyFechaFin = false;
     for (GrupoLineaInvestigador lineaInvestigador : grupoLineasInvestigadores) {
-
-      Assert.notNull(lineaInvestigador.getGrupoLineaInvestigacionId(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("id"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoLineaInvestigacion.class)).build());
-
-      Assert.notNull(lineaInvestigador.getPersonaRef(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("grupoLineaInvestigador.personaRef"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoLineaInvestigador.class)).build());
-
       Instant fechaFinGrupo = grupoLineaInvestigacion.getFechaFin();
 
       if (emptyFechaInicio && lineaInvestigador.getFechaInicio() == null) {
@@ -194,7 +189,7 @@ public class GrupoLineaInvestigadorService {
       }
 
       Set<ConstraintViolation<GrupoLineaInvestigador>> result = validator.validate(lineaInvestigador,
-          GrupoLineaInvestigador.Update.class);
+          BaseEntity.Update.class);
 
       if (!result.isEmpty()) {
         throw new ConstraintViolationException(result);
@@ -213,8 +208,7 @@ public class GrupoLineaInvestigadorService {
         grupoEquipo.getFechaInicio(), grupoEquipo.getFechaFin());
     Specification<GrupoLineaInvestigador> specs = Specification.where(specPersonaRef).and(specInFechas);
 
-    List<GrupoLineaInvestigador> returnValue = repository.findAll(specs);
-    return (returnValue.size() > 0);
+    return repository.count(specs) > 0;
   }
 
 }

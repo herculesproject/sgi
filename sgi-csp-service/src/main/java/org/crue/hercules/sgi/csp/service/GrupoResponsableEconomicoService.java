@@ -23,15 +23,13 @@ import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoResponsableEconomicoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +48,7 @@ public class GrupoResponsableEconomicoService {
   private final GrupoResponsableEconomicoRepository repository;
   private final GrupoRepository grupoRepository;
   private final Validator validator;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Obtiene una entidad {@link GrupoResponsableEconomico} por id.
@@ -63,6 +62,8 @@ public class GrupoResponsableEconomicoService {
     AssertHelper.idNotNull(id, GrupoResponsableEconomico.class);
     final GrupoResponsableEconomico returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoResponsableEconomicoNotFoundException(id));
+
+    authorityHelper.checkUserHasAuthorityViewGrupo(returnValue.getGrupoId());
 
     log.debug("findById(Long id) - end");
     return returnValue;
@@ -82,6 +83,8 @@ public class GrupoResponsableEconomicoService {
   public Page<GrupoResponsableEconomico> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoResponsableEconomico> specs = GrupoResponsableEconomicoSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -108,6 +111,8 @@ public class GrupoResponsableEconomicoService {
   public List<GrupoResponsableEconomico> update(Long grupoId,
       @Valid List<GrupoResponsableEconomico> grupoResponsableEconomicos) {
     log.debug("update(Long grupoId, List<GrupoResponsableEconomico> grupoResponsableEconomicos) - start");
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
 
     Grupo grupo = grupoRepository.findById(grupoId)
         .orElseThrow(() -> new GrupoNotFoundException(grupoId));
@@ -142,17 +147,6 @@ public class GrupoResponsableEconomicoService {
     boolean emptyFechaInicio = false;
     boolean emptyFechaFin = false;
     for (GrupoResponsableEconomico responsableEconomico : grupoResponsableEconomicos) {
-
-      Assert.notNull(responsableEconomico.getGrupoId(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("id"))
-              .parameter("entity", ApplicationContextSupport.getMessage(Grupo.class)).build());
-
-      Assert.notNull(responsableEconomico.getPersonaRef(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("grupoResponsableEconomico.personaRef"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoResponsableEconomico.class)).build());
-
       Instant fechaFinGrupo = grupo.getFechaFin();
 
       if (emptyFechaInicio && responsableEconomico.getFechaInicio() == null) {
@@ -185,7 +179,7 @@ public class GrupoResponsableEconomicoService {
       }
 
       Set<ConstraintViolation<GrupoResponsableEconomico>> result = validator.validate(responsableEconomico,
-          GrupoResponsableEconomico.Update.class);
+          BaseEntity.Update.class);
 
       if (!result.isEmpty()) {
         throw new ConstraintViolationException(result);

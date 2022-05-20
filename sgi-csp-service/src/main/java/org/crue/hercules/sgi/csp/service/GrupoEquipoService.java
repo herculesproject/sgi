@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,18 +27,14 @@ import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -58,6 +55,7 @@ public class GrupoEquipoService {
   private final GrupoRepository grupoRepository;
   private final Validator validator;
   private final RolProyectoRepository rolProyectoRepository;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link GrupoEquipo}.
@@ -71,6 +69,8 @@ public class GrupoEquipoService {
     log.debug("create(GrupoEquipo grupoEquipo) - start");
 
     AssertHelper.idIsNull(grupoEquipo.getId(), GrupoEquipo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipo.getGrupoId());
+
     GrupoEquipo returnValue = repository.save(grupoEquipo);
 
     log.debug("create(GrupoEquipo grupoEquipo) - end");
@@ -89,6 +89,7 @@ public class GrupoEquipoService {
     log.debug("update(GrupoEquipo grupoEquipoActualizar) - start");
 
     AssertHelper.idNotNull(grupoEquipoActualizar.getId(), GrupoEquipo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipoActualizar.getGrupoId());
 
     return repository.findById(grupoEquipoActualizar.getId()).map(data -> {
       data.setFechaInicio(grupoEquipoActualizar.getFechaInicio());
@@ -116,6 +117,8 @@ public class GrupoEquipoService {
     AssertHelper.idNotNull(id, GrupoEquipo.class);
     final GrupoEquipo returnValue = repository.findById(id).orElseThrow(() -> new GrupoEquipoNotFoundException(id));
 
+    authorityHelper.checkUserHasAuthorityViewGrupo(returnValue.getGrupoId());
+
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -131,7 +134,11 @@ public class GrupoEquipoService {
 
     AssertHelper.idNotNull(id, GrupoEquipo.class);
 
-    if (!repository.existsById(id)) {
+    Optional<GrupoEquipo> grupoEquipo = repository.findById(id);
+
+    if (grupoEquipo.isPresent()) {
+      authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipo.get().getGrupoId());
+    } else {
       throw new GrupoEquipoNotFoundException(id);
     }
 
@@ -152,6 +159,8 @@ public class GrupoEquipoService {
   public Page<GrupoEquipo> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoEquipo> specs = GrupoEquipoSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -171,7 +180,8 @@ public class GrupoEquipoService {
     log.debug("findMiembrosEquipoUsuario() - start");
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
-    List<String> returnValue = repository.findMiembrosEquipoUsuario(getUserPersonaRef(), fechaActual);
+    List<String> returnValue = repository.findMiembrosEquipoUsuario(authorityHelper.getAuthenticationPersonaRef(),
+        fechaActual);
     log.debug("findMiembrosEquipoUsuario() - end");
     return returnValue;
   }
@@ -195,6 +205,8 @@ public class GrupoEquipoService {
     log.debug("findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId) - start");
 
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
     List<String> returnValue = repository.findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(grupoId,
         fechaActual);
@@ -219,6 +231,8 @@ public class GrupoEquipoService {
     log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId) - start");
 
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
     List<String> returnValue = repository.findPersonaRefInvestigadoresPrincipales(grupoId, fechaActual);
 
@@ -289,6 +303,9 @@ public class GrupoEquipoService {
   public List<GrupoEquipo> update(Long grupoId, @Valid List<GrupoEquipo> grupoEquipos) {
     log.debug("update(Long grupoId, List<GrupoEquipo> grupoEquipos) - start");
 
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     if (!grupoRepository.existsById(grupoId)) {
       throw new GrupoNotFoundException(grupoId);
     }
@@ -337,11 +354,6 @@ public class GrupoEquipoService {
           .filter(solProyecEquip -> solProyecEquip.getPersonaRef().equals(personaRef)).collect(Collectors.toList());
 
       for (GrupoEquipo grupoEquipo : miembrosPersonaRef) {
-        Assert.notNull(grupoEquipo.getPersonaRef(),
-            () -> ProblemMessage.builder().key(Assert.class, "notNull")
-                .parameter("field", ApplicationContextSupport.getMessage("grupoEquipo.personaRef"))
-                .parameter("entity", ApplicationContextSupport.getMessage(GrupoEquipo.class)).build());
-
         if (grupoEquipoAnterior != null
             && grupoEquipoAnterior.getPersonaRef().equals(grupoEquipo.getPersonaRef())
             && !(grupoEquipoAnterior.getFechaFin() != null
@@ -367,14 +379,6 @@ public class GrupoEquipoService {
       }
 
     }
-  }
-
-  /**
-   * Recupera el personaRef del usuario actual
-   */
-  private String getUserPersonaRef() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication.getName();
   }
 
 }

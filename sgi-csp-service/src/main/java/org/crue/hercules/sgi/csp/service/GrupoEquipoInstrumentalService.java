@@ -2,19 +2,19 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.exceptions.GrupoEquipoInstrumentalNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.GrupoNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoInstrumentalRepository;
-import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEquipoInstrumentalSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoEquipoInstrumentalService {
 
   private final GrupoEquipoInstrumentalRepository repository;
-  private final GrupoRepository grupoRepository;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link GrupoEquipoInstrumental}.
@@ -51,6 +51,8 @@ public class GrupoEquipoInstrumentalService {
     log.debug("create(GrupoEquipoInstrumental grupoEquipo) - start");
 
     AssertHelper.idIsNull(grupoEquipo.getId(), GrupoEquipoInstrumental.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipo.getGrupoId());
+
     GrupoEquipoInstrumental returnValue = repository.save(grupoEquipo);
 
     log.debug("create(GrupoEquipoInstrumental grupoEquipo) - end");
@@ -70,6 +72,7 @@ public class GrupoEquipoInstrumentalService {
     log.debug("update(GrupoEquipoInstrumental grupoEquipoActualizar) - start");
 
     AssertHelper.idNotNull(grupoEquipoActualizar.getId(), GrupoEquipoInstrumental.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipoActualizar.getGrupoId());
 
     return repository.findById(grupoEquipoActualizar.getId()).map(data -> {
       data.setNombre(grupoEquipoActualizar.getNombre());
@@ -96,6 +99,8 @@ public class GrupoEquipoInstrumentalService {
     final GrupoEquipoInstrumental returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoEquipoInstrumentalNotFoundException(id));
 
+    authorityHelper.checkUserHasAuthorityViewGrupo(returnValue.getGrupoId());
+
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -111,7 +116,11 @@ public class GrupoEquipoInstrumentalService {
 
     AssertHelper.idNotNull(id, GrupoEquipoInstrumental.class);
 
-    if (!repository.existsById(id)) {
+    Optional<GrupoEquipoInstrumental> grupoEquipoInstrumental = repository.findById(id);
+
+    if (grupoEquipoInstrumental.isPresent()) {
+      authorityHelper.checkUserHasAuthorityViewGrupo(grupoEquipoInstrumental.get().getGrupoId());
+    } else {
       throw new GrupoEquipoInstrumentalNotFoundException(id);
     }
 
@@ -133,6 +142,8 @@ public class GrupoEquipoInstrumentalService {
   public Page<GrupoEquipoInstrumental> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoEquipoInstrumental> specs = GrupoEquipoInstrumentalSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -160,8 +171,8 @@ public class GrupoEquipoInstrumentalService {
       @Valid List<GrupoEquipoInstrumental> grupoEquiposInstrumentales) {
     log.debug("update(Long grupoId, List<GrupoEquipoInstrumental> grupoEquiposInstrumentales) - start");
 
-    grupoRepository.findById(grupoId)
-        .orElseThrow(() -> new GrupoNotFoundException(grupoId));
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
 
     List<GrupoEquipoInstrumental> grupoEquiposBD = repository.findAllByGrupoId(grupoId);
 

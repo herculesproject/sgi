@@ -23,15 +23,13 @@ import org.crue.hercules.sgi.csp.repository.GrupoPersonaAutorizadaRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoPersonaAutorizadaSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +48,7 @@ public class GrupoPersonaAutorizadaService {
   private final GrupoPersonaAutorizadaRepository repository;
   private final GrupoRepository grupoRepository;
   private final Validator validator;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Obtiene una entidad {@link GrupoPersonaAutorizada} por id.
@@ -63,6 +62,8 @@ public class GrupoPersonaAutorizadaService {
     AssertHelper.idNotNull(id, GrupoPersonaAutorizada.class);
     final GrupoPersonaAutorizada returnValue = repository.findById(id)
         .orElseThrow(() -> new GrupoPersonaAutorizadaNotFoundException(id));
+
+    authorityHelper.checkUserHasAuthorityViewGrupo(returnValue.getGrupoId());
 
     log.debug("findById(Long id) - end");
     return returnValue;
@@ -82,6 +83,8 @@ public class GrupoPersonaAutorizadaService {
   public Page<GrupoPersonaAutorizada> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
+
     Specification<GrupoPersonaAutorizada> specs = GrupoPersonaAutorizadaSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -108,6 +111,9 @@ public class GrupoPersonaAutorizadaService {
   public List<GrupoPersonaAutorizada> update(Long grupoId,
       @Valid List<GrupoPersonaAutorizada> grupoPersonasAutorizadas) {
     log.debug("update(Long grupoId, List<GrupoPersonaAutorizada> grupoPersonasAutorizadas) - start");
+
+    AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
 
     Grupo grupo = grupoRepository.findById(grupoId)
         .orElseThrow(() -> new GrupoNotFoundException(grupoId));
@@ -142,17 +148,6 @@ public class GrupoPersonaAutorizadaService {
     boolean emptyFechaInicio = false;
     boolean emptyFechaFin = false;
     for (GrupoPersonaAutorizada personaAutorizada : grupoPersonasAutorizadas) {
-
-      Assert.notNull(personaAutorizada.getGrupoId(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("id"))
-              .parameter("entity", ApplicationContextSupport.getMessage(Grupo.class)).build());
-
-      Assert.notNull(personaAutorizada.getPersonaRef(),
-          () -> ProblemMessage.builder().key(Assert.class, "notNull")
-              .parameter("field", ApplicationContextSupport.getMessage("grupoPersonaAutorizada.personaRef"))
-              .parameter("entity", ApplicationContextSupport.getMessage(GrupoPersonaAutorizada.class)).build());
-
       Instant fechaFinGrupo = grupo.getFechaFin();
 
       if (emptyFechaInicio && personaAutorizada.getFechaInicio() == null) {
@@ -185,7 +180,7 @@ public class GrupoPersonaAutorizadaService {
       }
 
       Set<ConstraintViolation<GrupoPersonaAutorizada>> result = validator.validate(personaAutorizada,
-          GrupoPersonaAutorizada.Update.class);
+          BaseEntity.Update.class);
 
       if (!result.isEmpty()) {
         throw new ConstraintViolationException(result);

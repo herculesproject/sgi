@@ -1,11 +1,14 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.exceptions.GrupoLineaClasificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.GrupoLineaClasificacion;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.repository.GrupoLineaClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoLineaClasificacionSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoLineaInvestigacionAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoLineaClasificacionService {
 
   private final GrupoLineaClasificacionRepository repository;
+  private final GrupoLineaInvestigacionAuthorityHelper authorityHelper;
 
   /**
    * Guardar un nuevo {@link GrupoLineaClasificacion}.
@@ -39,6 +43,7 @@ public class GrupoLineaClasificacionService {
     log.debug("create(GrupoLineaClasificacion grupoLineaClasificacion) - start");
 
     AssertHelper.idIsNull(grupoLineaClasificacion.getId(), GrupoLineaClasificacion.class);
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaClasificacion.getId());
 
     GrupoLineaClasificacion returnValue = repository.save(grupoLineaClasificacion);
 
@@ -57,7 +62,12 @@ public class GrupoLineaClasificacionService {
 
     AssertHelper.idNotNull(id, GrupoLineaClasificacion.class);
 
-    if (!repository.existsById(id)) {
+    Optional<GrupoLineaClasificacion> grupoLineaClasificacion = repository.findById(id);
+
+    if (grupoLineaClasificacion.isPresent()) {
+      authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(
+          grupoLineaClasificacion.get().getGrupoLineaInvestigacionId());
+    } else {
       throw new GrupoLineaClasificacionNotFoundException(id);
     }
 
@@ -79,6 +89,8 @@ public class GrupoLineaClasificacionService {
       Pageable pageable) {
     log.debug(
         "findAllByGrupoLineaInvestigacion(Long grupoLineaInvestigacionId, String query, Pageable pageable) - start");
+    authorityHelper.checkUserHasAuthorityViewGrupoLineaInvestigacion(grupoLineaInvestigacionId);
+
     Specification<GrupoLineaClasificacion> specs = GrupoLineaClasificacionSpecifications.byGrupoLineaInvestigacionId(
         grupoLineaInvestigacionId)
         .and(SgiRSQLJPASupport.toSpecification(query));
