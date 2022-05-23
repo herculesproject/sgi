@@ -380,8 +380,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
     if (this.busquedaAvanzada) {
       if (controls.plazoAbierto.value) {
-        rsqlFilter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
-          SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
+        rsqlFilter
+          .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.plazoAbierto.value.toString())
+          .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
+            SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
           .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
             SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
           .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
