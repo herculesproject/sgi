@@ -27,7 +27,6 @@ public class GrupoResponsableEconomicoInput implements Serializable {
   @NotBlank
   private String personaRef;
 
-  @NotNull
   private Instant fechaInicio;
 
   private Instant fechaFin;

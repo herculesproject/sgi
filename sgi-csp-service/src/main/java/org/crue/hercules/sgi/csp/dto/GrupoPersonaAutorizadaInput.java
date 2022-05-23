@@ -27,7 +27,6 @@ public class GrupoPersonaAutorizadaInput implements Serializable {
   @NotBlank
   private String personaRef;
 
-  @NotNull
   private Instant fechaInicio;
 
   private Instant fechaFin;
