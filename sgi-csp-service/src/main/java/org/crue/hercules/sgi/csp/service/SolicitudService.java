@@ -49,6 +49,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepos
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
@@ -104,6 +105,7 @@ public class SolicitudService {
   private final ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
   private final ComunicadosService comunicadosService;
   private final SgiApiSgpService personasService;
+  private final ProgramaRepository programaRepository;
   private final SolicitudAuthorityHelper solicitudAuthorityHelper;
   private final GrupoAuthorityHelper grupoAuthorityHelper;
 
@@ -122,6 +124,7 @@ public class SolicitudService {
       ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
       ComunicadosService comunicadosService,
       SgiApiSgpService personasService,
+      ProgramaRepository programaRepository,
       SolicitudAuthorityHelper solicitudAuthorityHelper,
       GrupoAuthorityHelper grupoAuthorityHelper) {
     this.sgiConfigProperties = sgiConfigProperties;
@@ -141,6 +144,7 @@ public class SolicitudService {
     this.convocatoriaEnlaceRepository = convocatoriaEnlaceRepository;
     this.comunicadosService = comunicadosService;
     this.personasService = personasService;
+    this.programaRepository = programaRepository;
     this.solicitudAuthorityHelper = solicitudAuthorityHelper;
     this.grupoAuthorityHelper = grupoAuthorityHelper;
   }
@@ -359,7 +363,7 @@ public class SolicitudService {
     log.debug("findAllRestringidos(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.distinct().and(SolicitudSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance())));
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository))));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAllRestringidos(String query, Pageable paging) - end");
@@ -377,7 +381,7 @@ public class SolicitudService {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.distinct()
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository)));
 
     List<String> unidadesGestion = SgiSecurityContextHolder.getUOsForAnyAuthority(
         new String[] { "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-R", "CSP-PRO-C" });
@@ -407,7 +411,7 @@ public class SolicitudService {
 
     Specification<Solicitud> specs = SolicitudSpecifications.activos()
         .and(SolicitudSpecifications.bySolicitante(authentication.getName()))
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository)));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");

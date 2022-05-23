@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepos
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
@@ -123,6 +124,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   private SgiApiSgpService personasService;
 
   @Mock
+  private ProgramaRepository programaRepository;
+
+  @Mock
   private SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   @Autowired
@@ -142,7 +146,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
         convocatoriaEntidadFinanciadoraRepository, convocatoriaEnlaceRepository, comunicadosService, personasService,
-        solicitudAuthorityHelper, grupoAuthorityHelper);
+        programaRepository, solicitudAuthorityHelper, grupoAuthorityHelper);
   }
 
   @Test

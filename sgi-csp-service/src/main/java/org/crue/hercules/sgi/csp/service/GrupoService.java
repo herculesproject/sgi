@@ -274,6 +274,8 @@ public class GrupoService {
     log.debug("existsById(Long id)  - start");
 
     AssertHelper.idNotNull(id, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(id);
+
     final boolean exists = repository.existsById(id);
 
     log.debug("existsById(Long id)  - end");
