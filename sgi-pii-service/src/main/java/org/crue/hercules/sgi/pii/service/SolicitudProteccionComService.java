@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -26,29 +27,53 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SolicitudProteccionComService {
 
-  private static final String UG_OTRI = "1";
-
   private final SolicitudProteccionRepository solicitudProteccionRepository;
   private final SgiApiCnfService configService;
   private final SgiApiComService emailService;
   private final SgiConfigProperties sgiConfigProperties;
 
-  public void enviarComunicadoHastaFinPrioridadSolicitudProteccion(Integer months) {
+  public void enviarComunicadoMesesHastaFinPrioridadSolicitudProteccion() {
 
-    Instant fechaFinPrioridadFrom = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
-        .with(LocalTime.MIN).plusMonths(months).toInstant();
+    IntStream.of(6, 3, 1).forEach(meses -> {
+      Instant fechaFinPrioridadFrom = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+          .with(LocalTime.MIN).plusMonths(meses).toInstant();
 
-    Instant fechaFinPrioridadTo = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
-        .with(LocalTime.MAX).withNano(0).plusMonths(months).toInstant();
+      Instant fechaFinPrioridadTo = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+          .with(LocalTime.MAX).withNano(0).plusMonths(meses).toInstant();
 
-    List<SolicitudProteccion> solicitudes = this.solicitudProteccionRepository
-        .findByfechaFinPriorPresFasNacRecBetweenAndViaProteccionExtensionInternacionalTrue(fechaFinPrioridadFrom,
-            fechaFinPrioridadTo);
+      List<SolicitudProteccion> solicitudes = this.solicitudProteccionRepository
+          .findByfechaFinPriorPresFasNacRecBetweenAndViaProteccionExtensionInternacionalFalse(fechaFinPrioridadFrom,
+              fechaFinPrioridadTo);
 
-    solicitudes.forEach(solicitud -> {
-      this.emailService
-          .sendEmail(this.buildComunicadoMesesHastaFinPrioridadSolicitudProteccion(solicitud, months).getId());
+      solicitudes.forEach(solicitud -> {
+        this.emailService
+            .sendEmail(this.buildComunicadoMesesHastaFinPrioridadSolicitudProteccion(solicitud, meses).getId());
+      });
     });
+
+  }
+
+  public void enviarComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion() {
+
+    IntStream.of(12, 6, 2).forEach(meses -> {
+      Instant fechaFinPresentacionFrom = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+          .with(LocalTime.MIN).plusMonths(meses).toInstant();
+
+      Instant fechaFinPresentaciónTo = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+          .with(LocalTime.MAX).withNano(0).plusMonths(meses).toInstant();
+
+      List<SolicitudProteccion> solicitudes = this.solicitudProteccionRepository
+          .findByfechaFinPriorPresFasNacRecBetweenAndViaProteccionExtensionInternacionalTrue(fechaFinPresentacionFrom,
+              fechaFinPresentaciónTo);
+
+      solicitudes.forEach(solicitud -> {
+        this.emailService
+            .sendEmail(this
+                .buildComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion(solicitud, meses)
+                .getId());
+      });
+    });
+
   }
 
   private EmailOutput buildComunicadoMesesHastaFinPrioridadSolicitudProteccion(SolicitudProteccion solicitud,
@@ -60,7 +85,8 @@ public class SolicitudProteccionComService {
         .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPrioridad)
         .build();
 
-    List<Recipient> recipients = getRecipientsUG();
+    List<Recipient> recipients = getRecipientsComunicado(
+        ComunicadosService.CONFIG_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DESTINATARIOS);
     EmailOutput comunicado = null;
     try {
       comunicado = this.emailService.createComunicadoMesesHastaFinPrioridadSolicitudProteccion(data, recipients);
@@ -70,13 +96,34 @@ public class SolicitudProteccionComService {
     return comunicado;
   }
 
-  private List<Recipient> getRecipientsUG() {
+  private EmailOutput buildComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion(
+      SolicitudProteccion solicitud,
+      Integer monthsBeforeFechaFinPresentacion) {
+    PiiComMesesHastaFinPrioridadSolicitudProteccionData data = PiiComMesesHastaFinPrioridadSolicitudProteccionData
+        .builder()
+        .solicitudTitle(solicitud.getTitulo())
+        .fechaFinPrioridad(solicitud.getFechaFinPriorPresFasNacRec())
+        .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPresentacion)
+        .build();
+
+    List<Recipient> recipients = getRecipientsComunicado(
+        ComunicadosService.CONFIG_PII_COM_AVISO_FIN_PLAZO_FASE_NAC_REG_SOLICITUD_PROTECCION_DESTINATARIOS);
+    EmailOutput comunicado = null;
+    try {
+      comunicado = this.emailService
+          .createComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion(data, recipients);
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+    }
+    return comunicado;
+  }
+
+  private List<Recipient> getRecipientsComunicado(
+      String configDestinatariosComunicado) {
     List<String> destinatarios = null;
     try {
       destinatarios = configService
-          .findStringListByName(
-              ComunicadosService.CONFIG_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_DESTINATARIOS
-                  + UG_OTRI);
+          .findStringListByName(configDestinatariosComunicado);
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
     }
@@ -88,4 +135,5 @@ public class SolicitudProteccionComService {
         .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
         .collect(Collectors.toList());
   }
+
 }

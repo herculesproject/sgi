@@ -31,4 +31,20 @@ public interface SolicitudProteccionRepository
   List<SolicitudProteccion> findByfechaFinPriorPresFasNacRecBetweenAndViaProteccionExtensionInternacionalTrue(
       Instant fechaFinPrioridadFrom,
       Instant fechaFinPrioridadTo);
+
+  /**
+   * Obtiene una lista de objetos de tipo @link{SolicitudProteccion} cuya
+   * fechaFinPrioridadPresFasNacRec (Fecha Fin Prioridad / Presentación / Fases
+   * Nacionales / Reguionales)
+   * esté entre las fechas recibidas por parámetro y sean de tipo PCT, esto es
+   * cuando la propiedad extension internacional de la tabla via proteccion es
+   * true
+   * 
+   * @param fechaFinPrioridadFrom fecha desde
+   * @param fechaFinPrioridadTo   fecha hasta
+   * @return Lista de @link{SolicitudProteccion}
+   */
+  List<SolicitudProteccion> findByfechaFinPriorPresFasNacRecBetweenAndViaProteccionExtensionInternacionalFalse(
+      Instant fechaFinPrioridadFrom,
+      Instant fechaFinPrioridadTo);
 }

@@ -33,6 +33,10 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_PARAM = TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION
       + DATA;
 
+  private static final String TEMPLATE_PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION = "PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION";
+  private static final String TEMPLATE_PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_PARAM = TEMPLATE_PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION
+      + DATA;
+
   private final ObjectMapper mapper;
 
   public SgiApiComService(RestApiProperties restApiProperties, RestTemplate restTemplate, ObjectMapper mapper) {
@@ -80,5 +84,13 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION,
         TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_PARAM);
+  }
+
+  public EmailOutput createComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion(
+      PiiComMesesHastaFinPrioridadSolicitudProteccionData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION,
+        TEMPLATE_PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_PARAM);
   }
 }
