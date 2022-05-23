@@ -33,7 +33,7 @@
         </mat-form-field>
       </div>
       <!-- Tercer bloque -->
-      <div fxLayout="row" fxLayoutGap="10px">
+      <div fxLayout="row" fxLayoutGap="10px" *ngIf="!data.anualidadGenerica">
         <!-- Anualidad -->
         <div fxFlex>
           <mat-form-field>

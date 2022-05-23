@@ -153,7 +153,8 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
       periodoAmortizacion: wrapper?.value ?? {} as IProyectoPeriodoAmortizacionListado,
       proyectoId: this.formPart.getKey() as number,
       entidadesFinanciadoras: this.formPart.entidadesFinanciadoras$.value.map(entidad => entidad.value),
-      proyectosSGE: this.formPart.proyectosSGE$.value
+      proyectosSGE: this.formPart.proyectosSGE$.value,
+      anualidadGenerica: !this.formPart.anualidades
     };
     const config = {
       data

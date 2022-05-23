@@ -28,13 +28,13 @@ const IMPORTE_KEY = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacio
 const FECHA_LIMITE_AMORTIZACION_KEY = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.fecha-limite-amortizacion');
 const TIPO_FINANCIACION_NO_INFORMADO = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.tipo-financiacion-no-informado');
 const FUENTE_FINANCIACION_NO_INFORMADA = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.fuente-financiacion-no-informada');
-
 export interface IProyectoPeriodoAmortizacionModalData {
   proyectoId: number;
   title: string;
   periodoAmortizacion: IProyectoPeriodoAmortizacion;
   entidadesFinanciadoras: IEntidadFinanciadora[];
   proyectosSGE: IProyectoProyectoSge[];
+  anualidadGenerica: boolean;
 }
 
 @Component({
@@ -46,6 +46,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
   extends DialogFormComponent<IProyectoPeriodoAmortizacionModalData> implements OnInit {
 
   anualidades$ = new BehaviorSubject<IProyectoAnualidad[]>([]);
+  anualidadGenerica: IProyectoAnualidad;
 
   msgParamPeriodoAmortizacionEntity = {};
   msgParamImporte = {};
@@ -77,7 +78,8 @@ export class ProyectoPeriodoAmortizacionModalComponent
   }
   readonly displayerIdentificadorSge = (proyectoProyectoSGE: IProyectoProyectoSge): string => proyectoProyectoSGE.proyectoSge?.id ?? '';
 
-  readonly sorterIdentificadorSge = (o1: SelectValue<IProyectoProyectoSge>, o2: SelectValue<IProyectoProyectoSge>): number => o1?.displayText.localeCompare(o2?.displayText);
+  readonly sorterIdentificadorSge = (o1: SelectValue<IProyectoProyectoSge>, o2: SelectValue<IProyectoProyectoSge>): number =>
+    o1?.displayText.localeCompare(o2?.displayText);
 
   readonly displayerAnualidad = (proyectoAnualidad: IProyectoAnualidad): string => proyectoAnualidad?.anio?.toString() ?? '';
 
@@ -114,6 +116,9 @@ export class ProyectoPeriodoAmortizacionModalComponent
           }),
           tap((value) => {
             this.anualidades$.next(value);
+            if (!!this.data.anualidadGenerica) {
+              this.anualidadGenerica = value[0];
+            }
           }),
         ),
       ).subscribe();
@@ -131,7 +136,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
       } as IProyectoProyectoSge
       : null;
     const entidadFinanciadora = this.data.periodoAmortizacion?.proyectoEntidadFinanciadora ?? null;
-    const anualidad = this.data.periodoAmortizacion?.proyectoAnualidad ?? null;
+    const anualidad = this.data.anualidadGenerica ? this.anualidadGenerica : (this.data.periodoAmortizacion?.proyectoAnualidad ?? null);
     const fechaInicioAnualidad = this.data.periodoAmortizacion?.proyectoAnualidad?.fechaInicio ?? null;
     const fechaFinAnualidad = this.data.periodoAmortizacion?.proyectoAnualidad?.fechaFin ?? null;
     const fechaLimiteAmortizacion = this.data.periodoAmortizacion?.fechaLimiteAmortizacion ?? null;
@@ -141,7 +146,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
       {
         identificadorSge: new FormControl(identificadorSge, Validators.required),
         entidadFinanciadora: new FormControl(entidadFinanciadora, Validators.required),
-        anualidad: new FormControl(anualidad, Validators.required),
+        anualidad: new FormControl({ value: anualidad, disabled: this.data.anualidadGenerica }, Validators.required),
         fechaInicioAnualidad: new FormControl({ value: fechaInicioAnualidad, disabled: true }),
         fechaFinAnualidad: new FormControl({ value: fechaFinAnualidad, disabled: true }),
         fechaLimiteAmortizacion: new FormControl(fechaLimiteAmortizacion, Validators.required
@@ -159,7 +164,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
   protected getValue(): IProyectoPeriodoAmortizacionModalData {
     this.data.periodoAmortizacion.proyectoSGE = this.formGroup.controls.identificadorSge.value?.proyectoSge;
     this.data.periodoAmortizacion.proyectoEntidadFinanciadora = this.formGroup.controls.entidadFinanciadora.value;
-    this.data.periodoAmortizacion.proyectoAnualidad = this.formGroup.controls.anualidad.value;
+    this.data.periodoAmortizacion.proyectoAnualidad = this.anualidadGenerica ?? this.formGroup.controls.anualidad.value;
     this.data.periodoAmortizacion.importe = this.formGroup.controls.importe.value;
     this.data.periodoAmortizacion.fechaLimiteAmortizacion = this.formGroup.controls.fechaLimiteAmortizacion.value;
 
@@ -171,7 +176,8 @@ export class ProyectoPeriodoAmortizacionModalComponent
     this.translate.get(
       FECHA_LIMITE_AMORTIZACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaLimiteAmortizacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) =>
+      this.msgParamFechaLimiteAmortizacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_PERIODO_AMORTIZACION_FONDOS_KEY,
@@ -187,17 +193,20 @@ export class ProyectoPeriodoAmortizacionModalComponent
     this.translate.get(
       PROYECTO_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) =>
+      this.msgParamProyectoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       ENTIDAD_FINANCIADORA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEntidadFinanciadoraEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) =>
+      this.msgParamEntidadFinanciadoraEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       ANUALIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamAnualidadEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) =>
+      this.msgParamAnualidadEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data.periodoAmortizacion?.proyectoEntidadFinanciadora) {
       this.translate.get(
