@@ -89,14 +89,14 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
 
     boolean applyFilter = Boolean.parseBoolean(node.getArguments().get(0));
     if (!applyFilter) {
-      return cb.equal(cb.literal("1"), cb.literal("1"));
+      return cb.isTrue(cb.literal(true));
     }
 
-    Instant now = Instant.now();
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
     Predicate plazoInicio = cb.lessThanOrEqualTo(root.get(Convocatoria_.configuracionSolicitud)
-        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaInicio), now);
+        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaInicio), fechaActual);
     Predicate plazoFin = cb.greaterThanOrEqualTo(root.get(Convocatoria_.configuracionSolicitud)
-        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaFin), now);
+        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaFin), fechaActual);
     return cb.and(plazoInicio, plazoFin);
   }
 

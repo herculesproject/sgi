@@ -363,7 +363,8 @@ public class SolicitudService {
     log.debug("findAllRestringidos(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.distinct().and(SolicitudSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository))));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties))));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAllRestringidos(String query, Pageable paging) - end");
@@ -381,7 +382,8 @@ public class SolicitudService {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.distinct()
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
     List<String> unidadesGestion = SgiSecurityContextHolder.getUOsForAnyAuthority(
         new String[] { "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-R", "CSP-PRO-C" });
@@ -411,7 +413,8 @@ public class SolicitudService {
 
     Specification<Solicitud> specs = SolicitudSpecifications.activos()
         .and(SolicitudSpecifications.bySolicitante(authentication.getName()))
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance(programaRepository)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");
