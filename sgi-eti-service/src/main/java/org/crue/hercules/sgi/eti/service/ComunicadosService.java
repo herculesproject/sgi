@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -207,6 +208,30 @@ public class ComunicadosService {
       log.debug(
           "enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
+  }
+
+  public void enviarComunicadoInformeSeguimientoAnual(String nombreInvestigacion, String referenciaMemoria,
+      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug("enviarComunicadoInformeSeguimientoAnual() - start");
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoAnualPendiente(
+          EtiComInformeSegAnualPendienteData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoInformeSeguimientoAnual() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoInformeSeguimientoAnual() - end");
   }
 
   /**

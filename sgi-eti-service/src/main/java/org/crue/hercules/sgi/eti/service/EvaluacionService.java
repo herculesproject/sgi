@@ -229,4 +229,12 @@ public interface EvaluacionService {
    * @return true si puede ser enviado / false si no puede ser enviado
    */
   Boolean enviarComunicado(Long id);
+
+  /**
+   * 
+   * Envia comunicados de aviso para informes con seguimiento anual
+   * pendiente
+   * 
+   */
+  void sendComunicadoInformeSeguimientoAnualPendiente();
 }

@@ -2,10 +2,14 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -46,6 +50,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,6 +66,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   private static final String TITULO_INFORME_EVALUACION_RETROSPECTIVA = "informeEvaluacionRetrospectivaPdf";
   private static final String TITULO_INFORME_FAVORABLE = "informeFavorablePdf";
   private static final String TITULO_INFORME_FICHA_EVALUADOR = "informeFichaEvaluadorPdf";
+
+  /** Propiedades de configuración de la aplicación */
+  private final SgiConfigProperties sgiConfigProperties;
 
   /** Estado Memoria repository */
   private final EstadoMemoriaRepository estadoMemoriaRepository;
@@ -121,7 +129,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
       EvaluacionConverter evaluacionConverter, SgiApiRepService reportService, SgdocService sgdocService,
-      ComunicadosService comunicadosService) {
+      ComunicadosService comunicadosService, SgiConfigProperties sgiConfigProperties) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -134,6 +142,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.reportService = reportService;
     this.sgdocService = sgdocService;
     this.comunicadosService = comunicadosService;
+    this.sgiConfigProperties = sgiConfigProperties;
   }
 
   /**
@@ -842,5 +851,68 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       log.debug("Error - enviarComunicado(Long idEvaluacion)", e);
       return false;
     }
+  }
+
+  public void sendComunicadoInformeSeguimientoAnualPendiente() {
+
+    List<Evaluacion> evaluaciones = recuperaInformesAvisoSeguimientoAnualPendiente();
+    if (CollectionUtils.isEmpty(evaluaciones)) {
+      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
+    } else {
+      evaluaciones.stream().forEach(evaluacion -> {
+        String tipoActividad;
+        if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
+            .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+          tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+        } else {
+          tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        }
+        try {
+          this.comunicadosService.enviarComunicadoInformeSeguimientoAnual(
+              evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+              evaluacion.getMemoria().getNumReferencia(),
+              tipoActividad,
+              evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
+              evaluacion.getMemoria().getPersonaRef());
+        } catch (Exception e) {
+          log.debug("sendComunicadoInformeSeguimientoAnualPendiente() - Error al enviar el comunicado", e);
+
+        }
+      });
+    }
+
+  }
+
+  /**
+   * Recuperar aquellas evaluaciones que tienen informe de seguimiento anual
+   * pendiente
+   */
+  public List<Evaluacion> recuperaInformesAvisoSeguimientoAnualPendiente() {
+    log.debug("recuperaInformesAvisoSeguimientoAnualPendiente() - start");
+
+    Instant fechaInicio = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+        .with(LocalTime.MIN).withNano(0).minusYears(1L).toInstant();
+
+    Instant fechaFin = this.getLastInstantOfDay().minusYears(1L)
+        .toInstant();
+
+    // Se buscan evaluaciones activas con Memoria con estado Fin Evaluacion (9) y
+    // Dictamen con estado Favorable(1) cuya fecha de dictamen cumpla un año durante
+    // el día de hoy
+    Specification<Evaluacion> specsEvaluacionByYearAvisoInformeAnualAnd = EvaluacionSpecifications.activos()
+        .and(EvaluacionSpecifications.byMemoriaEstado(9L))
+        .and(EvaluacionSpecifications.byDictamenEstado(1L))
+        .and(EvaluacionSpecifications.byFechaDictamenBetween(fechaInicio, fechaFin));
+
+    List<Evaluacion> evaluacionesPendientesAviso = evaluacionRepository
+        .findAll(specsEvaluacionByYearAvisoInformeAnualAnd);
+
+    log.debug("recuperaInformesAvisoSeguimientoAnualPendiente() - end");
+    return evaluacionesPendientesAviso;
+  }
+
+  private ZonedDateTime getLastInstantOfDay() {
+    return Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+        .with(LocalTime.MAX).withNano(0);
   }
 }
