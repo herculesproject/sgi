@@ -915,9 +915,9 @@ public class MemoriaServiceImpl implements MemoriaService {
     long diasPreaviso = configuracion.getDiasAvisoRetrospectiva();
 
     Instant fechaInicio = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
-        .with(LocalTime.MIN).withNano(0).minusDays(diasPreaviso).toInstant();
+        .with(LocalTime.MIN).withNano(0).plusDays(diasPreaviso).toInstant();
 
-    Instant fechaFin = this.getLastInstantOfDay().minusDays(diasPreaviso)
+    Instant fechaFin = this.getLastInstantOfDay().plusDays(diasPreaviso)
         .toInstant();
 
     Specification<Memoria> specsMemoriasByDiasAvisoRetrospectivaAndRequiereRetrospectiva = MemoriaSpecifications
