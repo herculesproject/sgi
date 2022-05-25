@@ -6,11 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
-import { ProduccionCientificaResolver } from '../shared/produccion-cientifica.resolver';
 import { PrcSharedModule } from '../shared/prc-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
 import { PrcReportService } from '@core/services/prc/report/prc-report.service';
 import { PublicacionInvRoutingModule } from './publicacion-inv-routing.module';
+import { ProduccionCientificaInvGuard } from '../shared/produccion-cientifica-inv.guard';
+import { ProduccionCientificaInvResolver } from '../shared/produccion-cientifica-inv.resolver';
 
 @NgModule({
   declarations: [],
@@ -28,7 +29,8 @@ import { PublicacionInvRoutingModule } from './publicacion-inv-routing.module';
     CspSharedModule
   ],
   providers: [
-    ProduccionCientificaResolver,
+    ProduccionCientificaInvResolver,
+    ProduccionCientificaInvGuard,
     PrcReportService,
     DecimalPipe
   ]
