@@ -545,6 +545,7 @@
                 "templateOptions": {
                   "label": "Tipo de vía",
                   "placeholder": "Introduce tipo de vía",
+                  "required": true,
                   "valueProp": "id",
                   "labelProp": "nombre",
                   "options": $1
@@ -561,7 +562,8 @@
                 "className": "flex-2",
                 "templateOptions": {
                   "label": "Nombre de vía",
-                  "placeholder": "Introduce nombre de vía"
+                  "placeholder": "Introduce nombre de vía",
+                  "required": true
                 }
               },
               {
