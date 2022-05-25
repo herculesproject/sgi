@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { SgiError } from '@core/errors/sgi-error';
@@ -23,6 +24,7 @@ import { NGXLogger } from 'ngx-logger';
 import { EMPTY, from, Observable } from 'rxjs';
 import { catchError, filter, map, mergeMap, startWith, switchMap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
+import { GrupoListadoExportModalComponent, IGrupoListadoModalData } from '../modals/grupo-listado-export-modal/grupo-listado-export-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_LOAD = marker('error.load');
@@ -79,7 +81,8 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     public authService: SgiAuthService,
     private rolProyectoColectivoService: RolProyectoColectivoService,
     private readonly translate: TranslateService,
-    private lineaInvestigacionService: LineaInvestigacionService
+    private lineaInvestigacionService: LineaInvestigacionService,
+    private matDialog: MatDialog,
   ) {
     super(snackBarService, MSG_ERROR_LOAD);
   }
@@ -402,6 +405,17 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
 
     return this.lineasInvestigacionListado.filter
       (lineaInvestigacion => lineaInvestigacion.nombre.toLowerCase().includes(filterValue));
+  }
+
+  openExportModal(): void {
+    const data: IGrupoListadoModalData = {
+      findOptions: this.findOptions
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(GrupoListadoExportModalComponent, config);
   }
 
 }
