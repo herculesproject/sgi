@@ -1,0 +1,3 @@
+export const EMPRESA_EXPLOTACION_RESULTADOS_NAMES = {
+
+};

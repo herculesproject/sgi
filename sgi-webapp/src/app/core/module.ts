@@ -14,6 +14,7 @@ export class Module {
   public static readonly INV = new Module('INV', marker('inv'), 'inv');
   public static readonly PII = new Module('PII', marker('pii'), 'pii');
   public static readonly PRC = new Module('PRC', marker('prc'), 'prc');
+  public static readonly EER = new Module('EER', marker('eer'), 'eer');
 
   static get values(): Module[] {
     return [
@@ -21,7 +22,8 @@ export class Module {
       this.ETI,
       this.INV,
       this.PII,
-      this.PRC
+      this.PRC,
+      this.EER
     ];
   }
 
@@ -37,6 +39,8 @@ export class Module {
         return Module.PII;
       case Module.PRC.path:
         return Module.PRC;
+      case Module.EER.path:
+        return Module.EER;
       default:
         return undefined;
     }
@@ -54,6 +58,8 @@ export class Module {
         return Module.PII;
       case Module.PRC.code:
         return Module.PRC;
+      case Module.EER.code:
+        return Module.EER;
       default:
         return undefined;
     }

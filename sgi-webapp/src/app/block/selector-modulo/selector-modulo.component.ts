@@ -9,6 +9,7 @@ const MSG_MODULO_ETI = marker('title.modulo.eti');
 const MSG_MODULO_INV = marker('title.modulo.inv');
 const MSG_MODULO_PII = marker('title.modulo.pii');
 const MSG_MODULO_PRC = marker('title.modulo.prc');
+const MSG_MODULO_EER = marker('title.modulo.eer');
 
 interface SelectorModulo {
   module: Module;
@@ -46,6 +47,10 @@ export class SelectorModuloComponent {
       {
         module: Module.PRC,
         nombre: MSG_MODULO_PRC
+      },
+      {
+        module: Module.EER,
+        nombre: MSG_MODULO_EER
       }
     ];
   }
