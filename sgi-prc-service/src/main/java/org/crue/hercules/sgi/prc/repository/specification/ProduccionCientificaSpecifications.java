@@ -14,6 +14,9 @@ import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.AutorGrupo_;
 import org.crue.hercules.sgi.prc.model.Autor_;
 import org.crue.hercules.sgi.prc.model.ConvocatoriaBaremacion;
+import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
+import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
+import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica_;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica_;
 import org.springframework.data.jpa.domain.Specification;
@@ -85,13 +88,19 @@ public class ProduccionCientificaSpecifications {
 
   /**
    * Lista de {@link ProduccionCientifica} que contenga los grupoRef indicados.
+   * Si la lista de grupoRef es null o está vacía, devuelve un filtro que se
+   * resuelve siempre a false.
    * 
    * @param gruposRef Lista de grupoRef.
    * @return specification para obtener los {@link ProduccionCientifica} que
    *         contenga los grupoRef indicados.
    */
-  public static Specification<ProduccionCientifica> byExistsSubqueryGrupoRefIn(List<Long> gruposRef) {
+  public static Specification<ProduccionCientifica> byExistsSubqueryInGrupoRef(List<Long> gruposRef) {
     return (root, query, cb) -> {
+      if (gruposRef == null || gruposRef.isEmpty()) {
+        return cb.and(cb.isTrue(cb.literal(false))); // always false = no filtering
+      }
+
       List<Predicate> predicatesSubquery = new ArrayList<>();
 
       Subquery<Long> queryAutorGrupo = query.subquery(Long.class);
@@ -111,4 +120,52 @@ public class ProduccionCientificaSpecifications {
     };
   }
 
+  /**
+   * {@link ProduccionCientifica} por id.
+   * 
+   * @param id de la {@link ProduccionCientifica}.
+   * @return specification para obtener la {@link ProduccionCientifica} por id.
+   */
+  public static Specification<ProduccionCientifica> byId(Long id) {
+    return (root, query, cb) -> cb.equal(root.get(ProduccionCientifica_.id), id);
+  }
+
+  /**
+   * Lista de {@link ProduccionCientifica} con estado no final (diferente de
+   * RECHAZADO o VALIDADO).
+   * 
+   * @return specification para obtener las {@link ProduccionCientifica} con
+   *         estado no final (diferente de RECHAZADO o VALIDADO).
+   */
+  public static Specification<ProduccionCientifica> isInEstadoEditable() {
+    return (root, query, cb) -> {
+      Join<ProduccionCientifica, EstadoProduccionCientifica> joinEstado = root.join(ProduccionCientifica_.estado);
+      return cb.and(
+          cb.notEqual(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.RECHAZADO),
+          cb.notEqual(joinEstado.get(EstadoProduccionCientifica_.estado), TipoEstadoProduccion.VALIDADO));
+    };
+  }
+
+  /**
+   * Lista de {@link ProduccionCientifica} con los {@link AutorGrupo} que
+   * pertenezcan a uno de los grupos recibidos como parámetro y que estén en
+   * el estado recibido por parámetro.
+   * 
+   * @param estado    estado del {@link AutorGrupo}
+   * @param gruposRef Lista de grupoRef.
+   * @return specification para obtener los {@link ProduccionCientifica} que
+   *         pertenezcan a uno de los grupos recibidos como parámetro y que estén
+   *         en el estado recibido por parámetro.
+   */
+  public static Specification<ProduccionCientifica> byAutorGrupoEstadoAndAutorGrupoInGrupoRef(
+      TipoEstadoProduccion estado, List<Long> gruposRef) {
+    return (root, query, cb) -> {
+      Join<ProduccionCientifica, Autor> joinAutor = root.join(ProduccionCientifica_.autores);
+      Join<Autor, AutorGrupo> joinAutorGrupo = joinAutor.join(Autor_.autoresGrupo);
+
+      return cb.and(
+          cb.equal(joinAutorGrupo.get(AutorGrupo_.estado), estado),
+          joinAutorGrupo.get(AutorGrupo_.grupoRef).in(gruposRef));
+    };
+  }
 }

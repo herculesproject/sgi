@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,8 +19,13 @@ import org.crue.hercules.sgi.prc.dto.CongresoResumen;
 import org.crue.hercules.sgi.prc.dto.DireccionTesisResumen;
 import org.crue.hercules.sgi.prc.dto.ObraArtisticaResumen;
 import org.crue.hercules.sgi.prc.dto.PublicacionResumen;
+import org.crue.hercules.sgi.prc.dto.csp.GrupoDto;
 import org.crue.hercules.sgi.prc.enums.EpigrafeCVN;
+import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaDataErrorException;
 import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotFoundException;
+import org.crue.hercules.sgi.prc.exceptions.ProduccionCientificaNotUpdatableException;
+import org.crue.hercules.sgi.prc.exceptions.UserNotAuthorizedToAccessProduccionCientificaException;
+import org.crue.hercules.sgi.prc.model.AutorGrupo;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica;
 import org.crue.hercules.sgi.prc.model.EstadoProduccionCientifica.TipoEstadoProduccion;
 import org.crue.hercules.sgi.prc.model.ProduccionCientifica;
@@ -63,6 +70,9 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
 
   @MockBean
   private SgiApiCspService sgiApiCspService;
+
+  @MockBean
+  private AutorGrupoService autorGrupoService;
 
   // This bean must be created by Spring so validations can be applied
   @Autowired
@@ -153,6 +163,54 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     for (long i = 1; i <= 37; i++) {
       publicaciones.add(generarMockPublicacionResumen(i, String.format("%03d", i)));
     }
+
+    BDDMockito.given(
+        repository.findAllPublicaciones(
+            ArgumentMatchers.<Specification<ProduccionCientifica>>any(),
+            ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<PublicacionResumen>>() {
+          @Override
+          public Page<PublicacionResumen> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > publicaciones.size() ? publicaciones.size() : toIndex;
+            List<PublicacionResumen> content = publicaciones.subList(fromIndex, toIndex);
+            Page<PublicacionResumen> page = new PageImpl<>(content, pageable, publicaciones.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<PublicacionResumen> page = service.findAllPublicaciones(null, paging);
+
+    // then: Devuelve la pagina 3 con los PublicacionResumen del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      PublicacionResumen publicacion = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(publicacion.getProduccionCientificaRef())
+          .isEqualTo("ProduccionCientifica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void findAllPublicaciones_Investigador_ReturnsPage() {
+    // given: Una lista con 37 PublicacionResumen
+    List<PublicacionResumen> publicaciones = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      publicaciones.add(generarMockPublicacionResumen(i, String.format("%03d", i)));
+    }
+
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.<String>any()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
 
     BDDMockito.given(
         repository.findAllPublicaciones(
@@ -407,7 +465,25 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void cambiarEstado_ProduccionCientificaEstadoNotPendiente_ReturnsProduccionCientifica() {
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
+  void cambiarEstado_Gestor_ThrowsProduccionCientificaNotFoundException() {
+    Long produccionCientificaId = 1L;
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any()))
+        .willAnswer(new Answer<Optional<ProduccionCientifica>>() {
+          @Override
+          public Optional<ProduccionCientifica> answer(InvocationOnMock invocation) throws Throwable {
+            return Optional.empty();
+          }
+        });
+    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(produccionCientificaId,
+        TipoEstadoProduccion.VALIDADO, null))
+        .isInstanceOf(ProduccionCientificaNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-E" })
+  void cambiarEstado_Gestor_ProduccionCientificaEstadoNotPendiente_ReturnsProduccionCientifica() {
     BDDMockito.given(
         repository.findById(ArgumentMatchers.<Long>any()))
         .willAnswer(new Answer<Optional<ProduccionCientifica>>() {
@@ -424,11 +500,291 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
             return Optional.of(produccionCientifica);
           }
         });
-    ProduccionCientifica produccionCientifica = service.cambiarEstado(1L,
-        TipoEstadoProduccion.VALIDADO, null);
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(1L, TipoEstadoProduccion.VALIDADO, null))
+        .isInstanceOf(ProduccionCientificaNotUpdatableException.class);
+  }
 
-    Assertions.assertThat(produccionCientifica.getEstado().getEstado()).as("getEstado().getEstado()")
-        .isEqualTo(TipoEstadoProduccion.RECHAZADO);
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ThrowsProduccionCientificaNotFoundException() {
+    Long produccionCientificaId = 1L;
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(produccionCientificaId,
+        TipoEstadoProduccion.VALIDADO, null))
+        .isInstanceOf(ProduccionCientificaNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ThrowsProduccionCientificaDataErrorException() {
+    Long produccionCientificaId = 1L;
+    ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+        .id(produccionCientificaId)
+        .estado(
+            EstadoProduccionCientifica.builder()
+                .id(1L)
+                .estado(TipoEstadoProduccion.PENDIENTE)
+                .build())
+        .build();
+
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(produccionCientifica));
+    BDDMockito.given(
+        autorGrupoService.findAllByProduccionCientificaIdAndInGruposRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Long>anyList()))
+        .willReturn(new ArrayList<AutorGrupo>());
+
+    Assertions.assertThatThrownBy(() -> this.service.cambiarEstado(produccionCientificaId,
+        TipoEstadoProduccion.VALIDADO, null))
+        .isInstanceOf(ProduccionCientificaDataErrorException.class);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ProduccionCientificaEstadoFinal_ReturnsProduccionCientifica() {
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any()))
+        .willAnswer(new Answer<Optional<ProduccionCientifica>>() {
+          @Override
+          public Optional<ProduccionCientifica> answer(InvocationOnMock invocation) throws Throwable {
+            ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+                .id(1L)
+                .estado(
+                    EstadoProduccionCientifica.builder()
+                        .id(1L)
+                        .estado(TipoEstadoProduccion.RECHAZADO)
+                        .build())
+                .build();
+            return Optional.of(produccionCientifica);
+          }
+        });
+    Assertions.assertThatThrownBy(() -> service.cambiarEstado(1L, TipoEstadoProduccion.VALIDADO, null))
+        .isInstanceOf(ProduccionCientificaNotUpdatableException.class);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ProduccionCientificaEstadoPendienteToRechazar_ReturnsProduccionCientifica() {
+    Long produccionCientificaId = 1L;
+    String comentario = "rechazar";
+    TipoEstadoProduccion estadoToChange = TipoEstadoProduccion.RECHAZADO;
+    TipoEstadoProduccion expectedEstado = TipoEstadoProduccion.RECHAZADO;
+    ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+        .id(produccionCientificaId)
+        .estado(
+            EstadoProduccionCientifica.builder()
+                .id(1L)
+                .estado(TipoEstadoProduccion.PENDIENTE)
+                .build())
+        .build();
+
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(produccionCientifica));
+    BDDMockito.given(
+        autorGrupoService.findAllByProduccionCientificaIdAndInGruposRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Long>anyList()))
+        .willReturn(generarMockAutorGrupoList(Arrays.asList(new Long[] { 1L, 2L })));
+    BDDMockito.given(estadoProduccionCientificaService.create(ArgumentMatchers.<EstadoProduccionCientifica>any()))
+        .willAnswer(new Answer<EstadoProduccionCientifica>() {
+          @Override
+          public EstadoProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            EstadoProduccionCientifica estadoProduccionCientificaToCreate = invocation.getArgument(0,
+                EstadoProduccionCientifica.class);
+            estadoProduccionCientificaToCreate.setId(2L);
+            return estadoProduccionCientificaToCreate;
+          }
+        });
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProduccionCientifica>any()))
+        .willAnswer(new Answer<ProduccionCientifica>() {
+          @Override
+          public ProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            ProduccionCientifica produccionCientificaToUpdate = invocation.getArgument(0,
+                ProduccionCientifica.class);
+            return produccionCientificaToUpdate;
+          }
+        });
+
+    ProduccionCientifica produccionCientificaUpdated = service.cambiarEstado(1L,
+        estadoToChange, comentario);
+
+    Assertions.assertThat(produccionCientificaUpdated.getEstado().getEstado()).as("getEstado().getEstado()")
+        .isEqualTo(expectedEstado);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ProduccionCientificaEstadoPendienteToValidar_ReturnsProduccionCientifica() {
+    Long produccionCientificaId = 1L;
+    String comentario = "rechazar";
+    TipoEstadoProduccion estadoToChange = TipoEstadoProduccion.VALIDADO;
+    TipoEstadoProduccion expectedEstado = TipoEstadoProduccion.VALIDADO;
+    ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+        .id(produccionCientificaId)
+        .estado(
+            EstadoProduccionCientifica.builder()
+                .id(1L)
+                .estado(TipoEstadoProduccion.PENDIENTE)
+                .build())
+        .build();
+
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(produccionCientifica));
+    BDDMockito.given(
+        autorGrupoService.findAllByProduccionCientificaIdAndInGruposRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Long>anyList()))
+        .willReturn(generarMockAutorGrupoList(Arrays.asList(new Long[] { 1L, 2L })));
+    BDDMockito.given(autorGrupoService.findAllByProduccionCientificaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(new AutorGrupo[] { generarMockAutorGrupo(1L, TipoEstadoProduccion.VALIDADO) }));
+    BDDMockito.given(estadoProduccionCientificaService.create(ArgumentMatchers.<EstadoProduccionCientifica>any()))
+        .willAnswer(new Answer<EstadoProduccionCientifica>() {
+          @Override
+          public EstadoProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            EstadoProduccionCientifica estadoProduccionCientificaToCreate = invocation.getArgument(0,
+                EstadoProduccionCientifica.class);
+            estadoProduccionCientificaToCreate.setId(2L);
+            return estadoProduccionCientificaToCreate;
+          }
+        });
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProduccionCientifica>any()))
+        .willAnswer(new Answer<ProduccionCientifica>() {
+          @Override
+          public ProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            ProduccionCientifica produccionCientificaToUpdate = invocation.getArgument(0,
+                ProduccionCientifica.class);
+            return produccionCientificaToUpdate;
+          }
+        });
+
+    ProduccionCientifica produccionCientificaUpdated = service.cambiarEstado(1L,
+        estadoToChange, comentario);
+
+    Assertions.assertThat(produccionCientificaUpdated.getEstado().getEstado()).as("getEstado().getEstado()")
+        .isEqualTo(expectedEstado);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void cambiarEstado_Investigador_ProduccionCientificaEstadoPendienteToValidarParcialmente_ReturnsProduccionCientifica() {
+    Long produccionCientificaId = 1L;
+    String comentario = "rechazar";
+    TipoEstadoProduccion estadoToChange = TipoEstadoProduccion.VALIDADO;
+    TipoEstadoProduccion expectedEstado = TipoEstadoProduccion.VALIDADO_PARCIALMENTE;
+    ProduccionCientifica produccionCientifica = ProduccionCientifica.builder()
+        .id(produccionCientificaId)
+        .estado(
+            EstadoProduccionCientifica.builder()
+                .id(1L)
+                .estado(TipoEstadoProduccion.PENDIENTE)
+                .build())
+        .build();
+
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.anyString()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    BDDMockito.given(
+        repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(produccionCientifica));
+    BDDMockito.given(
+        autorGrupoService.findAllByProduccionCientificaIdAndInGruposRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Long>anyList()))
+        .willReturn(generarMockAutorGrupoList(Arrays.asList(new Long[] { 1L, 2L })));
+    BDDMockito.given(autorGrupoService.findAllByProduccionCientificaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(new AutorGrupo[] {
+            generarMockAutorGrupo(1L, TipoEstadoProduccion.VALIDADO),
+            generarMockAutorGrupo(2L, TipoEstadoProduccion.PENDIENTE)
+        }));
+    BDDMockito.given(estadoProduccionCientificaService.create(ArgumentMatchers.<EstadoProduccionCientifica>any()))
+        .willAnswer(new Answer<EstadoProduccionCientifica>() {
+          @Override
+          public EstadoProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            EstadoProduccionCientifica estadoProduccionCientificaToCreate = invocation.getArgument(0,
+                EstadoProduccionCientifica.class);
+            estadoProduccionCientificaToCreate.setId(2L);
+            return estadoProduccionCientificaToCreate;
+          }
+        });
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProduccionCientifica>any()))
+        .willAnswer(new Answer<ProduccionCientifica>() {
+          @Override
+          public ProduccionCientifica answer(InvocationOnMock invocation) throws Throwable {
+            ProduccionCientifica produccionCientificaToUpdate = invocation.getArgument(0,
+                ProduccionCientifica.class);
+            return produccionCientificaToUpdate;
+          }
+        });
+
+    ProduccionCientifica produccionCientificaUpdated = service.cambiarEstado(1L,
+        estadoToChange, comentario);
+
+    Assertions.assertThat(produccionCientificaUpdated.getEstado().getEstado()).as("getEstado().getEstado()")
+        .isEqualTo(expectedEstado);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void accesibleByInvestigador_ReturnsTrue() {
+    // given: Un id de una ProduccionCientifca editable por el mock user
+    Long produccionCientificaId = 1L;
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.<String>any()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    // when: Comprobamos si la ProduccionCientifca es editable por el investigador
+    Boolean isEditable = service.accesibleByInvestigador(produccionCientificaId);
+
+    // then: La respuesta es true
+    Assertions.assertThat(isEditable).isTrue();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void editableByInvestigador_ReturnsTrue() {
+    // given: Un id de una ProduccionCientifca editable por el mock user
+    Long produccionCientificaId = 1L;
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.<String>any()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(1L);
+
+    // when: Comprobamos si la ProduccionCientifca es editable por el investigador
+    Boolean isEditable = service.editableByInvestigador(produccionCientificaId);
+
+    // then: La respuesta es true
+    Assertions.assertThat(isEditable).isTrue();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-VAL-INV-ER" })
+  void checkAccesibleByInvestigador_ThrowsUserNotAuthorizedToAccessProduccionCientificaException() {
+    // given: Un id de una ProduccionCientifca no editable por el mock user
+    Long produccionCientificaId = 1L;
+    BDDMockito.given(sgiApiCspService.findAllGruposByPersonaRef(ArgumentMatchers.<String>any()))
+        .willReturn(Arrays.asList(generarMockGrupoDto(1L)));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProduccionCientifica>>any())).willReturn(0L);
+
+    // when: Comprobamos si la ProduccionCientifca es editable por el investigador
+    // then: throws UserNotAuthorizedToAccessProduccionCientificaException
+    Assertions.assertThatThrownBy(() -> service.checkAccesibleByInvestigador(produccionCientificaId)).isInstanceOf(
+        UserNotAuthorizedToAccessProduccionCientificaException.class);
   }
 
   /**
@@ -535,5 +891,25 @@ class ProduccionCientificaServiceTest extends BaseServiceTest {
     actividad.setFechaDefensa(Instant.now());
 
     return actividad;
+  }
+
+  private GrupoDto generarMockGrupoDto(Long id) {
+    GrupoDto grupoDto = new GrupoDto();
+    grupoDto.setId(id);
+
+    return grupoDto;
+  }
+
+  private AutorGrupo generarMockAutorGrupo(Long id, TipoEstadoProduccion estado) {
+    AutorGrupo autorGrupo = new AutorGrupo();
+    autorGrupo.setId(id);
+    autorGrupo.setEstado(estado);
+
+    return autorGrupo;
+  }
+
+  private List<AutorGrupo> generarMockAutorGrupoList(List<Long> ids) {
+    return ids.stream().map(id -> generarMockAutorGrupo(id, TipoEstadoProduccion.PENDIENTE))
+        .collect(Collectors.toList());
   }
 }
