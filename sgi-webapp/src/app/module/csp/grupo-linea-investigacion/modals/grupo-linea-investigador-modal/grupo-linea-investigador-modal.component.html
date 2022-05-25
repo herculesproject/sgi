@@ -5,7 +5,7 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>
-          {{'csp.grupo-linea-investigador' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
+          {{'csp.grupo-linea-investigador' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
         </mat-label>
         <sgi-select-entity formControlName="miembro" [options]="miembrosEquipo$ | async"
           [displayWith]="displayerMiembroEquipo" required>
