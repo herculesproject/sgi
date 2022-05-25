@@ -226,7 +226,12 @@ export class InformeGenerarComponent implements OnInit, OnDestroy {
 
   private initInvestigadoresInvestigador(): void {
     this.grupoEquipoService.findMiembrosEquipoInvestigador().pipe(
-      filter(investigadores => !!investigadores),
+      map(investigadores => {
+        if (!!!investigadores || investigadores.length === 0) {
+          return [this.authService.authStatus$.value.userRefId];
+        }
+        return investigadores;
+      }),
       switchMap(investigadores => this.personaService.findAllByIdIn(investigadores)),
       map(response => response.items)
     ).subscribe(investigadores => {
