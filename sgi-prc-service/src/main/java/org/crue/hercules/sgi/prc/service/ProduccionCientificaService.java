@@ -109,8 +109,12 @@ public class ProduccionCientificaService {
    */
   public Page<CongresoResumen> findAllCongresos(String query, Pageable pageable) {
     log.debug("findAllCongresos(String query, Pageable pageable) - start");
-
-    Page<CongresoResumen> returnValue = repository.findAllCongresos(query, pageable);
+    if (isInvestigador()) {
+      log.debug("findAllCongresos(String query, Pageable pageable) - end");
+      return repository.findAllCongresos(createInvestigadorFilter(), query,
+          pageable);
+    }
+    Page<CongresoResumen> returnValue = repository.findAllCongresos(null, query, pageable);
     log.debug("findAllCongresos(String query, Pageable pageable) - end");
     return returnValue;
   }

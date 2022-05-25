@@ -168,7 +168,7 @@ public class ProduccionCientificaController {
    *         filtradas.
    */
   @GetMapping(PATH_CONGRESOS)
-  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ResponseEntity<Page<CongresoOutput>> findAllCongresos(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllCongresos(String query, Pageable paging) - start");

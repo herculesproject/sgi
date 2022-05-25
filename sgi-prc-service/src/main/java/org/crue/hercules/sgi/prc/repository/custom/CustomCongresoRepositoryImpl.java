@@ -55,8 +55,10 @@ public class CustomCongresoRepositoryImpl implements CustomCongresoRepository {
   private EntityManager entityManager;
 
   @Override
-  public Page<CongresoResumen> findAllCongresos(String query, Pageable pageable) {
-    log.debug("findAllCongresos(String query, Pageable pageable) - start");
+  public Page<CongresoResumen> findAllCongresos(Specification<ProduccionCientifica> specIsInvestigador, String query,
+      Pageable pageable) {
+    log.debug(
+        "findAllCongresos(Specification<ProduccionCientifica> specIsInvestigador, String query, Pageable pageable) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<CongresoResumen> cq = cb.createQuery(CongresoResumen.class);
@@ -132,6 +134,11 @@ public class CustomCongresoRepositoryImpl implements CustomCongresoRepository {
       listPredicatesCount.add(spec.toPredicate(rootCount, countQuery, cb));
     }
 
+    if (specIsInvestigador != null) {
+      listPredicates.add(specIsInvestigador.toPredicate(root, cq, cb));
+      listPredicatesCount.add(specIsInvestigador.toPredicate(rootCount, countQuery, cb));
+    }
+
     Path<Long> pathProduccionCientificaId = root.get(ProduccionCientifica_.id);
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
@@ -171,7 +178,8 @@ public class CustomCongresoRepositoryImpl implements CustomCongresoRepository {
     List<CongresoResumen> result = typedQuery.getResultList();
     Page<CongresoResumen> returnValue = new PageImpl<>(result, pageable, count);
 
-    log.debug("findAllCongresos(String query, Pageable pageable) - end");
+    log.debug(
+        "findAllCongresos(Specification<ProduccionCientifica> specIsInvestigador, String query, Pageable pageable) - end");
 
     return returnValue;
   }
