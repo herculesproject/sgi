@@ -8,6 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
+import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -157,6 +158,17 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
 
   ngOnDestroy(): void {
     this.subscriptions?.forEach(x => x.unsubscribe());
+  }
+
+  showDeleteEquipoTrabajo(personaRef: string): boolean {
+    const memorias = this.listadoFragment.memorias.filter(memoria => {
+      return memoria.estadoActual.id === ESTADO_MEMORIA.EN_ELABORACION ||
+        memoria.estadoActual.id === ESTADO_MEMORIA.COMPLETADA ||
+        memoria.estadoActual.id === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS ||
+        memoria.estadoActual.id === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES ||
+        memoria.estadoActual.id === ESTADO_MEMORIA.NO_PROCEDE_EVALUAR;
+    });
+    return (this.sgiAuthService.authStatus$?.getValue()?.userRefId !== personaRef) && ((memorias.length > 0) || this.listadoFragment.memorias.length === 0);
   }
 
 }
