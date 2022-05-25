@@ -22,6 +22,7 @@ const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
 const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_PUBLICACION_TITLE = marker('prc.publicacion');
+const MSG_CONGRESO_TITLE = marker('prc.congreso.title');
 
 const routes: SgiRoutes = [
   {
@@ -198,6 +199,19 @@ const routes: SgiRoutes = [
           title: MSG_PUBLICACION_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAuthorityForAnyUO: 'PRC-INF-INV-GR'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_CONGRESOS,
+        loadChildren: () =>
+          import('../prc/congreso/congreso-inv-routing.module').then(
+            (m) => m.CongresoInvRoutingModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONGRESO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
         }
       },
       { path: '**', component: null }
