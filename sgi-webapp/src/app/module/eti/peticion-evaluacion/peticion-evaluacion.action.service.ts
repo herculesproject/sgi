@@ -117,9 +117,12 @@ export class PeticionEvaluacionActionService extends ActionService {
 
   }
 
-  initializeMemoriasAndEquiposInvestigador(): void {
-    this.memoriasListado.initialize();
+  initializeEquiposInvestigador(): void {
     this.equipoInvestigadorListado.initialize();
+  }
+
+  initializeMemorias(): void {
+    this.memoriasListado.initialize();
   }
 
   /**

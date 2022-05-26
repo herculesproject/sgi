@@ -74,6 +74,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+    this.actionService.initializeMemorias();
 
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
