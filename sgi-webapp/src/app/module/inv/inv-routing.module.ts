@@ -23,6 +23,10 @@ const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_PUBLICACION_TITLE = marker('prc.publicacion');
 const MSG_CONGRESO_TITLE = marker('prc.congreso.title');
+const MSG_COMITE_EDITORIAL_TITLE = marker('prc.comite-editorial');
+const MSG_ACTIVIDAD_TITLE = marker('prc.actividad-idi');
+const MSG_OBRAS_ARTISTICAS_TITLE = marker('prc.obra-artistica.title');
+const MSG_DIRECCION_TESIS_TITLE = marker('prc.tesis-tfm-tfg');
 
 const routes: SgiRoutes = [
   {
@@ -211,6 +215,58 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_CONGRESO_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_COMITES_EDITORIALES,
+        loadChildren: () =>
+          import('../prc/comite-editorial/comite-editorial-inv.module').then(
+            (m) => m.ComiteEditorialInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_COMITE_EDITORIAL_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_ACTIVIDADES_IDI,
+        loadChildren: () =>
+          import('../prc/actividad-idi/actividad-idi-inv.module').then(
+            (m) => m.ActividadIdiInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_ACTIVIDAD_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_OBRAS_ARTISTICAS,
+        loadChildren: () =>
+          import('../prc/obra-artistica/obra-artistica-inv.module').then(
+            (m) => m.ObraArtisticaInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_OBRAS_ARTISTICAS_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_TESIS_TFM_TFG,
+        loadChildren: () =>
+          import('../prc/tesis-tfm-tfg/tesis-tfm-tfg-inv.module').then(
+            (m) => m.TesisTfmTfgInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_DIRECCION_TESIS_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
           hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
         }
       },

@@ -6,30 +6,30 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
-import { PrcSharedModule } from '../shared/prc-shared.module';
 import { CspSharedModule } from '../../csp/shared/csp-shared.module';
+import { PrcSharedModule } from '../shared/prc-shared.module';
 import { ProduccionCientificaInvGuard } from '../shared/produccion-cientifica-inv.guard';
 import { ProduccionCientificaInvResolver } from '../shared/produccion-cientifica-inv.resolver';
-import { CongresoInvRoutingModule } from './congreso-inv-routing.module';
+import { ComiteEditorialInvRoutingModule } from './comite-editorial-inv-routing.module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     SharedModule,
-    CongresoInvRoutingModule,
+    ComiteEditorialInvRoutingModule,
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
     SgiAuthModule,
     SgpSharedModule,
-    PrcSharedModule,
-    CspSharedModule
+    CspSharedModule,
+    PrcSharedModule
   ],
   providers: [
     ProduccionCientificaInvResolver,
     ProduccionCientificaInvGuard,
   ]
 })
-export class CongresoInvModule { }
+export class ComiteEditorialInvModule { }

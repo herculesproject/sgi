@@ -17,9 +17,16 @@
       <div class="col" fxFlex="49%" fxFlex.sm="99%">
         <mat-form-field>
           <mat-label>{{'prc.actividad-idi.grupo-investigacion' | translate}}</mat-label>
-          <sgi-select-dialog-grupo placeholder="{{'prc.actividad-idi.grupo-investigacion' | translate}}"
-            formControlName="grupoInvestigacion">
-          </sgi-select-dialog-grupo>
+          <ng-container *ngIf="authStatus$ | async as authStatus">
+            <sgi-select-grupo *ngIf="authStatus.isInvestigador; else grupoInvestigacionGestor"
+              [personaRef]="authStatus.userRefId" formControlName="grupoInvestigacion">
+            </sgi-select-grupo>
+          </ng-container>
+          <ng-template #grupoInvestigacionGestor>
+            <sgi-select-dialog-grupo placeholder="{{'prc.actividad-idi.grupo-investigacion' | translate}}"
+              formControlName="grupoInvestigacion">
+            </sgi-select-dialog-grupo>
+          </ng-template>
         </mat-form-field>
       </div>
 
