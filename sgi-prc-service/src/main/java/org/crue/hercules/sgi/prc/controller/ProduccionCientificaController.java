@@ -129,7 +129,7 @@ public class ProduccionCientificaController {
    *         filtradas.
    */
   @GetMapping(PATH_COMITES_EDITORIALES)
-  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ResponseEntity<Page<ComiteEditorialOutput>> findAllComitesEditoriales(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllComitesEditoriales(String query, Pageable paging) - start");
@@ -207,7 +207,7 @@ public class ProduccionCientificaController {
    *         filtradas.
    */
   @GetMapping(PATH_OBRAS_ARTISTICAS)
-  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ResponseEntity<Page<ObraArtisticaOutput>> findAllObrasArtisticas(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllObrasArtisticas(String query, Pageable paging) - start");
@@ -247,7 +247,7 @@ public class ProduccionCientificaController {
    *         filtradas.
    */
   @GetMapping(PATH_ACTIVIDADES)
-  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ResponseEntity<Page<ActividadOutput>> findAllActividades(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllActividades(String query, Pageable paging) - start");
@@ -286,7 +286,7 @@ public class ProduccionCientificaController {
    *         filtradas.
    */
   @GetMapping(PATH_DIRECCIONES_TESIS)
-  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E')")
+  @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ResponseEntity<Page<DireccionTesisOutput>> findAllDireccionesTesis(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllDireccionesTesis(String query, Pageable paging) - start");
