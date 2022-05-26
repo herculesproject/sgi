@@ -513,7 +513,8 @@ public class ActaServiceImpl implements ActaService {
           evaluacion.getMemoria().getComite().getNombreInvestigacion(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
-          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
+          evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - End");
     } catch (Exception e) {
       log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Error al enviar el comunicado", e);

@@ -800,7 +800,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           evaluacion.getMemoria().getComite().getNombreInvestigacion(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
-          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
+          evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - End");
     } catch (Exception e) {
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Error al enviar el comunicado", e);
@@ -817,11 +818,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       } else {
         tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
       }
-      this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
+      this.comunicadosService.enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(
           evaluacion.getMemoria().getComite().getNombreInvestigacion(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
-          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), evaluacion.getMemoria().getPersonaRef());
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
+          evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - End");
     } catch (Exception e) {
       log.debug(
@@ -854,7 +856,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   public void sendComunicadoInformeSeguimientoAnualPendiente() {
-
     List<Evaluacion> evaluaciones = recuperaInformesAvisoSeguimientoAnualPendiente();
     if (CollectionUtils.isEmpty(evaluaciones)) {
       log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
@@ -873,7 +874,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
               evaluacion.getMemoria().getNumReferencia(),
               tipoActividad,
               evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
-              evaluacion.getMemoria().getPersonaRef());
+              evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {
           log.debug("sendComunicadoInformeSeguimientoAnualPendiente() - Error al enviar el comunicado", e);
 

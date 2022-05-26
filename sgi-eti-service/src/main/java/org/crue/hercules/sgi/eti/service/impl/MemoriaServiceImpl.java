@@ -949,7 +949,7 @@ public class MemoriaServiceImpl implements MemoriaService {
               memoria.getComite().getNombreInvestigacion(),
               memoria.getComite().getGenero().toString(), memoria.getNumReferencia(), tipoActividad,
               memoria.getPeticionEvaluacion().getTitulo(), memoria.getCodOrganoCompetente(),
-              memoria.getPersonaRef());
+              memoria.getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {
           log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - Error al enviar el comunicado", e);
 
