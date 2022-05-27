@@ -208,8 +208,8 @@ const routes: SgiRoutes = [
       {
         path: INV_ROUTE_NAMES.VALIDACION_CONGRESOS,
         loadChildren: () =>
-          import('../prc/congreso/congreso-inv-routing.module').then(
-            (m) => m.CongresoInvRoutingModule
+          import('../prc/congreso/congreso-inv.module').then(
+            (m) => m.CongresoInvModule
           ),
         canActivate: [SgiAuthGuard],
         data: {

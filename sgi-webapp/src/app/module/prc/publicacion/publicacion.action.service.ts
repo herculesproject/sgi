@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 import { concatMap, map, tap } from 'rxjs/operators';
 import { CvnValorCampoService } from '../shared/cvn/services/cvn-valor-campo.service';
 import { ProduccionCientificaInitializerService } from '../shared/produccion-cientifica-initializer.service';
-import { PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from '../shared/produccion-cientifica-route-params';
-import { IProduccionCientificaData, PRODUCCION_CIENTIFICA_DATA_KEY } from '../shared/produccion-cientifica.resolver';
+import { PRODUCCION_CIENTIFICA_DATA_KEY, PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from '../shared/produccion-cientifica-route-params';
+import { IProduccionCientificaData } from '../shared/produccion-cientifica.resolver';
 import { PublicacionDatosGeneralesFragment } from './publicacion-formulario/publicacion-datos-generales/publicacion-datos-generales.fragment';
 
 @Injectable()
