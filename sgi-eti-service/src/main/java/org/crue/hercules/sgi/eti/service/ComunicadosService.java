@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegFinalPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -232,6 +233,30 @@ public class ComunicadosService {
           "enviarComunicadoInformeSeguimientoAnual() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoInformeSeguimientoAnual() - end");
+  }
+
+  public void enviarComunicadoInformeSeguimientoFinal(String nombreInvestigacion, String referenciaMemoria,
+      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug("enviarComunicadoInformeSeguimientoFinal() - start");
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoFinalPendiente(
+          EtiComInformeSegFinalPendienteData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoInformeSeguimientoFinal() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoInformeSeguimientoFinal() - end");
   }
 
   /**

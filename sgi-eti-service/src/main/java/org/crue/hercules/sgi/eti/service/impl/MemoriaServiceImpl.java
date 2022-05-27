@@ -958,6 +958,59 @@ public class MemoriaServiceImpl implements MemoriaService {
     }
   }
 
+  public void sendComunicadoInformeSeguimientoFinalPendiente() {
+    List<Memoria> memorias = recuperaInformesAvisoSeguimientoFinalPendiente();
+    if (CollectionUtils.isEmpty(memorias)) {
+      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
+    } else {
+      memorias.stream().forEach(memoria -> {
+        String tipoActividad;
+        if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+            .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+          tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+        } else {
+          tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        }
+        try {
+          this.comunicadosService.enviarComunicadoInformeSeguimientoFinal(
+              memoria.getComite().getNombreInvestigacion(),
+              memoria.getNumReferencia(),
+              tipoActividad,
+              memoria.getPeticionEvaluacion().getTitulo(),
+              memoria.getPeticionEvaluacion().getPersonaRef());
+        } catch (Exception e) {
+          log.debug("sendComunicadoInformeSeguimientoFinalPendiente() - Error al enviar el comunicado", e);
+
+        }
+      });
+    }
+  }
+
+  /**
+   * Recuperar aquellas memorias con informe final pendiente
+   */
+  public List<Memoria> recuperaInformesAvisoSeguimientoFinalPendiente() {
+    log.debug("recuperaInformesAvisoSeguimientoFinalPendiente() - start");
+
+    Instant fechaInicio = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
+        .with(LocalTime.MIN).withNano(0).minusYears(1L).toInstant();
+
+    Instant fechaFin = this.getLastInstantOfDay().minusYears(1L)
+        .toInstant();
+
+    // Se buscan memorias con Peticiones de Evaluación activas y cuya fecha fin
+    // cumpla un año durante el día de hoy
+    Specification<Memoria> specsMemoriasComunicadoInfAnual = MemoriaSpecifications.peticionesActivas()
+        .and(MemoriaSpecifications.byEstado(14L))
+        .and(MemoriaSpecifications.byPeticionFechaFin(fechaInicio, fechaFin));
+
+    List<Memoria> memoriasPendientesAviso = memoriaRepository
+        .findAll(specsMemoriasComunicadoInfAnual);
+
+    log.debug("recuperaInformesAvisoSeguimientoFinalPendiente() - end");
+    return memoriasPendientesAviso;
+  }
+
   private void validacionesCreateMemoria(Memoria memoria) {
     log.debug("validacionesCreateMemoria(Memoria memoria) - start");
 
