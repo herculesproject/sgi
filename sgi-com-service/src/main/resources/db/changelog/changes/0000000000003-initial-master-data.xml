@@ -14,6 +14,30 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_ERROR_DATA" />
+      <column name="description" value="JSON con formato: {&quot;anio&quot;:&quot;2022&quot;,&quot;error&quot;:&quot;texto error&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_FIN_DATA" />
+      <column name="description" value="JSON con formato: {&quot;anio&quot;:&quot;2022&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subject_tpl">
@@ -28,6 +52,30 @@
       <column name="tpl" valueClobFile="clob/0000000000003/eti-com-informe/ETI_COM_INF_SEG_FIN_SUBJECT.ftl" />
       <where>name='ETI_COM_INF_SEG_FIN_SUBJECT'</where>
     </update>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de error en el proceso de baremacion" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT'</where>
+    </update>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de fin del proceso de baremacion" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subjecttpl_param">
@@ -35,6 +83,18 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_SEG_FIN_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_SEG_FIN_DATA')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_ERROR_DATA')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_FIN_DATA')" />
     </insert>
   </changeSet>
 
@@ -55,6 +115,40 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/eti-com-informe/ETI_COM_INF_SEG_FIN_CONTENT_html.ftl" />
       <where>name='ETI_COM_INF_SEG_FIN_CONTENT'</where>
     </update>
+
+    <!--  PRC Proceso Baremacion Error -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de error en el proceso de baremacion" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT_text.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT_html.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT'</where>
+    </update>
+
+    <!--  PRC Proceso Baremacion Fin -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_FIN_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de fin del proceso de baremacion" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_text.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_html.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-contenttpl_param">
@@ -62,6 +156,18 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_SEG_FIN_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_SEG_FIN_DATA')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_ERROR_DATA')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_FIN_DATA')" />
     </insert>
   </changeSet>
 
@@ -76,6 +182,28 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_ERROR" />
+      <column name="description" value="Aviso de error del proceso de baremacion (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="PRC_COM_PROCESO_BAREMACION_FIN" />
+      <column name="description" value="Aviso de fin del proceso de baremacion (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_subjecttpl">
@@ -84,6 +212,18 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_SEG_FIN')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_SEG_FIN_SUBJECT')" />
     </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_contenttpl">
@@ -91,6 +231,18 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_SEG_FIN')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_SEG_FIN_CONTENT')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Error -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT')" />
+    </insert>
+
+    <!-- PRC Proceso Baremacion Fin -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
