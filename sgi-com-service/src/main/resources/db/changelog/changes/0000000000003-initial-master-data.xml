@@ -15,6 +15,18 @@
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
 
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="ETI_COM_DICT_MEM_REV_MINIMA_ARCH_DATA" />
+      <column name="description" value="JSON con formato: {&quot;nombre de investigacion&quot;&quot;genero de comite&quot;,&quot;referencia de memoria&quot;,&quot;tipo de actividad&quot;,&quot;titulo solicitud evaluacion&quot;,&quot;enlace de aplicacion&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
     <!-- PRC Proceso Baremacion Error -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -53,7 +65,7 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subject_tpl">
-    <!-- Informe de Seguimiento Final Pendiente -->
+    <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
       <column name="name" value="ETI_COM_INF_SEG_FIN_SUBJECT" />
@@ -63,6 +75,18 @@
     <update tableName="subject_tpl">
       <column name="tpl" valueClobFile="clob/0000000000003/eti-com-informe/ETI_COM_INF_SEG_FIN_SUBJECT.ftl" />
       <where>name='ETI_COM_INF_SEG_FIN_SUBJECT'</where>
+    </update>
+
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="ETI_COM_DICT_MEM_REV_MINIMA_ARCH_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de Memoria con dictamen Revisión Mínima archivada automáticamente" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/eti-com-dictamen/ETI_COM_DICT_MEM_REV_MINIMA_ARCH_SUBJECT.ftl" />
+      <where>name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_SUBJECT'</where>
     </update>
 
     <!-- PRC Proceso Baremacion Error -->
@@ -109,6 +133,12 @@
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_SEG_FIN_DATA')" />
     </insert>
 
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_DATA')" />
+    </insert>
+
     <!-- PRC Proceso Baremacion Error -->
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_SUBJECT')" />
@@ -144,6 +174,23 @@
     <update tableName="content_tpl">
       <column name="tpl_html" valueClobFile="clob/0000000000003/eti-com-informe/ETI_COM_INF_SEG_FIN_CONTENT_html.ftl" />
       <where>name='ETI_COM_INF_SEG_FIN_CONTENT'</where>
+    </update>
+
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envio de Memoria con dictamen Revisión Mínima archivada automáticamente" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/eti-com-dictamen/ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT_text.ftl" />
+      <where>name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/eti-com-dictamen/ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT_html.ftl" />
+      <where>name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT'</where>
     </update>
 
     <!--  PRC Proceso Baremacion Error -->
@@ -205,6 +252,12 @@
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_INF_SEG_FIN_DATA')" />
     </insert>
 
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_DATA')" />
+    </insert>
+
     <!-- PRC Proceso Baremacion Error -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR_CONTENT')" />
@@ -230,6 +283,17 @@
       <column name="id" valueSequenceNext="email_tpl_seq" />
       <column name="name" value="ETI_COM_INF_SEG_FIN" />
       <column name="description" value="Aviso de evaluación de seguimiento Final pendiente (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="ETI_COM_DICT_MEM_REV_MINIMA_ARCH" />
+      <column name="description" value="Aviso de Memoria con dictamen Revisión Mínima archivada automáticamente (texto + HTML)" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
       <column name="last_modified_by" value="master" />
@@ -277,6 +341,12 @@
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_SEG_FIN_SUBJECT')" />
     </insert>
 
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_SUBJECT')" />
+    </insert>
+
     <!-- PRC Proceso Baremacion Error -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_ERROR')" />
@@ -301,6 +371,12 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_SEG_FIN')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_SEG_FIN_CONTENT')" />
+    </insert>
+
+    <!-- ETI Memoria con dictamen Revisión Mínima archivada automáticamente -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_DICT_MEM_REV_MINIMA_ARCH_CONTENT')" />
     </insert>
 
     <!-- PRC Proceso Baremacion Error -->
