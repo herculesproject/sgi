@@ -15,5 +15,3 @@
     <p>Se ha producido un error en el proceso de baremación del <b>${data.anio}</b>. El error producido es <b>${data.error}</b>.</p>
   </body>
 </html>
-
-

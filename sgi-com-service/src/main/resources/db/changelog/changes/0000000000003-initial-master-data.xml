@@ -38,6 +38,18 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="PRC_COM_VALIDAR_ITEM_DATA" />
+      <column name="description" value="JSON con formato: {&quot;anio&quot;:&quot;2022&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subject_tpl">
@@ -76,6 +88,18 @@
       <column name="tpl" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT.ftl" />
       <where>name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT'</where>
     </update>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="PRC_COM_VALIDAR_ITEM_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío del comunicado para validar item" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/prc/PRC_COM_VALIDAR_ITEM_SUBJECT.ftl" />
+      <where>name='PRC_COM_VALIDAR_ITEM_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subjecttpl_param">
@@ -95,6 +119,12 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_FIN_DATA')" />
+    </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_VALIDAR_ITEM_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_VALIDAR_ITEM_DATA')" />
     </insert>
   </changeSet>
 
@@ -149,6 +179,23 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_html.ftl" />
       <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT'</where>
     </update>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="PRC_COM_VALIDAR_ITEM_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío del comunicado para validar item" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/prc/PRC_COM_VALIDAR_ITEM_CONTENT_text.ftl" />
+      <where>name='PRC_COM_VALIDAR_ITEM_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/prc/PRC_COM_VALIDAR_ITEM_CONTENT_html.ftl" />
+      <where>name='PRC_COM_VALIDAR_ITEM_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-contenttpl_param">
@@ -168,6 +215,12 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_PROCESO_BAREMACION_FIN_DATA')" />
+    </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_VALIDAR_ITEM_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PRC_COM_VALIDAR_ITEM_DATA')" />
     </insert>
   </changeSet>
 
@@ -204,6 +257,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="PRC_COM_VALIDAR_ITEM" />
+      <column name="description" value="Aviso para validar item (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_subjecttpl">
@@ -224,6 +288,12 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_SUBJECT')" />
     </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_VALIDAR_ITEM')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PRC_COM_VALIDAR_ITEM_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_contenttpl">
@@ -243,6 +313,12 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT')" />
+    </insert>
+
+    <!-- PRC Validar Item -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PRC_COM_VALIDAR_ITEM')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PRC_COM_VALIDAR_ITEM_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>

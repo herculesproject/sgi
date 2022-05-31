@@ -14,5 +14,3 @@
     <p>El proceso de baremación del <b>${data.anio}</b> ha finalizado con éxito. Puede ir a la opción de menú "Informes" para ver su resultado.</p>
   </body>
 </html>
-
-
