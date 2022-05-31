@@ -1,0 +1,1 @@
+Hito "${CSP_HITO_TIPO}" del proyecto "${CSP_PROYECTO_TITULO}" de la convocatoria "${CSP_CONVOCATORIA_TITULO}"

@@ -3,6 +3,18 @@
   <property name="schemaPrefix" value="" />
 
   <changeSet context="!test" author="master" id="0000000000003-param">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_PROYECTO_TITULO" />
+      <column name="description" value="Titulo del Proyecto" />
+      <column name="type" value="STRING" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -77,6 +89,18 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subject_tpl">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_PROYECTO_HITO_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para Proyectos-Hitos" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/csp-com-proyecto-hito/CSP_PROYECTO_HITO_SUBJECT.ftl" />
+      <where>name='CSP_PROYECTO_HITO_SUBJECT'</where>
+    </update>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
@@ -151,6 +175,20 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subjecttpl_param">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_PROYECTO_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_TIPO')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_PROYECTO_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_CONVOCATORIA_TITULO')" />
+    </insert>
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_PROYECTO_HITO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_PROYECTO_TITULO')" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_INF_SEG_FIN_SUBJECT')" />
@@ -189,6 +227,23 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-content_tpl">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_PROYECTO_HITO_CONTENT" />
+      <column name="description" value="Plantilla de contenido para Proyectos-Hitos" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/csp-com-proyecto-hito/CSP_PROYECTO_HITO_CONTENT_text.ftl" />
+      <where>name='CSP_PROYECTO_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/csp-com-proyecto-hito/CSP_PROYECTO_HITO_CONTENT_html.ftl" />
+      <where>name='CSP_PROYECTO_HITO_CONTENT'</where>
+    </update>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -293,6 +348,28 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-contenttpl_param">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_FECHA')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_TIPO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_CONVOCATORIA_TITULO')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_HITO_OBSERVACIONES')" />
+    </insert>
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_PROYECTO_TITULO')" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_INF_SEG_FIN_CONTENT')" />
@@ -331,6 +408,13 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-email_tpl">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_PROYECTO_HITO" />
+      <column name="description" value="Email de Proyecto-Hito" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -399,6 +483,11 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_subjecttpl">
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_PROYECTO_HITO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_PROYECTO_HITO_SUBJECT')" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_SEG_FIN')" />
@@ -437,6 +526,12 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_contenttpl">
+    <!-- CSP Proyecto Hito -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_PROYECTO_HITO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_PROYECTO_HITO_CONTENT')" />
+    </insert>
+
     <!-- ETI Informe de Seguimiento Final Pendiente -->
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_INF_SEG_FIN')" />
