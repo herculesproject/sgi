@@ -8,5 +8,24 @@
       <column name="description" value="Destinatarios proceso baremacion PRC" />
       <column name="value" value="[&quot;proceso.baremacion.prc@sgi.es&quot;]" />
     </insert>
+
+    <!-- Destinatarios defecto CSP Proyectos Hitos OTRI -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-hitos-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - OTRI" />
+      <column name="value" value="[&quot;proyecto.hitos.otri@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Proyectos Hitos OPE -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-hitos-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - OPE" />
+      <column name="value" value="[&quot;proyecto.hitos.ope@sgi.es&quot;]" />
+    </insert>
+    <!-- Destinatarios defecto CSP Proyectos Hitos UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-hitos-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - UGI" />
+      <column name="value" value="[&quot;proyecto.hitos.ugi@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
