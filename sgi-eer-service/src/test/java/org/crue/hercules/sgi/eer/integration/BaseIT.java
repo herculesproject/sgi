@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-abstract class BaseIT {
+public abstract class BaseIT {
 
   @Autowired
   protected TestRestTemplate restTemplate;

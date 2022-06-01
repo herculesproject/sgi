@@ -1,0 +1,143 @@
+package org.crue.hercules.sgi.eer.controller;
+
+import javax.validation.Valid;
+
+import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaInput;
+import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
+import org.crue.hercules.sgi.eer.model.Empresa;
+import org.crue.hercules.sgi.eer.service.EmpresaService;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * EmpresaController
+ */
+@RestController
+@RequestMapping(EmpresaController.REQUEST_MAPPING)
+@Slf4j
+@RequiredArgsConstructor
+public class EmpresaController {
+
+  public static final String REQUEST_MAPPING = "/empresas";
+  public static final String PATH_ID = "/{id}";
+  public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
+
+  // Services
+  private final EmpresaService service;
+  // Converters
+  private final EmpresaConverter converter;
+
+  /**
+   * Crea nuevo {@link Empresa}
+   * 
+   * @param empresa {@link Empresa} que se quiere crear.
+   * @return Nuevo {@link Empresa} creado.
+   */
+  @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('EER-EER-C')")
+  public ResponseEntity<EmpresaOutput> create(@Valid @RequestBody EmpresaInput empresa) {
+    log.debug("create(EmpresaInput empresa) - start");
+    EmpresaOutput returnValue = converter.convert(service.create(converter.convert(empresa)));
+    log.debug("create(EmpresaInput empresa) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza {@link Empresa}.
+   * 
+   * @param empresa {@link Empresa} a actualizar.
+   * @param id      Identificador {@link Empresa} a actualizar.
+   * @return {@link Empresa} actualizado
+   */
+  @PutMapping(PATH_ID)
+  @PreAuthorize("hasAuthorityForAnyUO('EER-EER-E')")
+  public EmpresaOutput update(@Valid @RequestBody EmpresaInput empresa, @PathVariable Long id) {
+    log.debug("update(EmpresaInput empresa, Long id) - start");
+    EmpresaOutput returnValue = converter.convert(service.update(converter.convert(id, empresa)));
+    log.debug("update(EmpresaInput empresa, Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve el {@link Empresa} con el id indicado.
+   * 
+   * @param id Identificador de {@link Empresa}.
+   * @return {@link Empresa} correspondiente al id
+   */
+  @GetMapping(PATH_ID)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-E', 'EER-EER-V')")
+  public EmpresaOutput findById(@PathVariable Long id) {
+    log.debug("findById(Long id) - start");
+    EmpresaOutput returnValue = converter.convert(service.findById(id));
+    log.debug("findById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link Empresa} con el id indicado.
+   *
+   * @param id Identificador de {@link Empresa}.
+   * @return {@link HttpStatus#OK} si existe y {@link HttpStatus#NO_CONTENT} si
+   *         no.
+   */
+  @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-E', 'EER-EER-V')")
+  public ResponseEntity<Void> exists(@PathVariable Long id) {
+    log.debug("Convocatoria exists(Long id) - start");
+    boolean exists = service.existsById(id);
+    log.debug("Convocatoria exists(Long id) - end");
+    return exists ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Empresa} activos.
+   *
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Empresa} paginadas y
+   *         filtradas.
+   */
+  @GetMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-B', 'EER-EER-E', 'EER-EER-R', 'EER-EER-V')")
+  public ResponseEntity<Page<EmpresaOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Page<EmpresaOutput> page = converter.convert(service.findActivos(query, paging));
+    log.debug("findAll(String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Desactiva la {@link Empresa} con id indicado.
+   * 
+   * @param id Identificador de {@link Empresa}.
+   * @return {@link Empresa} desactivada.
+   */
+  @PatchMapping(PATH_DESACTIVAR)
+  @PreAuthorize("hasAuthority('EER-EER-B')")
+  public EmpresaOutput desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
+    EmpresaOutput returnValue = converter.convert(service.desactivar(id));
+    log.debug("desactivar(Long id) - end");
+    return returnValue;
+  }
+
+}

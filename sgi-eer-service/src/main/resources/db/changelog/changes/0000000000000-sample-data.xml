@@ -1,2 +1,28 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd" />
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <changeSet context="dev" author="master" id="0000000000000-empresa">
+    <insert tableName="empresa">
+      <column name="id" valueSequenceNext="empresa_seq" />
+      <column name="fecha_solicitud" valueDate="2022-01-01T23:00:00" />
+      <column name="fecha_constitucion" valueDate="2022-05-01T23:00:00" />
+      <column name="fecha_incorporacion" valueDate="2022-11-01T23:00:00" />
+      <column name="entidad_ref" value="00051494" />
+      <column name="tipo_empresa" value="EBT" />
+      <column name="estado" value="EN_TRAMITACION" />
+      <column name="objeto_social" value="Reforestación de la Selva Amazónica con técnica IAPE" />
+      <column name="conocimiento_tecnologia" value="Reforestación de la Selva Amazónica con técnica IAPE" />
+    </insert>
+
+    <insert tableName="empresa">
+      <column name="id" valueSequenceNext="empresa_seq" />
+      <column name="fecha_solicitud" valueDate="2022-10-01T23:00:00" />
+      <column name="fecha_constitucion" valueDate="2022-12-01T23:00:00" />
+      <column name="fecha_incorporacion" valueDate="2022-14-01T23:00:00" />
+      <column name="tipo_empresa" value="EINCNT" />
+      <column name="estado" value="EN_TRAMITACION" />
+      <column name="nombre_razon_social" value="Empresa 2 SL" />
+      <column name="objeto_social" value="Clonación de células óseas" />
+      <column name="conocimiento_tecnologia" value="Tecnología para la clonación de células óseas" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>
