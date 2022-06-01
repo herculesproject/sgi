@@ -78,6 +78,8 @@ public class ProduccionCientificaController {
   public static final String PATH_OBRAS_ARTISTICAS = PATH_DELIMITER + "obras-artisticas";
   public static final String PATH_ACTIVIDADES = PATH_DELIMITER + "actividades";
   public static final String PATH_DIRECCIONES_TESIS = PATH_DELIMITER + "direcciones-tesis";
+
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_INDICES_IMPACTO = PATH_DELIMITER + "{id}/indices-impacto";
   public static final String PATH_AUTORES = PATH_DELIMITER + "{id}/autores";
   public static final String PATH_PROYECTOS = PATH_DELIMITER + "{id}/proyectos";
@@ -85,6 +87,8 @@ public class ProduccionCientificaController {
   public static final String PATH_CAMPOS = PATH_DELIMITER + "{id}/campos";
   public static final String PATH_VALORES = PATH_CAMPOS + PATH_DELIMITER + "{campoId}/valores";
   public static final String PATH_MODIFICABLE = PATH_DELIMITER + "{id}/modificable";
+  public static final String PATH_VALIDAR = PATH_DELIMITER + "{id}/validar";
+  public static final String PATH_RECHAZAR = PATH_DELIMITER + "{id}/rechazar";
 
   private final ProduccionCientificaService service;
   private final IndiceImpactoService indiceImpactoService;
@@ -322,7 +326,7 @@ public class ProduccionCientificaController {
    * @param id Identificador de {@link ProduccionCientifica}.
    * @return {@link ProduccionCientificaOutput} correspondiente al id.
    */
-  @GetMapping("/{id}")
+  @GetMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthority('PRC-VAL-V', 'PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ProduccionCientificaOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
@@ -339,7 +343,7 @@ public class ProduccionCientificaController {
    * @param id Identificador de {@link ProduccionCientifica}.
    * @return {@link ProduccionCientifica} actualizada.
    */
-  @PatchMapping("/{id}/validar")
+  @PatchMapping(PATH_VALIDAR)
   @PreAuthorize("hasAnyAuthority('PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ProduccionCientificaOutput validar(@PathVariable Long id) {
     log.debug("validar(Long id) - start");
@@ -359,7 +363,7 @@ public class ProduccionCientificaController {
    *                                   rechazo
    * @return {@link ProduccionCientifica} actualizada.
    */
-  @PatchMapping("/{id}/rechazar")
+  @PatchMapping(PATH_RECHAZAR)
   @PreAuthorize("hasAnyAuthority('PRC-VAL-E', 'PRC-VAL-INV-ER')")
   public ProduccionCientificaOutput rechazar(@PathVariable Long id,
       @Valid @RequestBody EstadoProduccionCientificaInput estadoProduccionCientifica) {
@@ -380,7 +384,7 @@ public class ProduccionCientificaController {
    * @return HTTP-200 si puede ser modificada / HTTP-204 si no puede ser
    *         consultada
    */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthority('PRC-VAL-INV-ER')")
   public ResponseEntity<Void> accesibleByInvestigador(@PathVariable Long id) {
     log.debug("registrable(Long id) - start");

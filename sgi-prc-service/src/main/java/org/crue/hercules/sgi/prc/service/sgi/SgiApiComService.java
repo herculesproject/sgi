@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.prc.dto.com.EmailOutput;
 import org.crue.hercules.sgi.prc.dto.com.EmailParam;
 import org.crue.hercules.sgi.prc.dto.com.PrcComProcesoBaremacionErrorData;
 import org.crue.hercules.sgi.prc.dto.com.PrcComProcesoBaremacionFinData;
+import org.crue.hercules.sgi.prc.dto.com.PrcComValidarItemData;
 import org.crue.hercules.sgi.prc.dto.com.Recipient;
 import org.crue.hercules.sgi.prc.dto.com.Status;
 import org.crue.hercules.sgi.prc.enums.ServiceType;
@@ -38,6 +39,9 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_PRC_COM_PROCESO_BAREMACION_FIN = "PRC_COM_PROCESO_BAREMACION_FIN";
   private static final String TEMPLATE_PRC_COM_PROCESO_BAREMACION_FIN_PARAM = TEMPLATE_PRC_COM_PROCESO_BAREMACION_FIN
       + PARAM_SUFFIX;
+
+  private static final String TEMPLATE_PRC_COM_VALIDAR_ITEM = "PRC_COM_VALIDAR_ITEM";
+  private static final String TEMPLATE_PRC_COM_VALIDAR_ITEM_PARAM = TEMPLATE_PRC_COM_VALIDAR_ITEM + PARAM_SUFFIX;
 
   private final ObjectMapper mapper;
 
@@ -78,6 +82,13 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_PRC_COM_PROCESO_BAREMACION_FIN,
         TEMPLATE_PRC_COM_PROCESO_BAREMACION_FIN_PARAM);
+  }
+
+  public EmailOutput createComunicadoValidarItem(PrcComValidarItemData data,
+      List<Recipient> recipients) throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_PRC_COM_VALIDAR_ITEM,
+        TEMPLATE_PRC_COM_VALIDAR_ITEM_PARAM);
   }
 
   /**

@@ -108,6 +108,7 @@ public class ProduccionCientificaApiService {
   private final SgiApiCspService sgiApiCspService;
   private final ProduccionCientificaConverter produccionCientificaConverter;
   private final SgiConfigProperties sgiConfigProperties;
+  private final ComunicadosService comunicadosService;
 
   /**
    * Guardar un nuevo {@link ProduccionCientifica} y sus entidades relacionadas
@@ -159,8 +160,72 @@ public class ProduccionCientificaApiService {
     output.setAcreditaciones(acreditaciones);
     output.setProyectos(proyectos);
 
+    enviarComunicadoValidacionItem(produccionCientifica.getEpigrafeCVN(), campos, autores);
+
     log.debug("create(ProduccionCientificaApiInput produccionCientificaApiInput) - end");
     return output;
+  }
+
+  private void enviarComunicadoValidacionItem(EpigrafeCVN epigrafeCVN, List<CampoProduccionCientificaInput> campos,
+      List<AutorInput> autores) {
+    log.debug(
+        "enviarComunicadoValidacionItem(EpigrafeCVN epigrafeCVN, List<CampoProduccionCientificaInput> campos) - start");
+
+    String titulo = null;
+    Instant fecha = null;
+    switch (epigrafeCVN) {
+      case E060_010_010_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E060_010_010_030);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E060_010_010_140);
+        break;
+      case E060_010_020_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E060_010_020_030);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E060_010_020_190);
+        break;
+      case E050_020_030_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E050_020_030_020);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E050_020_030_120);
+        break;
+      case E060_030_030_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E060_030_030_010);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E060_030_030_140);
+        break;
+      case E030_040_000_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E030_040_000_030);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E030_040_000_140);
+        break;
+      case E060_020_030_000:
+        titulo = getFirstValorCampo(campos, CodigoCVN.E060_020_030_010);
+        fecha = getFirstValorCampoAsInstant(campos, CodigoCVN.E060_020_030_160);
+        break;
+      default:
+        titulo = "";
+        fecha = null;
+        break;
+    }
+
+    List<String> personaRefs = autores.stream().map(AutorInput::getPersonaRef).filter(StringUtils::hasText).distinct()
+        .collect(Collectors.toList());
+    comunicadosService.enviarComunicadoValidarItem(epigrafeCVN.getDescription(), titulo, fecha, personaRefs);
+
+    log.debug(
+        "enviarComunicadoValidacionItem(EpigrafeCVN epigrafeCVN, List<CampoProduccionCientificaInput> campos) - end");
+  }
+
+  private String getFirstValorCampo(List<CampoProduccionCientificaInput> campos, CodigoCVN codigoCVN) {
+    return campos.stream()
+        .filter(c -> c.getCodigoCVN().equals(codigoCVN.getCode())).map(c -> c.getValores()
+            .get(0))
+        .findFirst().orElse("");
+  }
+
+  private Instant getFirstValorCampoAsInstant(List<CampoProduccionCientificaInput> campos, CodigoCVN codigoCVN) {
+    String valor = getFirstValorCampo(campos, codigoCVN);
+    if (!StringUtils.hasText(valor)) {
+      return null;
+    }
+
+    return Instant.parse(valor);
   }
 
   private void validateProduccionCientifica(ProduccionCientifica produccionCientifica, Class<?> classGroup) {
@@ -218,6 +283,8 @@ public class ProduccionCientificaApiService {
     output.setIndicesImpacto(indicesImpacto);
     output.setAcreditaciones(acreditaciones);
     output.setProyectos(proyectos);
+
+    enviarComunicadoValidacionItem(produccionCientificaUpdate.getEpigrafeCVN(), campos, autores);
 
     log.debug("update(produccionCientificaApiInput, produccionCientificaRef) - end");
     return output;
