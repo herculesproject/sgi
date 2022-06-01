@@ -284,7 +284,18 @@ public class ProduccionCientificaApiService {
     output.setAcreditaciones(acreditaciones);
     output.setProyectos(proyectos);
 
-    enviarComunicadoValidacionItem(produccionCientificaUpdate.getEpigrafeCVN(), campos, autores);
+    List<CampoProduccionCientificaInput> camposComnunicado = produccionCientificaApiInput.getCampos().stream()
+        .map(campo -> {
+          ConfiguracionCampo configuracionCampo = configuracionCampoRepository
+              .findByCodigoCVN(CodigoCVN.getByCode(campo.getCodigoCVN())).orElse(null);
+          TipoFormato tipoFormato = null != configuracionCampo ? configuracionCampo.getTipoFormato() : null;
+          campo.setValores(campo.getValores().stream().map(valor -> formatValorByTipoFormato(valor, tipoFormato))
+              .collect(Collectors.toList()));
+          return campo;
+        }).collect(Collectors.toList());
+
+    enviarComunicadoValidacionItem(produccionCientificaUpdate.getEpigrafeCVN(),
+        camposComnunicado, produccionCientificaApiInput.getAutores());
 
     log.debug("update(produccionCientificaApiInput, produccionCientificaRef) - end");
     return output;
