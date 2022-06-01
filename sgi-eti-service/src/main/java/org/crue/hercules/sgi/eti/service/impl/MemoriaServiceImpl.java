@@ -1168,6 +1168,7 @@ public class MemoriaServiceImpl implements MemoriaService {
         try {
           this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
           memoriasArchivadas.add(memoria.getId());
+          sendComunicadoMemoriaRevisionMinimaArchivada(memoria);
         } catch (Exception e) {
           log.debug("Error archivarNoPresentados() - ", e);
         }
@@ -1213,6 +1214,26 @@ public class MemoriaServiceImpl implements MemoriaService {
     }
     log.debug("archivarInactivos() - end");
     return memoriasArchivadas;
+  }
+
+  public void sendComunicadoMemoriaRevisionMinimaArchivada(Memoria memoria) {
+    String tipoActividad;
+    if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+        .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+      tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+    } else {
+      tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+    }
+    try {
+      this.comunicadosService.enviarComunicadoMemoriaRevisionMinimaArchivada(
+          memoria.getComite().getNombreInvestigacion(),
+          memoria.getNumReferencia(),
+          tipoActividad,
+          memoria.getPeticionEvaluacion().getTitulo(),
+          memoria.getPeticionEvaluacion().getPersonaRef());
+    } catch (Exception e) {
+      log.debug("sendComunicadoMemoriaRevisionMinimaArchivada() - Error al enviar el comunicado", e);
+    }
   }
 
   private ZonedDateTime getLastInstantOfDay() {

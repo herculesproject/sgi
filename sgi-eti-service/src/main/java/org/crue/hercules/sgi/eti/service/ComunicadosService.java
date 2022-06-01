@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegFinalPendienteData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComMemoriaRevisionMinArchivadaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -257,6 +258,29 @@ public class ComunicadosService {
           "enviarComunicadoInformeSeguimientoFinal() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoInformeSeguimientoFinal() - end");
+  }
+
+  public void enviarComunicadoMemoriaRevisionMinimaArchivada(String nombreInvestigacion, String referenciaMemoria,
+      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug("enviarComunicadoMemoriaRevisionMinimaArchivada() - start");
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoMemoriaRevisionMinArchivada(
+          EtiComMemoriaRevisionMinArchivadaData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoMemoriaRevisionMinimaArchivada() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoMemoriaRevisionMinimaArchivada() - end");
   }
 
   /**
