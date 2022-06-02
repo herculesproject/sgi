@@ -257,7 +257,7 @@ public class ProduccionCientificaApiService {
     validateProduccionCientificaUpdate(produccionCientificaUpdate);
 
     Long produccionCientificaId = produccionCientificaUpdate.getId();
-    updateEstado(produccionCientificaApiInput, produccionCientificaUpdate);
+    boolean isEstadoActualizado = updateEstadoToPendiente(produccionCientificaApiInput, produccionCientificaUpdate);
 
     List<CampoProduccionCientificaInput> campos = updateCampos(produccionCientificaApiInput.getCampos(),
         produccionCientificaId);
@@ -284,18 +284,20 @@ public class ProduccionCientificaApiService {
     output.setAcreditaciones(acreditaciones);
     output.setProyectos(proyectos);
 
-    List<CampoProduccionCientificaInput> camposComnunicado = produccionCientificaApiInput.getCampos().stream()
-        .map(campo -> {
-          ConfiguracionCampo configuracionCampo = configuracionCampoRepository
-              .findByCodigoCVN(CodigoCVN.getByCode(campo.getCodigoCVN())).orElse(null);
-          TipoFormato tipoFormato = null != configuracionCampo ? configuracionCampo.getTipoFormato() : null;
-          campo.setValores(campo.getValores().stream().map(valor -> formatValorByTipoFormato(valor, tipoFormato))
-              .collect(Collectors.toList()));
-          return campo;
-        }).collect(Collectors.toList());
+    if (isEstadoActualizado) {
+      List<CampoProduccionCientificaInput> camposComnunicado = produccionCientificaApiInput.getCampos().stream()
+          .map(campo -> {
+            ConfiguracionCampo configuracionCampo = configuracionCampoRepository
+                .findByCodigoCVN(CodigoCVN.getByCode(campo.getCodigoCVN())).orElse(null);
+            TipoFormato tipoFormato = null != configuracionCampo ? configuracionCampo.getTipoFormato() : null;
+            campo.setValores(campo.getValores().stream().map(valor -> formatValorByTipoFormato(valor, tipoFormato))
+                .collect(Collectors.toList()));
+            return campo;
+          }).collect(Collectors.toList());
 
-    enviarComunicadoValidacionItem(produccionCientificaUpdate.getEpigrafeCVN(),
-        camposComnunicado, produccionCientificaApiInput.getAutores());
+      enviarComunicadoValidacionItem(produccionCientificaUpdate.getEpigrafeCVN(),
+          camposComnunicado, produccionCientificaApiInput.getAutores());
+    }
 
     log.debug("update(produccionCientificaApiInput, produccionCientificaRef) - end");
     return output;
@@ -310,7 +312,17 @@ public class ProduccionCientificaApiService {
             .key("org.crue.hercules.sgi.prc.exceptions.EstadoNotValidProduccionCientificaException.message").build());
   }
 
-  private void updateEstado(ProduccionCientificaApiInput produccionCientificaApiInput,
+  /**
+   * Actualiza el estado del item a pendiente si cambia el valor de uno de los
+   * campos que necesitan validación adicional, el listado de autores o si estado
+   * actual del item es RECHAZADO
+   * 
+   * @param produccionCientificaApiInput item actualizado
+   * @param produccionCientificaUpdate   item actual
+   * @return <code>true</code> si se actualizo el estado, <code>false</code> en
+   *         otro caso
+   */
+  private boolean updateEstadoToPendiente(ProduccionCientificaApiInput produccionCientificaApiInput,
       ProduccionCientifica produccionCientificaUpdate) {
     Long produccionCientificaId = produccionCientificaUpdate.getId();
 
@@ -328,6 +340,8 @@ public class ProduccionCientificaApiService {
       produccionCientificaUpdate.setEstado(estadoProduccionCientificaNew);
       produccionCientificaRepository.save(produccionCientificaUpdate);
     }
+
+    return addEstadoPendiente;
   }
 
   private boolean checkCamposValidacionAdicional(ProduccionCientificaApiInput produccionCientificaApiInput,

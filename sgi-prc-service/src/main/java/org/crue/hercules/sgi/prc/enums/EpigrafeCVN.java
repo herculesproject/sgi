@@ -21,7 +21,7 @@ public enum EpigrafeCVN {
   /** Organización actividades I+D+i */
   E060_020_030_000("060.020.030.000", "Organización actividades I+D+i"),
   /** Dirección de tesis */
-  E030_040_000_000("030.040.000.000", "030.040.000.000"),
+  E030_040_000_000("030.040.000.000", "Dirección de tesis"),
   /** Sexenios (Periodos de actividad investigadora) */
   E060_030_070_000("060.030.070.000", "Sexenios (Periodos de actividad investigadora)");
 
