@@ -961,7 +961,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   public void sendComunicadoInformeSeguimientoFinalPendiente() {
     List<Memoria> memorias = recuperaInformesAvisoSeguimientoFinalPendiente();
     if (CollectionUtils.isEmpty(memorias)) {
-      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
+      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación final pendiente.");
       return;
     }
     memorias.stream().forEach(memoria -> {
