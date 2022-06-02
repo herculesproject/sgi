@@ -51,7 +51,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
             new ParameterizedTypeReference<PersonaDto>() {
             }, personaRef).getBody();
 
-        persona = Optional.of(response);
+        persona = response != null ? Optional.of(response) : Optional.empty();
       } catch (Exception e) {
         log.error(e.getMessage(), e);
         throw new MicroserviceCallException();
@@ -87,7 +87,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
           httpMethod, new ParameterizedTypeReference<VinculacionDto>() {
           }, personaRef).getBody();
 
-      vinculacion = Optional.of(response);
+      vinculacion = response != null ? Optional.of(response) : Optional.empty();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -122,7 +122,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
           httpMethod, new ParameterizedTypeReference<DatosContactoDto>() {
           }, personaRef).getBody();
 
-      datosContacto = Optional.of(response);
+      datosContacto = response != null ? Optional.of(response) : Optional.empty();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -157,7 +157,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
           new ParameterizedTypeReference<DatosAcademicosDto>() {
           }, personaRef).getBody();
 
-      datosAcademicos = Optional.of(response);
+      datosAcademicos = response != null ? Optional.of(response) : Optional.empty();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);

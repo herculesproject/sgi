@@ -57,7 +57,7 @@ public class SgiApiCspService extends SgiApiBaseService {
             new ParameterizedTypeReference<GrupoDto>() {
             }, grupoRef).getBody();
 
-        grupoDto = Optional.of(response);
+        grupoDto = response != null ? Optional.of(response) : Optional.empty();
 
       } catch (Exception e) {
         log.error(e.getMessage(), e);
