@@ -25,9 +25,10 @@ public interface ProyectoHitoService {
   ProyectoHito create(ProyectoHitoInput proyectoHitoInput);
 
   /**
-   * @param proyectoHitoId    id del {@link ProyectoHito}
-   * @param proyectoHitoInput datos a actualizar
-   *                          Actualiza la entidad {@link ProyectoHito}.
+   * @param proyectoHitoId         id del {@link ProyectoHito}
+   * @param proyectoHitoActualizar datos a actualizar
+   *                               Actualiza la entidad {@link ProyectoHito}.
+   * @return ProyectoHito la entidad {@link ProyectoHito} persistida.
    */
   ProyectoHito update(Long proyectoHitoId, ProyectoHitoInput proyectoHitoActualizar);
 

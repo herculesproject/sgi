@@ -304,7 +304,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
    * Obtiene el listado de destinatarios adicionales a los que enviar el email
    * generado por un hito en base al {@link ProyectoHitoAviso} relacionadao
    * 
-   * @param id identificador de {@link ProyectoHito}
+   * @param proyectoHitoId identificador de {@link ProyectoHito}
    * @return listado de {@link Recipient}
    */
   @Override
