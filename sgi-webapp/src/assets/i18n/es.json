@@ -443,6 +443,7 @@
   "csp.grupo-persona-autorizada.fecha-inicio": "Fecha inicio",
   "csp.grupo-persona-autorizada.nombre": "Nombre",
   "csp.grupo-resp-economico": "Resp. Económico",
+  "csp.grupo-pers-autorizada": "Pers. Autorizada",
   "csp.grupo-responsable-economico": "Responsable{count,plural, =0{} one{} other{s}} económico{count,plural, =0{} one{} other{s}}",
   "csp.grupo-responsable-economico.fecha-fin": "Fecha fin",
   "csp.grupo-responsable-economico.fecha-inicio": "Fecha inicio",

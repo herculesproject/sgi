@@ -100,15 +100,14 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
         if (reportConfig.reportOptions?.showLineasInvestigacion) {
           row.elements.push(...this.grupoLineaInvestigacionListadoExportService.fillRows(grupos, index, reportConfig));
         }
-
+        if (reportConfig.reportOptions?.showEquiposInstrumentales) {
+          row.elements.push(...this.grupoEquipoInstrumentalListadoExportService.fillRows(grupos, index, reportConfig));
+        }
         if (reportConfig.reportOptions?.showEnlaces) {
           row.elements.push(...this.grupoEnlaceListadoExportService.fillRows(grupos, index, reportConfig));
         }
         if (reportConfig.reportOptions?.showPersonasAutorizadas) {
           row.elements.push(...this.grupoPersonaAutorizadaListadoExportService.fillRows(grupos, index, reportConfig));
-        }
-        if (reportConfig.reportOptions?.showEquiposInstrumentales) {
-          row.elements.push(...this.grupoEquipoInstrumentalListadoExportService.fillRows(grupos, index, reportConfig));
         }
         return row;
       })
@@ -145,10 +144,9 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
       this.getDataReportEquipoInvestigacion(grupoData, reportOptions),
       this.getDataReportResponsableEconomico(grupoData, reportOptions),
       this.getDataReportLineaInvestigacion(grupoData, reportOptions),
-
+      this.getDataReportEquipoInstrumental(grupoData, reportOptions),
       this.getDataReportEnlace(grupoData, reportOptions),
       this.getDataReportPersonaAutorizada(grupoData, reportOptions),
-      this.getDataReportEquipoInstrumental(grupoData, reportOptions),
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -251,14 +249,14 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     if (reportConfig.reportOptions?.showLineasInvestigacion) {
       columns.push(... this.grupoLineaInvestigacionListadoExportService.fillColumns(resultados, reportConfig));
     }
+    if (reportConfig.reportOptions?.showEquiposInstrumentales) {
+      columns.push(... this.grupoEquipoInstrumentalListadoExportService.fillColumns(resultados, reportConfig));
+    }
     if (reportConfig.reportOptions?.showEnlaces) {
       columns.push(... this.grupoEnlaceListadoExportService.fillColumns(resultados, reportConfig));
     }
     if (reportConfig.reportOptions?.showPersonasAutorizadas) {
       columns.push(... this.grupoPersonaAutorizadaListadoExportService.fillColumns(resultados, reportConfig));
-    }
-    if (reportConfig.reportOptions?.showEquiposInstrumentales) {
-      columns.push(... this.grupoEquipoInstrumentalListadoExportService.fillColumns(resultados, reportConfig));
     }
     return of(columns);
   }

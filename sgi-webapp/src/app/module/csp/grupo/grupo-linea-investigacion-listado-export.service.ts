@@ -1,4 +1,3 @@
-import { PercentPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
@@ -60,7 +59,6 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private luxonDatePipe: LuxonDatePipe,
-    private readonly percentPipe: PercentPipe,
     private readonly grupoService: GrupoService,
     private personaService: PersonaService,
     private grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
@@ -346,6 +344,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       }
 
       const titleClasificacion = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACIONES_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR);
+      const titleCodigo = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACION_CODIGO_KEY);
       for (let c = 0; c < maxClasificaciones; c++) {
         const idClasificacion: string = String(c + 1);
         const columnClasificacion: ISgiColumnReport = {
@@ -354,12 +353,17 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
           type: ColumnType.STRING,
         };
         columns.push(columnClasificacion);
-        const columnCodigoClasificacion: ISgiColumnReport = {
-          name: LINEA_INVESTIGACION_CLASIFICACION_CODIGO_FIELD + idLinea + '_' + idClasificacion,
-          title: titleLinea + idLinea + ': ' + titleClasificacion + idClasificacion + ': ' + this.translate.instant(LINEA_INVESTIGACION_CLASIFICACION_CODIGO_KEY),
-          type: ColumnType.STRING,
-        };
-        columns.push(columnCodigoClasificacion);
+
+        const maxNumNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles?.length : 0) : 0));
+        for (let n = 0; n < maxNumNiveles - 1; n++) {
+          const idNivel: string = String(n + 1);
+          const columnCodigo: ISgiColumnReport = {
+            name: LINEA_INVESTIGACION_CLASIFICACION_CODIGO_FIELD + idNivel + '_' + idClasificacion,
+            title: titleClasificacion + idClasificacion + ': ' + titleCodigo + idNivel,
+            type: ColumnType.STRING,
+          };
+          columns.push(columnCodigo);
+        }
       }
 
       const titleEquipoInstrumental = this.translate.instant(LINEA_INVESTIGACION_EQUIPO_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR);
@@ -388,11 +392,12 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       const maxNumClasificaciones = Math.max(...grupos.map(g => g.clasificaciones?.length));
       const maxNumEquipoInstrumental = Math.max(...grupos.map(g => g.lineasEquiposInstrumentales?.length));
       for (let i = 0; i < maxNumLineas; i++) {
+        const maxNumNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles.length : 0) : 0));
         const lineaInvestigacion = grupo.lineasInvestigacion[i] ?? null;
         const miembrosAdscritos = lineaInvestigacion ? grupo.lineasInvestigador.filter(lineaInvestigador => lineaInvestigador.grupoLineaInvestigacion.id === lineaInvestigacion.id) : null;
         const clasificaciones = lineaInvestigacion ? grupo.clasificaciones.filter(clasificacion => clasificacion.grupoLineaInvestigacionId === lineaInvestigacion.id) : null;
         const equiposInstrumentales = lineaInvestigacion ? grupo.lineasEquiposInstrumentales.filter(equipoInstrumental => equipoInstrumental.grupoLineaInvestigacion.id === lineaInvestigacion.id) : null;
-        this.fillRowsLineaExcel(elementsRow, lineaInvestigacion, miembrosAdscritos, maxNumMiembros, clasificaciones, maxNumClasificaciones, equiposInstrumentales, maxNumEquipoInstrumental);
+        this.fillRowsLineaExcel(elementsRow, lineaInvestigacion, miembrosAdscritos, maxNumMiembros, clasificaciones, maxNumClasificaciones, maxNumNiveles, equiposInstrumentales, maxNumEquipoInstrumental);
       }
     }
     return elementsRow;
@@ -454,7 +459,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
 
   private fillRowsLineaExcel(elementsRow: any[], grupoLineaInvestigacion: IGrupoLineaInvestigacion,
     grupoLineasInvestigador: IGrupoLineaInvestigador[], maxNumMiembros: number,
-    grupoLineasClasificacion: GrupoLineaClasificacionListado[], maxNumClasificaciones: number,
+    grupoLineasClasificacion: GrupoLineaClasificacionListado[], maxNumClasificaciones: number, maxNumNiveles: number,
     grupoLineasEquipoInstrumental: IGrupoLineaEquipoInstrumental[], maxNumEquipoInstrumental: number) {
     if (grupoLineaInvestigacion) {
       elementsRow.push(grupoLineaInvestigacion?.lineaInvestigacion?.nombre ?? '');
@@ -481,11 +486,21 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       for (let k = 0; k < maxNumClasificaciones; k++) {
         const grupoLineaClasificacion = grupoLineasClasificacion[k];
         if (grupoLineaClasificacion) {
-          elementsRow.push(grupoLineaClasificacion.nivelesTexto ?? '');
-          elementsRow.push(grupoLineaClasificacion.clasificacion?.codigo ?? '');
+          elementsRow.push(grupoLineaClasificacion.clasificacion?.nombre ?? '');
+          for (let i = 0; i < maxNumNiveles; i++) {
+            const codigo = grupoLineaClasificacion.niveles
+              ? grupoLineaClasificacion.niveles[i] ?? null : null;
+            if (codigo && codigo.padreId !== null) {
+              elementsRow.push(codigo.nombre ?? '');
+            } else if (!codigo) {
+              elementsRow.push('');
+            }
+          }
         } else {
           elementsRow.push('');
-          elementsRow.push('');
+          for (let i = 0; i < maxNumNiveles - 1; i++) {
+            elementsRow.push('');
+          }
         }
       }
 
