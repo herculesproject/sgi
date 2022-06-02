@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet author="user (generated)" id="0000000000008-1">
+    <createSequence incrementBy="1" sequenceName="proyecto_hito_aviso_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-2">
+    <createTable tableName="proyecto_hito_aviso">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="proyecto_hito_avisoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="comunicado_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_proyecto" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="tarea_programada_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-3">
+    <addColumn tableName="proyecto_hito">
+      <column name="proyecto_hito_aviso_id" type="bigint" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-4">
+    <addForeignKeyConstraint baseColumnNames="proyecto_hito_aviso_id" baseTableName="proyecto_hito" constraintName="FK_PROYECTOHITO_PROYECTOHITOAVISO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_hito_aviso" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-5">
+    <dropColumn columnName="GENERA_AVISO" tableName="PROYECTO_HITO" />
+  </changeSet>
+
+</databaseChangeLog>

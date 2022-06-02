@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -1346,7 +1347,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyectoHito.setProyectoId(id == null ? 1 : id);
     proyectoHito.setFecha(Instant.parse("2020-10-19T23:59:59Z"));
     proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
-    proyectoHito.setGeneraAviso(true);
+    proyectoHito.setProyectoHitoAviso(ProyectoHitoAviso.builder().build());
     proyectoHito.setTipoHito(tipoHito);
 
     return proyectoHito;

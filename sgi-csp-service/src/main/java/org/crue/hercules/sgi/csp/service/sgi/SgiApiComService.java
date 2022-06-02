@@ -147,6 +147,7 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
+  private static final String PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/proyectohitos/%s/deferrable-recipients";
 
   private final ObjectMapper mapper;
 
@@ -669,6 +670,27 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_PARAM);
   }
 
+  public Long createProyectoHitoEmail(Long proyectoHitoId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("createProyectoHitoEmail({}, {}, {}, {}) - start", proyectoHitoId, subject, content, recipients);
+
+    Assert.notNull(proyectoHitoId, "ProyectoHito ID is required");
+    Assert.notNull(subject, "Subject is required");
+    Assert.notNull(content, "Content is required");
+    Assert.notEmpty(recipients, "At least one Recipient is required");
+    Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
+
+    Long id = this.createGenericEmailText(subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(
+            PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT,
+            proyectoHitoId),
+        HttpMethod.GET))
+        .getId();
+    log.debug("createProyectoHitoEmail({}, {}, {}, {}) - end", proyectoHitoId, subject, content, recipients);
+    return id;
+  }
+
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
       throws JsonProcessingException {
     ServiceType serviceType = ServiceType.COM;
@@ -682,4 +704,5 @@ public class SgiApiComService extends SgiApiBaseService {
         new ParameterizedTypeReference<EmailOutput>() {
         }).getBody();
   }
+
 }
