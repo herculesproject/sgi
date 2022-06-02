@@ -10,7 +10,6 @@ import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proy
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-equipo.converter';
-import { PROYECTO_HITO_CONVERTER } from '@core/converters/csp/proyecto-hito.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
@@ -31,7 +30,6 @@ import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proy
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoEquipoBackend } from '@core/models/csp/backend/proyecto-equipo-backend';
-import { IProyectoHitoBackend } from '@core/models/csp/backend/proyecto-hito-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
@@ -94,6 +92,8 @@ import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto
 import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion/proyecto-facturacion-response';
 import { PROYECTO_FACTURACION_RESPONSE_CONVERTER } from './proyecto-facturacion/proyecto-facturacion-response.converter';
+import { IProyectoHitoResponse } from './proyecto-hito/proyecto-hito-response';
+import { PROYECTO_HITO_RESPONSE_CONVERTER } from './proyecto-hito/proyecto-hito-response.converter';
 import { PROYECTO_PALABRACLAVE_REQUEST_CONVERTER } from './proyecto-palabra-clave/proyecto-palabra-clave-request.converter';
 import { IProyectoPalabraClaveResponse } from './proyecto-palabra-clave/proyecto-palabra-clave-response';
 import { PROYECTO_PALABRACLAVE_RESPONSE_CONVERTER } from './proyecto-palabra-clave/proyecto-palabra-clave-response.converter';
@@ -243,10 +243,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de hitos.
    */
   findHitosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoHito>> {
-    return this.find<IProyectoHitoBackend, IProyectoHito>(
+    return this.find<IProyectoHitoResponse, IProyectoHito>(
       `${this.endpointUrl}/${idProyecto}/proyectohitos`,
       options,
-      PROYECTO_HITO_CONVERTER
+      PROYECTO_HITO_RESPONSE_CONVERTER
     );
   }
 

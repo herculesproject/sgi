@@ -57,4 +57,21 @@ export class EmailTplService extends SgiRestBaseService {
 
     return this.processTemplate('CSP_SOLICITUD_HITO', params);
   }
+
+  processProyectoHitoTemplate(
+    tituloProyecto: string,
+    tituloConvocatoria: string,
+    fechaInicio: DateTime,
+    nombreHito: string,
+    observaciones: string
+  ): Observable<IProcessedEmailTpl> {
+    const params: IEmailParam[] = [];
+    params.push({ name: 'CSP_HITO_FECHA', value: LuxonUtils.toBackend(fechaInicio) });
+    params.push({ name: 'CSP_HITO_TIPO', value: nombreHito });
+    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: observaciones });
+    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: tituloConvocatoria });
+    params.push({ name: 'CSP_PROYECTO_TITULO', value: tituloProyecto });
+
+    return this.processTemplate('CSP_PROYECTO_HITO', params);
+  }
 }

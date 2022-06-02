@@ -24,7 +24,7 @@ import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
 import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
 import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
-import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
+import { ProyectoHitoService } from '@core/services/csp/proyecto-hito/proyecto-hito.service';
 import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
 import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
@@ -213,6 +213,14 @@ export class ProyectoActionService extends ActionService {
 
   get hasMiembrosEquipo() {
     return !!this.relaciones.miembrosEquipoProyecto && this.relaciones.miembrosEquipoProyecto.length > 0;
+  }
+
+  get unidadGestionId(): number {
+    return this.fichaGeneral.getValue().unidadGestion?.id;
+  }
+
+  get titulo(): string {
+    return this.fichaGeneral.getValue().titulo;
   }
 
   constructor(
