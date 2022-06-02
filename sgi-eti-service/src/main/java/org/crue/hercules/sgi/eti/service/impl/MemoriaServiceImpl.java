@@ -962,28 +962,50 @@ public class MemoriaServiceImpl implements MemoriaService {
     List<Memoria> memorias = recuperaInformesAvisoSeguimientoFinalPendiente();
     if (CollectionUtils.isEmpty(memorias)) {
       log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
-    } else {
-      memorias.stream().forEach(memoria -> {
-        String tipoActividad;
-        if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
-            .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-          tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
-        } else {
-          tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
-        }
-        try {
-          this.comunicadosService.enviarComunicadoInformeSeguimientoFinal(
-              memoria.getComite().getNombreInvestigacion(),
-              memoria.getNumReferencia(),
-              tipoActividad,
-              memoria.getPeticionEvaluacion().getTitulo(),
-              memoria.getPeticionEvaluacion().getPersonaRef());
-        } catch (Exception e) {
-          log.debug("sendComunicadoInformeSeguimientoFinalPendiente() - Error al enviar el comunicado", e);
-
-        }
-      });
+      return;
     }
+    memorias.stream().forEach(memoria -> {
+      String tipoActividad;
+      if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+      try {
+        this.comunicadosService.enviarComunicadoInformeSeguimientoFinal(
+            memoria.getComite().getNombreInvestigacion(),
+            memoria.getNumReferencia(),
+            tipoActividad,
+            memoria.getPeticionEvaluacion().getTitulo(),
+            memoria.getPeticionEvaluacion().getPersonaRef());
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+      }
+    });
+  }
+
+  public void sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(List<Memoria> memorias) {
+    memorias.stream().forEach(memoria -> {
+      String tipoActividad;
+      if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+      try {
+        this.comunicadosService.enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad(
+            memoria.getComite().getNombreInvestigacion(),
+            memoria.getNumReferencia(),
+            tipoActividad,
+            memoria.getPeticionEvaluacion().getTitulo(),
+            memoria.getPeticionEvaluacion().getPersonaRef());
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+      }
+    });
+
   }
 
   /**
@@ -1201,7 +1223,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaInactivo);
 
-    List<Long> memoriasArchivadas = new ArrayList<Long>();
+    List<Long> memoriasArchivadas = new ArrayList<>();
     if (!CollectionUtils.isEmpty(memorias)) {
       memorias.forEach(memoria -> {
         try {
@@ -1211,7 +1233,9 @@ public class MemoriaServiceImpl implements MemoriaService {
           log.debug("Error archivarInactivos() - ", e);
         }
       });
+      this.sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(memorias);
     }
+
     log.debug("archivarInactivos() - end");
     return memoriasArchivadas;
   }
@@ -1240,4 +1264,5 @@ public class MemoriaServiceImpl implements MemoriaService {
     return Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
         .with(LocalTime.MAX).withNano(0);
   }
+
 }

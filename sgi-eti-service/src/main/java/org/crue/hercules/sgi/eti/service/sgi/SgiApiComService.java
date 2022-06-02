@@ -38,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SgiApiComService extends SgiApiBaseService {
+
   private static final String DATA = "_DATA";
   private static final String PATH_EMAILS = "/emails";
 
@@ -84,6 +85,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_ETI_COM_INF_SEG_FIN = "ETI_COM_INF_SEG_FIN";
   private static final String TEMPLATE_ETI_COM_INF_SEG_FIN_PARAM = TEMPLATE_ETI_COM_INF_SEG_FIN
+      + DATA;
+
+  private static final String TEMPLATE_ETI_COM_MEM_ARCHIVADA_AUT = "ETI_COM_MEM_ARCHIVADA_AUT";
+  private static final String TEMPLATE_ETI_COM_MEM_ARCHIVADA_AUT_PARAM = TEMPLATE_ETI_COM_MEM_ARCHIVADA_AUT
       + DATA;
 
   private final SgiConfigProperties sgiConfigProperties;
@@ -328,6 +333,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH,
         TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH_PARAM);
+  }
+
+  public EmailOutput createComunicadoMemoriaArchivadaPorInactividad(
+      EtiComInformeSegFinalPendienteData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_ETI_COM_MEM_ARCHIVADA_AUT,
+        TEMPLATE_ETI_COM_MEM_ARCHIVADA_AUT_PARAM);
   }
 
   /**

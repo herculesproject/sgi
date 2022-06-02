@@ -283,6 +283,30 @@ public class ComunicadosService {
     log.debug("enviarComunicadoMemoriaRevisionMinimaArchivada() - end");
   }
 
+  public void enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad(String nombreInvestigacion,
+      String referenciaMemoria,
+      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoMemoriaArchivadaPorInactividad(
+          EtiComInformeSegFinalPendienteData.builder()
+              .nombreInvestigacion(nombreInvestigacion)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .enlaceAplicacion(enlaceAplicacion).build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoMemoriaRevisionMinimaArchivada() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug("enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad() - end");
+  }
+
   /**
    * Obtiene los emails de la personaRef recibida
    * 
