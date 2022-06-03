@@ -43,4 +43,28 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000000-3">
+    <createSequence incrementBy="1" sequenceName="empresa_equipo_emprendedor_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-4">
+    <createTable tableName="empresa_equipo_emprendedor">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="empresa_equipo_emprendedorPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="empresa_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="miembro_equipo_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-5">
+    <addForeignKeyConstraint baseColumnNames="empresa_id" baseTableName="empresa_equipo_emprendedor" constraintName="FK_EMPRESAEQUIPOEMPRENDEDOR_EMPRESA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="empresa" validate="true" />
+  </changeSet>
 </databaseChangeLog>

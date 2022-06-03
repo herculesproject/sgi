@@ -3,9 +3,13 @@ package org.crue.hercules.sgi.eer.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
+import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaEquipoEmprendedorOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
+import org.crue.hercules.sgi.eer.model.EmpresaEquipoEmprendedor;
+import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -39,11 +43,14 @@ public class EmpresaController {
   public static final String REQUEST_MAPPING = "/empresas";
   public static final String PATH_ID = "/{id}";
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
+  public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + "/equipos-emprendedores";
 
   // Services
   private final EmpresaService service;
+  private final EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
   // Converters
   private final EmpresaConverter converter;
+  private final EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
 
   /**
    * Crea nuevo {@link Empresa}
@@ -138,6 +145,28 @@ public class EmpresaController {
     EmpresaOutput returnValue = converter.convert(service.desactivar(id));
     log.debug("desactivar(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link EmpresaEquipoEmprendedor}
+   * de la {@link Empresa}.
+   * 
+   * @param id     Identificador del {@link EmpresaEquipoEmprendedor}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link EmpresaEquipoEmprendedor} paginadas
+   *         y
+   *         filtradas de la {@link Empresa}.
+   */
+  @GetMapping(PATH_EMPRESA_EQUIPO_EMPRENDEDOR)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-V', 'EER-EER-E')")
+  public ResponseEntity<Page<EmpresaEquipoEmprendedorOutput>> findAllEmpresaEquipoEmprendedor(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEmpresaEquipoEmprendedor(Long id, String query, Pageable paging) - start");
+    Page<EmpresaEquipoEmprendedorOutput> page = empresaEquipoEmprendedorConverter
+        .convert(empresaEquipoEmprendedorService.findAllByEmpresa(id, query, paging));
+    log.debug("findAllEmpresaEquipoEmprendedor(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

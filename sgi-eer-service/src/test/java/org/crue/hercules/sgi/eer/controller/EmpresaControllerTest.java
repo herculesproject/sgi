@@ -9,12 +9,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
+import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -48,6 +50,10 @@ public class EmpresaControllerTest extends BaseControllerTest {
   private EmpresaService service;
   @MockBean
   private EmpresaConverter converter;
+  @MockBean
+  private EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
+  @MockBean
+  private EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

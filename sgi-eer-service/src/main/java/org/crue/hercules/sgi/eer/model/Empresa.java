@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eer.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -16,12 +18,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.eer.validation.EntidadEmpresaOrNombreRazonSocialEmpresaNotNull;
+import org.crue.hercules.sgi.eer.validation.ValidateEstado;
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -33,6 +39,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ActivableIsActivo(entityClass = Empresa.class, groups = { BaseEntity.Update.class })
 @EntidadEmpresaOrNombreRazonSocialEmpresaNotNull(groups = { BaseEntity.Update.class, BaseEntity.Create.class })
+@ValidateEstado(groups = { BaseEntity.Update.class, BaseEntity.Create.class })
 public class Empresa extends BaseActivableEntity {
 
   protected static final String TABLE_NAME = "empresa";
@@ -156,5 +163,10 @@ public class Empresa extends BaseActivableEntity {
   @Enumerated(EnumType.STRING)
   @NotNull
   private EstadoEmpresa estado;
+
+  @OneToMany(mappedBy = "empresa")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<EmpresaEquipoEmprendedor> miembrosEquipoEmprendedor = null;
 
 }

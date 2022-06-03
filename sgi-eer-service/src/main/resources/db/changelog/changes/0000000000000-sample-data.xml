@@ -25,4 +25,18 @@
       <column name="conocimiento_tecnologia" value="Tecnología para la clonación de células óseas" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-empresa-equipo-emprendedor">
+    <insert tableName="empresa_equipo_emprendedor">
+      <column name="id" valueSequenceNext="empresa_equipo_emprendedor_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where entidad_ref='00051494')" />
+      <column name="miembro_equipo_ref" value="22932567" />
+    </insert>
+
+    <insert tableName="empresa_equipo_emprendedor">
+      <column name="id" valueSequenceNext="empresa_equipo_emprendedor_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where nombre_razon_social='Empresa 2 SL')" />
+      <column name="miembro_equipo_ref" value="01889311" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
