@@ -123,7 +123,7 @@ export class EmpresaExplotacionResultadosListadoComponent extends AbstractTableP
     const controls = this.formGroup.controls;
     const rsqlFilter = new RSQLSgiRestFilter('nombreRazonSocial', SgiRestFilterOperator.LIKE_ICASE, controls.nombreRazonSocial.value)
       .and('entidadRef', SgiRestFilterOperator.LIKE_ICASE, controls.entidad.value?.id)
-      .and('objetoSocial', SgiRestFilterOperator.EQUALS, controls.objetoSocial.value)
+      .and('objetoSocial', SgiRestFilterOperator.LIKE_ICASE, controls.objetoSocial.value)
       .and('fechaConstitucion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaConstitucionDesde.value))
       .and('fechaConstitucion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaConstitucionHasta.value))
       .and('fechaIncorporacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaIncorporacionDesde.value))
@@ -209,7 +209,7 @@ export class EmpresaExplotacionResultadosListadoComponent extends AbstractTableP
       switchMap((value) => {
         return this.translate.get(
           MSG_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoDesactivar = value);
@@ -221,7 +221,7 @@ export class EmpresaExplotacionResultadosListadoComponent extends AbstractTableP
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoErrorDesactivar = value);
@@ -233,7 +233,7 @@ export class EmpresaExplotacionResultadosListadoComponent extends AbstractTableP
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);

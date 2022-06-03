@@ -10,6 +10,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { EmpresaExplotacionResultadosCrearComponent } from './empresa-explotacion-resultados-crear/empresa-explotacion-resultados-crear.component';
 import { EmpresaExplotacionResultadosDataResolver, EMPRESA_EXPLOTACION_RESULTADOS_DATA_KEY } from './empresa-explotacion-resultados-data.resolver';
 import { EmpresaExplotacionResultadosEditarComponent } from './empresa-explotacion-resultados-editar/empresa-explotacion-resultados-editar.component';
+import { EmpresaEquipoEmprendedorComponent } from './empresa-explotacion-resultados-formulario/empresa-equipo-emprendedor/empresa-equipo-emprendedor.component';
 import { EmpresaExplotacionResultadosDatosGeneralesComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-datos-generales/empresa-explotacion-resultados-datos-generales.component';
 import { EmpresaExplotacionResultadosListadoComponent } from './empresa-explotacion-resultados-listado/empresa-explotacion-resultados-listado.component';
 import { EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES } from './empresa-explotacion-resultados-route-names';
@@ -37,7 +38,7 @@ const routes: SgiRoutes = [
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
-        entity: EMPRESA_TITLE_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR,
+        entity: EMPRESA_TITLE_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR,
       },
       hasAuthorityForAnyUO: 'EER-EER-C'
     },
@@ -76,6 +77,11 @@ const routes: SgiRoutes = [
       {
         path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.DATOS_GENERALES,
         component: EmpresaExplotacionResultadosDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.EQUIPO_EMPRENDEDOR,
+        component: EmpresaEquipoEmprendedorComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

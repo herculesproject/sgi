@@ -1,14 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IEmpresaEquipoEmprendedor } from '@core/models/eer/empresa-equipo-emprendedor';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor,
   mixinCreate, mixinFindAll, mixinFindById,
-  mixinUpdate, SgiRestBaseService, UpdateCtor
+  mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEmpresaEquipoEmprendedorResponse } from '../empresa-equipo-emprendedor/empresa-equipo-emprendedor-response';
+import { EMPRESA_EQUIPO_EMPRENDEDOR_RESPONSE_CONVERTER } from '../empresa-equipo-emprendedor/empresa-equipo-emprendedor-response.converter';
 import { IEmpresaExplotacionResultadosRequest } from './empresa-explotacion-resultados-request';
 import { EMPRESA_EXPLOTACION_RESULTADOS_REQUEST_CONVERTER } from './empresa-explotacion-resultados-request.converter';
 import { IEmpresaExplotacionResultadosResponse } from './empresa-explotacion-resultados-response';
@@ -72,6 +75,20 @@ export class EmpresaExplotacionResultadosService extends _EmpresaExplotacionResu
   desactivar(id: number): Observable<void> {
     const url = `${this.endpointUrl}/${id}/desactivar`;
     return this.http.patch<void>(url, { id });
+  }
+
+  /**
+   * Recupera la lista de miembros del equipo de la empresa de explotación de resultados
+   *
+   * @param id Identificador de la empresa de explotación de resultados
+   * @param options opciones de búsqueda.
+   */
+  findMiembrosEquipoEmprendedor(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEmpresaEquipoEmprendedor>> {
+    return this.find<IEmpresaEquipoEmprendedorResponse, IEmpresaEquipoEmprendedor>(
+      `${this.endpointUrl}/${id}/equipos-emprendedores`,
+      options,
+      EMPRESA_EQUIPO_EMPRENDEDOR_RESPONSE_CONVERTER
+    );
   }
 
 }

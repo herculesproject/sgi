@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_EMPRESA_EXPLOTACION_RESULTADOS_MAP, IEmpresaExplotacionResultados, TipoEmpresa, TIPO_EMPRESA_EXPLOTACION_RESULTADOS_MAP } from '@core/models/eer/empresa-explotacion-resultados';
+import { EstadoEmpresa, ESTADO_EMPRESA_EXPLOTACION_RESULTADOS_MAP, IEmpresaExplotacionResultados, TipoEmpresa, TIPO_EMPRESA_EXPLOTACION_RESULTADOS_MAP } from '@core/models/eer/empresa-explotacion-resultados';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { Subscription } from 'rxjs';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { EmpresaExplotacionResultadosActionService } from '../../empresa-explotacion-resultados.action.service';
 import { EmpresaExplotacionResultadosDatosGeneralesFragment } from './empresa-explotacion-resultados-datos-generales.fragment';
@@ -39,12 +40,12 @@ export class EmpresaExplotacionResultadosDatosGeneralesComponent extends FormFra
   msgParamNotarioEntity = {};
   msgParamNumeroProtocoloEntity = {};
 
+  subscriptions: Subscription[] = [];
+
+  estados = new Map<EstadoEmpresa, string>();
+
   get TIPO_EMPRESA_MAP() {
     return TIPO_EMPRESA_EXPLOTACION_RESULTADOS_MAP;
-  }
-
-  get ESTADO_EMPRESA_MAP() {
-    return ESTADO_EMPRESA_EXPLOTACION_RESULTADOS_MAP;
   }
 
   constructor(
@@ -54,11 +55,38 @@ export class EmpresaExplotacionResultadosDatosGeneralesComponent extends FormFra
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as EmpresaExplotacionResultadosDatosGeneralesFragment;
+
+    this.estados = this.getEstadosWithoutActiva();
+
+    this.subscriptions.push(
+      this.formPart.getFormGroup().controls.entidad.valueChanges.subscribe(
+        (value) => {
+          if (value) {
+            this.estados = ESTADO_EMPRESA_EXPLOTACION_RESULTADOS_MAP;
+          } else {
+            this.estados = this.getEstadosWithoutActiva();
+          }
+        }
+      )
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+  }
+
+  private getEstadosWithoutActiva(): Map<EstadoEmpresa, string> {
+    const estadosNew = new Map<EstadoEmpresa, string>();
+    ESTADO_EMPRESA_EXPLOTACION_RESULTADOS_MAP.forEach((value, key) => {
+      if (key !== EstadoEmpresa.ACTIVA) {
+        estadosNew.set(key, value);
+      }
+    });
+    if (this.formGroup.controls.estado.value === EstadoEmpresa.ACTIVA) {
+      this.formGroup.controls.estado.setValue(null);
+    }
+    return estadosNew;
   }
 
   private setupI18N(): void {
@@ -103,5 +131,9 @@ export class EmpresaExplotacionResultadosDatosGeneralesComponent extends FormFra
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNumeroProtocoloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

@@ -98,7 +98,7 @@
           {{'eer.empresa-explotacion-resultados.nombre-razon-social' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.nombreRazonSocial }}
+          {{element.nombreRazonSocial ? element.nombreRazonSocial : element.entidad?.nombre}}
         </td>
       </ng-container>
 

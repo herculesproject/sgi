@@ -83,11 +83,7 @@ export class EmpresaExplotacionResultadosDatosGeneralesFragment extends FormFrag
     this.subscriptions.push(
       formGroup.controls.entidad.valueChanges.subscribe(
         (value) => {
-          if (value) {
-            this.showRazonSocial = false;
-          } else {
-            this.showRazonSocial = true;
-          }
+          this.addValidations(value);
         }
       )
     );
@@ -131,6 +127,7 @@ export class EmpresaExplotacionResultadosDatosGeneralesFragment extends FormFrag
       form.nombreRazonSocial.setValidators([Validators.required, Validators.maxLength(250)]);
       this.showRazonSocial = true;
     }
+    form.nombreRazonSocial.updateValueAndValidity();
   }
 
   getValue(): IEmpresaExplotacionResultados {
