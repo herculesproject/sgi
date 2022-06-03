@@ -1195,6 +1195,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           log.debug("Error archivarNoPresentados() - ", e);
         }
       });
+      this.sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(memorias);
     }
     log.debug("archivarNoPresentados() - end");
     return memoriasArchivadas;
@@ -1233,7 +1234,6 @@ public class MemoriaServiceImpl implements MemoriaService {
           log.debug("Error archivarInactivos() - ", e);
         }
       });
-      this.sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(memorias);
     }
 
     log.debug("archivarInactivos() - end");
