@@ -160,7 +160,9 @@ public class ProduccionCientificaApiService {
     output.setAcreditaciones(acreditaciones);
     output.setProyectos(proyectos);
 
-    enviarComunicadoValidacionItem(produccionCientifica.getEpigrafeCVN(), campos, autores);
+    if (!estadoProduccionCientifica.getEstado().equals(TipoEstadoProduccion.VALIDADO)) {
+      enviarComunicadoValidacionItem(produccionCientifica.getEpigrafeCVN(), campos, autores);
+    }
 
     log.debug("create(ProduccionCientificaApiInput produccionCientificaApiInput) - end");
     return output;
