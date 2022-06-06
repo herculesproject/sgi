@@ -20,6 +20,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
+import { Observable, of } from 'rxjs';
 import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
@@ -118,7 +119,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
           if (this.formGroup.get('aviso').disabled) {
             this.formGroup.get('aviso').enable();
           }
-          this.fillDefaultAviso();
+          this.getTituloConvocatoria().subscribe((titulo: string) => this.fillDefaultAviso(titulo));
         }
       }
     );
@@ -295,7 +296,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
         }
         if (!!!this.data.hito?.id && newDate > this.data.hito?.fecha) {
           this.clearAviso();
-          this.fillDefaultAviso();
+          this.getTituloConvocatoria().subscribe((titulo: string) => this.fillDefaultAviso(titulo));
         }
       });
     }
@@ -332,7 +333,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     this.formGroup.get('aviso.incluirIpsProyecto').setValue(false);
   }
 
-  private fillDefaultAviso(): void {
+  private fillDefaultAviso(tituloConvocatoria: string): void {
     this.formGroup.get('aviso.fechaEnvio').setValue(this.formGroup.get('fecha').value);
     this.configService.getEmailRecipients(DEFAULT_PREFIX_RECIPIENTS_CSP_PRO_HITOS + this.data.unidadGestionId).subscribe(
       (destinatarios: any) => {
@@ -340,23 +341,18 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
       }
     );
 
-    this.convocatoriaService.findById(this.data.convocatoriaId).pipe(
-      map((convocatoria: IConvocatoria) => convocatoria.titulo)
-    ).subscribe((tituloConvocatoria => {
-      this.emailTplService.processProyectoHitoTemplate(
-        this.data.tituloProyecto,
-        tituloConvocatoria,
-        this.formGroup.get('fecha').value ?? DateTime.now(),
-        this.formGroup.get('tipoHito').value?.nombre ?? '',
-        this.formGroup.get('comentario').value ?? ''
-      ).subscribe(
-        (template) => {
-          this.formGroup.get('aviso.asunto').setValue(template.subject);
-          this.formGroup.get('aviso.contenido').setValue(template.contentText);
-        }
-      );
-    }));
-
+    this.emailTplService.processProyectoHitoTemplate(
+      this.data.tituloProyecto,
+      tituloConvocatoria,
+      this.formGroup.get('fecha').value ?? DateTime.now(),
+      this.formGroup.get('tipoHito').value?.nombre ?? '',
+      this.formGroup.get('comentario').value ?? ''
+    ).subscribe(
+      (template) => {
+        this.formGroup.get('aviso.asunto').setValue(template.subject);
+        this.formGroup.get('aviso.contenido').setValue(template.contentText);
+      }
+    );
   }
 
   private isLoadEmailRequired(comunicado: IGenericEmailText): boolean {
@@ -390,5 +386,14 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
         this.formGroup.get('aviso').disable();
       }
     }
+  }
+
+  private getTituloConvocatoria(): Observable<string> {
+    if (!this.data.convocatoriaId) {
+      return of('');
+    }
+    return this.convocatoriaService.findById(this.data.convocatoriaId).pipe(
+      map((convocatoria: IConvocatoria) => convocatoria.titulo)
+    );
   }
 }
