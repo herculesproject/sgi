@@ -27,5 +27,12 @@
       <column name="description" value="Destinatarios defecto CSP Solicitudes Hito - UGI" />
       <column name="value" value="[&quot;proyecto.hitos.ugi@sgi.es&quot;]" />
     </insert>
+
+    <!-- Destinatarios defecto CSP Autorizacion Modificación Estado Participación Proyecto Externo -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-ex-mod-aut-participacion-destinatarios" />
+      <column name="description" value="Destinatarios defecto CSP Modificar Autorización del estado de participación de un proyecto externo" />
+      <column name="value" value="[&quot;pro.ext.mod.aut1@sgi.es&quot;, &quot;pro.ext.mod.aut2@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
