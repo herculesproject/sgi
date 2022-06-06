@@ -129,7 +129,11 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     return this.grupoLineaInvestigacionService.findLineasInvestigadores(grupoLineaInvestigacion.id).pipe(
       map((responseLineaInvestigador) => {
         grupoData.lineasInvestigador.push(...responseLineaInvestigador.items);
-        grupoData.lineasInvestigador.map(lineaInvestigador => lineaInvestigador.grupoLineaInvestigacion = grupoLineaInvestigacion);
+        grupoData.lineasInvestigador.map(lineaInvestigador => {
+          if (!lineaInvestigador.grupoLineaInvestigacion) {
+            lineaInvestigador.grupoLineaInvestigacion = grupoLineaInvestigacion;
+          }
+        });
         return responseLineaInvestigador;
       }),
       switchMap(responseLineaInvestigador => {
@@ -157,7 +161,8 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
           clasificacion: undefined,
           nivelSeleccionado: grupoLineaClasificacion.clasificacion,
           niveles: undefined,
-          nivelesTexto: ''
+          nivelesTexto: '',
+          grupoLineaInvestigacion
         };
         return clasificacionListado;
       })),
@@ -200,8 +205,11 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     return this.grupoLineaInvestigacionService.findLineasEquiposInstrumentales(grupoLineaInvestigacion.id).pipe(
       map((responseLineaEquipoInstrumental) => {
         grupoData.lineasEquiposInstrumentales.push(...responseLineaEquipoInstrumental.items);
-        grupoData.lineasEquiposInstrumentales.map(lineaEquipoInstrumental =>
-          lineaEquipoInstrumental.grupoLineaInvestigacion = grupoLineaInvestigacion);
+        grupoData.lineasEquiposInstrumentales.map(lineaEquipoInstrumental => {
+          if (!lineaEquipoInstrumental.grupoLineaInvestigacion) {
+            lineaEquipoInstrumental.grupoLineaInvestigacion = grupoLineaInvestigacion;
+          }
+        });
         return responseLineaEquipoInstrumental;
       }),
       switchMap(result => {
@@ -282,9 +290,6 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     const columns: ISgiColumnReport[] = [];
 
     const maxNumLineas = Math.max(...grupos.map(g => g.lineasInvestigacion?.length));
-    const maxNumMiembros = Math.max(...grupos.map(g => g.lineasInvestigador?.length));
-    const maxClasificaciones = Math.max(...grupos.map(g => g.clasificaciones?.length));
-    const maxEquiposInstrumentales = Math.max(...grupos.map(g => g.lineasEquiposInstrumentales?.length));
 
     const titleLinea = this.translate.instant(LINEA_KEY);
     for (let i = 0; i < maxNumLineas; i++) {
@@ -307,6 +312,19 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
         type: ColumnType.DATE,
       };
       columns.push(columnFechaFinLinea);
+
+      const maxNumMiembros = Math.max(...grupos.map(g => {
+        const miembros = g.lineasInvestigador.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        return miembros?.length;
+      }));
+      const maxClasificaciones = Math.max(...grupos.map(g => {
+        const clasificaciones = g.clasificaciones.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        return clasificaciones?.length;
+      }));
+      const maxEquiposInstrumentales = Math.max(...grupos.map(g => {
+        const miembros = g.lineasEquiposInstrumentales.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        return miembros?.length;
+      }));
 
       const titleMiembro = this.translate.instant(LINEA_INVESTIGACION_MIEMBRO_KEY);
       for (let m = 0; m < maxNumMiembros; m++) {
@@ -345,6 +363,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
 
       const titleClasificacion = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACIONES_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR);
       const titleCodigo = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACION_CODIGO_KEY);
+      let maxNumNiveles = 0;
       for (let c = 0; c < maxClasificaciones; c++) {
         const idClasificacion: string = String(c + 1);
         const columnClasificacion: ISgiColumnReport = {
@@ -354,12 +373,13 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
         };
         columns.push(columnClasificacion);
 
-        const maxNumNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles?.length : 0) : 0));
+        const numNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[c] && g.clasificaciones[c].niveles ? g.clasificaciones[c].niveles?.length : 0) : 0));
+        maxNumNiveles = numNiveles > maxNumLineas ? numNiveles : maxNumNiveles;
         for (let n = 0; n < maxNumNiveles - 1; n++) {
           const idNivel: string = String(n + 1);
           const columnCodigo: ISgiColumnReport = {
-            name: LINEA_INVESTIGACION_CLASIFICACION_CODIGO_FIELD + idNivel + '_' + idClasificacion,
-            title: titleClasificacion + idClasificacion + ': ' + titleCodigo + idNivel,
+            name: LINEA_INVESTIGACION_CLASIFICACION_CODIGO_FIELD + idLinea + '_' + idClasificacion + '_' + idNivel,
+            title: titleLinea + idLinea + ': ' + titleClasificacion + idClasificacion + ': ' + titleCodigo + idNivel,
             type: ColumnType.STRING,
           };
           columns.push(columnCodigo);
@@ -388,15 +408,28 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       this.fillRowsLineaNotExcel(grupo, elementsRow);
     } else {
       const maxNumLineas = Math.max(...grupos.map(g => g.lineasInvestigacion?.length));
-      const maxNumMiembros = Math.max(...grupos.map(g => g.lineasInvestigador?.length));
-      const maxNumClasificaciones = Math.max(...grupos.map(g => g.clasificaciones?.length));
-      const maxNumEquipoInstrumental = Math.max(...grupos.map(g => g.lineasEquiposInstrumentales?.length));
+      let maxNumNiveles = 0;
       for (let i = 0; i < maxNumLineas; i++) {
-        const maxNumNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles.length : 0) : 0));
+
+        const maxNumMiembros = Math.max(...grupos.map(g => {
+          const miembros = g.lineasInvestigador.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          return miembros?.length;
+        }));
+        const maxNumClasificaciones = Math.max(...grupos.map(g => {
+          const clasificaciones = g.clasificaciones.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          return clasificaciones?.length;
+        }));
+        const maxNumEquipoInstrumental = Math.max(...grupos.map(g => {
+          const miembros = g.lineasEquiposInstrumentales.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          return miembros?.length;
+        }));
+
+        const numNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles.length : 0) : 0));
+        maxNumNiveles = numNiveles > maxNumLineas ? numNiveles : maxNumNiveles;
         const lineaInvestigacion = grupo.lineasInvestigacion[i] ?? null;
-        const miembrosAdscritos = lineaInvestigacion ? grupo.lineasInvestigador.filter(lineaInvestigador => lineaInvestigador.grupoLineaInvestigacion.id === lineaInvestigacion.id) : null;
-        const clasificaciones = lineaInvestigacion ? grupo.clasificaciones.filter(clasificacion => clasificacion.grupoLineaInvestigacionId === lineaInvestigacion.id) : null;
-        const equiposInstrumentales = lineaInvestigacion ? grupo.lineasEquiposInstrumentales.filter(equipoInstrumental => equipoInstrumental.grupoLineaInvestigacion.id === lineaInvestigacion.id) : null;
+        const miembrosAdscritos = lineaInvestigacion ? grupo.lineasInvestigador.filter(lineaInvestigador => lineaInvestigador.grupoLineaInvestigacion.lineaInvestigacion.id === lineaInvestigacion.lineaInvestigacion.id) : null;
+        const clasificaciones = lineaInvestigacion ? grupo.clasificaciones.filter(clasificacion => clasificacion.grupoLineaInvestigacion.lineaInvestigacion.id === lineaInvestigacion.lineaInvestigacion.id) : null;
+        const equiposInstrumentales = lineaInvestigacion ? grupo.lineasEquiposInstrumentales.filter(equipoInstrumental => equipoInstrumental.grupoLineaInvestigacion.lineaInvestigacion.id === lineaInvestigacion.lineaInvestigacion.id) : null;
         this.fillRowsLineaExcel(elementsRow, lineaInvestigacion, miembrosAdscritos, maxNumMiembros, clasificaciones, maxNumClasificaciones, maxNumNiveles, equiposInstrumentales, maxNumEquipoInstrumental);
       }
     }
@@ -410,7 +443,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       const equipoElementsRow: any[] = [];
 
       const miembrosAdscritos = grupo.lineasInvestigador?.filter(grupoLineaInvestigador =>
-        grupoLineaInvestigador.grupoLineaInvestigacion.id === grupoLineaInvestigacion.id)
+        grupoLineaInvestigador.grupoLineaInvestigacion?.lineaInvestigacion?.id === grupoLineaInvestigacion?.lineaInvestigacion?.id)
         .map(grupoLineaInvestigador => {
           return grupoLineaInvestigador.persona.nombre + ' ' + grupoLineaInvestigador.persona.apellidos + ' '
             + this.translate.instant(LINEA_INVESTIGACION_FECHA_INICIO_KEY) + ': ' + this.luxonDatePipe.transform(LuxonUtils.toBackend(grupoLineaInvestigador?.fechaInicio, true), 'shortDate')
@@ -419,14 +452,14 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
 
       const clasificaciones =
         grupo.clasificaciones?.filter(grupoLineaClasificacion =>
-          grupoLineaClasificacion.grupoLineaInvestigacionId === grupoLineaInvestigacion.id)
+          grupoLineaClasificacion.grupoLineaInvestigacion?.lineaInvestigacion?.id === grupoLineaInvestigacion?.lineaInvestigacion?.id)
           .map(grupoLineaClasificacion => {
             return grupoLineaClasificacion.clasificacion?.nombre ?? '';
           }).join('; ');
 
       const equiposInstrumentales =
         grupo.lineasEquiposInstrumentales?.filter(grupoLineaEquipoInstrumental =>
-          grupoLineaEquipoInstrumental.grupoLineaInvestigacion.id === grupoLineaInvestigacion.id)
+          grupoLineaEquipoInstrumental.grupoLineaInvestigacion?.lineaInvestigacion?.id === grupoLineaInvestigacion?.lineaInvestigacion?.id)
           .map(grupoLineaEquipoInstrumental => {
             return grupoLineaEquipoInstrumental.grupoEquipoInstrumental?.nombre ?? '';
           }).join('; ');
@@ -487,9 +520,9 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
         const grupoLineaClasificacion = grupoLineasClasificacion[k];
         if (grupoLineaClasificacion) {
           elementsRow.push(grupoLineaClasificacion.clasificacion?.nombre ?? '');
-          for (let i = 0; i < maxNumNiveles; i++) {
+          for (let n = 0; n < maxNumNiveles; n++) {
             const codigo = grupoLineaClasificacion.niveles
-              ? grupoLineaClasificacion.niveles[i] ?? null : null;
+              ? grupoLineaClasificacion.niveles[n] ?? null : null;
             if (codigo && codigo.padreId !== null) {
               elementsRow.push(codigo.nombre ?? '');
             } else if (!codigo) {
@@ -498,7 +531,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
           }
         } else {
           elementsRow.push('');
-          for (let i = 0; i < maxNumNiveles - 1; i++) {
+          for (let n = 0; n < maxNumNiveles - 1; n++) {
             elementsRow.push('');
           }
         }
@@ -526,6 +559,8 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       }
       for (let k = 0; k < maxNumClasificaciones; k++) {
         elementsRow.push('');
+      }
+      for (let n = 0; n < maxNumNiveles - 1; n++) {
         elementsRow.push('');
       }
       for (let j = 0; j < maxNumEquipoInstrumental; j++) {
