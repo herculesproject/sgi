@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionNotificarData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionValidarIPData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
@@ -32,6 +30,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -148,6 +149,10 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
   private static final String PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/proyectohitos/%s/deferrable-recipients";
+
+  private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
+  private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
+      + DATA;
 
   private final ObjectMapper mapper;
 
@@ -689,6 +694,15 @@ public class SgiApiComService extends SgiApiBaseService {
         .getId();
     log.debug("createProyectoHitoEmail({}, {}, {}, {}) - end", proyectoHitoId, subject, content, recipients);
     return id;
+  }
+
+  public EmailOutput createComunicadoModificacionAutorizacionParticipacionProyectoExterno(
+      CspComModificacionEstadoParticipacionProyectoExternoData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO,
+        TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
