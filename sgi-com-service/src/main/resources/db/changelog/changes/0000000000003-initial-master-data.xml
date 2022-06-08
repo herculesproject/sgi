@@ -320,6 +320,7 @@
       <column name="tpl_text" value=" " />
       <column name="tpl_html" value="" />
     </insert>
+
     <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/0000000000003/prc/PRC_COM_VALIDAR_ITEM_CONTENT_text.ftl" />
       <where>name='PRC_COM_VALIDAR_ITEM_CONTENT'</where>
@@ -483,6 +484,7 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_subjecttpl">
+    <!-- CSP Proyecto Hito -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_PROYECTO_HITO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_PROYECTO_HITO_SUBJECT')" />
