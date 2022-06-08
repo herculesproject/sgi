@@ -5,7 +5,10 @@
       [title]="'label.datos-generales' | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
     </sgi-action-fragment-menu-item>
-
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['EER-EER-V', 'EER-EER-E']"
+      [route]="[EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.DOCUMENTOS]" [title]="'label.documentos' | translate"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
+    </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['EER-EER-V', 'EER-EER-E']"
       [title]="'eer.empresa-equipo-empresarial' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR">
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['EER-EER-V', 'EER-EER-E']"

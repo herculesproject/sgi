@@ -1,17 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEmpresaEquipoEmprendedor } from '@core/models/eer/empresa-equipo-emprendedor';
+import { IEmpresaDocumento } from '@core/models/eer/empresa-documento';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor,
   mixinCreate, mixinFindAll, mixinFindById,
-  mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
+  mixinUpdate, SgiRestBaseService, SgiRestFindOptions,
+  SgiRestListResult, UpdateCtor
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IEmpresaEquipoEmprendedorResponse } from '../empresa-equipo-emprendedor/empresa-equipo-emprendedor-response';
 import { EMPRESA_EQUIPO_EMPRENDEDOR_RESPONSE_CONVERTER } from '../empresa-equipo-emprendedor/empresa-equipo-emprendedor-response.converter';
+import { IEmpresaDocumentoResponse } from '../empresa-documento/empresa-documento-response';
+import { EMPRESA_DOCUMENTO_RESPONSE_CONVERTER } from '../empresa-documento/empresa-documento-response.converter';
 import { IEmpresaExplotacionResultadosRequest } from './empresa-explotacion-resultados-request';
 import { EMPRESA_EXPLOTACION_RESULTADOS_REQUEST_CONVERTER } from './empresa-explotacion-resultados-request.converter';
 import { IEmpresaExplotacionResultadosResponse } from './empresa-explotacion-resultados-response';
@@ -91,4 +95,19 @@ export class EmpresaExplotacionResultadosService extends _EmpresaExplotacionResu
     );
   }
 
+  /**
+   * Obtiene todos los Documentos de una Empresa de explotacion de resultados
+   * @param empresa Empresa de explotacion de resultados
+   * @param options opciones de busqueda
+   * @returns Documentos de una Empresa de explotacion de resultados
+   */
+  findDocumentos(
+    empresa: IEmpresaExplotacionResultados, options?: SgiRestFindOptions
+  ): Observable<SgiRestListResult<IEmpresaDocumento>> {
+    return this.find<IEmpresaDocumentoResponse, IEmpresaDocumento>(
+      `${this.endpointUrl}/${empresa?.id}/documentos`,
+      options,
+      EMPRESA_DOCUMENTO_RESPONSE_CONVERTER
+    );
+  }
 }

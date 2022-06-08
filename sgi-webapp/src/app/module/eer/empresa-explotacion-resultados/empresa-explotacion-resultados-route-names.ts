@@ -2,5 +2,6 @@ export const EMPRESA_EXPLOTACION_RESULTADOS_ROUTE = 'empresas';
 
 export const EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES = {
   DATOS_GENERALES: 'datos-generales',
-  EQUIPO_EMPRENDEDOR: 'equipo-emprendedor'
+  EQUIPO_EMPRENDEDOR: 'equipo-emprendedor',
+  DOCUMENTOS: 'documentos'
 };

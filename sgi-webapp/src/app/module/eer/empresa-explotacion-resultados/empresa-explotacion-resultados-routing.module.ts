@@ -12,6 +12,7 @@ import { EmpresaExplotacionResultadosDataResolver, EMPRESA_EXPLOTACION_RESULTADO
 import { EmpresaExplotacionResultadosEditarComponent } from './empresa-explotacion-resultados-editar/empresa-explotacion-resultados-editar.component';
 import { EmpresaEquipoEmprendedorComponent } from './empresa-explotacion-resultados-formulario/empresa-equipo-emprendedor/empresa-equipo-emprendedor.component';
 import { EmpresaExplotacionResultadosDatosGeneralesComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-datos-generales/empresa-explotacion-resultados-datos-generales.component';
+import { EmpresaExplotacionResultadosDocumentosComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-documentos/empresa-explotacion-resultados-documentos.component';
 import { EmpresaExplotacionResultadosListadoComponent } from './empresa-explotacion-resultados-listado/empresa-explotacion-resultados-listado.component';
 import { EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES } from './empresa-explotacion-resultados-route-names';
 import { EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_PARAMS } from './empresa-explotacion-resultados-route-params';
@@ -82,6 +83,11 @@ const routes: SgiRoutes = [
       {
         path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.EQUIPO_EMPRENDEDOR,
         component: EmpresaEquipoEmprendedorComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.DOCUMENTOS,
+        component: EmpresaExplotacionResultadosDocumentosComponent,
         canDeactivate: [FragmentGuard],
       },
     ]
