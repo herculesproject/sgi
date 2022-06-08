@@ -10,6 +10,10 @@ import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.EmpresaEquipoEmprendedor;
 import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
+import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -44,13 +48,16 @@ public class EmpresaController {
   public static final String PATH_ID = "/{id}";
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
   public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + "/equipos-emprendedores";
+  public static final String PATH_DOCUMENTOS = PATH_ID + "/documentos";
 
   // Services
   private final EmpresaService service;
   private final EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
+  private final EmpresaDocumentoService empresaDocumentoService;
   // Converters
   private final EmpresaConverter converter;
   private final EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
+  private final EmpresaDocumentoConverter empresaDocumentoConverter;
 
   /**
    * Crea nuevo {@link Empresa}
@@ -169,4 +176,25 @@ public class EmpresaController {
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada {@link EmpresaDocumento} activos que
+   * pertenezcan a la {@link Empresa} con id indicado.
+   *
+   * @param id     Identificador de {@link Empresa}.
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link EmpresaDocumento} paginadas y
+   *         filtradas.
+   */
+  @GetMapping(PATH_DOCUMENTOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-E', 'EER-EER-V')")
+  public ResponseEntity<Page<EmpresaDocumentoOutput>> findDocumentos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findDocumentos(Long id, String query, Pageable paging) - start");
+    Page<EmpresaDocumentoOutput> page = empresaDocumentoConverter
+        .convert(empresaDocumentoService.findAllByEmpresaId(id, query, paging));
+    log.debug("findDocumentos(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }

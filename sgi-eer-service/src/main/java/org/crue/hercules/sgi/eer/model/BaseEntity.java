@@ -8,6 +8,9 @@ import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable;
  * Base Entity.
  */
 public class BaseEntity extends Auditable implements Serializable {
+  public static final int REF_LENGTH = 50;
+  public static final int SHORT_TEXT_LENGTH = 250;
+  public static final int LONG_TEXT_LENGTH = 2000;
 
   /** Serial version. */
   private static final long serialVersionUID = 1L;

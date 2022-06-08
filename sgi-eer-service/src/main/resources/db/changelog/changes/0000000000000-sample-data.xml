@@ -39,4 +39,61 @@
       <column name="miembro_equipo_ref" value="01889311" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-tipo_documento">
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Documentos de procedimiento" />
+      <column name="descripcion" value="Documentos de procedimiento" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Documentos corporativos" />
+      <column name="descripcion" value="Documentos corporativos" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Estutos sociales" />
+      <column name="descripcion" value="Estutos sociales" />
+    </insert>
+
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Solicitud de creación" />
+      <column name="descripcion" value="Solicitud de creación" />
+      <column name="tipo_documento_padre_id" valueNumeric="1" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Solicitud de incorporación" />
+      <column name="descripcion" value="Solicitud de incorporación" />
+      <column name="tipo_documento_padre_id" valueNumeric="1" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Informe viabilidad de la OTRI" />
+      <column name="descripcion" value="Informe viabilidad de la OTRI" />
+      <column name="tipo_documento_padre_id" valueNumeric="1" />
+    </insert>
+
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Informe anual de cuentas" />
+      <column name="descripcion" value="Informe anual de cuentas" />
+      <column name="tipo_documento_padre_id" valueNumeric="2" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Acta de reunión" />
+      <column name="descripcion" value="Acta de reunión" />
+      <column name="tipo_documento_padre_id" valueNumeric="2" />
+    </insert>
+
+    <insert tableName="tipo_documento">
+      <column name="id" valueSequenceNext="tipo_documento_seq" />
+      <column name="nombre" value="Modificación composición sociedad" />
+      <column name="descripcion" value="Modificación composición sociedad" />
+      <column name="tipo_documento_padre_id" valueNumeric="3" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

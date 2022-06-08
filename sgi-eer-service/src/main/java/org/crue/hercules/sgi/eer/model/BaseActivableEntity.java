@@ -13,6 +13,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class BaseActivableEntity extends Activable implements Identifiable, Serializable {
+  public static final int REF_LENGTH = 50;
+  public static final int SHORT_TEXT_LENGTH = 250;
+  public static final int LONG_TEXT_LENGTH = 2000;
 
   /**
    * Interfaz para marcar validaciones en las activaciones de la entidad.

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eer.controller.EmpresaController;
+import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
@@ -31,6 +33,7 @@ public class EmpresaIT extends BaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String CONTROLLER_BASE_PATH = "/empresas";
+  private static final String PATH_DOCUMENTOS = EmpresaController.PATH_DOCUMENTOS;
 
   private HttpEntity<Empresa> buildRequest(HttpHeaders headers, Empresa entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -179,4 +182,44 @@ public class EmpresaIT extends BaseIT {
         .isEqualTo("nombreRazonSocial 1");
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+  // @formatter:off
+      "classpath:scripts/empresa.sql",
+      "classpath:scripts/tipo_documento.sql",
+      "classpath:scripts/empresa_documento.sql",
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findDocumentos_WithPagingSortingAndFiltering_ReturnsEmpresaDocumentoSubList() throws Exception {
+
+    // given: data for EmpresaDocumento
+    Long empresaId = 1L;
+    // first page, 3 elements per page sorted by id des and filtered by nombre
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+    String filter = "nombre=ke=Documento";
+
+    // when: find EmpresaDocumento
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_DOCUMENTOS).queryParam("s", sort)
+        .queryParam("q", filter)
+        .buildAndExpand(empresaId).toUri();
+    final ResponseEntity<List<EmpresaDocumentoOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<EmpresaDocumentoOutput>>() {
+        });
+
+    // given: EmpresaDocumento data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<EmpresaDocumentoOutput> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(1);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
+
+    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("Documento de procedimiento 1");
+  }
 }

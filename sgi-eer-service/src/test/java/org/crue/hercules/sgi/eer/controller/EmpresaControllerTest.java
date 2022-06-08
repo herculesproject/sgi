@@ -10,13 +10,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
+import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
+import org.crue.hercules.sgi.eer.dto.TipoDocumentoOutput;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.TipoDocumento;
+import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -54,10 +60,15 @@ public class EmpresaControllerTest extends BaseControllerTest {
   private EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
   @MockBean
   private EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
+  @MockBean
+  private EmpresaDocumentoService empresaDocumentoService;
+  @MockBean
+  private EmpresaDocumentoConverter empresaDocumentoConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String CONTROLLER_BASE_PATH = "/empresas";
+  private static final String PATH_DOCUMENTOS = EmpresaController.PATH_DOCUMENTOS;
 
   @Test
   @WithMockUser(username = "user", authorities = { "EER-EER-C" })
@@ -410,4 +421,163 @@ public class EmpresaControllerTest extends BaseControllerTest {
         .build();
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "EER-EER-E" })
+  public void findDocumentos_WithPaging_ReturnsEmpresaDocumentoSubList() throws Exception {
+    // given: 40 EmpresaDocumento con empresaId
+    Long empresaId = 1L;
+    List<EmpresaDocumento> data = new ArrayList<>();
+    for (int i = 1; i <= 40; i++) {
+      data.add(generateEmpresaDocumentoMock(Long.valueOf(i)));
+    }
+
+    List<EmpresaDocumentoOutput> dataOutput = new ArrayList<>();
+    for (int i = 1; i <= 40; i++) {
+      dataOutput.add(generateEmpresaDocumentoOutputMock(Long.valueOf(i)));
+    }
+
+    PageRequest paging = PageRequest.of(3, 10);
+
+    BDDMockito.given(empresaDocumentoConverter.convert(
+        ArgumentMatchers.<Page<EmpresaDocumento>>any()))
+        .willReturn(new PageImpl<EmpresaDocumentoOutput>(dataOutput, paging, dataOutput.size()));
+
+    BDDMockito
+        .given(empresaDocumentoService.findAllByEmpresaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<EmpresaDocumento>>() {
+          @Override
+          public Page<EmpresaDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<EmpresaDocumento> content = data.subList(fromIndex, toIndex);
+            Page<EmpresaDocumento> page = new PageImpl<>(content, pageable, data.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_DOCUMENTOS, empresaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: the asked Empresa are returned with the right page
+        // information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "40"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(40))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<EmpresaDocumento> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<EmpresaDocumento>>() {
+        });
+
+    // containing Nombre='Documento-31' to 'Documento-40'
+    for (int i = 0, j = 1; i < 10; i++, j++) {
+      EmpresaDocumento item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("Documento-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "EER-EER-E" })
+  public void findDocumentos_EmptyList_Returns204() throws Exception {
+    Long empresaId = 1L;
+    BDDMockito.given(empresaDocumentoConverter.convert(
+        ArgumentMatchers.<Page<EmpresaDocumento>>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+    // given: no data EmpresaDocumento
+    BDDMockito
+        .given(empresaDocumentoService.findAllByEmpresaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<EmpresaDocumento>>() {
+          @Override
+          public Page<EmpresaDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Page<EmpresaDocumento> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_DOCUMENTOS, empresaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  private EmpresaDocumento generateEmpresaDocumentoMock(Long id) {
+    return generateEmpresaDocumentoMock(id, 1L,
+        generateTipoDocumentoMock(id), "Documento-" + id.toString(), "Comentario", "documento-ref-1");
+  }
+
+  private EmpresaDocumento generateEmpresaDocumentoMock(Long id, Long empresaId, TipoDocumento tipoDocumento,
+      String nombre,
+      String comentarios, String documentoRef) {
+    return EmpresaDocumento.builder()
+        .comentarios(comentarios)
+        .documentoRef(documentoRef)
+        .empresaId(empresaId)
+        .id(id)
+        .nombre(nombre)
+        .tipoDocumento(tipoDocumento)
+        .build();
+  }
+
+  private EmpresaDocumentoOutput generateEmpresaDocumentoOutputMock(Long id) {
+    return generateEmpresaDocumentoOutputMock(id, 1L,
+        generateTipoDocumentoOutputMock(id), "Documento-" + id.toString(), "Comentario", "documento-ref-1");
+  }
+
+  private EmpresaDocumentoOutput generateEmpresaDocumentoOutputMock(Long id, Long empresaId,
+      TipoDocumentoOutput tipoDocumento, String nombre, String comentarios, String documentoRef) {
+    return EmpresaDocumentoOutput.builder()
+        .comentarios(comentarios)
+        .documentoRef(documentoRef)
+        .empresaId(empresaId)
+        .id(id)
+        .nombre(nombre)
+        .tipoDocumento(tipoDocumento)
+        .build();
+  }
+
+  private TipoDocumento generateTipoDocumentoMock(Long id) {
+    return generateTipoDocumentoMock(id, Boolean.TRUE, "Nombre", "Descripcion", null);
+  }
+
+  private TipoDocumento generateTipoDocumentoMock(Long id, Boolean activo, String nombre, String descripcion,
+      TipoDocumento padre) {
+    return TipoDocumento.builder()
+        .activo(activo)
+        .descripcion(descripcion)
+        .id(id)
+        .nombre(nombre)
+        .padre(padre)
+        .build();
+  }
+
+  private TipoDocumentoOutput generateTipoDocumentoOutputMock(Long id) {
+    return generateTipoDocumentoOutputMock(id, Boolean.TRUE, "Nombre", "Descripcion", null);
+  }
+
+  private TipoDocumentoOutput generateTipoDocumentoOutputMock(Long id, Boolean activo, String nombre,
+      String descripcion, TipoDocumentoOutput padre) {
+    return TipoDocumentoOutput.builder()
+        .activo(activo)
+        .descripcion(descripcion)
+        .id(id)
+        .nombre(nombre)
+        .padre(padre)
+        .build();
+  }
 }
