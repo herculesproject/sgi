@@ -66,11 +66,12 @@ public class EmpresaDocumentoServiceTest extends BaseServiceTest {
     EmpresaDocumento empresaDocumentoToCreate = generateEmpresaDocumentoMock(null, 1L, Boolean.TRUE);
 
     mockActivableIsActivo(TipoDocumento.class, empresaDocumentoToCreate.getTipoDocumento());
-    BDDMockito.given(repository.save(ArgumentMatchers.<EmpresaDocumento>any())).will((InvocationOnMock invocation) -> {
-      EmpresaDocumento empresaDocumentoCreated = invocation.getArgument(0);
-      empresaDocumentoCreated.setId(1L);
-      return empresaDocumentoCreated;
-    });
+    BDDMockito.given(repository.saveAndFlush(ArgumentMatchers.<EmpresaDocumento>any()))
+        .will((InvocationOnMock invocation) -> {
+          EmpresaDocumento empresaDocumentoCreated = invocation.getArgument(0);
+          empresaDocumentoCreated.setId(1L);
+          return empresaDocumentoCreated;
+        });
 
     // when: Creamos la EmpresaDocumento
     EmpresaDocumento empresaDocumentoCreated = service.create(empresaDocumentoToCreate);
@@ -123,11 +124,12 @@ public class EmpresaDocumentoServiceTest extends BaseServiceTest {
       Long idToFind = invocation.getArgument(0);
       return Optional.of(generateEmpresaDocumentoMock(idToFind));
     });
-    BDDMockito.given(repository.save(ArgumentMatchers.<EmpresaDocumento>any())).will((InvocationOnMock invocation) -> {
-      EmpresaDocumento empresaDocumentoUpdated = invocation.getArgument(0);
-      empresaDocumentoUpdated.setNombre(nombreToUpdate);
-      return empresaDocumentoUpdated;
-    });
+    BDDMockito.given(repository.saveAndFlush(ArgumentMatchers.<EmpresaDocumento>any()))
+        .will((InvocationOnMock invocation) -> {
+          EmpresaDocumento empresaDocumentoUpdated = invocation.getArgument(0);
+          empresaDocumentoUpdated.setNombre(nombreToUpdate);
+          return empresaDocumentoUpdated;
+        });
 
     // when: Actualizamos la EmpresaDocumento
     EmpresaDocumento empresaDocumentoUpdated = service.update(empresaDocumentoToUpdate);

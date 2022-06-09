@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eer.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -66,7 +67,7 @@ public class EmpresaDocumento extends BaseEntity {
   private TipoDocumento tipoDocumento;
 
   // Relation mappings for JPA metamodel generation only
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "empresa_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_EMPRESADOCUMENTO_EMPRESA"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)

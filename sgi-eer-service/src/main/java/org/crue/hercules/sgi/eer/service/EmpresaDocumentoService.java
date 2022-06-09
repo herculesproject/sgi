@@ -57,7 +57,8 @@ public class EmpresaDocumentoService {
       }
     }
 
-    EmpresaDocumento newEmpresaDocumento = repository.save(empresaDocumento);
+    EmpresaDocumento newEmpresaDocumento = repository.saveAndFlush(empresaDocumento);
+    repository.refresh(newEmpresaDocumento);
 
     log.debug("create(EmpresaDocumento empresaDocumento) - end");
     return newEmpresaDocumento;
@@ -97,8 +98,8 @@ public class EmpresaDocumentoService {
       empresaDocumentoExistente.setNombre(empresaDocumentoActualizar.getNombre());
       empresaDocumentoExistente.setTipoDocumento(empresaDocumentoActualizar.getTipoDocumento());
 
-      EmpresaDocumento returnValue = repository.save(empresaDocumentoExistente);
-
+      EmpresaDocumento returnValue = repository.saveAndFlush(empresaDocumentoExistente);
+      repository.refresh(returnValue);
       log.debug("update(EmpresaDocumento empresaDocumentoActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new EmpresaDocumentoNotFoundException(empresaDocumentoActualizar.getId()));
