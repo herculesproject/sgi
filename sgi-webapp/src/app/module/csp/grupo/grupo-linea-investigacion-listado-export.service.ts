@@ -314,15 +314,21 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       columns.push(columnFechaFinLinea);
 
       const maxNumMiembros = Math.max(...grupos.map(g => {
-        const miembros = g.lineasInvestigador.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        const miembros = (g.lineasInvestigador && g.lineasInvestigador.length > 0) ?
+          (g.lineasInvestigador.filter(l =>
+            l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
         return miembros?.length;
       }));
       const maxClasificaciones = Math.max(...grupos.map(g => {
-        const clasificaciones = g.clasificaciones.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        const clasificaciones = (g.clasificaciones && g.clasificaciones.length > 0) ?
+          (g.clasificaciones.filter(l =>
+            l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
         return clasificaciones?.length;
       }));
       const maxEquiposInstrumentales = Math.max(...grupos.map(g => {
-        const miembros = g.lineasEquiposInstrumentales.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+        const miembros = (g.lineasEquiposInstrumentales && g.lineasEquiposInstrumentales.length > 0) ?
+          (g.lineasEquiposInstrumentales.filter(l =>
+            l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
         return miembros?.length;
       }));
 
@@ -412,15 +418,21 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       for (let i = 0; i < maxNumLineas; i++) {
 
         const maxNumMiembros = Math.max(...grupos.map(g => {
-          const miembros = g.lineasInvestigador.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          const miembros = (g.lineasInvestigador && g.lineasInvestigador.length > 0) ?
+            (g.lineasInvestigador.filter(l =>
+              l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
           return miembros?.length;
         }));
         const maxNumClasificaciones = Math.max(...grupos.map(g => {
-          const clasificaciones = g.clasificaciones.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          const clasificaciones = (g.clasificaciones && g.clasificaciones.length > 0) ?
+            (g.clasificaciones.filter(l =>
+              l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
           return clasificaciones?.length;
         }));
         const maxNumEquipoInstrumental = Math.max(...grupos.map(g => {
-          const miembros = g.lineasEquiposInstrumentales.filter(l => l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)
+          const miembros = (g.lineasEquiposInstrumentales && g.lineasEquiposInstrumentales.length > 0) ?
+            (g.lineasEquiposInstrumentales.filter(l =>
+              l.grupoLineaInvestigacion.lineaInvestigacion.id === g.lineasInvestigacion[i].lineaInvestigacion.id)) : [];
           return miembros?.length;
         }));
 
