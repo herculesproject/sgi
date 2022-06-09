@@ -102,7 +102,15 @@ export class ComiteEditorialDatosGeneralesFragment extends Fragment {
     );
   }
 
-  emitProduccionCientifica(produccionCientifica: IProduccionCientifica): void {
+  refreshDatosGenerales(produccionCientifica: IProduccionCientifica): void {
     this.produccionCientifica$.next(produccionCientifica);
+    this.refreshAutores(produccionCientifica);
+  }
+
+  refreshAutores(produccionCientifica: IProduccionCientifica): void {
+    this.subscriptions.push(
+      this.initializerService.initializeAutores$(produccionCientifica)
+        .subscribe((autores) => this.autores$.next(autores))
+    );
   }
 }

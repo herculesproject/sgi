@@ -60,21 +60,21 @@ export class TesisTfmTfgActionService extends ActionService {
   validar(): Observable<IProduccionCientifica> {
     return this.produccionCientificaService.validar(this.data.produccionCientifica?.id)
       .pipe(
-        tap(produccionCientifica => this.datosGenerales.emitProduccionCientifica(produccionCientifica))
+        tap(produccionCientifica => this.datosGenerales.refreshDatosGenerales(produccionCientifica))
       );
   }
 
   rechazar(estadoProduccionCientifica: IEstadoProduccionCientificaRequest): Observable<IProduccionCientifica> {
     return this.produccionCientificaService.rechazar(this.data.produccionCientifica?.id, estadoProduccionCientifica)
       .pipe(
-        tap(produccionCientifica => this.datosGenerales.emitProduccionCientifica(produccionCientifica))
+        tap(produccionCientifica => this.datosGenerales.refreshDatosGenerales(produccionCientifica))
       );
   }
 
   validarInvestigador(): Observable<IProduccionCientifica> {
     return this.produccionCientificaService.validar(this.data.produccionCientifica?.id)
       .pipe(
-        tap(produccionCientifica => this.datosGenerales.emitProduccionCientifica(produccionCientifica)),
+        tap(produccionCientifica => this.datosGenerales.refreshDatosGenerales(produccionCientifica)),
         concatMap(produccionCientifica => this.updateCanEdit(produccionCientifica))
       );
   }
@@ -82,7 +82,7 @@ export class TesisTfmTfgActionService extends ActionService {
   rechazarInvestigador(estadoProduccionCientifica: IEstadoProduccionCientificaRequest): Observable<IProduccionCientifica> {
     return this.produccionCientificaService.rechazar(this.data.produccionCientifica?.id, estadoProduccionCientifica)
       .pipe(
-        tap(produccionCientifica => this.datosGenerales.emitProduccionCientifica(produccionCientifica)),
+        tap(produccionCientifica => this.datosGenerales.refreshDatosGenerales(produccionCientifica)),
         concatMap(produccionCientifica => this.updateCanEdit(produccionCientifica))
       );
   }
