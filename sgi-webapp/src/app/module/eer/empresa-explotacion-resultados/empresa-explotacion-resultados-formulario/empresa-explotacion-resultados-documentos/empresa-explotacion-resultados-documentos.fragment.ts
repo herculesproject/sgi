@@ -328,6 +328,7 @@ export class EmpresaExplotacionResultadosDocumentosFragment extends Fragment {
       mergeMap((node) => {
         return this.empresaDocumentoService.update(node.documento.value.id, node.documento.value).pipe(
           map((updated) => {
+            updated.documento = node.documento.value.documento;
             node.documento = new StatusWrapper<IEmpresaDocumento>(updated);
           })
         );
@@ -343,6 +344,7 @@ export class EmpresaExplotacionResultadosDocumentosFragment extends Fragment {
         node.documento.value.empresa = this.empresa;
         return this.empresaDocumentoService.create(node.documento.value).pipe(
           map(created => {
+            created.documento = node.documento.value.documento;
             node.documento = new StatusWrapper<IEmpresaDocumento>(created);
           })
         );
