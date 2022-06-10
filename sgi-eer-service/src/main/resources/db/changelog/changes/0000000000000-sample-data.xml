@@ -96,4 +96,24 @@
       <column name="tipo_documento_padre_id" valueNumeric="3" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-empresa-composicion-sociedad">
+    <insert tableName="empresa_composicion_sociedad">
+      <column name="id" valueSequenceNext="empresa_composicion_sociedad_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where entidad_ref='00051494')" />
+      <column name="miembro_sociedad_persona_ref" value="22932567" />
+      <column name="fecha_inicio" valueDate="2022-06-01T23:00:00" />
+      <column name="participacion" value="50" />
+      <column name="tipo_aportacion" value="DINERARIA" />
+    </insert>
+
+    <insert tableName="empresa_composicion_sociedad">
+      <column name="id" valueSequenceNext="empresa_composicion_sociedad_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where nombre_razon_social='Empresa 2 SL')" />
+      <column name="miembro_sociedad_empresa_ref" value="00051494" />
+      <column name="fecha_inicio" valueDate="2022-01-01T23:00:00" />
+      <column name="participacion" value="50" />
+      <column name="tipo_aportacion" value="NO_DINERARIA" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -2,18 +2,22 @@ package org.crue.hercules.sgi.eer.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eer.converter.EmpresaComposicionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
+import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaComposicionSociedadOutput;
+import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaEquipoEmprendedorOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
-import org.crue.hercules.sgi.eer.model.EmpresaEquipoEmprendedor;
-import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
-import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
-import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
+import org.crue.hercules.sgi.eer.model.EmpresaComposicionSociedad;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaEquipoEmprendedor;
+import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
+import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -49,15 +53,18 @@ public class EmpresaController {
   public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
   public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + "/equipos-emprendedores";
   public static final String PATH_DOCUMENTOS = PATH_ID + "/documentos";
+  public static final String PATH_EMPRESA_COMPOSICION_SOCIEDAD = PATH_ID + "/composiciones-sociedades";
 
   // Services
   private final EmpresaService service;
   private final EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
   private final EmpresaDocumentoService empresaDocumentoService;
+  private final EmpresaComposicionSociedadService empresaComposicionSociedadService;
   // Converters
   private final EmpresaConverter converter;
   private final EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
   private final EmpresaDocumentoConverter empresaDocumentoConverter;
+  private final EmpresaComposicionSociedadConverter empresaComposicionSociedadConverter;
 
   /**
    * Crea nuevo {@link Empresa}
@@ -197,4 +204,30 @@ public class EmpresaController {
     log.debug("findDocumentos(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link EmpresaComposicionSociedad}
+   * de la {@link Empresa}.
+   * 
+   * @param id     Identificador del {@link EmpresaComposicionSociedad}.
+   * 
+   * @param query  filtro de búsqueda.
+   * 
+   * @param paging pageable.
+   * 
+   * @return el listado de entidades {@link EmpresaComposicionSociedad} paginadas
+   *         y
+   *         filtradas de la {@link Empresa}.
+   */
+  @GetMapping(PATH_EMPRESA_COMPOSICION_SOCIEDAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-V', 'EER-EER-E')")
+  public ResponseEntity<Page<EmpresaComposicionSociedadOutput>> findAllEmpresaComposicionSociedad(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEmpresaComposicionSociedad(Long id, String query, Pageable paging) - start");
+    Page<EmpresaComposicionSociedadOutput> page = empresaComposicionSociedadConverter
+        .convert(empresaComposicionSociedadService.findAllByEmpresa(id, query, paging));
+    log.debug("findAllEmpresaComposicionSociedad(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }

@@ -123,4 +123,38 @@
   <changeSet author="user (generated)" id="0000000000000-12">
     <addForeignKeyConstraint baseColumnNames="tipo_documento_padre_id" baseTableName="tipo_documento" constraintName="FK_TIPODOCUMENTO_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000000-13">
+    <createSequence incrementBy="1" sequenceName="empresa_composicion_sociedad_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-14">
+    <createTable tableName="empresa_composicion_sociedad">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="empresa_composicion_sociedadPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="capital_social" type="DECIMAL(19, 2)" />
+      <column name="empresa_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_fin" type="TIMESTAMP" />
+      <column name="fecha_inicio" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="miembro_sociedad_empresa_ref" type="VARCHAR(50)" />
+      <column name="miembro_sociedad_persona_ref" type="VARCHAR(50)" />
+      <column name="participacion" type="DECIMAL(19, 2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_aportacion" type="VARCHAR(20)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-15">
+    <addForeignKeyConstraint baseColumnNames="empresa_id" baseTableName="empresa_composicion_sociedad" constraintName="FK_EMPRESACOMPOSICIONSOCIEDAD_EMPRESA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="empresa" validate="true" />
+  </changeSet>
 </databaseChangeLog>
