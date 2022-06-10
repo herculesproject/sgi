@@ -49,7 +49,7 @@ export class EmpresaEquipoEmprendedorModalComponent extends DialogFormComponent<
 
     this.setupI18N();
 
-    this.textSaveOrUpdate = this.data?.entidad ? MSG_ACEPTAR : MSG_ANADIR;
+    this.textSaveOrUpdate = this.data?.entidad?.id ? MSG_ACEPTAR : MSG_ANADIR;
 
     this.subscriptions.push(
       merge(
@@ -64,7 +64,7 @@ export class EmpresaEquipoEmprendedorModalComponent extends DialogFormComponent<
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamMiembroEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
-    if (this.data?.entidad) {
+    if (this.data?.entidad?.id) {
       this.translate.get(
         this.data.titleEntity,
         MSG_PARAMS.CARDINALIRY.SINGULAR

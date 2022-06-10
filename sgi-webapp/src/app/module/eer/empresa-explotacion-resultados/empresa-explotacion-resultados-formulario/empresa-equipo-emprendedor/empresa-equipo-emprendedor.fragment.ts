@@ -14,7 +14,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface IEmpresaEquipoEmprendedorListado extends IEmpresaEquipoEmprendedor {
@@ -55,7 +55,8 @@ export class EmpresaEquipoEmprendedorFragment extends Fragment {
                       this.readonly = false;
                     }
                     return element as IEmpresaEquipoEmprendedorListado;
-                  })
+                  }),
+                  switchMap(empresaEquipoEmprendedor => this.getVinculacionPersona(empresaEquipoEmprendedor))
                 );
               }),
               map(() => result)
@@ -64,17 +65,7 @@ export class EmpresaEquipoEmprendedorFragment extends Fragment {
           switchMap(result => {
             return from(result.items).pipe(
               mergeMap(element => {
-                if (element.miembroEquipo.entidad?.id) {
-                  return this.empresaService.findById(element.miembroEquipo.entidad?.id).pipe(
-                    map(entidad => {
-                      element.miembroEquipo.entidad = entidad;
-                      return element as IEmpresaEquipoEmprendedorListado;
-                    }),
-                    switchMap(empresaEquipoEmprendedor => this.getVinculacionPersona(empresaEquipoEmprendedor))
-                  );
-                } else {
-                  return of(element);
-                }
+                return this.getEntidadPersona(element as IEmpresaEquipoEmprendedorListado);
               }),
               map(() => result)
             );
@@ -98,27 +89,21 @@ export class EmpresaEquipoEmprendedorFragment extends Fragment {
   }
 
   addEmpresaEquipoEmprendedor(element: IEmpresaEquipoEmprendedorListado) {
-    this.getVinculacionPersona(element).subscribe(equipo => {
-      const wrapper = new StatusWrapper<IEmpresaEquipoEmprendedorListado>(equipo);
-      wrapper.setCreated();
-      const current = this.equipos$.value;
-      current.push(wrapper);
-      this.equipos$.next(current);
-      this.setChanges(true);
-    });
-  }
-
-  updateEmpresaEquipoEmprendedor(wrapper: StatusWrapper<IEmpresaEquipoEmprendedorListado>): void {
-    const current = this.equipos$.value;
-    const index = current.findIndex(value => value.value.id === wrapper.value.id);
-    if (index >= 0) {
-      wrapper.setEdited();
-      this.getVinculacionPersona(this.equipos$.value[index].value).subscribe(() => {
-        this.equipos$.value[index] = wrapper;
+    merge(
+      this.getVinculacionPersona(element),
+      this.getEntidadPersona(element)).pipe(
+        map(equipo => {
+          const wrapper = new StatusWrapper<IEmpresaEquipoEmprendedorListado>(equipo);
+          wrapper.setCreated();
+          return wrapper;
+        }),
+        takeLast(1)
+      ).subscribe((wrapper) => {
+        const current = this.equipos$.value;
+        current.push(wrapper);
+        this.equipos$.next(current);
         this.setChanges(true);
       });
-
-    }
   }
 
   deleteEmpresaEquipoEmprendedor(wrapper: StatusWrapper<IEmpresaEquipoEmprendedorListado>) {
@@ -183,6 +168,20 @@ export class EmpresaEquipoEmprendedorFragment extends Fragment {
         element.categoriaProfesional = vinculacionCategoria?.categoriaProfesional;
         return element;
       }));
+  }
+
+  private getEntidadPersona(element: IEmpresaEquipoEmprendedorListado): Observable<IEmpresaEquipoEmprendedorListado> {
+    const entidadId = element.miembroEquipo.entidad?.id ?? element.miembroEquipo.entidadPropia?.id;
+    if (entidadId) {
+      return this.empresaService.findById(entidadId).pipe(
+        map(entidad => {
+          element.miembroEquipo.entidad = entidad;
+          return element as IEmpresaEquipoEmprendedorListado;
+        })
+      );
+    } else {
+      return of(element);
+    }
   }
 
 }

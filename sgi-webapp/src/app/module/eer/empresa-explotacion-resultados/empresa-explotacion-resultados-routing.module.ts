@@ -10,6 +10,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { EmpresaExplotacionResultadosCrearComponent } from './empresa-explotacion-resultados-crear/empresa-explotacion-resultados-crear.component';
 import { EmpresaExplotacionResultadosDataResolver, EMPRESA_EXPLOTACION_RESULTADOS_DATA_KEY } from './empresa-explotacion-resultados-data.resolver';
 import { EmpresaExplotacionResultadosEditarComponent } from './empresa-explotacion-resultados-editar/empresa-explotacion-resultados-editar.component';
+import { EmpresaComposicionSociedadComponent } from './empresa-explotacion-resultados-formulario/empresa-composicion-sociedad/empresa-composicion-sociedad.component';
 import { EmpresaEquipoEmprendedorComponent } from './empresa-explotacion-resultados-formulario/empresa-equipo-emprendedor/empresa-equipo-emprendedor.component';
 import { EmpresaExplotacionResultadosDatosGeneralesComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-datos-generales/empresa-explotacion-resultados-datos-generales.component';
 import { EmpresaExplotacionResultadosDocumentosComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-documentos/empresa-explotacion-resultados-documentos.component';
@@ -81,13 +82,18 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard],
       },
       {
+        path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.DOCUMENTOS,
+        component: EmpresaExplotacionResultadosDocumentosComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
         path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.EQUIPO_EMPRENDEDOR,
         component: EmpresaEquipoEmprendedorComponent,
         canDeactivate: [FragmentGuard],
       },
       {
-        path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.DOCUMENTOS,
-        component: EmpresaExplotacionResultadosDocumentosComponent,
+        path: EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_NAMES.COMPOSICION_SOCIEDAD,
+        component: EmpresaComposicionSociedadComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

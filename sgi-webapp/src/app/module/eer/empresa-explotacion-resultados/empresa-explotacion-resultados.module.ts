@@ -12,11 +12,13 @@ import { EerSharedModule } from '../shared/eer-shared.module';
 import { EmpresaExplotacionResultadosCrearComponent } from './empresa-explotacion-resultados-crear/empresa-explotacion-resultados-crear.component';
 import { EmpresaExplotacionResultadosDataResolver } from './empresa-explotacion-resultados-data.resolver';
 import { EmpresaExplotacionResultadosEditarComponent } from './empresa-explotacion-resultados-editar/empresa-explotacion-resultados-editar.component';
+import { EmpresaComposicionSociedadComponent } from './empresa-explotacion-resultados-formulario/empresa-composicion-sociedad/empresa-composicion-sociedad.component';
 import { EmpresaEquipoEmprendedorComponent } from './empresa-explotacion-resultados-formulario/empresa-equipo-emprendedor/empresa-equipo-emprendedor.component';
 import { EmpresaExplotacionResultadosDatosGeneralesComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-datos-generales/empresa-explotacion-resultados-datos-generales.component';
 import { EmpresaExplotacionResultadosDocumentosComponent } from './empresa-explotacion-resultados-formulario/empresa-explotacion-resultados-documentos/empresa-explotacion-resultados-documentos.component';
 import { EmpresaExplotacionResultadosListadoComponent } from './empresa-explotacion-resultados-listado/empresa-explotacion-resultados-listado.component';
 import { EmpresaExplotacionResultadosRoutingModule } from './empresa-explotacion-resultados-routing.module';
+import { EmpresaComposicionSociedadModalComponent } from './modals/empresa-composicion-sociedad-modal/empresa-composicion-sociedad-modal.component';
 import { EmpresaEquipoEmprendedorModalComponent } from './modals/empresa-equipo-emprendedor-modal/empresa-equipo-emprendedor-modal.component';
 
 @NgModule({
@@ -28,6 +30,8 @@ import { EmpresaEquipoEmprendedorModalComponent } from './modals/empresa-equipo-
     EmpresaEquipoEmprendedorComponent,
     EmpresaEquipoEmprendedorModalComponent,
     EmpresaExplotacionResultadosDocumentosComponent,
+    EmpresaComposicionSociedadComponent,
+    EmpresaComposicionSociedadModalComponent,
   ],
   imports: [
     CommonModule,
