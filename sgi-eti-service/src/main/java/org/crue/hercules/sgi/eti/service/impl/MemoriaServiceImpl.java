@@ -3,11 +3,14 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -483,6 +486,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * @param memoria             {@link Memoria} a actualizar estado.
    * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
    */
+  @Transactional
   @Override
   public void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
@@ -1171,6 +1175,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * 
    * @return Los ids de memorias que pasan al estado "Archivado"
    */
+  @Transactional
   public List<Long> archivarNoPresentados() {
     log.debug("archivarNoPresentados() - start");
     Configuracion configuracion = configuracionService.findConfiguracion();
@@ -1178,27 +1183,23 @@ public class MemoriaServiceImpl implements MemoriaService {
     // pasado "mesesArchivadaPendienteCorrecciones" días desde la fecha de estado de
     // una memoria cuyo estado es "Pendiente Correcciones"
     Specification<Memoria> specsMemoriasByMesesArchivadaPendienteCorrecciones = MemoriaSpecifications.activos()
-        .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES)))
-        .and(MemoriaSpecifications
-            .byFechaActualMayorFechaEstadoByMesesDiff(configuracion.getMesesArchivadaPendienteCorrecciones()));
+        .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES)));
 
-    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByMesesArchivadaPendienteCorrecciones);
+    return memoriaRepository.findAll(specsMemoriasByMesesArchivadaPendienteCorrecciones).stream().filter(memoria -> {
+      EstadoMemoria lastEstado = this.estadoMemoriaRepository.findTopByMemoriaIdOrderByFechaEstadoDesc(memoria.getId());
 
-    List<Long> memoriasArchivadas = new ArrayList<Long>();
-    if (!CollectionUtils.isEmpty(memorias)) {
-      memorias.forEach(memoria -> {
-        try {
-          this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
-          memoriasArchivadas.add(memoria.getId());
-          sendComunicadoMemoriaRevisionMinimaArchivada(memoria);
-        } catch (Exception e) {
-          log.debug("Error archivarNoPresentados() - ", e);
-        }
-      });
-      this.sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(memorias);
-    }
-    log.debug("archivarNoPresentados() - end");
-    return memoriasArchivadas;
+      return lastEstado.getFechaEstado().isBefore(Instant.now().atZone(ZoneOffset.UTC).minus(Period.ofMonths(configuracion.getMesesArchivadaPendienteCorrecciones())).toInstant());
+    }).map(memoria -> {
+      try {
+        this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+        sendComunicadoMemoriaRevisionMinimaArchivada(memoria);
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        return null;
+      }
+      return memoria.getId();
+    }).filter(Objects::nonNull)
+    .collect(Collectors.toList());
   }
 
   /**
@@ -1209,6 +1210,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * 
    * @return Los ids de memorias que pasan al estado "Archivado"
    */
+  @Transactional
   public List<Long> archivarInactivos() {
     log.debug("archivarInactivos() - start");
     Configuracion configuracion = configuracionService.findConfiguracion();
@@ -1219,25 +1221,30 @@ public class MemoriaServiceImpl implements MemoriaService {
     Specification<Memoria> specsMemoriasByDiasArchivadaInactivo = MemoriaSpecifications.activos()
         .and(MemoriaSpecifications.estadoActualIn(Arrays.asList(
             Constantes.TIPO_ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS,
-            Constantes.TIPO_ESTADO_MEMORIA_NO_PROCEDE_EVALUAR, Constantes.TIPO_ESTADO_MEMORIA_SOLICITUD_MODIFICACION)))
-        .and(MemoriaSpecifications.byFechaActualMayorFechaEstadoByDiasDiff(configuracion.getDiasArchivadaInactivo()));
+            Constantes.TIPO_ESTADO_MEMORIA_NO_PROCEDE_EVALUAR,
+            Constantes.TIPO_ESTADO_MEMORIA_SOLICITUD_MODIFICACION)));
 
-    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaInactivo);
+    List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByDiasArchivadaInactivo).stream().filter(memoria -> {
+      EstadoMemoria lastEstado = this.estadoMemoriaRepository.findTopByMemoriaIdOrderByFechaEstadoDesc(memoria.getId());
 
-    List<Long> memoriasArchivadas = new ArrayList<>();
+      return lastEstado.getFechaEstado().isBefore(Instant.now().atZone(ZoneOffset.UTC).minus(Period.ofDays(configuracion.getDiasArchivadaInactivo())).toInstant());
+    }).map(memoria -> {
+      try {
+        this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        return null;
+      }
+      return memoria;
+    }).filter(Objects::nonNull)
+    .collect(Collectors.toList());
+
     if (!CollectionUtils.isEmpty(memorias)) {
-      memorias.forEach(memoria -> {
-        try {
-          this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
-          memoriasArchivadas.add(memoria.getId());
-        } catch (Exception e) {
-          log.debug("Error archivarInactivos() - ", e);
-        }
-      });
+      this.sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(memorias);
     }
 
     log.debug("archivarInactivos() - end");
-    return memoriasArchivadas;
+    return memorias.stream().map(memoria -> memoria.getId()).collect(Collectors.toList());
   }
 
   public void sendComunicadoMemoriaRevisionMinimaArchivada(Memoria memoria) {

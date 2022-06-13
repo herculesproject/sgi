@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.com.EmailInput;
@@ -32,6 +29,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,8 +79,9 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_ETI_COM_INF_SEG_ANU = "ETI_COM_INF_SEG_ANU";
   private static final String TEMPLATE_ETI_COM_INF_SEG_ANU_PARAM = TEMPLATE_ETI_COM_INF_SEG_ANU
       + DATA;
+
   private static final String TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH = "ETI_COM_DICT_MEM_REV_MINIMA_ARCH";
-  private static final String TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH_PARAM = TEMPLATE_ETI_COM_INF_SEG_ANU
+  private static final String TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH_PARAM = TEMPLATE_ETI_COM_DICT_MEM_REV_MINIMA_ARCH
       + DATA;
 
   private static final String TEMPLATE_ETI_COM_INF_SEG_FIN = "ETI_COM_INF_SEG_FIN";
