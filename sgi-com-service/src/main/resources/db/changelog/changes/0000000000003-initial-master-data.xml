@@ -43,7 +43,7 @@
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
       <column name="name" value="ETI_COM_DICT_MEM_REV_MINIMA_ARCH_DATA" />
-      <column name="description" value="JSON con formato: {&quot;nombre de investigacion&quot;&quot;genero de comite&quot;,&quot;referencia de memoria&quot;,&quot;tipo de actividad&quot;,&quot;titulo solicitud evaluacion&quot;,&quot;enlace de aplicacion&quot;}" />
+      <column name="description" value="JSON con formato: {&quot;nombreInvestigacion&quot;:&quot;nombre de investigacion&quot;,&quot;referenciaMemoria&quot;:&quot;referencia de memoria&quot;,&quot;tipoActividad&quot;:&quot;tipo de actividad&quot;,&quot;tituloSolicitudEvaluacion&quot;:&quot;titulo solicitud evaluacion&quot;}" />
       <column name="type" value="JSON" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
