@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IEmpresaAdministracionSociedad } from '@core/models/eer/empresa-administracion-sociedad';
 import { IEmpresaComposicionSociedad } from '@core/models/eer/empresa-composicion-sociedad';
 import { IEmpresaDocumento } from '@core/models/eer/empresa-documento';
 import { IEmpresaEquipoEmprendedor } from '@core/models/eer/empresa-equipo-emprendedor';
@@ -13,6 +14,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEmpresaAdministracionSociedadResponse } from '../empresa-administracion-sociedad/empresa-administracion-sociedad-response';
+import { EMPRESA_ADMINISTRACION_SOCIEDAD_RESPONSE_CONVERTER } from '../empresa-administracion-sociedad/empresa-administracion-sociedad-response.converter';
 import { IEmpresaComposicionSociedadResponse } from '../empresa-composicion-sociedad/empresa-composicion-sociedad-response';
 import { EMPRESA_COMPOSICION_SOCIEDAD_RESPONSE_CONVERTER } from '../empresa-composicion-sociedad/empresa-composicion-sociedad-response.converter';
 import { IEmpresaDocumentoResponse } from '../empresa-documento/empresa-documento-response';
@@ -125,6 +128,20 @@ export class EmpresaExplotacionResultadosService extends _EmpresaExplotacionResu
       `${this.endpointUrl}/${id}/composiciones-sociedades`,
       options,
       EMPRESA_COMPOSICION_SOCIEDAD_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de administraciones de la sociedad de la empresa de explotación de resultados
+   *
+   * @param id Identificador de la empresa de explotación de resultados
+   * @param options opciones de búsqueda.
+   */
+  findAdministracionesSociedad(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEmpresaAdministracionSociedad>> {
+    return this.find<IEmpresaAdministracionSociedadResponse, IEmpresaAdministracionSociedad>(
+      `${this.endpointUrl}/${id}/administraciones-sociedades`,
+      options,
+      EMPRESA_ADMINISTRACION_SOCIEDAD_RESPONSE_CONVERTER
     );
   }
 

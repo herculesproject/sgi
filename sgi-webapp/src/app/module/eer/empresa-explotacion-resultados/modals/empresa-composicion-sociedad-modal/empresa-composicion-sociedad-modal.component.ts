@@ -123,19 +123,15 @@ export class EmpresaComposicionSociedadModalComponent extends DialogFormComponen
   }
 
   protected buildFormGroup(): FormGroup {
-    let valueMiembroSociedad = true;
-    if (this.data.entidad?.id) {
-      valueMiembroSociedad = this.data.entidad?.miembroSociedadPersona !== undefined;
-    }
+
     const formGroup = new FormGroup(
       {
-        miembroSociedad: new FormControl(valueMiembroSociedad, Validators.required),
+        miembroSociedad: new FormControl(true, Validators.required),
         miembroSociedadPersona: new FormControl(this.data.entidad?.miembroSociedadPersona),
         miembroSociedadEmpresa: new FormControl(this.data.entidad?.miembroSociedadEmpresa),
         participacion: new FormControl(this.data?.entidad?.participacion,
           [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
             Validators.min(0),
             Validators.max(100)]),
         tipoAportacion: new FormControl(this.data?.entidad?.tipoAportacion, Validators.required),
@@ -153,7 +149,7 @@ export class EmpresaComposicionSociedadModalComponent extends DialogFormComponen
       }
     );
 
-    this.addValidators(valueMiembroSociedad, formGroup);
+    this.addValidators(this.data.entidad, formGroup);
 
     return formGroup;
   }
@@ -191,9 +187,15 @@ export class EmpresaComposicionSociedadModalComponent extends DialogFormComponen
     formControl.markAsTouched({ onlySelf: true });
   }
 
-  private addValidators(value: boolean, form?: FormGroup) {
+  private addValidators(entidad: IEmpresaComposicionSociedad, form?: FormGroup) {
+    let value = true;
     if (!form) {
       form = this.formGroup;
+      value = form.get('miembroSociedad').value;
+    }
+
+    if (entidad?.miembroSociedadPersona?.id || entidad?.miembroSociedadEmpresa?.id) {
+      value = entidad?.miembroSociedadPersona !== undefined && entidad?.miembroSociedadPersona !== null;
     }
 
     if (value) {
@@ -204,6 +206,8 @@ export class EmpresaComposicionSociedadModalComponent extends DialogFormComponen
       form.get('miembroSociedadEmpresa').setValidators([Validators.required]);
     }
 
+    form.get('miembroSociedad').setValue(value);
+    form.get('miembroSociedad').updateValueAndValidity();
     form.get('miembroSociedadPersona').updateValueAndValidity();
     form.get('miembroSociedadEmpresa').updateValueAndValidity();
 

@@ -66,9 +66,6 @@
         <mat-error *ngIf="formGroup.controls.participacion.errors?.required">
           {{'error.required.entity' | translate:msgParamParticipacionEntity}}
         </mat-error>
-        <mat-error *ngIf="formGroup.controls.participacion.errors?.pattern">
-          {{'error.number.format.integer.entity' | translate:msgParamParticipacionEntity}}
-        </mat-error>
         <mat-error *ngIf="formGroup.controls.participacion.errors?.min">
           {{ 'error.min.entity' | translate:msgParamParticipacionEntity }}
         </mat-error>
