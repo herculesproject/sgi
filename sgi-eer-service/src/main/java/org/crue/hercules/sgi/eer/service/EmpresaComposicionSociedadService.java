@@ -141,7 +141,7 @@ public class EmpresaComposicionSociedadService {
     if (!empresaComposicionSociedades.isEmpty()) {
       participacion = 0;
       empresaComposicionSociedades.forEach(sociedad -> {
-        if (sociedad.getParticipacion().intValue() > 0 && sociedad.getParticipacion().intValue() < 100) {
+        if (sociedad.getParticipacion().intValue() > 0 && sociedad.getParticipacion().intValue() <= 100) {
           participacion += sociedad.getParticipacion().intValue();
         } else {
           throw new EmpresaComposicionSociedadParticipacionException();

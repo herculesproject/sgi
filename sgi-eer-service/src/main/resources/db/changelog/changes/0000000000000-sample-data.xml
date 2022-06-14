@@ -116,4 +116,22 @@
       <column name="tipo_aportacion" value="NO_DINERARIA" />
     </insert>
   </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-empresa-administracion-sociedad">
+    <insert tableName="empresa_administracion_sociedad">
+      <column name="id" valueSequenceNext="empresa_administracion_sociedad_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where entidad_ref='00051494')" />
+      <column name="miembro_equipo_administracion_ref" value="22932567" />
+      <column name="fecha_inicio" valueDate="2022-06-01T23:00:00" />
+      <column name="tipo_administracion" value="ADMINISTRADOR_UNICO" />
+    </insert>
+
+    <insert tableName="empresa_administracion_sociedad">
+      <column name="id" valueSequenceNext="empresa_administracion_sociedad_seq" />
+      <column name="empresa_id" valueComputed="(select id from ${schemaPrefix}empresa where nombre_razon_social='Empresa 2 SL')" />
+      <column name="miembro_equipo_administracion_ref" value="01889311" />
+      <column name="fecha_inicio" valueDate="2022-01-01T23:00:00" />
+      <column name="tipo_administracion" value="ADMINISTRADOR_SOLIDARIO" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

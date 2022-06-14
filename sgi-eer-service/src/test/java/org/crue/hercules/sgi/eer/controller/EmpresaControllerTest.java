@@ -8,6 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eer.converter.EmpresaAdministracionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaComposicionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
@@ -20,6 +21,7 @@ import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.service.EmpresaAdministracionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
@@ -63,6 +65,8 @@ public class EmpresaControllerTest extends BaseControllerTest {
   @MockBean
   private EmpresaComposicionSociedadService empresaComposicionSociedadService;
   @MockBean
+  private EmpresaAdministracionSociedadService empresaAdministracionSociedadService;
+  @MockBean
   private EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
   @MockBean
   private EmpresaDocumentoService empresaDocumentoService;
@@ -70,6 +74,8 @@ public class EmpresaControllerTest extends BaseControllerTest {
   private EmpresaDocumentoConverter empresaDocumentoConverter;
   @MockBean
   private EmpresaComposicionSociedadConverter empresaComposicionSociedadConverter;
+  @MockBean
+  private EmpresaAdministracionSociedadConverter empresaAdministracionSociedadConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

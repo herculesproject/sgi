@@ -2,19 +2,23 @@ package org.crue.hercules.sgi.eer.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eer.converter.EmpresaAdministracionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaComposicionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
+import org.crue.hercules.sgi.eer.dto.EmpresaAdministracionSociedadOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaComposicionSociedadOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaEquipoEmprendedorOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
+import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad;
 import org.crue.hercules.sgi.eer.model.EmpresaComposicionSociedad;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
 import org.crue.hercules.sgi.eer.model.EmpresaEquipoEmprendedor;
+import org.crue.hercules.sgi.eer.service.EmpresaAdministracionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
 import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
@@ -54,17 +58,20 @@ public class EmpresaController {
   public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + "/equipos-emprendedores";
   public static final String PATH_DOCUMENTOS = PATH_ID + "/documentos";
   public static final String PATH_EMPRESA_COMPOSICION_SOCIEDAD = PATH_ID + "/composiciones-sociedades";
+  public static final String PATH_EMPRESA_ADMINISTRACION_SOCIEDAD = PATH_ID + "/administraciones-sociedades";
 
   // Services
   private final EmpresaService service;
   private final EmpresaEquipoEmprendedorService empresaEquipoEmprendedorService;
   private final EmpresaDocumentoService empresaDocumentoService;
   private final EmpresaComposicionSociedadService empresaComposicionSociedadService;
+  private final EmpresaAdministracionSociedadService empresaAdministracionSociedadService;
   // Converters
   private final EmpresaConverter converter;
   private final EmpresaEquipoEmprendedorConverter empresaEquipoEmprendedorConverter;
   private final EmpresaDocumentoConverter empresaDocumentoConverter;
   private final EmpresaComposicionSociedadConverter empresaComposicionSociedadConverter;
+  private final EmpresaAdministracionSociedadConverter empresaAdministracionSociedadConverter;
 
   /**
    * Crea nuevo {@link Empresa}
@@ -210,11 +217,8 @@ public class EmpresaController {
    * de la {@link Empresa}.
    * 
    * @param id     Identificador del {@link EmpresaComposicionSociedad}.
-   * 
    * @param query  filtro de búsqueda.
-   * 
    * @param paging pageable.
-   * 
    * @return el listado de entidades {@link EmpresaComposicionSociedad} paginadas
    *         y
    *         filtradas de la {@link Empresa}.
@@ -227,6 +231,31 @@ public class EmpresaController {
     Page<EmpresaComposicionSociedadOutput> page = empresaComposicionSociedadConverter
         .convert(empresaComposicionSociedadService.findAllByEmpresa(id, query, paging));
     log.debug("findAllEmpresaComposicionSociedad(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link EmpresaAdministracionSociedad}
+   * de la {@link Empresa}.
+   * 
+   * @param id     Identificador del {@link EmpresaAdministracionSociedad}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link EmpresaAdministracionSociedad}
+   *         paginadas
+   *         y
+   *         filtradas de la {@link Empresa}.
+   */
+  @GetMapping(PATH_EMPRESA_ADMINISTRACION_SOCIEDAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-V', 'EER-EER-E')")
+  public ResponseEntity<Page<EmpresaAdministracionSociedadOutput>> findAllEmpresaAdministracionSociedad(
+      @PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEmpresaAdministracionSociedad(Long id, String query, Pageable paging) - start");
+    Page<EmpresaAdministracionSociedadOutput> page = empresaAdministracionSociedadConverter
+        .convert(empresaAdministracionSociedadService.findAllByEmpresa(id, query, paging));
+    log.debug("findAllEmpresaAdministracionSociedad(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
