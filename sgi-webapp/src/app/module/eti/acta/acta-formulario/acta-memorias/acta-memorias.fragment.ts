@@ -13,6 +13,7 @@ export interface MemoriaListado {
   /** Version */
   version: number;
   dictamen: IDictamen;
+  idEvaluacion: number;
 }
 
 export class ActaMemoriasFragment extends Fragment {
@@ -47,7 +48,8 @@ export class ActaMemoriasFragment extends Fragment {
                   id: evaluacionesSinDuplicados[idEvaluacion].memoria?.id,
                   numReferencia: evaluacionesSinDuplicados[idEvaluacion].memoria?.numReferencia,
                   version: evaluacionesSinDuplicados[idEvaluacion].version,
-                  dictamen: evaluacionesSinDuplicados[idEvaluacion].dictamen
+                  dictamen: evaluacionesSinDuplicados[idEvaluacion].dictamen,
+                  idEvaluacion: idEvaluacion as unknown as number
                 };
               });
             return memorias;
