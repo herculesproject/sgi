@@ -288,6 +288,11 @@ public class AutorizacionService {
     autorizacion.setEstado(estadoAutorizacion);
 
     Autorizacion returnValue = repository.save(autorizacion);
+    try{
+      this.autorizacionComService.enviarComunicadoCambioEstadoParticipacionAutorizacionProyectoExterno(autorizacion);
+    }catch(Exception ex) {
+      log.error(ex.getMessage(), ex);
+    }
 
     log.debug("cambiarEstado(Long id, EstadoProyecto estadoProyecto) - end");
     return returnValue;

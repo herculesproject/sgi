@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoParticipacionAutorizacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
@@ -44,7 +45,7 @@ public class AutorizacionComService {
     try {
       EmailOutput comunicado = this.emailService
           .createComunicadoModificacionAutorizacionParticipacionProyectoExterno(data,
-              this.getRecipients());
+              this.getRecipientsPreconfigurados());
       this.emailService.sendEmail(comunicado.getId());
 
     } catch (JsonProcessingException e) {
@@ -52,7 +53,38 @@ public class AutorizacionComService {
     }
   }
 
-  private List<Recipient> getRecipients() throws JsonProcessingException {
+  public void enviarComunicadoCambioEstadoParticipacionAutorizacionProyectoExterno(Autorizacion autorizacion) {
+    List<Recipient> recipients = getSolicitanteRecipients(autorizacion.getSolicitanteRef());
+
+    CspComCambioEstadoParticipacionAutorizacionProyectoExternoData data = CspComCambioEstadoParticipacionAutorizacionProyectoExternoData
+        .builder()
+        .estadoSolicitudPext(autorizacion.getEstado().getEstado().name())
+        .fechaEstadoSolicitudPext(autorizacion.getEstado().getFecha())
+        .tituloPext(autorizacion.getTituloProyecto())
+        .build();
+
+    try {
+      EmailOutput comunicado = this.emailService
+          .createComunicadoCambioEstadoAutorizacionParticipacionProyectoExterno(data,
+          recipients);
+      this.emailService.sendEmail(comunicado.getId());
+
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+    }
+  }
+
+  private List<Recipient> getSolicitanteRecipients(String solicitanteRef) {
+    PersonaOutput datosSolicitante = this.sgiApiSgpService.findById(solicitanteRef);
+
+    return datosSolicitante.getEmails().stream().filter(email -> email.getPrincipal())
+        .map(email -> Recipient
+            .builder().name(email.getEmail()).address(email.getEmail())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  private List<Recipient> getRecipientsPreconfigurados() throws JsonProcessingException {
     List<String> destinatarios = configService
         .findStringListByName(
             CONFIG_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DESTINATARIOS);

@@ -7,6 +7,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionNotificarData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionValidarIPData;
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoParticipacionAutorizacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
@@ -152,6 +153,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
       + DATA;
 
   private final ObjectMapper mapper;
@@ -703,6 +708,15 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO,
         TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM);
+  }
+
+  public EmailOutput createComunicadoCambioEstadoAutorizacionParticipacionProyectoExterno(
+      CspComCambioEstadoParticipacionAutorizacionProyectoExternoData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+        
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
