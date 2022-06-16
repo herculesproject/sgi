@@ -311,7 +311,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         }
 
         const solicitudes = response.items;
-        const personaIdsSolicitantes = new Set<string>(solicitudes.map((solicitud) => solicitud.solicitante.id));
+        const personaIdsSolicitantes = new Set<string>(
+          solicitudes.filter(solicitud => !!solicitud.solicitante?.id).map((solicitud) => solicitud.solicitante.id)
+        );
         return this.personaService.findAllByIdIn([...personaIdsSolicitantes]).pipe(
           map((result) => {
             const personas = result.items;
@@ -324,8 +326,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
               }
 
 
-              solicitud.solicitante = personas.find((persona) =>
-                solicitud.solicitante.id === persona.id);
+              solicitud.solicitante = personas.find((persona) => solicitud.solicitante?.id === persona.id);
               if (this.authService.hasAnyAuthorityForAnyUO(['CSP-SOL-E', 'CSP-SOL-V'])) {
                 this.suscripciones.push(this.solicitudService.modificable(solicitud.id).subscribe((value) => {
                   this.mapModificable.set(solicitud.id, value);

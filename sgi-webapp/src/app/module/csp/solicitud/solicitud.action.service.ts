@@ -17,6 +17,7 @@ import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { SolicitanteExternoService } from '@core/services/csp/solicitante-externo/solicitante-externo.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudGrupoService } from '@core/services/csp/solicitud-grupo/solicitud-grupo.service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito/solicitud-hito.service';
@@ -29,6 +30,7 @@ import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitu
 import { SolicitudProyectoResponsableEconomicoService } from '@core/services/csp/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
+import { SolicitudRrhhService } from '@core/services/csp/solicitud-rrhh/solicitud-rrhh.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -39,6 +41,7 @@ import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.se
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
+import { DatosContactoService } from '@core/services/sgp/datos-contacto/datos-contacto.service';
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
@@ -66,6 +69,7 @@ import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formu
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
+import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
 
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
@@ -101,7 +105,11 @@ export class SolicitudActionService extends ActionService {
     DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades',
     CLASIFICACIONES: 'clasificaciones',
     RESPONSABLE_ECONOMICO: 'responsable-economico',
-    AUTOEVALUACION: 'autoevaluacion'
+    AUTOEVALUACION: 'autoevaluacion',
+    SOLICITANTE: 'solicitante',
+    TUTOR: 'tutor',
+    REQUISITOS_CONVOCATORIA: 'requisitos-convocatoria',
+    MEMORIA: 'memoria'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -118,6 +126,7 @@ export class SolicitudActionService extends ActionService {
   private clasificaciones: SolicitudProyectoClasificacionesFragment;
   private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
   private autoevaluacion: SolicitudAutoevaluacionFragment;
+  private solicitanteRrhh: SolicitudRrhhSolitanteFragment;
   public readonly isInvestigador: boolean;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
@@ -224,7 +233,10 @@ export class SolicitudActionService extends ActionService {
     datosPersonalesService: DatosPersonalesService,
     palabraClaveService: PalabraClaveService,
     solicitudGrupoService: SolicitudGrupoService,
-    proyectoService: ProyectoService
+    proyectoService: ProyectoService,
+    solicitudRrhhService: SolicitudRrhhService,
+    solicitanteExternoService: SolicitanteExternoService,
+    datosContactoService: DatosContactoService,
   ) {
     super();
 
@@ -289,6 +301,22 @@ export class SolicitudActionService extends ActionService {
     this.responsableEconomico = new SolicitudProyectoResponsableEconomicoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoResponsableEconomicoService, personaService, this.readonly);
     this.autoevaluacion = new SolicitudAutoevaluacionFragment(this.data?.solicitud, formlyService, checklistService, authService);
+
+    // Fragments Socitudes Rrhh
+    this.solicitanteRrhh = new SolicitudRrhhSolitanteFragment(
+      logger,
+      this.data?.solicitud,
+      this.isInvestigador,
+      solicitudService,
+      solicitudRrhhService,
+      solicitanteExternoService,
+      clasificacionService,
+      datosContactoService,
+      datosPersonalesService,
+      personaService,
+      empresaService,
+      this.readonly
+    );
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
@@ -365,6 +393,8 @@ export class SolicitudActionService extends ActionService {
             this.desglosePresupuestoEntidades.setEntidadesFinanciadorasEdited(entidadesFinanciadoras.map(entidad => entidad.value));
           }));
 
+        } else if (this.isFormularioSolicitudRrhh()) {
+          this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
         }
       } else {
         this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -373,12 +403,14 @@ export class SolicitudActionService extends ActionService {
           }
         ));
 
-        if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
+        if (this.isFormularioSolicitudProyecto()) {
           this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
           this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
           this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
           this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
           this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
+        } else if (this.isFormularioSolicitudRrhh()) {
+          this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
         }
       }
 
@@ -657,6 +689,10 @@ export class SolicitudActionService extends ActionService {
 
   private isFormularioSolicitudProyecto(): boolean {
     return this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO;
+  }
+
+  private isFormularioSolicitudRrhh(): boolean {
+    return this.data.solicitud.formularioSolicitud === FormularioSolicitud.RRHH;
   }
 
 }

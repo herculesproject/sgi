@@ -38,6 +38,7 @@ import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-form
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
+import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
 import { SolicitudGeneralListadoExportService } from './solicitud-general-listado-export.service';
 import { SolicitudListadoExportService } from './solicitud-listado-export.service';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
@@ -79,6 +80,7 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudAutoevaluacionComponent,
     SolicitudProyectoPresupuestoListadoExportModalComponent,
     SolicitudGrupoModalComponent,
+    SolicitudRrhhSolitanteComponent
   ],
   imports: [
     CommonModule,
