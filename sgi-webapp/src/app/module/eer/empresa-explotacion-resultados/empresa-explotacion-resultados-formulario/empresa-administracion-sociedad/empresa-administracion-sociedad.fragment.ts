@@ -1,12 +1,18 @@
 
 import { IEmpresaAdministracionSociedad } from '@core/models/eer/empresa-administracion-sociedad';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
+import { IVinculacion } from '@core/models/sgp/vinculacion';
+import { IVinculacionCategoriaProfesional } from '@core/models/sgp/vinculacion-categoria-profesional';
 import { Fragment } from '@core/services/action-service';
 import { EmpresaAdministracionSociedadService } from '@core/services/eer/empresa-administracion-sociedad/empresa-administracion-sociedad.service';
 import { EmpresaExplotacionResultadosService } from '@core/services/eer/empresa-explotacion-resultados/empresa-explotacion-resultados.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -40,7 +46,8 @@ export class EmpresaAdministracionSociedadFragment extends Fragment {
                     map(persona => {
                       element.miembroEquipoAdministracion = persona;
                       return element as IEmpresaAdministracionSociedad;
-                    })
+                    }),
+                    switchMap(empresaAdministracionSociedad => this.getEntidadPersona(empresaAdministracionSociedad))
                   );
                 } else {
                   return of(element);
@@ -68,12 +75,18 @@ export class EmpresaAdministracionSociedadFragment extends Fragment {
   }
 
   addEmpresaAdministracionSociedad(element: IEmpresaAdministracionSociedad) {
-    const wrapper = new StatusWrapper<IEmpresaAdministracionSociedad>(element);
-    wrapper.setCreated();
-    const current = this.administracionesSociedad$.value;
-    current.push(wrapper);
-    this.administracionesSociedad$.next(current);
-    this.setChanges(true);
+    this.getEntidadPersona(element).pipe(
+      map(element => {
+        const wrapper = new StatusWrapper<IEmpresaAdministracionSociedad>(element);
+        wrapper.setCreated();
+        return wrapper;
+      })
+    ).subscribe(wrapper => {
+      const current = this.administracionesSociedad$.value;
+      current.push(wrapper);
+      this.administracionesSociedad$.next(current);
+      this.setChanges(true);
+    });
   }
 
   updateEmpresaAdministracionSociedad(wrapper: StatusWrapper<IEmpresaAdministracionSociedad>): void {
@@ -134,6 +147,20 @@ export class EmpresaAdministracionSociedadFragment extends Fragment {
   private isSaveOrUpdateComplete(): boolean {
     const hasTouched = this.administracionesSociedad$.value.some((wrapper) => wrapper.touched);
     return !hasTouched;
+  }
+
+  private getEntidadPersona(element: IEmpresaAdministracionSociedad): Observable<IEmpresaAdministracionSociedad> {
+    const entidadId = element.miembroEquipoAdministracion.entidad?.id ?? element.miembroEquipoAdministracion.entidadPropia?.id;
+    if (entidadId) {
+      return this.empresaService.findById(entidadId).pipe(
+        map(entidad => {
+          element.miembroEquipoAdministracion.entidad = entidad;
+          return element as IEmpresaAdministracionSociedad;
+        })
+      );
+    } else {
+      return of(element);
+    }
   }
 
 }

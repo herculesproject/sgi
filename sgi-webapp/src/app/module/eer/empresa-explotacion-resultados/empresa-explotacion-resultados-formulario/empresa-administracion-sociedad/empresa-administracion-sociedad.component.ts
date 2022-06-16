@@ -32,7 +32,7 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
   formPart: EmpresaAdministracionSociedadFragment;
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumns = ['miembro', 'fechaInicio', 'fechaFin', 'tipoAdministracion', 'acciones'];
+  displayedColumns = ['tipoAdministracion', 'nombre', 'apellidos', 'email', 'fechaInicio', 'fechaFin', 'entidad', 'acciones'];
 
   modalTitleEntity: string;
   msgParamEntity = {};

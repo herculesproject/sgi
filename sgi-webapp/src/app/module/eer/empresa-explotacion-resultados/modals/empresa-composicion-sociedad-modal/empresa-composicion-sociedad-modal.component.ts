@@ -132,7 +132,7 @@ export class EmpresaComposicionSociedadModalComponent extends DialogFormComponen
         participacion: new FormControl(this.data?.entidad?.participacion,
           [
             Validators.required,
-            Validators.min(0),
+            Validators.min(1),
             Validators.max(100)]),
         tipoAportacion: new FormControl(this.data?.entidad?.tipoAportacion, Validators.required),
         fechaInicio: new FormControl(this.data?.entidad?.fechaInicio, Validators.required),
