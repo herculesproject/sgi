@@ -177,7 +177,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
                 root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
             (iniciales) ? cb.equal(subqRoot.get(Evaluacion_.version), 1)
                 : cb.greaterThan(subqRoot.get(Evaluacion_.version), 1),
-            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false)));
+            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false),
+            cb.equal(subqRoot.get(Evaluacion_.activo), true)));
 
     log.debug(
         "getNumEvaluaciones(Root<Acta> root, CriteriaBuilder cb, CriteriaQuery<ActaWithNumEvaluaciones> cq, boolean iniciales) - end");
@@ -206,7 +207,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         .where(cb.and(cb.isNull(subqRoot.get(Evaluacion_.dictamen)), cb.isTrue(subqRoot.get(Evaluacion_.activo)),
             cb.equal(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
                 root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
-            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false)));
+            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false),
+            cb.equal(subqRoot.get(Evaluacion_.activo), true)));
     log.debug(
         "getNumEvaluacionesNoEvaluadas(Root<Acta> root, CriteriaBuilder cb, CriteriaQuery<ActaWithNumEvaluaciones> cq) - end");
     return queryNumEvaluaciones;
