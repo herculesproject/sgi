@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eer.exceptions.EmpresaAdministracionSociedadMiembroException;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaAdministracionSociedadNotFoundException;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.BaseEntity;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad;
+import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad.TipoAdministracion;
 import org.crue.hercules.sgi.eer.repository.EmpresaAdministracionSociedadRepository;
 import org.crue.hercules.sgi.eer.repository.EmpresaRepository;
 import org.crue.hercules.sgi.eer.repository.specification.EmpresaAdministracionSociedadSpecifications;
@@ -129,10 +131,54 @@ public class EmpresaAdministracionSociedadService {
       repository.deleteAll(empresaAdministracionSociedadesEliminar);
     }
 
+    this.validateEmpresaAdministracionSociedad(empresaAdministracionSociedades);
+
     List<EmpresaAdministracionSociedad> returnValue = repository.saveAll(empresaAdministracionSociedades);
     log.debug("update(Long empresaId, List<EmpresaAdministracionSociedad> empresaAdministracionSociedades) - END");
 
     return returnValue;
+  }
+
+  private void validateEmpresaAdministracionSociedad(
+      List<EmpresaAdministracionSociedad> empresaAdministracionSociedades) {
+    if (!empresaAdministracionSociedades.isEmpty()) {
+      Integer countAdminUnico = empresaAdministracionSociedades.stream()
+          .filter(e -> e.getTipoAdministracion().equals(TipoAdministracion.ADMINISTRADOR_UNICO))
+          .collect(Collectors.toList()).size();
+
+      Integer countAdminMancomunado = empresaAdministracionSociedades.stream()
+          .filter(e -> e.getTipoAdministracion().equals(TipoAdministracion.ADMINISTRADOR_MANCOMUNADO))
+          .collect(Collectors.toList()).size();
+
+      Integer countAdminSolidario = empresaAdministracionSociedades.stream()
+          .filter(e -> e.getTipoAdministracion().equals(TipoAdministracion.ADMINISTRADOR_SOLIDARIO))
+          .collect(Collectors.toList()).size();
+
+      Integer countConsejoAdmin = empresaAdministracionSociedades.stream()
+          .filter(e -> e.getTipoAdministracion().equals(TipoAdministracion.CONSEJO_ADMINISTRACION))
+          .collect(Collectors.toList()).size();
+
+      boolean error = false;
+      if (countAdminUnico != 1) {
+        error = true;
+      }
+      if (!error && countAdminSolidario < 2) {
+        error = true;
+      }
+      if (!error && countAdminMancomunado < 2) {
+        error = true;
+      }
+      if (!error && countConsejoAdmin < 3) {
+        error = true;
+      }
+
+      if (error) {
+        throw new EmpresaAdministracionSociedadMiembroException();
+      }
+
+    } else {
+      throw new EmpresaAdministracionSociedadMiembroException();
+    }
   }
 
 }
