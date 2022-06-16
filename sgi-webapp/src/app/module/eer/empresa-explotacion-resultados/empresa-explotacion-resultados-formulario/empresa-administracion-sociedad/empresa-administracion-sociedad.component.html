@@ -71,6 +71,9 @@
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>
+      <sgi-field-info matSuffix [visible]="this.formPart.hasErrors()"
+        message="{{'msg.eer.empresa-administracion-sociedad' | translate}}">
+      </sgi-field-info>
     </div>
   </ng-container>
 </sgi-fragment>

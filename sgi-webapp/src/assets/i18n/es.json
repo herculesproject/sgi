@@ -2011,6 +2011,7 @@
   "msg.delete.entity.success": "Se ha eliminado correctamente {gender,select,male{el} female{la} other{el/La}} {entity}",
   "msg.desasociar.entity": "Desasociar {entity}",
   "msg.desasociar.entity.success": "Se ha eliminado correctamente la asociación de{gender,select,male{l} female{ la} other{el/la}} {entity}",
+  "msg.eer.empresa-administracion-sociedad": "Deben de estar presentes: solo un miembro 'administrador único', al menos dos miembros 'administrador mancomunado' y 'administrador solidario' y 3 o más miembros del 'consejo de administración'",
   "msg.envio-comunicado.entity.error": "Se ha producido un error en el envío del comunicado {entity}",
   "msg.envio-comunicado.entity.success": "Se ha enviado correctamente el comunicado {entity}",
   "msg.estado-actual": "Estado actual:",

@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEmpresaAdministracionSociedad, TIPO_ADMINISTRACION_SOCIEDAD_MAP } from '@core/models/eer/empresa-administracion-sociedad';
+import { IEmpresaAdministracionSociedad, TipoAdministracion, TIPO_ADMINISTRACION_SOCIEDAD_MAP } from '@core/models/eer/empresa-administracion-sociedad';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaAdministracionSociedadService } from '@core/services/eer/empresa-administracion-sociedad/empresa-administracion-sociedad.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -144,6 +144,7 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
             const entidad = new StatusWrapper<IEmpresaAdministracionSociedad>(modalData.entidad as IEmpresaAdministracionSociedad);
             this.formPart.updateEmpresaAdministracionSociedad(entidad);
           }
+          this.validateTipoAdministracion();
         }
       }
     );
@@ -163,11 +164,43 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteEmpresaAdministracionSociedad(wrapper);
+            this.validateTipoAdministracion();
           }
         }
       )
     );
 
+  }
+
+  private validateTipoAdministracion() {
+    const entidades = this.dataSource.data.map(element => element.value);
+
+    const countAdminUnico = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.ADMINISTRADOR_UNICO).length;
+    const countAdminSolidario = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.ADMINISTRADOR_SOLIDARIO).length;
+    const countAdminMancomunado = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.ADMINISTRADOR_MANCOMUNADO).length;
+    const countConsejoAdmin = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.CONSEJO_ADMINISTRACION).length;
+
+    let err = false;
+    if (countAdminUnico !== 1) {
+      err = true;
+    }
+    if (!err && countAdminSolidario < 2) {
+      err = true;
+    }
+    if (!err && countAdminMancomunado < 2) {
+      err = true;
+    }
+    if (!err && countConsejoAdmin < 3) {
+      err = true;
+    }
+
+    if (err) {
+      this.formPart.setComplete(false);
+      this.formPart.setErrors(true);
+    } else {
+      this.formPart.setComplete(true);
+      this.formPart.setErrors(false);
+    }
   }
 
 }
