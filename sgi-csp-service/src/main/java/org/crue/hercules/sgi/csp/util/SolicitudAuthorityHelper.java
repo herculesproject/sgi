@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.util;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -22,6 +23,21 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   /**
    * Comprueba si el usuario logueado tiene permiso para ver la {@link Solicitud}
    * 
+   * @param solicitudId Identificador de la {@link Solicitud}
+   * 
+   * @throws UserNotAuthorizedToAccessSolicitudException si el usuario no esta
+   *                                                     autorizado para ver la
+   *                                                     {@link Solicitud}
+   */
+  public void checkUserHasAuthorityViewSolicitud(Long solicitudId)
+      throws UserNotAuthorizedToAccessSolicitudException {
+    checkUserHasAuthorityViewSolicitud(repository.findById(solicitudId)
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitudId)));
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene permiso para ver la {@link Solicitud}
+   * 
    * @param solicitud la {@link Solicitud}
    * 
    * @throws UserNotAuthorizedToAccessSolicitudException si el usuario no esta
@@ -32,6 +48,23 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
       throws UserNotAuthorizedToAccessSolicitudException {
     if (!(hasAuthorityViewInvestigador(solicitud) || hasAuthorityViewUnidadGestion(solicitud))) {
       throw new UserNotAuthorizedToAccessSolicitudException();
+    }
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene permiso para modificar la
+   * {@link Solicitud}
+   * 
+   * @param solicitud la {@link Solicitud}
+   * 
+   * @throws UserNotAuthorizedToModifySolicitudException si el usuario no esta
+   *                                                     autorizado para modificar
+   *                                                     la {@link Solicitud}
+   */
+  public void checkUserHasAuthorityModifySolicitud(Solicitud solicitud)
+      throws UserNotAuthorizedToModifySolicitudException {
+    if (!hasPermisosEdicion(solicitud) || solicitud.getActivo().equals(Boolean.FALSE)) {
+      throw new UserNotAuthorizedToModifySolicitudException();
     }
   }
 

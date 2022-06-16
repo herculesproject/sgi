@@ -6,19 +6,23 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.GrupoConverter;
+import org.crue.hercules.sgi.csp.converter.SolicitanteExternoConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudGrupoConverter;
+import org.crue.hercules.sgi.csp.converter.SolicitudRrhhConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
-import org.crue.hercules.sgi.csp.dto.SolicitudHitoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitanteExternoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudGrupoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudHitoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudRrhhOutput;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -30,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.RequisitoEquipoNivelAcademico;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
+import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudGrupo;
@@ -45,6 +50,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudRrhh;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
@@ -53,6 +59,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
+import org.crue.hercules.sgi.csp.service.SolicitanteExternoService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudGrupoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
@@ -67,6 +74,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudRrhhService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
@@ -176,6 +184,18 @@ public class SolicitudController {
   /** GrupoConverter */
   private final GrupoConverter grupoConverter;
 
+  /** SolicitudRrhh Service */
+  private final SolicitudRrhhService solicitudRrhhService;
+
+  /** SolicitudRrhh Converter */
+  private final SolicitudRrhhConverter solicitudRrhhConverter;
+
+  /** SolicitanteExterno Service */
+  private final SolicitanteExternoService solicitanteExternoService;
+
+  /** SolicitanteExterno Converter */
+  private final SolicitanteExternoConverter solicitanteExternoConverter;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -205,6 +225,10 @@ public class SolicitudController {
    * @param grupoConverter                                   {@link GrupoConverter}.
    * @param grupoService                                     {@link GrupoService}.
    * @param solicitudGrupoConverter                          {@link SolicitudGrupoConverter}.
+   * @param solicitudRrhhService                             {@link SolicitudRrhhService}.
+   * @param solicitudRrhhConverter                           {@link SolicitudRrhhConverter}.
+   * @param solicitanteExternoService                        {@link SolicitanteExternoService}.
+   * @param solicitanteExternoConverter                      {@link SolicitanteExternoConverter}.
    */
   public SolicitudController(ModelMapper modelMapper, SolicitudService solicitudService,
       SolicitudModalidadService solicitudModalidadService, EstadoSolicitudService estadoSolicitudService,
@@ -226,7 +250,11 @@ public class SolicitudController {
       SolicitudGrupoService solicitudGrupoService,
       SolicitudGrupoConverter solicitudGrupoConverter,
       GrupoService grupoService,
-      GrupoConverter grupoConverter) {
+      GrupoConverter grupoConverter,
+      SolicitudRrhhService solicitudRrhhService,
+      SolicitudRrhhConverter solicitudRrhhConverter,
+      SolicitanteExternoService solicitanteExternoService,
+      SolicitanteExternoConverter solicitanteExternoConverter) {
     this.modelMapper = modelMapper;
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
@@ -253,6 +281,10 @@ public class SolicitudController {
     this.solicitudGrupoConverter = solicitudGrupoConverter;
     this.grupoService = grupoService;
     this.grupoConverter = grupoConverter;
+    this.solicitudRrhhService = solicitudRrhhService;
+    this.solicitudRrhhConverter = solicitudRrhhConverter;
+    this.solicitanteExternoService = solicitanteExternoService;
+    this.solicitanteExternoConverter = solicitanteExternoConverter;
   }
 
   /**
@@ -1261,6 +1293,55 @@ public class SolicitudController {
         .convert(grupoService.createGrupoBySolicitud(id, grupoConverter.convert(grupo)));
     log.debug("createGrupoBySolicitud(@PathVariable Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Recupera un {@link SolicitudRrhh} de una solicitud
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitudRrhh}
+   */
+  @GetMapping(path = "/{id}/solicitudrrhh")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<SolicitudRrhhOutput> findSolicitudRrhh(@PathVariable Long id) {
+    log.debug("findSolicitudRrhh(Long id) - start");
+    SolicitudRrhh returnValue = solicitudRrhhService.findBySolicitud(id);
+    log.debug("findSolicitudRrhh(Long id) - end");
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(solicitudRrhhConverter.convert(returnValue), HttpStatus.OK);
+  }
+
+  /**
+   * Recupera un {@link SolicitanteExterno} de una solicitud
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitanteExterno}
+   */
+  @GetMapping(path = "/{id}/solicitanteexterno")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<SolicitanteExternoOutput> findSolicitanteExterno(@PathVariable Long id) {
+    log.debug("findSolicitanteExterno(Long id) - start");
+    SolicitanteExterno returnValue = solicitanteExternoService.findBySolicitud(id);
+    log.debug("findSolicitanteExterno(Long id) - end");
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(solicitanteExternoConverter.convert(returnValue), HttpStatus.OK);
+  }
+
+  /**
+   * Actualiza el solicitante de la {@link Solicitud} con id indicado.
+   * 
+   * @param id             Identificador de {@link Solicitud}.
+   * @param solicitanteRef Identificador del solicitante
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/solicitante")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  public Solicitud updateSolicitante(@PathVariable Long id, @RequestBody(required = false) String solicitanteRef) {
+    log.debug("updateSolicitante(Long id, String solicitanteRef) - start");
+
+    Solicitud returnValue = service.updateSolicitante(id, solicitanteRef);
+    log.debug("updateSolicitante(Long id, String solicitanteRef) - end");
+    return returnValue;
   }
 
   private Page<SolicitudPalabraClaveOutput> convertSolicitudPalabraClave(Page<SolicitudPalabraClave> page) {

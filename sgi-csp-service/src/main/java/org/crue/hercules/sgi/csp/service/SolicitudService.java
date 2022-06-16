@@ -62,6 +62,7 @@ import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSoli
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -218,7 +219,10 @@ public class SolicitudService {
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
 
-    Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
+    if (solicitud.getFormularioSolicitud() != null
+        && !solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
+      Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
+    }
 
     Assert.isTrue(
         solicitud.getConvocatoriaId() != null
@@ -846,6 +850,29 @@ public class SolicitudService {
 
     log.debug("findByGrupoIdAndUserInGrupo(Long grupoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Actualiza el solicitante de la {@link Solicitud}.
+   *
+   * @param id             Id del {@link Solicitud}.
+   * @param solicitanteRef Identificador del solicitante
+   * @return la entidad {@link Solicitud} persistida.
+   */
+  @Transactional
+  public Solicitud updateSolicitante(Long id, String solicitanteRef) {
+    log.debug("updateSolicitante(Long id, String solicitanteRef) - start");
+
+    AssertHelper.idNotNull(id, Solicitud.class);
+
+    return repository.findById(id).map(solicitud -> {
+      solicitudAuthorityHelper.checkUserHasAuthorityModifySolicitud(solicitud);
+
+      solicitud.setSolicitanteRef(solicitanteRef);
+      Solicitud returnValue = repository.save(solicitud);
+      log.debug("updateSolicitante(Long id, String solicitanteRef) - end");
+      return returnValue;
+    }).orElseThrow(() -> new SolicitudNotFoundException(id));
   }
 
   /**

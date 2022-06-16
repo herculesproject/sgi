@@ -88,9 +88,8 @@ public class Solicitud extends BaseEntity {
   private String creadorRef;
 
   /** SolicitanteRef */
-  @Column(name = "solicitante_ref", length = 50, nullable = false)
+  @Column(name = "solicitante_ref", length = 50, nullable = true)
   @Size(max = 50)
-  @NotNull
   private String solicitanteRef;
 
   /** Observaciones */

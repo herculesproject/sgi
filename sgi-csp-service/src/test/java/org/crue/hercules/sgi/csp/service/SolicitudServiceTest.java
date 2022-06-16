@@ -440,6 +440,7 @@ class SolicitudServiceTest extends BaseServiceTest {
   void update_SolicitanteRefNull_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     solicitud.setSolicitanteRef(null);
 
     // when: Creamos el Solicitud
