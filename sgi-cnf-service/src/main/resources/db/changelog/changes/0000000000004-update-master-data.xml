@@ -34,5 +34,12 @@
       <column name="description" value="Destinatarios defecto CSP Modificar Autorización del estado de participación de un proyecto externo" />
       <column name="value" value="[&quot;pro.ext.mod.aut1@sgi.es&quot;, &quot;pro.ext.mod.aut2@sgi.es&quot;]" />
     </insert>
+
+    <!-- Destinatarios defecto CSP Recepción Notificación CVN Proyecto Externo -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-recep-not-cvn-pext-destinatarios" />
+      <column name="description" value="Destinatarios defecto CSP Recepción Notificación CVN proyecto externo" />
+      <column name="value" value="[&quot;pro.ext.recep.not.cvn.aut1@sgi.es&quot;, &quot;pro.ext.recep.not-cvn.aut2@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
