@@ -79,6 +79,31 @@ public class SolicitudRrhhService {
   }
 
   /**
+   * Actualiza el tutor de la {@link SolicitudRrhh}.
+   *
+   * @param solicitudRrhhActualizar {@link SolicitudRrhh} con los datos del tutor
+   *                                actualizados.
+   * @return {@link SolicitudRrhh} actualizado.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Update.class })
+  public SolicitudRrhh updateTutor(@Valid SolicitudRrhh solicitudRrhhActualizar) {
+    log.debug("updateTutor(SolicitudRrhh solicitudRrhhActualizar) - start");
+
+    AssertHelper.idNotNull(solicitudRrhhActualizar.getId(), SolicitudRrhh.class);
+    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhhActualizar.getId());
+
+    return repository.findById(solicitudRrhhActualizar.getId()).map(data -> {
+      data.setTutorRef(solicitudRrhhActualizar.getTutorRef());
+
+      SolicitudRrhh returnValue = repository.save(data);
+
+      log.debug("updateTutor(SolicitudRrhh solicitudRrhhActualizar) - end");
+      return returnValue;
+    }).orElseThrow(() -> new SolicitudRrhhNotFoundException(solicitudRrhhActualizar.getId()));
+  }
+
+  /**
    * Obtiene una entidad {@link SolicitudRrhh} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudRrhh}.
