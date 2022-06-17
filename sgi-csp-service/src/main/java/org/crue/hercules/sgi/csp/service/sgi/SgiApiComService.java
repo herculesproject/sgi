@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCien
 import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPeriodoJustificacionSocioData;
 import org.crue.hercules.sgi.csp.dto.com.CspComPresentacionSeguimientoCientificoIpData;
+import org.crue.hercules.sgi.csp.dto.com.CspComRecepcionNotificacionesCVNProyectoExtData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoDefinitivoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoProvisionalData;
@@ -162,6 +163,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
   private static final String TEMPLATE_CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO = "CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO";
+  private static final String TEMPLATE_CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO
       + DATA;
 
   private final ObjectMapper mapper;
@@ -731,6 +736,15 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO,
         TEMPLATE_CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM);
+  }
+
+  public EmailOutput createComunicadoRecepcionNotificacionCVNProyectoExterno(
+      CspComRecepcionNotificacionesCVNProyectoExtData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO,
+        TEMPLATE_CSP_COM_RECEPCION_NOTIFICACION_CVN_PROYECTO_EXTERNO_PARAM);
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)
