@@ -1,15 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
+import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
 import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate,
   SgiRestBaseService, UpdateCtor
 } from '@sgi/framework/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ISolicitudRrhhRequest } from './solicitud-rrhh-request';
 import { SOLICITUD_RRHH_REQUEST_CONVERTER } from './solicitud-rrhh-request.converter';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh-response';
 import { SOLICITUD_RRHH_RESPONSE_CONVERTER } from './solicitud-rrhh-response.converter';
+import { SOLICITUD_RRHH_TUTOR_REQUEST_CONVERTER } from './solicitud-rrhh-tutor-request.converter';
+import { ISolicitudRrhhTutorResponse } from './solicitud-rrhh-tutor-response';
+import { SOLICITUD_RRHH_TUTOR_RESPONSE_CONVERTER } from './solicitud-rrhh-tutor-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _SolicitudRrhhMixinBase:
@@ -39,6 +45,34 @@ export class SolicitudRrhhService extends _SolicitudRrhhMixinBase {
     super(
       `${environment.serviceServers.csp}${SolicitudRrhhService.MAPPING}`,
       http,
+    );
+  }
+
+  /**
+   * Devuelve los datos del tutor de una solicitud de RRHH
+   *
+   * @param solicitudRrhhId Id de la solicitud
+   */
+  findTutor(solicitudRrhhId: number): Observable<ISolicitudRrhhTutor> {
+    return this.http.get<ISolicitudRrhhTutorResponse>(
+      `${this.endpointUrl}/${solicitudRrhhId}/tutor`
+    ).pipe(
+      map(response => SOLICITUD_RRHH_TUTOR_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Actualiza los datos del tutor de una solicitud de RRHH
+   *
+   * @param solicitudRrhhId Id de la solicitud
+   * @param tutor ISolicitudRrhhTutor
+   */
+  updateTutor(solicitudRrhhId: number, tutor: ISolicitudRrhhTutor): Observable<ISolicitudRrhhTutor> {
+    return this.http.patch<ISolicitudRrhhTutorResponse>(
+      `${this.endpointUrl}/${solicitudRrhhId}/tutor`,
+      SOLICITUD_RRHH_TUTOR_REQUEST_CONVERTER.fromTarget(tutor)
+    ).pipe(
+      map(response => SOLICITUD_RRHH_TUTOR_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

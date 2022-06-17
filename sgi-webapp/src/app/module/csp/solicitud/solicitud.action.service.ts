@@ -70,6 +70,7 @@ import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formular
 import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
 import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
+import { SolicitudRrhhTutorFragment } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.fragment';
 
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
@@ -127,6 +128,7 @@ export class SolicitudActionService extends ActionService {
   private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
   private autoevaluacion: SolicitudAutoevaluacionFragment;
   private solicitanteRrhh: SolicitudRrhhSolitanteFragment;
+  private tutorRrhh: SolicitudRrhhTutorFragment;
   public readonly isInvestigador: boolean;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
@@ -318,6 +320,17 @@ export class SolicitudActionService extends ActionService {
       this.readonly
     );
 
+    this.tutorRrhh = new SolicitudRrhhTutorFragment(
+      logger,
+      this.data?.solicitud?.id,
+      this.isInvestigador,
+      solicitudRrhhService,
+      datosContactoService,
+      vinculacionService,
+      personaService,
+      this.readonly
+    )
+
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
     this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -395,6 +408,7 @@ export class SolicitudActionService extends ActionService {
 
         } else if (this.isFormularioSolicitudRrhh()) {
           this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
+          this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
         }
       } else {
         this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -411,6 +425,7 @@ export class SolicitudActionService extends ActionService {
           this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
         } else if (this.isFormularioSolicitudRrhh()) {
           this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
+          this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
         }
       }
 

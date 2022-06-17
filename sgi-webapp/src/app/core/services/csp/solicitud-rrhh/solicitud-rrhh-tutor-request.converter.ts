@@ -1,4 +1,5 @@
 import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
+import { IPersona } from '@core/models/sgp/persona';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ISolicitudRrhhTutorRequest } from './solicitud-rrhh-tutor-request';
 
@@ -9,7 +10,7 @@ class SolicitudRrhhTutorRequestConverter
       return value as unknown as ISolicitudRrhhTutor;
     }
     return {
-      tutorRef: value.tutorRef
+      tutor: { id: value.tutorRef } as IPersona
     };
   }
 
@@ -18,7 +19,7 @@ class SolicitudRrhhTutorRequestConverter
       return value as unknown as ISolicitudRrhhTutorRequest;
     }
     return {
-      tutorRef: value.tutorRef
+      tutorRef: value.tutor.id
     };
   }
 }

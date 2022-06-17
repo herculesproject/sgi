@@ -1,12 +1,9 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
-import { IDatosContacto } from '@core/models/sgp/datos-contacto';
-import { IDatosPersonales } from '@core/models/sgp/datos-personales';
 import { IEmail } from '@core/models/sgp/email';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
@@ -39,12 +36,9 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   private solicitudSolicitanteRrhh: ISolicitudSolicitanteRrhh;
   private solicitanteExterno: ISolicitanteExterno;
   private solicitanteForm: IPersona;
-  private solicitanteDatosContacto: IDatosContacto;
-  private solicitanteDatosPersonales: IDatosPersonales;
 
   readonly solicitanteEmails$ = new BehaviorSubject<IEmail[]>([]);
   readonly solicitanteTelefonos$ = new BehaviorSubject<string[]>([]);
-  readonly tipos$ = new BehaviorSubject<IGrupoTipo[]>([]);
   readonly areasAnep$ = new BehaviorSubject<SolicitudRrhhAreaAnepListado[]>([]);
   public readonly userCanEdit: boolean;
 
@@ -154,14 +148,14 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
           tipoDocumento: solicitudSolicitanteRrhh.solicitante.tipoDocumento ?? null,
           numeroDocumento: solicitudSolicitanteRrhh.solicitante.numeroDocumento ?? null,
           sexo: solicitudSolicitanteRrhh.solicitante.sexo ?? null,
-          fechaNacimiento: this.solicitanteDatosPersonales.fechaNacimiento ?? null,
-          paisNacimiento: this.solicitanteDatosPersonales.paisNacimiento ?? null,
-          direccionContacto: this.solicitanteDatosContacto.direccionContacto ?? null,
-          paisContacto: this.solicitanteDatosContacto.paisContacto ?? null,
-          comunidadAutonomaContacto: this.solicitanteDatosContacto.comAutonomaContacto ?? null,
-          provinciaContacto: this.solicitanteDatosContacto.provinciaContacto ?? null,
-          localidadContacto: this.solicitanteDatosContacto.ciudadContacto ?? null,
-          codigoPostalContacto: this.solicitanteDatosContacto.codigoPostalContacto ?? null
+          fechaNacimiento: solicitudSolicitanteRrhh.solicitante.datosPersonales?.fechaNacimiento ?? null,
+          paisNacimiento: solicitudSolicitanteRrhh.solicitante.datosPersonales?.paisNacimiento ?? null,
+          direccionContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.direccionContacto ?? null,
+          paisContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.paisContacto ?? null,
+          comunidadAutonomaContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.comAutonomaContacto ?? null,
+          provinciaContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.provinciaContacto ?? null,
+          localidadContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.ciudadContacto ?? null,
+          codigoPostalContacto: solicitudSolicitanteRrhh.solicitante.datosContacto?.codigoPostalContacto ?? null
         }
       };
 
@@ -304,21 +298,38 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
 
     return this.personaService.findById(id).pipe(
       switchMap((solicitante: IPersona) => {
-        if (!!solicitante?.id) {
-          return forkJoin({
-            datosContacto: this.datosContactoService.findByPersonaId(solicitante.id),
-            datosPersonales: this.datosPersonalesService.findByPersonaId(solicitante.id)
-          }).pipe(
-            tap(({ datosContacto }) => this.solicitanteDatosContacto = datosContacto),
-            tap(({ datosPersonales }) => this.solicitanteDatosPersonales = datosPersonales),
-            map(() => {
-              this.solicitanteForm = solicitante;
-              return solicitante;
-            })
-          );
+        if (!!!solicitante?.id) {
+          return of(solicitante);
         }
 
-        return of(solicitante);
+        return this.fillDatosContactoAndPersonalesSolicitante(solicitante);
+      })
+    );
+  }
+
+  private fillDatosContactoAndPersonalesSolicitante(solicitante: IPersona): Observable<IPersona> {
+    if (!!!solicitante?.id) {
+      return of(solicitante);
+    }
+
+    return forkJoin({
+      datosContacto: this.datosContactoService.findByPersonaId(solicitante.id),
+      datosPersonales: this.datosPersonalesService.findByPersonaId(solicitante.id)
+    }).pipe(
+      map(({ datosContacto, datosPersonales }) => {
+        solicitante.datosContacto = datosContacto;
+        solicitante.datosPersonales = datosPersonales;
+        this.solicitanteForm = solicitante;
+        return solicitante;
+      }),
+      tap(solicitante => {
+        if (!!!solicitante) {
+          return;
+        }
+
+        this.solicitanteEmails$.next(solicitante.datosContacto?.emails);
+        const telefonos = (solicitante.datosContacto?.telefonos ?? []).concat(solicitante.datosContacto?.moviles ?? []).filter(telefono => !!telefono);
+        this.solicitanteTelefonos$.next(telefonos);
       })
     );
   }
@@ -380,14 +391,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
           filter(solicitante => solicitante !== this.solicitanteForm && (!!this.solicitanteForm || !!solicitante)),
           switchMap((solicitante: IPersona) => {
             if (!!solicitante?.id) {
-              return forkJoin({
-                datosContacto: this.datosContactoService.findByPersonaId(solicitante.id),
-                datosPersonales: this.datosPersonalesService.findByPersonaId(solicitante.id)
-              }).pipe(
-                tap(({ datosContacto }) => this.solicitanteDatosContacto = datosContacto),
-                tap(({ datosPersonales }) => this.solicitanteDatosPersonales = datosPersonales),
-                map(() => solicitante)
-              );
+              return this.fillDatosContactoAndPersonalesSolicitante(solicitante);
             }
 
             return of(solicitante);
@@ -400,7 +404,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
             formGroup.controls.solicitanteExterno.enable({ emitEvent: false });
           }
 
-          this.fillDatosSolicitante();
+          this.fillDatosSolicitanteForm();
           this.setSolicitanteValidators(this.solicitanteExterno);
         })
     );
@@ -427,12 +431,11 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
       this.getFormGroup().controls.solicitante.setValidators([Validators.required]);
     } else {
       this.getFormGroup().controls.solicitante.clearValidators();
-      // this.solicitanteExterno = this.getDatosFormSolicitanteExterno();
     }
     this.getFormGroup().controls.solicitante.updateValueAndValidity({ onlySelf: true });
   }
 
-  private fillDatosSolicitante(): void {
+  private fillDatosSolicitanteForm(): void {
     const solicitante = this.getFormGroup().controls.solicitante.value;
     if (!!solicitante) {
       this.fillDatosSolicitanteUniversidad(solicitante);
@@ -452,24 +455,15 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     solicitanteExternoFormGroup.controls.numeroDocumento.setValue(solicitante.numeroDocumento, { emitEvent: false });
     solicitanteExternoFormGroup.controls.sexo.setValue(solicitante.sexo, { emitEvent: false });
 
-    solicitanteExternoFormGroup.controls.fechaNacimiento.setValue(this.solicitanteDatosPersonales?.fechaNacimiento, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.paisNacimiento.setValue(this.solicitanteDatosPersonales?.paisNacimiento, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.fechaNacimiento.setValue(solicitante.datosPersonales?.fechaNacimiento, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.paisNacimiento.setValue(solicitante.datosPersonales?.paisNacimiento, { emitEvent: false });
 
-    this.solicitanteEmails$.next(this.solicitanteDatosContacto.emails);
-    this.solicitanteTelefonos$.next(this.solicitanteDatosContacto.telefonos);
-
-    solicitanteExternoFormGroup.controls.direccionContacto.setValue(this.solicitanteDatosContacto?.direccionContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.paisContacto.setValue(this.solicitanteDatosContacto?.paisContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.comunidadAutonomaContacto.setValue(
-      this.solicitanteDatosContacto?.comAutonomaContacto,
-      { emitEvent: false }
-    );
-    solicitanteExternoFormGroup.controls.provinciaContacto.setValue(this.solicitanteDatosContacto?.provinciaContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.localidadContacto.setValue(this.solicitanteDatosContacto?.ciudadContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.codigoPostalContacto.setValue(
-      this.solicitanteDatosContacto?.codigoPostalContacto,
-      { emitEvent: false }
-    );
+    solicitanteExternoFormGroup.controls.direccionContacto.setValue(solicitante.datosContacto?.direccionContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.paisContacto.setValue(solicitante.datosContacto?.paisContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.comunidadAutonomaContacto.setValue(solicitante.datosContacto?.comAutonomaContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.provinciaContacto.setValue(solicitante.datosContacto?.provinciaContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.localidadContacto.setValue(solicitante.datosContacto?.ciudadContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.codigoPostalContacto.setValue(solicitante.datosContacto?.codigoPostalContacto, { emitEvent: false });
 
     solicitanteExternoFormGroup.updateValueAndValidity();
   }

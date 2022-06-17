@@ -1,4 +1,5 @@
+import { IPersona } from '../sgp/persona';
 
 export interface ISolicitudRrhhTutor {
-  tutorRef: string;
+  tutor: IPersona;
 }

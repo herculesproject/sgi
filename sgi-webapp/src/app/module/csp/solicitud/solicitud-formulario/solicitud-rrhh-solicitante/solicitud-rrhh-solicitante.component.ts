@@ -121,13 +121,13 @@ export class SolicitudRrhhSolitanteComponent extends FormFragmentComponent<ISoli
     this.translate.get(
       SOLICITUD_RRHH_NUMERO_DOCUMENTO_KEY
     ).subscribe((value) =>
-      this.msgParamApellidosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+      this.msgParamNumeroDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
     );
 
     this.translate.get(
       SOLICITUD_RRHH_TIPO_DOCUMENTO_KEY
     ).subscribe((value) =>
-      this.msgParamApellidosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+      this.msgParamTipoDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
     );
 
     this.translate.get(

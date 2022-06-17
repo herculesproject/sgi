@@ -27,4 +27,4 @@ class SolicitudRrhhMemoriaRequestConverter
   }
 }
 
-export const SOLICITUD_RRHH_TUTOR_REQUEST_CONVERTER = new SolicitudRrhhMemoriaRequestConverter();
+export const SOLICITUD_RRHH_MEMORIA_REQUEST_CONVERTER = new SolicitudRrhhMemoriaRequestConverter();
