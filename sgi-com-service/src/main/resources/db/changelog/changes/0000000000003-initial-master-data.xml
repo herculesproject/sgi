@@ -134,6 +134,18 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="PII_COM_FECHA_LIMITE_PROCEDIMIENTO_DATA" />
+      <column name="description" value="JSON con formato: {&quot;tipoProcedimiento&quot;:&quot;tipo procedimiento&quot;,&quot;accionATomar&quot;:&quot;acción a tomar&quot;,&quot;fechaLimite&quot;:&quot;2022-06-23T00:00:000z&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subject_tpl">
@@ -268,6 +280,18 @@
       <column name="tpl" valueClobFile="clob/0000000000003/eti-com-mem-archivada-automaticamente/ETI_COM_MEM_ARCHIVADA_AUT_SUBJECT.ftl" />
       <where>name='ETI_COM_MEM_ARCHIVADA_AUT_SUBJECT'</where>
     </update>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="PII_COM_FECHA_LIMITE_PROCEDIMIENTO_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de comunicados de fecha límite de procedimiento" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/pii-com-fecha-limite-procedimiento/PII_COM_FECHA_LIMITE_PROCEDIMIENTO_SUBJECT.ftl" />
+      <where>name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_SUBJECT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-subjecttpl_param">
@@ -343,6 +367,12 @@
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_MEM_ARCHIVADA_AUT_DATA')" />
+    </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_DATA')" />
     </insert>
   </changeSet>
 
@@ -534,6 +564,23 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/eti-com-mem-archivada-automaticamente/ETI_COM_MEM_ARCHIVADA_AUT_CONTENT_html.ftl" />
       <where>name='ETI_COM_MEM_ARCHIVADA_AUT_CONTENT'</where>
     </update>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de comunicados de fecha límite de procedimiento" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/pii-com-fecha-limite-procedimiento/PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT_text.ftl" />
+      <where>name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/pii-com-fecha-limite-procedimiento/PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT_html.ftl" />
+      <where>name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-contenttpl_param">
@@ -617,6 +664,12 @@
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='ETI_COM_MEM_ARCHIVADA_AUT_DATA')" />
+    </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_DATA')" />
     </insert>
   </changeSet>
 
@@ -737,6 +790,17 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="PII_COM_FECHA_LIMITE_PROCEDIMIENTO" />
+      <column name="description" value="Aviso de fecha límite de procedimiento (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_subjecttpl">
@@ -805,6 +869,12 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT_SUBJECT')" />
     </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_SUBJECT')" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-emailtpl_contenttpl">
@@ -872,6 +942,12 @@
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='ETI_COM_MEM_ARCHIVADA_AUT_CONTENT')" />
+    </insert>
+
+    <!-- PII Fecha límite procedimiento -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT')" />
     </insert>
   </changeSet>
 </databaseChangeLog>
