@@ -25,6 +25,7 @@ export class ActaMemoriasFragment extends Fragment {
   constructor(key: number, private service: ConvocatoriaReunionService) {
     super(key);
     this.selectedIdConvocatoria = key;
+    this.setComplete(true);
   }
 
   onInitialize(): void {
@@ -59,18 +60,6 @@ export class ActaMemoriasFragment extends Fragment {
           }
         })
       ).subscribe((memorias) => {
-        if (this.isEdit() && this.selectedIdConvocatoria !== this.getKey()) {
-          this.setChanges(true);
-          this.setComplete(this.selectedIdConvocatoria ? true : false);
-        }
-        else if (this.isEdit() && this.selectedIdConvocatoria === this.getKey()) {
-          this.setChanges(false);
-          this.setComplete(false);
-        }
-        else {
-          this.setChanges(this.selectedIdConvocatoria ? true : false);
-          this.setComplete(this.selectedIdConvocatoria ? true : false);
-        }
         this.memorias$.next(memorias);
       });
     }
