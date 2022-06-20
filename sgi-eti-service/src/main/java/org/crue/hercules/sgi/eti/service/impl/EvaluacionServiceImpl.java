@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -586,7 +587,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     if (favorable.booleanValue()) {
       // Se obtiene el informe favorable en formato pdf creado mediante el
       // servicio de reporting
-      if (evaluacion.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
+      if (Objects.equals(evaluacion.getTipoEvaluacion().getId(), Constantes.TIPO_EVALUACION_RETROSPECTIVA)) {
         informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
