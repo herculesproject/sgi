@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionEvaluacionException;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
@@ -170,6 +171,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     if (!memoriaRepository.existsById(evaluacion.getMemoria().getId())) {
       throw new MemoriaNotFoundException(evaluacion.getMemoria().getId());
+    }
+
+    List<Memoria> memoriasAsignables = memoriaRepository
+        .findAllMemoriasAsignablesConvocatoria(evaluacion.getConvocatoriaReunion().getId());
+    boolean asignable = memoriasAsignables.stream()
+        .anyMatch(mem -> mem.getId().equals(evaluacion.getMemoria().getId()));
+    if (!asignable) {
+      throw new ConvocatoriaReunionEvaluacionException();
     }
 
     // Si la evaluación es creada mediante la asignación de memorias en
