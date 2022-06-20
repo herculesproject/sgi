@@ -287,7 +287,6 @@ public class ActaServiceImpl implements ActaService {
             Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
     for (Evaluacion evaluacion : listEvaluacionesMemoria) {
-      boolean evaluacionMinima = false;
       switch (evaluacion.getDictamen().getId().intValue()) {
         case Constantes.DICTAMEN_FAVORABLE: {
           // Dictamen "Favorable"-
@@ -299,7 +298,6 @@ public class ActaServiceImpl implements ActaService {
           // Dictamen "Favorable pendiente de revisión mínima"-
           // Se actualiza memoria a estado 6: "Favorable Pendiente de Modificaciones
           // Mínimas"
-          evaluacionMinima = true;
           memoriaService.updateEstadoMemoria(evaluacion.getMemoria(),
               Constantes.ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS);
           break;
@@ -327,7 +325,7 @@ public class ActaServiceImpl implements ActaService {
       }
 
       // Enviar comunicado de cada evaluación al finalizar un acta
-      if (!evaluacionMinima) {
+      if (!evaluacion.getEsRevMinima().booleanValue()) {
         sendComunicadoActaFinalizada(evaluacion);
       }
 
