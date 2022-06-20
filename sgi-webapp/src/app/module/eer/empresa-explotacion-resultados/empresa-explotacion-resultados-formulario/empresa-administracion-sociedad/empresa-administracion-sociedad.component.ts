@@ -79,6 +79,9 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.administracionesSociedad$.subscribe(elements => {
       this.dataSource.data = elements;
+      if (elements.length > 0) {
+        this.validateTipoAdministracion();
+      }
     }));
   }
 
@@ -143,8 +146,8 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
           } else if (!wrapper.created) {
             const entidad = new StatusWrapper<IEmpresaAdministracionSociedad>(modalData.entidad as IEmpresaAdministracionSociedad);
             this.formPart.updateEmpresaAdministracionSociedad(entidad);
+            this.validateTipoAdministracion();
           }
-          this.validateTipoAdministracion();
         }
       }
     );
