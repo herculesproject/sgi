@@ -180,18 +180,9 @@ export class EmpresaAdministracionSociedadComponent extends FragmentComponent im
     const countAdminMancomunado = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.ADMINISTRADOR_MANCOMUNADO).length;
     const countConsejoAdmin = entidades.filter(entidad => entidad.tipoAdministracion === TipoAdministracion.CONSEJO_ADMINISTRACION).length;
 
-    let err = false;
-    if (countAdminUnico !== 1) {
-      err = true;
-    }
-    if (!err && countAdminSolidario < 2) {
-      err = true;
-    }
-    if (!err && countAdminMancomunado < 2) {
-      err = true;
-    }
-    if (!err && countConsejoAdmin < 3) {
-      err = true;
+    let err = true;
+    if (countAdminUnico === 1 || countAdminSolidario >= 2 || countAdminMancomunado >= 2 || countConsejoAdmin >= 3) {
+      err = false;
     }
 
     if (err) {
