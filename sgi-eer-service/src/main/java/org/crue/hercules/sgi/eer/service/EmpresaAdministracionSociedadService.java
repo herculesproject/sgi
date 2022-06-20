@@ -158,18 +158,9 @@ public class EmpresaAdministracionSociedadService {
           .filter(e -> e.getTipoAdministracion().equals(TipoAdministracion.CONSEJO_ADMINISTRACION))
           .collect(Collectors.toList()).size();
 
-      boolean error = false;
-      if (countAdminUnico != 1) {
-        error = true;
-      }
-      if (!error && countAdminSolidario < 2) {
-        error = true;
-      }
-      if (!error && countAdminMancomunado < 2) {
-        error = true;
-      }
-      if (!error && countConsejoAdmin < 3) {
-        error = true;
+      boolean error = true;
+      if (countAdminUnico == 1 || countAdminSolidario >= 2 || countAdminMancomunado >= 2 || countConsejoAdmin >= 3) {
+        error = false;
       }
 
       if (error) {
