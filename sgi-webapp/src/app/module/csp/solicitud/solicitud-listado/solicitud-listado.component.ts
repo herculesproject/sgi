@@ -10,6 +10,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
 import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -26,8 +27,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
@@ -50,6 +51,8 @@ const GRUPO_KEY = marker('csp.grupo');
 export interface ISolicitudListadoData extends ISolicitud {
   convocatoria: IConvocatoria;
   showCreateGrupo: boolean;
+  solicitanteExterno: ISolicitanteExterno;
+  nombreSolicitante: string;
 }
 
 @Component({
@@ -314,6 +317,11 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         const personaIdsSolicitantes = new Set<string>(
           solicitudes.filter(solicitud => !!solicitud.solicitante?.id).map((solicitud) => solicitud.solicitante.id)
         );
+
+        if (personaIdsSolicitantes.size === 0) {
+          return of(response);
+        }
+
         return this.personaService.findAllByIdIn([...personaIdsSolicitantes]).pipe(
           map((result) => {
             const personas = result.items;
@@ -339,7 +347,29 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
           catchError(() => of(response))
         );
 
-      })
+      }),
+      switchMap(response =>
+        from(response.items).pipe(
+          mergeMap(solicitud => {
+            if (!!!solicitud.solicitante?.id) {
+              return this.solicitudService.findSolicitanteExterno(solicitud.id).pipe(
+                map(solicitanteExterno => {
+                  solicitud.solicitanteExterno = solicitanteExterno;
+                  solicitud.nombreSolicitante = `${solicitud.solicitanteExterno?.nombre ?? ''} ${solicitud.solicitanteExterno?.apellidos ?? ''}`;
+                  return solicitud;
+                })
+              );
+            }
+
+            solicitud.nombreSolicitante = `${solicitud.solicitante.nombre ?? ''} ${solicitud.solicitante.apellidos ?? ''}`;
+            return of(solicitud);
+          }),
+          toArray(),
+          map(() => {
+            return response;
+          })
+        )
+      )
     );
   }
 

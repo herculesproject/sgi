@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
+import { ISolicitudRrhhMemoria } from '@core/models/csp/solicitud-rrhh-memoria';
 import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
 import { environment } from '@env';
 import {
@@ -9,6 +10,9 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SOLICITUD_RRHH_MEMORIA_REQUEST_CONVERTER } from './solicitud-rrhh-memoria-request.converter';
+import { ISolicitudRrhhMemoriaResponse } from './solicitud-rrhh-memoria-response';
+import { SOLICITUD_RRHH_MEMORIA_RESPONSE_CONVERTER } from './solicitud-rrhh-memoria-response.converter';
 import { ISolicitudRrhhRequest } from './solicitud-rrhh-request';
 import { SOLICITUD_RRHH_REQUEST_CONVERTER } from './solicitud-rrhh-request.converter';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh-response';
@@ -73,6 +77,34 @@ export class SolicitudRrhhService extends _SolicitudRrhhMixinBase {
       SOLICITUD_RRHH_TUTOR_REQUEST_CONVERTER.fromTarget(tutor)
     ).pipe(
       map(response => SOLICITUD_RRHH_TUTOR_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Devuelve los datos de la memoria de una solicitud de RRHH
+   *
+   * @param solicitudRrhhId Id de la solicitud
+   */
+  findMemoria(solicitudRrhhId: number): Observable<ISolicitudRrhhMemoria> {
+    return this.http.get<ISolicitudRrhhMemoriaResponse>(
+      `${this.endpointUrl}/${solicitudRrhhId}/memoria`
+    ).pipe(
+      map(response => SOLICITUD_RRHH_MEMORIA_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Actualiza los datos de la memoria de una solicitud de RRHH
+   *
+   * @param solicitudRrhhId Id de la solicitud
+   * @param memoria ISolicitudRrhhMemoria
+   */
+  updateMemoria(solicitudRrhhId: number, memoria: ISolicitudRrhhMemoria): Observable<ISolicitudRrhhMemoria> {
+    return this.http.patch<ISolicitudRrhhMemoriaResponse>(
+      `${this.endpointUrl}/${solicitudRrhhId}/memoria`,
+      SOLICITUD_RRHH_MEMORIA_REQUEST_CONVERTER.fromTarget(memoria)
+    ).pipe(
+      map(response => SOLICITUD_RRHH_MEMORIA_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

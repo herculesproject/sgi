@@ -17,7 +17,7 @@ import { DatosPersonalesService } from '@core/services/sgp/datos-personales.serv
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 export interface ISolicitudSolicitanteRrhh extends ISolicitudRrhh {
   solicitante: IPersona;
@@ -64,6 +64,15 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     this.setComplete(true);
     this.solicitudSolicitanteRrhh = {} as ISolicitudSolicitanteRrhh;
     this.userCanEdit = !readonly;
+
+    // Hack edit mode
+    this.initialized$.pipe(
+      take(2)
+    ).subscribe(value => {
+      if (value) {
+        this.performChecks(true);
+      }
+    });
   }
 
   protected initializer(key: string | number): Observable<ISolicitudSolicitanteRrhh> {
@@ -266,7 +275,9 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   }
 
   private saveOrUpdateSolicitanteInterno(solicitudSolicitanteRrhh: ISolicitudSolicitanteRrhh): Observable<void> {
-    return this.solicitudService.updateSolicitante(solicitudSolicitanteRrhh.id, solicitudSolicitanteRrhh?.solicitante?.id);
+    return this.solicitudService.updateSolicitante(solicitudSolicitanteRrhh.id, solicitudSolicitanteRrhh?.solicitante?.id).pipe(
+      tap(() => this.solicitud.solicitante = solicitudSolicitanteRrhh?.solicitante)
+    );
   }
 
   private saveOrUpdateSolicitanteExterno(solicitudSolicitanteRrhh: ISolicitudSolicitanteRrhh): Observable<void> {
@@ -322,13 +333,14 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
         this.solicitanteForm = solicitante;
         return solicitante;
       }),
-      tap(solicitante => {
-        if (!!!solicitante) {
+      tap(datosSolicitante => {
+        if (!!!datosSolicitante) {
           return;
         }
 
-        this.solicitanteEmails$.next(solicitante.datosContacto?.emails);
-        const telefonos = (solicitante.datosContacto?.telefonos ?? []).concat(solicitante.datosContacto?.moviles ?? []).filter(telefono => !!telefono);
+        this.solicitanteEmails$.next(datosSolicitante.datosContacto?.emails);
+        const telefonos = (datosSolicitante.datosContacto?.telefonos ?? [])
+          .concat(datosSolicitante.datosContacto?.moviles ?? []).filter(telefono => !!telefono);
         this.solicitanteTelefonos$.next(telefonos);
       })
     );
@@ -460,10 +472,16 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
 
     solicitanteExternoFormGroup.controls.direccionContacto.setValue(solicitante.datosContacto?.direccionContacto, { emitEvent: false });
     solicitanteExternoFormGroup.controls.paisContacto.setValue(solicitante.datosContacto?.paisContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.comunidadAutonomaContacto.setValue(solicitante.datosContacto?.comAutonomaContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.comunidadAutonomaContacto.setValue(
+      solicitante.datosContacto?.comAutonomaContacto,
+      { emitEvent: false }
+    );
     solicitanteExternoFormGroup.controls.provinciaContacto.setValue(solicitante.datosContacto?.provinciaContacto, { emitEvent: false });
     solicitanteExternoFormGroup.controls.localidadContacto.setValue(solicitante.datosContacto?.ciudadContacto, { emitEvent: false });
-    solicitanteExternoFormGroup.controls.codigoPostalContacto.setValue(solicitante.datosContacto?.codigoPostalContacto, { emitEvent: false });
+    solicitanteExternoFormGroup.controls.codigoPostalContacto.setValue(
+      solicitante.datosContacto?.codigoPostalContacto,
+      { emitEvent: false }
+    );
 
     solicitanteExternoFormGroup.updateValueAndValidity();
   }

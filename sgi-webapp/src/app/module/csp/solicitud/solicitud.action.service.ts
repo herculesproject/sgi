@@ -69,6 +69,7 @@ import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formu
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
+import { SolicitudRrhhMemoriaFragment } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.fragment';
 import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
 import { SolicitudRrhhTutorFragment } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.fragment';
 
@@ -129,6 +130,7 @@ export class SolicitudActionService extends ActionService {
   private autoevaluacion: SolicitudAutoevaluacionFragment;
   private solicitanteRrhh: SolicitudRrhhSolitanteFragment;
   private tutorRrhh: SolicitudRrhhTutorFragment;
+  private memoriaRrhh: SolicitudRrhhMemoriaFragment;
   public readonly isInvestigador: boolean;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
@@ -329,7 +331,15 @@ export class SolicitudActionService extends ActionService {
       vinculacionService,
       personaService,
       this.readonly
-    )
+    );
+
+    this.memoriaRrhh = new SolicitudRrhhMemoriaFragment(
+      logger,
+      this.data?.solicitud?.id,
+      this.isInvestigador,
+      solicitudRrhhService,
+      this.readonly
+    );
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 
@@ -409,6 +419,7 @@ export class SolicitudActionService extends ActionService {
         } else if (this.isFormularioSolicitudRrhh()) {
           this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
           this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
+          this.addFragment(this.FRAGMENT.MEMORIA, this.memoriaRrhh);
         }
       } else {
         this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -426,6 +437,7 @@ export class SolicitudActionService extends ActionService {
         } else if (this.isFormularioSolicitudRrhh()) {
           this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
           this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
+          this.addFragment(this.FRAGMENT.MEMORIA, this.memoriaRrhh);
         }
       }
 
@@ -477,6 +489,10 @@ export class SolicitudActionService extends ActionService {
               miembroEquipo.value.solicitudProyectoEquipo.persona.id === this.solicitud.solicitante.id))
         );
 
+      } else if (this.isFormularioSolicitudRrhh()) {
+        this.solicitanteRrhh.initialize();
+        this.tutorRrhh.initialize();
+        this.memoriaRrhh.initialize();
       }
     }
 
@@ -549,6 +565,26 @@ export class SolicitudActionService extends ActionService {
         cascade = cascade.pipe(
           switchMap(() => this.datosGenerales.saveOrUpdate().pipe(tap(() => this.datosGenerales.refreshInitialState(true))))
         );
+      }
+
+      if (this.isFormularioSolicitudRrhh()) {
+        if (this.solicitanteRrhh.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.solicitanteRrhh.saveOrUpdate().pipe(tap(() => this.solicitanteRrhh.refreshInitialState(true))))
+          );
+        }
+
+        if (this.tutorRrhh.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.tutorRrhh.saveOrUpdate().pipe(tap(() => this.tutorRrhh.refreshInitialState(true))))
+          );
+        }
+
+        if (this.memoriaRrhh.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.memoriaRrhh.saveOrUpdate().pipe(tap(() => this.memoriaRrhh.refreshInitialState(true))))
+          );
+        }
       }
 
       // Si se modifica alguna pestaña desde el perfil investigador y no se ha creado la ficha general se fuerza que se cree

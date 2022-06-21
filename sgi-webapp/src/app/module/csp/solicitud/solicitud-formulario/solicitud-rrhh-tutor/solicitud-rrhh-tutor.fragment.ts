@@ -9,7 +9,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 
 export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor> {
 
@@ -33,11 +33,21 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
     this.setComplete(true);
     this.userCanEdit = !readonly;
     this.solicitudRrhhTutor = {} as ISolicitudRrhhTutor;
+
+    // Hack edit mode
+    this.initialized$.pipe(
+      take(2)
+    ).subscribe(value => {
+      if (value) {
+        this.performChecks(true);
+      }
+    });
   }
 
   protected initializer(key: string | number): Observable<ISolicitudRrhhTutor> {
     return this.solicitudRrhhService.findTutor(key as number).pipe(
-      switchMap(tutorSolicitudRrhh => this.fillDatosTutor(tutorSolicitudRrhh.tutor)
+      map(tutorSolicitudRrhh => tutorSolicitudRrhh ?? {} as ISolicitudRrhhTutor),
+      switchMap(tutorSolicitudRrhh => this.getDatosTutor(tutorSolicitudRrhh?.tutor)
         .pipe(
           map(tutor => {
             tutorSolicitudRrhh.tutor = tutor;
@@ -69,24 +79,16 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
   }
 
   buildPatch(solicitudRrhhTutor: ISolicitudRrhhTutor): { [key: string]: any } {
-    let formValues: { [key: string]: any } = {
-      tutor: solicitudRrhhTutor?.tutor
-    };
-
-    if (!!solicitudRrhhTutor?.tutor) {
-      formValues = {
-        ...formValues,
-        nombre: solicitudRrhhTutor.tutor.nombre ?? null,
-        apellidos: solicitudRrhhTutor.tutor.apellidos ?? null,
-        categoria: solicitudRrhhTutor.tutor.vinculacion?.categoriaProfesional?.nombre ?? null,
-        departamento: solicitudRrhhTutor.tutor.vinculacion?.departamento?.nombre ?? null,
-        centro: solicitudRrhhTutor.tutor.vinculacion?.centro?.nombre ?? null
-      };
-    }
-
     this.initFormSubscriptions(this.getFormGroup());
 
-    return formValues;
+    return {
+      tutor: solicitudRrhhTutor?.tutor ?? null,
+      nombre: solicitudRrhhTutor.tutor?.nombre ?? null,
+      apellidos: solicitudRrhhTutor.tutor?.apellidos ?? null,
+      categoria: solicitudRrhhTutor.tutor?.vinculacion?.categoriaProfesional?.nombre ?? null,
+      departamento: solicitudRrhhTutor.tutor?.vinculacion?.departamento?.nombre ?? null,
+      centro: solicitudRrhhTutor.tutor?.vinculacion?.centro?.nombre ?? null
+    };
   }
 
 
@@ -105,27 +107,28 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
     );
   }
 
-  private fillDatosTutor(tutor: IPersona): Observable<IPersona> {
+  private getDatosTutor(tutor: IPersona): Observable<IPersona> {
     if (!!!tutor?.id) {
       return of(tutor);
     }
 
     return this.personaService.findById(tutor.id).pipe(
-      switchMap((tutor: IPersona) => {
-        if (!!!tutor?.id) {
-          return of(tutor);
+      switchMap((persona: IPersona) => {
+        if (!!!persona?.id) {
+          return of(persona);
         }
 
-        return this.fillDatosContactoAndVinculacionesTutor(tutor);
+        return this.fillDatosContactoAndVinculacionesTutor(persona);
       }),
-      tap(tutor => {
-        if (!!!tutor) {
+      tap(persona => {
+        if (!!!persona) {
           return;
         }
 
-        this.fillDatosTutorForm(tutor);
-        this.tutorEmails$.next(tutor.datosContacto?.emails);
-        const telefonos = (tutor.datosContacto?.telefonos ?? []).concat(tutor.datosContacto?.moviles ?? []).filter(telefono => !!telefono);
+        this.fillDatosTutorForm(persona);
+        this.tutorEmails$.next(persona.datosContacto?.emails);
+        const telefonos = (persona.datosContacto?.telefonos ?? []).concat(persona.datosContacto?.moviles ?? [])
+          .filter(telefono => !!telefono);
         this.tutorTelefonos$.next(telefonos);
       })
     );
@@ -152,9 +155,9 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
     this.subscriptions.push(
       formGroup.controls.tutor.valueChanges
         .pipe(
-          switchMap(tutor => this.fillDatosTutor(tutor)),
+          switchMap(tutor => this.getDatosTutor(tutor)),
         ).subscribe(tutor => {
-          this.solicitudRrhhTutor.tutor = tutor;
+          this.solicitudRrhhTutor.tutor = tutor ?? null;
         })
     );
   }
