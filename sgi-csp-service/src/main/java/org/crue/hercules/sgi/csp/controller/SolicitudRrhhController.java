@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.SolicitudRrhhConverter;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudRrhhMemoriaInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudRrhhMemoriaOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhTutorInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhTutorOutput;
@@ -38,6 +40,7 @@ public class SolicitudRrhhController {
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "solicitudes-rrhh";
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_TUTOR = PATH_ID + PATH_DELIMITER + "tutor";
+  public static final String PATH_MEMORIA = PATH_ID + PATH_DELIMITER + "memoria";
 
   private final SolicitudRrhhService service;
   private final SolicitudRrhhConverter converter;
@@ -99,11 +102,12 @@ public class SolicitudRrhhController {
    */
   @GetMapping(PATH_TUTOR)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
-  public SolicitudRrhhTutorOutput findTutorBySolicitudRrhhId(@PathVariable Long id) {
+  public ResponseEntity<SolicitudRrhhTutorOutput> findTutorBySolicitudRrhhId(@PathVariable Long id) {
     log.debug("findTutorBySolicitudRrhhId(Long id) - start");
-    SolicitudRrhhTutorOutput returnValue = converter.convertRrhhTutorOutput(service.findById(id));
+    SolicitudRrhh returnValue = service.findBySolicitud(id);
     log.debug("findTutorBySolicitudRrhhId(Long id) - end");
-    return returnValue;
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(converter.convertRrhhTutorOutput(returnValue), HttpStatus.OK);
   }
 
   /**
@@ -121,6 +125,42 @@ public class SolicitudRrhhController {
     SolicitudRrhhTutorOutput returnValue = converter
         .convertRrhhTutorOutput(service.updateTutor(converter.convert(id, tutor)));
     log.debug("updateTutor(Long id, SolicitudRrhhTutorInput tutor) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve el {@link SolicitudRrhhMemoriaOutput} de {@link SolicitudRrhh} con
+   * el id indicado.
+   * 
+   * @param id Identificador de {@link SolicitudRrhh}.
+   * @return {@link SolicitudRrhhMemoriaOutput} correspondiente al id
+   */
+  @GetMapping(PATH_MEMORIA)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
+  public ResponseEntity<SolicitudRrhhMemoriaOutput> findMemoriaBySolicitudRrhhId(@PathVariable Long id) {
+    log.debug("findMemoriaBySolicitudRrhhId(Long id) - start");
+    SolicitudRrhh returnValue = service.findBySolicitud(id);
+    log.debug("findMemoriaBySolicitudRrhhId(Long id) - end");
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(converter.convertRrhhMemoriaOutput(returnValue), HttpStatus.OK);
+  }
+
+  /**
+   * Actualiza la memoria de la {@link SolicitudRrhh} con id indicado.
+   * 
+   * @param id      Identificador de {@link SolicitudRrhh}.
+   * @param memoria el {@link SolicitudRrhhMemoriaInput}.
+   * @return {@link SolicitudRrhhMemoriaOutput} actualizado.
+   */
+  @PatchMapping(PATH_MEMORIA)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-INV-ER')")
+  public SolicitudRrhhMemoriaOutput updateMemoria(@PathVariable Long id,
+      @RequestBody SolicitudRrhhMemoriaInput memoria) {
+    log.debug("updateMemoria(Long id, SolicitudRrhhTutorInput memoria) - start");
+
+    SolicitudRrhhMemoriaOutput returnValue = converter
+        .convertRrhhMemoriaOutput(service.updateMemoria(converter.convert(id, memoria)));
+    log.debug("updateMemoria(Long id, SolicitudRrhhTutorInput memoria) - end");
     return returnValue;
   }
 

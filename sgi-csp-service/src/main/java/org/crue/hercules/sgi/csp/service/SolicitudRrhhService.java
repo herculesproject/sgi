@@ -104,6 +104,33 @@ public class SolicitudRrhhService {
   }
 
   /**
+   * Actualiza la memoria de la {@link SolicitudRrhh}.
+   *
+   * @param solicitudRrhhActualizar {@link SolicitudRrhh} con los datos de la
+   *                                memoria actualizados.
+   * @return {@link SolicitudRrhh} actualizado.
+   */
+  @Transactional
+  @Validated({ BaseEntity.Update.class })
+  public SolicitudRrhh updateMemoria(@Valid SolicitudRrhh solicitudRrhhActualizar) {
+    log.debug("updateMemoria(SolicitudRrhh solicitudRrhhActualizar) - start");
+
+    AssertHelper.idNotNull(solicitudRrhhActualizar.getId(), SolicitudRrhh.class);
+    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhhActualizar.getId());
+
+    return repository.findById(solicitudRrhhActualizar.getId()).map(data -> {
+      data.setTituloTrabajo(solicitudRrhhActualizar.getTituloTrabajo());
+      data.setResumen(solicitudRrhhActualizar.getResumen());
+      data.setObservaciones(solicitudRrhhActualizar.getObservaciones());
+
+      SolicitudRrhh returnValue = repository.save(data);
+
+      log.debug("updateMemoria(SolicitudRrhh solicitudRrhhActualizar) - end");
+      return returnValue;
+    }).orElseThrow(() -> new SolicitudRrhhNotFoundException(solicitudRrhhActualizar.getId()));
+  }
+
+  /**
    * Obtiene una entidad {@link SolicitudRrhh} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudRrhh}.

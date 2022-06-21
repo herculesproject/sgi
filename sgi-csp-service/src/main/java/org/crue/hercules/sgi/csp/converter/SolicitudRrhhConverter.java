@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.converter;
 
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudRrhhMemoriaInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudRrhhMemoriaOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhTutorInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudRrhhTutorOutput;
@@ -38,6 +40,16 @@ public class SolicitudRrhhConverter {
 
   public SolicitudRrhhTutorOutput convertRrhhTutorOutput(SolicitudRrhh entity) {
     return modelMapper.map(entity, SolicitudRrhhTutorOutput.class);
+  }
+
+  public SolicitudRrhh convert(Long id, SolicitudRrhhMemoriaInput input) {
+    SolicitudRrhh entity = modelMapper.map(input, SolicitudRrhh.class);
+    entity.setId(id);
+    return entity;
+  }
+
+  public SolicitudRrhhMemoriaOutput convertRrhhMemoriaOutput(SolicitudRrhh entity) {
+    return modelMapper.map(entity, SolicitudRrhhMemoriaOutput.class);
   }
 
 }
