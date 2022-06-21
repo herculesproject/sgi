@@ -14,7 +14,7 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -26,7 +26,19 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
-    
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="param">
+      <column name="id" valueSequenceNext="param_seq" />
+      <column name="name" value="CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_DATA" />
+      <column name="description" value="JSON con formato: {&quot;fechaEstado&quot;:&quot;2022-06-11T00:00:000z&quot;,&quot;nombreApellidosSolicitante&quot;:&quot;Francisco José Alonso&quot;,&quot;codigoInternoSolicitud&quot;:&quot;SOL-INT-CODE-01&quot;,&quot;tituloConvocatoria&quot;:&quot;Convocatoria RRHH&quot;,&quot;fechaProvisionalConvocatoria&quot;:&quot;2022-06-11T00:00:000z&quot;,&quot;enlaceAplicacionMenuValidacionTutor&quot;:&quot;https://sgi.test.corp.treelogic.com/inv/solicitudes/validacion-tutor&quot;}" />
+      <column name="type" value="JSON" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
     <insert tableName="param">
       <column name="id" valueSequenceNext="param_seq" />
@@ -172,7 +184,19 @@
       <column name="tpl" valueClobFile="clob/0000000000003/csp-com-cambio-estado-autorizacion-part-pro-ex/CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT.ftl" />
       <where>name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT'</where>
     </update>
-    
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="subject_tpl">
+      <column name="id" valueSequenceNext="subject_tpl_seq" />
+      <column name="name" value="CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_SUBJECT" />
+      <column name="description" value="Plantilla de asunto para el envío de comunicados de Cambio de estado a SOLICITADA de una solicitud de RRHH" />
+      <column name="tpl" value=" " />
+    </insert>
+    <update tableName="subject_tpl">
+      <column name="tpl" valueClobFile="clob/0000000000003/csp-com-cambio-estado-solicitada-sol-tipo-rrhh/CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_SUBJECT.ftl" />
+      <where>name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_SUBJECT'</where>
+    </update>
+
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
     <insert tableName="subject_tpl">
       <column name="id" valueSequenceNext="subject_tpl_seq" />
@@ -300,13 +324,19 @@
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA')" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA')" />
     </insert>
-    
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="subjecttpl_param">
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_SUBJECT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_DATA')" />
+    </insert>
+
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
     <insert tableName="subjecttpl_param">
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT')" />
@@ -393,7 +423,7 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/csp-com-add-mod-cert-autorizacion-part-pro-ex/CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT_html.ftl" />
       <where>name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT'</where>
     </update>
-    
+
     <!-- Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -410,7 +440,24 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/csp-com-cambio-estado-autorizacion-part-pro-ex/CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT_html.ftl" />
       <where>name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT'</where>
     </update>
-    
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="content_tpl">
+      <column name="id" valueSequenceNext="content_tpl_seq" />
+      <column name="name" value="CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT" />
+      <column name="description" value="Plantilla de contenido para el envío de comunicados de Cambio de estado a solicitada de una soolicitud de tipo RRHH" />
+      <column name="tpl_text" value=" " />
+      <column name="tpl_html" value="" />
+    </insert>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/csp-com-cambio-estado-solicitada-sol-tipo-rrhh/CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/csp-com-cambio-estado-solicitada-sol-tipo-rrhh/CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT'</where>
+    </update>
+
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
     <insert tableName="content_tpl">
       <column name="id" valueSequenceNext="content_tpl_seq" />
@@ -589,11 +636,17 @@
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA')" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="contenttpl_param">
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT')" />
       <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA')" />
+    </insert>
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="contenttpl_param">
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT')" />
+      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_DATA')" />
     </insert>
 
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
@@ -684,7 +737,7 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -695,7 +748,18 @@
       <column name="last_modified_by" value="master" />
       <column name="last_modified_date" valueDate="current_timestamp()" />
     </insert>
-    
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="email_tpl">
+      <column name="id" valueSequenceNext="email_tpl_seq" />
+      <column name="name" value="CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH" />
+      <column name="description" value="Aviso de cambio de estado a SOLICITADA de una solicitud de tipo RRHH (texto + HTML)" />
+      <column name="created_by" value="master" />
+      <column name="creation_date" valueDate="current_timestamp()" />
+      <column name="last_modified_by" value="master" />
+      <column name="last_modified_date" valueDate="current_timestamp()" />
+    </insert>
+
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
     <insert tableName="email_tpl">
       <column name="id" valueSequenceNext="email_tpl_seq" />
@@ -809,11 +873,17 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT')" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="emailtpl_subjecttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO')" />
       <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_SUBJECT')" />
+    </insert>
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="emailtpl_subjecttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH')" />
+      <column name="subjecttpl_id" valueComputed="(select id from ${schemaPrefix}subject_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_SUBJECT')" />
     </insert>
 
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
@@ -883,11 +953,17 @@
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_ADD_MODIFICAR_CERTIFICADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT')" />
     </insert>
-    
+
     <!-- CSP Cambiar estado autorización participación proyecto externo - Unidad gestión -->
     <insert tableName="emailtpl_contenttpl">
       <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO')" />
       <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CAMBIO_ESTADO_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_CONTENT')" />
+    </insert>
+
+    <!-- CSP Cambio al estado Solicitada para solicitudes de tipo RRHH -->
+    <insert tableName="emailtpl_contenttpl">
+      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH')" />
+      <column name="contenttpl_id" valueComputed="(select id from ${schemaPrefix}content_tpl where name='CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_CONTENT')" />
     </insert>
 
     <!-- CSP Modificar autorización participación proyecto externo - Perfil investigador -->
