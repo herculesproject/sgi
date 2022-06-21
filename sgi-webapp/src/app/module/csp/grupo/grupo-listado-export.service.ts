@@ -14,10 +14,9 @@ import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, zip } from 'rxjs';
+import { concat, Observable, of, zip } from 'rxjs';
 import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
 import { GrupoLineaClasificacionListado } from '../grupo-linea-investigacion/grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.fragment';
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
@@ -55,7 +54,6 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private authService: SgiAuthService,
     private readonly grupoService: GrupoService,
     private readonly grupoGeneralListadoExportService: GrupoGeneralListadoExportService,
     private readonly grupoEquipoInvestigacionListadoExportService: GrupoEquipoListadoExportService,
@@ -139,7 +137,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
   }
 
   private getDataReportInner(grupoData: IGrupoReportData, reportOptions: IGrupoReportOptions): Observable<IGrupoReportData> {
-    return merge(
+    return concat(
       this.getDataReportListadoGeneral(grupoData),
       this.getDataReportEquipoInvestigacion(grupoData, reportOptions),
       this.getDataReportResponsableEconomico(grupoData, reportOptions),

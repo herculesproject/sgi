@@ -21,8 +21,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
-import { from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { concat, from, Observable, of } from 'rxjs';
+import { catchError, concatMap, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { GrupoLineaClasificacionListado } from '../grupo-linea-investigacion/grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.fragment';
 import { IGrupoReportData, IGrupoReportOptions } from '../grupo/grupo-listado-export.service';
 
@@ -106,7 +106,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
             return grupoLineaInvestigacion;
           }),
           switchMap(() => {
-            return merge(
+            return concat(
               this.getMiembrosAdscritos(grupoLineaInvestigacion, grupoData),
               this.getClasificaciones(grupoLineaInvestigacion, grupoData),
               this.getEquiposInstrumentales(grupoLineaInvestigacion, grupoData)
@@ -118,7 +118,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
               }));
           })
         );
-      }
+      }, this.DEFAULT_CONCURRENT
       ),
       map(() => grupoData)
     );
@@ -138,7 +138,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       }),
       switchMap(responseLineaInvestigador => {
         return from(responseLineaInvestigador.items).pipe(
-          mergeMap(element => {
+          concatMap(element => {
             return this.personaService.findById(element.persona.id).pipe(
               map(persona => {
                 element.persona = persona;
@@ -169,7 +169,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       switchMap((result) => {
         grupoData.clasificaciones.push(...result);
         return from(result).pipe(
-          mergeMap((grupoLineaClasificacion) => {
+          concatMap((grupoLineaClasificacion) => {
 
             return this.clasificacionService.findById(grupoLineaClasificacion.nivelSeleccionado.id).pipe(
               map((clasificacion) => {
@@ -214,7 +214,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       }),
       switchMap(result => {
         return from(result.items).pipe(
-          mergeMap(element => {
+          concatMap(element => {
             return this.grupoEquipoInstrumentalService.findById(element.grupoEquipoInstrumental.id).pipe(
               map(equipoInstrumental => {
                 element.grupoEquipoInstrumental = equipoInstrumental;

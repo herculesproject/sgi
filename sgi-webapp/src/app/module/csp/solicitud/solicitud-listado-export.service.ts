@@ -18,7 +18,7 @@ import { ReportService } from '@core/services/rep/report.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, zip } from 'rxjs';
+import { concat, Observable, of, zip } from 'rxjs';
 import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SolicitudEntidadConvocanteListadoExportService } from './solicitud-entidad-convocante-listado-export.service';
 import { SolicitudDatosGenerales } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
@@ -160,7 +160,7 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
   }
 
   private getDataReportInner(solicitudData: ISolicitudReportData, reportOptions: ISolicitudReportOptions): Observable<ISolicitudReportData> {
-    return merge(
+    return concat(
       this.getDataReportListadoGeneral(solicitudData),
       this.getDataReportEntidadesConvocantes(solicitudData, reportOptions),
       this.getDataReportSolicitudProyectoFichaGeneral(solicitudData, reportOptions),

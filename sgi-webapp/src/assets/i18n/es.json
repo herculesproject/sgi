@@ -204,8 +204,6 @@
   "csp.convocatoria-periodo-justificacion.periodo": "Número de Periodo",
   "csp.convocatoria-periodo-justificacion.tipo": "Tipo",
   "csp.convocatoria-periodo-seguimiento-cientifico": "Periodo{count,plural,=0{} one{} other{s}} Seguimiento Científico",
-  "csp.convocatoria-req-equipo": "Req. Equipo",
-  "csp.convocatoria-req-ip": "Req. IP",
   "csp.convocatoria-requisito-equipo": "Requisitos Equipo",
   "csp.convocatoria-requisito-equipo.categoria-profesional.limitacion-fechas": "Limitaciones sobre la fecha de obtención de la categoría profesional",
   "csp.convocatoria-requisito-equipo.fecha-anterior": "Anterior a",
