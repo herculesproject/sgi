@@ -109,6 +109,7 @@ public class SolicitudService {
   private final ProgramaRepository programaRepository;
   private final SolicitudAuthorityHelper solicitudAuthorityHelper;
   private final GrupoAuthorityHelper grupoAuthorityHelper;
+  private final SolicitudRrhhComService solicitudRrhhComService;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -127,7 +128,8 @@ public class SolicitudService {
       SgiApiSgpService personasService,
       ProgramaRepository programaRepository,
       SolicitudAuthorityHelper solicitudAuthorityHelper,
-      GrupoAuthorityHelper grupoAuthorityHelper) {
+      GrupoAuthorityHelper grupoAuthorityHelper,
+      SolicitudRrhhComService solicitudRrhhComService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -148,6 +150,7 @@ public class SolicitudService {
     this.programaRepository = programaRepository;
     this.solicitudAuthorityHelper = solicitudAuthorityHelper;
     this.grupoAuthorityHelper = grupoAuthorityHelper;
+    this.solicitudRrhhComService = solicitudRrhhComService;
   }
 
   /**
@@ -602,6 +605,17 @@ public class SolicitudService {
                 break;
             }
           }
+        }
+      }
+
+      if (EstadoSolicitud.Estado.SOLICITADA == estadoSolicitud.getEstado()
+          && solicitud.getFormularioSolicitud() == FormularioSolicitud.RRHH) {
+        try {
+          this.solicitudRrhhComService.enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(
+              estadoSolicitud.getFechaEstado(),
+              solicitud);
+        } catch (Exception ex) {
+          log.error(ex.getMessage(), ex);
         }
       }
     }

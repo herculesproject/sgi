@@ -135,6 +135,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private GrupoAuthorityHelper grupoAuthorityHelper;
 
+  @Mock
+  private SolicitudRrhhComService solicitudRrhhComService;
+
   private SolicitudService service;
 
   @BeforeEach
@@ -146,7 +149,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
         convocatoriaEntidadFinanciadoraRepository, convocatoriaEnlaceRepository, comunicadosService, personasService,
-        programaRepository, solicitudAuthorityHelper, grupoAuthorityHelper);
+        programaRepository, solicitudAuthorityHelper, grupoAuthorityHelper, solicitudRrhhComService);
   }
 
   @Test
