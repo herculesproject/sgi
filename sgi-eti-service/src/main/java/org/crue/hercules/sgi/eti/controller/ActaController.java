@@ -161,7 +161,7 @@ public class ActaController {
   }
 
   @PutMapping("/{id}/finalizar")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-FIN','ETI-ACT-INV-DESR','ETI-ACT-DESR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-FIN','ETI-ACT-DESR')")
   public void finishActa(@PathVariable Long id) {
 
     log.debug("finalizarActa(Long id) - start");
