@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -274,7 +275,8 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
 
     // Comprobar solamente si estamos creando o se ha modificado el documento
     if (datosOriginales == null
-        || (modeloTipoDocumento.get().getTipoDocumento().getId() != datosOriginales.getTipoDocumento().getId())) {
+        || (!Objects.equals(modeloTipoDocumento.get().getTipoDocumento().getId(),
+            datosOriginales.getTipoDocumento().getId()))) {
 
       // La asignación al ModeloEjecucion está activa
       Assert.isTrue(modeloTipoDocumento.get().getActivo(),

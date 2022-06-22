@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -172,8 +173,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
           if (convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion() != null) {
             Assert.isTrue(
                 (convocatoriaEntidadFinanciadora.getFuenteFinanciacion() != null
-                    && convocatoriaEntidadFinanciadora.getFuenteFinanciacion()
-                        .getId() == convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getId())
+                    && Objects.equals(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()
+                        .getId(), convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getId()))
                     || convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getActivo(),
                 "La FuenteFinanciacion debe estar Activo");
           }
@@ -181,8 +182,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
           if (convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion() != null) {
             Assert.isTrue(
                 (convocatoriaEntidadFinanciadora.getTipoFinanciacion() != null
-                    && convocatoriaEntidadFinanciadora.getTipoFinanciacion()
-                        .getId() == convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getId())
+                    && Objects.equals(convocatoriaEntidadFinanciadora.getTipoFinanciacion()
+                        .getId(), convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getId()))
                     || convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getActivo(),
                 "El TipoFinanciacion debe estar Activo");
           }

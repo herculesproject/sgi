@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -252,8 +253,8 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
 
     // Periodos eliminados
     List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcsEliminar = convocatoriaConceptoGastoCodigoEcsBD
-        .stream().filter(periodo -> !convocatoriaConceptoGastoCodigoEcs.stream()
-            .map(ConvocatoriaConceptoGastoCodigoEc::getId).anyMatch(id -> id == periodo.getId()))
+        .stream().filter(periodo -> convocatoriaConceptoGastoCodigoEcs.stream()
+            .map(ConvocatoriaConceptoGastoCodigoEc::getId).noneMatch(id -> Objects.equals(id, periodo.getId())))
         .collect(Collectors.toList());
 
     if (!convocatoriaConceptoGastoCodigoEcsEliminar.isEmpty()) {
@@ -265,19 +266,21 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
         Comparator.nullsLast(Comparator.naturalOrder())));
 
     // Validaciones
-    List<ConvocatoriaConceptoGastoCodigoEc> returnValue = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
+    List<ConvocatoriaConceptoGastoCodigoEc> returnValue = new ArrayList<>();
     for (ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc : convocatoriaConceptoGastoCodigoEcs) {
 
       // actualizando
       if (convocatoriaConceptoGastoCodigoEc.getId() != null) {
         ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcBD = convocatoriaConceptoGastoCodigoEcsBD
-            .stream().filter(periodo -> periodo.getId() == convocatoriaConceptoGastoCodigoEc.getId()).findFirst()
+            .stream().filter(periodo -> Objects.equals(periodo.getId(), convocatoriaConceptoGastoCodigoEc.getId()))
+            .findFirst()
             .orElseThrow(() -> new ConvocatoriaConceptoGastoCodigoEcNotFoundException(
                 convocatoriaConceptoGastoCodigoEc.getId()));
 
         Assert.isTrue(
-            convocatoriaConceptoGastoCodigoEcBD.getConvocatoriaConceptoGastoId() == convocatoriaConceptoGastoCodigoEc
-                .getConvocatoriaConceptoGastoId(),
+            Objects.equals(convocatoriaConceptoGastoCodigoEcBD.getConvocatoriaConceptoGastoId(),
+                convocatoriaConceptoGastoCodigoEc
+                    .getConvocatoriaConceptoGastoId()),
             "No se puede modificar el convocatoriaConceptoGasto del ConvocatoriaConceptoGastoCodigoEc");
       }
 

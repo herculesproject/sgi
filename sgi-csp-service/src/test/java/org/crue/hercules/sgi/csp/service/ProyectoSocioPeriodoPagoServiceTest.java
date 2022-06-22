@@ -54,7 +54,6 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // given: una lista con uno de los ProyectoSocioPeriodoPago actualizado,
     // otro nuevo y sin el otros existente
     Long proyectoSocioId = 1L;
-    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
     List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagoExistentes = new ArrayList<>();
     proyectoSocioPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(2L));
@@ -68,8 +67,8 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     proyectoSocioPeriodoPagoActualizar.add(newProyectoSocioPeriodoPago);
     proyectoSocioPeriodoPagoActualizar.add(updatedProyectoSocioPeriodoPago);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocio));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoSocioPeriodoPagoExistentes);
@@ -133,7 +132,8 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     Long proyectoSocioId = 1L;
     ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = generarMockProyectoSocioPeriodoPago(1L);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(false);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoSocioPeriodoPago
@@ -148,13 +148,12 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     Long solicitudProyectoSocioId = 1L;
     ProyectoSocioPeriodoPago proyectoPeriodoPago = generarMockProyectoSocioPeriodoPago(1L);
     Long proyectoSocioId = 1L;
-    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
     List<ProyectoSocioPeriodoPago> proyectoPeriodoPagoExistentes = new ArrayList<>();
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(3L));
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocio));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);
@@ -170,15 +169,13 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // given:Se actualiza ProyectoSocio
     Long proyectoSocioId = 1L;
     ProyectoSocioPeriodoPago proyectoPeriodoPago = generarMockProyectoSocioPeriodoPago(1L);
-    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
-
     proyectoPeriodoPago.setProyectoSocioId(2L);
 
     List<ProyectoSocioPeriodoPago> proyectoPeriodoPagoExistentes = new ArrayList<>();
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(1L));
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocio));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);

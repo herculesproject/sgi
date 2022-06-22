@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -58,14 +59,16 @@ public class ProyectoPeriodoJustificacionService {
     log.debug(
         "update(Long proyectoPeriodoJustificacionId,List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificaciones) - start");
 
-    proyectoRepository.findById(proyectoId).orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
+    if (!proyectoRepository.existsById(proyectoId)) {
+      throw new ProyectoNotFoundException(proyectoId);
+    }
 
     List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificacionsBD = repository.findByProyectoId(proyectoId);
 
     // eliminados
     List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificacionsEliminar = proyectoPeriodoJustificacionsBD.stream()
-        .filter(periodo -> !proyectoPeriodoJustificaciones.stream().map(ProyectoPeriodoJustificacion::getId)
-            .anyMatch(id -> id == periodo.getId()))
+        .filter(periodo -> proyectoPeriodoJustificaciones.stream().map(ProyectoPeriodoJustificacion::getId)
+            .noneMatch(id -> Objects.equals(id, periodo.getId())))
         .collect(Collectors.toList());
 
     if (!proyectoPeriodoJustificacionsEliminar.isEmpty()) {
@@ -82,7 +85,7 @@ public class ProyectoPeriodoJustificacionService {
     AtomicInteger numPeriodo = new AtomicInteger(0);
 
     // Validaciones
-    List<ProyectoPeriodoJustificacion> returnValue = new ArrayList<ProyectoPeriodoJustificacion>();
+    List<ProyectoPeriodoJustificacion> returnValue = new ArrayList<>();
     int index = 0;
     for (ProyectoPeriodoJustificacion periodoJustificacion : proyectoPeriodoJustificaciones) {
 
@@ -98,13 +101,14 @@ public class ProyectoPeriodoJustificacionService {
 
       // actualizando
       if (periodoJustificacion.getId() != null) {
-        proyectoPeriodoJustificacionsBD.stream().filter(periodo -> periodo.getId() == periodoJustificacion.getId())
+        proyectoPeriodoJustificacionsBD.stream()
+            .filter(periodo -> Objects.equals(periodo.getId(), periodoJustificacion.getId()))
             .findFirst()
             .orElseThrow(() -> new ProyectoPeriodoJustificacionNotFoundException(periodoJustificacion.getId()));
       }
 
       // Solo puede haber un tipo de justificacion 'final' y ha de ser el último"
-      if ((periodoFinal != null && (periodoFinal.getId() != periodoJustificacion.getId()))
+      if ((periodoFinal != null && (!Objects.equals(periodoFinal.getId(), periodoJustificacion.getId())))
           && periodoJustificacion.getTipoJustificacion().equals(TipoJustificacion.FINAL)
           || (index > proyectoPeriodoJustificaciones.size() - 1)) {
         throw new TipoFinalException();

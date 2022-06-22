@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -179,7 +180,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
       // La asignación al ModeloEjecucion está activa
       Assert.isTrue(
-          modeloTipoFase.get().getTipoFase().getId() == convocatoriaFase.getTipoFase().getId()
+          Objects.equals(modeloTipoFase.get().getTipoFase().getId(), convocatoriaFase.getTipoFase().getId())
               || modeloTipoFase.get().getActivo(),
           "ModeloTipoFase '" + modeloTipoFase.get().getTipoFase().getNombre()
               + "' no está activo para el ModeloEjecucion '" + modeloTipoFase.get().getModeloEjecucion().getNombre()
@@ -187,7 +188,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
       // El TipoFase está activo
       Assert.isTrue(
-          modeloTipoFase.get().getTipoFase().getId() == convocatoriaFase.getTipoFase().getId()
+          Objects.equals(modeloTipoFase.get().getTipoFase().getId(), convocatoriaFase.getTipoFase().getId())
               || modeloTipoFase.get().getTipoFase().getActivo(),
           TIPO_FASE_TEMPLATE + modeloTipoFase.get().getTipoFase().getNombre() + "' no está activo");
 
@@ -344,7 +345,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
         .findByConvocatoriaId(convocatoriaId);
 
     if (configuraciSolicitud.isPresent() && configuraciSolicitud.get().getFasePresentacionSolicitudes() != null
-        && configuraciSolicitud.get().getFasePresentacionSolicitudes().getId() == convocatoriaFaseId) {
+        && Objects.equals(configuraciSolicitud.get().getFasePresentacionSolicitudes().getId(), convocatoriaFaseId)) {
 
       returnValue = convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaId, null,
           new String[] { "CSP-CON-E" });

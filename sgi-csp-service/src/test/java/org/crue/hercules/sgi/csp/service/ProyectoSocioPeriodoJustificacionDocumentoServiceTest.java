@@ -52,8 +52,6 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
     // otro nuevo y sin el otros existente
     Long proyectoSocioId = 1L;
     Long proyectoSocioPeriodoJustificacionId = 1L;
-    ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
-        proyectoSocioPeriodoJustificacionId);
 
     List<ProyectoSocioPeriodoJustificacionDocumento> peridosJustificiacionExistentes = new ArrayList<>();
     peridosJustificiacionExistentes
@@ -80,8 +78,8 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
     peridosJustificiacionActualizar.add(newProyectoSocioPeriodoJustificacionDocumento);
     peridosJustificiacionActualizar.add(updatedProyectoSocioPeriodoJustificacionDocumento);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocioPeriodoJustificacion));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioPeriodoJustificacionId(ArgumentMatchers.anyLong()))
         .willReturn(peridosJustificiacionExistentes);
@@ -154,7 +152,8 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(false);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoSocioPeriodoJustificacionEntidadGestora
@@ -166,17 +165,14 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
   @Test
   public void update_WithIdNotExist_ThrowsProyectoSocioPeriodoJustificacionDocumentoNotFoundException() {
     // given: Un ProyectoSocioPeriodoJustificacionDocumento a actualizar con un id
-    // que no
-    // existe
+    // que no existe
     Long proyectoSocioId = 1L;
     Long proyectoSocioPeriodoJustificacionId = 1L;
-    ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
-        proyectoSocioPeriodoJustificacionId);
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocioPeriodoJustificacion));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioPeriodoJustificacionId(ArgumentMatchers.anyLong()))
         .willReturn(new ArrayList<>());
@@ -197,15 +193,13 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseS
     // modificado
     Long proyectoSocioId = 1L;
     Long proyectoSocioPeriodoJustificacionId = 1L;
-    ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
-        proyectoSocioPeriodoJustificacionId);
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
 
     proyectoSocioPeriodoJustificacionDocumento.setProyectoSocioPeriodoJustificacionId(3L);
 
-    BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoSocioPeriodoJustificacion));
+    BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     BDDMockito.given(repository.findAllByProyectoSocioPeriodoJustificacionId(ArgumentMatchers.anyLong())).willReturn(
         Arrays.asList(generarMockProyectoSocioPeriodoJustificacionDocumento(1L, proyectoSocioPeriodoJustificacionId)));

@@ -108,12 +108,10 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
 
   @Test
   void delete_VerificationSuccess() {
-    ProyectoConceptoGasto proyectoConceptoGasto = this.buildMockProyectoConceptoGasto(1L, 1L, null,
-        Instant.now().plusSeconds(46000000), null);
     List<ProyectoConceptoGastoCodigoEc> codigosEconomicos = Arrays
         .asList(this.buildMockProyectoConceptoGastoCodigoEc(1L, null, null));
 
-    BDDMockito.given(this.repository.findById(1L)).willReturn(Optional.of(proyectoConceptoGasto));
+    BDDMockito.given(this.repository.existsById(1L)).willReturn(true);
 
     BDDMockito.given(proyectoConceptoGastoCodigoEcRepository.findAllByProyectoConceptoGastoId(anyLong()))
         .willReturn(codigosEconomicos);
