@@ -1,12 +1,12 @@
 package org.crue.hercules.sgi.pii.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.crue.hercules.sgi.pii.service.ComunicadosService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,5 +30,11 @@ public class ComunicadosController {
   public void enviarComunicadoMesesHastaFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion()
       throws JsonProcessingException {
     comunicadoService.enviarComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion();
+  }
+
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-pii'))")
+  @GetMapping("/aviso-fecha-limite-procedimiento")
+  public void enviarComunicadoFechaLimiteProcedimiento() {
+    comunicadoService.enviarComunicadoFechaLimiteProcedimiento();
   }
 }
