@@ -41,5 +41,12 @@
       <column name="description" value="Destinatarios defecto CSP Recepción Notificación CVN proyecto externo" />
       <column name="value" value="[&quot;pro.ext.recep.not.cvn.aut1@sgi.es&quot;, &quot;pro.ext.recep.not-cvn.aut2@sgi.es&quot;]" />
     </insert>
+
+    <!-- Destinatarios defecto PII Fecha límite de procedimiento -->
+    <insert tableName="config">
+      <column name="name" value="pii-fecha-limite-procedimiento-destinatarios" />
+      <column name="description" value="Destinatarios defecto PII Fecha límite de procedimiento" />
+      <column name="value" value="[&quot;fecha.limite.proce01@sgi.es&quot;, &quot;fecha.limite.proce02@sgi.es&quot;]" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
