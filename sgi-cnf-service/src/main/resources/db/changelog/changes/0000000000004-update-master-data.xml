@@ -48,5 +48,12 @@
       <column name="description" value="Destinatarios defecto PII Fecha límite de procedimiento" />
       <column name="value" value="[&quot;fecha.limite.proce01@sgi.es&quot;, &quot;fecha.limite.proce02@sgi.es&quot;]" />
     </insert>
+
+    <!-- Integración blockchain -->
+    <insert tableName="config">
+      <column name="name" value="eti-blockchain-enable" />
+      <column name="description" value="Indica si se va a realizar la integración con el blockchain en el módulo de ética" />
+      <column name="value" value="false" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
