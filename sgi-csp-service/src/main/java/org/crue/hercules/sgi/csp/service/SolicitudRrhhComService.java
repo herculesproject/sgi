@@ -12,9 +12,13 @@ import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhh
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudRrhhNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitanteExternoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRrhhRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
@@ -35,13 +39,15 @@ public class SolicitudRrhhComService {
   private final SgiApiSgpService sgiApiSgpService;
   private final SgiApiComService emailService;
   private final SgiConfigProperties sgiConfigProperties;
+  private final SolicitanteExternoRepository solicitanteExternoRepository;
+  private final SolicitudRrhhRepository solicitudRrhhRepository;
 
   public void enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud) {
 
     CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
         .builder()
         .fechaEstado(fechaEstado)
-        .nombreApellidosSolicitante(getSolicitanteNombreApellidos(solicitud.getSolicitanteRef()))
+        .nombreApellidosSolicitante(getSolicitanteNombreApellidos(solicitud))
         .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
         .enlaceAplicacionMenuValidacionTutor(getEnlaceAplicacionMenuValidacionTutor());
 
@@ -54,7 +60,7 @@ public class SolicitudRrhhComService {
 
       EmailOutput comunicado = this.emailService
           .createComunicadoCambioEstadoSolicitadaSolTipoRrhh(dataBuilder.build(),
-              this.getSolicitanteRecipients(solicitud.getSolicitanteRef()));
+              this.getTutorRecipients(solicitud.getId()));
       this.emailService.sendEmail(comunicado.getId());
 
     } catch (JsonProcessingException e) {
@@ -77,8 +83,10 @@ public class SolicitudRrhhComService {
     return this.sgiConfigProperties.getWebUrl() + PATH_MENU_VALIDACION_TUTOR;
   }
 
-  private List<Recipient> getSolicitanteRecipients(String solicitanteRef) {
-    PersonaOutput datosSolicitante = this.sgiApiSgpService.findById(solicitanteRef);
+  private List<Recipient> getTutorRecipients(Long solicitudId) {
+    String tutorRef = this.solicitudRrhhRepository.findBySolicitudId(solicitudId).map(rrhh -> rrhh.getTutorRef())
+        .orElseThrow(() -> new SolicitudRrhhNotFoundException(solicitudId));
+    PersonaOutput datosSolicitante = this.sgiApiSgpService.findById(tutorRef);
 
     return datosSolicitante.getEmails().stream().filter(email -> email.getPrincipal())
         .map(email -> Recipient
@@ -87,9 +95,29 @@ public class SolicitudRrhhComService {
         .collect(Collectors.toList());
   }
 
-  private String getSolicitanteNombreApellidos(String solicitanteRef) {
-    return Optional.of(this.sgiApiSgpService.findById(solicitanteRef))
-        .map(datos -> String.format("%s %s", datos.getNombre(), datos.getApellidos())).orElse(StringUtils.EMPTY);
+  private String getSolicitanteNombreApellidos(Solicitud solicitud) {
+    return StringUtils
+        .isNotEmpty(solicitud.getSolicitanteRef())
+            ? getNombreApellidosFromPersonaWithSolicitanteRef(solicitud)
+            : getNombreApellidosFromSolicitanteExterno(solicitud);
+  }
+
+  private String getNombreApellidosFromSolicitanteExterno(Solicitud solicitud) {
+
+    Optional<SolicitanteExterno> solicitanteExterno = this.solicitanteExternoRepository
+        .findBySolicitudId(solicitud.getId());
+    if (!solicitanteExterno.isPresent()) {
+      return null;
+    }
+
+    return String.format("%s %s", solicitanteExterno.get().getNombre(),
+        solicitanteExterno.get().getApellidos());
+  }
+
+  private String getNombreApellidosFromPersonaWithSolicitanteRef(Solicitud solicitud) {
+    PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitud.getSolicitanteRef());
+
+    return String.format("%s %s", datosPersona.getNombre(), datosPersona.getApellidos());
   }
 
 }
