@@ -24,14 +24,14 @@ import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { FormlyFormOptions } from '@ngx-formly/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
-import { catchError, endWith, map, mergeAll, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { BehaviorSubject, from, merge, Observable, of, Subject, zip } from 'rxjs';
+import { catchError, endWith, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface IBlock {
   bloque: IBloque;
   formlyData: IFormlyData;
   questions: IQuestion[];
-  loaded: boolean;
+  loaded$: BehaviorSubject<boolean>;
   selected: boolean;
 }
 
@@ -155,12 +155,9 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     return tareas$;
   }
 
-  protected onInitialize(): void {
+  protected onInitialize(): Observable<void> {
     if (this.getKey() && this.comite) {
-
-      let load$: Observable<IMemoria>;
-
-      load$ = this.memoriaService.findById(this.getKey() as number).pipe(
+      return this.memoriaService.findById(this.getKey() as number).pipe(
         map((memoria) => {
           this.memoria = memoria;
           if (!this.isEditable() && !this.readonly) {
@@ -169,7 +166,6 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           return memoria;
         }),
         switchMap((memoria) => {
-
           return this.loadTareas(memoria.id, memoria.peticionEvaluacion.id).pipe(
             map((tareas) => {
               this.tareas = tareas;
@@ -180,22 +176,22 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           return this.loadComentarios(memoria.id, this.tipoEvaluacion).pipe(
             map((comentarios) => {
               this.comentarios = comentarios;
-              return memoria;
+              return void 0;
             }));
+        }),
+        switchMap(() => {
+          return this.loadFormulario(this.tipoEvaluacion, this.comite);
         })
       );
-
-      this.subscriptions.push(load$.subscribe(
-        (memoria) => {
-          this.loadFormulario(this.tipoEvaluacion, this.comite);
-        }
-      ));
+    }
+    else {
+      return of(void 0);
     }
   }
 
   public performChecks(markAllTouched?: boolean) {
     this.blocks$.value.forEach((block) => {
-      if (block.loaded) {
+      if (block.loaded$.value) {
         block.formlyData.fields.forEach((field) => {
           if (field.group) {
             field.group.forceUpdate(markAllTouched);
@@ -282,23 +278,24 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     );
   }
 
-  private loadFormulario(tipoEvaluacion: TIPO_EVALUACION, comite: IComite) {
-    this.subscriptions.push(this.formularioService.findById(resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion, comite)).pipe(
+  private loadFormulario(tipoEvaluacion: TIPO_EVALUACION, comite: IComite): Observable<void> {
+    return this.formularioService.findById(resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion, comite)).pipe(
       switchMap((formulario) => {
         return this.formularioService.getBloques(formulario.id);
       }),
       map((response) => {
         return this.toBlocks(response.items);
       }),
-    ).subscribe(
-      (res) => {
-        this.blocks$.next(res);
-        this.loadBlock(this.selectedIndex$.value);
-      },
-      (error) => {
-        this.logger.error(error);
-      }
-    )
+      tap(
+        (blocks) => {
+          this.blocks$.next(blocks);
+          this.loadBlock(this.selectedIndex$.value);
+        }, (error) => {
+          this.logger.error(error);
+        }),
+      map(() => {
+        return void 0;
+      })
     );
   }
 
@@ -322,7 +319,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         },
         questions: [],
         selected: false,
-        loaded: false
+        loaded$: new BehaviorSubject<boolean>(false)
       };
       bloqueModels[bloque.orden] = block.formlyData.model;
       block.formlyData.options.formState = {
@@ -371,7 +368,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
    */
   private loadBlock(index: number): void {
     const block = this.blocks$.value[index];
-    if (block && !block.loaded) {
+    if (block && !block.loaded$.value) {
       this.bloqueService.getApartados(block.bloque.id).pipe(
         map((apartados) => {
           return apartados.items.map((ap) => ap as IApartadoWithRespuestaAndComentario);
@@ -397,8 +394,6 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         })
       ).subscribe(
         (value) => {
-          block.loaded = true;
-          block.selected = true;
           this.fillFormlyData(true, value.formlyData.model, value.formlyData.options.formState, value.formlyData.fields, value.questions);
 
           this.formStateGlobal = { ...this.formStateGlobal, ...block.formlyData.model };
@@ -411,6 +406,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
               }));
             }
           });
+          block.selected = true;
+          block.loaded$.next(true);
         }
       );
     }
@@ -523,7 +520,9 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       const fieldConfig = firstFieldConfig.fieldGroup;
       if (firstLevel && key) {
         model[key] = question.apartado.respuesta.valor;
-        this.evalExpressionModelValue(question.apartado.esquema, model[key], formState);
+        if (this.isEditable()) {
+          this.evalExpressionModelValue(question.apartado.esquema, model[key], formState);
+        }
       }
       else {
         model = Object.assign(model, question.apartado.respuesta.valor);
