@@ -43,4 +43,7 @@ public class Documento implements Serializable {
 
   @Column(name = "autor_ref")
   private String autorRef;
+
+  @Column(name = "hash")
+  private String hash;
 }

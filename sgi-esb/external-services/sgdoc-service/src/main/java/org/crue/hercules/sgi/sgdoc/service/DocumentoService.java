@@ -3,6 +3,8 @@ package org.crue.hercules.sgi.sgdoc.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,20 +69,21 @@ public class DocumentoService {
 
     documento.setDocumentoRef(UUID.randomUUID().toString());
 
-    Documento returnValue = repository.save(documento);
-
     try {
       File fileStore = StoreUtils.getResource(storeProperties.getPath(), documento).getFile();
 
       fileStore.getParentFile().mkdirs();
       if (!fileStore.exists()) {
         Files.copy(file.getInputStream(), fileStore.toPath());
+        documento.setHash(getHashFile(fileStore));
       } else {
         throw new IllegalArgumentException("File exist!");
       }
-    } catch (IOException io) {
+    } catch (IOException | NoSuchAlgorithmException io) {
       throw new RuntimeException(io);
     }
+
+    Documento returnValue = repository.save(documento);
 
     log.debug("create(Documento documento) - end");
 
@@ -185,5 +188,11 @@ public class DocumentoService {
       throw new ArchivoNotFoundException(documento.getDocumentoRef());
     }
     return resource;
+  }
+
+  private String getHashFile(File file) throws IOException, NoSuchAlgorithmException {
+    // Use SHA-256 algorithm
+    MessageDigest shaDigest = MessageDigest.getInstance("SHA-256");
+    return StoreUtils.getFileChecksum(shaDigest, file);
   }
 }
