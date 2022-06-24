@@ -2,16 +2,21 @@ package org.crue.hercules.sgi.pii.integration;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionDto;
+import org.crue.hercules.sgi.pii.dto.InvencionGastoOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionIngresoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionInventorOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,12 +32,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.Data;
+
 /**
  * Test de integracion de Invencion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class InvencionIT extends BaseIT {
+class InvencionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/invenciones";
@@ -45,15 +52,16 @@ public class InvencionIT extends BaseIT {
   public static final String PATH_INVENCION_INVENTOR = "/{invencionId}/invencion-inventores";
   public static final String PATH_PRC = "/produccioncientifica/{anioInicio}/{anioFin}/{universidadId}";
   public static final String PATH_INVENCION_GASTO = "/{invencionId}/gastos";
+  public static final String PATH_INVENCION_INGRESO = "/{invencionId}/ingresos";
 
-  private HttpEntity<InvencionInput> buildRequest(HttpHeaders headers,
-      InvencionInput entity, String... roles) throws Exception {
+  private HttpEntity<Object> buildRequest(HttpHeaders headers,
+      Object entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
 
-    HttpEntity<InvencionInput> request = new HttpEntity<>(entity, headers);
+    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
     return request;
   }
 
@@ -65,7 +73,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findActivos_WithPagingSortingAndFiltering_ReturnInvencionOutputSubList() throws Exception {
+  void findActivos_WithPagingSortingAndFiltering_ReturnInvencionOutputSubList() throws Exception {
 
     String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E", "PII-INV-B", "PII-INV-R", "PII-INV-MOD-V" };
 
@@ -98,6 +106,34 @@ public class InvencionIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+      "classpath:scripts/tipo_proteccion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findActivos_WithPagingSortingAndFiltering_ReturnStatusCodeNO_CONTENT() throws Exception {
+
+    String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E", "PII-INV-B", "PII-INV-R", "PII-INV-MOD-V" };
+
+    // when: Obtiene la page=0 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "descripcion=ke=-00";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<InvencionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<InvencionOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/invencion.sql"
@@ -105,7 +141,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnInvencionOutpuSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnInvencionOutpuSubList() throws Exception {
 
     String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E", "PII-INV-B", "PII-INV-R" };
 
@@ -139,6 +175,35 @@ public class InvencionIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAll_WithPagingSortingAndFiltering_ReturnStatusCodeNO_CONTENT() throws Exception {
+
+    String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E", "PII-INV-B", "PII-INV-R" };
+
+    // when: Obtiene la page=0 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "descripcion=ke=-00";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<InvencionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<InvencionOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/invencion.sql"
@@ -146,7 +211,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnInvencionOutput() throws Exception {
+  void findById_ReturnInvencionOutput() throws Exception {
 
     String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E", "PII-INV-B", "PII-INV-R", "PII-INV-MOD-V" };
     Long invencionOutputId = 1L;
@@ -172,7 +237,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnInvencionOutput() throws Exception {
+  void create_ReturnInvencionOutput() throws Exception {
 
     String[] roles = { "PII-INV-C" };
     InvencionInput invencionInput = generaMockInvencionInput();
@@ -197,7 +262,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnInvencionOutput() throws Exception {
+  void update_ReturnInvencionOutput() throws Exception {
 
     String[] roles = { "PII-INV-E" };
     Long invencionId = 1L;
@@ -220,13 +285,14 @@ public class InvencionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
+  "classpath:cleanup.sql",
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/invencion.sql"
 // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void activar_ReturnInvencionOutput() throws Exception {
+  void activar_ReturnInvencionOutput() throws Exception {
 
     String[] roles = { "PII-INV-R" };
     Long invencionId = 4L;
@@ -254,7 +320,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnInvencionOutput() throws Exception {
+  void desactivar_ReturnInvencionOutput() throws Exception {
 
     String[] roles = { "PII-INV-B" };
     Long invencionId = 1L;
@@ -275,6 +341,107 @@ public class InvencionIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void exists_ReturnStatusCodeOK() throws Exception {
+
+    String[] roles = { "PII-INV-V", "PII-INV-E" };
+    Long invencionOutputId = 1L;
+
+    final ResponseEntity<Void> response = restTemplate.exchange(CONTROLLER_BASE_PATH
+        + PATH_PARAMETER_ID, HttpMethod.HEAD,
+        buildRequest(null, null, roles), Void.class, invencionOutputId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void exists_ReturnStatusCodeNO_CONTENT() throws Exception {
+
+    String[] roles = { "PII-INV-V", "PII-INV-E" };
+    Long invencionOutputId = 111L;
+
+    final ResponseEntity<Void> response = restTemplate.exchange(CONTROLLER_BASE_PATH
+        + PATH_PARAMETER_ID, HttpMethod.HEAD,
+        buildRequest(null, null, roles), Void.class, invencionOutputId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/sector_aplicacion.sql",
+    "classpath:scripts/invencion_sector_aplicacion.sql"
+    // @formatter:on
+  })
+  @Test
+  void updateSectoresAplicacion_ReturnInvencionSectorAplicacionOutputSubList() throws Exception {
+    String[] roles = { "PII-INV-E", "PII-INV-C" };
+
+    Long idInvencion = 2L;
+
+    List<InvencionSectorAplicacionInput> toUpdate = Arrays.asList(InvencionSectorAplicacionInput.builder()
+        .invencionId(idInvencion)
+        .sectorAplicacionId(1L)
+        .build());
+
+    final ResponseEntity<List<InvencionSectorAplicacionOutput>> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_SECTORES,
+        HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), new ParameterizedTypeReference<List<InvencionSectorAplicacionOutput>>() {
+        }, idInvencion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/sector_aplicacion.sql",
+    "classpath:scripts/invencion_sector_aplicacion.sql"
+    // @formatter:on
+  })
+  @Test
+  void updateSectoresAplicacion_ReturnError() throws Exception {
+    String[] roles = { "PII-INV-E", "PII-INV-C" };
+
+    Long idInvencion = 2L;
+
+    List<InvencionSectorAplicacionInput> toUpdate = Arrays.asList(InvencionSectorAplicacionInput.builder()
+        .invencionId(1L)
+        .sectorAplicacionId(1L)
+        .build());
+
+    final ResponseEntity<ResponseError> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_SECTORES,
+        HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), ResponseError.class, idInvencion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    ResponseError error = response.getBody();
+
+    Assertions.assertThat(error).isNotNull();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/invencion.sql",
@@ -283,7 +450,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAreasConocimientoByInvencionId_ReturnInvencionAreaConocimientoOutput() throws Exception {
+  void findAreasConocimientoByInvencionId_ReturnInvencionAreaConocimientoOutput() throws Exception {
 
     String[] roles = { "PII-INV-E", "PII-INV-V", "PII-INV-C" };
     Long invencionId = 1L;
@@ -306,6 +473,65 @@ public class InvencionIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_area_conocimiento.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateAreasConocimiento_ReturnInvencionAreaConocimientoOutputSubList() throws Exception {
+    String[] roles = { "PII-INV-E", "PII-INV-C" };
+
+    Long idInvencion = 2L;
+
+    List<InvencionAreaConocimientoInput> toUpdate = Arrays.asList(InvencionAreaConocimientoInput.builder()
+        .invencionId(idInvencion)
+        .areaConocimientoRef("007")
+        .build());
+
+    final ResponseEntity<List<InvencionAreaConocimientoOutput>> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_AREAS,
+        HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), new ParameterizedTypeReference<List<InvencionAreaConocimientoOutput>>() {
+        }, idInvencion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+  // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_area_conocimiento.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateAreasConocimiento_ReturnError() throws Exception {
+    String[] roles = { "PII-INV-E", "PII-INV-C" };
+
+    Long idInvencion = 2L;
+
+    List<InvencionAreaConocimientoInput> toUpdate = Arrays.asList(InvencionAreaConocimientoInput.builder()
+        .invencionId(1L)
+        .areaConocimientoRef("007")
+        .build());
+
+    final ResponseEntity<ResponseError> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_AREAS,
+        HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), ResponseError.class, idInvencion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    ResponseError error = response.getBody();
+
+    Assertions.assertThat(error).isNotNull();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
 // @formatter:off
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/invencion.sql",
@@ -315,7 +541,7 @@ public class InvencionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findSectoresAplicacionByInvencionId_ReturnInvencionSectorAplicacionOutputSubList() throws Exception {
+  void findSectoresAplicacionByInvencionId_ReturnInvencionSectorAplicacionOutputSubList() throws Exception {
 
     String[] roles = { "PII-INV-E", "PII-INV-V", "PII-INV-C" };
     Long invencionId = 1L;
@@ -339,16 +565,16 @@ public class InvencionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
   // @formatter:off
+  "classpath:cleanup.sql",
   "classpath:scripts/tipo_proteccion.sql",
   "classpath:scripts/resultado_informe_patentabilidad.sql",
   "classpath:scripts/invencion.sql",
   "classpath:scripts/informe_patentabilidad.sql",
 // @formatter:on
   })
-
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findInformesPatentabilidadByInvencionId_ReturnInformePatentabilidadOutputSubList() throws Exception {
+  void findInformesPatentabilidadByInvencionId_ReturnInformePatentabilidadOutputSubList() throws Exception {
 
     String[] roles = { "PII-INV-E", "PII-INV-V" };
     Long invencionId = 1L;
@@ -380,7 +606,7 @@ public class InvencionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findInvencionInventoresByInvencionId__WithPagingSortingAndFiltering_ReturnInvencionInventoresOutputSubList()
+  void findInvencionInventoresByInvencionId__WithPagingSortingAndFiltering_ReturnInvencionInventoresOutputSubList()
       throws Exception {
 
     String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E" };
@@ -426,7 +652,7 @@ public class InvencionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @CsvSource({ "2020, 2021, 'Q3018001'" })
-  public void findInvencionesProduccionCientifica(Integer anioInicio, Integer anioFin, String universidadId)
+  void findInvencionesProduccionCientifica(Integer anioInicio, Integer anioFin, String universidadId)
       throws Exception {
 
     String roles = "CSP-PRO-PRC-V";
@@ -451,6 +677,64 @@ public class InvencionIT extends BaseIT {
 
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/tipo_caducidad.sql",
+    "classpath:scripts/via_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_inventor.sql",
+    "classpath:scripts/periodo_titularidad.sql",
+    "classpath:scripts/periodo_titularidad_titular.sql",
+    "classpath:scripts/solicitud_proteccion.sql",
+    "classpath:scripts/invencion_gasto.sql"
+  // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findInvencionGastosByInvencionId_ReturnsInvencionGastoOutputSubList() throws Exception {
+    String[] roles = { "PII-INV-V", "PII-INV-E" };
+    Long invencionId = 1L;
+    final ResponseEntity<List<InvencionGastoOutput>> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_INVENCION_GASTO,
+        HttpMethod.GET,
+        buildRequest(null, null, roles),
+        new ParameterizedTypeReference<List<InvencionGastoOutput>>() {
+        }, invencionId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).hasSize(5);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/tipo_caducidad.sql",
+    "classpath:scripts/via_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_inventor.sql",
+    "classpath:scripts/periodo_titularidad.sql",
+    "classpath:scripts/periodo_titularidad_titular.sql",
+    "classpath:scripts/solicitud_proteccion.sql",
+    "classpath:scripts/invencion_ingreso.sql"
+  // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findInvencionIngresoByInvencionId_ReturnsInvencionIngresoOutputSubList() throws Exception {
+    String[] roles = { "PII-INV-V", "PII-INV-E" };
+    Long invencionId = 1L;
+    final ResponseEntity<List<InvencionIngresoOutput>> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_INVENCION_INGRESO,
+        HttpMethod.GET,
+        buildRequest(null, null, roles),
+        new ParameterizedTypeReference<List<InvencionIngresoOutput>>() {
+        }, invencionId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).hasSize(5);
+  }
+
   /**
    * Función que devuelve un objeto InvencionInput
    * 
@@ -466,6 +750,15 @@ public class InvencionIT extends BaseIT {
     invencionInput.setTipoProteccionId(1L);
 
     return invencionInput;
+  }
+
+  @Data
+  private static class ResponseError {
+    public String type;
+    public String title;
+    public int status;
+    public String detail;
+    public String instance;
   }
 
 }
