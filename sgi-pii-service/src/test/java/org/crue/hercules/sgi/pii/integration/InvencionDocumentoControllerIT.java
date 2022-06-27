@@ -71,6 +71,7 @@ class InvencionDocumentoControllerIT extends BaseIT {
     Assertions.assertThat(created.getDocumentoRef()).as("getDocumentoRef()").isEqualTo(toCreate.getDocumentoRef());
     Assertions.assertThat(created.getNombre()).as("getNombre()").isEqualTo(toCreate.getNombre());
     Assertions.assertThat(created.getInvencionId()).as("getInvencionId()").isEqualTo(toCreate.getInvencionId());
+    Assertions.assertThat(created.getFechaAnadido()).isNotNull();
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
