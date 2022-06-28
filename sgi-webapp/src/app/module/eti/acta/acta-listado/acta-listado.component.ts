@@ -200,16 +200,27 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    * Visualiza el informe seleccionado.
    * @param documentoRef Referencia del informe..
    */
-  visualizarInforme(idActa: number): void {
+  visualizarInforme(acta: IActaWithNumEvaluaciones): void {
     const documento: IDocumento = {} as IDocumento;
-    this.actasService.getDocumentoActa(idActa).pipe(
-      switchMap((documentoInfo: IDocumento) => {
-        documento.nombre = documentoInfo.nombre;
-        return this.documentoService.downloadFichero(documentoInfo.documentoRef);
-      })
-    ).subscribe(response => {
-      triggerDownloadToUser(response, documento.nombre);
-    });
+    if (this.isFinalizada(acta)) {
+      this.documentoService.getInfoFichero(acta.documentoRef).pipe(
+        switchMap((documentoInfo: IDocumento) => {
+          documento.nombre = documentoInfo.nombre;
+          return this.documentoService.downloadFichero(acta.documentoRef);
+        })
+      ).subscribe(response => {
+        triggerDownloadToUser(response, documento.nombre);
+      });
+    } else {
+      this.actasService.getDocumentoActa(acta.id).pipe(
+        switchMap((documentoInfo: IDocumento) => {
+          documento.nombre = documentoInfo.nombre;
+          return this.documentoService.downloadFichero(documentoInfo.documentoRef);
+        })
+      ).subscribe(response => {
+        triggerDownloadToUser(response, documento.nombre);
+      });
+    }
   }
 
   openExportModal(): void {
