@@ -37,6 +37,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   private solicitanteExterno: ISolicitanteExterno;
   private solicitanteForm: IPersona;
 
+  solicitante$ = new BehaviorSubject<IPersona>(null);
   readonly solicitanteEmails$ = new BehaviorSubject<IEmail[]>([]);
   readonly solicitanteTelefonos$ = new BehaviorSubject<string[]>([]);
   readonly areasAnep$ = new BehaviorSubject<SolicitudRrhhAreaAnepListado[]>([]);
@@ -150,7 +151,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     if (!!solicitudSolicitanteRrhh?.solicitante) {
       formValues = {
         ...formValues,
-        solicitante: solicitudSolicitanteRrhh?.solicitante,
+        solicitante: solicitudSolicitanteRrhh.solicitante,
         solicitanteExterno: {
           nombre: solicitudSolicitanteRrhh.solicitante.nombre ?? null,
           apellidos: solicitudSolicitanteRrhh.solicitante.apellidos ?? null,
@@ -169,6 +170,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
       };
 
       this.getFormGroup().controls.solicitanteExterno.disable({ emitEvent: false });
+      this.solicitante$.next(solicitudSolicitanteRrhh.solicitante);
     } else if (!!solicitudSolicitanteRrhh?.solicitanteExterno) {
       formValues = {
         ...formValues,
@@ -410,6 +412,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
           })
         ).subscribe(solicitante => {
           this.solicitanteForm = solicitante;
+          this.solicitante$.next(this.solicitanteForm);
           if (!!solicitante) {
             formGroup.controls.solicitanteExterno.disable({ emitEvent: false });
           } else {

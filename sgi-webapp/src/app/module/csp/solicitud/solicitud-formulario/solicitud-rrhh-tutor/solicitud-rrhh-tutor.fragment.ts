@@ -16,6 +16,7 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
   private solicitudRrhhTutor: ISolicitudRrhhTutor;
   readonly tutorEmails$ = new BehaviorSubject<IEmail[]>([]);
   readonly tutorTelefonos$ = new BehaviorSubject<string[]>([]);
+  tutor$ = new BehaviorSubject<IPersona>(null);
 
   public readonly userCanEdit: boolean;
 
@@ -126,6 +127,7 @@ export class SolicitudRrhhTutorFragment extends FormFragment<ISolicitudRrhhTutor
         }
 
         this.fillDatosTutorForm(persona);
+        this.tutor$.next(persona);
         this.tutorEmails$.next(persona.datosContacto?.emails);
         const telefonos = (persona.datosContacto?.telefonos ?? []).concat(persona.datosContacto?.moviles ?? [])
           .filter(telefono => !!telefono);

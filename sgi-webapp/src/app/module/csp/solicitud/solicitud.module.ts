@@ -19,6 +19,8 @@ import { SolicitudListadoExportModalComponent } from './modals/solicitud-listado
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudProyectoPresupuestoListadoExportModalComponent } from './modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';
 import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
+import { SolicitudRrhhAcreditarCategoriaProfesionalModalComponent } from './modals/solicitud-rrhh-acreditar-categoria-profesional/solicitud-rrhh-acreditar-categoria-profesional-modal.component';
+import { SolicitudRrhhAcreditarNivelAcademicoModalComponent } from './modals/solicitud-rrhh-acreditar-nivel-academico/solicitud-rrhh-acreditar-nivel-academico-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
 import { SolicitudDataResolver } from './solicitud-data.resolver';
@@ -39,6 +41,7 @@ import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formula
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudRrhhMemoriaComponent } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.component';
+import { SolicitudRrhhRequisitosConvocatoriaComponent } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.component';
 import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
 import { SolicitudRrhhTutorComponent } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.component';
 import { SolicitudGeneralListadoExportService } from './solicitud-general-listado-export.service';
@@ -84,7 +87,10 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudGrupoModalComponent,
     SolicitudRrhhSolitanteComponent,
     SolicitudRrhhTutorComponent,
-    SolicitudRrhhMemoriaComponent
+    SolicitudRrhhMemoriaComponent,
+    SolicitudRrhhRequisitosConvocatoriaComponent,
+    SolicitudRrhhAcreditarNivelAcademicoModalComponent,
+    SolicitudRrhhAcreditarCategoriaProfesionalModalComponent
   ],
   imports: [
     CommonModule,

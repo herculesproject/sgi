@@ -26,6 +26,7 @@ import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formula
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudRrhhMemoriaComponent } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.component';
+import { SolicitudRrhhRequisitosConvocatoriaComponent } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.component';
 import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
 import { SolicitudRrhhTutorComponent } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
@@ -182,6 +183,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.TUTOR,
         component: SolicitudRrhhTutorComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.REQUISITOS_CONVOCATORIA,
+        component: SolicitudRrhhRequisitosConvocatoriaComponent,
         canDeactivate: [FragmentGuard]
       },
       {
