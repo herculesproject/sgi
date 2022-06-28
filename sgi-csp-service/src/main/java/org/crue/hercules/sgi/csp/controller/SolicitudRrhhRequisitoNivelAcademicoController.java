@@ -40,8 +40,8 @@ public class SolicitudRrhhRequisitoNivelAcademicoController {
   /**
    * Crea nuevo {@link SolicitudRrhhRequisitoNivelAcademico}.
    * 
-   * @param solicitudRrhhRequisitoNivelAcademico {@link SolicitudRrhhRequisitoNivelAcademico}
-   *                                             que se quiere crear.
+   * @param requisitoNivelAcademico {@link SolicitudRrhhRequisitoNivelAcademico}
+   *                                que se quiere crear.
    * @return Nuevo {@link SolicitudRrhhRequisitoNivelAcademico} creado.
    */
   @PostMapping

@@ -40,8 +40,8 @@ public class SolicitudRrhhRequisitoCategoriaController {
   /**
    * Crea nuevo {@link SolicitudRrhhRequisitoCategoria}.
    * 
-   * @param solicitudRrhhRequisitoCategoria {@link SolicitudRrhhRequisitoCategoria}
-   *                                        que se quiere crear.
+   * @param requisitoCategoria {@link SolicitudRrhhRequisitoCategoria}
+   *                           que se quiere crear.
    * @return Nuevo {@link SolicitudRrhhRequisitoCategoria} creado.
    */
   @PostMapping

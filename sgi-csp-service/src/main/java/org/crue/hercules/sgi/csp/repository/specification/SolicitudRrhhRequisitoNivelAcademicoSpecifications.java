@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class SolicitudRrhhRequisitoNivelAcademicoSpecifications {
 
   /**
-   * {@link SolicitudRrhRequisitoNivelAcademico} del {@link SolicitudRrhh} con el
+   * {@link SolicitudRrhhRequisitoNivelAcademico} del {@link SolicitudRrhh} con el
    * id indicado.
    * 
    * @param id identificador de la {@link SolicitudRrhh}.
