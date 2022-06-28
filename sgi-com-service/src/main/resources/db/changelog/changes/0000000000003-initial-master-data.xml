@@ -628,6 +628,26 @@
       <column name="tpl_html" valueClobFile="clob/0000000000003/pii-com-fecha-limite-procedimiento/PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT_html.ftl" />
       <where>name='PII_COM_FECHA_LIMITE_PROCEDIMIENTO_CONTENT'</where>
     </update>
+
+    <!-- PII Fin Fecha Prioridad Solicitud Proteccion -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_text.ftl" />
+      <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/pii-com-meses-hasta-fin-prioridad-solicitud-proteccion/PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
+      <where>name='PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
+
+    <!-- PII Fin Plazo Presentación Entrada Fases nacionales/Reguionales Solicitud Proteccion -->
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/0000000000003/pii-com-aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion/PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT_text.ftl" />
+      <where>name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000003/pii-com-aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion/PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT_html.ftl" />
+      <where>name='PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="0000000000003-contenttpl_param">
