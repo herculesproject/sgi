@@ -54,6 +54,7 @@ import { ValidacionGastosEditarModalComponent } from './modals/validacion-gastos
 import { ValidacionGastosHistoricoModalComponent } from './modals/validacion-gastos-historico-modal/validacion-gastos-historico-modal.component';
 import { ValidacionGastosModalComponent } from './modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-dietas-modal.component';
+import { SeguimientoJustificacionResumenComponent } from './ejecucion-economica-formulario/seguimiento-justificacion-resumen/seguimiento-justificacion-resumen.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-
     FacturasEmitidasComponent,
     FacturasEmitidasModalComponent,
     ValidacionGastosEditarModalComponent,
-    ValidacionGastosHistoricoModalComponent
+    ValidacionGastosHistoricoModalComponent,
+    SeguimientoJustificacionResumenComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +105,7 @@ import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-
     CspSharedModule,
     SgoSharedModule,
     FormlyFormsModule,
-    SgpSharedModule
+    SgpSharedModule,
   ],
   providers: [
     EjecucionEconomicaDataResolver,
