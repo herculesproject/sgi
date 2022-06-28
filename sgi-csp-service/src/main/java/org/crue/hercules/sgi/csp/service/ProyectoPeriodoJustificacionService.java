@@ -191,4 +191,26 @@ public class ProyectoPeriodoJustificacionService {
     log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - end");
     return returnValue;
   }
+
+  /**
+   * Obtiene ltodos los {@link ProyectoPeriodoJustificacion} del ProyectoSGE
+   * filtrados y/o paginados.
+   *
+   * @param proyectoSgeRef identificador del ProyectoSGE
+   * @param query          la información del filtro.
+   * @param paging         la información de la paginación.
+   * @return la lista de entidades {@link ProyectoPeriodoJustificacion}
+   */
+
+  public Page<ProyectoPeriodoJustificacion> findAllByProyectoSgeRef(String proyectoSgeRef, String query,
+      Pageable paging) {
+    log.debug("findAllByProyectoSgeRef(String proyectoSgeRef, String query, Pageable paging) - start");
+
+    Specification<ProyectoPeriodoJustificacion> specs = ProyectoPeriodoJustificacionSpecifications
+        .byProyectoSgeRef(proyectoSgeRef).and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ProyectoPeriodoJustificacion> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllByProyectoSgeRef(String proyectoSgeRef, String query, Pageable paging) - end");
+    return returnValue;
+  }
 }

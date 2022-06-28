@@ -14,6 +14,7 @@ import javax.validation.Validator;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -22,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
+import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
@@ -905,6 +907,52 @@ public class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(pageResult.getContent()).isEqualTo(proyectos);
   }
 
+  @Test
+  @WithMockUser(authorities = { "CSP-SJUS-V" })
+  void findProyectosSeguimientoEjecucionEconomica_ReturnsPage() {
+    // given: Una lista de ProyectoSeguimientoEjecucionEconomica
+    String proyectoSgeRef = "1";
+    List<ProyectoSeguimientoEjecucionEconomica> proyectos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectos.add(generarMockProyectoSeguimientoEjecucionEconomica(i, "Proyecto-" + String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(proyectoProyectoSgeRepository.findProyectosSeguimientoEjecucionEconomica(
+            ArgumentMatchers.<Specification<ProyectoProyectoSge>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoSeguimientoEjecucionEconomica>>() {
+          @Override
+          public Page<ProyectoSeguimientoEjecucionEconomica> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
+            List<ProyectoSeguimientoEjecucionEconomica> content = proyectos.subList(fromIndex, toIndex);
+            Page<ProyectoSeguimientoEjecucionEconomica> page = new PageImpl<>(content, pageable, proyectos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ProyectoSeguimientoEjecucionEconomica> page = service
+        .findProyectosSeguimientoEjecucionEconomica(proyectoSgeRef, null, paging);
+
+    // then: Devuelve la pagina 3 con los ProyectoSeguimientoEjecucionEconomica del
+    // 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      ProyectoSeguimientoEjecucionEconomica proyecto = page.getContent()
+          .get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(proyecto.getNombre()).isEqualTo("Proyecto-" + String.format("%03d", i));
+    }
+  }
+
   /**
    * Función que devuelve un objeto Proyecto
    * 
@@ -977,4 +1025,11 @@ public class ProyectoServiceTest extends BaseServiceTest {
         .build();
   }
 
+  private ProyectoSeguimientoEjecucionEconomica generarMockProyectoSeguimientoEjecucionEconomica(Long id,
+      String nombre) {
+    return ProyectoSeguimientoEjecucionEconomica.builder()
+        .id(id)
+        .nombre(nombre)
+        .build();
+  }
 }

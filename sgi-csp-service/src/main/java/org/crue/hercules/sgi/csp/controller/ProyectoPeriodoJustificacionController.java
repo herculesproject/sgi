@@ -3,12 +3,10 @@ package org.crue.hercules.sgi.csp.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
-
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput;
-import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput.Proyecto;
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -27,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -111,7 +111,7 @@ public class ProyectoPeriodoJustificacionController {
    */
   @GetMapping("/{id}/proyectoperiodojustificacion")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  public ResponseEntity<Page<ProyectoPeriodoJustificacionOutput>> findAll(@PathVariable Long id,
+  public ResponseEntity<Page<ProyectoPeriodoJustificacionOutput>> findAllByProyectoId(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(Long id, String query, Pageable paging) - start");
     Page<ProyectoPeriodoJustificacion> page = service.findAllByProyectoId(id, query, paging);

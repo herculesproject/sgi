@@ -14,6 +14,7 @@ import javax.validation.Validator;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
 import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
@@ -1890,6 +1891,31 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     log.debug("getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - end");
     return proyectosCompetitivosPersona;
+  }
+
+  @Override
+  public Page<ProyectoSeguimientoEjecucionEconomica> findProyectosSeguimientoEjecucionEconomica(String proyectoSgeRef, String query, Pageable pageable) {
+    log.debug("findProyectosSeguimientoEjecucionEconomica(String query, Pageable pageable) - start");
+
+    Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.activos()
+    .and(ProyectoProyectoSgeSpecifications.byProyectoSgeRef(proyectoSgeRef));
+    if (query != null) {
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query, ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
+    }
+
+    // No tiene acceso a todos los UO
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-SJUS-V", "CSP-SJUS-E" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<ProyectoProyectoSge> specByUnidadGestionRefIn = ProyectoProyectoSgeSpecifications
+          .unidadGestionRefIn(unidadesGestion);
+      specs = specs.and(specByUnidadGestionRefIn);
+    }
+
+    Page<ProyectoSeguimientoEjecucionEconomica> returnValue = proyectoProyectoSGERepository.findProyectosSeguimientoEjecucionEconomica(specs, pageable);
+    log.debug("findProyectosSeguimientoEjecucionEconomica(String query, Pageable pageable) - end");
+    return returnValue;
   }
 
 }

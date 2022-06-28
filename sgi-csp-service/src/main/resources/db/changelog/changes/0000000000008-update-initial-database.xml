@@ -160,4 +160,14 @@
     <addForeignKeyConstraint baseColumnNames="solicitud_rrhh_id" baseTableName="solicitud_rrhh_requisito_nivel_academico" constraintName="FK_SOLICITUDRRHHREQUISITONIVELACADEMICO_SOLICITUDRRHH" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_rrhh" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000008-20">
+    <addColumn tableName="proyecto_periodo_justificacion">
+      <column name="fecha_presentacion_justificacion" type="timestamp" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-21">
+    <addColumn tableName="proyecto_periodo_justificacion">
+      <column name="identificador_justificacion" type="varchar(255)" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

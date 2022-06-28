@@ -96,6 +96,14 @@ public class ProyectoPeriodoJustificacion extends BaseEntity {
   @Column(name = "convocatoria_periodo_justificacion_id")
   private Long convocatoriaPeriodoJustificacionId;
 
+  /** Fecha presentacion justificacion */
+  @Column(name = "fecha_presentacion_justificacion", nullable = true)
+  private Instant fechaPresentacionJustificacion;
+
+  /** Identificador justificacion */
+  @Column(name = "identificador_justificacion", length = EXTERNAL_REF_LENGTH, nullable = true)
+  private String identificadorJustificacion;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOPERIODOJUSTIFICACION_PROYECTO"))
