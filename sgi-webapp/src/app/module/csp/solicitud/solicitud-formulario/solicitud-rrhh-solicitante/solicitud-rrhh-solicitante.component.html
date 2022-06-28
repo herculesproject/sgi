@@ -2,7 +2,7 @@
   title="{{'menu.csp.solicitud.solicitud-rrhh' | translate}} - {{'menu.csp.solicitud.solicitud-rrhh.solicitante' | translate}}">
 
   <form [formGroup]="formGroup" fxLayout="column">
-    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="!this.formPart.isInvestigador">
       <!-- Solicitante -->
       <mat-form-field fxFlex="0 1 calc((100% - 10px) / 2)">
         <mat-label>{{'csp.solicitud.solicitud-rrhh.solicitante' | translate}}</mat-label>
@@ -214,9 +214,15 @@
       </fieldset>
     </ng-container>
 
+    <!-- Mensaje de advertencia Solicitante -->
+    <div fxFlex fxLayout="row" *ngIf="this.formPart.isInvestigador" class="info-message tooltip-inv">
+      <mat-icon class="info-icon">info</mat-icon>
+      {{'msg.csp.solicitud.solicitud-rrhh.solicitante-inv' |translate}}
+    </div>
+
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Universidad select -->
-      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)" *ngIf="!this.formPart.isInvestigador">
         <mat-label>{{'csp.solicitud.solicitud-rrhh.universidad-select' | translate}}</mat-label>
         <sgi-select-empresa formControlName="universidadSelect">
         </sgi-select-empresa>

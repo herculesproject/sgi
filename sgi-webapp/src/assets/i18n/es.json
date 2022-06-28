@@ -2079,6 +2079,7 @@
   "msg.csp.solicitud.solicitud-rrhh.requisitos.solicitante": "Solicitante",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.tutor": "Tutor/a",
   "msg.csp.solicitud.solicitud-rrhh.solicitante": "En caso de que la persona solicitante no se encuentre disponible en el buscador proporcionado, sus datos personales y de contacto deberán introducirse manualmente en los campos disponibles a continuación. De igual forma, podrá anular los datos introducidos manualmente cuando la persona solicitante ya haya sido registrada en el sistema de personas oficial de la Universidad, para ello deberá realizar la búsqueda de la persona a través del buscador. También puede utilizar el buscador en cualquier momento para solicitar el alta de la persona solicitante en el sistema de personas oficial de la Universidad si así lo desea.",
+  "msg.csp.solicitud.solicitud-rrhh.solicitante-inv": "Si algún dato personal no estuviera actualizado, por favor, notifíquelo a través del cauce oficial para que sus datos sean actualizados en el sistema central de datos personales",
   "msg.deactivate.entity": "¿Desea desactivar {gender,select,male{el} female{la} other{el/la}} {entity}?",
   "msg.deactivate.entity.success": "{entity} desactivad{gender,select,male{o} female{a} other{o/a}} correctamente",
   "msg.delete.entity": "¿Desea eliminar {gender,select,male{el} female{la} other{el/la}} {entity}?",

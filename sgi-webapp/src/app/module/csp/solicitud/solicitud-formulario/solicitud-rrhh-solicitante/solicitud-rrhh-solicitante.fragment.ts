@@ -50,7 +50,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   constructor(
     private readonly logger: NGXLogger,
     readonly solicitud: ISolicitud,
-    readonly isInvestigador,
+    readonly isInvestigador: boolean,
     private readonly solicitudService: SolicitudService,
     private readonly solicitudRrhhService: SolicitudRrhhService,
     private readonly solicitanteExternoService: SolicitanteExternoService,
@@ -78,6 +78,11 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
 
   protected initializer(key: string | number): Observable<ISolicitudSolicitanteRrhh> {
     return this.solicitudService.findSolicitudRrhh(key as number).pipe(
+      tap(solicitudRrhh => {
+        if (!!!solicitudRrhh && this.isInvestigador) {
+          this.setChanges(true);
+        }
+      }),
       map(solicitudRrhh => {
         const solicitanteSolicitudRrhh = (solicitudRrhh ?? {}) as ISolicitudSolicitanteRrhh;
         solicitanteSolicitudRrhh.solicitante = this.solicitud.solicitante;
@@ -130,7 +135,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
         codigoPostalContacto: new FormControl(null)
       }),
       universidadSelect: new FormControl(null),
-      universidadText: new FormControl({ value: null, disabled: true }),
+      universidadText: new FormControl({ value: null, disabled: !this.isInvestigador }),
       areaAnep: new FormControl(null)
     });
 
