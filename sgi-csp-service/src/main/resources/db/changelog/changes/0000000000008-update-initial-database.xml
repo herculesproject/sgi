@@ -87,11 +87,11 @@
       <column name="last_modified_by" type="VARCHAR(255)" />
       <column name="last_modified_date" type="TIMESTAMP" />
       <column name="area_anep_ref" type="VARCHAR(50)" />
-      <column name="observaciones" type="VARCHAR(50)" />
-      <column name="resumen" type="VARCHAR(50)" />
-      <column name="titulo_trabajo" type="VARCHAR(2000)" />
+      <column name="observaciones" type="VARCHAR(2000)" />
+      <column name="resumen" type="VARCHAR(2000)" />
+      <column name="titulo_trabajo" type="VARCHAR(250)" />
       <column name="tutor_ref" type="VARCHAR(50)" />
-      <column name="universidad" type="VARCHAR(2000)" />
+      <column name="universidad" type="VARCHAR(250)" />
       <column name="universidad_ref" type="VARCHAR(50)" />
     </createTable>
   </changeSet>
@@ -103,6 +103,61 @@
   </changeSet>
   <changeSet author="user (generated)" id="0000000000008-11">
     <dropNotNullConstraint columnDataType="varchar(50)" columnName="solicitante_ref" tableName="solicitud" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000008-12">
+    <createSequence incrementBy="1" sequenceName="solicitud_rrhh_requisito_categoria_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-13">
+    <createSequence incrementBy="1" sequenceName="solicitud_rrhh_requisito_nivel_academico_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-14">
+    <createTable tableName="solicitud_rrhh_requisito_categoria">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_rrhh_requisito_categoriaPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="documento_ref" type="VARCHAR(50)" />
+      <column name="requisitoip_categoriaprofesional_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="solicitud_rrhh_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-15">
+    <createTable tableName="solicitud_rrhh_requisito_nivel_academico">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_rrhh_requisito_nivel_academicoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="documento_ref" type="VARCHAR(50)" />
+      <column name="requisitoip_nivelacademico_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="solicitud_rrhh_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-16">
+    <addForeignKeyConstraint baseColumnNames="requisitoip_categoriaprofesional_id" baseTableName="solicitud_rrhh_requisito_categoria" constraintName="FK_SOLICITUDRRHHREQUISITOCATEGORIA_REQUISITOIPCATEGORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisitoip_categoriaprofesional" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-17">
+    <addForeignKeyConstraint baseColumnNames="solicitud_rrhh_id" baseTableName="solicitud_rrhh_requisito_categoria" constraintName="FK_SOLICITUDRRHHREQUISITOCATEGORIA_SOLICITUDRRHH" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_rrhh" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-18">
+    <addForeignKeyConstraint baseColumnNames="requisitoip_nivelacademico_id" baseTableName="solicitud_rrhh_requisito_nivel_academico" constraintName="FK_SOLICITUDRRHHREQUISITONIVELACADEMICO_REQUISITOIPNIVELACADEMICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requisitoip_nivelacademico" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-19">
+    <addForeignKeyConstraint baseColumnNames="solicitud_rrhh_id" baseTableName="solicitud_rrhh_requisito_nivel_academico" constraintName="FK_SOLICITUDRRHHREQUISITONIVELACADEMICO_SOLICITUDRRHH" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_rrhh" validate="true" />
   </changeSet>
 
 </databaseChangeLog>

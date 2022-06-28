@@ -43,7 +43,7 @@ public class SolicitudRrhhService {
     log.debug("create(SolicitudRrhh solicitudRrhh) - start");
 
     AssertHelper.idNotNull(solicitudRrhh.getId(), SolicitudRrhh.class);
-    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhh.getId());
+    authorityHelper.checkUserHasAuthorityModifySolicitud(solicitudRrhh.getId());
 
     SolicitudRrhh returnValue = repository.save(solicitudRrhh);
 
@@ -64,7 +64,7 @@ public class SolicitudRrhhService {
     log.debug("update(SolicitudRrhh solicitudRrhhActualizar) - start");
 
     AssertHelper.idNotNull(solicitudRrhhActualizar.getId(), SolicitudRrhh.class);
-    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhhActualizar.getId());
+    authorityHelper.checkUserHasAuthorityModifySolicitud(solicitudRrhhActualizar.getId());
 
     return repository.findById(solicitudRrhhActualizar.getId()).map(data -> {
       data.setAreaAnepRef(solicitudRrhhActualizar.getAreaAnepRef());
@@ -91,7 +91,7 @@ public class SolicitudRrhhService {
     log.debug("updateTutor(SolicitudRrhh solicitudRrhhActualizar) - start");
 
     AssertHelper.idNotNull(solicitudRrhhActualizar.getId(), SolicitudRrhh.class);
-    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhhActualizar.getId());
+    authorityHelper.checkUserHasAuthorityModifySolicitud(solicitudRrhhActualizar.getId());
 
     return repository.findById(solicitudRrhhActualizar.getId()).map(data -> {
       data.setTutorRef(solicitudRrhhActualizar.getTutorRef());
@@ -116,7 +116,7 @@ public class SolicitudRrhhService {
     log.debug("updateMemoria(SolicitudRrhh solicitudRrhhActualizar) - start");
 
     AssertHelper.idNotNull(solicitudRrhhActualizar.getId(), SolicitudRrhh.class);
-    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudRrhhActualizar.getId());
+    authorityHelper.checkUserHasAuthorityModifySolicitud(solicitudRrhhActualizar.getId());
 
     return repository.findById(solicitudRrhhActualizar.getId()).map(data -> {
       data.setTituloTrabajo(solicitudRrhhActualizar.getTituloTrabajo());
@@ -156,6 +156,8 @@ public class SolicitudRrhhService {
    */
   public SolicitudRrhh findBySolicitud(Long solicitudId) {
     log.debug("findBySolicitud(Long solicitudId) - start");
+    AssertHelper.idNotNull(solicitudId, SolicitudRrhh.class);
+    authorityHelper.checkUserHasAuthorityViewSolicitud(solicitudId);
     Optional<SolicitudRrhh> returnValue = repository.findById(solicitudId);
     log.debug("findBySolicitud(Long solicitudId) - end");
     return (returnValue.isPresent()) ? returnValue.get() : null;

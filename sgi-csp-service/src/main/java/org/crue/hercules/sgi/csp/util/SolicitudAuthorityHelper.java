@@ -55,6 +55,22 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
    * Comprueba si el usuario logueado tiene permiso para modificar la
    * {@link Solicitud}
    * 
+   * @param solicitudId Identificador de la {@link Solicitud}
+   * 
+   * @throws UserNotAuthorizedToModifySolicitudException si el usuario no esta
+   *                                                     autorizado para modificar
+   *                                                     la {@link Solicitud}
+   */
+  public void checkUserHasAuthorityModifySolicitud(Long solicitudId)
+      throws UserNotAuthorizedToModifySolicitudException {
+    checkUserHasAuthorityModifySolicitud(repository.findById(solicitudId)
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitudId)));
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene permiso para modificar la
+   * {@link Solicitud}
+   * 
    * @param solicitud la {@link Solicitud}
    * 
    * @throws UserNotAuthorizedToModifySolicitudException si el usuario no esta

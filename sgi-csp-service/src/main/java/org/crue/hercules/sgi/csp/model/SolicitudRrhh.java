@@ -30,10 +30,10 @@ public class SolicitudRrhh extends BaseEntity {
   protected static final String TABLE_NAME = "solicitud_rrhh";
 
   public static final int ENTIDAD_REF_LENGTH = 50;
-  public static final int OBSERVACIONES_LENGTH = 50;
-  public static final int RESUMEN_LENGTH = 50;
-  public static final int TITULO_TRABAJO_LENGTH = 2000;
-  public static final int UNIVERSIDAD_LENGTH = 2000;
+  public static final int OBSERVACIONES_LENGTH = 2000;
+  public static final int RESUMEN_LENGTH = 2000;
+  public static final int TITULO_TRABAJO_LENGTH = 250;
+  public static final int UNIVERSIDAD_LENGTH = 250;
 
   /** Id de la Solicitud */
   @Id
