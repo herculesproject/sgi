@@ -97,7 +97,7 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
 
   protected onInitialize(): void {
     const id = this.getKey() as number;
-    if (id) {
+    if (!!id && !!this.convocatoriaId) {
       this.subscriptions.push(
         forkJoin({
           requisitosEquipo: this.convocatoriaRequisitoEquipoService.findByConvocatoriaId(this.convocatoriaId),
@@ -326,6 +326,10 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
   }
 
   private getRequisitosEquipoCategoriasProfesionales(convocatoriaId: number): Observable<IRequisitoEquipoCategoriaProfesional[]> {
+    if (!!!convocatoriaId) {
+      return of([]);
+    }
+
     return this.convocatoriaService.findRequisitosEquipoCategoriasProfesionales(convocatoriaId)
       .pipe(
         switchMap((requisitoEquipoCategoria) => {
@@ -348,6 +352,10 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
   }
 
   private getRequisitosIpCategoriasProfesionales(convocatoriaId: number): Observable<IRequisitoIPCategoriaProfesional[]> {
+    if (!!!convocatoriaId) {
+      return of([]);
+    }
+
     return this.convocatoriaService.findRequisitosIpCategoriasProfesionales(convocatoriaId)
       .pipe(
         switchMap((requisitoIpCategoria) => {

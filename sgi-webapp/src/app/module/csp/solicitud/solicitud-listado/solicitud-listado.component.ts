@@ -168,6 +168,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       fechaFinDesde: new FormControl(null),
       fechaFinHasta: new FormControl(null),
       solicitante: new FormControl(undefined),
+      nombreSolicitanteExterno: new FormControl(null),
+      apellidosSolicitanteExterno: new FormControl(null),
       activo: new FormControl('true'),
       fechaPublicacionConvocatoriaDesde: new FormControl(null),
       fechaPublicacionConvocatoriaHasta: new FormControl(null),
@@ -379,6 +381,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         'codigoRegistroInterno',
         'codigoExterno',
         'solicitante',
+        'externo',
         'titulo',
         'referencia',
         'estado.estado',
@@ -391,6 +394,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         'codigoRegistroInterno',
         'codigoExterno',
         'solicitante',
+        'externo',
         'titulo',
         'referencia',
         'estado.estado',
@@ -424,6 +428,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       }
       rsqlFilter
         .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id)
+        .and('solicitanteExterno.nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombreSolicitanteExterno.value)
+        .and('solicitanteExterno.apellidos', SgiRestFilterOperator.LIKE_ICASE, controls.apellidosSolicitanteExterno.value)
         .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
         .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL,
           LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
