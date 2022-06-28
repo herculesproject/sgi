@@ -140,7 +140,8 @@
     </div>
 
     <!-- Título -->
-    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px"
+      *ngIf="!(this.formPart.isInvestigador && this.formPart.tipoFormularioSolicitud === FormularioSolicitud.RRHH)">
       <mat-form-field fxFlex="100%">
         <mat-label>{{'csp.solicitud.titulo' | translate}}</mat-label>
         <input matInput formControlName="titulo" type="text" id="titulo"

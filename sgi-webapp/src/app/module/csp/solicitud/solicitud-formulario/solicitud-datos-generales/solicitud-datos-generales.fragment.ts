@@ -210,10 +210,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         solicitante: solicitud.solicitante,
         unidadGestion: solicitud.unidadGestion
       };
-    }
 
-    if (!this.isSolicitanteRequired) {
-      this.getFormGroup().controls.solicitante.disable();
+      if (!this.isSolicitanteRequired) {
+        this.getFormGroup().controls.solicitante.disable();
+      }
     }
 
     if (!this.readonly && solicitud?.estado?.estado === Estado.BORRADOR) {
