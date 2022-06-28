@@ -914,6 +914,8 @@ public class MemoriaServiceImpl implements MemoriaService {
    * Recuperar aquellas memorias que requieren evaluación retrospectiva y cuya
    * fecha de evaluación retrospectiva se encuentre entre el día actual y el
    * número de días guardado como parámetro de configuración
+   * 
+   * @return lista de {@link Memoria}
    */
   public List<Memoria> recuperarMemoriasAvisoFechaRetrospectiva() {
     log.debug("recuperarMemoriasAvisoFechaRetrospectiva() - start");
@@ -1016,6 +1018,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   /**
    * Recuperar aquellas memorias con informe final pendiente
+   * 
+   * @return lista de {@link Memoria}
    */
   public List<Memoria> recuperaInformesAvisoSeguimientoFinalPendiente() {
     log.debug("recuperaInformesAvisoSeguimientoFinalPendiente() - start");

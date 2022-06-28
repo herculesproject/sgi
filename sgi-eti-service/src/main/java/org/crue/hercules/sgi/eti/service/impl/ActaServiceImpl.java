@@ -25,7 +25,6 @@ import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
-import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
@@ -105,7 +104,6 @@ public class ActaServiceImpl implements ActaService {
    * @param reportService            {@link SgiApiRepService}
    * @param sgdocService             {@link SgdocService}
    * @param comunicadosService       {@link ComunicadosService}
-   * @param informeService           {@link InformeService}
    * @param configService            {@link SgiApiCnfService}
    * @param blockchainService        {@link SgiApiBlockchainService}
    */

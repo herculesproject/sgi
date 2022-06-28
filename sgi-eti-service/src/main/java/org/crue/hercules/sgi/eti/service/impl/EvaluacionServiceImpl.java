@@ -124,6 +124,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param sgdocService                  servicio gestor documental
    *                                      {@link SgdocService}
    * @param comunicadosService            {@link ComunicadosService}
+   * @param sgiConfigProperties           {@link SgiConfigProperties}
    */
   @Autowired
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
@@ -897,6 +898,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /**
    * Recuperar aquellas evaluaciones que tienen informe de seguimiento anual
    * pendiente
+   * 
+   * @return lista de {@link Evaluacion}
    */
   public List<Evaluacion> recuperaInformesAvisoSeguimientoAnualPendiente() {
     log.debug("recuperaInformesAvisoSeguimientoAnualPendiente() - start");
