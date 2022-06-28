@@ -25,9 +25,12 @@ import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
+import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -81,6 +84,12 @@ public class ActaServiceImpl implements ActaService {
   /** Comunicado service */
   private final ComunicadosService comunicadosService;
 
+  /** CNF service */
+  private final SgiApiCnfService configService;
+
+  /** Blockchain service */
+  private final SgiApiBlockchainService blockchainService;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   /**
@@ -96,13 +105,17 @@ public class ActaServiceImpl implements ActaService {
    * @param reportService            {@link SgiApiRepService}
    * @param sgdocService             {@link SgdocService}
    * @param comunicadosService       {@link ComunicadosService}
+   * @param informeService           {@link InformeService}
+   * @param configService            {@link SgiApiCnfService}
+   * @param blockchainService        {@link SgiApiBlockchainService}
    */
   @Autowired
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
       RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService,
       RetrospectivaService retrospectivaService, SgiApiRepService reportService, SgdocService sgdocService,
-      ComunicadosService comunicadosService) {
+      ComunicadosService comunicadosService, SgiApiCnfService configService,
+      SgiApiBlockchainService blockchainService) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
@@ -112,6 +125,8 @@ public class ActaServiceImpl implements ActaService {
     this.reportService = reportService;
     this.sgdocService = sgdocService;
     this.comunicadosService = comunicadosService;
+    this.configService = configService;
+    this.blockchainService = blockchainService;
   }
 
   /**
@@ -280,6 +295,8 @@ public class ActaServiceImpl implements ActaService {
     Assert.notNull(id, "El id de acta recibido no puede ser null.");
 
     Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
+
+    acta = this.generarDocumento(acta);
 
     // Tipo evaluación memoria
     List<Evaluacion> listEvaluacionesMemoria = evaluacionRepository
@@ -517,5 +534,23 @@ public class ActaServiceImpl implements ActaService {
     } catch (Exception e) {
       log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Error al enviar el comunicado", e);
     }
+  }
+
+  private Acta generarDocumento(Acta acta) {
+    log.debug("generarDocumento(Acta acta) - start");
+    DocumentoOutput documento = generarDocumentoActa(acta.getId());
+    acta.setDocumentoRef(documento.getDocumentoRef());
+
+    try {
+      if (configService.isBlockchainEnable().booleanValue()) {
+        String transaccion = blockchainService.sellarDocumento(documento.getHash());
+        acta.setTransaccionRef(transaccion);
+      }
+    } catch (Exception e) {
+      log.debug("generarDocumento(Acta acta) - Error blockchain", e);
+    }
+
+    log.debug("generarDocumento(Acta acta) - end");
+    return acta;
   }
 }

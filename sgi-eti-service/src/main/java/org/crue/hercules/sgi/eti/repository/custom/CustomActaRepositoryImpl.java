@@ -126,7 +126,9 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         getNumEvaluaciones(root, cb, cq, Boolean.TRUE).alias("numEvaluaciones"),
         getNumEvaluaciones(root, cb, cq, Boolean.FALSE).alias("numRevisiones"),
         getNumEvaluacionesNoEvaluadas(root, cb, cq).alias("evaluacionesEvaluadas"),
-        root.get(Acta_.estadoActual).alias("estadoActa"));
+        root.get(Acta_.estadoActual).alias("estadoActa"),
+        root.get(Acta_.documentoRef).alias("documentoRef"),
+        root.get(Acta_.transaccionRef).alias("transaccionRef"));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
