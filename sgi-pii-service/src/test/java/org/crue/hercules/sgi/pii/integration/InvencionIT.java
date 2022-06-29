@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.pii.integration;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Arrays;
@@ -10,14 +11,17 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.pii.dto.InformePatentabilidadOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoInput;
 import org.crue.hercules.sgi.pii.dto.InvencionAreaConocimientoOutput;
+import org.crue.hercules.sgi.pii.dto.InvencionDocumentoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionDto;
 import org.crue.hercules.sgi.pii.dto.InvencionGastoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionIngresoOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionInput;
+import org.crue.hercules.sgi.pii.dto.InvencionInventorInput;
 import org.crue.hercules.sgi.pii.dto.InvencionInventorOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
+import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -53,6 +57,8 @@ class InvencionIT extends BaseIT {
   public static final String PATH_PRC = "/produccioncientifica/{anioInicio}/{anioFin}/{universidadId}";
   public static final String PATH_INVENCION_GASTO = "/{invencionId}/gastos";
   public static final String PATH_INVENCION_INGRESO = "/{invencionId}/ingresos";
+  public static final String PATH_INVENCION_DOCUMENTOS = "/{invencionId}/invenciondocumentos";
+  public static final String PATH_SOLICITUDES_PROTECCION = "/{invencionId}/solicitudesproteccion";
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers,
       Object entity, String... roles) throws Exception {
@@ -735,6 +741,173 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(response.getBody()).hasSize(5);
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/resultado_informe_patentabilidad.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_documento.sql"
+  // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findInvencionDocumentosByInvencionId_WithPagingSortingAndFiltering_ReturnsInvencionDocumentoOutputSubList()
+      throws Exception {
+    String[] roles = { "PII-INV-V", "PII-INV-C", "PII-INV-E" };
+
+    // when: Obtiene la page=0 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "invencionId=1";
+    Long invencionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_INVENCION_DOCUMENTOS).queryParam("s", sort)
+        .queryParam("q", filter).buildAndExpand(invencionId).toUri();
+
+    final ResponseEntity<List<InvencionDocumentoOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<InvencionDocumentoOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<InvencionDocumentoOutput> invencionDocumentoOutput = response.getBody();
+
+    Assertions.assertThat(invencionDocumentoOutput).hasSize(2);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/invencion_inventor.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateInventoresByInvencionId_WithPagingSortingAndFiltering_ReturnsInvencionInventorOutputSubList()
+      throws Exception {
+    String[] roles = { "PII-INV-C", "PII-INV-E" };
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "";
+    String inventorRef1 = "11223344";
+    String inventorRef2 = "11223345";
+    String inventorRef3 = "U0186304";
+    BigDecimal participacion1 = new BigDecimal(50L);
+    BigDecimal participacion2 = new BigDecimal(50L);
+
+    Long invencionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_INVENCION_INVENTOR)
+        .queryParam("s", sort)
+        .queryParam("q", filter)
+        .buildAndExpand(invencionId).toUri();
+
+    List<InvencionInventorInput> invencionInventoresInput = Arrays
+        .asList(buildMockInvencionInventorInput(1L, invencionId, inventorRef1, participacion1),
+            buildMockInvencionInventorInput(2L, invencionId, inventorRef2, participacion2));
+
+    final ResponseEntity<List<InvencionInventorOutput>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequest(headers, invencionInventoresInput, roles),
+        new ParameterizedTypeReference<List<InvencionInventorOutput>>() {
+        });
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<InvencionInventorOutput> invencionesInventorOutput = response.getBody();
+
+    Assertions.assertThat(invencionesInventorOutput).hasSize(3);
+
+    InvencionInventorOutput inventor1 = invencionesInventorOutput.get(2);
+    InvencionInventorOutput inventor2 = invencionesInventorOutput.get(1);
+    InvencionInventorOutput inventor3 = invencionesInventorOutput.get(0);
+
+    Assertions.assertThat(inventor1.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(inventor2.getId()).as("getId()").isEqualTo(2L);
+    Assertions.assertThat(inventor3.getId()).as("getId()").isEqualTo(3L);
+
+    Assertions.assertThat(inventor1.getInventorRef()).as("getInventorRef()").isEqualTo(inventorRef1);
+    Assertions.assertThat(inventor2.getInventorRef()).as("getInventorRef()").isEqualTo(inventorRef2);
+    Assertions.assertThat(inventor3.getInventorRef()).as("getInventorRef()").isEqualTo(inventorRef3);
+
+    Assertions.assertThat(inventor1.getParticipacion().longValue()).as("getParticipacion()")
+        .isEqualTo(participacion1.longValue());
+    Assertions.assertThat(inventor2.getParticipacion().longValue()).as("getParticipacion()")
+        .isEqualTo(participacion2.longValue());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/tipo_caducidad.sql",
+    "classpath:scripts/via_proteccion.sql",
+    "classpath:scripts/solicitud_proteccion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findSolicitudesProteccionByInvencionId_WithPagingSortingAndFiltering_ReturnsSolicitudProteccionOutputSubList()
+      throws Exception {
+    String[] roles = { "PII-INV-E" };
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "";
+
+    Long invencionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_SOLICITUDES_PROTECCION)
+        .queryParam("s", sort)
+        .queryParam("q", filter)
+        .buildAndExpand(invencionId).toUri();
+
+    final ResponseEntity<List<SolicitudProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles),
+        new ParameterizedTypeReference<List<SolicitudProteccionOutput>>() {
+        });
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<SolicitudProteccionOutput> solicitudes = response.getBody();
+
+    Assertions.assertThat(solicitudes).hasSize(3);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    "classpath:scripts/invencion.sql",
+    "classpath:scripts/tipo_caducidad.sql",
+    "classpath:scripts/via_proteccion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findSolicitudesProteccionByInvencionId_WithPagingSortingAndFiltering_ReturnsHttpStatusNO_CONTENT()
+      throws Exception {
+    String[] roles = { "PII-INV-E" };
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "";
+
+    Long invencionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_SOLICITUDES_PROTECCION)
+        .queryParam("s", sort)
+        .queryParam("q", filter)
+        .buildAndExpand(invencionId).toUri();
+
+    final ResponseEntity<List<SolicitudProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles),
+        new ParameterizedTypeReference<List<SolicitudProteccionOutput>>() {
+        });
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
   /**
    * Función que devuelve un objeto InvencionInput
    * 
@@ -750,6 +923,18 @@ class InvencionIT extends BaseIT {
     invencionInput.setTipoProteccionId(1L);
 
     return invencionInput;
+  }
+
+  private InvencionInventorInput buildMockInvencionInventorInput(Long id, Long invencionId, String inventorRef,
+      BigDecimal participacion) {
+    return InvencionInventorInput.builder()
+        .id(id)
+        .activo(Boolean.TRUE)
+        .invencionId(invencionId)
+        .inventorRef(inventorRef)
+        .participacion(participacion)
+        .repartoUniversidad(Boolean.TRUE)
+        .build();
   }
 
   @Data
