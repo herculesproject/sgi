@@ -4,6 +4,10 @@ import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidad_;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidad;
 import org.springframework.data.jpa.domain.Specification;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResultadoInformePatentabilidadSpecifications {
 
   /**
@@ -13,9 +17,7 @@ public class ResultadoInformePatentabilidadSpecifications {
    *         activos.
    */
   public static Specification<ResultadoInformePatentabilidad> activos() {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(ResultadoInformePatentabilidad_.activo), Boolean.TRUE);
-    };
+    return (root, query, cb) -> cb.equal(root.get(ResultadoInformePatentabilidad_.activo), Boolean.TRUE);
   }
 
 }

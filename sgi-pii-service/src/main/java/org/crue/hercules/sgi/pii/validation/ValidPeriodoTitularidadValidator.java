@@ -43,15 +43,15 @@ public class ValidPeriodoTitularidadValidator
 
     Optional<PeriodoTitularidad> titularidadPosterior = this.repository
         .findByInvencionIdAndFechaFinGreaterThanEqual(value.getInvencionId(), value.getFechaInicio());
-    if (titularidadPosterior.isPresent() && !Objects.equals(titularidadPosterior.get().getId(), value.getId())) {
-      return returnValue(context, false);
-    }
 
-    return returnValue(context, true);
+    boolean condition = !(titularidadPosterior.isPresent()
+        && !Objects.equals(titularidadPosterior.get().getId(), value.getId()));
+
+    return returnValue(context, condition);
   }
 
   private Boolean returnValue(ConstraintValidatorContext context, Boolean result) {
-    if (!result) {
+    if (!result.booleanValue()) {
       addEntityMessageParameter(context);
     }
 

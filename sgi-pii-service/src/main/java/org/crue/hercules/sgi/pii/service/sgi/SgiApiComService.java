@@ -27,8 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SgiApiComService extends SgiApiBaseService {
 
   private static final String DATA = "_DATA";
-  private static final String PATH_EMAILS = "/emails";
-  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_SEPARATOR = "/";
+  private static final String PATH_EMAILS = PATH_SEPARATOR + "emails";
+  private static final String PATH_PARAMETER_ID = PATH_SEPARATOR + "{id}";
 
   private static final String TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION = "PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION";
   private static final String TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION_PARAM = TEMPLATE_PII_COM_MESES_HASTA_FIN_PRIORIDAD_SOLICITUD_PROTECCION

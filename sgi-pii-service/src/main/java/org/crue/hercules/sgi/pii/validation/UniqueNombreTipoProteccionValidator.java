@@ -45,9 +45,7 @@ public class UniqueNombreTipoProteccionValidator
     specs = specs
         .and((root, query, cb) -> Boolean.TRUE.equals(isSubtipo) ? cb.and(cb.isNotNull(root.get(TipoProteccion_.padre)),
             cb.equal(root.get(TipoProteccion_.padre), value.getPadre())) : cb.isNull(root.get(TipoProteccion_.padre)));
-    specs = specs.and((root, query, cb) -> {
-      return cb.equal(root.get(TipoProteccion_.nombre), value.getNombre());
-    });
+    specs = specs.and((root, query, cb) -> cb.equal(root.get(TipoProteccion_.nombre), value.getNombre()));
 
     List<TipoProteccion> tipoProteccion = repository.findAll(specs);
     boolean returnValue = tipoProteccion.stream().noneMatch(tipo -> !Objects.equals(tipo.getId(), value.getId()));

@@ -59,7 +59,7 @@ public class SolicitudProteccionController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R')")
-  ResponseEntity<SolicitudProteccionOutput> findById(@PathVariable Long id) {
+  public ResponseEntity<SolicitudProteccionOutput> findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     SolicitudProteccion returnValue = this.solicitudProteccionService.findById(id);
     log.debug("findById(Long id) - end");
@@ -74,7 +74,7 @@ public class SolicitudProteccionController {
    */
   @PostMapping
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  ResponseEntity<SolicitudProteccionOutput> create(
+  public ResponseEntity<SolicitudProteccionOutput> create(
       @Valid @RequestBody SolicitudProteccionInput solicitudProteccionInput) {
 
     return new ResponseEntity<>(
@@ -90,7 +90,7 @@ public class SolicitudProteccionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  SolicitudProteccionOutput update(@Valid @RequestBody SolicitudProteccionInput solicitudProteccion,
+  public SolicitudProteccionOutput update(@Valid @RequestBody SolicitudProteccionInput solicitudProteccion,
       @PathVariable Long id) {
     log.debug("update(@Valid @RequestBody SolicitudProteccionInput invencion, @PathVariable Long id) - start");
     SolicitudProteccion returnValue = this.solicitudProteccionService.update(convert(id, solicitudProteccion));
@@ -106,7 +106,7 @@ public class SolicitudProteccionController {
    */
   @PatchMapping("/{id}/activar")
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  SolicitudProteccionOutput activar(@PathVariable Long id) {
+  public SolicitudProteccionOutput activar(@PathVariable Long id) {
 
     return convert(this.solicitudProteccionService.activar(id));
   }
@@ -118,7 +118,7 @@ public class SolicitudProteccionController {
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  SolicitudProteccionOutput desactivar(@PathVariable Long id) {
+  public SolicitudProteccionOutput desactivar(@PathVariable Long id) {
 
     return convert(this.solicitudProteccionService.desactivar(id));
   }
@@ -184,7 +184,7 @@ public class SolicitudProteccionController {
   /****************/
 
   private Page<PaisValidadoOutput> convertToPaisValidadoPage(Page<PaisValidado> page) {
-    List<PaisValidadoOutput> content = page.getContent().stream().map((paisValidado) -> convert(paisValidado))
+    List<PaisValidadoOutput> content = page.getContent().stream().map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
@@ -205,7 +205,7 @@ public class SolicitudProteccionController {
   }
 
   private Page<ProcedimientoOutput> convertToProcedimientoPage(Page<Procedimiento> page) {
-    List<ProcedimientoOutput> content = page.getContent().stream().map((procedimiento) -> convert(procedimiento))
+    List<ProcedimientoOutput> content = page.getContent().stream().map(this::convert)
         .collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());

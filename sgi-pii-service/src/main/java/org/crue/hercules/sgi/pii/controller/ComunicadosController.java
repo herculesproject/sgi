@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,14 +19,13 @@ public class ComunicadosController {
 
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-pii'))")
   @GetMapping("/meses-hasta-fecha-fin-prioridad-solicitud-proteccion")
-  public void enviarComunicadoMesesHastaFinPrioridadSolicitudProteccion() throws JsonProcessingException {
+  public void enviarComunicadoMesesHastaFinPrioridadSolicitudProteccion() {
     comunicadoService.enviarComunicadoMesesHastaFinPrioridadSolicitudProteccion();
   }
 
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-pii'))")
   @GetMapping("/aviso-fin-plazo-presentacion-fases-nacionales-regionales-solicitud-proteccion")
-  public void enviarComunicadoMesesHastaFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion()
-      throws JsonProcessingException {
+  public void enviarComunicadoMesesHastaFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion() {
     comunicadoService.enviarComunicadoAvisoFinPlazoPresentacionFasesNacionalesRegionalesSolicitudProteccion();
   }
 

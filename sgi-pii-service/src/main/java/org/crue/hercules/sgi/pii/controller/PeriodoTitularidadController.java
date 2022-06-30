@@ -84,7 +84,8 @@ public class PeriodoTitularidadController {
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E', 'PII-INV-V')")
-  ResponseEntity<Page<PeriodoTitularidadOutput>> findAll(@RequestParam(name = "q", required = false) String query,
+  public ResponseEntity<Page<PeriodoTitularidadOutput>> findAll(
+      @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug(
         "findAll(@RequestParam(name = 'q', required = false) String query, @RequestPageable(sort = 's') Pageable paging) - start");
@@ -109,7 +110,8 @@ public class PeriodoTitularidadController {
    */
   @PostMapping()
   @PreAuthorize("hasAuthority('PII-INV-C')")
-  ResponseEntity<PeriodoTitularidadOutput> create(@Valid @RequestBody PeriodoTitularidadInput periodoTitularidad) {
+  public ResponseEntity<PeriodoTitularidadOutput> create(
+      @Valid @RequestBody PeriodoTitularidadInput periodoTitularidad) {
     log.debug("create(@Valid @RequestBody PeriodoTitularidadInput periodoTitularidad) - start");
 
     PeriodoTitularidad returnValue = this.service.create(convert(periodoTitularidad),
@@ -128,7 +130,8 @@ public class PeriodoTitularidadController {
    */
   @PutMapping("/{periodoTitularidadId}")
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")
-  ResponseEntity<PeriodoTitularidadOutput> updatePeriodoTitularidadInvencionId(@PathVariable Long periodoTitularidadId,
+  public ResponseEntity<PeriodoTitularidadOutput> updatePeriodoTitularidadInvencionId(
+      @PathVariable Long periodoTitularidadId,
       @Valid @RequestBody PeriodoTitularidadInput periodoTitularidadInput) {
 
     if (!this.invencionService.existsById(periodoTitularidadInput.getInvencionId())) {
@@ -142,7 +145,7 @@ public class PeriodoTitularidadController {
 
   private Page<PeriodoTitularidadOutput> convertToPeriodoTitularidadPage(Page<PeriodoTitularidad> page) {
     List<PeriodoTitularidadOutput> content = page.getContent().stream()
-        .map((periodoTitularidad) -> convert(periodoTitularidad)).collect(Collectors.toList());
+        .map(this::convert).collect(Collectors.toList());
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
@@ -189,7 +192,7 @@ public class PeriodoTitularidadController {
 
   private List<PeriodoTitularidadTitular> convertPeriodoTitularidadTitularesInput(
       List<PeriodoTitularidadTitularInput> inputs) {
-    return inputs.stream().map((input) -> convert(input)).collect(Collectors.toList());
+    return inputs.stream().map(this::convert).collect(Collectors.toList());
   }
 
   private PeriodoTitularidadTitular convert(PeriodoTitularidadTitularInput periodoTitularidadTitularInput) {
@@ -198,7 +201,7 @@ public class PeriodoTitularidadController {
 
   private List<PeriodoTitularidadTitularOutput> convertPeriodoTitularidadTitular(
       List<PeriodoTitularidadTitular> entities) {
-    return entities.stream().map((entity) -> convert(entity)).collect(Collectors.toList());
+    return entities.stream().map(this::convert).collect(Collectors.toList());
   }
 
   private PeriodoTitularidadTitularOutput convert(PeriodoTitularidadTitular periodoTitularidadTitular) {

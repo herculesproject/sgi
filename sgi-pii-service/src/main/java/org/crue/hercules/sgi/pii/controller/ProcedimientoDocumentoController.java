@@ -41,7 +41,7 @@ public class ProcedimientoDocumentoController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAuthority('PII-INV-E', 'PII-INV-V')")
-  ResponseEntity<ProcedimientoDocumentoOutput> findById(@PathVariable Long id) {
+  public ResponseEntity<ProcedimientoDocumentoOutput> findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProcedimientoDocumento returnValue = procedimientoDocumentoService.findById(id);
     log.debug("findById(Long id) - end");
@@ -56,7 +56,7 @@ public class ProcedimientoDocumentoController {
    */
   @PostMapping
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")
-  ResponseEntity<ProcedimientoDocumentoOutput> create(
+  public ResponseEntity<ProcedimientoDocumentoOutput> create(
       @Valid @RequestBody ProcedimientoDocumentoInput procedimientoDocumentoInput) {
 
     return new ResponseEntity<>(
@@ -74,7 +74,7 @@ public class ProcedimientoDocumentoController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  ResponseEntity<ProcedimientoDocumentoOutput> update(
+  public ResponseEntity<ProcedimientoDocumentoOutput> update(
       @Valid @RequestBody ProcedimientoDocumentoInput procedimientoDocumentoInput, @PathVariable Long id) {
 
     return ResponseEntity
@@ -90,7 +90,7 @@ public class ProcedimientoDocumentoController {
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-C')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
+  public void deleteById(@PathVariable Long id) {
     this.procedimientoDocumentoService.delete(id);
   }
 

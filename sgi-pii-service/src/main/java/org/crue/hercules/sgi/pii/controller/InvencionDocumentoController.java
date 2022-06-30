@@ -37,7 +37,8 @@ public class InvencionDocumentoController {
    */
   @PostMapping
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")
-  ResponseEntity<InvencionDocumentoOutput> create(@Valid @RequestBody InvencionDocumentoInput invencionDocumento) {
+  public ResponseEntity<InvencionDocumentoOutput> create(
+      @Valid @RequestBody InvencionDocumentoInput invencionDocumento) {
 
     return new ResponseEntity<>(convert(this.invencionDocumentoService.create(convert(invencionDocumento))),
         HttpStatus.CREATED);
@@ -52,7 +53,7 @@ public class InvencionDocumentoController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PII-INV-E')")
-  ResponseEntity<InvencionDocumentoOutput> update(@Valid @RequestBody InvencionDocumentoInput invencionDocumento,
+  public ResponseEntity<InvencionDocumentoOutput> update(@Valid @RequestBody InvencionDocumentoInput invencionDocumento,
       @PathVariable Long id) {
 
     return ResponseEntity.ok(convert(this.invencionDocumentoService.update(convert(id, invencionDocumento))));
@@ -67,7 +68,7 @@ public class InvencionDocumentoController {
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-C')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
+  public void deleteById(@PathVariable Long id) {
     this.invencionDocumentoService.delete(id);
   }
 
