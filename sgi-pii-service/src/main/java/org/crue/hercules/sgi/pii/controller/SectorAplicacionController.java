@@ -169,6 +169,7 @@ public class SectorAplicacionController {
    * Desactiva el {@link SectorAplicacion} con id indicado.
    * 
    * @param id Identificador de {@link SectorAplicacion}.
+   * @return objeto de tiop {@link SectorAplicacionOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-SEA-B')")

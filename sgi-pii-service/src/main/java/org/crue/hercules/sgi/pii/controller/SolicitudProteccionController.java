@@ -7,13 +7,13 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.crue.hercules.sgi.pii.dto.PaisValidadoOutput;
+import org.crue.hercules.sgi.pii.dto.ProcedimientoOutput;
 import org.crue.hercules.sgi.pii.dto.SolicitudProteccionInput;
 import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
 import org.crue.hercules.sgi.pii.model.PaisValidado;
+import org.crue.hercules.sgi.pii.model.Procedimiento;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.service.PaisValidadoService;
-import org.crue.hercules.sgi.pii.dto.ProcedimientoOutput;
-import org.crue.hercules.sgi.pii.model.Procedimiento;
 import org.crue.hercules.sgi.pii.service.ProcedimientoService;
 import org.crue.hercules.sgi.pii.service.SolicitudProteccionService;
 import org.modelmapper.ModelMapper;
@@ -69,7 +69,8 @@ public class SolicitudProteccionController {
   /**
    * Crea un nuevo {@link SolicitudProteccion}.
    * 
-   * @param viaProteccion {@link SolicitudProteccion} que se quiere crear.
+   * @param solicitudProteccionInput {@link SolicitudProteccion} que se quiere
+   *                                 crear.
    * @return Nuevo {@link SolicitudProteccion} creado.
    */
   @PostMapping
@@ -115,6 +116,7 @@ public class SolicitudProteccionController {
    * Desactiva el {@link SolicitudProteccion} con id indicado.
    * 
    * @param id Identificador de {@link SolicitudProteccion}.
+   * @return objeto de tipo {@link SolicitudProteccionOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-INV-E')")

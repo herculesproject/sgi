@@ -245,6 +245,7 @@ public class InvencionController {
    * Desactiva la {@link Invencion} con id indicado.
    * 
    * @param id Identificador de {@link Invencion}.
+   * @return objecto de tipo {@link InvencionOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-INV-B')")
@@ -384,12 +385,15 @@ public class InvencionController {
   }
 
   /**
+   * 
    * Devuelve una lista paginada de {@link InvencionInventor} relacionados a la
    * {@link Invencion} pasada por parámetros Devuelve una lista paginada de
    * {@link InvencionInventor} activos relacionados a la {@link Invencion} pasada
    * por parámetros
    * 
-   * @param id Identificador de {@link Invencion}.
+   * @param invencionId Identificador de {@link Invencion}.
+   * @param query       filtro
+   * @param paging      paginacion info
    * @return Lista de entidades {@link InvencionInventor} paginadas
    */
   @GetMapping(PATH_INVENCION_INVENTOR)
@@ -444,7 +448,9 @@ public class InvencionController {
    * Devuelve una lista de {@link SolicitudProteccion} relacionados a una
    * invencion
    * 
-   * @param id Identificador de {@link Invencion}.
+   * @param invencionId Identificador de {@link Invencion}.
+   * @param paging      paginacion info
+   * @param query       filtro
    * @return la lista de entidades {@link SolicitudProteccion}
    */
   @GetMapping("/{invencionId}/solicitudesproteccion")
@@ -497,6 +503,7 @@ public class InvencionController {
   /**
    * Crea un nuevo {@link PeriodoTitularidad}.
    * 
+   * @param invencionId        Identificador de {@link Invencion}
    * @param periodoTitularidad {@link PeriodoTitularidad} que se quiere crear.
    * @return Nuevo {@link PeriodoTitularidad} creado.
    */

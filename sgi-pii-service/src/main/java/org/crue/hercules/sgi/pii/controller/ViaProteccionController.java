@@ -38,11 +38,11 @@ public class ViaProteccionController {
   private final ModelMapper modelMapper;
 
   /**
-   * Devuelve una lista paginada y filtrada {@link TipoProcedimiento}.
+   * Devuelve una lista paginada y filtrada {@link ViaProteccionOutput}.
    * 
    * @param query  Filtro de búsqueda.
    * @param paging Información de Paginado.
-   * @return Lista de entidades {@link TipoProcedimiento}.
+   * @return Lista de entidades {@link ViaProteccionOutput}.
    */
   @GetMapping("/todos")
   @PreAuthorize("hasAnyAuthority('PII-VPR-V', 'PII-VPR-C', 'PII-VPR-E', 'PII-VPR-B', 'PII-VPR-R', 'PII-INV-E', 'PII-INV-V')")
@@ -57,8 +57,8 @@ public class ViaProteccionController {
   /**
    * Crea un nuevo {@link ViaProteccion}.
    * 
-   * @param viaProteccion {@link ViaProteccion} que se quiere crear.
-   * @return Nuevo {@link ViaProteccion} creado.
+   * @param viaProteccionInput {@link ViaProteccionInput} que se quiere crear.
+   * @return Nuevo {@link ViaProteccionOutput} creado.
    */
   @PostMapping
   @PreAuthorize("hasAuthority('PII-VPR-C')")
@@ -85,6 +85,7 @@ public class ViaProteccionController {
    * Desactiva el {@link ViaProteccion} con id indicado.
    * 
    * @param id Identificador de {@link ViaProteccion}.
+   * @return objeto de tipo {@link ViaProteccionOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-VPR-B')")

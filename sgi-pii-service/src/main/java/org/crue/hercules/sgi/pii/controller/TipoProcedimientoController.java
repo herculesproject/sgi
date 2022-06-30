@@ -40,8 +40,8 @@ public class TipoProcedimientoController {
   /**
    * Devuelve todos los tiposProcedimientos activos
    * 
-   * @param query
-   * @param paging
+   * @param query  filtro
+   * @param paging paginacion info
    * @return la lista de entidades {@link TipoProcedimiento} paginada con
    *         posibilidad de filtrado
    */
@@ -94,7 +94,7 @@ public class TipoProcedimientoController {
    * Crea un nuevo {@link TipoProcedimiento}.
    * 
    * @param tipoProcedimientoInput {@link TipoProcedimiento} que se quiere crear.
-   * @return Nuevo {@link TipoProteccion} creado.
+   * @return Nuevo {@link TipoProcedimientoOutput} creado.
    */
   @PostMapping
   @PreAuthorize("hasAuthority('PII-TPR-C')")
@@ -122,6 +122,7 @@ public class TipoProcedimientoController {
    * Desactiva el {@link TipoProcedimiento} con el id indicado.
    * 
    * @param id Identificador del {@link TipoProcedimiento}.
+   * @return objeto de tipo {@link TipoProcedimientoOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-TPR-B')")

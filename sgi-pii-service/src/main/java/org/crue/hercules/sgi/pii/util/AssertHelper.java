@@ -17,7 +17,7 @@ public class AssertHelper {
   /**
    * Comprueba que el id no sea null
    * 
-   * @param id    Id del {@link GrupoEquipo}.
+   * @param id    Id del Objeto
    * @param clazz clase para la que se comprueba el id
    */
   public static void idIsNull(Long id, Class<?> clazz) {
@@ -32,7 +32,7 @@ public class AssertHelper {
   /**
    * Comprueba que el id no sea null
    * 
-   * @param id    Id del {@link GrupoEquipo}.
+   * @param id    Id del objeto
    * @param clazz clase para la que se comprueba el id
    */
   public static void idNotNull(Long id, Class<?> clazz) {

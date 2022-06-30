@@ -51,7 +51,8 @@ public class ProcedimientoDocumentoController {
   /**
    * Crea un nuevo {@link ProcedimientoDocumento}.
    * 
-   * @param procedimientoDocumento {@link ProcedimientoDocumento} a crear.
+   * @param procedimientoDocumentoInput {@link ProcedimientoDocumentoInput} a
+   *                                    crear.
    * @return Nuevo {@link ProcedimientoDocumento} creado.
    */
   @PostMapping

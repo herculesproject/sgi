@@ -33,7 +33,7 @@ public class InvencionDocumentoController {
    * Crea un nuevo {@link InvencionDocumento}.
    * 
    * @param invencionDocumento {@link InvencionDocumento} que se quiere crear.
-   * @return Nuevo {@link Invencion} creado.
+   * @return Nuevo {@link InvencionDocumentoOutput} creado.
    */
   @PostMapping
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")
@@ -47,8 +47,10 @@ public class InvencionDocumentoController {
   /**
    * Actualiza la {@link InvencionDocumento} con el id indicado.
    * 
-   * @param invencionDocumento
-   * @param id
+   * @param invencionDocumento objeto de tipo {@link InvencionDocumentoInput} con
+   *                           los
+   *                           datos para actualizar
+   * @param id                 identificador del objeto {@link InvencionDocumento}
    * @return {@link InvencionDocumento}
    */
   @PutMapping("/{id}")

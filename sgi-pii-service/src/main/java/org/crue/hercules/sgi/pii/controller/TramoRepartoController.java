@@ -128,7 +128,6 @@ public class TramoRepartoController {
    * Elimina la entidad {@link TramoReparto} con id indicado.
    * 
    * @param id Identificador de {@link TramoReparto}.
-   * @return {@link TramoReparto} actualizado.
    */
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('PII-TRE-B')")

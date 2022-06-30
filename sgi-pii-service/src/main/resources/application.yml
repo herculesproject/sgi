@@ -19,10 +19,14 @@ spring:
     # Make sure database schema is created (schema.sql is executed): always/never
     initialization-mode: always
     # We use a H2 in file database with PostgreSQL compatibility mode
-    url: "jdbc:postgresql://postgres:5432/pii"
-    driver-class-name: org.postgresql.Driver
+    url: "jdbc:h2:./target/db/pii;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
+    driver-class-name: org.h2.Driver
     username: pii
     password: pii
+  # H2 console
+  h2:
+    console:
+      enabled: false
   jpa:
     hibernate:
       # Make sure Hibernate will not use the entities to create, update or validate the database
@@ -34,7 +38,7 @@ spring:
     properties:
       hibernate:
         # We use a H2 database with PostgreSQL compatibility mode
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
         '[default_schema]': ${spring.datasource.username}
         jdbc:
@@ -173,7 +177,6 @@ sgi:
       cnf-url: "http://sgi-cnf-service:8080"
       com-url: "http://sgi-com-service:8080"
       tp-url: "http://sgi-tp-service:8080"
-      sgemp-url: "http://sgi-esb:8080/sgemp"
 spring:
   profiles: prod
   datasource:

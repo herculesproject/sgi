@@ -61,6 +61,7 @@ public class ResultadoInformePatentabilidadController {
    * 
    * @param query  Filtro de búsqueda.
    * @param paging Información de paginación.
+   * @return page of {@link ResultadoInformePatentabilidadOutput} list
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthority('PII-RIP-V','PII-RIP-C','PII-RIP-E','PII-RIP-B','PII-RIP-R', 'PII-INV-V', 'PII-INV-E')")
@@ -87,6 +88,7 @@ public class ResultadoInformePatentabilidadController {
    * 
    * @param query  Filtro de búsqueda.
    * @param paging Información de paginación.
+   * @return page of {@link ResultadoInformePatentabilidadOutput} list
    */
   @GetMapping("/todos")
   @PreAuthorize("hasAnyAuthority('PII-RIP-V','PII-RIP-C','PII-RIP-E','PII-RIP-B','PII-RIP-R')")
@@ -178,6 +180,7 @@ public class ResultadoInformePatentabilidadController {
    * Desactiva el {@link ResultadoInformePatentabilidad} con id indicado.
    * 
    * @param id Identificador de {@link ResultadoInformePatentabilidad}.
+   * @return objeto de tipo {@link ResultadoInformePatentabilidadOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-RIP-B')")

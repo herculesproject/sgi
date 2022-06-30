@@ -124,9 +124,12 @@ public class PeriodoTitularidadController {
   /**
    * Modifica el {@link PeriodoTitularidad} pasado por parámetros
    * 
-   * @param periodoTitularidadId
-   * @param periodoTitularidadInput
-   * @return
+   * @param periodoTitularidadId    identificador del objeto
+   *                                {@link PeriodoTitularidad} a actualizar
+   * @param periodoTitularidadInput objeto de tipo {@link PeriodoTitularidadInput}
+   *                                con
+   *                                los datos a actualizar
+   * @return Objeto de tipo {@link PeriodoTitularidadOutput}
    */
   @PutMapping("/{periodoTitularidadId}")
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")

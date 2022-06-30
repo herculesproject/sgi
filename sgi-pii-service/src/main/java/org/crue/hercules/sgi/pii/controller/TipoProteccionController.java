@@ -105,6 +105,7 @@ public class TipoProteccionController {
    * Devuelve una lista paginada y filtrada de {@link TipoProteccion} activos que
    * sean Subtipos del {@link TipoProteccion} pasado por párametros.
    * 
+   * @param id     Identificador del {@link TipoProteccion}
    * @param query  Filtro de búsqueda.
    * @param paging Información de Paginado.
    * @return Lista de entidades {@link TipoProteccion} paginadas y/o filtradas.
@@ -130,6 +131,7 @@ public class TipoProteccionController {
    * Subtipos del {@link TipoProteccion} pasado por párametros sin importar su
    * estado.
    * 
+   * @param id     Identificador del objeto {@link TipoProteccion}
    * @param query  Filtro de búsqueda.
    * @param paging Información de Paginado.
    * @return Lista de entidades {@link TipoProteccion} paginadas y/o filtradas.
@@ -215,6 +217,7 @@ public class TipoProteccionController {
    * Desactiva el {@link TipoProteccion} con id indicado.
    * 
    * @param id Identificador de {@link TipoProteccion}.
+   * @return objeto de tipo {@link TipoProteccionOutput}
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('PII-TPR-B')")
