@@ -51,4 +51,33 @@ public class SgiApiBlockchainService {
       return null;
     }
   }
+
+  public String confirmarRegistro(String transaccionRef) {
+    log.debug("confirmarRegistro(String transaccionRef) - start");
+    String relativeUrl = "/dev/herc-timestamp-data?token={pass}&txhash={transaccionRef}";
+
+    Map<String, String> params = new HashMap<>();
+    params.put("pass", blockchainApiProperties.getPassword());
+    params.put("transaccionRef", transaccionRef);
+
+    HttpMethod httpMethod = HttpMethod.POST;
+
+    String mergedURL = new StringBuilder(blockchainApiProperties.getUrl()).append(relativeUrl).toString();
+    String response = null;
+    try {
+      response = restTemplate.exchange(mergedURL, httpMethod, null,
+          new ParameterizedTypeReference<String>() {
+          }, params).getBody();
+      if (response != null) {
+        response = response.replace("\"", "");
+      }
+    } catch (Exception e) {
+      log.error("confirmarRegistro(String transaccionRef) - error", e);
+    }
+
+    log.debug("confirmarRegistro(String transaccionRef) - end");
+
+    return response;
+  }
+
 }

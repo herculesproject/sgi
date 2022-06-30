@@ -551,4 +551,17 @@ public class ActaServiceImpl implements ActaService {
     log.debug("generarDocumento(Acta acta) - end");
     return acta;
   }
+
+  @Override
+  @Transactional
+  public Boolean confirmarRegistroBlockchain(Long idActa) {
+    log.debug("confirmarRegistroBlockchain(Long idActa) - start");
+    Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
+
+    DocumentoOutput documento = sgdocService.getDocumento(acta.getDocumentoRef());
+
+    String hash = blockchainService.confirmarRegistro(acta.getTransaccionRef());
+    log.debug("confirmarRegistroBlockchain(Long idActa) - end");
+    return (documento.getHash().equals(hash));
+  }
 }

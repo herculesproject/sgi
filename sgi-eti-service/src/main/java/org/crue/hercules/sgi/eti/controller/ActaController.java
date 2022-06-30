@@ -248,4 +248,23 @@ public class ActaController {
     log.debug("isResponsableOrCreador(Long id, Authentication authentication) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
+
+  /**
+   * Comprueba si el registro blockchain ha sido confirmado correctamente o ha
+   * sido alterado
+   * 
+   * @param id Identificador de {@link Acta}.
+   * @return HTTP 200 si es correcto y HTTP 204 si se ha alterado
+   */
+  @RequestMapping(path = "/{id}/confirmar-registro-blockchain", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V','ETI-ACT-INV-ER','ETI-ACT-ER')")
+  public ResponseEntity<?> confirmarRegistroBlockchain(@PathVariable Long id) {
+    log.debug("Acta confirmarRegistroBlockchain(Long id) - start");
+    if (service.confirmarRegistroBlockchain(id).booleanValue()) {
+      log.debug("Acta confirmarRegistroBlockchain(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Acta confirmarRegistroBlockchain(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }
