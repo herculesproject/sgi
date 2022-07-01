@@ -1024,7 +1024,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       SolicitudProyecto solicitudProyecto) {
     log.debug(
         "copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
-    this.copyContexto(proyecto, solicitud, solicitudProyecto);
+    this.copyContexto(proyecto, solicitudProyecto);
     this.copyAreasConocimiento(proyecto, solicitudProyecto.getId());
     this.copyClasificaciones(proyecto, solicitudProyecto.getId());
     this.copyCodigosUNESCO(proyecto);
@@ -1047,8 +1047,8 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @param solicitudProyecto la entidad {@link SolicitudProyecto}
    * @return la entidad {@link Proyecto} con los nuevos datos
    */
-  private void copyContexto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) {
-    log.debug("copyContexto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
+  private void copyContexto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) {
+    log.debug("copyContexto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - start");
     ContextoProyecto contextoProyectoNew = new ContextoProyecto();
     contextoProyectoNew.setProyectoId(proyecto.getId());
     contextoProyectoNew.setObjetivos(solicitudProyecto.getObjetivos());
@@ -1057,7 +1057,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
 
     contextoProyectoService.create(contextoProyectoNew);
-    log.debug("copyContexto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
+    log.debug("copyContexto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - end");
   }
 
   /**

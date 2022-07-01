@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
  * Test de integracion de ProyectoFase.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoFaseIT extends BaseIT {
+class ProyectoFaseIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyectofases";
@@ -45,7 +45,7 @@ public class ProyectoFaseIT extends BaseIT {
       "classpath:scripts/modelo_tipo_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsProyectoFase() throws Exception {
+  void create_ReturnsProyectoFase() throws Exception {
     // given: new ProyectoFase
     ProyectoFase newProyectoFase = generarMockProyectoFase(1L, 1L, 1L);
     newProyectoFase.setId(null);
@@ -74,7 +74,7 @@ public class ProyectoFaseIT extends BaseIT {
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsProyectoFase() throws Exception {
+  void update_ReturnsProyectoFase() throws Exception {
     Long idProyectoFase = 1L;
     ProyectoFase proyectoFase = generarMockProyectoFase(1L, 1L, 1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -109,7 +109,7 @@ public class ProyectoFaseIT extends BaseIT {
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  void delete_Return204() throws Exception {
     Long idProyectoFase = 1L;
 
     final ResponseEntity<ProyectoFase> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -127,7 +127,7 @@ public class ProyectoFaseIT extends BaseIT {
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsProyectoFase() throws Exception {
+  void findById_ReturnsProyectoFase() throws Exception {
     Long idProyectoFase = 1L;
 
     final ResponseEntity<ProyectoFase> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,

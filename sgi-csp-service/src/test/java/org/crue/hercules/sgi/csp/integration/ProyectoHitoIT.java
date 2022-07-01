@@ -22,7 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
  * Test de integracion de ProyectoHito.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoHitoIT extends BaseIT {
+class ProyectoHitoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyectohitos";

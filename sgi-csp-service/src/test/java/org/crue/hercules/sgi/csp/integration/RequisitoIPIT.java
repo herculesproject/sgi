@@ -26,7 +26,7 @@ import org.springframework.test.context.jdbc.Sql;
  * Test de integracion de RequisitoIP.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RequisitoIPIT extends BaseIT {
+class RequisitoIPIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
 
@@ -52,7 +52,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsRequisitoIP() throws Exception {
+  void create_ReturnsRequisitoIP() throws Exception {
 
     // given: new RequisitoIP
     RequisitoIP newRequisitoIP = generarMockRequisitoIP(null);
@@ -82,7 +82,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsRequisitoIP() throws Exception {
+  void update_ReturnsRequisitoIP() throws Exception {
     Long idRequisitoIP = 1L;
     RequisitoIP requisitoIP = generarMockRequisitoIP(1L);
 
@@ -110,7 +110,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findRequisitoIPConvocatoria_ReturnsRequisitoIP() throws Exception {
+  void findRequisitoIPConvocatoria_ReturnsRequisitoIP() throws Exception {
     Long idConvocatoria = 1L;
 
     final ResponseEntity<RequisitoIP> response = restTemplate.exchange(
@@ -137,7 +137,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void testFindNivelesAcademicos() throws Exception {
+  void testFindNivelesAcademicos() throws Exception {
     Long id = 1L;
 
     final ResponseEntity<List<RequisitoIPNivelAcademicoOutput>> response = restTemplate.exchange(
@@ -165,7 +165,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void testUpdateNivelesAcademicos() throws Exception {
+  void testUpdateNivelesAcademicos() throws Exception {
     Long id = 1L;
 
     List<RequisitoIPNivelAcademicoInput> requestBody = new ArrayList<RequisitoIPNivelAcademicoInput>();
@@ -199,7 +199,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void testFindCategoriasProfesionales() throws Exception {
+  void testFindCategoriasProfesionales() throws Exception {
     Long id = 1L;
 
     final ResponseEntity<List<RequisitoIPCategoriaProfesionalOutput>> response = restTemplate.exchange(
@@ -228,7 +228,7 @@ public class RequisitoIPIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void testUpdateCategoriasProfesionales() throws Exception {
+  void testUpdateCategoriasProfesionales() throws Exception {
     Long id = 1L;
 
     List<RequisitoIPCategoriaProfesionalInput> requestBody = new ArrayList<RequisitoIPCategoriaProfesionalInput>();

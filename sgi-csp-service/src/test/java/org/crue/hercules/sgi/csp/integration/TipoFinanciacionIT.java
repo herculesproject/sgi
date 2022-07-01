@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoFinanciacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TipoFinanciacionIT extends BaseIT {
+class TipoFinanciacionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -43,7 +43,7 @@ public class TipoFinanciacionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsTipoFinanciacion() throws Exception {
+  void create_ReturnsTipoFinanciacion() throws Exception {
 
     // given: new TipoFinanciacion
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(null);
@@ -65,7 +65,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnTipoFinanciacion() throws Exception {
+  void desactivar_ReturnTipoFinanciacion() throws Exception {
     Long idTipoFinanciacion = 1L;
 
     final ResponseEntity<TipoFinanciacion> response = restTemplate.exchange(
@@ -85,7 +85,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnTipoFinanciacion() throws Exception {
+  void reactivar_ReturnTipoFinanciacion() throws Exception {
     Long idTipoFinanciacion = 1L;
 
     final ResponseEntity<TipoFinanciacion> response = restTemplate.exchange(
@@ -104,7 +104,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsTipoFinanciacion() throws Exception {
+  void findById_ReturnsTipoFinanciacion() throws Exception {
     Long id = 1L;
 
     final ResponseEntity<TipoFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -121,7 +121,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_WithExistingId_ReturnsTipoFinanciacion() throws Exception {
+  void update_WithExistingId_ReturnsTipoFinanciacion() throws Exception {
 
     // given: Entidad existente que se va a actualizar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -140,7 +140,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -173,7 +173,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
     headers.add("X-Page", "0");

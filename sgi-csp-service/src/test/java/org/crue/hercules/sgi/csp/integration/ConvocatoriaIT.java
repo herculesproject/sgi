@@ -115,7 +115,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsConvocatoria() throws Exception {
+  void create_ReturnsConvocatoria() throws Exception {
 
     // given: new Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -162,7 +162,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsConvocatoria() throws Exception {
+  void update_ReturnsConvocatoria() throws Exception {
 
     // given: existing Convocatoria to be updated
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -209,7 +209,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void registrar_ReturnsConvocatoria() throws Exception {
+  void registrar_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria id to registrar
     Long convocatoriaId = 1L;
 
@@ -229,7 +229,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void enable_ReturnsConvocatoria() throws Exception {
+  void enable_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria to be enabled
     Long id = 1L;
 
@@ -251,7 +251,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void disable_ReturnsConvocatoria() throws Exception {
+  void disable_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria to be disabled
     Long id = 1L;
 
@@ -273,7 +273,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void modificable_WhenModificableReturnsTrue_Returns200() throws Exception {
+  void modificable_WhenModificableReturnsTrue_Returns200() throws Exception {
 
     // given: existing Convocatoria When modificable returns true
     Long id = 1L;
@@ -291,7 +291,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
+  void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
 
     // given: existing Convocatoria registrada with Solicitudes or Proyectos
     Long id = 1L;
@@ -309,7 +309,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void registrable_WhenRegistrableReturnsTrue_Returns200() throws Exception {
+  void registrable_WhenRegistrableReturnsTrue_Returns200() throws Exception {
 
     // given: existing Convocatoria When registrable returns true
     Long id = 1L;
@@ -326,7 +326,7 @@ class ConvocatoriaIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void registrable_WhenRegistrableReturnsFalse_Returns204() throws Exception {
+  void registrable_WhenRegistrableReturnsFalse_Returns204() throws Exception {
 
     // given: existing Convocatoria When registrable returns false
     Long id = 1L;
@@ -344,7 +344,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsById_Returns200() throws Exception {
+  void existsById_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
     // when: exists by id
@@ -356,7 +356,7 @@ class ConvocatoriaIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsById_Returns204() throws Exception {
+  void existsById_Returns204() throws Exception {
     // given: no existing id
     Long id = 1L;
     // when: exists by id
@@ -369,7 +369,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsConvocatoria() throws Exception {
+  void findById_ReturnsConvocatoria() throws Exception {
     Long id = 1L;
 
     final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -406,7 +406,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
 
     // given: data for Convocatoria
 
@@ -445,7 +445,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+  void findAllRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
 
     // given: data for Convocatoria
 
@@ -484,7 +484,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+  void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
 
     // given: data for Convocatoria
 
@@ -527,7 +527,7 @@ class ConvocatoriaIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
+  void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
 
     // given: no data for Convocatoria
     // when: find Convocatoria
@@ -559,7 +559,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaEntidadConvocantes_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadConvocanteSubList()
+  void findAllConvocatoriaEntidadConvocantes_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadConvocanteSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
@@ -602,7 +602,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadFinanciadoraSubList()
+  void findAllConvocatoriaEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadFinanciadoraSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
@@ -645,7 +645,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaEntidadGestora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadGestoraSubList()
+  void findAllConvocatoriaEntidadGestora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadGestoraSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
@@ -688,7 +688,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaAreaTematica_WithPagingSortingAndFiltering_ReturnsConvocatoriaAreaTematicaSubList()
+  void findAllConvocatoriaAreaTematica_WithPagingSortingAndFiltering_ReturnsConvocatoriaAreaTematicaSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CATEM-V")));
@@ -731,7 +731,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaDocumento_WithPagingSortingAndFiltering_ReturnsConvocatoriaDocumentoSubList()
+  void findAllConvocatoriaDocumento_WithPagingSortingAndFiltering_ReturnsConvocatoriaDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
@@ -774,7 +774,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaEnlace_WithPagingSortingAndFiltering_ReturnsConvocatoriaEnlaceSubList()
+  void findAllConvocatoriaEnlace_WithPagingSortingAndFiltering_ReturnsConvocatoriaEnlaceSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
@@ -816,7 +816,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaFase_WithPagingSortingAndFiltering_ReturnsConvocatoriaFaseSubList() throws Exception {
+  void findAllConvocatoriaFase_WithPagingSortingAndFiltering_ReturnsConvocatoriaFaseSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
@@ -852,7 +852,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaHito_WithPagingSortingAndFiltering_ReturnsConvocatoriaHitoSubList() throws Exception {
+  void findAllConvocatoriaHito_WithPagingSortingAndFiltering_ReturnsConvocatoriaHitoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CHIT-V")));
     headers.add("X-Page", "0");
@@ -895,7 +895,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsConvocatoriaPeriodoJustificacionSubList()
+  void findAllConvocatoriaPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsConvocatoriaPeriodoJustificacionSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
@@ -938,7 +938,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaPeriodoSeguimientoCientifico_WithPagingSortingAndFiltering_ReturnsConvocatoriaPeriodoSeguimientoCientificoSubList()
+  void findAllConvocatoriaPeriodoSeguimientoCientifico_WithPagingSortingAndFiltering_ReturnsConvocatoriaPeriodoSeguimientoCientificoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CPSCI-V")));
@@ -993,7 +993,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaConceptoGastoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoPermitidosSubList()
+  void findAllConvocatoriaConceptoGastoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoPermitidosSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
@@ -1031,7 +1031,7 @@ class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllConvocatoriaConceptoGastoNoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoNoPermitidosSubList()
+  void findAllConvocatoriaConceptoGastoNoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoNoPermitidosSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));

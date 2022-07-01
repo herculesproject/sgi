@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class GrupoLineaInvestigacionIT extends BaseIT {
+class GrupoLineaInvestigacionIT extends BaseIT {
   private static final String CONTROLLER_BASE_PATH = GrupoLineaInvestigacionController.REQUEST_MAPPING;
   private static final String PATH_CLASIFICACION = GrupoLineaInvestigacionController.PATH_CLASIFICACIONES;
 

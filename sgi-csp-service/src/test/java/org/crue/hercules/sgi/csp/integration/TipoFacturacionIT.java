@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class TipoFacturacionIT extends BaseIT {
+class TipoFacturacionIT extends BaseIT {
 
   private static final String CONTROLLER_BASE_PATH = "/tiposfacturacion";
 

@@ -19,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoProyectoSgeIT extends BaseIT {
+class ProyectoProyectoSgeIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyecto-proyectos-sge";
@@ -52,7 +52,7 @@ public class ProyectoProyectoSgeIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_SortingAndFiltering_ReturnsProyectoProyectoSGESubList() throws Exception {
+  void findAll_SortingAndFiltering_ReturnsProyectoProyectoSGESubList() throws Exception {
 
     // first page, 5 elements per page sorted by id asc
     HttpHeaders headers = new HttpHeaders();

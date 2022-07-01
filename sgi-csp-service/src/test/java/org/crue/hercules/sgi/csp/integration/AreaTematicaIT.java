@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de AreaTematica.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AreaTematicaIT extends BaseIT {
+class AreaTematicaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -44,7 +44,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsAreaTematica() throws Exception {
+  void create_ReturnsAreaTematica() throws Exception {
     AreaTematica areaTematica = generarMockAreaTematica(null, "A-001", 9999L);
 
     final ResponseEntity<AreaTematica> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -65,7 +65,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsAreaTematica() throws Exception {
+  void update_ReturnsAreaTematica() throws Exception {
     Long idAreaTematica = 2L;
     AreaTematica areaTematica = generarMockAreaTematica(idAreaTematica, "A-UPD", 1L);
 
@@ -85,7 +85,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnAreaTematica() throws Exception {
+  void reactivar_ReturnAreaTematica() throws Exception {
     Long idAreaTematica = 1L;
 
     final ResponseEntity<AreaTematica> response = restTemplate.exchange(
@@ -104,7 +104,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnAreaTematica() throws Exception {
+  void desactivar_ReturnAreaTematica() throws Exception {
     Long idAreaTematica = 1L;
 
     final ResponseEntity<AreaTematica> response = restTemplate.exchange(
@@ -123,7 +123,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsAreaTematica() throws Exception {
+  void findById_ReturnsAreaTematica() throws Exception {
     Long idAreaTematica = 1L;
 
     final ResponseEntity<AreaTematica> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -140,7 +140,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -173,7 +173,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllGrupo_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
+  void findAllGrupo_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
@@ -207,7 +207,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodosGrupo_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
+  void findAllTodosGrupo_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
@@ -241,7 +241,7 @@ public class AreaTematicaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllHijosAreaTematica_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
+  void findAllHijosAreaTematica_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");

@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ConceptoGasto.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ConceptoGastoIT extends BaseIT {
+class ConceptoGastoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -46,7 +46,7 @@ public class ConceptoGastoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsConceptoGasto() throws Exception {
+  void create_ReturnsConceptoGasto() throws Exception {
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(null);
 
     final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -65,7 +65,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsConceptoGasto() throws Exception {
+  void update_ReturnsConceptoGasto() throws Exception {
     Long idConceptoGasto = 1L;
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(idConceptoGasto, "nombre-actualizado");
 
@@ -85,7 +85,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnConceptoGasto() throws Exception {
+  void desactivar_ReturnConceptoGasto() throws Exception {
     Long idConceptoGasto = 1L;
 
     final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(
@@ -105,7 +105,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnConceptoGasto() throws Exception {
+  void reactivar_ReturnConceptoGasto() throws Exception {
     Long idConceptoGasto = 1L;
 
     final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(
@@ -125,7 +125,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsConceptoGasto() throws Exception {
+  void findById_ReturnsConceptoGasto() throws Exception {
     Long idConceptoGasto = 1L;
 
     final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -144,7 +144,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsConceptoGastoSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsConceptoGastoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -177,7 +177,7 @@ public class ConceptoGastoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsConceptoGastoSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsConceptoGastoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");

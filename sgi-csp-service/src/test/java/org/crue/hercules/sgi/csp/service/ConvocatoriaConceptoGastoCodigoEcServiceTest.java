@@ -27,8 +27,6 @@ class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTest {
   @Mock
   private ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
   @Mock
-  private ConvocatoriaService convocatoriaService;
-  @Mock
   ConvocatoriaRepository convocatoriaRepository;
   @Mock
   ConfiguracionSolicitudRepository configuracionSolicitudRepository;
@@ -38,7 +36,7 @@ class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTest {
   @BeforeEach
   void setUp() throws Exception {
     service = new ConvocatoriaConceptoGastoCodigoEcServiceImpl(repository, convocatoriaConceptoGastoRepository,
-        convocatoriaService, convocatoriaRepository, configuracionSolicitudRepository);
+        convocatoriaRepository, configuracionSolicitudRepository);
   }
 
   @Test

@@ -218,7 +218,7 @@ class ProyectoPeriodoJustificacionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsProyectoPeriodoJustificacion() throws Exception {
+  void update_ReturnsProyectoPeriodoJustificacion() throws Exception {
     String roles = "CSP-SJUS-E";
     Long id = 1L;
     ProyectoPeriodoJustificacionIdentificadorJustificacionInput newIdentificadorJustificacion = generarMockProyectoPeriodoJustificacionIdentificadorJustificacionInput();

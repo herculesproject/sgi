@@ -25,7 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class ConvocatoriaConceptoGastoCodigoEcIT extends BaseIT {
+class ConvocatoriaConceptoGastoCodigoEcIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/convocatoriaconceptogastocodigoecs";
@@ -46,7 +46,7 @@ public class ConvocatoriaConceptoGastoCodigoEcIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsConvocatoriaConceptoGastoCodigoEc() throws Exception {
+  void findById_ReturnsConvocatoriaConceptoGastoCodigoEc() throws Exception {
     Long idConvocatoriaConceptoGastoCodigoEc = 1L;
 
     final ResponseEntity<ConvocatoriaConceptoGastoCodigoEc> response = restTemplate.exchange(

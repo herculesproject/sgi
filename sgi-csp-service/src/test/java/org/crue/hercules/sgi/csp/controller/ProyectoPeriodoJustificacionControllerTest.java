@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ProyectoPeriodoJustificacionControllerTest
  */
 @WebMvcTest(ProyectoPeriodoJustificacionController.class)
-public class ProyectoPeriodoJustificacionControllerTest extends BaseControllerTest {
+class ProyectoPeriodoJustificacionControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoPeriodoJustificacionService service;
@@ -32,7 +32,7 @@ public class ProyectoPeriodoJustificacionControllerTest extends BaseControllerTe
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
-  public void update_ReturnsFuenteFinanciacion() throws Exception {
+  void update_ReturnsFuenteFinanciacion() throws Exception {
     // given: Existing ProyectoPeriodoJustificacion to be updated
     Long id = 1L;
     ProyectoPeriodoJustificacionIdentificadorJustificacionInput newIdentificadorJustificacion = generarMockProyectoPeriodoJustificacionIdentificadorJustificacionInput();

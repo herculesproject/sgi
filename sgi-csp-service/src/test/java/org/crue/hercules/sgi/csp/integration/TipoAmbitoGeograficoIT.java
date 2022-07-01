@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoAmbitoGeografico.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TipoAmbitoGeograficoIT extends BaseIT {
+class TipoAmbitoGeograficoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/tipoambitogeograficos";
@@ -45,7 +45,7 @@ public class TipoAmbitoGeograficoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsTipoAmbitoGeografico() throws Exception {
+  void findById_ReturnsTipoAmbitoGeografico() throws Exception {
     Long idTipoAmbitoGeografico = 1L;
 
     final ResponseEntity<TipoAmbitoGeografico> response = restTemplate.exchange(
@@ -62,7 +62,7 @@ public class TipoAmbitoGeograficoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsTipoAmbitoGeograficoSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsTipoAmbitoGeograficoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");

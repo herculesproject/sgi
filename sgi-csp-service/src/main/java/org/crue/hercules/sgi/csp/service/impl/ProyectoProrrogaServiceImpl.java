@@ -400,7 +400,6 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
    * 
    * @param proyectoId identificador del {@link Proyecto}
    */
-  @Transactional
   private void recalcularNumProrroga(Long proyectoId) {
     List<ProyectoProrroga> listadoProyectoProrrogaBD = repository.findAllByProyectoIdOrderByFechaConcesion(proyectoId);
 

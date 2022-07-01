@@ -195,7 +195,7 @@ class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsProyecto() throws Exception {
+  void update_ReturnsProyecto() throws Exception {
     String roles = "CSP-PRO-E";
     Long idProyecto = 1L;
     Proyecto proyecto = generarMockProyecto(1L);
@@ -231,7 +231,7 @@ class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnProyecto() throws Exception {
+  void desactivar_ReturnProyecto() throws Exception {
     String roles = "CSP-PRO-B";
     Long idProyecto = 1L;
 
@@ -260,7 +260,7 @@ class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnProyecto() throws Exception {
+  void reactivar_ReturnProyecto() throws Exception {
     String roles = "CSP-PRO-R";
     Long idProyecto = 5L;
 
@@ -289,7 +289,7 @@ class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existsById_Returns200() throws Exception {
+  void existsById_Returns200() throws Exception {
     String roles = "CSP-PRO-E";
     // given: existing id
     Long id = 1L;
@@ -314,7 +314,7 @@ class ProyectoIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsProyecto() throws Exception {
+  void findById_ReturnsProyecto() throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-MOD-V" };
     Long idProyecto = 1L;
 
@@ -3170,7 +3170,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @CsvSource({ "2020, 2021" })
-  public void findProyectosProduccionCientifica_ok(Integer anioInicio, Integer anioFin)
+  void findProyectosProduccionCientifica_ok(Integer anioInicio, Integer anioFin)
       throws Exception {
     String roles = "CSP-PRO-PRC-V";
 
@@ -3203,7 +3203,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @CsvSource({ "1, '63000.00'", "2, '30100.00'" })
-  public void getTotalImporteConcedidoAnualidadGasto_ok(Long proyectoId, String total)
+  void getTotalImporteConcedidoAnualidadGasto_ok(Long proyectoId, String total)
       throws Exception {
     String roles = "CSP-PRO-PRC-V";
 
@@ -3239,7 +3239,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @CsvSource({ "1, '57000.00'", "2, '30100.00'" })
-  public void getTotalImporteConcedidoAnualidadGastoCostesIndirectos_ok(Long proyectoId, String total)
+  void getTotalImporteConcedidoAnualidadGastoCostesIndirectos_ok(Long proyectoId, String total)
       throws Exception {
     String roles = "CSP-PRO-PRC-V";
 
@@ -3273,7 +3273,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @ParameterizedTest
   @CsvSource({ "1" })
-  public void findByProyectoIdAndAnio_ok(Long proyectoId) throws Exception {
+  void findByProyectoIdAndAnio_ok(Long proyectoId) throws Exception {
     String roles = "CSP-PRO-PRC-V";
 
     final ResponseEntity<List<ProyectoEquipoDto>> response = restTemplate.exchange(

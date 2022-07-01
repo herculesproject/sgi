@@ -122,11 +122,10 @@ public class ProyectoPeriodoJustificacionService {
       }
       // solapamiento de fechas
       rangos.stream().forEach(rango -> {
-        if ((periodoJustificacion.getFechaInicio().isBefore(rango[0])
+        if (!((periodoJustificacion.getFechaInicio().isBefore(rango[0])
             && periodoJustificacion.getFechaFin().isBefore(rango[1]))
             || (periodoJustificacion.getFechaInicio().isAfter(rango[0])
-                && periodoJustificacion.getFechaFin().isAfter(rango[1]))) {
-        } else {
+                && periodoJustificacion.getFechaFin().isAfter(rango[1])))) {
           throw new ProyectoPeriodoJustificacionOverlappedFechasException();
         }
       });

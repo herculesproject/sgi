@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoDocumento.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TipoDocumentoIT extends BaseIT {
+class TipoDocumentoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -42,7 +42,7 @@ public class TipoDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsTipoDocumento() throws Exception {
+  void create_ReturnsTipoDocumento() throws Exception {
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(null);
 
@@ -62,7 +62,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsTipoDocumento() throws Exception {
+  void update_ReturnsTipoDocumento() throws Exception {
     Long idTipoDocumento = 1L;
     TipoDocumento tipoDocumento = generarMockTipoDocumento(idTipoDocumento, "nombre-actualizado");
 
@@ -83,7 +83,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnTipoDocumento() throws Exception {
+  void reactivar_ReturnTipoDocumento() throws Exception {
     Long idTipoDocumento = 1L;
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
@@ -101,7 +101,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnTipoDocumento() throws Exception {
+  void desactivar_ReturnTipoDocumento() throws Exception {
     Long idTipoDocumento = 1L;
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
@@ -119,7 +119,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsTipoDocumento() throws Exception {
+  void findById_ReturnsTipoDocumento() throws Exception {
     Long idTipoDocumento = 1L;
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
@@ -137,7 +137,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -170,7 +170,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");

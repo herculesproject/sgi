@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
  * Test de integracion de ConvocatoriaFase.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ConvocatoriaFaseIT extends BaseIT {
+class ConvocatoriaFaseIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/convocatoriafases";
@@ -39,7 +39,7 @@ public class ConvocatoriaFaseIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsConvocatoriaFase() throws Exception {
+  void create_ReturnsConvocatoriaFase() throws Exception {
 
     // given: new ConvocatoriaFase
     ConvocatoriaFase newConvocatoriaFase = generarMockConvocatoriaFase(null);
@@ -65,7 +65,7 @@ public class ConvocatoriaFaseIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsConvocatoriaFase() throws Exception {
+  void update_ReturnsConvocatoriaFase() throws Exception {
     Long idConvocatoriaFase = 1L;
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
 
@@ -87,7 +87,7 @@ public class ConvocatoriaFaseIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  void delete_Return204() throws Exception {
     // given: existing ConvocatoriaFase to be deleted
     Long id = 1L;
 
@@ -103,7 +103,7 @@ public class ConvocatoriaFaseIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsConvocatoriaFase() throws Exception {
+  void findById_ReturnsConvocatoriaFase() throws Exception {
     Long idConvocatoriaFase = 1L;
 
     final ResponseEntity<ConvocatoriaFase> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,

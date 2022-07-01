@@ -450,7 +450,7 @@ public class SgiApiComService extends SgiApiBaseService {
         "createComunicadoSolicitudPeticionEvaluacionEti(CspComSolicitudPeticionEvaluacionData data, List<Recipient> recipients) - start");
 
     ServiceType serviceType = ServiceType.COM;
-    String relativeUrl = "/emails";
+    String relativeUrl = PATH_EMAILS;
     HttpMethod httpMethod = HttpMethod.POST;
     String mergedURL = buildUri(serviceType, relativeUrl);
 

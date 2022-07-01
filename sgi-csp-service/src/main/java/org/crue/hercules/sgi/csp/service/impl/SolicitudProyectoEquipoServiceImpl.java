@@ -23,7 +23,6 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
@@ -59,17 +58,12 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
 
   private final SolicitudRepository solicitudRepository;
 
-  private final SolicitudProyectoRepository solicitudProyectoRepository;
-
   public SolicitudProyectoEquipoServiceImpl(Validator validator, SolicitudProyectoEquipoRepository repository,
-      RolProyectoRepository rolProyectoRepository, SolicitudRepository solicitudRepository,
-      SolicitudProyectoRepository solicitudProyectoRepository) {
+      RolProyectoRepository rolProyectoRepository, SolicitudRepository solicitudRepository) {
     this.validator = validator;
     this.repository = repository;
     this.rolProyectoRepository = rolProyectoRepository;
     this.solicitudRepository = solicitudRepository;
-    this.solicitudProyectoRepository = solicitudProyectoRepository;
-
   }
 
   /**

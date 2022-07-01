@@ -22,7 +22,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +46,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
   public ConvocatoriaConceptoGastoCodigoEcServiceImpl(ConvocatoriaConceptoGastoCodigoEcRepository repository,
-      ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository, ConvocatoriaService convocatoriaService,
+      ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository,
       ConvocatoriaRepository convocatoriaRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository) {
     this.repository = repository;

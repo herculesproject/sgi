@@ -142,7 +142,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsSolicitud() throws Exception {
+  void update_ReturnsSolicitud() throws Exception {
     Long idSolicitud = 1L;
     Solicitud solicitud = generarMockSolicitud(1L);
     solicitud.setObservaciones("observaciones actualizadas");
@@ -178,7 +178,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnSolicitud() throws Exception {
+  void desactivar_ReturnSolicitud() throws Exception {
     Long idSolicitud = 1L;
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(
@@ -195,7 +195,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnSolicitud() throws Exception {
+  void reactivar_ReturnSolicitud() throws Exception {
     Long idSolicitud = 1L;
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(
@@ -213,7 +213,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsSolicitud() throws Exception {
+  void findById_ReturnsSolicitud() throws Exception {
     Long idSolicitud = 1L;
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -237,7 +237,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsSolicitudSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsSolicitudSubList() throws Exception {
 
     // given: data for Solicitud
 
@@ -275,7 +275,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsSolicitudSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsSolicitudSubList() throws Exception {
 
     // given: data for Solicitud
 
@@ -319,7 +319,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudModalidad_WithPagingSortingAndFiltering_ReturnsSolicitudModalidadSubList()
+  void findAllSolicitudModalidad_WithPagingSortingAndFiltering_ReturnsSolicitudModalidadSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -362,7 +362,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllEstadoSolicitud_WithPagingSortingAndFiltering_ReturnsEstadoSolicitudSubList() throws Exception {
+  void findAllEstadoSolicitud_WithPagingSortingAndFiltering_ReturnsEstadoSolicitudSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -403,7 +403,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudDocumento_WithPagingSortingAndFiltering_ReturnsSolicitudDocumentoSubList()
+  void findAllSolicitudDocumento_WithPagingSortingAndFiltering_ReturnsSolicitudDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -438,7 +438,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudHito_WithPagingSortingAndFiltering_ReturnsSolicitudHitoSubList() throws Exception {
+  void findAllSolicitudHito_WithPagingSortingAndFiltering_ReturnsSolicitudHitoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
@@ -468,7 +468,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findSolicitudProyecto_ReturnsSolicitudProyectoSubList() throws Exception {
+  void findSolicitudProyecto_ReturnsSolicitudProyectoSubList() throws Exception {
     Long idSolicitud = 1L;
 
     final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
@@ -481,7 +481,7 @@ class SolicitudIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existSolictudProyectoDatos_Returns204() throws Exception {
+  void existSolictudProyectoDatos_Returns204() throws Exception {
 
     // given: existing Solicitud datos proyecto for solicitud
     Long id = 1L;
@@ -500,7 +500,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void existSolictudProyectoDatos_Returns200() throws Exception {
+  void existSolictudProyectoDatos_Returns200() throws Exception {
 
     // given: existing Solicitud datos proyecto for solicitud
     Long id = 1L;
@@ -525,7 +525,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoSocio_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoSocioSubList()
+  void findAllSolicitudProyectoSocio_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoSocioSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -560,7 +560,7 @@ class SolicitudIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoEntidadFinanciadoraAjena_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadFinanciadoraAjenaSubList()
+  void findAllSolicitudProyectoEntidadFinanciadoraAjena_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoEntidadFinanciadoraAjenaSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -626,7 +626,7 @@ class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoPresupuesto_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoPresupuestoSubList()
+  void findAllSolicitudProyectoPresupuesto_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoPresupuestoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -1905,7 +1905,7 @@ class SolicitudIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void getCodigoRegistroInterno_ReturnsCodigoRegistroInterno() throws Exception {
+  void getCodigoRegistroInterno_ReturnsCodigoRegistroInterno() throws Exception {
     Long idSolicitud = 1L;
 
     final ResponseEntity<String> response = restTemplate.exchange(

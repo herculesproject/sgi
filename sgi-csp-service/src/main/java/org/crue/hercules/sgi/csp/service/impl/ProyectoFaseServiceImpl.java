@@ -57,7 +57,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
 
     Assert.isNull(proyectoFase.getId(), "ProyectoFase id tiene que ser null para crear un nuevo ProyectoFase");
     this.validarRequeridosProyectoFase(proyectoFase);
-    this.validarProyectoFase(proyectoFase, null);
+    this.validarProyectoFase(proyectoFase);
 
     ProyectoFase returnValue = repository.save(proyectoFase);
 
@@ -81,7 +81,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
 
     return repository.findById(proyectoFaseActualizar.getId()).map(proyectoFase -> {
 
-      validarProyectoFase(proyectoFaseActualizar, proyectoFase);
+      validarProyectoFase(proyectoFaseActualizar);
 
       proyectoFase.setFechaInicio(proyectoFaseActualizar.getFechaInicio());
       proyectoFase.setFechaFin(proyectoFaseActualizar.getFechaFin());
@@ -158,8 +158,8 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
    * @param datosProyectoFase
    * @param datosOriginales
    */
-  private void validarProyectoFase(ProyectoFase datosProyectoFase, ProyectoFase datosOriginales) {
-    log.debug("validarProyectoFase(ProyectoFase datosProyectoFase, ProyectoFase datosOriginales) - start");
+  private void validarProyectoFase(ProyectoFase datosProyectoFase) {
+    log.debug("validarProyectoFase(ProyectoFase datosProyectoFase) - start");
 
     // Se autocompletan los datos de las fechas en caso necesario.
     // Podrá darse el caso que una fase pueda recogerse en una sola fecha, en este
@@ -213,7 +213,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
     Assert.isTrue(!existsProyectoFaseConFechasSolapadas(datosProyectoFase),
         "Ya existe un registro para la misma Fase en ese rango de fechas");
 
-    log.debug("validarProyectoFase(ProyectoFase datosProyectoFase, ProyectoFase datosOriginales) - end");
+    log.debug("validarProyectoFase(ProyectoFase datosProyectoFase) - end");
   }
 
   /**

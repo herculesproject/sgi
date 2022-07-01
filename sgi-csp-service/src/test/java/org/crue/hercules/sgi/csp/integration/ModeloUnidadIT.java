@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ModeloUnidad.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ModeloUnidadIT extends BaseIT {
+class ModeloUnidadIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/modelounidades";
@@ -42,7 +42,7 @@ public class ModeloUnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsModeloUnidad() throws Exception {
+  void create_ReturnsModeloUnidad() throws Exception {
 
     // given: new ModeloUnidad
     ModeloUnidad modeloUnidad = generarMockModeloUnidad(null, "unidad-1");
@@ -67,7 +67,7 @@ public class ModeloUnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  void delete_Return204() throws Exception {
     // given: existing ModeloUnidad to be disabled
     Long id = 1L;
 
@@ -82,7 +82,7 @@ public class ModeloUnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsModeloUnidad() throws Exception {
+  void findById_ReturnsModeloUnidad() throws Exception {
     Long id = 1L;
 
     final ResponseEntity<ModeloUnidad> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -104,7 +104,7 @@ public class ModeloUnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");

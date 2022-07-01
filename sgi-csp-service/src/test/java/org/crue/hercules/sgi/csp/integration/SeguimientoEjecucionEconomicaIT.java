@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ProyectoSeguimientoEjecucionEconomica.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SeguimientoEjecucionEconomicaIT extends BaseIT {
+class SeguimientoEjecucionEconomicaIT extends BaseIT {
   private static final String CONTROLLER_BASE_PATH = SeguimientoEjecucionEconomicaController.REQUEST_MAPPING;
   private static final String PATH_PROYECTOS = SeguimientoEjecucionEconomicaController.PATH_PROYECTOS;
   private static final String PATH_PERIODO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_PERIODO_JUSTIFICACION;
@@ -56,7 +56,7 @@ public class SeguimientoEjecucionEconomicaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findProyectosSeguimientoEjecucionEconomica_WithPagingSorting_ReturnsProyectoSeguimientoEjecucionEconomicaSubList()
+  void findProyectosSeguimientoEjecucionEconomica_WithPagingSorting_ReturnsProyectoSeguimientoEjecucionEconomicaSubList()
       throws Exception {
 
     // given: data for ProyectoSeguimientoEjecucionEconomica and a proyectoSgeRef
@@ -108,7 +108,7 @@ public class SeguimientoEjecucionEconomicaIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findProyectoPeriodosJustificacion_WithPagingSorting_ReturnsProyectoPeriodoJustificacionOutputSubList()
+  void findProyectoPeriodosJustificacion_WithPagingSorting_ReturnsProyectoPeriodoJustificacionOutputSubList()
       throws Exception {
 
     // given: data for ProyectoPeriodoJustificacionOutput and a proyectoSgeRef

@@ -51,7 +51,7 @@ class ModeloEjecucionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsModeloEjecucion() throws Exception {
+  void create_ReturnsModeloEjecucion() throws Exception {
 
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(null);
 
@@ -73,7 +73,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsModeloEjecucion() throws Exception {
+  void update_ReturnsModeloEjecucion() throws Exception {
     Long idModeloEjecucion = 1L;
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(idModeloEjecucion, "nombre-actualizado");
 
@@ -97,7 +97,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnModeloEjecucion() throws Exception {
+  void reactivar_ReturnModeloEjecucion() throws Exception {
     Long idModeloEjecucion = 1L;
 
     final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
@@ -115,7 +115,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnModeloEjecucion() throws Exception {
+  void desactivar_ReturnModeloEjecucion() throws Exception {
     Long idModeloEjecucion = 1L;
 
     final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
@@ -133,7 +133,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsModeloEjecucion() throws Exception {
+  void findById_ReturnsModeloEjecucion() throws Exception {
     Long idModeloEjecucion = 1L;
 
     final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
@@ -151,7 +151,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -184,7 +184,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -223,7 +223,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoEnlaces_WithPagingSortingAndFiltering_ReturnsModeloTipoEnlaceSubList() throws Exception {
+  void findAllModeloTipoEnlaces_WithPagingSortingAndFiltering_ReturnsModeloTipoEnlaceSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -286,7 +286,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoFases_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList() throws Exception {
+  void findAllModeloTipoFases_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -343,7 +343,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
+  void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -402,7 +402,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
+  void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -467,7 +467,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoDocumentos_WithPagingSortingAndFiltering_ReturnsModeloTipoDocumentoSubList()
+  void findAllModeloTipoDocumentos_WithPagingSortingAndFiltering_ReturnsModeloTipoDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -510,7 +510,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoFinalidades_WithPagingSortingAndFiltering_ReturnsModeloTipoFinalidadSubList()
+  void findAllModeloTipoFinalidades_WithPagingSortingAndFiltering_ReturnsModeloTipoFinalidadSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -553,7 +553,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoHitos_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList() throws Exception {
+  void findAllModeloTipoHitos_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -589,7 +589,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoHitosConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
+  void findAllModeloTipoHitosConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -626,7 +626,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoHitosProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
+  void findAllModeloTipoHitosProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -663,7 +663,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoHitosSolicitud_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
+  void findAllModeloTipoHitosSolicitud_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -706,7 +706,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloUnidades_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
+  void findAllModeloUnidades_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");

@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de FuenteFinanciacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FuenteFinanciacionIT extends BaseIT {
+class FuenteFinanciacionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -50,7 +50,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsFuenteFinanciacion() throws Exception {
+  void create_ReturnsFuenteFinanciacion() throws Exception {
     FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
 
     final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
@@ -77,7 +77,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_ReturnsFuenteFinanciacion() throws Exception {
+  void update_ReturnsFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
     FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
     fuenteFinanciacion.setNombre("nombre-actualizado");
@@ -106,7 +106,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void desactivar_ReturnFuenteFinanciacion() throws Exception {
+  void desactivar_ReturnFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
     final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
@@ -131,7 +131,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void activar_ReturnFuenteFinanciacion() throws Exception {
+  void activar_ReturnFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
     final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
@@ -156,7 +156,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_ReturnsFuenteFinanciacion() throws Exception {
+  void findById_ReturnsFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
     final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
@@ -181,7 +181,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
@@ -214,7 +214,7 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");

@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ProyectoIVA.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProyectoIVAIT extends BaseIT {
+class ProyectoIVAIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyectoiva";
@@ -57,7 +57,7 @@ public class ProyectoIVAIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsProyectoIva() throws Exception {
+  void create_ReturnsProyectoIva() throws Exception {
 
     String roles = "CSP-PRO-E";
     // given: new ProyectoIVA
@@ -93,7 +93,7 @@ public class ProyectoIVAIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllByProyectoId_WithPagingSorting_ReturnsProyectoIVASubList()
+  void findAllByProyectoId_WithPagingSorting_ReturnsProyectoIVASubList()
       throws Exception {
     String roles = "CSP-PRO-E";
     HttpHeaders headers = new HttpHeaders();
