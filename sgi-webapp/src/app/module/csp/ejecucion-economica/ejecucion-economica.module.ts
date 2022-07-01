@@ -55,6 +55,7 @@ import { ValidacionGastosHistoricoModalComponent } from './modals/validacion-gas
 import { ValidacionGastosModalComponent } from './modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { ViajesDietasModalComponent } from './modals/viajes-dietas-modal/viajes-dietas-modal.component';
 import { SeguimientoJustificacionResumenComponent } from './ejecucion-economica-formulario/seguimiento-justificacion-resumen/seguimiento-justificacion-resumen.component';
+import { IdentificadorJustificacionModalComponent } from './modals/identificador-justificacion-modal/identificador-justificacion-modal.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { SeguimientoJustificacionResumenComponent } from './ejecucion-economica-
     FacturasEmitidasModalComponent,
     ValidacionGastosEditarModalComponent,
     ValidacionGastosHistoricoModalComponent,
-    SeguimientoJustificacionResumenComponent
+    SeguimientoJustificacionResumenComponent,
+    IdentificadorJustificacionModalComponent
   ],
   imports: [
     CommonModule,

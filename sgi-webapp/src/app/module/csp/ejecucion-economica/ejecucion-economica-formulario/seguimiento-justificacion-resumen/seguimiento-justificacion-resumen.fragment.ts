@@ -1,16 +1,18 @@
+import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoSeguimientoEjecucionEconomica } from '@core/models/csp/proyecto-seguimiento-ejecucion-economica';
-import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
+import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
-import { concatMap, map, toArray } from 'rxjs/operators';
+import { concatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 
 export interface IProyectoSeguimientoEjecucionEconomicaData extends IProyectoSeguimientoEjecucionEconomica {
@@ -26,22 +28,29 @@ export class SeguimientoJustificacionResumenFragment extends Fragment {
   private responsablesMap: Map<number, IPersona[]>;
   private proyectoTituloMap: Map<number, string>;
   private proyectosSGI$ = new BehaviorSubject<IProyectoSeguimientoEjecucionEconomicaData[]>([]);
-  private periodosJustificacion$ = new BehaviorSubject<IProyectoPeriodoJustificacionWithTituloProyecto[]>([]);
+  private periodosJustificacion$ = new BehaviorSubject<StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>[]>([]);
+
+  get configuracion(): IConfiguracion {
+    return this._configuracion;
+  }
 
   constructor(
     key: number,
     private readonly proyectoSge: IProyectoSge,
-    readonly relaciones: IRelacionEjecucionEconomicaWithResponsables[],
+    readonly relacionesProyectos: IRelacionEjecucionEconomicaWithResponsables[],
+    // tslint:disable-next-line: variable-name
+    private readonly _configuracion: IConfiguracion,
     private readonly proyectoService: ProyectoService,
     private readonly proyectoSeguimientoEjecucionEconomicaService: ProyectoSeguimientoEjecucionEconomicaService,
-    private readonly empresaService: EmpresaService
+    private readonly empresaService: EmpresaService,
+    private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService
   ) {
     super(key);
     this.responsablesMap = new Map(
-      relaciones.map(relacion => ([relacion.id, relacion.responsables]))
+      relacionesProyectos.map(relacion => ([relacion.id, relacion.responsables]))
     );
     this.proyectoTituloMap = new Map(
-      relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO).map(relacion => ([relacion.id, relacion.nombre]))
+      relacionesProyectos.map(relacion => ([relacion.id, relacion.nombre]))
     );
   }
 
@@ -125,10 +134,13 @@ export class SeguimientoJustificacionResumenFragment extends Fragment {
     }
   }
 
-  private findCalendarioJustificacion(proyectoSge: IProyectoSge): Observable<IProyectoPeriodoJustificacionWithTituloProyecto[]> {
+  private findCalendarioJustificacion(proyectoSge: IProyectoSge):
+    Observable<StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>[]> {
     return this.proyectoSeguimientoEjecucionEconomicaService.findProyectoPeriodosJustificacion(proyectoSge.id)
       .pipe(
-        map(({ items }) => items.map(item => ({ ...item, tituloProyecto: this.proyectoTituloMap.get(item.proyecto.id) })))
+        map(({ items }) => items.map(item =>
+          (new StatusWrapper({ ...item, tituloProyecto: this.proyectoTituloMap.get(item.proyecto.id) })))
+        )
       );
   }
 
@@ -136,12 +148,66 @@ export class SeguimientoJustificacionResumenFragment extends Fragment {
     return this.proyectosSGI$.asObservable();
   }
 
-  getPeriodosJustificacion$(): Observable<IProyectoPeriodoJustificacionWithTituloProyecto[]> {
+  getPeriodosJustificacion$(): Observable<StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>[]> {
     return this.periodosJustificacion$.asObservable();
   }
 
-  saveOrUpdate(action?: any): Observable<string | number | void> {
-    throw new Error('Method not implemented.');
+  updatePeriodoJustificacion(periodoJustificacion: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>): void {
+    periodoJustificacion.setEdited();
+    this.setChanges(true);
   }
 
+  saveOrUpdate(action?: any): Observable<string | number | void> {
+    return this.updatePeriodosJustificacion().pipe(
+      tap(() => {
+        this.setChanges(this.hasFragmentChangesPending());
+      })
+    );
+  }
+
+  private hasFragmentChangesPending(): boolean {
+    return this.periodosJustificacion$.value.some(wrapper => wrapper.edited);
+  }
+
+  private updatePeriodosJustificacion(): Observable<void> {
+    const current = this.periodosJustificacion$.value;
+    return from(current.filter(wrapper => wrapper.edited)).pipe(
+      mergeMap((wrapper => {
+        return this.proyectoPeriodoJustificacionService.updateIdentificadorJustificacion(
+          this.getProyectoPeriodoJustificacion(wrapper.value))
+          .pipe(
+            map((periodoJustificacionResponse) => this.refreshProyectoRelacionesTableData(periodoJustificacionResponse, wrapper, current)),
+          );
+      }))
+    );
+  }
+
+  private getProyectoPeriodoJustificacion(periodoJustificacionWithTituloProyecto: IProyectoPeriodoJustificacionWithTituloProyecto):
+    IProyectoPeriodoJustificacion {
+    const { tituloProyecto, ...periodoJustificacion } = periodoJustificacionWithTituloProyecto;
+    return periodoJustificacion;
+  }
+
+  private refreshProyectoRelacionesTableData(
+    periodoJustificacionResponse: IProyectoPeriodoJustificacion,
+    wrapper: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>,
+    current: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>[]
+  ): void {
+    const periodoJustificacionWithTituloProyecto: IProyectoPeriodoJustificacionWithTituloProyecto =
+    {
+      ...periodoJustificacionResponse,
+      tituloProyecto: null
+    };
+    this.copyRelatedAttributes(wrapper.value, periodoJustificacionWithTituloProyecto);
+    current[current.findIndex(c => c === wrapper)] = new StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>(
+      periodoJustificacionWithTituloProyecto);
+    this.periodosJustificacion$.next(current);
+  }
+
+  private copyRelatedAttributes(
+    source: IProyectoPeriodoJustificacionWithTituloProyecto,
+    target: IProyectoPeriodoJustificacionWithTituloProyecto
+  ): void {
+    target.tituloProyecto = source.tituloProyecto;
+  }
 }

@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { TIPO_JUSTIFICACION_MAP } from '@core/enums/tipo-justificacion';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
+import { IdentificadorJustificacionModalComponent, IdentificadorJustificacionModalData } from '../../modals/identificador-justificacion-modal/identificador-justificacion-modal.component';
 import {
   IProyectoPeriodoJustificacionWithTituloProyecto, IProyectoSeguimientoEjecucionEconomicaData, SeguimientoJustificacionResumenFragment
 } from './seguimiento-justificacion-resumen.fragment';
@@ -52,7 +55,7 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
   ];
 
   proyectosSGIDataSource = new MatTableDataSource<IProyectoSeguimientoEjecucionEconomicaData>();
-  calendarioJustificacionDataSource = new MatTableDataSource<IProyectoPeriodoJustificacionWithTituloProyecto>();
+  calendarioJustificacionDataSource = new MatTableDataSource<StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>>();
   @ViewChild('proyectosSGIPaginator', { static: true }) proyectosSGIPaginator: MatPaginator;
   @ViewChild('proyectosSGISort', { static: true }) proyectosSGISort: MatSort;
   @ViewChild('calendarioJustificacionPaginator', { static: true }) calendarioJustificacionPaginator: MatPaginator;
@@ -66,7 +69,9 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     return TIPO_JUSTIFICACION_MAP;
   }
 
-  constructor(actionService: EjecucionEconomicaActionService) {
+  constructor(
+    actionService: EjecucionEconomicaActionService,
+    private matDialog: MatDialog) {
     super(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_RESUMEN, actionService);
     this.formPart = this.fragment as SeguimientoJustificacionResumenFragment;
   }
@@ -90,5 +95,27 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  openModal(periodoJustificacion: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>): void {
+    const data: IdentificadorJustificacionModalData = {
+      configuracion: this.formPart.configuracion,
+      othersPeriodosJustificacion: this.calendarioJustificacionDataSource.data.
+        filter(element => element.value.id !== periodoJustificacion.value.id),
+      periodoJustificacion,
+    };
+
+    const config = {
+      data
+    };
+
+    const dialogRef = this.matDialog.open(IdentificadorJustificacionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (modalData: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>) => {
+        if (modalData) {
+          this.formPart.updatePeriodoJustificacion(modalData);
+        }
+      }
+    );
   }
 }

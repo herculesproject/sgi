@@ -9,6 +9,7 @@ import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-pr
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
+import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
@@ -88,7 +89,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     proyectoSeguimientoEjecucionEconomicaService: ProyectoSeguimientoEjecucionEconomicaService,
-    empresaService: EmpresaService
+    empresaService: EmpresaService,
+    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService
   ) {
     super();
 
@@ -148,7 +150,8 @@ export class EjecucionEconomicaActionService extends ActionService {
 
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(
       id, this.data.proyectoSge, this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
-      proyectoService, proyectoSeguimientoEjecucionEconomicaService, empresaService
+      this.data.configuracion, proyectoService, proyectoSeguimientoEjecucionEconomicaService, empresaService,
+      proyectoPeriodoJustificacionService
     );
 
     this.addFragment(this.FRAGMENT.PROYECTOS, this.proyectos);
