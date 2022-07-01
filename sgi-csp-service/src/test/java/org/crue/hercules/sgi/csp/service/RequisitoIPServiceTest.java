@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoIPNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPRepository;
@@ -25,24 +24,21 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   private RequisitoIPRepository repository;
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
-  @Mock
-  private ConvocatoriaService convocatoriaService;
 
   private RequisitoIPService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new RequisitoIPService(repository, convocatoriaRepository, convocatoriaService);
+    service = new RequisitoIPService(repository, convocatoriaRepository);
   }
 
   @Test
   public void create_ReturnsRequisitoIP() {
     // given: Un nuevo RequisitoIP
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(true);
 
     BDDMockito.given(repository.save(requisitoIP)).will((InvocationOnMock invocation) -> {
       RequisitoIP requisitoIPCreado = invocation.getArgument(0);
@@ -150,10 +146,6 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // then: lanza un ConvocatoriaNotFoundException
     Assertions.assertThatThrownBy(() -> service.findByConvocatoria(idBuscado))
         .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).activo(Boolean.TRUE).codigo("codigo" + convocatoriaId).build();
   }
 
   /**

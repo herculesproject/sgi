@@ -69,6 +69,6 @@ public class SolicitudRrhhRequisitoNivelAcademico extends BaseEntity {
   @JoinColumn(name = "requisitoip_nivelacademico_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDRRHHREQUISITONIVELACADEMICO_REQUISITOIPNIVELACADEMICO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  private final RequisitoIPNivelAcademico requisitoIPCategoriaProfesional = null;
+  private final RequisitoIPNivelAcademico requisitoIPNivelAcademico = null;
 
 }

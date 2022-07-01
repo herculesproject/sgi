@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RequisitoIPCategoriaProfesionalInput {
+
+  private Long id;
+
   /** RequisitoIP Id */
   private Long requisitoIPId;
 
