@@ -170,4 +170,22 @@
       <column name="identificador_justificacion" type="varchar(255)" />
     </addColumn>
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000008-22">
+    <addColumn tableName="configuracion">
+      <column name="formato_identificador_justificacion" type="varchar(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-23">
+    <addColumn tableName="configuracion">
+      <column name="plantilla_formato_identificador_justificacion" type="varchar(255)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-24">
+    <addUniqueConstraint columnNames="formato_identificador_justificacion" constraintName="UC_CONFIGURACIONFORMATO_IDENTIFICADOR_JUSTIFICACION_COL" tableName="configuracion" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-25">
+    <addUniqueConstraint columnNames="plantilla_formato_identificador_justificacion" constraintName="UC_CONFIGURACIONPLANTILLA_FORMATO_IDENTIFICADOR_JUSTIFICACION_C" tableName="configuracion" />
+  </changeSet>
+
 </databaseChangeLog>

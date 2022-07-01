@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotFoundException;
@@ -23,6 +24,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoJustificacionSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
@@ -212,5 +214,41 @@ public class ProyectoPeriodoJustificacionService {
     Page<ProyectoPeriodoJustificacion> returnValue = repository.findAll(specs, paging);
     log.debug("findAllByProyectoSgeRef(String proyectoSgeRef, String query, Pageable paging) - end");
     return returnValue;
+  }
+
+  /**
+   * Actualiza el Identificador de Justificación de la entidad
+   * {@link ProyectoPeriodoJustificacion}.
+   * 
+   * @param proyectoPeriodoJustificacion la informacion a modificar.
+   * @return la entidad {@link ProyectoPeriodoJustificacion} modificada.
+   */
+  @Transactional
+  public ProyectoPeriodoJustificacion updateIdentificadorJustificacion(
+      ProyectoPeriodoJustificacion proyectoPeriodoJustificacion) {
+    log.debug("updateIdentificadorJustificacion(ProyectoPeriodoJustificacion proyectoPeriodoJustificacion) - start");
+    AssertHelper.idNotNull(proyectoPeriodoJustificacion.getId(), ProyectoPeriodoJustificacion.class);
+
+    return repository.findById(proyectoPeriodoJustificacion.getId()).map(proyectoPeriodoJustificacionToUpdate -> {
+      if (StringUtils.compare(proyectoPeriodoJustificacion.getIdentificadorJustificacion(),
+          proyectoPeriodoJustificacionToUpdate.getIdentificadorJustificacion()) != 0) {
+        Set<ConstraintViolation<ProyectoPeriodoJustificacion>> result = validator.validate(proyectoPeriodoJustificacion,
+            ProyectoPeriodoJustificacion.OnActualizarIdentificadorJustificacion.class);
+
+        if (!result.isEmpty()) {
+          throw new ConstraintViolationException(result);
+        }
+      }
+
+      proyectoPeriodoJustificacionToUpdate
+          .setIdentificadorJustificacion(proyectoPeriodoJustificacion.getIdentificadorJustificacion());
+      proyectoPeriodoJustificacionToUpdate
+          .setFechaPresentacionJustificacion(proyectoPeriodoJustificacion.getFechaPresentacionJustificacion());
+
+      ProyectoPeriodoJustificacion returnValue = repository.save(proyectoPeriodoJustificacionToUpdate);
+
+      log.debug("updateIdentificadorJustificacion(ProyectoPeriodoJustificacion proyectoPeriodoJustificacion) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ProyectoPeriodoJustificacionNotFoundException(proyectoPeriodoJustificacion.getId()));
   }
 }
