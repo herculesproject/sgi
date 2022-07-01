@@ -556,11 +556,11 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_CATEGORIA_PROFESIONAL_DESCONOCIDA;
     }
 
-    if (persona.vinculacion?.fechaObtencionCategoria < requisito.fechaMinimaObtencion) {
+    if (!!requisito.fechaMinimaObtencion && persona.vinculacion?.fechaObtencionCategoria < requisito.fechaMinimaObtencion) {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_CATEGORIA_PROFESIONAL_MIN;
     }
 
-    if (persona.vinculacion?.fechaObtencionCategoria > requisito.fechaMaximaObtencion) {
+    if (!!requisito.fechaMaximaObtencion && persona.vinculacion?.fechaObtencionCategoria > requisito.fechaMaximaObtencion) {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_CATEGORIA_PROFESIONAL_MAX;
     }
 
@@ -618,11 +618,11 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_NIVEL_ACADEMICO_DESCONOCIDA;
     }
 
-    if (persona.datosAcademicos?.fechaObtencion < requisito.fechaMinimaObtencion) {
+    if (!!requisito.fechaMinimaObtencion && persona.datosAcademicos?.fechaObtencion < requisito.fechaMinimaObtencion) {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_NIVEL_ACADEMICO_MIN;
     }
 
-    if (persona.datosAcademicos?.fechaObtencion > requisito.fechaMaximaObtencion) {
+    if (!!requisito.fechaMaximaObtencion && persona.datosAcademicos?.fechaObtencion > requisito.fechaMaximaObtencion) {
       return ValidacionRequisitosEquipoIp.FECHA_OBTENCION_NIVEL_ACADEMICO_MAX;
     }
 
