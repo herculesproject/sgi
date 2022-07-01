@@ -24,7 +24,7 @@ class NotificacionProyectoExternoCVNServiceTest extends BaseServiceTest {
   private NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     this.notificacionProyectoExternoCVNService = new NotificacionProyectoExternoCVNService(
         notificacionProyectoExternoCVNRepository, notificacionCVNEntidadFinanciadoraRepository,
         notificacionProyectoExternoCVNComService);

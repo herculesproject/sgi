@@ -215,7 +215,7 @@ class GrupoIT extends BaseIT {
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<GrupoOutput> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(2);
+    Assertions.assertThat(responseData).hasSize(2);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -253,7 +253,7 @@ class GrupoIT extends BaseIT {
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<GrupoOutput> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(2);
+    Assertions.assertThat(responseData).hasSize(2);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -439,7 +439,7 @@ class GrupoIT extends BaseIT {
           }
         })
         .collect(Collectors.toList());
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(expectedSize));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -487,7 +487,7 @@ class GrupoIT extends BaseIT {
           }
         })
         .collect(Collectors.toList());
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(2));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(2));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();

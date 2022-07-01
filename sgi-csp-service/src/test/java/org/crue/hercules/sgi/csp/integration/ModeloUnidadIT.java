@@ -61,7 +61,7 @@ public class ModeloUnidadIT extends BaseIT {
         .isEqualTo(modeloUnidad.getModeloEjecucion().getId());
     Assertions.assertThat(modeloUnidadResponse.getUnidadGestionRef()).as("getUnidadGestionRef()")
         .isEqualTo(modeloUnidad.getUnidadGestionRef());
-    Assertions.assertThat(modeloUnidadResponse.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloUnidadResponse.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -98,7 +98,7 @@ public class ModeloUnidadIT extends BaseIT {
         .isEqualTo(1L);
     Assertions.assertThat(modeloUnidadResponse.getUnidadGestionRef()).as("getUnidadGestionRef()")
         .isEqualTo("unidad-001");
-    Assertions.assertThat(modeloUnidadResponse.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloUnidadResponse.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -121,7 +121,7 @@ public class ModeloUnidadIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ModeloUnidad> modeloUnidades = response.getBody();
-    Assertions.assertThat(modeloUnidades.size()).isEqualTo(3);
+    Assertions.assertThat(modeloUnidades).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

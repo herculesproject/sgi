@@ -28,7 +28,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * EstadoSolicitudServiceTest
  */
-public class EstadoSolicitudServiceTest extends BaseServiceTest {
+class EstadoSolicitudServiceTest extends BaseServiceTest {
 
   @Mock
   private EstadoSolicitudRepository repository;
@@ -38,12 +38,12 @@ public class EstadoSolicitudServiceTest extends BaseServiceTest {
   private EstadoSolicitudService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new EstadoSolicitudServiceImpl(repository, solicitudRepository);
   }
 
   @Test
-  public void create_WithConvocatoria_ReturnsEstadoSolicitud() {
+  void create_WithConvocatoria_ReturnsEstadoSolicitud() {
     // given: Un nuevo EstadoSolicitud
     EstadoSolicitud estadoSolicitud = generarMockEstadoSolicitud(null);
 
@@ -65,7 +65,7 @@ public class EstadoSolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
+  void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo EstadoSolicitud que ya tiene id
     EstadoSolicitud solicitudModalidad = generarMockEstadoSolicitud(1L);
 
@@ -76,7 +76,7 @@ public class EstadoSolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutSolicitudId_ThrowsIllegalArgumentException() {
+  void create_WithoutSolicitudId_ThrowsIllegalArgumentException() {
     // given: Un nuevo EstadoSolicitud que no tiene solicitud
     EstadoSolicitud estadoSolicitud = generarMockEstadoSolicitud(null);
     estadoSolicitud.setSolicitudId(null);
@@ -89,7 +89,7 @@ public class EstadoSolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
-  public void findAllBySolicitud_ReturnsPage() {
+  void findAllBySolicitud_ReturnsPage() {
     // given: Una lista con 37 EstadoSolicitud
     Long solicitudId = 1L;
     Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
@@ -119,7 +119,7 @@ public class EstadoSolicitudServiceTest extends BaseServiceTest {
     Page<EstadoSolicitud> page = service.findAllBySolicitud(solicitudId, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);

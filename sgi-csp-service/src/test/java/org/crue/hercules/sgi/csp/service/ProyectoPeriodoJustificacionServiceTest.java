@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ProyectoPeriodoJustificacionServiceTest
  */
 @Import({ ProyectoPeriodoJustificacionService.class, ApplicationContextSupport.class })
-public class ProyectoPeriodoJustificacionServiceTest extends BaseServiceTest {
+class ProyectoPeriodoJustificacionServiceTest extends BaseServiceTest {
 
   @MockBean
   private ProyectoPeriodoJustificacionRepository repository;
@@ -60,7 +60,7 @@ public class ProyectoPeriodoJustificacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByProyectoSgeRef_ReturnsPage() {
+  void findAllByProyectoSgeRef_ReturnsPage() {
     // given: Una lista con 37 ProyectoPeriodoJustificacion
     String proyectosSgeRef = "1";
     List<ProyectoPeriodoJustificacion> periodosJustificacion = new ArrayList<>();

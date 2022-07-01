@@ -428,7 +428,7 @@ class ConvocatoriaIT extends BaseIT {
     // given: Convocatoria data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Convocatoria> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -467,7 +467,7 @@ class ConvocatoriaIT extends BaseIT {
     // given: Convocatoria data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Convocatoria> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -511,7 +511,7 @@ class ConvocatoriaIT extends BaseIT {
     // given: Convocatoria data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Convocatoria> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -579,7 +579,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocantes = response.getBody();
-    Assertions.assertThat(convocatoriaEntidadConvocantes.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaEntidadConvocantes).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -622,7 +622,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadoras = response.getBody();
-    Assertions.assertThat(convocatoriaEntidadFinanciadoras.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaEntidadFinanciadoras).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -665,7 +665,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaEntidadGestora> convocatoriasEntidadesGestoras = response.getBody();
-    Assertions.assertThat(convocatoriasEntidadesGestoras.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasEntidadesGestoras).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -708,7 +708,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaAreaTematica> convocatoriasAreasTematicas = response.getBody();
-    Assertions.assertThat(convocatoriasAreasTematicas.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasAreasTematicas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -751,7 +751,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaDocumento> convocatoriasDocumentos = response.getBody();
-    Assertions.assertThat(convocatoriasDocumentos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasDocumentos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -794,7 +794,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaEnlace> convocatoriasEnlaces = response.getBody();
-    Assertions.assertThat(convocatoriasEnlaces.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasEnlaces).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -835,7 +835,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaFase> convocatoriasFases = response.getBody();
-    Assertions.assertThat(convocatoriasFases.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasFases).hasSize(3);
     Assertions.assertThat(convocatoriasFases.get(0).getObservaciones()).as("get(0).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 3));
     Assertions.assertThat(convocatoriasFases.get(1).getObservaciones()).as("get(1).getObservaciones())")
@@ -872,7 +872,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ConvocatoriaHito> convocatoriasHitos = response.getBody();
-    Assertions.assertThat(convocatoriasHitos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasHitos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -915,7 +915,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones = response.getBody();
-    Assertions.assertThat(convocatoriaPeriodoJustificaciones.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaPeriodoJustificaciones).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -961,7 +961,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoes = response
         .getBody();
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1014,7 +1014,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = response.getBody();
-    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaConceptoGastos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1052,7 +1052,7 @@ class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = response.getBody();
-    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaConceptoGastos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1102,7 +1102,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     List<ConvocatoriaPalabraClaveOutput> updated = response.getBody();
-    Assertions.assertThat(updated.size()).isEqualTo(3);
+    Assertions.assertThat(updated).hasSize(3);
 
     Assertions.assertThat(updated.get(0)).isNotNull();
     Assertions.assertThat(updated.get(1)).isNotNull();
@@ -1145,7 +1145,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     List<Convocatoria> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(1);
+    Assertions.assertThat(responseData).hasSize(1);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(0).getId()).isEqualTo(1);
@@ -1221,7 +1221,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     final List<ConvocatoriaPartida> convocatoriaConceptoGastos = response.getBody();
-    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriaConceptoGastos).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1352,7 +1352,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
 
     final List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastos = response.getBody();
-    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(2);
+    Assertions.assertThat(convocatoriaConceptoGastos).hasSize(2);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1405,7 +1405,7 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
 
     final List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastos = response.getBody();
-    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(1);
+    Assertions.assertThat(convocatoriaConceptoGastos).hasSize(1);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1524,7 +1524,7 @@ class ConvocatoriaIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1556,7 +1556,7 @@ class ConvocatoriaIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1588,7 +1588,7 @@ class ConvocatoriaIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1620,7 +1620,7 @@ class ConvocatoriaIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

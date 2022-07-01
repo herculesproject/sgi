@@ -45,7 +45,7 @@ class AutorizacionServiceTest extends BaseServiceTest {
   private AutorizacionService autorizacionService;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     this.autorizacionService = new AutorizacionService(
         autorizacionRepository,
         estadoAutorizacionRepository,

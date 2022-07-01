@@ -362,7 +362,7 @@ class ProyectoIT extends BaseIT {
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Proyecto> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -409,7 +409,7 @@ class ProyectoIT extends BaseIT {
     // given: Proyecto data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Proyecto> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -464,7 +464,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoHito> proyectosHitos = response.getBody();
-    Assertions.assertThat(proyectosHitos.size()).isEqualTo(3);
+    Assertions.assertThat(proyectosHitos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -581,7 +581,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoFase> proyectosFases = response.getBody();
-    Assertions.assertThat(proyectosFases.size()).isEqualTo(3);
+    Assertions.assertThat(proyectosFases).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -698,7 +698,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoPaqueteTrabajo> proyectosPaqueteTrabajos = response.getBody();
-    Assertions.assertThat(proyectosPaqueteTrabajos.size()).isEqualTo(3);
+    Assertions.assertThat(proyectosPaqueteTrabajos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -740,7 +740,7 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProyectoSocio> proyectoSocios = response.getBody();
-    Assertions.assertThat(proyectoSocios.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoSocios).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1045,7 +1045,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoEntidadGestora> proyectosEntidadGestoras = response.getBody();
-    Assertions.assertThat(proyectosEntidadGestoras.size()).isEqualTo(3);
+    Assertions.assertThat(proyectosEntidadGestoras).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1131,7 +1131,7 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProyectoEquipo> proyectoEquipos = response.getBody();
-    Assertions.assertThat(proyectoEquipos.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoEquipos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1215,7 +1215,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoProrroga> proyectosProrrogas = response.getBody();
-    Assertions.assertThat(proyectosProrrogas.size()).isEqualTo(3);
+    Assertions.assertThat(proyectosProrrogas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1358,7 +1358,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<EstadoProyecto> estadoProyecto = response.getBody();
-    Assertions.assertThat(estadoProyecto.size()).isEqualTo(1);
+    Assertions.assertThat(estadoProyecto).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1449,7 +1449,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoEntidadFinanciadora> proyectoEntidadFinanciadora = response.getBody();
-    Assertions.assertThat(proyectoEntidadFinanciadora.size()).isEqualTo(1);
+    Assertions.assertThat(proyectoEntidadFinanciadora).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1543,7 +1543,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoDocumento> proyectoDocumento = response.getBody();
-    Assertions.assertThat(proyectoDocumento.size()).isEqualTo(2);
+    Assertions.assertThat(proyectoDocumento).hasSize(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1665,7 +1665,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoPeriodoSeguimiento> proyectoPeriodoSeguimiento = response.getBody();
-    Assertions.assertThat(proyectoPeriodoSeguimiento.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoPeriodoSeguimiento).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1753,7 +1753,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoClasificacion> proyectoClasificacion = response.getBody();
-    Assertions.assertThat(proyectoClasificacion.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoClasificacion).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1836,7 +1836,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoAreaConocimiento> proyectoAreaConocimiento = response.getBody();
-    Assertions.assertThat(proyectoAreaConocimiento.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoAreaConocimiento).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1923,7 +1923,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoProyectoSge> proyectoProyectoSge = response.getBody();
-    Assertions.assertThat(proyectoProyectoSge.size()).isEqualTo(1);
+    Assertions.assertThat(proyectoProyectoSge).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -2065,7 +2065,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoAnualidadResumen> proyectoAnualidadResumen = response.getBody();
-    Assertions.assertThat(proyectoAnualidadResumen.size()).isEqualTo(2);
+    Assertions.assertThat(proyectoAnualidadResumen).hasSize(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -2148,7 +2148,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoPartida> proyectoPartida = response.getBody();
-    Assertions.assertThat(proyectoPartida.size()).isEqualTo(1);
+    Assertions.assertThat(proyectoPartida).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -2240,7 +2240,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<ProyectoResponsableEconomicoOutput> proyectoResponsableEconomicoOutput = response.getBody();
-    Assertions.assertThat(proyectoResponsableEconomicoOutput.size()).isEqualTo(3);
+    Assertions.assertThat(proyectoResponsableEconomicoOutput).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -2338,7 +2338,7 @@ class ProyectoIT extends BaseIT {
 
     List<AnualidadGasto> responseData = response.getBody();
     Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2396,7 +2396,7 @@ class ProyectoIT extends BaseIT {
 
     List<ProyectoConceptoGasto> responseData = response.getBody();
     Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData.size()).isEqualTo(2);
+    Assertions.assertThat(responseData).hasSize(2);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2452,7 +2452,7 @@ class ProyectoIT extends BaseIT {
 
     List<ProyectoConceptoGasto> responseData = response.getBody();
     Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData.size()).isEqualTo(2);
+    Assertions.assertThat(responseData).hasSize(2);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2592,7 +2592,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
 
     final List<ProyectoAgrupacionGastoOutput> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(1);
+    Assertions.assertThat(responseData).hasSize(1);
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(0).getId()).isEqualTo(1);
   }
@@ -2641,7 +2641,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo(expectedSize);
 
     final List<ProyectoPeriodoJustificacion> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(expectedSize));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(0).getId()).isEqualTo(1);
   }
@@ -2701,7 +2701,7 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
 
     List<ProyectoAnualidad> responseData = response.getBody().stream().sorted(new Comparator<ProyectoAnualidad>() {
 
@@ -2752,7 +2752,7 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(4);
+    Assertions.assertThat(response.getBody()).hasSize(4);
 
     List<ProyectoAnualidad> responseData = response.getBody().stream().sorted(new Comparator<ProyectoAnualidad>() {
 
@@ -2828,7 +2828,7 @@ class ProyectoIT extends BaseIT {
           }
         })
         .collect(Collectors.toList());
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(expectedSize));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2891,7 +2891,7 @@ class ProyectoIT extends BaseIT {
           }
         })
         .collect(Collectors.toList());
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(expectedSize));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2944,7 +2944,7 @@ class ProyectoIT extends BaseIT {
           }
         })
         .collect(Collectors.toList());
-    Assertions.assertThat(responseData.size()).isEqualTo(Integer.valueOf(2));
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(2));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2986,7 +2986,7 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
 
     List<NotificacionProyectoExternoCVNOutput> responseData = response.getBody().stream()
         .sorted(new Comparator<NotificacionProyectoExternoCVNOutput>() {

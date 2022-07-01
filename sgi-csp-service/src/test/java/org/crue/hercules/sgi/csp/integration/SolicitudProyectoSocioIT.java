@@ -169,7 +169,7 @@ public class SolicitudProyectoSocioIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoSocioPeriodoPago> solicitudProyectoSocioPeriodoPago = response.getBody();
-    Assertions.assertThat(solicitudProyectoSocioPeriodoPago.size()).isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoSocioPeriodoPago).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -205,7 +205,7 @@ public class SolicitudProyectoSocioIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoSocioEquipo> solicitudProyectoSocioEquipo = response.getBody();
-    Assertions.assertThat(solicitudProyectoSocioEquipo.size()).isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoSocioEquipo).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -243,7 +243,7 @@ public class SolicitudProyectoSocioIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoSocioPeriodoJustificacion> solicitudProyectoSocioPeriodoJustificacion = response
         .getBody();
-    Assertions.assertThat(solicitudProyectoSocioPeriodoJustificacion.size()).isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoSocioPeriodoJustificacion).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

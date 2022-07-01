@@ -24,8 +24,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Slf4j
 public class SolicitudSpecifications {
 
   /**
@@ -116,7 +118,7 @@ public class SolicitudSpecifications {
             expressions.add(from.get((SingularAttribute<T, ?>) obj));
           }
         } catch (IllegalAccessException e) {
-          e.printStackTrace();
+          log.error(e.getMessage(), e);
         }
       }
     }

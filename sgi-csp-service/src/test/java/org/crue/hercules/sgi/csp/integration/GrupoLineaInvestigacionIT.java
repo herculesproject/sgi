@@ -74,7 +74,7 @@ public class GrupoLineaInvestigacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<GrupoLineaClasificacion> grupoLineaClasificacion = response.getBody();
-    Assertions.assertThat(grupoLineaClasificacion.size()).isEqualTo(3);
+    Assertions.assertThat(grupoLineaClasificacion).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

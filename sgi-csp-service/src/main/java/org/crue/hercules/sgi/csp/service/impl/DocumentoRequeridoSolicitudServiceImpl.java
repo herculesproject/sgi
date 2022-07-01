@@ -122,20 +122,20 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
     log.debug("delete(Long id) - start");
 
     Assert.notNull(id, "DocumentoRequeridoSolicitud id no puede ser null para eliminar un DocumentoRequeridoSolicitud");
-    repository.findById(id).map(convocatoriaAreaTematica -> {
 
-      // comprobar si convocatoria es modificable
+    Optional<DocumentoRequeridoSolicitud> documentoRequeridoSolicitud = repository.findById(id);
+    if (documentoRequeridoSolicitud.isPresent()) {
       ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-          .findById(convocatoriaAreaTematica.getConfiguracionSolicitudId())
+          .findById(documentoRequeridoSolicitud.get().getConfiguracionSolicitudId())
           .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(
-              convocatoriaAreaTematica.getConfiguracionSolicitudId()));
+              documentoRequeridoSolicitud.get().getConfiguracionSolicitudId()));
       Assert.isTrue(
           convocatoriaService.isRegistradaConSolicitudesOProyectos(configuracionSolicitud.getConvocatoriaId(), null,
               new String[] { "CSP-CON-E" }),
           "No se puede eliminar DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
-      return convocatoriaAreaTematica;
-    }).orElseThrow(() -> new DocumentoRequeridoSolicitudNotFoundException(id));
+    } else {
+      throw new DocumentoRequeridoSolicitudNotFoundException(id);
+    }
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

@@ -73,7 +73,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   private ProyectoHitoService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new ProyectoHitoServiceImpl(repository,
         proyectoRepository,
         modeloTipoHitoRepository,
@@ -167,7 +167,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutProyectoId_ThrowsIllegalArgumentException() {
+  void create_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without ProyectoId
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
     proyectoHito.setProyectoId(null);
@@ -210,7 +210,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
+  void create_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
     // given: a ProyectoHito with non existing Proyecto
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
 
@@ -471,7 +471,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutTipoHitoId_ThrowsIllegalArgumentException() {
+  void update_WithoutTipoHitoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without TipoHitoId
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
     proyectoHito.setComentario("comentario modificado");
@@ -486,7 +486,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutFecha_ThrowsIllegalArgumentException() {
+  void update_WithoutFecha_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without Fecha
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
     proyectoHito.setComentario("comentario modificado");
@@ -674,7 +674,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithExistingId_NoReturnsAnyException() {
+  void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ProyectoHito
     Long id = 1L;
 
@@ -689,7 +689,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Long id = 1L;
 
@@ -703,7 +703,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsProyectoHito() {
+  void findById_ReturnsProyectoHito() {
     // given: Un ProyectoHito con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado))
@@ -718,7 +718,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsProyectoHitoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoHitoNotFoundException() throws Exception {
     // given: Ningun ProyectoHito con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -730,7 +730,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByProyecto_ReturnsPage() {
+  void findAllByProyecto_ReturnsPage() {
     // given: Una lista con 37 ProyectoHito para la Proyecto
     Long proyectoId = 1L;
     List<ProyectoHito> proyectosEntidadesConvocantes = new ArrayList<>();
@@ -764,7 +764,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     Page<ProyectoHito> page = service.findAllByProyecto(proyectoId, null, paging);
 
     // then: Devuelve la pagina 3 con los ProyectoHito del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);

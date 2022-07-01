@@ -44,7 +44,7 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
   private ProyectoConceptoGastoService service;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     // @formatter=off
     this.service = new ProyectoConceptoGastoServiceImpl(repository,
         proyectoRepository,

@@ -258,7 +258,7 @@ class SolicitudIT extends BaseIT {
     // given: Solicitud data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Solicitud> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -296,7 +296,7 @@ class SolicitudIT extends BaseIT {
     // given: Solicitud data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Solicitud> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -339,7 +339,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudModalidad> solicitudModalidades = response.getBody();
-    Assertions.assertThat(solicitudModalidades.size()).isEqualTo(3);
+    Assertions.assertThat(solicitudModalidades).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -380,7 +380,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EstadoSolicitud> estadosSolicitud = response.getBody();
-    Assertions.assertThat(estadosSolicitud.size()).isEqualTo(3);
+    Assertions.assertThat(estadosSolicitud).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -423,7 +423,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudDocumento> solicitudDocumentos = response.getBody();
-    Assertions.assertThat(solicitudDocumentos.size()).isEqualTo(3);
+    Assertions.assertThat(solicitudDocumentos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -457,7 +457,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudHito> solicitudHitos = response.getBody();
-    Assertions.assertThat(solicitudHitos.size()).isEqualTo(3);
+    Assertions.assertThat(solicitudHitos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -545,7 +545,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoSocio> solicitudProyectoSocio = response.getBody();
-    Assertions.assertThat(solicitudProyectoSocio.size()).isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoSocio).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -1610,7 +1610,7 @@ class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final List<SolicitudPalabraClaveOutput> palabrasClave = response.getBody();
-    Assertions.assertThat(palabrasClave.size()).isEqualTo(3);
+    Assertions.assertThat(palabrasClave).hasSize(3);
 
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -1650,7 +1650,7 @@ class SolicitudIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     List<SolicitudPalabraClaveOutput> updated = response.getBody();
-    Assertions.assertThat(updated.size()).isEqualTo(3);
+    Assertions.assertThat(updated).hasSize(3);
 
     Assertions.assertThat(updated.get(0)).isNotNull();
     Assertions.assertThat(updated.get(1)).isNotNull();
@@ -1796,7 +1796,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1828,7 +1828,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1860,7 +1860,7 @@ class SolicitudIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();
-    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
+    Assertions.assertThat(response.getBody()).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

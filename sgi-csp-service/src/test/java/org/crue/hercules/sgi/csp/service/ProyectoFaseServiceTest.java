@@ -38,7 +38,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ProyectoFaseServiceTest
  */
 
-public class ProyectoFaseServiceTest extends BaseServiceTest {
+class ProyectoFaseServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoFaseRepository repository;
@@ -52,12 +52,12 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   private ProyectoFaseService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new ProyectoFaseServiceImpl(repository, proyectoRepository, modeloTipoFaseRepository);
   }
 
   @Test
-  public void create_ReturnsProyectoFase() {
+  void create_ReturnsProyectoFase() {
     // given: Un nuevo ProyectoFase
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -106,7 +106,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
+  void create_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
     // given: Un nuevo ProyectoFase con rango de fechas pasado
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -157,7 +157,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
+  void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ProyectoFase que ya tiene id
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     // when: Creamos el ProyectoFase
@@ -167,7 +167,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutProyectoId_ThrowsIllegalArgumentException() {
+  void create_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without ProyectoId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -182,7 +182,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
+  void create_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without TipoFaseId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -197,7 +197,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutFechas_ThrowsIllegalArgumentException() {
+  void create_WithoutFechas_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without Fecha
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -213,7 +213,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
+  void create_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
     // given: Fecha Inicio > fechaFin
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -226,7 +226,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
+  void create_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
     // given: a ProyectoFase with non existing Proyecto
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -241,7 +241,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+  void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con Proyecto sin Modelo de Ejecucion
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -261,7 +261,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con TipoFase no asignado al Modelo de Ejecucion de la
     // proyecto
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -280,7 +280,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la proyecto inactiva
     Long proyectoId = 1L;
@@ -306,7 +306,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase TipoFase disabled
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -331,7 +331,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
+  void create_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -367,7 +367,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_ReturnsProyectoFase() {
+  void update_ReturnsProyectoFase() {
     // given: Un nuevo ProyectoFase con el tipoFase actualizado
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -415,7 +415,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
+  void update_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
     // given: Un nuevo ProyectoFase con el tipoFase actualizado
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -465,7 +465,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithIdNotExist_ThrowsProyectoFaseNotFoundException() {
+  void update_WithIdNotExist_ThrowsProyectoFaseNotFoundException() {
     // given: Un ProyectoFase a actualizar con un id que no existe
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
 
@@ -477,7 +477,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
+  void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without ProyectoId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -492,7 +492,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
+  void update_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without TipoFaseId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -507,7 +507,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutFecha_ThrowsIllegalArgumentException() {
+  void update_WithoutFecha_ThrowsIllegalArgumentException() {
     // given: a ProyectoFase without Fecha
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -523,7 +523,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
+  void update_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
     // given: Fecha Inicio > fechaFin
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -541,7 +541,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
+  void update_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
     // given: a ProyectoFase with non existing Proyecto
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -558,7 +558,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+  void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con Proyecto sin Modelo de Ejecucion
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -580,7 +580,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con TipoFase no asignado al Modelo de Ejecucion de la
     // proyecto
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
@@ -601,7 +601,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la proyecto inactiva
     Long proyectoId = 1L;
@@ -629,7 +629,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase TipoFase disabled
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -656,7 +656,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
+  void update_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
@@ -694,7 +694,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithExistingId_NoReturnsAnyException() {
+  void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ProyectoFase
     Long id = 1L;
 
@@ -709,7 +709,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Long id = 1L;
 
@@ -723,7 +723,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsProyectoFase() {
+  void findById_ReturnsProyectoFase() {
     // given: Un ProyectoFase con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockProyectoFase(idBuscado)));
@@ -737,7 +737,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsProyectoFaseNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoFaseNotFoundException() throws Exception {
     // given: Ningun ProyectoFase con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -748,7 +748,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByProyecto_ReturnsPage() {
+  void findAllByProyecto_ReturnsPage() {
     // given: Una lista con 37 ProyectoFase para la Proyecto
     Long proyectoId = 1L;
     List<ProyectoFase> proyectosEntidadesConvocantes = new ArrayList<>();
@@ -777,7 +777,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     Page<ProyectoFase> page = service.findAllByProyecto(proyectoId, null, paging);
 
     // then: Devuelve la pagina 3 con los ProyectoFase del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);

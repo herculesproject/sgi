@@ -34,7 +34,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * SeguimientoEjecucionEconomicaControllerTest
  */
 @WebMvcTest(SeguimientoEjecucionEconomicaController.class)
-public class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
+class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoService proyectoService;
@@ -47,7 +47,7 @@ public class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerT
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
-  public void findProyectosSeguimientoEjecucionEconomica_ReturnsPage() throws Exception {
+  void findProyectosSeguimientoEjecucionEconomica_ReturnsPage() throws Exception {
     // given: Una lista con 37 ProyectoSeguimientoEjecucionEconomica
     String proyectoSgeRef = "1";
     List<ProyectoSeguimientoEjecucionEconomica> proyectos = new ArrayList<>();
@@ -99,7 +99,7 @@ public class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerT
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
-  public void findProyectosSeguimientoEjecucionEconomica_EmptyList_Returns204() throws Exception {
+  void findProyectosSeguimientoEjecucionEconomica_EmptyList_Returns204() throws Exception {
     // given: no data ProyectoSeguimientoEjecucionEconomica
     String proyectoSgeRef = "1";
     BDDMockito
@@ -125,7 +125,7 @@ public class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerT
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
-  public void findProyectoPeriodosJustificacion_ReturnsPage() throws Exception {
+  void findProyectoPeriodosJustificacion_ReturnsPage() throws Exception {
     // given: Una lista con 37 ProyectoPeriodoJustificacion
     String proyectoSgeRef = "1";
     List<ProyectoPeriodoJustificacion> periodosJustificacion = new ArrayList<>();
@@ -177,7 +177,7 @@ public class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerT
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
-  public void findProyectoPeriodosJustificacion_EmptyList_Returns204() throws Exception {
+  void findProyectoPeriodosJustificacion_EmptyList_Returns204() throws Exception {
     // given: no data ProyectoSeguimientoEjecucionEconomica
     String proyectoSgeRef = "1";
     BDDMockito

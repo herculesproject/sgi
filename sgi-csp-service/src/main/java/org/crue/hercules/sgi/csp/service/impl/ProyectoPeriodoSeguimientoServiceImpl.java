@@ -126,7 +126,6 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
    * 
    * @param proyectoId identificador del {@link Proyecto}
    */
-  @Transactional
   private void recalcularNumPeriodos(Long proyectoId) {
     List<ProyectoPeriodoSeguimiento> listadoProyectoPeriodoSeguimientoBD = repository
         .findByProyectoIdOrderByFechaInicio(proyectoId);

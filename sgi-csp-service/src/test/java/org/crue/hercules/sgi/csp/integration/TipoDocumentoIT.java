@@ -56,7 +56,7 @@ public class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumentoCreado.getNombre()).as("getNombre()").isEqualTo(tipoDocumento.getNombre());
     Assertions.assertThat(tipoDocumentoCreado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(tipoDocumento.getDescripcion());
-    Assertions.assertThat(tipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoDocumentoCreado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -77,7 +77,7 @@ public class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumentoActualizado.getNombre()).as("getNombre()").isEqualTo(tipoDocumento.getNombre());
     Assertions.assertThat(tipoDocumentoActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(tipoDocumento.getDescripcion());
-    Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -131,7 +131,7 @@ public class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumento.getId()).as("getId()").isEqualTo(idTipoDocumento);
     Assertions.assertThat(tipoDocumento.getNombre()).as("getNombre()").isEqualTo("nombre-1");
     Assertions.assertThat(tipoDocumento.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
-    Assertions.assertThat(tipoDocumento.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoDocumento.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -153,7 +153,7 @@ public class TipoDocumentoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoDocumento> tiposDocumento = response.getBody();
-    Assertions.assertThat(tiposDocumento.size()).isEqualTo(3);
+    Assertions.assertThat(tiposDocumento).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -186,7 +186,7 @@ public class TipoDocumentoIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoDocumento> tiposDocumento = response.getBody();
-    Assertions.assertThat(tiposDocumento.size()).isEqualTo(3);
+    Assertions.assertThat(tiposDocumento).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");

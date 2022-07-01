@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -27,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -223,16 +225,16 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     Assert.notNull(id,
         "ConvocatoriaEntidadFinanciadora id no puede ser null para desactivar un ConvocatoriaEntidadFinanciadora");
 
-    repository.findById(id).map(convocatoriaEntidadFinanciadora -> {
-
+    Optional<ConvocatoriaEntidadFinanciadora> entidadFinanciadora = repository.findById(id);
+    if (entidadFinanciadora.isPresent()) {
       // comprobar si convocatoria es modificable
       Assert.isTrue(
-          convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
+          convocatoriaService.isRegistradaConSolicitudesOProyectos(entidadFinanciadora.get().getConvocatoriaId(),
               null, new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
-      return convocatoriaEntidadFinanciadora;
-    }).orElseThrow(() -> new ConvocatoriaEntidadFinanciadoraNotFoundException(id));
+    } else {
+      throw new ConvocatoriaEntidadFinanciadoraNotFoundException(id);
+    }
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

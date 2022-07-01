@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ProyectoHitoControllerTest
  */
 @WebMvcTest(ProyectoHitoController.class)
-public class ProyectoHitoControllerTest extends BaseControllerTest {
+class ProyectoHitoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoHitoService service;
@@ -70,7 +70,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void create_WithId_Returns400() throws Exception {
+  void create_WithId_Returns400() throws Exception {
     // given: a ProyectoHito with id filled
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
 
@@ -155,7 +155,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
@@ -173,7 +173,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "AUTH" })
-  public void findById_WithExistingId_ReturnsProyectoHito() throws Exception {
+  void findById_WithExistingId_ReturnsProyectoHito() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {

@@ -19,8 +19,9 @@ class ProyectoPeriodoAmortizacionServiceTest extends BaseServiceTest {
   private ProyectoPeriodoAmortizacionService proyectoPeriodoAmortizacionService;
 
   @BeforeEach
-  public void setup(){
-    this.proyectoPeriodoAmortizacionService = new ProyectoPeriodoAmortizacionService(this.validator, this.proyectoPeriodoAmortizacionRepository);
+  void setup() {
+    this.proyectoPeriodoAmortizacionService = new ProyectoPeriodoAmortizacionService(this.validator,
+        this.proyectoPeriodoAmortizacionRepository);
   }
 
   @Test
@@ -28,29 +29,33 @@ class ProyectoPeriodoAmortizacionServiceTest extends BaseServiceTest {
 
     ProyectoPeriodoAmortizacion proyectoPeriodoAmortizacion = buildMockProyectoPeriodoAmortizacion(1L);
 
-    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.create(proyectoPeriodoAmortizacion)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.create(proyectoPeriodoAmortizacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void update_WithProyectoPeriodoAmortizacionIdNull_ThrowsIllegalArgumentException() {
     ProyectoPeriodoAmortizacion proyectoPeriodoAmortizacion = buildMockProyectoPeriodoAmortizacion(null);
 
-    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.update(proyectoPeriodoAmortizacion)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.update(proyectoPeriodoAmortizacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void delete_WithProyectoPeriodoAmortizacionIdNull_ThrowsIllegalArgumentException() {
-    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.delete(null)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.delete(null))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void findById_WithProyectoPeriodoAmortizacionIdNull_ThrowsIllegalArgumentException() {
-    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.findById(null)).isInstanceOf(IllegalArgumentException.class);
+    Assertions.assertThatThrownBy(() -> this.proyectoPeriodoAmortizacionService.findById(null))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   private ProyectoPeriodoAmortizacion buildMockProyectoPeriodoAmortizacion(Long id) {
     return ProyectoPeriodoAmortizacion.builder()
-    .id(id)
-    .build();
+        .id(id)
+        .build();
   }
 }

@@ -61,7 +61,7 @@ public class ProgramaIT extends BaseIT {
     Assertions.assertThat(programaCreado.getDescripcion()).as("getDescripcion()").isEqualTo(programa.getDescripcion());
     Assertions.assertThat(programaCreado.getPadre().getId()).as("getPadre().getId()")
         .isEqualTo(programa.getPadre().getId());
-    Assertions.assertThat(programaCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programaCreado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -81,7 +81,7 @@ public class ProgramaIT extends BaseIT {
     Assertions.assertThat(programaActualizado.getNombre()).as("getNombre()").isEqualTo(programa.getNombre());
     Assertions.assertThat(programaActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(programa.getDescripcion());
-    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -100,7 +100,7 @@ public class ProgramaIT extends BaseIT {
     Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
     Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(programa.getDescripcion()).as("descripcion-001").isEqualTo(programa.getDescripcion());
-    Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(programa.getActivo()).as("getActivo()").isFalse();
   }
 
   @Sql
@@ -118,8 +118,8 @@ public class ProgramaIT extends BaseIT {
     Programa programa = response.getBody();
     Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
     Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(programa.getDescripcion()).as("descripcion-001");
-    Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programa.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(programa.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -136,7 +136,7 @@ public class ProgramaIT extends BaseIT {
     Assertions.assertThat(programa.getId()).as("getId()").isEqualTo(idPrograma);
     Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(programa.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
-    Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programa.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -159,7 +159,7 @@ public class ProgramaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Programa> programas = response.getBody();
-    Assertions.assertThat(programas.size()).isEqualTo(3);
+    Assertions.assertThat(programas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -193,7 +193,7 @@ public class ProgramaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Programa> programas = response.getBody();
-    Assertions.assertThat(programas.size()).isEqualTo(3);
+    Assertions.assertThat(programas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -227,7 +227,7 @@ public class ProgramaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Programa> programas = response.getBody();
-    Assertions.assertThat(programas.size()).isEqualTo(3);
+    Assertions.assertThat(programas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -263,7 +263,7 @@ public class ProgramaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Programa> programas = response.getBody();
-    Assertions.assertThat(programas.size()).isEqualTo(3);
+    Assertions.assertThat(programas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

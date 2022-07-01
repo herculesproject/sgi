@@ -85,7 +85,7 @@ public class SolicitudProyectoSocioEquipoIT extends BaseIT {
     // existente y se eliminan los otros
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     List<SolicitudProyectoSocioEquipo> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(2);
+    Assertions.assertThat(responseData).hasSize(2);
 
   }
 

@@ -221,15 +221,15 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
     Assert.notNull(id, "ConvocatoriaFase id no puede ser null para eliminar un ConvocatoriaFase");
 
-    repository.findById(id).map(convocatoriaFase -> {
-
+    Optional<ConvocatoriaFase> fase = repository.findById(id);
+    if (fase.isPresent()) {
       // Si la fase es la asignada a la ConfiguracionSolicitud comprobar si
       // convocatoria es modificable
-      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoriaId(), convocatoriaFase.getId()),
+      Assert.isTrue(isModificable(fase.get().getConvocatoriaId(), fase.get().getId()),
           "No se puede eliminar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
-
-      return convocatoriaFase;
-    }).orElseThrow(() -> new ConvocatoriaFaseNotFoundException(id));
+    } else {
+      throw new ConvocatoriaFaseNotFoundException(id);
+    }
 
     Page<ConfiguracionSolicitud> configuracionesSolicitud = configuracionSolicitudRepository
         .findByFasePresentacionSolicitudesId(id, null);

@@ -155,7 +155,7 @@ public class RequisitoEquipoIT extends BaseIT {
 
     List<RequisitoEquipoNivelAcademicoOutput> body = response.getBody();
     Assertions.assertThat(body).isNotNull();
-    Assertions.assertThat(body.size()).isEqualTo(3);
+    Assertions.assertThat(body).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -189,7 +189,7 @@ public class RequisitoEquipoIT extends BaseIT {
 
     List<RequisitoEquipoNivelAcademicoOutput> body = response.getBody();
     Assertions.assertThat(body).isNotNull();
-    Assertions.assertThat(body.size()).isEqualTo(10);
+    Assertions.assertThat(body).hasSize(10);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -218,7 +218,7 @@ public class RequisitoEquipoIT extends BaseIT {
 
     List<RequisitoEquipoCategoriaProfesionalOutput> body = response.getBody();
     Assertions.assertThat(body).isNotNull();
-    Assertions.assertThat(body.size()).isEqualTo(3);
+    Assertions.assertThat(body).hasSize(3);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -253,7 +253,7 @@ public class RequisitoEquipoIT extends BaseIT {
 
     List<RequisitoEquipoCategoriaProfesionalOutput> body = response.getBody();
     Assertions.assertThat(body).isNotNull();
-    Assertions.assertThat(body.size()).isEqualTo(10);
+    Assertions.assertThat(body).hasSize(10);
   }
 
   /**

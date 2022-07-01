@@ -102,11 +102,9 @@ public class ProyectoPeriodoJustificacionService {
       });
 
       // actualizando
-      if (periodoJustificacion.getId() != null) {
-        proyectoPeriodoJustificacionsBD.stream()
-            .filter(periodo -> Objects.equals(periodo.getId(), periodoJustificacion.getId()))
-            .findFirst()
-            .orElseThrow(() -> new ProyectoPeriodoJustificacionNotFoundException(periodoJustificacion.getId()));
+      if (periodoJustificacion.getId() != null && proyectoPeriodoJustificacionsBD.stream()
+          .noneMatch(periodo -> Objects.equals(periodo.getId(), periodoJustificacion.getId()))) {
+        throw new ProyectoPeriodoJustificacionNotFoundException(periodoJustificacion.getId());
       }
 
       // Solo puede haber un tipo de justificacion 'final' y ha de ser el último"

@@ -101,7 +101,7 @@ public class ConvocatoriaConceptoGastoCodigoEcIT extends BaseIT {
 
     List<ConvocatoriaConceptoGastoCodigoEc> updated = response.getBody();
     Assertions.assertThat(updated).isNotNull();
-    Assertions.assertThat(updated.size()).isEqualTo(1);
+    Assertions.assertThat(updated).hasSize(1);
     Assertions.assertThat(updated.get(0)).isNotNull();
     Assertions.assertThat(updated.get(0).getId()).isEqualTo(1L);
     Assertions.assertThat(updated.get(0).getConvocatoriaConceptoGastoId()).isEqualTo(convocatoriaConceptoGastoId);

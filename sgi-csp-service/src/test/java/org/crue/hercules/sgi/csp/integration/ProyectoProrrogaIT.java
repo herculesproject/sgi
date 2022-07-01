@@ -239,7 +239,7 @@ public class ProyectoProrrogaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProrrogaDocumento> convocatoriasDocumentos = response.getBody();
-    Assertions.assertThat(convocatoriasDocumentos.size()).isEqualTo(3);
+    Assertions.assertThat(convocatoriasDocumentos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

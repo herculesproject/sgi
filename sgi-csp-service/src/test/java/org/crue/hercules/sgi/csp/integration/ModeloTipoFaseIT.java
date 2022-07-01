@@ -114,7 +114,7 @@ public class ModeloTipoFaseIT extends BaseIT {
     ModeloTipoFase updatedModeloTipoFase = response.getBody();
     // then: Los datos se actualizan correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(updatedModeloTipoFase.getConvocatoria()).as("getConvocatoria()").isEqualTo(false);
+    Assertions.assertThat(updatedModeloTipoFase.getConvocatoria()).as("getConvocatoria()").isFalse();
   }
 
   /*

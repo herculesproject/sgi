@@ -55,7 +55,7 @@ public class TipoFaseIT extends BaseIT {
     Assertions.assertThat(tipoFase.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(tipoFase.getNombre()).as("getNombre()").isEqualTo("TipoFase1");
     Assertions.assertThat(tipoFase.getDescripcion()).as("getDescripcion()").isEqualTo("Descripcion1");
-    Assertions.assertThat(tipoFase.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoFase.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -73,7 +73,7 @@ public class TipoFaseIT extends BaseIT {
     Assertions.assertThat(tipoFaseCreado.getId()).as("getId()").isNotNull();
     Assertions.assertThat(tipoFaseCreado.getNombre()).as("getNombre()").isEqualTo(tipoFase.getNombre());
     Assertions.assertThat(tipoFaseCreado.getDescripcion()).as("getDescripcion()").isEqualTo(tipoFase.getDescripcion());
-    Assertions.assertThat(tipoFaseCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoFaseCreado.getActivo()).as("getActivo()").isTrue();
 
   }
 
@@ -130,7 +130,7 @@ public class TipoFaseIT extends BaseIT {
     Assertions.assertThat(tipoFaseActualizado.getNombre()).as("getNombre()").isEqualTo(tipoFase.getNombre());
     Assertions.assertThat(tipoFaseActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(tipoFase.getDescripcion());
-    Assertions.assertThat(tipoFaseActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoFaseActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -153,7 +153,7 @@ public class TipoFaseIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoFase> tiposFase = response.getBody();
-    Assertions.assertThat(tiposFase.size()).isEqualTo(3);
+    Assertions.assertThat(tiposFase).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -187,7 +187,7 @@ public class TipoFaseIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoFase> tiposFase = response.getBody();
-    Assertions.assertThat(tiposFase.size()).isEqualTo(3);
+    Assertions.assertThat(tiposFase).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");

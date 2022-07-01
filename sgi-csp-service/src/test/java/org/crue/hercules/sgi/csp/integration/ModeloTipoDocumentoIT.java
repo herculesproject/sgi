@@ -66,7 +66,7 @@ public class ModeloTipoDocumentoIT extends BaseIT {
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase()).as("getModeloTipoFase()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
         .isEqualTo(modeloTipoDocumento.getModeloTipoFase().getId());
-    Assertions.assertThat(modeloTipoDocumentoResponse.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloTipoDocumentoResponse.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -107,7 +107,7 @@ public class ModeloTipoDocumentoIT extends BaseIT {
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase()).as("getModeloTipoFase()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
         .isEqualTo(1L);
-    Assertions.assertThat(modeloTipoDocumentoResponse.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloTipoDocumentoResponse.getActivo()).as("getActivo()").isTrue();
   }
 
   /**

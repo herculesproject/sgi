@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConvocatoriaFaseControllerTest
  */
 @WebMvcTest(ConvocatoriaFaseController.class)
-public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
+class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaFaseService service;
@@ -39,7 +39,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
-  public void create_ReturnsModeloConvocatoriaFase() throws Exception {
+  void create_ReturnsModeloConvocatoriaFase() throws Exception {
     // given: new ConvocatoriaFase
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
@@ -68,7 +68,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
-  public void create_WithId_Returns400() throws Exception {
+  void create_WithId_Returns400() throws Exception {
     // given: a ConvocatoriaFase with id filled
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
 
@@ -87,7 +87,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void update_ReturnsConvocatoriaFase() throws Exception {
+  void update_ReturnsConvocatoriaFase() throws Exception {
     // given: Existing ConvocatoriaFase to be updated
     ConvocatoriaFase convocatoriaFaseExistente = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -115,7 +115,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void update_WithNoExistingId_Returns404() throws Exception {
+  void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -135,7 +135,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.doNothing().when(service).delete(ArgumentMatchers.anyLong());
@@ -153,7 +153,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
@@ -171,7 +171,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "AUTH" })
-  public void findById_WithExistingId_ReturnsConvocatoriaFase() throws Exception {
+  void findById_WithExistingId_ReturnsConvocatoriaFase() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
       return generarMockConvocatoriaFase(invocation.getArgument(0));
@@ -194,7 +194,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "AUTH" })
-  public void findById_WithNoExistingId_Returns404() throws Exception {
+  void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ConvocatoriaFaseNotFoundException(1L);

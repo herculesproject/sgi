@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
@@ -143,10 +144,8 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
       repository
           .findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
               convocatoriaEntidadConvocanteActualizar.getEntidadRef())
-          .ifPresent(convocatoriaR -> {
-            Assert.isTrue(convocatoriaEntidadConvocante.getId().equals(convocatoriaR.getId()),
-                "Ya existe una asociación activa para esa Convocatoria y Entidad");
-          });
+          .ifPresent(convocatoriaR -> Assert.isTrue(convocatoriaEntidadConvocante.getId().equals(convocatoriaR.getId()),
+              "Ya existe una asociación activa para esa Convocatoria y Entidad"));
 
       if (convocatoriaEntidadConvocanteActualizar.getPrograma() != null) {
         if (convocatoriaEntidadConvocanteActualizar.getPrograma().getId() == null) {
@@ -182,16 +181,16 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     Assert.notNull(id,
         "ConvocatoriaEntidadConvocante id no puede ser null para desactivar un ConvocatoriaEntidadConvocante");
 
-    repository.findById(id).map(convocatoriaEntidadConvocante -> {
-
+    Optional<ConvocatoriaEntidadConvocante> entidadConvocante = repository.findById(id);
+    if (entidadConvocante.isPresent()) {
       // comprobar si convocatoria es modificable
       Assert.isTrue(
-          convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadConvocante.getConvocatoriaId(),
+          convocatoriaService.isRegistradaConSolicitudesOProyectos(entidadConvocante.get().getConvocatoriaId(),
               null, new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
-      return convocatoriaEntidadConvocante;
-    }).orElseThrow(() -> new ConvocatoriaEntidadConvocanteNotFoundException(id));
+    } else {
+      throw new ConvocatoriaEntidadConvocanteNotFoundException(id);
+    }
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

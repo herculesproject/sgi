@@ -79,7 +79,7 @@ public class TipoFinanciacionIT extends BaseIT {
     Assertions.assertThat(tipoFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(tipoFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(tipoFinanciacion.getDescripcion());
-    Assertions.assertThat(tipoFinanciacion.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(tipoFinanciacion.getActivo()).as("getActivo()").isFalse();
   }
 
   @Sql
@@ -97,8 +97,8 @@ public class TipoFinanciacionIT extends BaseIT {
     TipoFinanciacion tipoFinanciacion = response.getBody();
     Assertions.assertThat(tipoFinanciacion.getId()).as("getId()").isNotNull();
     Assertions.assertThat(tipoFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(tipoFinanciacion.getDescripcion()).as("descripcion-001");
-    Assertions.assertThat(tipoFinanciacion.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(tipoFinanciacion.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(tipoFinanciacion.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -156,7 +156,7 @@ public class TipoFinanciacionIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoFinanciacion> tiposFinanciacion = response.getBody();
-    Assertions.assertThat(tiposFinanciacion.size()).isEqualTo(3);
+    Assertions.assertThat(tiposFinanciacion).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
@@ -190,7 +190,7 @@ public class TipoFinanciacionIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoFinanciacion> tiposFinanciacion = response.getBody();
-    Assertions.assertThat(tiposFinanciacion.size()).isEqualTo(3);
+    Assertions.assertThat(tiposFinanciacion).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");

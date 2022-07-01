@@ -97,7 +97,7 @@ public class SolicitudProyectoEquipoIT extends BaseIT {
 
     List<SolicitudProyectoEquipo> responseData = response.getBody();
 
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    Assertions.assertThat(responseData).hasSize(3);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();

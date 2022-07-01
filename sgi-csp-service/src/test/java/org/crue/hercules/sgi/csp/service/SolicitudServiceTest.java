@@ -141,7 +141,7 @@ class SolicitudServiceTest extends BaseServiceTest {
   private SolicitudService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     solicitudAuthorityHelper = new SolicitudAuthorityHelper(repository);
     service = new SolicitudService(sgiConfigProperties,
         sgiApiEtiService, repository,
@@ -261,7 +261,7 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
-  public void create_WithoutCreadorRef_ThrowsIllegalArgumentException() {
+  void create_WithoutCreadorRef_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
     solicitud.setCreadorRef(null);
@@ -287,7 +287,7 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
-  public void create_WithNoExistingConvocatoria_ThrowsProgramaNotFoundException() {
+  void create_WithNoExistingConvocatoria_ThrowsProgramaNotFoundException() {
     // given: Un nuevo Solicitud que tiene una convocatoria que no existe
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
 
@@ -470,7 +470,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // then: El Solicitud se activa correctamente.
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(solicitud.getId());
-    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Test
@@ -501,7 +501,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // then: El Solicitud se desactivan correctamente
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo()").isFalse();
   }
 
   @Test
@@ -563,9 +563,9 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitud.getCreadorRef()).as("getCreadorRef()").isEqualTo("usr-001");
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
     Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
-    Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isEqualTo(null);
+    Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isNull();
     Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("1");
-    Assertions.assertThat(solicitud.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(solicitud.getActivo()).as("getActivo()").isTrue();
   }
 
   @Test
@@ -611,7 +611,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     Page<Solicitud> page = service.findAllRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
@@ -652,7 +652,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     Page<Solicitud> page = service.findAllTodosRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
@@ -693,7 +693,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     Page<Solicitud> page = service.findAllTodosRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);

@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +43,7 @@ import org.springframework.security.test.context.support.WithMockUser;
  * ConvocatoriaFaseServiceTest
  */
 
-public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
+class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaFaseRepository repository;
@@ -60,13 +59,13 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   private ConvocatoriaFaseService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
         modeloTipoFaseRepository, convocatoriaService);
   }
 
   @Test
-  public void create_ReturnsConvocatoriaFase() {
+  void create_ReturnsConvocatoriaFase() {
     // given: Un nuevo ConvocatoriaFase
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
@@ -108,7 +107,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
+  void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaFase que ya tiene id
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
 
@@ -119,7 +118,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
+  void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase without ConvocatoriaId
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.setConvocatoriaId(null);
@@ -133,7 +132,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
+  void create_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
     // given: a ConvocatoriaFase with non existing Convocatoria
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
@@ -147,7 +146,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
+  void create_WithoutTipoFaseId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase without tipoFaseId
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.getTipoFase().setId(null);
@@ -161,7 +160,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+  void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
@@ -180,7 +179,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con TipoFase no asignado al Modelo de Ejecucion de la
     // convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -200,7 +199,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la convocatoria inactiva
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -222,7 +221,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
+  void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase TipoFase disabled
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
@@ -243,7 +242,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
+  void create_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase with fechas solapadas con una convocatoria
     // existente
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -272,7 +271,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_ReturnsConvocatoriaFase() {
+  void update_ReturnsConvocatoriaFase() {
     // given: Un nuevo ConvocatoriaFase con el nombre actualizado
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -310,7 +309,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithIdNotExist_ThrowsConvocatoriaFaseNotFoundException() {
+  void update_WithIdNotExist_ThrowsConvocatoriaFaseNotFoundException() {
     // given: Un ConvocatoriaFase a actualizar con un id que no existe
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
 
@@ -323,7 +322,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+  void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -345,7 +344,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con TipoFase no asignado al Modelo de Ejecucion de la
     // convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -368,7 +367,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la convocatoria inactiva
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -392,7 +391,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
+  void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase TipoFase disabled
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -414,7 +413,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
+  void update_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase with fechas solapadas con una convocatoria
     // existente
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -444,7 +443,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+  void update_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase selected in ConfiguracionSolicitud when
     // modificable return false
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -466,7 +465,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithExistingId_NoReturnsAnyException() {
+  void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ConvocatoriaFase
     Long id = 1L;
 
@@ -486,7 +485,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Long id = 1L;
 
@@ -500,7 +499,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+  void delete_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: existing ConvocatoriaFase when modificable returns false
     Long id = 1L;
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(id);
@@ -524,7 +523,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
-  public void findAllByConvocatoria_ReturnsPage() {
+  void findAllByConvocatoria_ReturnsPage() {
     // given: Una lista con 37 ConvocatoriaFase para la Convocatoria
     Long convocatoriaId = 1L;
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
@@ -556,7 +555,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     Page<ConvocatoriaFase> page = service.findAllByConvocatoria(convocatoriaId, null, paging);
 
     // then: Devuelve la pagina 3 con los ConvocatoriaFase del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
     Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
     Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
@@ -567,7 +566,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_ReturnsConvocatoriaFase() {
+  void findById_ReturnsConvocatoriaFase() {
     // given: Un ConvocatoriaFase con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockConvocatoriaFase(idBuscado)));
@@ -581,7 +580,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findById_WithIdNotExist_ThrowsConvocatoriaFaseNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsConvocatoriaFaseNotFoundException() throws Exception {
     // given: Ningun ConvocatoriaFase con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());

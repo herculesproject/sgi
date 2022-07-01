@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ProyectoFaseControllerTest
  */
 @WebMvcTest(ProyectoFaseController.class)
-public class ProyectoFaseControllerTest extends BaseControllerTest {
+class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoFaseService service;
@@ -39,7 +39,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void create_ReturnsProyectoFase() throws Exception {
+  void create_ReturnsProyectoFase() throws Exception {
     // given: new ProyectoFase
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(1L);
@@ -70,7 +70,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void create_WithId_Returns400() throws Exception {
+  void create_WithId_Returns400() throws Exception {
     // given: a ProyectoFase with id filled
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
 
@@ -88,7 +88,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void update_ReturnsProyectoFase() throws Exception {
+  void update_ReturnsProyectoFase() throws Exception {
     // given: Existing ProyectoFase to be updated
     ProyectoFase proyectoFaseExistente = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -115,7 +115,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void update_WithNoExistingId_Returns404() throws Exception {
+  void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -135,7 +135,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.doNothing().when(service).delete(ArgumentMatchers.anyLong());
@@ -153,7 +153,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
@@ -171,7 +171,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "AUTH" })
-  public void findById_WithExistingId_ReturnsProyectoFase() throws Exception {
+  void findById_WithExistingId_ReturnsProyectoFase() throws Exception {
     // given: existing id
     Long id = 1L;
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -197,7 +197,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "AUTH" })
-  public void findById_WithNoExistingId_Returns404() throws Exception {
+  void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ProyectoFaseNotFoundException(1L);

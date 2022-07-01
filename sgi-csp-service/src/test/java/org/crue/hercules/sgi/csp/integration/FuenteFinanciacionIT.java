@@ -71,7 +71,7 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacionCreado.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()")
         .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacionId());
-    Assertions.assertThat(fuenteFinanciacionCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacionCreado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -120,12 +120,12 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
-    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
     Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
         .isEqualTo(1L);
     Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
-    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isFalse();
   }
 
   @Sql
@@ -145,12 +145,12 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
-    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
     Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
         .isEqualTo(1L);
     Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
-    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -170,12 +170,12 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
-    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
     Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
         .isEqualTo(1L);
     Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
-    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -197,7 +197,7 @@ public class FuenteFinanciacionIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
-    Assertions.assertThat(fuenteFinanciaciones.size()).isEqualTo(3);
+    Assertions.assertThat(fuenteFinanciaciones).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -231,7 +231,7 @@ public class FuenteFinanciacionIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
-    Assertions.assertThat(fuenteFinanciaciones.size()).isEqualTo(3);
+    Assertions.assertThat(fuenteFinanciaciones).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

@@ -59,7 +59,7 @@ public class TipoOrigenFuenteFinanciacionIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoOrigenFuenteFinanciacion> tipoAmbitoGeograficos = response.getBody();
-    Assertions.assertThat(tipoAmbitoGeograficos.size()).isEqualTo(3);
+    Assertions.assertThat(tipoAmbitoGeograficos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

@@ -18,7 +18,7 @@ import org.mockito.invocation.InvocationOnMock;
 /**
  * RequisitoIPServiceTest
  */
-public class RequisitoIPServiceTest extends BaseServiceTest {
+class RequisitoIPServiceTest extends BaseServiceTest {
 
   @Mock
   private RequisitoIPRepository repository;
@@ -28,12 +28,12 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   private RequisitoIPService service;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     service = new RequisitoIPService(repository, convocatoriaRepository);
   }
 
   @Test
-  public void create_ReturnsRequisitoIP() {
+  void create_ReturnsRequisitoIP() {
     // given: Un nuevo RequisitoIP
     Long convocatoriaId = 1L;
     RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
@@ -56,7 +56,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutId_ThrowsIllegalArgumentException() {
+  void create_WithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoIP sin convocatoria
     RequisitoIP requisitoIP = generarMockRequisitoIP(null);
 
@@ -67,7 +67,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
+  void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo RequisitoIP con convocatoria ya asignada
     Long convocatoriaId = 1L;
     RequisitoIP requisitoIPExistente = generarMockRequisitoIP(convocatoriaId);
@@ -82,7 +82,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_ReturnsRequisitoIP() {
+  void update_ReturnsRequisitoIP() {
     // given: Un nuevo RequisitoIP con el sexo actualizado
     Long convocatoriaId = 1L;
     RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
@@ -103,7 +103,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithIdNotExist_ThrowsRequisitoIPNotFoundException() {
+  void update_WithIdNotExist_ThrowsRequisitoIPNotFoundException() {
     // given: Un RequisitoIP actualizado con un id que no existe
     Long convocatoriaId = 1L;
     RequisitoIP requisitoIP = generarMockRequisitoIP(convocatoriaId);
@@ -117,7 +117,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findByConvocatoriaId_ReturnsRequisitoIP() {
+  void findByConvocatoriaId_ReturnsRequisitoIP() {
     // given: Un RequisitoIP con el id buscado
     Long idBuscado = 1L;
 
@@ -136,7 +136,7 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findByConvocatoriaId_WithIdNotExist_ThrowsConvocatoriaNotFoundExceptionException() throws Exception {
+  void findByConvocatoriaId_WithIdNotExist_ThrowsConvocatoriaNotFoundExceptionException() throws Exception {
     // given: Ninguna Convocatoria con el id buscado
     Long idBuscado = 1L;
 

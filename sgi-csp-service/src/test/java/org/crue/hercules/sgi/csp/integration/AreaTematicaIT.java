@@ -59,7 +59,7 @@ public class AreaTematicaIT extends BaseIT {
         .isEqualTo(areaTematica.getDescripcion());
     Assertions.assertThat(areaTematicaCreado.getPadre().getId()).as("getPadre().getId()")
         .isEqualTo(areaTematica.getPadre().getId());
-    Assertions.assertThat(areaTematicaCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(areaTematicaCreado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -79,7 +79,7 @@ public class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(areaTematicaActualizado.getNombre()).as("getNombre()").isEqualTo(areaTematica.getNombre());
     Assertions.assertThat(areaTematicaActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(areaTematica.getDescripcion());
-    Assertions.assertThat(areaTematicaActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(areaTematicaActualizado.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -134,7 +134,7 @@ public class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(areaTematica.getId()).as("getId()").isEqualTo(idAreaTematica);
     Assertions.assertThat(areaTematica.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(areaTematica.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
-    Assertions.assertThat(areaTematica.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(areaTematica.getActivo()).as("getActivo()").isTrue();
   }
 
   @Sql
@@ -156,7 +156,7 @@ public class AreaTematicaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<AreaTematica> areaTematicas = response.getBody();
-    Assertions.assertThat(areaTematicas.size()).isEqualTo(3);
+    Assertions.assertThat(areaTematicas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -190,7 +190,7 @@ public class AreaTematicaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<AreaTematica> areaTematicas = response.getBody();
-    Assertions.assertThat(areaTematicas.size()).isEqualTo(3);
+    Assertions.assertThat(areaTematicas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -224,7 +224,7 @@ public class AreaTematicaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<AreaTematica> areaTematicas = response.getBody();
-    Assertions.assertThat(areaTematicas.size()).isEqualTo(3);
+    Assertions.assertThat(areaTematicas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -259,7 +259,7 @@ public class AreaTematicaIT extends BaseIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<AreaTematica> areaTematicas = response.getBody();
-    Assertions.assertThat(areaTematicas.size()).isEqualTo(3);
+    Assertions.assertThat(areaTematicas).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
