@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -91,8 +92,20 @@ public class ProyectoPeriodoJustificacionService {
     int index = 0;
     for (ProyectoPeriodoJustificacion periodoJustificacion : proyectoPeriodoJustificaciones) {
 
-      // Actualiza el numero de periodo
+      Optional<ProyectoPeriodoJustificacion> periodoJustificacionBD = proyectoPeriodoJustificacionsBD.stream().filter(
+          proyectoPeriodoJustificacionBD -> proyectoPeriodoJustificacionBD.getId().equals(periodoJustificacion.getId()))
+          .findFirst();
+      // Actualiza el numero de periodo y el proyectoId con el pasado por parametro
       periodoJustificacion.setNumPeriodo(numPeriodo.incrementAndGet());
+      periodoJustificacion.setProyectoId(proyectoId);
+      // Estos datos solo se actualizan a traves del metodo
+      // updateIdentificadorJustificacion
+      if (periodoJustificacionBD.isPresent()) {
+        periodoJustificacion
+            .setIdentificadorJustificacion(periodoJustificacionBD.get().getIdentificadorJustificacion());
+        periodoJustificacion
+            .setFechaPresentacionJustificacion(periodoJustificacionBD.get().getFechaPresentacionJustificacion());
+      }
 
       // Obtiene los rangos no permitidos
       List<Instant[]> rangos = new ArrayList<>();
