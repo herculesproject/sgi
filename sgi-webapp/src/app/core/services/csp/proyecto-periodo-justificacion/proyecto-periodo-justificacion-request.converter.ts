@@ -23,8 +23,8 @@ class ProyectoPeriodoJustificacionRequestConverter
       tipoJustificacion: value.tipoJustificacion,
       observaciones: value.observaciones,
       convocatoriaPeriodoJustificacionId: value.convocatoriaPeriodoJustificacionId,
-      fechaPresentacionJustificacion: LuxonUtils.fromBackend(value.fechaPresentacionJustificacion),
-      identificadorJustificacion: value.identificadorJustificacion
+      fechaPresentacionJustificacion: null,
+      identificadorJustificacion: null
     };
   }
 
@@ -43,8 +43,6 @@ class ProyectoPeriodoJustificacionRequestConverter
       tipoJustificacion: value.tipoJustificacion,
       observaciones: value.observaciones,
       convocatoriaPeriodoJustificacionId: value.convocatoriaPeriodoJustificacionId,
-      fechaPresentacionJustificacion: LuxonUtils.toBackend(value.fechaPresentacionJustificacion),
-      identificadorJustificacion: value.identificadorJustificacion
     };
   }
 }

@@ -11,6 +11,4 @@ export interface IProyectoPeriodoJustificacionRequest {
   tipoJustificacion: TipoJustificacion;
   observaciones: string;
   convocatoriaPeriodoJustificacionId: number;
-  fechaPresentacionJustificacion: string;
-  identificadorJustificacion: string;
 }
