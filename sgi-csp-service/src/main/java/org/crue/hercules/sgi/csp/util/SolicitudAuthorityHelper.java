@@ -126,9 +126,8 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
    * de la unidad de gestión de la solicitud o si es tiene el permiso de
    * investigador y es el creador de la solicitud.
    * 
-   * @param solicitud La solicitud
-   * @return <code>true</code> si tiene el permiso de edición; <code>false</code>
-   *         caso contrario.
+   * @param solicitud       La {@link Solicitud}
+   * @param estadoSolicitud El {@link EstadoSolicitud}
    */
   public void checkUserHasAuthorityModifyEstadoSolicitud(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {
 
