@@ -210,7 +210,7 @@ export class SolicitudRrhhRequisitosConvocatoriaComponent extends FragmentCompon
     dialogRef.afterClosed().subscribe((modalData: SolicitudRrhhAcreditarCategoriaProfesionalModalData) => {
       if (modalData) {
         wrapper.value.nivelAcreditado.documento = modalData.documento;
-        this.formPart.acreditarCategoriaProfesional(wrapper);
+        this.formPart.acreditarRequisito(wrapper);
       }
     });
   }
@@ -237,7 +237,7 @@ export class SolicitudRrhhRequisitosConvocatoriaComponent extends FragmentCompon
     dialogRef.afterClosed().subscribe((modalData: SolicitudRrhhAcreditarNivelAcademicoModalData) => {
       if (modalData) {
         wrapper.value.nivelAcreditado.documento = modalData.documento;
-        this.formPart.acreditarNivelAcademico(wrapper);
+        this.formPart.acreditarRequisito(wrapper);
       }
     });
   }

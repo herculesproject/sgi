@@ -115,6 +115,15 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
                 } as RequisitoIPCategoriaProfesionalListado;
                 return new StatusWrapper<RequisitoIPCategoriaProfesionalListado>(reqCategoriaProfesional);
               }),
+              switchMap(categoriaProfesionalListado =>
+                this.convocatoriaRequisitoIPService.isRequisitoCategoriaProfesionalEliminable(categoriaProfesionalListado.value)
+                  .pipe(
+                    map(value => {
+                      categoriaProfesionalListado.value.eliminable = value;
+                      return categoriaProfesionalListado;
+                    })
+                  )
+              )
             );
           });
 

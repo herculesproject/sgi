@@ -295,13 +295,9 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
     this.checkRequisitosAcreditatos();
   }
 
-  acreditarCategoriaProfesional(wrapper: StatusWrapper<RequisitoCategoriaProfesionalExigidoAndAcreditado>): void {
-    wrapper.setCreated();
-    this.setChanges(true);
-    this.checkRequisitosAcreditatos();
-  }
-
-  acreditarNivelAcademico(wrapper: StatusWrapper<RequisitoNivelAcademicoExigidoAndAcreditado>): void {
+  acreditarRequisito(
+    wrapper: StatusWrapper<RequisitoCategoriaProfesionalExigidoAndAcreditado | RequisitoNivelAcademicoExigidoAndAcreditado>
+  ): void {
     wrapper.setCreated();
     this.setChanges(true);
     this.checkRequisitosAcreditatos();
@@ -313,7 +309,7 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
   }
 
   private checkRequisitosAcreditatos(): void {
-    if (![Estado.BORRADOR].includes(this.estado.estado)) {
+    if (![Estado.BORRADOR, Estado.RECHAZADA].includes(this.estado.estado)) {
       return;
     }
 
@@ -337,12 +333,12 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
             return of([]);
           }
           const categoriasProfesionalesObservable = requisitoEquipoCategoria.
-            map(requisitoIpCategoriaProfesional => {
+            map(requisitoEquipoCategoriaProfesional => {
 
-              return this.categoriasProfesionalesService.findById(requisitoIpCategoriaProfesional.categoriaProfesional.id).pipe(
+              return this.categoriasProfesionalesService.findById(requisitoEquipoCategoriaProfesional.categoriaProfesional.id).pipe(
                 map(categoriaProfesional => {
-                  requisitoIpCategoriaProfesional.categoriaProfesional = categoriaProfesional;
-                  return requisitoIpCategoriaProfesional;
+                  requisitoEquipoCategoriaProfesional.categoriaProfesional = categoriaProfesional;
+                  return requisitoEquipoCategoriaProfesional;
                 }),
               );
             });

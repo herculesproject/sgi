@@ -39,6 +39,7 @@ export interface SolicitudCambioEstadoModalComponentData {
   solicitud: ISolicitud;
   solicitudProyecto: ISolicitudProyecto;
   isSolicitanteInSolicitudEquipo: boolean;
+  isTutor: boolean;
 }
 
 export const ESTADO_MAP_INVESTIGADOR: Map<Estado, Map<Estado, string>> = new Map();
@@ -65,6 +66,10 @@ ESTADO_MAP_INVESTIGADOR.set(Estado.DENEGADA, new Map([
   [Estado.RECURSO_FASE_CONCESION, ESTADO_MAP.get(Estado.RECURSO_FASE_CONCESION)],
   [Estado.DESISTIDA, ESTADO_MAP.get(Estado.DESISTIDA)]
 ]));
+
+export const ESTADO_MAP_TUTOR: Map<Estado, Map<Estado, string>> = new Map();
+ESTADO_MAP_TUTOR.set(Estado.SOLICITADA,
+  new Map([[Estado.RECHAZADA, ESTADO_MAP.get(Estado.RECHAZADA)], [Estado.VALIDADA, ESTADO_MAP.get(Estado.VALIDADA)]]));
 
 @Component({
   selector: 'sgi-cambio-estado-modal',
@@ -97,7 +102,9 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
   ) {
     super(matDialogRef, true);
 
-    if (this.data?.isInvestigador) {
+    if (this.data?.isTutor) {
+      this.estadosNuevos = ESTADO_MAP_TUTOR.get(this.data.estadoActual);
+    } else if (this.data?.isInvestigador) {
       this.estadosNuevos = ESTADO_MAP_INVESTIGADOR.get(this.data.estadoActual);
     } else {
       const estados = new Map<string, string>();

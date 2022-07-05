@@ -635,6 +635,13 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+  modificableEstadoAsTutor(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificableestadoastutor`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
   /**
    * Devuelve el código de registro interno de la solicitud
    *

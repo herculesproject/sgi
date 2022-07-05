@@ -93,6 +93,8 @@ export interface ISolicitudData {
   solicitudProyecto: ISolicitudProyecto;
   hasAnySolicitudProyectoSocioWithRolCoordinador: boolean;
   proyectosIds: number[];
+  modificableEstadoAsTutor: boolean;
+  isTutor: boolean;
 }
 
 @Injectable()
@@ -206,6 +208,14 @@ export class SolicitudActionService extends ActionService {
 
   get estadoAndDocumentosReadonly(): boolean {
     return this.data?.estadoAndDocumentosReadonly ?? false;
+  }
+
+  get modificableEstadoAsTutor(): boolean {
+    return this.data?.modificableEstadoAsTutor ?? false;
+  }
+
+  get isTutor(): boolean {
+    return this.data?.isTutor ?? false;
   }
 
   constructor(
