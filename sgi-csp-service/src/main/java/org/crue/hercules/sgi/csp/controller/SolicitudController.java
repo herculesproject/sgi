@@ -103,9 +103,17 @@ import lombok.extern.slf4j.Slf4j;
  * SolicitudController
  */
 @RestController
-@RequestMapping("/solicitudes")
+@RequestMapping(SolicitudController.REQUEST_MAPPING)
 @Slf4j
 public class SolicitudController {
+
+  public static final String PATH_DELIMITER = "/";
+  public static final String REQUEST_MAPPING = PATH_DELIMITER + "solicitudes";
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
+  public static final String PATH_MODIFICABLE_ESTADO_DOCUMENTOS_BY_INV = PATH_ID
+      + "/modificableestadoanddocumentosbyinvestigador";
+  public static final String PATH_MODIFICABLE_ESTADO_AS_TUTOR = PATH_ID + "/modificableestadoastutor";
 
   private ModelMapper modelMapper;
 
@@ -794,7 +802,7 @@ public class SolicitudController {
    * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
    *         modificación
    */
-  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
+  @RequestMapping(path = PATH_MODIFICABLE, method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   public ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
@@ -1127,8 +1135,8 @@ public class SolicitudController {
 
   /**
    * Devuelve la {@link Convocatoria} asociada a la {@link Solicitud} con el id
-   * indicado si el usuario que realiza la peticion es el solicitante de la
-   * {@link Solicitud}.
+   * indicado si el usuario que realiza la peticion es el solicitante o el tutor
+   * de la {@link Solicitud}.
    * 
    * @param id Identificador de {@link Solicitud}.
    * @return {@link Convocatoria} correspondiente a la {@link Solicitud}.
@@ -1138,7 +1146,7 @@ public class SolicitudController {
   public ResponseEntity<Convocatoria> findConvocatoriaBySolicitudId(@PathVariable Long id) {
     log.debug("findConvocatoriaBySolicitudId(Long id) - start");
 
-    Convocatoria returnValue = convocatoriaService.findBySolicitudIdAndUserIsSolicitante(id);
+    Convocatoria returnValue = convocatoriaService.findBySolicitudIdAndUserIsSolicitanteOrTutor(id);
 
     if (returnValue == null) {
       log.debug("findConvocatoriaBySolicitudId(Long id) - end");
@@ -1152,7 +1160,7 @@ public class SolicitudController {
   /**
    * Obtiene las {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}
    * para una {@link Solicitud} si el usuario que realiza la peticion es el
-   * solicitante de la {@link Solicitud}.
+   * solicitante o el tutor de la {@link Solicitud}.
    *
    * @param id     el id de la {@link Solicitud}.
    * @param paging la información de la paginación.
@@ -1165,7 +1173,7 @@ public class SolicitudController {
       @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaEntidadConvocantes(Long id, Pageable paging) - start");
     Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService
-        .findAllBySolicitudAndUserIsSolicitante(id, paging);
+        .findAllBySolicitudAndUserIsSolicitanteOrTutor(id, paging);
 
     if (page.isEmpty()) {
       log.debug("findAllConvocatoriaEntidadConvocantes(Long id, Pageable paging) - end");
@@ -1242,14 +1250,30 @@ public class SolicitudController {
    * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
    *         modificación
    */
-  @RequestMapping(path = "/{id}/modificableestadoanddocumentosbyinvestigador", method = RequestMethod.HEAD)
+  @RequestMapping(path = PATH_MODIFICABLE_ESTADO_DOCUMENTOS_BY_INV, method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   public ResponseEntity<Void> modificableEstadoAndDocumentosByInvestigador(@PathVariable Long id) {
     log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - start");
-    Boolean returnValue = service.modificableEstadoAndDocumentosByInvestigador(id);
+    boolean returnValue = service.modificableEstadoAndDocumentosByInvestigador(id);
     log.debug("modificableEstadoAndDocumentosByInvestigador(Long id) - end");
-    return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
-        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si el estado puede ser
+   * modificado por usuario actual como el tutor de la {@link Solicitud}.
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = PATH_MODIFICABLE_ESTADO_AS_TUTOR, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public ResponseEntity<Void> modificableEstadoAsTutor(@PathVariable Long id) {
+    log.debug("modificableEstadoAsTutor(Long id) - start");
+    boolean returnValue = service.modificableEstadoAsTutor(id);
+    log.debug("modificableEstadoAsTutor(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**

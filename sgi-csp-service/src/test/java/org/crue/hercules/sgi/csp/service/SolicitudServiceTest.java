@@ -747,6 +747,9 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
     BDDMockito.given(solicitudProyectoRepository.save(ArgumentMatchers.<SolicitudProyecto>any()))
         .willReturn(solicitudProyecto);
 
@@ -781,7 +784,9 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
-
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
     BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
@@ -812,7 +817,9 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
-
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
     BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
@@ -846,7 +853,9 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     BDDMockito.given(solicitudProyectoRepository.findById(solicitud.getId()))
         .willReturn(Optional.of(solicitudProyecto));
-
+    BDDMockito
+        .given(solicitudProyectoEquipoRepository.findAllBySolicitudProyectoIdAndPersonaRef(anyLong(), anyString()))
+        .willReturn(Arrays.asList(SolicitudProyectoEquipo.builder().build()));
     BDDMockito.given(sgiApiEtiService.getPeticionEvaluacion(anyString())).willReturn(peticionEvaluacion);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).willReturn(solicitud);
@@ -1011,7 +1020,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isInstanceOf(SolicitudProyectoWithoutSocioCoordinadorException.class);
   }
 
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
+  @WithMockUser(username = "usr-001", authorities = { "CSP-SOL-INV-ER" })
   @Test
   void cambiarEstado_WithEstadoSubsanacion_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
@@ -1028,7 +1037,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
+  @WithMockUser(username = "usr-001", authorities = { "CSP-SOL-INV-ER" })
   @Test
   void cambiarEstado_WithExcluidaProvisional_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
@@ -1045,7 +1054,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
+  @WithMockUser(username = "usr-001", authorities = { "CSP-SOL-INV-ER" })
   @Test
   void cambiarEstado_WithExcluidaDefinitiva_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
@@ -1062,7 +1071,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
+  @WithMockUser(username = "usr-001", authorities = { "CSP-SOL-INV-ER" })
   @Test
   void cambiarEstado_WithDenegadaProvisional_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
@@ -1079,7 +1088,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .isInstanceOf(UserNotAuthorizedToChangeEstadoSolicitudException.class);
   }
 
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-ER", "CSP-SOL-E" })
+  @WithMockUser(username = "usr-001", authorities = { "CSP-SOL-INV-ER" })
   @Test
   void cambiarEstado_WithDenegada_ThrowsUserNotAuthorizedToChangeEstadoSolicitudException() {
     Long solicitudId = 1L;
@@ -1176,6 +1185,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitud.setConvocatoriaExterna(convocatoriaExterna);
     solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
 
     if (id != null) {
       solicitud.setEstado(estadoSolicitud);
@@ -1229,7 +1239,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     return SolicitudProyecto.builder()
         .id(solicitudProyectoId)
         .acronimo("acronimo-" + solicitudProyectoId)
-        .colaborativo(Boolean.TRUE)
+        .colaborativo(Boolean.FALSE)
         .tipoPresupuesto(TipoPresupuesto.GLOBAL)
         .checklistRef("checklist-001")
         .build();
@@ -1246,6 +1256,7 @@ class SolicitudServiceTest extends BaseServiceTest {
   private SolicitudProyectoEquipo buildMockSolicitudProyectoEquipo(Long id, int mesInicio, int mesFin) {
     return SolicitudProyectoEquipo.builder()
         .id(id)
+        .personaRef("usr-00" + 1)
         .mesFin(mesFin)
         .mesInicio(mesInicio)
         .build();

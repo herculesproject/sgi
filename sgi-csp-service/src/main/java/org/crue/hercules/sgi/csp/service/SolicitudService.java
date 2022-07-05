@@ -344,16 +344,6 @@ public class SolicitudService {
 
     solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(returnValue);
 
-    String authorityVisualizar = "CSP-SOL-V";
-
-    Assert
-        .isTrue(
-            SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C")
-                || solicitudAuthorityHelper.hasPermisosEdicion(returnValue)
-                || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar) || SgiSecurityContextHolder
-                    .hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
-            "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
-
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -464,9 +454,7 @@ public class SolicitudService {
     // VALIDACIONES
 
     // Permisos
-    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
-      throw new UserNotAuthorizedToModifySolicitudException();
-    }
+    solicitudAuthorityHelper.checkUserHasAuthorityModifyEstadoSolicitud(solicitud, estadoSolicitud);
 
     // El nuevo estado es diferente al estado actual de la solicitud
     if (estadoSolicitud.getEstado().equals(solicitud.getEstado().getEstado())) {
@@ -478,10 +466,6 @@ public class SolicitudService {
     if ((!estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.DESISTIDA)
         && !estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.RENUNCIADA))) {
       validateCambioNoDesistidaRenunciada(solicitud);
-    }
-
-    if (solicitudAuthorityHelper.isUserInvestigador()) {
-      validateCambioEstadoInvestigador(solicitud.getEstado().getEstado(), estadoSolicitud.getEstado());
     }
 
     // Se cambia el estado de la solicitud
@@ -891,6 +875,24 @@ public class SolicitudService {
 
   /**
    * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada para cambiar el estado por el usuario actual como tutor.
+   *
+   * @param id Id de la {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableEstadoAsTutor(Long id) {
+
+    return repository.findById(id).map(solicitud -> {
+      if (!solicitudAuthorityHelper.isUserTutor(solicitud.getId())) {
+        return false;
+      }
+
+      return Arrays.asList(Estado.SOLICITADA).contains(solicitud.getEstado().getEstado());
+    }).orElse(false);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
    * puede ser modificada para cambiar el estado y añadir
    * nuevos documentos.
    *
@@ -915,13 +917,17 @@ public class SolicitudService {
    * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
    * puede ser modificada por un usuario investigador.
    * No es modificable cuando el estado de la {@link Solicitud} es distinto de
-   * {@link EstadoSolicitud.Estado#BORRADOR}
+   * {@link EstadoSolicitud.Estado#BORRADOR} o
+   * {@link EstadoSolicitud.Estado#RECHAZADA} si es una {@link Solicitud} con
+   * {@link FormularioSolicitud#RRHH}
    *
    * @param solicitud Id del {@link Solicitud}.
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   private boolean modificableByInvestigador(Solicitud solicitud) {
-    return solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.BORRADOR);
+    return solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.BORRADOR) ||
+        (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH) && solicitud.getEstado()
+            .getEstado().equals(EstadoSolicitud.Estado.RECHAZADA));
   }
 
   /**
@@ -987,51 +993,6 @@ public class SolicitudService {
 
     }
     log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-  }
-
-  /**
-   * Comprueba si el cambio de estado esta entre los permitidos para el
-   * investigador
-   * 
-   * @param estadoActual Estado actual de la {@link Solicitud}
-   * @param nuevoEstado  Nuevo estado al que se quiere cambiar la
-   *                     {@link Solicitud}
-   * 
-   * @throws {@link UserNotAuthorizedToChangeEstadoSolicitudException} si el
-   *                cambio de estado no esta permitido
-   */
-  private void validateCambioEstadoInvestigador(Estado estadoActual, Estado nuevoEstado) {
-    boolean isCambioEstadoValido;
-    switch (estadoActual) {
-      case BORRADOR:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.SOLICITADA) || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      case SUBSANACION:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.PRESENTADA_SUBSANACION)
-            || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      case EXCLUIDA_PROVISIONAL:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.ALEGACION_FASE_ADMISION)
-            || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      case EXCLUIDA_DEFINITIVA:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.RECURSO_FASE_ADMISION) || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      case DENEGADA_PROVISIONAL:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.ALEGACION_FASE_PROVISIONAL)
-            || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      case DENEGADA:
-        isCambioEstadoValido = nuevoEstado.equals(Estado.RECURSO_FASE_CONCESION)
-            || nuevoEstado.equals(Estado.DESISTIDA);
-        break;
-      default:
-        isCambioEstadoValido = false;
-    }
-
-    if (!isCambioEstadoValido) {
-      throw new UserNotAuthorizedToChangeEstadoSolicitudException(estadoActual, nuevoEstado);
-    }
   }
 
   private boolean isEntidadFinanciadora(Solicitud solicitud) {

@@ -249,7 +249,7 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
   /**
    * Obtiene las {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}
    * para una {@link Solicitud} si el usuario que realiza la peticion es el
-   * solicitante de la {@link Solicitud}.
+   * solicitante o el tutor de la {@link Solicitud}.
    *
    * @param solicitudId el id de la {@link Convocatoria}.
    * @param pageable    la información de la paginación.
@@ -257,14 +257,15 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
    *         {@link Convocatoria} paginadas.
    */
   @Override
-  public Page<ConvocatoriaEntidadConvocante> findAllBySolicitudAndUserIsSolicitante(Long solicitudId,
+  public Page<ConvocatoriaEntidadConvocante> findAllBySolicitudAndUserIsSolicitanteOrTutor(Long solicitudId,
       Pageable pageable) {
-    log.debug("findAllBySolicitudAndUserIsSolicitante(Long solicitudId, Pageable pageable) - start");
+    log.debug("findAllBySolicitudAndUserIsSolicitanteOrTutor(Long solicitudId, Pageable pageable) - start");
 
     String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    Solicitud solicitud = solicitudRepository.findOne(SolicitudSpecifications.bySolicitante(personaRef).and(
-        SolicitudSpecifications.byId(solicitudId)))
+    Solicitud solicitud = solicitudRepository
+        .findOne(
+            SolicitudSpecifications.bySolicitanteOrTutor(personaRef).and(SolicitudSpecifications.byId(solicitudId)))
         .orElseThrow(UserNotAuthorizedToAccessSolicitudException::new);
 
     if (Objects.isNull(solicitud.getConvocatoriaId())) {
@@ -275,7 +276,7 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
         .byConvocatoriaId(solicitud.getConvocatoriaId());
 
     Page<ConvocatoriaEntidadConvocante> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllBySolicitudAndUserIsSolicitante(Long solicitudId, Pageable pageable) - end");
+    log.debug("findAllBySolicitudAndUserIsSolicitanteOrTutor(Long solicitudId, Pageable pageable) - end");
     return returnValue;
   }
 

@@ -240,7 +240,7 @@ public class RequisitoIPController {
    *         Si no se permite
    */
   @RequestMapping(path = PATH_NIVEL_ELIMINABLE, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   public ResponseEntity<Void> nivelAcademicoEliminable(@PathVariable Long id, @PathVariable Long nivelAcademicoId) {
     log.debug("nivelAcademicoEliminable(Long id, Long nivelAcademicoId) - start");
     boolean returnValue = requisitoIPNivelAcademicoService.eliminable(id, nivelAcademicoId);
@@ -259,7 +259,7 @@ public class RequisitoIPController {
    *         Si no se permite
    */
   @RequestMapping(path = PATH_CATEGORIA_PROFESIONAL_ELIMINABLE, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   public ResponseEntity<Void> categoriaProfesionalEliminable(@PathVariable Long id,
       @PathVariable Long categoriaProfesionalId) {
     log.debug("categoriaProfesionalEliminable(Long id, Long categoriaProfesionalId) - start");

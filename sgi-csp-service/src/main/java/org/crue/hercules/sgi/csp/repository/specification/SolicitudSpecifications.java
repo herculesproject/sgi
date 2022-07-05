@@ -19,6 +19,8 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud_;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.Grupo_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudRrhh;
+import org.crue.hercules.sgi.csp.model.SolicitudRrhh_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -104,6 +106,34 @@ public class SolicitudSpecifications {
           .where(cb.equal(queryGrupoRoot.get(Grupo_.id), grupoId));
       return root.get(Solicitud_.id).in(queryGrupo);
     };
+  }
+
+  /**
+   * {@link Solicitud} en las que la persona es el tutor.
+   * 
+   * @param personaRef referencia de la persona
+   * @return specification para obtener las {@link Solicitud} en las que la
+   *         persona es el tutor.
+   */
+  public static Specification<Solicitud> byTutor(String personaRef) {
+    return (root, query, cb) -> {
+      Subquery<Long> queryTutor = query.subquery(Long.class);
+      Root<SolicitudRrhh> queryTutorRoot = queryTutor.from(SolicitudRrhh.class);
+      queryTutor.select(queryTutorRoot.get(SolicitudRrhh_.solicitud).get(Solicitud_.id))
+          .where(cb.equal(queryTutorRoot.get(SolicitudRrhh_.tutorRef), personaRef));
+      return root.get(Solicitud_.id).in(queryTutor);
+    };
+  }
+
+  /**
+   * {@link Solicitud} en las que la persona es el solicitante o el tutor.
+   * 
+   * @param personaRef referencia de la persona
+   * @return specification para obtener las {@link Solicitud} en las que la
+   *         persona es el solicitante o el tutor.
+   */
+  public static Specification<Solicitud> bySolicitanteOrTutor(String personaRef) {
+    return bySolicitante(personaRef).or(byTutor(personaRef));
   }
 
   @SuppressWarnings("unchecked")
