@@ -432,6 +432,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       map((response => ESTADO_SOLICITUD_CONVERTER.toTarget(response)))
     );
   }
+
   /**
    * Devuelve el listado de solicitudes que puede ver un investigador
    *
@@ -439,6 +440,15 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    */
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
     return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/investigador`, options, SOLICITUD_CONVERTER);
+  }
+
+  /**
+   * Devuelve el listado de solicitudes que puede ver un tutor
+   *
+   * @param options opciones de búsqueda.
+   */
+  findAllTutor(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
+    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/tutor`, options, SOLICITUD_CONVERTER);
   }
 
   /**

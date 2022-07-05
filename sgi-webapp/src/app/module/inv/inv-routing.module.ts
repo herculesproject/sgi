@@ -27,6 +27,7 @@ const MSG_COMITE_EDITORIAL_TITLE = marker('prc.comite-editorial');
 const MSG_ACTIVIDAD_TITLE = marker('prc.actividad-idi');
 const MSG_OBRAS_ARTISTICAS_TITLE = marker('prc.obra-artistica.title');
 const MSG_DIRECCION_TESIS_TITLE = marker('prc.tesis-tfm-tfg');
+const MSG_VALIDACION_TUTOR_TITLE = marker('menu.principal.inv.validacion-tutor');
 
 const routes: SgiRoutes = [
   {
@@ -268,6 +269,18 @@ const routes: SgiRoutes = [
           title: MSG_DIRECCION_TESIS_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
           hasAuthorityForAnyUO: 'PRC-VAL-INV-ER'
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.VALIDACION_TUTOR,
+        loadChildren: () =>
+          import('../csp/solicitud/solicitud-validacion-tutor-inv.module').then(
+            (m) => m.SolicitudValidacionTutorInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_VALIDACION_TUTOR_TITLE,
+          hasAuthorityForAnyUO: 'CSP-SOL-INV-ER',
         }
       },
       { path: '**', component: null }
