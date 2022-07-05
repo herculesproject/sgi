@@ -1020,23 +1020,19 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @param proyecto          la entidad {@link Proyecto}
    * @param solicitudProyecto la entidad {@link SolicitudProyecto}
    */
-  private void copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud,
-      SolicitudProyecto solicitudProyecto) {
+  private void copyDatosSolicitudToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) {
     log.debug(
-        "copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
+        "copyDatosSolicitudToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - start");
     this.copyContexto(proyecto, solicitudProyecto);
     this.copyAreasConocimiento(proyecto, solicitudProyecto.getId());
     this.copyClasificaciones(proyecto, solicitudProyecto.getId());
-    this.copyCodigosUNESCO(proyecto);
-    this.copyCodigosNABS(proyecto);
-    this.copyCodigosCNAE(proyecto);
     this.copyEntidadesConvocantesDeSolicitud(proyecto);
     this.copyEntidadesFinanciadorasDeSolicitud(proyecto, solicitudProyecto.getId());
     this.copyMiembrosEquipo(proyecto, solicitudProyecto.getId());
     this.copySocios(proyecto, solicitudProyecto.getId());
     this.copyResponsablesEconomicos(proyecto, solicitudProyecto.getId());
     log.debug(
-        "copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
+        "copyDatosSolicitudToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - end");
   }
 
   /**
@@ -1101,30 +1097,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       this.proyectoClasificacionRepository.save(clasificacionProyecto);
     });
     log.debug("copyClasificaciones(Proyecto proyecto, Long solicitudProyectoId) - end");
-  }
-
-  private void copyCodigosUNESCO(Proyecto proyecto) {
-    log.debug("copyCodigosUNESCO(Proyecto proyecto) - start");
-    // TODO Se copian de los códigos UNESCO definidos en la solicitud, por cada
-    // registro en la tabla "SolicitudProyectoUnesco" se creará un registro en
-    // la tabla "ProyectoUnesco" con él código indicado en la solicitud.
-    log.debug("copyCodigosUNESCO(Proyecto proyecto) - end");
-  }
-
-  private void copyCodigosNABS(Proyecto proyecto) {
-    log.debug("copyCodigosNABS(Proyecto proyecto) - start");
-    // TODO Se copian de los códigos NABS definidos en la solicitud, por cada
-    // registro en la tabla "SolicitudProyectoNabs" se creará un registro en la
-    // tabla "ProyectoNabs" con él código indicado en la solicitud.
-    log.debug("copyCodigosNABS(Proyecto proyecto) - end");
-  }
-
-  private void copyCodigosCNAE(Proyecto proyecto) {
-    log.debug("copyCodigosCNAE(Proyecto proyecto) - start");
-    // TODO Se copian de los códigos CNAE definidos en la solicitud, por cada
-    // registro en la tabla "SolicitudProyectoCnae" se creará un registro en la
-    // tabla "ProyectoCnae" con él código indicado en la solicitud.
-    log.debug("copyCodigosCNAE(Proyecto proyecto) - end");
   }
 
   /**
@@ -1576,7 +1548,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     // Actualiza el estado actual del proyecto con el nuevo estado
     Proyecto returnValue = repository.save(proyecto);
 
-    this.copyDatosSolicitudToProyecto(returnValue, solicitud, solicitudProyecto);
+    this.copyDatosSolicitudToProyecto(returnValue, solicitudProyecto);
 
     // Si hay asignada una convocatoria se deben de rellenar las entidades
     // correspondientes con los datos de la convocatoria

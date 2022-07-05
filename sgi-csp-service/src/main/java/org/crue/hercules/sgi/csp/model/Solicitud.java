@@ -173,4 +173,10 @@ public class Solicitud extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final SolicitanteExterno solicitanteExterno = null;
+
+  @OneToOne(mappedBy = "solicitud")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final SolicitudRrhh solicitudRrhh = null;
+
 }

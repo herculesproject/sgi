@@ -109,7 +109,13 @@ public class SolicitudController {
 
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "solicitudes";
+
+  public static final String PATH_INVESTIGADOR = PATH_DELIMITER + "investigador";
+  public static final String PATH_TUTOR = PATH_DELIMITER + "tutor";
+
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_DOCUMENTOS = PATH_ID + "/solicituddocumentos";
+  public static final String PATH_HISTORICO_ESTADOS = PATH_ID + "/estadosolicitudes";
   public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
   public static final String PATH_MODIFICABLE_ESTADO_DOCUMENTOS_BY_INV = PATH_ID
       + "/modificableestadoanddocumentosbyinvestigador";
@@ -464,7 +470,7 @@ public class SolicitudController {
    * @return el listado de entidades {@link EstadoSolicitud} paginados y
    *         filtrados.
    */
-  @GetMapping("/{id}/estadosolicitudes")
+  @GetMapping(PATH_HISTORICO_ESTADOS)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Page<EstadoSolicitud>> findAllEstadoSolicitud(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -517,7 +523,7 @@ public class SolicitudController {
    * @return el listado de entidades {@link SolicitudDocumento} paginados y
    *         filtrados.
    */
-  @GetMapping("/{id}/solicituddocumentos")
+  @GetMapping(PATH_DOCUMENTOS)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V','CSP-SOL-INV-ER')")
   public ResponseEntity<Page<SolicitudDocumento>> findAllSolicitudDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
@@ -839,7 +845,7 @@ public class SolicitudController {
    * @return el listado de entidades {@link Solicitud} que puede visualizar un
    *         investigador paginadas y filtradas.
    */
-  @GetMapping("/investigador")
+  @GetMapping(PATH_INVESTIGADOR)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   public ResponseEntity<Page<Solicitud>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -851,6 +857,30 @@ public class SolicitudController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Solicitud} que puede visualizar
+   * un tutor paginadas y filtradas.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Solicitud} que puede visualizar un
+   *         tutor paginadas y filtradas.
+   */
+  @GetMapping(PATH_TUTOR)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER')")
+  public ResponseEntity<Page<Solicitud>> findAllTutor(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTutor(String query, Pageable paging) - start");
+    Page<Solicitud> page = service.findAllTutor(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTutor(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllTutor(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

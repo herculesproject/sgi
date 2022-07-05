@@ -12,10 +12,12 @@ import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhh
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput.Email;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudRrhhNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudRrhh;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitanteExternoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRrhhRepository;
@@ -32,8 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class SolicitudRrhhComService {
-
-  private static final String PATH_MENU_VALIDACION_TUTOR = "/inv/solicitudes/validacion-tutor";
+  public static final String PATH_DELIMITER = "/";
+  private static final String PATH_MENU_VALIDACION_TUTOR = PATH_DELIMITER + "inv/validacion-solicitudes-tutor";
 
   private final ConvocatoriaRepository convocatoriaRepository;
   private final SgiApiSgpService sgiApiSgpService;
@@ -84,11 +86,11 @@ public class SolicitudRrhhComService {
   }
 
   private List<Recipient> getTutorRecipients(Long solicitudId) {
-    String tutorRef = this.solicitudRrhhRepository.findBySolicitudId(solicitudId).map(rrhh -> rrhh.getTutorRef())
+    String tutorRef = this.solicitudRrhhRepository.findBySolicitudId(solicitudId).map(SolicitudRrhh::getTutorRef)
         .orElseThrow(() -> new SolicitudRrhhNotFoundException(solicitudId));
     PersonaOutput datosSolicitante = this.sgiApiSgpService.findById(tutorRef);
 
-    return datosSolicitante.getEmails().stream().filter(email -> email.getPrincipal())
+    return datosSolicitante.getEmails().stream().filter(Email::getPrincipal)
         .map(email -> Recipient
             .builder().name(email.getEmail()).address(email.getEmail())
             .build())

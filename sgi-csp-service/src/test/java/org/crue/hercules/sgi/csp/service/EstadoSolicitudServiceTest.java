@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.EstadoSolicitudServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -35,11 +36,14 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudRepository solicitudRepository;
 
+  private SolicitudAuthorityHelper authorityHelper;
+
   private EstadoSolicitudService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new EstadoSolicitudServiceImpl(repository, solicitudRepository);
+    authorityHelper = new SolicitudAuthorityHelper(solicitudRepository);
+    service = new EstadoSolicitudServiceImpl(repository, authorityHelper);
   }
 
   @Test

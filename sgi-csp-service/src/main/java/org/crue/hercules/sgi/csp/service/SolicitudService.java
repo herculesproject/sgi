@@ -26,8 +26,6 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToChangeEstadoSolicitudException;
-import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -405,7 +403,7 @@ public class SolicitudService {
    *         investigador paginadas y filtradas.
    */
   public Page<Solicitud> findAllInvestigador(String query, Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     Specification<Solicitud> specs = SolicitudSpecifications.activos()
@@ -414,7 +412,30 @@ public class SolicitudService {
             SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Solicitud} que puede visualizar un
+   * tutor paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Solicitud} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  public Page<Solicitud> findAllTutor(String query, Pageable paging) {
+    log.debug("findAllTutor(String query, Pageable paging) - start");
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    Specification<Solicitud> specs = SolicitudSpecifications.activos()
+        .and(SolicitudSpecifications.byTutor(authentication.getName()))
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
+
+    Page<Solicitud> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllTutor(String query, Pageable paging) - end");
     return returnValue;
   }
 

@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudDocumentoServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,11 +42,14 @@ class SolicitudDocumentoServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudRepository solicitudRepository;
 
+  private SolicitudAuthorityHelper authorityHelper;
+
   private SolicitudDocumentoService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new SolicitudDocumentoServiceImpl(solicitudDocumentoRepository, solicitudService, solicitudRepository);
+    authorityHelper = new SolicitudAuthorityHelper(solicitudRepository);
+    service = new SolicitudDocumentoServiceImpl(solicitudDocumentoRepository, solicitudService, authorityHelper);
   }
 
   @Test
