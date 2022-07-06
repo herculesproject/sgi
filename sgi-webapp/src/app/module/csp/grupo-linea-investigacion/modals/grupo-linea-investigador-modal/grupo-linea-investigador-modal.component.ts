@@ -167,6 +167,8 @@ export class GrupoLineaInvestigadorModalComponent extends DialogFormComponent<Gr
         if (formGroup.controls.fechaFin.value) {
           formGroup.controls.fechaFin.markAsTouched();
           formGroup.controls.fechaFin.updateValueAndValidity();
+        } else {
+          this.validateFechaFinNull();
         }
       }
     ));
@@ -176,6 +178,7 @@ export class GrupoLineaInvestigadorModalComponent extends DialogFormComponent<Gr
         this.setupValidators(formGroup, value.value);
         formGroup.controls.fechaInicio.markAsTouched();
         formGroup.controls.fechaInicio.updateValueAndValidity();
+        this.validateFechaFinNull(value.value);
       }
     ));
 
@@ -232,15 +235,19 @@ export class GrupoLineaInvestigadorModalComponent extends DialogFormComponent<Gr
     return this.data;
   }
 
-  private validateFechaFinNull() {
-    const miembroBuscado = this.data.selectedEntidades?.find(miembro => miembro.persona.id === this.formGroup.get('miembro').value?.id);
-    const fechaInicio: DateTime = this.formGroup.get('fechaInicio').value;
-    if (miembroBuscado.fechaFin !== null && fechaInicio.toMillis() <= miembroBuscado.fechaFin.toMillis()) {
-      this.formGroup.get('fechaFin').setErrors({ overlaps: true });
-      this.formGroup.get('fechaFin').markAsTouched({ onlySelf: true });
-    } else if (miembroBuscado.fechaFin === null) {
-      this.formGroup.get('fechaFin').setErrors({ overlaps: true });
-      this.formGroup.get('fechaFin').markAsTouched({ onlySelf: true });
+  private validateFechaFinNull(persona?: IPersona) {
+    const fechaFinForm = this.formGroup.get('fechaFin');
+    if (!fechaFinForm.value) {
+      const miembroBuscado = this.data.selectedEntidades?.find(
+        miembro => miembro.persona.id === (persona?.id ?? this.formGroup.get('miembro').value?.id));
+      const fechaInicio: DateTime = this.formGroup.get('fechaInicio').value;
+      if (miembroBuscado && miembroBuscado.fechaFin !== null && fechaInicio.toMillis() <= miembroBuscado.fechaFin.toMillis()) {
+        fechaFinForm.setErrors({ overlaps: true });
+        fechaFinForm.markAsTouched({ onlySelf: true });
+      } else if (fechaFinForm.errors) {
+        delete fechaFinForm.errors.overlaps;
+        fechaFinForm.updateValueAndValidity({ onlySelf: true });
+      }
     }
   }
 
