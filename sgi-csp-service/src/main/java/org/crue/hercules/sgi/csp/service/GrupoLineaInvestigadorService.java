@@ -151,7 +151,8 @@ public class GrupoLineaInvestigadorService {
       GrupoLineaInvestigacion grupoLineaInvestigacion) {
 
     // Ordena los responsables por fechaInicial
-    grupoLineasInvestigadores.sort(Comparator.comparing(GrupoLineaInvestigador::getFechaInicio));
+    grupoLineasInvestigadores.sort(Comparator.comparing(GrupoLineaInvestigador::getPersonaRef)
+        .thenComparing(Comparator.comparing(GrupoLineaInvestigador::getFechaInicio)));
 
     Instant lastEnd = null;
     String lastPersonaRef = null;
@@ -164,17 +165,14 @@ public class GrupoLineaInvestigadorService {
         // Solo puede haber un registro con la fecha de inicio vacia
         throw new GrupoLineaInvestigadorOverlapRangeException();
       }
-      if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef) && lineaInvestigador.getFechaFin() == null) {
+      if (emptyFechaFin && lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
+          && lineaInvestigador.getFechaFin() == null) {
         // Solo puede haber un registro con la fecha de fin vacia
         throw new GrupoLineaInvestigadorOverlapRangeException();
       }
       if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
           && !emptyFechaInicio && lineaInvestigador.getFechaInicio() == null) {
         emptyFechaInicio = true;
-      }
-      if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
-          && !emptyFechaFin && lineaInvestigador.getFechaFin() == null) {
-        emptyFechaFin = true;
       }
 
       if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
@@ -184,6 +182,13 @@ public class GrupoLineaInvestigadorService {
                   && lineaInvestigador.getFechaFin().isAfter(fechaFinGrupo)))) {
         throw new GrupoLineaInvestigadorProjectRangeException(lineaInvestigador.getFechaInicio(),
             fechaFinGrupo);
+      }
+
+      if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
+          && !emptyFechaFin && lineaInvestigador.getFechaFin() == null) {
+        emptyFechaFin = true;
+      } else if (!lineaInvestigador.getPersonaRef().equals(lastPersonaRef)) {
+        emptyFechaFin = false;
       }
 
       if (lineaInvestigador.getPersonaRef().equals(lastPersonaRef)
