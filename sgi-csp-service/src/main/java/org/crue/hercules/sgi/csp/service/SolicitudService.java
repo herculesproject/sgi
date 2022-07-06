@@ -783,14 +783,19 @@ public class SolicitudService {
       return false;
     }
 
-    // Si el formulario de la solicitud no es de tipo PROYECTO no se podrá crear el
-    // proyecto a partir de ella
-    if (solicitud.getFormularioSolicitud() != FormularioSolicitud.PROYECTO) {
+    // Si el formulario de la solicitud no es de tipo PROYECTO o RRHH no se podrá
+    // crear el proyecto a partir de ella
+    if (!solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)
+        && !solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
       return false;
     }
 
-    // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
-    return solicitudProyectoRepository.existsById(solicitud.getId());
+    if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)) {
+      // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
+      return solicitudProyectoRepository.existsById(solicitud.getId());
+    }
+
+    return true;
   }
 
   /**

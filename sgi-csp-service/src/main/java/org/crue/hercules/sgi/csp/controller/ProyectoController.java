@@ -122,6 +122,7 @@ public class ProyectoController {
   private static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
   private static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
   private static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
+  private static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
 
   private final ModelMapper modelMapper;
 
@@ -730,7 +731,7 @@ public class ProyectoController {
    * @param proyecto {@link Proyecto} a crear
    * @return Nuevo {@link Proyecto} creado.
    */
-  @PostMapping("/{id}/solicitud")
+  @PostMapping(PATH_SOLICITUD)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
   public ResponseEntity<Proyecto> createProyectoBySolicitud(@PathVariable Long id, @RequestBody Proyecto proyecto) {
     log.debug("createProyectoBySolicitud(@PathVariable Long id) - start");

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.util;
 
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToCreateProyectoException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
@@ -43,6 +44,12 @@ public class ProyectoHelper extends AuthorityHelper {
     if (hasUserAuthorityInvestigador() && !checkUserPresentInEquipos(proyectoId)
         && !checkUserIsResponsableEconomico(proyectoId)) {
       throw new UserNotAuthorizedToAccessProyectoException();
+    }
+  }
+
+  public void checkCanCreateProyecto(Proyecto proyecto) {
+    if (!SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef())) {
+      throw new UserNotAuthorizedToCreateProyectoException();
     }
   }
 

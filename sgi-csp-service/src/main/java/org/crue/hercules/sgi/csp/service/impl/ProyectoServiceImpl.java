@@ -117,6 +117,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -983,20 +984,39 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Copia los datos generales de la {@link Solicitud} al {@link Proyecto}
+   * Copia los datos generales del {@link SolicitudProyecto} al {@link Proyecto}
    *
-   * @param proyecto la entidad {@link Proyecto}
+   * @param proyecto          la entidad {@link Proyecto}
+   * @param solicitudProyecto la entidad {@link SolicitudProyecto}
    * @return la entidad {@link Proyecto} con los nuevos datos
    */
-  private Proyecto copyDatosGeneralesSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud,
+  private Proyecto copyDatosGeneralesSolicitudProyectoToProyecto(Proyecto proyecto,
       SolicitudProyecto solicitudProyecto) {
     log.debug(
-        "copyDatosGenerales(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
+        "copyDatosGeneralesSolicitudProyectoToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - start");
+    proyecto.setAcronimo(solicitudProyecto.getAcronimo());
+    proyecto.setCodigoExterno(solicitudProyecto.getCodExterno());
+    proyecto.setColaborativo(solicitudProyecto.getColaborativo());
+    proyecto.setCoordinado(solicitudProyecto.getCoordinado());
+    proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
+    log.debug(
+        "copyDatosGeneralesSolicitudProyectoToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - end");
+    return proyecto;
+  }
+
+  /**
+   * Copia los datos generales de la {@link Solicitud} al {@link Proyecto}
+   *
+   * @param proyecto  la entidad {@link Proyecto}
+   * @param solicitud la entidad {@link Solicitud}
+   * @return la entidad {@link Proyecto} con los nuevos datos
+   */
+  private Proyecto copyDatosGeneralesSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud) {
+    log.debug(
+        "copyDatosGeneralesSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud) - start");
     proyecto.setSolicitudId(solicitud.getId());
     proyecto.setConvocatoriaId(solicitud.getConvocatoriaId());
-    proyecto.setAcronimo(solicitudProyecto.getAcronimo());
     proyecto.setUnidadGestionRef(solicitud.getUnidadGestionRef());
-    proyecto.setCodigoExterno(solicitudProyecto.getCodExterno());
     if (solicitud.getConvocatoriaId() != null) {
       Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
@@ -1007,10 +1027,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     } else {
       proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }
-    proyecto.setColaborativo(solicitudProyecto.getColaborativo());
-    proyecto.setCoordinado(solicitudProyecto.getCoordinado());
-    proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
-    log.debug("copyDatosGenerales(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
+    log.debug(
+        "copyDatosGeneralesSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud) - end");
     return proyecto;
   }
 
@@ -1502,8 +1520,10 @@ public class ProyectoServiceImpl implements ProyectoService {
           "La solicitud no se encuentra en un estado correcto para la creación del proyecto.");
     }
 
-    Assert.isTrue(solicitud.getFormularioSolicitud() == FormularioSolicitud.PROYECTO,
-        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.PROYECTO);
+    Assert.isTrue(solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)
+        || solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH),
+        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.PROYECTO + " o "
+            + FormularioSolicitud.RRHH);
   }
 
   /**
@@ -1519,22 +1539,39 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Transactional
   public Proyecto createProyectoBySolicitud(Long solicitudId, Proyecto proyecto) {
     log.debug("createProyectoBySolicitud(Long solicitudId, Proyecto proyecto) - start");
-    Assert.isNull(proyecto.getId(), "Proyecto id tiene que ser null para crear un Proyecto");
+    AssertHelper.idIsNull(proyecto.getId(), Proyecto.class);
+    proyectoHelper.checkCanCreateProyecto(proyecto);
 
     Solicitud solicitud = solicitudRepository.findById(solicitudId)
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
 
     this.validarDatosSolicitud(solicitud);
 
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitudId)
-        .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
-
-    this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud, solicitudProyecto);
-
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
-        "La Unidad de Gestión no es gestionable por el usuario");
-
     proyecto.setActivo(Boolean.TRUE);
+
+    if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)) {
+      return createProyectoBySolicitudProyecto(solicitud, proyecto);
+    } else if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
+      return createProyectoBySolicitudRrhh(solicitud, proyecto);
+    }
+
+    return null;
+  }
+
+  /**
+   * Crea un proyecto desde una solicitud de proyecto
+   * 
+   * @param solicitud datos de la {@link Solicitud} desde la que se crea
+   * @param proyecto  datos necesarios para crear el {@link Proyecto}
+   * @return proyecto la entidad {@link Proyecto} persistida.
+   */
+  private Proyecto createProyectoBySolicitudProyecto(Solicitud solicitud, Proyecto proyecto) {
+    log.debug("createProyectoBySolicitudProyecto(Long solicitudId, Proyecto proyecto) - start");
+    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitud.getId())
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitud.getId()));
+
+    this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud);
+    this.copyDatosGeneralesSolicitudProyectoToProyecto(proyecto, solicitudProyecto);
 
     this.validarDatos(proyecto);
 
@@ -1556,8 +1593,58 @@ public class ProyectoServiceImpl implements ProyectoService {
       this.copyDatosConvocatoriaToProyecto(returnValue);
     }
 
-    log.debug("createProyectoBySolicitud(Long solicitudId, Proyecto proyecto) - end");
+    log.debug("createProyectoBySolicitudProyecto(Long solicitudId, Proyecto proyecto) - end");
     return returnValue;
+  }
+
+  /**
+   * Crea un proyecto desde una solicitud de RRHH
+   * 
+   * @param solicitud datos de la {@link Solicitud} desde la que se crea
+   * @param proyecto  datos necesarios para crear el {@link Proyecto}
+   * @return proyecto la entidad {@link Proyecto} persistida.
+   */
+  private Proyecto createProyectoBySolicitudRrhh(Solicitud solicitud, Proyecto proyecto) {
+    log.debug("createProyectoBySolicitudRrhh(Long solicitudId, Proyecto proyecto) - start");
+    this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud);
+
+    this.validarDatos(proyecto);
+
+    // Crea el proyecto
+    repository.save(proyecto);
+
+    // Crea el estado inicial del proyecto
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
+
+    proyecto.setEstado(estadoProyecto);
+    // Actualiza el estado actual del proyecto con el nuevo estado
+    Proyecto returnValue = repository.save(proyecto);
+
+    createEmptyContexto(proyecto.getId());
+
+    // Si hay asignada una convocatoria se deben de rellenar las entidades
+    // correspondientes con los datos de la convocatoria
+    if (proyecto.getConvocatoriaId() != null) {
+      this.copyDatosConvocatoriaToProyecto(returnValue);
+    }
+
+    log.debug("createProyectoBySolicitudRrhh(Long solicitudId, Proyecto proyecto) - end");
+    return returnValue;
+  }
+
+  /**
+   * Copia el los datos {@link ContextoProyecto} de la entidad
+   * {@link SolicitudProyecto} al {@link Proyecto}
+   *
+   * @param proyecto la entidad {@link Proyecto}
+   * @return la entidad {@link Proyecto} con los nuevos datos
+   */
+  private void createEmptyContexto(Long proyectoId) {
+    log.debug("createEmptyContexto(Long proyectoId) - start");
+    ContextoProyecto contextoProyectoNew = new ContextoProyecto();
+    contextoProyectoNew.setProyectoId(proyectoId);
+    contextoProyectoService.create(contextoProyectoNew);
+    log.debug("createEmptyContexto(Long proyectoId) - end");
   }
 
   /**

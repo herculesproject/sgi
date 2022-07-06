@@ -114,12 +114,13 @@ public class SolicitudController {
   public static final String PATH_TUTOR = PATH_DELIMITER + "tutor";
 
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
-  public static final String PATH_DOCUMENTOS = PATH_ID + "/solicituddocumentos";
-  public static final String PATH_HISTORICO_ESTADOS = PATH_ID + "/estadosolicitudes";
-  public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
-  public static final String PATH_MODIFICABLE_ESTADO_DOCUMENTOS_BY_INV = PATH_ID
-      + "/modificableestadoanddocumentosbyinvestigador";
-  public static final String PATH_MODIFICABLE_ESTADO_AS_TUTOR = PATH_ID + "/modificableestadoastutor";
+  public static final String PATH_DOCUMENTOS = PATH_ID + PATH_DELIMITER + "solicituddocumentos";
+  public static final String PATH_HISTORICO_ESTADOS = PATH_ID + PATH_DELIMITER + "estadosolicitudes";
+  public static final String PATH_MODIFICABLE = PATH_ID + PATH_DELIMITER + "modificable";
+  public static final String PATH_MODIFICABLE_ESTADO_DOCUMENTOS_BY_INV = PATH_ID + PATH_DELIMITER
+      + "modificableestadoanddocumentosbyinvestigador";
+  public static final String PATH_MODIFICABLE_ESTADO_AS_TUTOR = PATH_ID + PATH_DELIMITER + "modificableestadoastutor";
+  public static final String PATH_CREAR_PROYECTO = PATH_ID + PATH_DELIMITER + "crearproyecto";
 
   private ModelMapper modelMapper;
 
@@ -790,7 +791,7 @@ public class SolicitudController {
    * @return HTTP-200 Si se permite la creación / HTTP-204 Si no se permite
    *         creación
    */
-  @RequestMapping(path = "/{id}/crearproyecto", method = RequestMethod.HEAD)
+  @RequestMapping(path = PATH_CREAR_PROYECTO, method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
   public ResponseEntity<Solicitud> isPosibleCrearProyecto(@PathVariable Long id) {
     log.debug("isPosibleCrearProyecto(Long id) - start");
