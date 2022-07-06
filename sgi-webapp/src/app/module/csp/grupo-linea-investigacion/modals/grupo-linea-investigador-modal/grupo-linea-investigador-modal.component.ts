@@ -179,6 +179,18 @@ export class GrupoLineaInvestigadorModalComponent extends DialogFormComponent<Gr
       }
     ));
 
+    this.subscriptions.push(formGroup.controls.fechaFin.valueChanges.subscribe(
+      (value) => {
+        if (value === null) {
+          this.validateFechaFinNull();
+        }
+      }
+    ));
+
+    if (this.data?.entidad?.persona) {
+      this.setupValidators(formGroup, this.data?.entidad?.persona);
+    }
+
     return formGroup;
   }
 
@@ -218,6 +230,18 @@ export class GrupoLineaInvestigadorModalComponent extends DialogFormComponent<Gr
     this.data.entidad.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.entidad.fechaFin = this.formGroup.get('fechaFin').value;
     return this.data;
+  }
+
+  private validateFechaFinNull() {
+    const miembroBuscado = this.data.selectedEntidades?.find(miembro => miembro.persona.id === this.formGroup.get('miembro').value?.id);
+    const fechaInicio: DateTime = this.formGroup.get('fechaInicio').value;
+    if (miembroBuscado.fechaFin !== null && fechaInicio.toMillis() <= miembroBuscado.fechaFin.toMillis()) {
+      this.formGroup.get('fechaFin').setErrors({ overlaps: true });
+      this.formGroup.get('fechaFin').markAsTouched({ onlySelf: true });
+    } else if (miembroBuscado.fechaFin === null) {
+      this.formGroup.get('fechaFin').setErrors({ overlaps: true });
+      this.formGroup.get('fechaFin').markAsTouched({ onlySelf: true });
+    }
   }
 
   displayerMiembroEquipo(persona: StatusWrapper<IPersona> | IPersona): string {

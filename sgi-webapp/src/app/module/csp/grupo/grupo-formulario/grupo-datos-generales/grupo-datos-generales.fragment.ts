@@ -132,7 +132,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
         validators: Validators.required,
         asyncValidators: GrupoValidator.duplicatedCodigo(this.grupoService, this.grupo.id),
       }),
-      proyectoSge: new FormControl(null),
+      proyectoSge: new FormControl({ value: null, disabled: !this.isEdit() }),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
       palabrasClave: new FormControl(null),
