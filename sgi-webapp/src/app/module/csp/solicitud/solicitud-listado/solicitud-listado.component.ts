@@ -566,11 +566,16 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     return typeof programa === 'string' ? programa : programa?.nombre;
   }
 
-  crearProyectoModal(solicitud: ISolicitud): void {
-    this.suscripciones.push(this.solicitudService.findSolicitudProyecto(solicitud.id).pipe(
+  crearProyectoModal(solicitudData: ISolicitudListadoData): void {
+    this.suscripciones.push(this.solicitudService.findSolicitudProyecto(solicitudData.id).pipe(
       map(solicitudProyectoDatos => {
         const config = {
-          data: { solicitud, solicitudProyecto: solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
+          data: {
+            solicitud: solicitudData as ISolicitud,
+            solicitudProyecto: solicitudProyectoDatos,
+            convocatoria: solicitudData.convocatoria,
+            nombreSolicitante: solicitudData.nombreSolicitante
+          } as ISolicitudCrearProyectoModalData
         };
         const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);
         dialogRef.afterClosed().subscribe(
