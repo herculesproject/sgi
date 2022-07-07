@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
 import { CausaExencion, CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
@@ -246,12 +247,20 @@ export class ProyectoEconomicoFormlyModalComponent implements OnInit, OnDestroy 
   }
 
   private findImportePresupuestoBySolicitudProyecto(proyectoEconomico: any, formlyData: IFormlyData): Observable<IFormlyData> {
-    return this.solicitudProyectoService.findById(proyectoEconomico.solicitudId).pipe(
-      switchMap((solicitudProyecto) => {
-        if (solicitudProyecto.importePresupuestado) {
-          formlyData.data.importeTotalGastos = solicitudProyecto.importePresupuestado;
+    return this.solicitudService.findById(proyectoEconomico.solicitudId).pipe(
+      switchMap(solicitud => {
+        if (!!!solicitud || solicitud.formularioSolicitud !== FormularioSolicitud.PROYECTO) {
+          return of(formlyData);
         }
-        return of(formlyData);
+
+        return this.solicitudProyectoService.findById(proyectoEconomico.solicitudId).pipe(
+          switchMap((solicitudProyecto) => {
+            if (solicitudProyecto.importePresupuestado) {
+              formlyData.data.importeTotalGastos = solicitudProyecto.importePresupuestado;
+            }
+            return of(formlyData);
+          })
+        );
       })
     );
   }

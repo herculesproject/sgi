@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-requisitos-equipo-ip';
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado } from '@core/models/csp/estado-proyecto';
@@ -99,6 +100,8 @@ const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 
 export interface IProyectoData {
   proyecto: IProyecto;
+  solicitanteRefSolicitud: string;
+  solicitudFormularioSolicitud: FormularioSolicitud;
   readonly: boolean;
   disableCoordinadorExterno: boolean;
   hasAnyProyectoSocioCoordinador: boolean;
@@ -192,7 +195,7 @@ export class ProyectoActionService extends ActionService {
   }
 
   get estado(): Estado {
-    return this.fichaGeneral.getValue().estado?.estado;
+    return this.data?.proyecto?.estado?.estado;
   }
 
   get readonly(): boolean {
@@ -211,8 +214,16 @@ export class ProyectoActionService extends ActionService {
     return this.fichaGeneral.hasPopulatedSocios$;
   }
 
-  get hasMiembrosEquipo() {
-    return !!this.relaciones.miembrosEquipoProyecto && this.relaciones.miembrosEquipoProyecto.length > 0;
+  get miembrosEquipoPersonaRefs(): string[] {
+    return this.proyectoEquipo.equipos$.value.map(personaListado => personaListado.value.proyectoEquipo.persona.id);
+  }
+
+  get solicitanteRefSolicitud(): string {
+    return this.data.solicitanteRefSolicitud ?? null;
+  }
+
+  get solicitudFormularioSolicitud(): FormularioSolicitud {
+    return this.data.solicitudFormularioSolicitud ?? null;
   }
 
   get unidadGestionId(): number {
@@ -339,10 +350,23 @@ export class ProyectoActionService extends ActionService {
           this.data?.proyecto?.convocatoriaId, this.readonly, this.data?.isVisor);
         this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
           id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
-        this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, this.data?.proyecto?.convocatoriaId, proyectoService,
-          proyectoEquipoService, personaService,
-          convocatoriaService, datosAcademicosService, convocatoriaRequisitoIPService, viculacionService,
-          convocatoriaRequisitoEquipoService, datosPersonalesService);
+        this.proyectoEquipo = new ProyectoEquipoFragment(
+          logger,
+          id,
+          this.data?.proyecto?.convocatoriaId,
+          this.data?.solicitanteRefSolicitud,
+          this.data?.proyecto?.estado?.estado,
+          this.data.solicitudFormularioSolicitud,
+          proyectoService,
+          proyectoEquipoService,
+          personaService,
+          convocatoriaService,
+          datosAcademicosService,
+          convocatoriaRequisitoIPService,
+          viculacionService,
+          convocatoriaRequisitoEquipoService,
+          datosPersonalesService
+        );
         this.entidadGestora = new ProyectoEntidadGestoraFragment(
           fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly, this.data?.isVisor);
         this.areaConocimiento = new ProyectoAreaConocimientoFragment(this.data?.proyecto?.id,
@@ -404,6 +428,8 @@ export class ProyectoActionService extends ActionService {
         this.addFragment(this.FRAGMENT.AMORTIZACION_FONDOS, this.amortizacionFondos);
         this.addFragment(this.FRAGMENT.RELACIONES, this.relaciones);
         this.addFragment(this.FRAGMENT.CALENDARIO_FACTURACION, this.proyectoCalendarioFacturacion);
+
+        this.proyectoEquipo.initialize();
 
         this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
           if (value) {
