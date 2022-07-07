@@ -55,5 +55,27 @@
       <column name="description" value="Indica si se va a realizar la integración con el blockchain en el módulo de ética" />
       <column name="value" value="false" />
     </insert>
+
+    <!-- Destinatarios defecto CSP Convocatoria fases OTRI -->
+    <insert tableName="config">
+      <column name="name" value="csp-conv-fases-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Convocatoria Fases - OTRI" />
+      <column name="value" value="[&quot;convocatoria.fases.otri@sgi.es&quot;]" />
+    </insert>
+
+    <!-- Destinatarios defecto CSP Convocatoria fases OPE -->
+    <insert tableName="config">
+      <column name="name" value="csp-conv-fases-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Convocatoria Fases - OPE" />
+      <column name="value" value="[&quot;convocatoria.fases.ope@sgi.es&quot;]" />
+    </insert>
+
+    <!-- Destinatarios defecto CSP Convocatoria fases UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-conv-fases-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Convocatoria Fases - UGI" />
+      <column name="value" value="[&quot;convocatoria.fases.ugi@sgi.es&quot;]" />
+    </insert>
+
   </changeSet>
 </databaseChangeLog>
