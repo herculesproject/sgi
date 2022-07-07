@@ -542,9 +542,6 @@ class ProyectoServiceTest extends BaseServiceTest {
     modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
     modeloUnidad.setActivo(true);
 
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     Assertions.assertThatThrownBy(() -> service.update(proyectoObservacionesActualizadas))
@@ -639,12 +636,13 @@ class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   void update_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Actualizar proyecto
     Proyecto proyecto = generarMockProyecto(1L);
     proyecto.setConvocatoriaId(1L);
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
     BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
 
     // when: Actualizamos el Proyecto
@@ -654,14 +652,12 @@ class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_UGI" })
+  @WithMockUser(authorities = { "CSP-PRO-E_3" })
   void update_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(new ModeloUnidad()));
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
@@ -670,11 +666,12 @@ class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   void update_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
     BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.empty());
 
@@ -700,8 +697,6 @@ class ProyectoServiceTest extends BaseServiceTest {
     modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
     modeloUnidad.setActivo(true);
 
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     // then: Lanza una excepcion porque no se puede modificar la convocatoria del

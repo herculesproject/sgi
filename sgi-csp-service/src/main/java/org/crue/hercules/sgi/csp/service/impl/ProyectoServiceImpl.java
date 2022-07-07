@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.MissingInvestigadorPrincipalInProyectoEquipoException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -33,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -310,7 +312,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     proyecto.setActivo(Boolean.TRUE);
 
-    this.validarDatos(proyecto);
+    this.validarDatos(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     // Crea el proyecto
     repository.save(proyecto);
@@ -351,8 +353,6 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Transactional
   public Proyecto update(Proyecto proyectoActualizar) {
     log.debug("update(Proyecto proyecto) - start");
-
-    this.validarDatos(proyectoActualizar);
 
     return repository.findById(proyectoActualizar.getId()).map(data -> {
       proyectoHelper.checkCanRead(data);
@@ -411,6 +411,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setImporteConcedidoSocios(proyectoActualizar.getImporteConcedidoSocios());
       data.setTotalImporteConcedido(proyectoActualizar.getTotalImporteConcedido());
       data.setTotalImportePresupuesto(proyectoActualizar.getTotalImportePresupuesto());
+
+      this.validarDatos(data, data.getEstado().getEstado());
 
       List<ProyectoEquipo> equipos = null;
       if (data.getFechaFinDefinitiva() == null && proyectoActualizar.getFechaFinDefinitiva() != null) {
@@ -766,9 +768,10 @@ public class ProyectoServiceImpl implements ProyectoService {
    * Se comprueba que los datos a guardar cumplan las validaciones oportunas
    * 
    * @param proyecto datos del proyecto
+   * @param estado   estado del proyecto
    * 
    */
-  private void validarDatos(Proyecto proyecto) {
+  private void validarDatos(Proyecto proyecto, Estado estado) {
     if (proyecto.getConvocatoriaId() != null) {
       Assert.isTrue(convocatoriaRepository.existsById(proyecto.getConvocatoriaId()),
           "La convocatoria con id '" + proyecto.getConvocatoriaId() + "' no existe");
@@ -799,25 +802,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     // Validación de campos obligatorios según estados. Solo aplicaría en el
     // actualizar ya que en el crear el estado siempre será "Borrador"
-    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
-      // En la validación del crear no pasará por aquí, aún no tendrá estado.
-      Assert.isTrue(proyecto.getFinalidad() != null,
-          "El campo finalidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getAmbitoGeografico() != null,
-          "El campo ambitoGeografico debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getConfidencial() != null,
-          "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
-        Assert.isTrue(proyecto.getCoordinadorExterno() != null,
-            "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-      }
-
-      Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
-          "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-    }
+    this.checkCamposObligatoriosPorEstado(proyecto, estado);
 
     // Validación de datos IVA
     if (proyecto.getIva() != null && proyecto.getIva().getIva() != null && proyecto.getCausaExencion() != null) {
@@ -1573,7 +1558,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud);
     this.copyDatosGeneralesSolicitudProyectoToProyecto(proyecto, solicitudProyecto);
 
-    this.validarDatos(proyecto);
+    this.validarDatos(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     // Crea el proyecto
     repository.save(proyecto);
@@ -1608,7 +1593,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("createProyectoBySolicitudRrhh(Long solicitudId, Proyecto proyecto) - start");
     this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud);
 
-    this.validarDatos(proyecto);
+    this.validarDatos(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     // Crea el proyecto
     repository.save(proyecto);
@@ -1665,8 +1650,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     // VALIDACIONES
     // Permisos
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-E", proyecto.getUnidadGestionRef()),
-        "La Unidad de Gestión no es gestionable por el usuario");
+    proyectoHelper.checkCanModifyProyecto(proyecto);
 
     // El nuevo estado es diferente al estado actual de del proyecto
     if (estadoProyecto.getEstado().equals(proyecto.getEstado().getEstado())) {
@@ -1674,7 +1658,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
 
     // Validaciones según el cambio de estado
-    this.checkCamposObligatoriosPorEstado(proyecto, estadoProyecto);
+    this.checkCamposObligatoriosPorEstado(proyecto, estadoProyecto.getEstado());
 
     // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o
     // RESCINDIDO
@@ -1721,10 +1705,10 @@ public class ProyectoServiceImpl implements ProyectoService {
     return returnValue;
   }
 
-  private void checkCamposObligatoriosPorEstado(Proyecto proyecto, EstadoProyecto estadoProyecto) {
+  private void checkCamposObligatoriosPorEstado(Proyecto proyecto, Estado estado) {
     // Validación de campos obligatorios según estados. Solo aplicaría en el
     // actualizar ya que en el crear el estado siempre será "Borrador"
-    if (estadoProyecto.getEstado() != null && estadoProyecto.getEstado() == EstadoProyecto.Estado.CONCEDIDO) {
+    if (estado != null && estado == EstadoProyecto.Estado.CONCEDIDO) {
       // En la validación del crear no pasará por aquí, aún no tendrá estado.
       Assert.isTrue(proyecto.getFinalidad() != null,
           "El campo finalidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
@@ -1738,7 +1722,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(proyecto.getCoordinado() != null,
           "El campo Proyecto coordinado debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
-      if (proyecto.getCoordinado() != null && proyecto.getCoordinado()) {
+      if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
         Assert.isTrue(proyecto.getCoordinadorExterno() != null,
             "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
       }
@@ -1746,10 +1730,21 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
           "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
-      List<ProyectoEquipo> equipos = proyectoEquipoService.findAllByProyectoId(proyecto.getId());
+      if (proyecto.getSolicitudId() != null) {
+        Solicitud solicitud = solicitudRepository.findById(proyecto.getSolicitudId())
+            .orElseThrow(() -> new SolicitudNotFoundException(proyecto.getSolicitudId()));
 
-      Assert.isTrue(!CollectionUtils.isEmpty(equipos),
-          "El equipo debe tener al menos un miembro para el proyecto en estado 'CONCEDIDO'");
+        if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)) {
+          List<ProyectoEquipo> equipos = proyectoEquipoService.findAllByProyectoId(proyecto.getId());
+
+          if (equipos.stream().map(ProyectoEquipo::getPersonaRef)
+              .noneMatch(personaRef -> personaRef.equals(solicitud.getSolicitanteRef()))) {
+            throw new MissingInvestigadorPrincipalInProyectoEquipoException();
+          }
+
+        }
+      }
+
     }
   }
 

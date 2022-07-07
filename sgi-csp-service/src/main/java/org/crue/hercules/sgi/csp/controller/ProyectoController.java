@@ -116,13 +116,16 @@ public class ProyectoController {
   /** El path que gestiona este controlador */
   public static final String PATH_SEPARATOR = "/";
   public static final String REQUEST_MAPPING = PATH_SEPARATOR + "proyectos";
-  public static final String PATH_ID = PATH_SEPARATOR + "{id}";
-  public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
+
   public static final String PATH_PROYECTOS_COMPETITIVOS_PERSONAS = PATH_SEPARATOR + "competitivos-personas";
-  private static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
-  private static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
-  private static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
-  private static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
+
+  public static final String PATH_ID = PATH_SEPARATOR + "{id}";
+  public static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
+  public static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
+  public static final String PATH_CAMBIAR_ESTADO = PATH_ID + PATH_SEPARATOR + "cambiar-estado";
+  public static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
+  public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
+  public static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
 
   private final ModelMapper modelMapper;
 
@@ -1002,7 +1005,7 @@ public class ProyectoController {
    * @param estadoProyecto nuevo {@link EstadoProyecto}.
    * @return {@link Proyecto} actualizado.
    */
-  @PatchMapping("/{id}/cambiar-estado")
+  @PatchMapping(PATH_CAMBIAR_ESTADO)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public Proyecto cambiarEstado(@PathVariable Long id, @RequestBody EstadoProyecto estadoProyecto) {
     log.debug("cambiarEstado(EstadoProyecto estadoProyecto) - start");
