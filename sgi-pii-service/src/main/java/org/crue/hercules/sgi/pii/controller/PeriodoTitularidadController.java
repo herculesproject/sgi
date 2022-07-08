@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.pii.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -161,7 +160,6 @@ public class PeriodoTitularidadController {
   @DeleteMapping("/{periodoTitularidadId}")
   @PreAuthorize("hasAnyAuthority('PII-INV-E','PII-INV-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  @Transactional
   public void eliminarPeriodoTitularidad(@PathVariable Long periodoTitularidadId) {
     this.service.deleteById(periodoTitularidadId);
   }
