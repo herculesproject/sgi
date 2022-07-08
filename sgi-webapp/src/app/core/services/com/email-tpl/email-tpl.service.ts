@@ -74,4 +74,30 @@ export class EmailTplService extends SgiRestBaseService {
 
     return this.processTemplate('CSP_PROYECTO_HITO', params);
   }
+
+  /**
+   * 
+   * @param tituloConvocatoria 
+   * @param fechaInicioFase 
+   * @param fechaFinFase 
+   * @param tipoFase 
+   * @param observaciones 
+   * @returns Observable of IProcessedEmailTpl
+   */
+  processConvocatoriaFaseTemplate(
+    tituloConvocatoria: string,
+    fechaInicioFase: DateTime,
+    fechaFinFase: DateTime,
+    tipoFase: string,
+    observaciones: string
+  ): Observable<IProcessedEmailTpl> {
+    const params: IEmailParam[] = [];
+    params.push({ name: 'CSP_CONV_FASE_FECHA_INICIO', value: LuxonUtils.toBackend(fechaInicioFase) });
+    params.push({ name: 'CSP_CONV_FASE_FECHA_FIN', value: LuxonUtils.toBackend(fechaFinFase) });
+    params.push({ name: 'CSP_CONV_TIPO_FASE', value: tipoFase });
+    params.push({ name: 'CSP_CONV_FASE_OBSERVACIONES', value: observaciones });
+    params.push({ name: 'CSP_CONV_FASE_TITULO', value: tituloConvocatoria });
+
+    return this.processTemplate('CSP_COM_CONVOCATORIA_FASE', params);
+  }
 }

@@ -97,7 +97,9 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
       plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly,
-      canEdit: this.formPart.canEdit
+      canEdit: this.formPart.canEdit,
+      unidadGestionId: this.actionService.unidadGestionId,
+      tituloConvocatoria: this.actionService.titulo
     };
 
     const config = {
