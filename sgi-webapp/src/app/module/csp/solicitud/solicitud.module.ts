@@ -56,6 +56,7 @@ import { SolicitudProyectoPresupuestoListadoExportService } from './solicitud-pr
 import { SolicitudProyectoResponsableEconomicoListadoExportService } from './solicitud-proyecto-responsable-economico-listado-export.service';
 import { SolicitudProyectoSocioListadoExportService } from './solicitud-proyecto-socio-listado-export.service';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
+import { SolicitudRrhhListadoExportService } from './solicitud-rrhh-listado-export.service';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoResponsableEconomicoListadoExportService,
     SolicitudProyectoSocioListadoExportService,
     SolicitudProyectoEntidadFinanciadoraListadoExportService,
-    SolicitudProyectoPresupuestoListadoExportService
+    SolicitudProyectoPresupuestoListadoExportService,
+    SolicitudRrhhListadoExportService
   ]
 })
 export class SolicitudModule { }
