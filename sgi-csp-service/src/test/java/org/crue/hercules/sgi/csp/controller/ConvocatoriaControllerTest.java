@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseConverter;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -67,11 +67,14 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -80,11 +83,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 /**
  * ConvocatoriaControllerTest
  */
 @WebMvcTest(ConvocatoriaController.class)
 class ConvocatoriaControllerTest extends BaseControllerTest {
+
+  @Autowired
+  private ModelMapper modelMapper;
 
   @MockBean
   private ConvocatoriaService service;
@@ -124,6 +132,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
   private RequisitoEquipoNivelAcademicoService requisitoEquipoNivelAcademicoService;
   @MockBean
   private ConvocatoriaPalabraClaveService convocatoriaPalabraClaveService;
+  @MockBean
+  private ConvocatoriaFaseConverter convocatoriaFaseConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -846,9 +856,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     // given: Una lista con 37 ConvocatoriaFase para la Convocatoria
     Long convocatoriaId = 1L;
 
-    List<ConvocatoriaFase> convocatoriasFases = new ArrayList<>();
+    List<ConvocatoriaFaseOutput> convocatoriasFases = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriasFases.add(generarMockConvocatoriaFase(i));
+      convocatoriasFases.add(modelMapper.map(generarMockConvocatoriaFase(i), ConvocatoriaFaseOutput.class));
     }
 
     Integer page = 3;
@@ -857,20 +867,23 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     BDDMockito
         .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
+        .willAnswer(new Answer<Page<ConvocatoriaFaseOutput>>() {
           @Override
-          public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ConvocatoriaFaseOutput> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             toIndex = toIndex > convocatoriasFases.size() ? convocatoriasFases.size() : toIndex;
-            List<ConvocatoriaFase> content = convocatoriasFases.subList(fromIndex, toIndex);
-            Page<ConvocatoriaFase> page = new PageImpl<>(content, pageable, convocatoriasFases.size());
+            List<ConvocatoriaFaseOutput> content = convocatoriasFases.subList(fromIndex, toIndex);
+            Page<ConvocatoriaFaseOutput> page = new PageImpl<>(content, pageable, convocatoriasFases.size());
             return page;
           }
         });
+    BDDMockito.given(this.convocatoriaFaseConverter.convert(ArgumentMatchers.<Page<ConvocatoriaFase>>any()))
+        .willReturn(
+            new PageImpl<>(convocatoriasFases.subList(30, 37), PageRequest.of(3, 10), convocatoriasFases.size()));
 
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
@@ -887,12 +900,13 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
 
-    List<ConvocatoriaFase> convocatoriaFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<ConvocatoriaFase>>() {
+    List<ConvocatoriaFaseOutput> convocatoriaFaseResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ConvocatoriaFaseOutput>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      ConvocatoriaFase convocatoriaFase = convocatoriaFaseResponse.get(i - (page * pageSize) - 1);
+      ConvocatoriaFaseOutput convocatoriaFase = convocatoriaFaseResponse.get(i - (page * pageSize) - 1);
       Assertions.assertThat(convocatoriaFase.getObservaciones()).isEqualTo("observaciones" + i);
     }
   }
@@ -902,7 +916,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
   void findAllConvocatoriaFase_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaFase para la Convocatoria
     Long convocatoriaId = 1L;
-    List<ConvocatoriaFase> convocatoriasFases = new ArrayList<>();
+    List<ConvocatoriaFaseOutput> convocatoriasFases = new ArrayList<>();
 
     Integer page = 0;
     Integer pageSize = 10;
@@ -910,14 +924,18 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     BDDMockito
         .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
+        .willAnswer(new Answer<Page<ConvocatoriaFaseOutput>>() {
           @Override
-          public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ConvocatoriaFaseOutput> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ConvocatoriaFase> page = new PageImpl<>(convocatoriasFases, pageable, 0);
+            Page<ConvocatoriaFaseOutput> page = new PageImpl<>(convocatoriasFases, pageable, 0);
             return page;
           }
         });
+
+    BDDMockito.given(this.convocatoriaFaseConverter.convert(ArgumentMatchers.<Page<ConvocatoriaFase>>any()))
+        .willReturn(
+            new PageImpl<>(new LinkedList<>(), PageRequest.of(0, 10), 0));
 
     // when: Get page=0 with pagesize=10
     mockMvc

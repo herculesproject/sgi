@@ -153,6 +153,7 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String CONVOCATORIA_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriahitos/%s/deferrable-recipients";
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
   private static final String PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/proyectohitos/%s/deferrable-recipients";
+  private static final String CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriafases/%s/deferrable-recipients";
 
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
@@ -759,6 +760,24 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_PARAM);
+  }
+
+  public Long createConvocatoriaFaseEmail(Long convocatoriaFaseId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - start", convocatoriaFaseId, subject, content, recipients);
+
+    Assert.notNull(convocatoriaFaseId, "ConvocatoriaFase ID is required");
+    Assert.notNull(subject, "Subject is required");
+    Assert.notNull(content, "Content is required");
+    Assert.notEmpty(recipients, "At least one Recipient is required");
+    Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
+
+    Long id = this.createGenericEmailText(subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, convocatoriaFaseId), HttpMethod.GET))
+        .getId();
+    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - end", convocatoriaFaseId, subject, content, recipients);
+    return id;
   }
 
   private <T> EmailOutput createComunicado(T data, List<Recipient> recipients, String template, String templateParam)

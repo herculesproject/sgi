@@ -188,4 +188,41 @@
     <addUniqueConstraint columnNames="plantilla_formato_identificador_justificacion" constraintName="UC_CONFIGURACIONPLANTILLA_FORMATO_IDENTIFICADOR_JUSTIFICACION_C" tableName="configuracion" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000008-26">
+    <createSequence incrementBy="1" sequenceName="convocatoria_fase_aviso_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-27">
+    <createTable tableName="convocatoria_fase_aviso">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_fase_avisoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="comunicado_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_proyecto" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_solicitud" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="tarea_programada_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-28">
+    <addColumn tableName="convocatoria_fase">
+      <column name="convocatoria_fase_aviso1_id" type="bigint" />
+    </addColumn>
+    <addColumn tableName="convocatoria_fase">
+      <column name="convocatoria_fase_aviso2_id" type="bigint" />
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="convocatoria_fase_aviso1_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIAFASEAVISO1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_fase_aviso" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_fase_aviso2_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIAFASEAVISO2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_fase_aviso" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

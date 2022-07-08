@@ -1,13 +1,18 @@
 package org.crue.hercules.sgi.csp.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -22,16 +27,27 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseAvisoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaFaseServiceImpl;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -42,8 +58,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 /**
  * ConvocatoriaFaseServiceTest
  */
-
+@SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = { ModelMapper.class })
 class ConvocatoriaFaseServiceTest extends BaseServiceTest {
+
+  @Autowired
+  private ModelMapper modelMapper;
 
   @Mock
   private ConvocatoriaFaseRepository repository;
@@ -55,13 +74,34 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   private ModeloTipoFaseRepository modeloTipoFaseRepository;
   @Mock
   private ConvocatoriaService convocatoriaService;
+  @Mock
+  private TipoFaseRepository tipoFaseRepository;
+  @Mock
+  private ConvocatoriaFaseAvisoRepository convocatoriaFaseAvisoRepository;
+  @Mock
+  private SolicitudRepository solicitudRepository;
+  @Mock
+  private ProyectoEquipoRepository proyectoEquipoRepository;
+  @Mock
+  private SgiApiComService emailService;
+  @Mock
+  private SgiApiTpService sgiApiTaskService;
+  @Mock
+  private SgiApiSgpService personaService;
 
   private ConvocatoriaFaseService service;
 
   @BeforeEach
   void setUp() throws Exception {
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
-        modeloTipoFaseRepository, convocatoriaService);
+        modeloTipoFaseRepository, convocatoriaService,
+        tipoFaseRepository,
+        convocatoriaFaseAvisoRepository,
+        solicitudRepository,
+        proyectoEquipoRepository,
+        emailService,
+        sgiApiTaskService,
+        personaService);
   }
 
   @Test
@@ -69,14 +109,14 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // given: Un nuevo ConvocatoriaFase
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
-
+    ConvocatoriaFase convocatoriaFaseNew = generarMockConvocatoriaFase(null);
+    convocatoriaFaseNew.setId(1L);
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<ConvocatoriaFase> page = new PageImpl<>(new ArrayList<ConvocatoriaFase>(), pageable, 0);
           return page;
-
         });
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
@@ -91,7 +131,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     });
 
     // when: Creamos el ConvocatoriaFase
-    ConvocatoriaFase convocatoriaFaseCreado = service.create(convocatoriaFase);
+    ConvocatoriaFase convocatoriaFaseCreado = service
+        .create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class));
 
     // then: El ConvocatoriaFase se crea correctamente
     Assertions.assertThat(convocatoriaFaseCreado).as("isNotNull()").isNotNull();
@@ -107,17 +148,6 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void create_WithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ConvocatoriaFase que ya tiene id
-    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
-
-    // when: Creamos el ConvocatoriaFase
-    // then: Lanza una excepcion porque el ConvocatoriaFase ya tiene id
-    Assertions.assertThatThrownBy(() -> service.create(convocatoriaFase)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear ConvocatoriaFase");
-  }
-
-  @Test
   void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase without ConvocatoriaId
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
@@ -125,7 +155,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ConvocatoriaId is null
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaFase");
@@ -140,7 +170,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as Convocatoria is not found
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
@@ -153,7 +183,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as tipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Id Fase no puede ser null para crear ConvocatoriaFase");
@@ -171,11 +201,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaFase.getTipoFase().getNombre(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+            "Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -191,11 +221,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -213,7 +243,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
@@ -226,19 +256,19 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.getTipoFase().setActivo(Boolean.FALSE);
-
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE);
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
+        .willReturn(Optional.of(modeloTipoFase));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", convocatoriaFase.getTipoFase().getNombre());
+        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -265,7 +295,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(convocatoriaFase))
+        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is not activo
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe una convocatoria en ese rango de fechas");
   }
@@ -285,6 +315,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
             Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFaseActualizado, Boolean.TRUE)));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaFase>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -295,7 +326,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         });
 
     // when: Actualizamos el ConvocatoriaFase
-    ConvocatoriaFase updated = service.update(convocatoriaFaseActualizado);
+    ConvocatoriaFase updated = service.update(1L,
+        modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class));
 
     // then: El ConvocatoriaFase se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
@@ -317,7 +349,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     // when: Actualizamos el ConvocatoriaFase
     // then: Lanza una excepcion porque el ConvocatoriaFase no existe
-    Assertions.assertThatThrownBy(() -> service.update(convocatoriaFase))
+    Assertions
+        .assertThatThrownBy(() -> service.update(1L, modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         .isInstanceOf(ConvocatoriaFaseNotFoundException.class);
   }
 
@@ -336,11 +369,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFaseActualizado))
+        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaFaseActualizado.getTipoFase().getNombre(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+            "Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -359,11 +392,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFaseActualizado))
+        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaFaseActualizado.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -374,20 +407,22 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado,
+        Boolean.FALSE);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(
-            Optional.of(generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado, Boolean.FALSE)));
+            Optional.of(modeloTipoFase));
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFaseActualizado))
+        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            convocatoriaFaseActualizado.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+            modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -406,7 +441,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFaseActualizado))
+        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFase '%s' no está activo", convocatoriaFaseActualizado.getTipoFase().getNombre());
@@ -437,7 +472,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFaseActualizado))
+        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as Programa is not activo
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe una convocatoria en ese rango de fechas");
   }
@@ -458,7 +493,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(convocatoriaFase))
+        () -> service.update(1L, modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede modificar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
@@ -550,6 +585,13 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
         });
 
+    List<ConvocatoriaFaseOutput> outputList = new LinkedList<>();
+    for (long i = 1; i <= 37; i++) {
+      outputList.add(modelMapper.map(generarMockConvocatoriaFase(Long.valueOf(i)), ConvocatoriaFaseOutput.class));
+    }
+    Page<ConvocatoriaFaseOutput> mockedPage = new PageImpl<>(outputList.subList(30, 37),
+        PageRequest.of(3, 10), convocatoriasEntidadesConvocantes.size());
+
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
     Page<ConvocatoriaFase> page = service.findAllByConvocatoria(convocatoriaId, null, paging);
@@ -569,7 +611,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   void findById_ReturnsConvocatoriaFase() {
     // given: Un ConvocatoriaFase con el id buscado
     Long idBuscado = 1L;
-    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockConvocatoriaFase(idBuscado)));
+    Optional<ConvocatoriaFase> fase = Optional.of(generarMockConvocatoriaFase(idBuscado));
+    BDDMockito.given(repository.findById(anyLong())).willReturn(fase);
 
     // when: Buscamos el ConvocatoriaFase por su id
     ConvocatoriaFase convocatoriaFase = service.findById(idBuscado);

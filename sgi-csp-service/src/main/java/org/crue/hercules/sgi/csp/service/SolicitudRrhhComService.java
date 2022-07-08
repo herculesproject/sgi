@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
-import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
@@ -46,7 +45,7 @@ public class SolicitudRrhhComService {
 
   public void enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud) {
 
-    CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
+    CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
         .builder()
         .fechaEstado(fechaEstado)
         .nombreApellidosSolicitante(getSolicitanteNombreApellidos(solicitud))
@@ -70,7 +69,8 @@ public class SolicitudRrhhComService {
     }
   }
 
-  private void fillConvocatoriaData(CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder,
+  private void fillConvocatoriaData(
+      CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder,
       Long convocatoriaId) {
     if (convocatoriaId != null) {
       Optional<Convocatoria> convocatoria = this.convocatoriaRepository.findById(convocatoriaId);
