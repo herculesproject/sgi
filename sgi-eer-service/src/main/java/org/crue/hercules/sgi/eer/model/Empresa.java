@@ -169,4 +169,19 @@ public class Empresa extends BaseActivableEntity {
   @Setter(AccessLevel.NONE)
   private final List<EmpresaEquipoEmprendedor> miembrosEquipoEmprendedor = null;
 
+  @OneToMany(mappedBy = "empresa")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<EmpresaComposicionSociedad> composicionSociedad = null;
+
+  @OneToMany(mappedBy = "empresa")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<EmpresaAdministracionSociedad> administradores = null;
+
+  @OneToMany(mappedBy = "empresa")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<EmpresaDocumento> documentos = null;
+
 }

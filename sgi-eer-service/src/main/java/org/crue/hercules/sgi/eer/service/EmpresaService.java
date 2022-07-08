@@ -1,11 +1,14 @@
 package org.crue.hercules.sgi.eer.service;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.BaseEntity;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.repository.EmpresaRepository;
+import org.crue.hercules.sgi.eer.repository.predicate.EmpresaPredicateResolver;
 import org.crue.hercules.sgi.eer.repository.specification.EmpresaSpecifications;
 import org.crue.hercules.sgi.eer.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -164,6 +167,25 @@ public class EmpresaService {
       log.debug("desactivar(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new EmpresaNotFoundException(id));
+  }
+
+  /**
+   * Obtiene los ids de {@link Empresa} modificados que cumplan las condiciones
+   * indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Empresa}.
+   */
+  public List<Long> findIdsEmpresaModificados(String query) {
+    log.debug("findIdsEmpresaModificados(String query) - start");
+
+    Specification<Empresa> specs = SgiRSQLJPASupport.toSpecification(query, EmpresaPredicateResolver.getInstance());
+
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsEmpresaModificados(String query) - end");
+
+    return returnValue;
   }
 
 }

@@ -167,7 +167,7 @@ public class EmpresaServiceTest extends BaseServiceTest {
     Assertions.assertThat(empresaActualizada.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(empresaActualizada.getNombreRazonSocial()).as("getNombreRazonSocial()")
         .isEqualTo(empresa.getNombreRazonSocial());
-    Assertions.assertThat(empresaActualizada.getActivo()).as("getActivo()").isEqualTo(false);
+    Assertions.assertThat(empresaActualizada.getActivo()).as("getActivo()").isFalse();
 
   }
 
@@ -214,7 +214,7 @@ public class EmpresaServiceTest extends BaseServiceTest {
 
     // then: A Page with ten Empresaes are returned containing
     // descripcion='Empresa031' to 'Empresa040'
-    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getContent()).hasSize(10);
     Assertions.assertThat(page.getNumber()).isEqualTo(3);
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);

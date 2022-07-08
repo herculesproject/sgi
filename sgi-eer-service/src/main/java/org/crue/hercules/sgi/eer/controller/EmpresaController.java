@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eer.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eer.converter.EmpresaAdministracionSociedadConverter;
@@ -51,14 +53,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class EmpresaController {
-
-  public static final String REQUEST_MAPPING = "/empresas";
-  public static final String PATH_ID = "/{id}";
-  public static final String PATH_DESACTIVAR = PATH_ID + "/desactivar";
-  public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + "/equipos-emprendedores";
-  public static final String PATH_DOCUMENTOS = PATH_ID + "/documentos";
-  public static final String PATH_EMPRESA_COMPOSICION_SOCIEDAD = PATH_ID + "/composiciones-sociedades";
-  public static final String PATH_EMPRESA_ADMINISTRACION_SOCIEDAD = PATH_ID + "/administraciones-sociedades";
+  public static final String PATH_DELIMITER = "/";
+  public static final String REQUEST_MAPPING = PATH_DELIMITER + "empresas";
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_DESACTIVAR = PATH_ID + PATH_DELIMITER + "desactivar";
+  public static final String PATH_EMPRESA_EQUIPO_EMPRENDEDOR = PATH_ID + PATH_DELIMITER + "equipos-emprendedores";
+  public static final String PATH_DOCUMENTOS = PATH_ID + PATH_DELIMITER + "documentos";
+  public static final String PATH_EMPRESA_COMPOSICION_SOCIEDAD = PATH_ID + PATH_DELIMITER + "composiciones-sociedades";
+  public static final String PATH_EMPRESA_ADMINISTRACION_SOCIEDAD = PATH_ID + PATH_DELIMITER
+      + "administraciones-sociedades";
+  public static final String PATH_MODIFICADOS_IDS = PATH_DELIMITER + "modificados-ids";
 
   // Services
   private final EmpresaService service;
@@ -257,6 +261,24 @@ public class EmpresaController {
         .convert(empresaAdministracionSociedadService.findAllByEmpresa(id, query, paging));
     log.debug("findAllEmpresaAdministracionSociedad(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene los ids de {@link Empresa} modificados que cumplan las condiciones
+   * indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Empresa}.
+   */
+  @GetMapping(PATH_MODIFICADOS_IDS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('EER-EER-V', 'EER-EER-E')")
+  public ResponseEntity<List<Long>> findIdsEmpresaModificados(
+      @RequestParam(name = "q", required = false) String query) {
+    log.debug("findIdsEmpresaModificados(String query) - start");
+    List<Long> returnValue = service.findIdsEmpresaModificados(query);
+    log.debug("findIdsEmpresaModificados(String query) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }
