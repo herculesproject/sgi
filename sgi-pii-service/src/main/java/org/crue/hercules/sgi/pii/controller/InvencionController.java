@@ -371,12 +371,14 @@ public class InvencionController {
   /**
    * Devuelve una lista de {@link InvencionDocumento} relacionados a una invencion
    * 
-   * @param id Identificador de {@link Invencion}.
+   * @param invencionId Identificador de {@link Invencion}.
+   * @param paging      opciones de paginacion
    * @return la lista de entidades {@link InvencionDocumento}
    */
   @GetMapping("/{invencionId}/invenciondocumentos")
   @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-E')")
-  ResponseEntity<Page<InvencionDocumentoOutput>> findInvencionDocumentosByInvencionId(@PathVariable Long invencionId,
+  public ResponseEntity<Page<InvencionDocumentoOutput>> findInvencionDocumentosByInvencionId(
+      @PathVariable Long invencionId,
       @RequestPageable(sort = "s") Pageable paging) {
 
     Page<InvencionDocumentoOutput> page = convertToPage(

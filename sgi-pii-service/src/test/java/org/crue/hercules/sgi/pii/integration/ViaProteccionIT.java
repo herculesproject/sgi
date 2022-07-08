@@ -52,7 +52,7 @@ public class ViaProteccionIT extends BaseIT {
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnViaProteccionOutputSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnViaProteccionOutputSubList() throws Exception {
 
     String[] roles = { "PII-VPR-V", "PII-VPR-C", "PII-VPR-E", "PII-VPR-B", "PII-VPR-R", "PII-INV-E", "PII-INV-V" };
 
@@ -73,7 +73,7 @@ public class ViaProteccionIT extends BaseIT {
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ViaProteccionOutput> tramoRepartoOutput = response.getBody();
-    Assertions.assertThat(tramoRepartoOutput.size()).isEqualTo(3);
+    Assertions.assertThat(tramoRepartoOutput).hasSize(3);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

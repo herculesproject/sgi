@@ -146,9 +146,9 @@ public class TramoRepartoController {
    */
   @RequestMapping(path = "", method = RequestMethod.HEAD, params = { "tipo" })
   @PreAuthorize("hasAnyAuthority('PII-TRE-V', 'PII-TRE-C', 'PII-TRE-E')")
-  public ResponseEntity<?> existTipoTramoReparto(@RequestParam(required = true) Tipo tipo) {
+  public ResponseEntity<Void> existTipoTramoReparto(@RequestParam(required = true) Tipo tipo) {
     log.debug("ResponseEntity<?> existTipoTramoReparto(Tipo tipo) - start");
-    final ResponseEntity<?> returnValue = service.existTipoTramoReparto(tipo) ? new ResponseEntity<>(HttpStatus.OK)
+    final ResponseEntity<Void> returnValue = service.existTipoTramoReparto(tipo) ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NO_CONTENT);
     log.debug("ResponseEntity<?> existTipoTramoReparto(Tipo tipo) - end");
 

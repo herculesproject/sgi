@@ -77,7 +77,7 @@ public class PeriodoTitularidadService {
 
     Optional<PeriodoTitularidad> previous = repository
         .findByInvencionIdAndFechaFinIsNull(periodoTitularidad.getInvencionId());
-    previous.ifPresent((previousVigente) -> {
+    previous.ifPresent(previousVigente -> {
       previousVigente.setFechaFin(fechaFinPrevious);
       repository.save(previousVigente);
     });

@@ -165,7 +165,7 @@ public class SolicitudProteccion extends BaseActivableEntity {
     this.estado = EstadoSolicitudProteccion.SOLICITADA;
   }
 
-  public static enum EstadoSolicitudProteccion {
+  public enum EstadoSolicitudProteccion {
     SOLICITADA, PUBLICADA, CONCEDIDA, CADUCADA
   }
 }

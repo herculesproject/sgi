@@ -4,8 +4,8 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.pii.model.TramoReparto;
-import org.crue.hercules.sgi.pii.model.TramoReparto_;
 import org.crue.hercules.sgi.pii.model.TramoReparto.Tipo;
+import org.crue.hercules.sgi.pii.model.TramoReparto_;
 import org.springframework.data.jpa.domain.Specification;
 
 import lombok.AccessLevel;
@@ -35,12 +35,10 @@ public class TramoRepartoSpecifications {
    *         solapados.
    */
   public static Specification<TramoReparto> overlappedTramoRepartoNotFinal(Integer desde, Integer hasta) {
-    return (root, query, cb) -> {
-      return cb.and(cb.and(cb.or(cb.between(root.get(TramoReparto_.desde), desde, hasta),
-          cb.between(root.get(TramoReparto_.hasta), desde, hasta),
-          cb.and(cb.lessThanOrEqualTo(root.get(TramoReparto_.desde), desde),
-              cb.greaterThanOrEqualTo(root.get(TramoReparto_.hasta), hasta)))));
-    };
+    return (root, query, cb) -> cb.and(cb.and(cb.or(cb.between(root.get(TramoReparto_.desde), desde, hasta),
+        cb.between(root.get(TramoReparto_.hasta), desde, hasta),
+        cb.and(cb.lessThanOrEqualTo(root.get(TramoReparto_.desde), desde),
+            cb.greaterThanOrEqualTo(root.get(TramoReparto_.hasta), hasta)))));
   }
 
   /**

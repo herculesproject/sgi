@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.pii.repository.predicate;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.util.regex.Pattern;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,8 +10,8 @@ import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.crue.hercules.sgi.pii.model.TramoReparto;
-import org.crue.hercules.sgi.pii.model.TramoReparto_;
 import org.crue.hercules.sgi.pii.model.TramoReparto.Tipo;
+import org.crue.hercules.sgi.pii.model.TramoReparto_;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;

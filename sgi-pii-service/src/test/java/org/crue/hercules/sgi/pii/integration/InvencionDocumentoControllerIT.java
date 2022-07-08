@@ -131,7 +131,7 @@ class InvencionDocumentoControllerIT extends BaseIT {
         HttpMethod.DELETE, buildRequest(null, null, roles), Void.class, toDeleteId);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-    Assertions.assertThat(this.invencionDocumentoRepository.findById(toDeleteId).isPresent()).isFalse();
+    Assertions.assertThat(this.invencionDocumentoRepository.findById(toDeleteId)).isNotPresent();
   }
 
   private InvencionDocumentoInput buildMockInvencionDocumentoInput() {

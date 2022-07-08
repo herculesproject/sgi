@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.pii.service;
 
+import static org.crue.hercules.sgi.pii.util.AssertHelper.PROBLEM_MESSAGE_NOTNULL;
 import static org.crue.hercules.sgi.pii.util.AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY;
 import static org.crue.hercules.sgi.pii.util.AssertHelper.PROBLEM_MESSAGE_PARAMETER_FIELD;
 
@@ -94,7 +95,7 @@ public class InformePatentabilidadService {
             .build());
     Assert.notNull(informePatentabilidad.getResultadoInformePatentabilidad(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD,
                 ApplicationContextSupport.getMessage(ResultadoInformePatentabilidadService.class))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
@@ -102,7 +103,7 @@ public class InformePatentabilidadService {
             .build());
     Assert.notNull(informePatentabilidad.getResultadoInformePatentabilidad().getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("id"))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
                 ApplicationContextSupport.getMessage(ResultadoInformePatentabilidadService.class))
@@ -127,14 +128,14 @@ public class InformePatentabilidadService {
 
     Assert.notNull(informePatentabilidad.getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("id"))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
                 ApplicationContextSupport.getMessage(InformePatentabilidad.class))
             .build());
     Assert.notNull(informePatentabilidad.getResultadoInformePatentabilidad(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD,
                 ApplicationContextSupport.getMessage(ResultadoInformePatentabilidadService.class))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
@@ -142,7 +143,7 @@ public class InformePatentabilidadService {
             .build());
     Assert.notNull(informePatentabilidad.getResultadoInformePatentabilidad().getId(),
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("id"))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
                 ApplicationContextSupport.getMessage(ResultadoInformePatentabilidadService.class))
@@ -191,7 +192,7 @@ public class InformePatentabilidadService {
     log.debug("deleteById(Long id) - start");
     Assert.notNull(id,
         // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("id"))
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
                 ApplicationContextSupport.getMessage(InformePatentabilidad.class))

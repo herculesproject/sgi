@@ -156,14 +156,13 @@ public class PeriodoTitularidadController {
   /**
    * Elimina el {@link PeriodoTitularidad} pasado por parámetros.
    * 
-   * @param periodoTitularidadId
-   * @return Respuesta vacía
+   * @param periodoTitularidadId id del periodo de titularidad
    */
   @DeleteMapping("/{periodoTitularidadId}")
   @PreAuthorize("hasAnyAuthority('PII-INV-E','PII-INV-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   @Transactional
-  void eliminarPeriodoTitularidad(@PathVariable Long periodoTitularidadId) {
+  public void eliminarPeriodoTitularidad(@PathVariable Long periodoTitularidadId) {
     this.service.deleteById(periodoTitularidadId);
   }
 
@@ -182,7 +181,7 @@ public class PeriodoTitularidadController {
 
   @PatchMapping("{periodoTitularidadId}/titulares")
   @PreAuthorize("hasAnyAuthority('PII-INV-C', 'PII-INV-E')")
-  ResponseEntity<List<PeriodoTitularidadTitularOutput>> updateTitularesByPeriodoTitularidad(
+  public ResponseEntity<List<PeriodoTitularidadTitularOutput>> updateTitularesByPeriodoTitularidad(
       @PathVariable Long periodoTitularidadId,
       @Valid @RequestBody List<PeriodoTitularidadTitularInput> periodoTitularidadTitularesInput) {
 
