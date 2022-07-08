@@ -18,8 +18,8 @@ public interface ConvocatoriaFaseService {
   /**
    * Guarda la entidad {@link ConvocatoriaFase}.
    * 
-   * @param convocatoriaFaseInput la entidad {@link ConvocatoriaFaseInput} a
-   *                              guardar.
+   * @param convocatoriaFase la entidad {@link ConvocatoriaFaseInput} a
+   *                         guardar.
    * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase}
    *         persistida.
    */
@@ -28,7 +28,7 @@ public interface ConvocatoriaFaseService {
   /**
    * Actualiza la entidad {@link ConvocatoriaFase}.
    * 
-   * @Param convocatoriaFaseId id de la {@link ConvocatoriaFase}
+   * @param convocatoriaFaseId         id de la {@link ConvocatoriaFase}
    * @param convocatoriaFaseActualizar la entidad {@link ConvocatoriaFaseInput} a
    *                                   guardar.
    * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase}
