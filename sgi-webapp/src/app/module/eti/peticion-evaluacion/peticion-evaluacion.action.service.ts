@@ -168,7 +168,7 @@ export class PeticionEvaluacionActionService extends ActionService {
           tap(() => part.refreshInitialState(true)))
         ),
         takeLast(1),
-        switchMap(() => this.updateMemorias(this.peticionEvaluacion.id))
+        switchMap(() => this.updateMemorias(this.datosGenerales.getKey() as number))
       );
     }
     else {
@@ -213,8 +213,8 @@ export class PeticionEvaluacionActionService extends ActionService {
           filter(value => value.isEditable() && !value.isReadonly()),
           switchMap(fragment => {
             return from(fragment.blocks$.value).pipe(
-              // Se excluye el último bloque (documentación), para que no se marque la memoria como completada sin intervención del usuario
-              filter(block => fragment.blocks$.value.indexOf(block) < fragment.blocks$.value.length - 1),
+              // Se excluyen los bloques que no hayan sido persistidos
+              filter(block => fragment.blocks$.value.indexOf(block) <= fragment.getLastFilledBlockIndex()),
               concatMap(block => {
                 fragment.selectedIndex$.next(fragment.blocks$.value.indexOf(block));
                 return block.loaded$.pipe(filter((value) => value), take(1), map(() => block.formlyData));

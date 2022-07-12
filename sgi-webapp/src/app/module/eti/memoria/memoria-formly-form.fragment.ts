@@ -24,7 +24,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { FormlyFormOptions } from '@ngx-formly/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subject, zip } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
 import { catchError, endWith, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface IBlock {
@@ -68,6 +68,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   // Almacena el formState de todos los bloques para poder hacer referencia entre ellos
   private formStateGlobal: any = {};
+
+  private lastCompletedBlock: number;
 
   isReadonly(): boolean {
     return this.readonly;
@@ -180,6 +182,18 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
             }));
         }),
         switchMap(() => {
+          return this.respuestaService.findLastByMemoriaId(this.memoria.id).pipe(
+            map(respuesta => {
+              if (!!respuesta?.id) {
+                this.lastCompletedBlock = respuesta.apartado.bloque.orden - 1;
+              }
+              else {
+                this.lastCompletedBlock = 0;
+              }
+            })
+          );
+        }),
+        switchMap(() => {
           return this.loadFormulario(this.tipoEvaluacion, this.comite);
         })
       );
@@ -187,6 +201,19 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     else {
       return of(void 0);
     }
+  }
+
+  public getLastFilledBlockIndex(): number {
+    let inMemory = 0;
+    this.blocks$.value.forEach((block, index) => {
+      if (block.loaded$.value) {
+        inMemory = index;
+      }
+    });
+    if (this.lastCompletedBlock > inMemory) {
+      return this.lastCompletedBlock;
+    }
+    return inMemory;
   }
 
   public performChecks(markAllTouched?: boolean) {
@@ -217,6 +244,44 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     ).pipe(
       takeLast(1)
     );
+  }
+
+  public refreshMemoria(memoria: IMemoria): void {
+    Object.assign(this.memoria, memoria);
+    const lastBlock = this.getLastFilledBlockIndex();
+    this.blocks$.value.forEach((block, index) => {
+      if (index <= lastBlock) {
+        if (block.loaded$.value) {
+          // Asumimos que siempre que se refresque el valor, y se haya cargado algo es porque hay un cambio. 
+          // Aunque no sabemos si tras un cambio ha retornado al valor original. Al menos el usuario tendrá feedback.
+          this.setChanges(true);
+          this.refreshFormlyModelValues(true, block.formlyData.model, block.formlyData.options.formState, block.formlyData.fields, block.questions);
+        }
+      }
+    });
+  }
+
+  private refreshFormlyModelValues(
+    firstLevel: boolean,
+    model: any,
+    formState: any,
+    formlyFieldConfig: SgiFormlyFieldConfig[],
+    questions: IQuestion[]
+  ): void {
+    questions.forEach(question => {
+      const firstFieldConfig = question.apartado.esquema ? question.apartado.esquema[0] : {};
+      const key = firstFieldConfig.key as string;
+      const fieldConfig = firstFieldConfig.fieldGroup;
+      if (firstLevel && key) {
+        if (this.isEditable()) {
+          this.evalExpressionModelValue(question.apartado.esquema, model[key], formState);
+        }
+        if (question.childs.length) {
+          const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
+          this.refreshFormlyModelValues(isFirstLevel, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs);
+        }
+      }
+    });
   }
 
   private getRespuestas(question: IQuestion): IRespuesta[] {
