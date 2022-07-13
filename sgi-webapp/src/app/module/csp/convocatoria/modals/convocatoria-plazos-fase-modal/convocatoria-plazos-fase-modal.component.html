@@ -70,7 +70,7 @@
       <!-- Aviso 2-->
       <div fxFlex *ngIf="formGroup.controls?.generaAviso1?.value">
         <mat-checkbox color="primary" formControlName="generaAviso2">
-          {{'csp.convocatoria-fase.aviso.generar-primero' | translate}}</mat-checkbox>
+          {{'csp.convocatoria-fase.aviso.generar-segundo' | translate}}</mat-checkbox>
       </div>
     </div>
     <mat-tab-group #avisosTabGroup *ngIf="formGroup.controls?.generaAviso1?.value">
@@ -79,8 +79,8 @@
         <mat-card formGroupName="aviso1" *ngIf="formGroup.controls?.generaAviso1?.value" fxFlex fxLayout="column">
 
           <div fxFlex>
-            <mat-form-field color="primary" fxFlex="40">
-              <mat-label>{{'label.aviso1.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+            <mat-form-field color="primary" fxFlex="45">
+              <mat-label>{{'label.aviso.primero.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
               <input matInput [ngxMatDatetimePicker]="pickerFechaEnvio" formControlName="fechaEnvio" required
                 [min]="minFechaPrimerAviso">
               <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEnvio"></mat-datepicker-toggle>
@@ -140,8 +140,9 @@
         <mat-card formGroupName="aviso2" fxFlex fxLayout="column">
 
           <div fxFlex>
-            <mat-form-field color="primary" fxFlex="40">
-              <mat-label>{{'label.aviso.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+            <mat-form-field color="primary" fxFlex="45">
+              <mat-label>{{'label.aviso.segundo.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}
+              </mat-label>
               <input matInput [ngxMatDatetimePicker]="pickerFechaEnvio" formControlName="fechaEnvio" required
                 [min]="minFechaSegundoAviso">
               <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEnvio"></mat-datepicker-toggle>
@@ -160,7 +161,7 @@
           </div>
           <div fxFlex>
             <mat-form-field fxFlex>
-              <mat-label>{{'label.aviso2.asunto' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+              <mat-label>{{'label.aviso.asunto' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
               <input matInput formControlName="asunto" type="text" required />
               <mat-error *ngIf="formGroup.hasError('required','aviso2.asunto')">
                 {{'error.required.entity' | translate:msgParamAsuntoEntity}}

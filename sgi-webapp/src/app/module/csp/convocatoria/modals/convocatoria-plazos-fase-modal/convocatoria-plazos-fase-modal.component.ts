@@ -56,16 +56,11 @@ export class ConvocatoriaPlazosFaseModalComponent
   }
 
   get minFechaPrimerAviso(): DateTime {
-    return (this.formGroup?.get('fechaFin')?.value as DateTime).plus({ minute: 15 });
+    return DateTime.now().plus({ minute: 15 });
   }
 
   get minFechaSegundoAviso(): DateTime {
-    const minFecha = this.minFechaPrimerAviso;
-    const now = DateTime.now().plus({ minute: 15 });
-    if (minFecha < now) {
-      return now;
-    }
-    return minFecha;
+    return this.formGroup.get('aviso1.fechaEnvio')?.value?.plus({ second: 1 });
   }
 
   textSaveOrUpdate: string;
@@ -175,7 +170,6 @@ export class ConvocatoriaPlazosFaseModalComponent
       ...MSG_PARAMS.GENDER.MALE,
       ...MSG_PARAMS.CARDINALIRY.PLURAL
     });
-
   }
 
   /**

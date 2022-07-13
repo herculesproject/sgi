@@ -6,7 +6,7 @@ import { ITipoFase } from "@core/models/csp/tipos-configuracion";
 import { IConvocatoriaFaseAvisoRequest } from "./convocatoria-fase-aviso-request";
 import { IConvocatoriaFaseAviso } from "./convocatoria-fase-aviso";
 
-class ConvocatåoriaFaseRequestConverter extends SgiBaseConverter<IConvocatoriaFaseRequest, IConvocatoriaFase> {
+class ConvocatoriaFaseRequestConverter extends SgiBaseConverter<IConvocatoriaFaseRequest, IConvocatoriaFase> {
 
   toTarget(value: IConvocatoriaFaseRequest): IConvocatoriaFase {
     return !!!value ? value as unknown as IConvocatoriaFase :
@@ -65,4 +65,4 @@ class ConvocatåoriaFaseRequestConverter extends SgiBaseConverter<IConvocatoriaF
     } : null;
   }
 }
-export const CONVOCATORIA_FASE_REQUEST_CONVERTER = new ConvocatåoriaFaseRequestConverter();
+export const CONVOCATORIA_FASE_REQUEST_CONVERTER = new ConvocatoriaFaseRequestConverter();
