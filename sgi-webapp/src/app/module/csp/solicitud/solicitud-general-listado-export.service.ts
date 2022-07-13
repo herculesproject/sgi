@@ -43,8 +43,8 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
   public getData(solicitudData: ISolicitudReportData): Observable<ISolicitudReportData> {
     return of(solicitudData).pipe(
       switchMap(() => {
-        if (!!!solicitudData.solicitante?.id) {
-          return this.solicitudService.findSolicitanteExterno(solicitudData.solicitud?.id).pipe(
+        if (!!!solicitudData.solicitante?.id && !!solicitudData.id) {
+          return this.solicitudService.findSolicitanteExterno(solicitudData?.id).pipe(
             map(solicitanteExterno => {
               solicitudData.solicitanteExterno = solicitanteExterno;
               return solicitudData;
