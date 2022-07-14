@@ -6,24 +6,26 @@ export class Module {
   private constructor(
     public readonly code: string,
     public readonly title: string,
-    public readonly path: string
+    public readonly path: string,
+    public readonly name: string,
+    public readonly icon: string
   ) { }
 
-  public static readonly CSP = new Module('CSP', marker('csp'), 'csp');
-  public static readonly ETI = new Module('ETI', marker('eti'), 'eti');
-  public static readonly INV = new Module('INV', marker('inv'), 'inv');
-  public static readonly PII = new Module('PII', marker('pii'), 'pii');
-  public static readonly PRC = new Module('PRC', marker('prc'), 'prc');
-  public static readonly EER = new Module('EER', marker('eer'), 'eer');
+  public static readonly CSP = new Module('CSP', marker('csp'), 'csp', marker('title.modulo.csp'), 'business_center');
+  public static readonly ETI = new Module('ETI', marker('eti'), 'eti', marker('title.modulo.eti'), 'balance');
+  public static readonly INV = new Module('INV', marker('inv'), 'inv', marker('title.modulo.inv'), 'cast_for_education');
+  public static readonly PII = new Module('PII', marker('pii'), 'pii', marker('title.modulo.pii'), 'tips_and_updates');
+  public static readonly PRC = new Module('PRC', marker('prc'), 'prc', marker('title.modulo.prc'), 'category');
+  public static readonly EER = new Module('EER', marker('eer'), 'eer', marker('title.modulo.eer'), 'business');
 
   static get values(): Module[] {
     return [
       this.CSP,
+      this.EER,
       this.ETI,
       this.INV,
       this.PII,
-      this.PRC,
-      this.EER
+      this.PRC
     ];
   }
 
