@@ -225,4 +225,105 @@
     <addForeignKeyConstraint baseColumnNames="convocatoria_fase_aviso2_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIAFASEAVISO2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_fase_aviso" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000008-29">
+    <createSequence incrementBy="1" sequenceName="incidencia_documentacion_requerimiento_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-30">
+    <createSequence incrementBy="1" sequenceName="requerimiento_justificacion_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-31">
+    <createSequence incrementBy="1" sequenceName="tipo_requerimiento_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-32">
+    <createTable tableName="incidencia_documentacion_requerimiento">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="incidencia_documentacion_requerimientoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="alegacion" type="VARCHAR(2000)" />
+      <column name="incidencia" type="VARCHAR(2000)" />
+      <column name="nombre_documento" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="requerimiento_justificacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-33">
+    <createTable tableName="requerimiento_justificacion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="requerimiento_justificacionPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="anticipo_justificado" type="DECIMAL(19, 2)" />
+      <column name="defecto_anticipo" type="DECIMAL(19, 2)" />
+      <column name="defecto_subvencion" type="DECIMAL(19, 2)" />
+      <column name="fecha_fin_alegacion" type="TIMESTAMP" />
+      <column name="fecha_notificacion" type="TIMESTAMP" />
+      <column name="importe_aceptado" type="DECIMAL(19, 2)" />
+      <column name="importe_aceptado_cd" type="DECIMAL(19, 2)" />
+      <column name="importe_aceptado_ci" type="DECIMAL(19, 2)" />
+      <column name="importe_rechazado" type="DECIMAL(19, 2)" />
+      <column name="importe_rechazado_cd" type="DECIMAL(19, 2)" />
+      <column name="importe_rechazado_ci" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrar" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrar_cd" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrar_ci" type="DECIMAL(19, 2)" />
+      <column name="intereses_reintegrar" type="DECIMAL(19, 2)" />
+      <column name="num_requerimiento" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="observaciones" type="VARCHAR(2000)" />
+      <column name="proyecto_periodo_justificacion_id" type="BIGINT" />
+      <column name="proyecto_proyecto_sge_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="recurso_estimado" type="BOOLEAN" />
+      <column name="requerimiento_previo_id" type="BIGINT" />
+      <column name="subvencion_justificada" type="DECIMAL(19, 2)" />
+      <column name="tipo_requerimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-34">
+    <createTable tableName="tipo_requerimiento">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_requerimientoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-35">
+    <addForeignKeyConstraint baseColumnNames="requerimiento_justificacion_id" baseTableName="incidencia_documentacion_requerimiento" constraintName="FK_INCIDENCIADOCUMENTACIONREQUERIMIENTO_REQUERIMIENTOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requerimiento_justificacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-36">
+    <addForeignKeyConstraint baseColumnNames="requerimiento_previo_id" baseTableName="requerimiento_justificacion" constraintName="FK_REQUERIMIENTOJUSTIFICACIONPREVIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requerimiento_justificacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-37">
+    <addForeignKeyConstraint baseColumnNames="proyecto_periodo_justificacion_id" baseTableName="requerimiento_justificacion" constraintName="FK_REQUERIMIENTOJUSTIFICACION_PROYECTOPERIODOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_periodo_justificacion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-38">
+    <addForeignKeyConstraint baseColumnNames="proyecto_proyecto_sge_id" baseTableName="requerimiento_justificacion" constraintName="FK_REQUERIMIENTOJUSTIFICACION_PROYECTOPROYECTOSGE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_proyecto_sge" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-39">
+    <addForeignKeyConstraint baseColumnNames="tipo_requerimiento_id" baseTableName="requerimiento_justificacion" constraintName="FK_REQUERIMIENTOJUSTIFICACION_TIPOREQUERIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_requerimiento" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

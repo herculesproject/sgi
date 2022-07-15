@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.SeguimientoEjecucionEconomicaController;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
+import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,6 +29,7 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
   private static final String CONTROLLER_BASE_PATH = SeguimientoEjecucionEconomicaController.REQUEST_MAPPING;
   private static final String PATH_PROYECTOS = SeguimientoEjecucionEconomicaController.PATH_PROYECTOS;
   private static final String PATH_PERIODO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_PERIODO_JUSTIFICACION;
+  private static final String PATH_REQUERIMIENTO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_REQUERIMIENTO_JUSTIFICACION;
 
   private static final String[] DEFAULT_ROLES = { "CSP-SJUS-E", "CSP-SJUS-V" };
 
@@ -143,5 +145,57 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
         .isEqualTo("testing periodo 2");
     Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
         .isEqualTo("testing periodo 1");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/proyecto_proyecto_sge.sql",
+    "classpath:scripts/proyecto_periodo_justificacion.sql",
+    "classpath:scripts/tipo_requerimiento.sql",
+    "classpath:scripts/requerimiento_justificacion.sql",
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findRequerimientosJustificacion_WithPagingSorting_ReturnsRequerimientoJustificacionOutputSubList()
+      throws Exception {
+
+    // given: data for RequerimientoJustificacionOutput and a proyectoSgeRef
+    String proyectoSgeRef = "proyecto-sge-ref-001";
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "observaciones,desc";
+
+    // when: find RequerimientoJustificacionOutput
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_REQUERIMIENTO_JUSTIFICACION)
+        .queryParam("s", sort).buildAndExpand(proyectoSgeRef).toUri();
+    final ResponseEntity<List<RequerimientoJustificacionOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET,
+        buildRequest(headers, null, DEFAULT_ROLES),
+        new ParameterizedTypeReference<List<RequerimientoJustificacionOutput>>() {
+        });
+
+    // given: RequerimientoJustificacionOutput data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<RequerimientoJustificacionOutput> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(2);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
+
+    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
+        .isEqualTo("obs-002");
+    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("obs-001");
   }
 }

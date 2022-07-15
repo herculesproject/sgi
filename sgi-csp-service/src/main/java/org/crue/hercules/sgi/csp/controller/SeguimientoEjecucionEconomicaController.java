@@ -3,12 +3,16 @@ package org.crue.hercules.sgi.csp.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
+import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -34,13 +38,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class SeguimientoEjecucionEconomicaController {
-  public static final String REQUEST_MAPPING = "/seguimiento-ejecucion-economica";
-  public static final String PATH_PROYECTOS = "/{id}/proyectos";
-  public static final String PATH_PERIODO_JUSTIFICACION = "/{id}/periodos-justificacion";
+  public static final String PATH_DELIMITER = "/";
+  public static final String REQUEST_MAPPING = PATH_DELIMITER + "seguimiento-ejecucion-economica";
+  public static final String PATH_ID = PATH_DELIMITER + "{id}";
+  public static final String PATH_PROYECTOS = PATH_DELIMITER + PATH_ID + PATH_DELIMITER + "proyectos";
+  public static final String PATH_PERIODO_JUSTIFICACION = PATH_DELIMITER + PATH_ID + PATH_DELIMITER
+      + "periodos-justificacion";
+  public static final String PATH_REQUERIMIENTO_JUSTIFICACION = PATH_DELIMITER + PATH_ID + PATH_DELIMITER
+      + "requerimientos-justificacion";
 
   private final ModelMapper modelMapper;
   private final ProyectoService proyectoService;
   private final ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService;
+  private final RequerimientoJustificacionService requerimientoJustificacionService;
+  private final RequerimientoJustificacionConverter requerimientoJustificacionConverter;
 
   /**
    * Devuelve una lista paginada y filtrada
@@ -105,5 +116,33 @@ public class SeguimientoEjecucionEconomicaController {
 
   private ProyectoPeriodoJustificacionOutput convert(ProyectoPeriodoJustificacion proyectoPeriodoJustificacion) {
     return modelMapper.map(proyectoPeriodoJustificacion, ProyectoPeriodoJustificacionOutput.class);
+  }
+
+  /**
+   * Devuelve una lista paginada de todos los
+   * {@link RequerimientoJustificacion} asociados a un ProyectoSGE.
+   * 
+   * @param id     identificador del proyectoSGE
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link RequerimientoJustificacion}
+   *         paginados y filtrados.
+   */
+  @GetMapping(PATH_REQUERIMIENTO_JUSTIFICACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SJUS-V', 'CSP-SJUS-E')")
+  public ResponseEntity<Page<RequerimientoJustificacionOutput>> findRequerimientosJustificacion(
+      @PathVariable String id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findRequerimientosJustificacion(String id, String query, Pageable paging) - start");
+    Page<RequerimientoJustificacion> page = requerimientoJustificacionService.findAllByProyectoSgeRef(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findRequerimientosJustificacion(String id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findRequerimientosJustificacion(String id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(requerimientoJustificacionConverter.convert(page), HttpStatus.OK);
   }
 }
