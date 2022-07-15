@@ -77,6 +77,11 @@
         [title]="'menu.csp.ejecucion-economica.seguimiento-justificacion.resumen' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_RESUMEN)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-SJUS-V', 'CSP-SJUS-E']"
+        [route]="[EJECUCION_ECONOMICA_ROUTE_NAMES.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS]"
+        [title]="'menu.csp.ejecucion-economica.seguimiento-justificacion.requerimientos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS)">
+      </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
   </ng-container>
   <ng-container footer>

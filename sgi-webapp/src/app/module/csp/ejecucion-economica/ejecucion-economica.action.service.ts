@@ -10,8 +10,10 @@ import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
+import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
@@ -27,6 +29,7 @@ import { FacturasEmitidasFragment } from './ejecucion-economica-formulario/factu
 import { FacturasGastosFragment } from './ejecucion-economica-formulario/facturas-gastos/facturas-gastos.fragment';
 import { PersonalContratadoFragment } from './ejecucion-economica-formulario/personal-contratado/personal-contratado.fragment';
 import { ProyectosFragment } from './ejecucion-economica-formulario/proyectos/proyectos.fragment';
+import { SeguimientoJustificacionRequerimientosFragment } from './ejecucion-economica-formulario/seguimiento-justificacion-requerimientos/seguimiento-justificacion-requerimientos.fragment';
 import { SeguimientoJustificacionResumenFragment } from './ejecucion-economica-formulario/seguimiento-justificacion-resumen/seguimiento-justificacion-resumen.fragment';
 import { ValidacionGastosFragment } from './ejecucion-economica-formulario/validacion-gastos/validacion-gastos.fragment';
 import { ViajesDietasFragment } from './ejecucion-economica-formulario/viajes-dietas/viajes-dietas.fragment';
@@ -59,7 +62,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     PERSONAL_CONTRATADO: 'personal-contratado',
     VALIDACION_GASTOS: 'validacion-gastos',
     FACTURAS_EMITIDAS: 'facturas-emitidas',
-    SEGUIMIENTO_JUSTIFICACION_RESUMEN: 'seguimiento-justificacion-resumen'
+    SEGUIMIENTO_JUSTIFICACION_RESUMEN: 'seguimiento-justificacion-resumen',
+    SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS: 'seguimiento-justificacion-requerimientos'
   };
 
   private proyectos: ProyectosFragment;
@@ -75,6 +79,7 @@ export class EjecucionEconomicaActionService extends ActionService {
   private validacionGastos: ValidacionGastosFragment;
   private facturasEmitidas: FacturasEmitidasFragment;
   private seguimientoJustificacionResumen: SeguimientoJustificacionResumenFragment;
+  private seguimientoJustificacionRequerimientos: SeguimientoJustificacionRequerimientosFragment;
 
   private readonly data: IEjecucionEconomicaData;
 
@@ -90,7 +95,9 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     proyectoSeguimientoEjecucionEconomicaService: ProyectoSeguimientoEjecucionEconomicaService,
     empresaService: EmpresaService,
-    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService
+    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
+    requerimientoJustificacionService: RequerimientoJustificacionService,
+    proyectoProyectoSgeService: ProyectoProyectoSgeService
   ) {
     super();
 
@@ -154,6 +161,11 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoPeriodoJustificacionService
     );
 
+    this.seguimientoJustificacionRequerimientos = new SeguimientoJustificacionRequerimientosFragment(
+      id, proyectoSeguimientoEjecucionEconomicaService, requerimientoJustificacionService,
+      proyectoProyectoSgeService, proyectoPeriodoJustificacionService
+    );
+
     this.addFragment(this.FRAGMENT.PROYECTOS, this.proyectos);
     this.addFragment(this.FRAGMENT.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, this.ejecucionPresupuestariaEstadoActual);
     this.addFragment(this.FRAGMENT.EJECUCION_PRESUPUESTARIA_GASTOS, this.ejecucionPresupuestariaGastos);
@@ -167,6 +179,7 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.VALIDACION_GASTOS, this.validacionGastos);
     this.addFragment(this.FRAGMENT.FACTURAS_EMITIDAS, this.facturasEmitidas);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_RESUMEN, this.seguimientoJustificacionResumen);
+    this.addFragment(this.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, this.seguimientoJustificacionRequerimientos);
   }
 
 }
