@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IAutorGrupo } from '@core/models/prc/autor-grupo';
-import { TIPO_ESTADO_PRODUCCION_MAP } from '@core/models/prc/estado-produccion-cientifica';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
@@ -15,7 +14,7 @@ export class AutorGrupoEstadoTooltipPipe implements PipeTransform {
       return '';
     }
     return grupos.map(autorGrupo =>
-      this.translateService.instant(TIPO_ESTADO_PRODUCCION_MAP.get(autorGrupo.estado)) + ' (' + autorGrupo.grupo.codigo + ')'
+      this.translateService.instant(autorGrupo.grupo.nombre) + ' (' + autorGrupo.grupo.codigo + ')'
     ).join(', ');
   }
 }
