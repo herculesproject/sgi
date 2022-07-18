@@ -172,7 +172,8 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   }
 
   public boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
-    return hasAuthorityViewInvestigador() && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
+    return hasAuthorityViewInvestigador()
+        && Objects.equals(solicitud.getSolicitanteRef(), getAuthenticationPersonaRef());
   }
 
   public boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {

@@ -29,7 +29,7 @@ public class ConvocatoriaFaseOutput implements Serializable {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  public static class TipoFase {
+  public static class TipoFase implements Serializable {
     private Long id;
     private String nombre;
     private String descripcion;
