@@ -77,6 +77,27 @@
       <column name="value" value="[&quot;convocatoria.fases.ugi@sgi.es&quot;]" />
     </insert>
 
+    <!-- Destinatarios defecto CSP Proyecto fases OTRI -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-fases-destinatarios-1" />
+      <column name="description" value="Destinatarios defecto CSP Proyecto Fases - OTRI" />
+      <column name="value" value="[&quot;proyecto.fases.otri@sgi.es&quot;]" />
+    </insert>
+
+    <!-- Destinatarios defecto CSP Proyecto fases OPE -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-fases-destinatarios-2" />
+      <column name="description" value="Destinatarios defecto CSP Proyecto Fases - OPE" />
+      <column name="value" value="[&quot;proyecto.fases.ope@sgi.es&quot;]" />
+    </insert>
+
+    <!-- Destinatarios defecto CSP Proyecto fases UGI -->
+    <insert tableName="config">
+      <column name="name" value="csp-pro-fases-destinatarios-3" />
+      <column name="description" value="Destinatarios defecto CSP Proyecto Fases - UGI" />
+      <column name="value" value="[&quot;proyecto.fases.ugi@sgi.es&quot;]" />
+    </insert>
+
     <!-- Nombre sistema gestion externo -->
     <insert tableName="config">
       <column name="name" value="nombre-sistema-gestion-externo" />
