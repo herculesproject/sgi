@@ -53,7 +53,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_ROUTE_NAMES } from '../proyecto/proyecto-route-names';
@@ -183,7 +183,13 @@ export class SolicitudActionService extends ActionService {
   }
 
   get solicitante(): IPersona {
-    return this.datosGenerales.getValue().solicitante;
+    let solicitante = this.datosGenerales.getValue().solicitante;
+
+    if (!solicitante && this.isFormularioSolicitudRrhh() && this.solicitanteRrhh.isInitialized()) {
+      solicitante = this.solicitanteRrhh.getValue().solicitante;
+    }
+
+    return solicitante;
   }
 
   get solicitudProyecto(): ISolicitudProyecto {
@@ -582,7 +588,7 @@ export class SolicitudActionService extends ActionService {
     if (this.hasErrors()) {
       return throwError('Errores');
     } else {
-      if (!!this.convocatoriaId && this.isFormularioSolicitudProyecto()) {
+      if (!!this.convocatoriaId) {
         return this.equipoProyecto.validateRequisitosConvocatoriaSolicitante(this.solicitante, this.convocatoriaId).pipe(
           switchMap((response) => {
             if (response) {
@@ -607,6 +613,8 @@ export class SolicitudActionService extends ActionService {
                   if (aceptado) {
                     return this.saveOrUpdateSolicitud();
                   }
+
+                  return NEVER;
                 })
               );
             }
