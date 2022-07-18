@@ -45,7 +45,8 @@ export interface SolicitudCambioEstadoModalComponentData {
 export const ESTADO_MAP_INVESTIGADOR: Map<Estado, Map<Estado, string>> = new Map();
 ESTADO_MAP_INVESTIGADOR.set(Estado.BORRADOR,
   new Map([[Estado.SOLICITADA, ESTADO_MAP.get(Estado.SOLICITADA)], [Estado.DESISTIDA, ESTADO_MAP.get(Estado.DESISTIDA)]]));
-
+ESTADO_MAP_INVESTIGADOR.set(Estado.RECHAZADA,
+  new Map([[Estado.SOLICITADA, ESTADO_MAP.get(Estado.SOLICITADA)], [Estado.DESISTIDA, ESTADO_MAP.get(Estado.DESISTIDA)]]));
 ESTADO_MAP_INVESTIGADOR.set(Estado.SUBSANACION, new Map([
   [Estado.PRESENTADA_SUBSANACION, ESTADO_MAP.get(Estado.PRESENTADA_SUBSANACION)],
   [Estado.DESISTIDA, ESTADO_MAP.get(Estado.DESISTIDA)]
