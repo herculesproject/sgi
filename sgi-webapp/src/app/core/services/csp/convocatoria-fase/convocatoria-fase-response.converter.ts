@@ -29,9 +29,9 @@ class ConvocatoriaFaseResponseConverter extends SgiBaseConverter<IConvocatoriaFa
         id: value.id,
         fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
         fechaFin: LuxonUtils.toBackend(value.fechaFin),
-        tipoFase: {
+        tipoFase: !!value.tipoFase ? {
           id: value.tipoFase.id
-        } as ITipoFase,
+        } as ITipoFase : null,
         observaciones: value.observaciones,
         convocatoriaId: value.convocatoriaId,
         aviso1: this.getConvocatoriaFaseAvisoResponse(value.aviso1),
