@@ -425,8 +425,8 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
     const categoriasProfesionalesExigidas = requisitosCategoria.map(requisitoCategoria => {
       const requisitoCategoriaExigida: RequisitoCategoriaProfesionalExigidoAndAcreditado = {
         nivelExigido: requisitoCategoria.categoriaProfesional,
-        fechaMaximaObtencion: requisitosIp.fechaMaximaNivelAcademico,
-        fechaMinimaObtencion: requisitosIp.fechaMinimaNivelAcademico,
+        fechaMaximaObtencion: requisitosIp.fechaMaximaCategoriaProfesional,
+        fechaMinimaObtencion: requisitosIp.fechaMinimaCategoriaProfesional,
         nivelAcreditado: nivelesCategoriaAcreditados
           .find(requisitoCategoriaAcreditado => requisitoCategoriaAcreditado.requisitoIpCategoria.id === requisitoCategoria.id),
         help: null
