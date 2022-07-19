@@ -13,15 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ConvocatoriaFaseAvisoOutput implements Serializable {
+public class ProyectoFaseAvisoOutput implements Serializable {
 
   private Long id;
 
   private String tareaProgramadaRef;
 
   private String comunicadoRef;
-
-  private Boolean incluirIpsSolicitud;
 
   private Boolean incluirIpsProyecto;
 }

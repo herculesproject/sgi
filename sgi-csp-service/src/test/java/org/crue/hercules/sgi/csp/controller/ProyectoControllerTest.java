@@ -5,11 +5,13 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
+import org.crue.hercules.sgi.csp.dto.ProyectoFaseAvisoOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoFaseOutput;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -17,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
+import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
@@ -71,6 +74,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -78,6 +82,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ProyectoControllerTest
@@ -165,6 +171,9 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private GastoProyectoService gastoProyectoService;
+
+  @MockBean
+  private ProyectoFaseConverter proyectoFaseConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -632,9 +641,13 @@ class ProyectoControllerTest extends BaseControllerTest {
     // given: Una lista con 37 ProyectoFase para el Proyecto
     Long proyectoId = 1L;
 
-    List<ProyectoFase> proyectoFases = new ArrayList<>();
+    List<ProyectoFase> proyectoFases = new LinkedList<>();
     for (long i = 1; i <= 37; i++) {
       proyectoFases.add(generarMockProyectoFase(i));
+    }
+    List<ProyectoFaseOutput> proyectoFasesOutput = new LinkedList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoFasesOutput.add(generarMockProyectoFaseOutput(i));
     }
 
     Integer page = 3;
@@ -655,6 +668,10 @@ class ProyectoControllerTest extends BaseControllerTest {
             return page;
           }
         });
+
+    BDDMockito.given(this.proyectoFaseConverter.convert(ArgumentMatchers.<Page<ProyectoFase>>any()))
+        .willReturn(
+            new PageImpl<>(proyectoFasesOutput.subList(30, 37), PageRequest.of(3, 10), proyectoFasesOutput.size()));
 
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
@@ -1370,7 +1387,26 @@ class ProyectoControllerTest extends BaseControllerTest {
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
-    proyectoFase.setGeneraAviso(true);
+    proyectoFase.setProyectoFaseAviso1(buildMockProyectoFaseAviso(1L, id));
+    proyectoFase.setProyectoFaseAviso2(buildMockProyectoFaseAviso(2L, id));
+    proyectoFase.setTipoFase(tipoFase);
+
+    return proyectoFase;
+  }
+
+  private ProyectoFaseOutput generarMockProyectoFaseOutput(Long id) {
+    ProyectoFaseOutput.TipoFase tipoFase = new ProyectoFaseOutput.TipoFase();
+    tipoFase.setId(id == null ? 1 : id);
+    tipoFase.setActivo(true);
+
+    ProyectoFaseOutput proyectoFase = new ProyectoFaseOutput();
+    proyectoFase.setId(id);
+    proyectoFase.setProyectoId(id == null ? 1 : id);
+    proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
+    proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
+    proyectoFase.setAviso1(buildMockProyectoFaseAvisoOutput(1L, id));
+    proyectoFase.setAviso2(buildMockProyectoFaseAvisoOutput(2L, id));
     proyectoFase.setTipoFase(tipoFase);
 
     return proyectoFase;
@@ -1496,6 +1532,22 @@ class ProyectoControllerTest extends BaseControllerTest {
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();
     // @formatter:on
+  }
+
+  private ProyectoFaseAviso buildMockProyectoFaseAviso(Long id, Long proyectoFaseId) {
+    return ProyectoFaseAviso.builder()
+        .comunicadoRef("3333")
+        .id(id)
+        .tareaProgramadaRef("666")
+        .build();
+  }
+
+  private ProyectoFaseAvisoOutput buildMockProyectoFaseAvisoOutput(Long id, Long proyectoFaseId) {
+    return ProyectoFaseAvisoOutput.builder()
+        .comunicadoRef("3333")
+        .id(id)
+        .tareaProgramadaRef("666")
+        .build();
   }
 
 }

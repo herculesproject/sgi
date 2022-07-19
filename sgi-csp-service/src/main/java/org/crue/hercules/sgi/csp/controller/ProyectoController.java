@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
@@ -16,6 +17,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoEquipoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoFacturacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoFaseOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
@@ -216,6 +218,8 @@ public class ProyectoController {
   /** Convocatoria service */
   private final ConvocatoriaService convocatoriaService;
 
+  private final ProyectoFaseConverter proyectoFaseConverter;
+
   /**
    * Crea nuevo {@link Proyecto}
    * 
@@ -397,7 +401,7 @@ public class ProyectoController {
    */
   @GetMapping("/{id}/proyectofases")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  public ResponseEntity<Page<ProyectoFase>> findAllProyectoFase(@PathVariable Long id,
+  public ResponseEntity<Page<ProyectoFaseOutput>> findAllProyectoFase(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoFase(Long id, String query, Pageable paging) - start");
     Page<ProyectoFase> page = proyectoFaseService.findAllByProyecto(id, query, paging);
@@ -408,7 +412,7 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoFase(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    return new ResponseEntity<>(this.proyectoFaseConverter.convert(page), HttpStatus.OK);
   }
 
   /**

@@ -33,7 +33,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
-import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaFaseSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
@@ -68,7 +67,6 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final ConvocatoriaService convocatoriaService;
   private final ConvocatoriaFaseAvisoRepository convocatoriaFaseAvisoRepository;
-  private final TipoFaseRepository tipoFaseRepository;
   private final SgiApiComService emailService;
   private final SgiApiTpService sgiApiTaskService;
   private final SgiApiSgpService personaService;
@@ -81,7 +79,6 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       ConfiguracionSolicitudRepository configuracionSolicitudRepository,
       ModeloTipoFaseRepository modeloTipoFaseRepository,
       ConvocatoriaService convocatoriaService,
-      TipoFaseRepository tipoFaseRepository,
       ConvocatoriaFaseAvisoRepository convocatoriaFaseAvisoRepository,
       SolicitudRepository solicitudRepository,
       ProyectoEquipoRepository proyectoEquipoRepository,
@@ -93,7 +90,6 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.convocatoriaService = convocatoriaService;
-    this.tipoFaseRepository = tipoFaseRepository;
     this.emailService = emailService;
     this.sgiApiTaskService = sgiApiTaskService;
     this.personaService = personaService;
@@ -351,6 +347,9 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
         }).collect(Collectors.toList());
 
     configuracionSolicitudRepository.saveAll(configuracionesSolicitudModificadas);
+
+    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso1());
+    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso2());
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

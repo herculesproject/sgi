@@ -33,7 +33,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
-import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaFaseServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
@@ -75,8 +74,6 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Mock
   private ConvocatoriaService convocatoriaService;
   @Mock
-  private TipoFaseRepository tipoFaseRepository;
-  @Mock
   private ConvocatoriaFaseAvisoRepository convocatoriaFaseAvisoRepository;
   @Mock
   private SolicitudRepository solicitudRepository;
@@ -95,7 +92,6 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   void setUp() throws Exception {
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
         modeloTipoFaseRepository, convocatoriaService,
-        tipoFaseRepository,
         convocatoriaFaseAvisoRepository,
         solicitudRepository,
         proyectoEquipoRepository,

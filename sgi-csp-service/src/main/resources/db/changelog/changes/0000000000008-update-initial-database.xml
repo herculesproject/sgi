@@ -325,5 +325,38 @@
   <changeSet author="user (generated)" id="0000000000008-39">
     <addForeignKeyConstraint baseColumnNames="tipo_requerimiento_id" baseTableName="requerimiento_justificacion" constraintName="FK_REQUERIMIENTOJUSTIFICACION_TIPOREQUERIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_requerimiento" validate="true" />
   </changeSet>
-
+  <changeSet author="user (generated)" id="0000000000008-40">
+    <createSequence incrementBy="1" sequenceName="proyecto_fase_aviso_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-41">
+    <createTable tableName="proyecto_fase_aviso">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="proyecto_fase_avisoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="comunicado_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+      <column defaultValueBoolean="false" name="incluir_ips_proyecto" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <column name="tarea_programada_ref" type="VARCHAR(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000008-42">
+    <addColumn tableName="proyecto_fase">
+      <column name="proyecto_fase_aviso1_id" type="bigint" />
+    </addColumn>
+    <addColumn tableName="proyecto_fase">
+      <column name="proyecto_fase_aviso2_id" type="bigint" />
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="proyecto_fase_aviso1_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_PROYECTOFASEAVISO1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_fase_aviso" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="proyecto_fase_aviso2_id" baseTableName="proyecto_fase" constraintName="FK_PROYECTOFASE_PROYECTOFASEAVISO2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proyecto_fase_aviso" validate="true" />
+    <dropColumn columnName="GENERA_AVISO" tableName="PROYECTO_FASE" />
+  </changeSet>
 </databaseChangeLog>

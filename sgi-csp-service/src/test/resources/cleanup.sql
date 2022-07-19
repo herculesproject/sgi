@@ -15,6 +15,7 @@ DELETE FROM test.prorroga_documento;
 DELETE FROM test.proyecto_prorroga;
 DELETE FROM test.proyecto_paquete_trabajo;
 DELETE FROM test.proyecto_fase;
+DELETE FROM test.proyecto_fase_aviso;
 DELETE FROM test.contexto_proyecto;
 DELETE FROM test.proyecto_periodo_seguimiento_documento;
 DELETE FROM test.proyecto_periodo_seguimiento;

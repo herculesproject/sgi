@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadResumen;
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoEquipoDto;
 import org.crue.hercules.sgi.csp.dto.ProyectoFacturacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoFaseOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
@@ -34,7 +35,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
-import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
@@ -556,6 +556,7 @@ class ProyectoIT extends BaseIT {
       "classpath:scripts/proyecto.sql", 
       "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", 
+      "classpath:scripts/proyecto_fase_aviso.sql",
       "classpath:scripts/proyecto_fase.sql"
     // @formatter:on
   })
@@ -574,13 +575,13 @@ class ProyectoIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASES)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(proyectoId).toUri();
 
-    final ResponseEntity<List<ProyectoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<ProyectoFase>>() {
+    final ResponseEntity<List<ProyectoFaseOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<ProyectoFaseOutput>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    final List<ProyectoFase> proyectosFases = response.getBody();
+    final List<ProyectoFaseOutput> proyectosFases = response.getBody();
     Assertions.assertThat(proyectosFases).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -606,6 +607,7 @@ class ProyectoIT extends BaseIT {
     "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/modelo_tipo_fase.sql",
+    "classpath:scripts/proyecto_fase_aviso.sql",
     "classpath:scripts/proyecto_fase.sql"
     // @formatter:on
   })
@@ -637,6 +639,7 @@ class ProyectoIT extends BaseIT {
     "classpath:scripts/convocatoria.sql", 
     "classpath:scripts/proyecto.sql", 
     "classpath:scripts/modelo_tipo_fase.sql",
+    "classpath:scripts/proyecto_fase_aviso.sql",
     "classpath:scripts/proyecto_fase.sql"
     // @formatter:on
   })
@@ -650,8 +653,8 @@ class ProyectoIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASES)
         .buildAndExpand(proyectoId).toUri();
 
-    final ResponseEntity<Proyecto> response = restTemplate.exchange(uri, HttpMethod.HEAD,
-        buildRequest(null, null, roles), Proyecto.class);
+    final ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.HEAD,
+        buildRequest(null, null, roles), Void.class);
 
     // then: El proyecto no tiene fases
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -2337,8 +2340,8 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     List<AnualidadGasto> responseData = response.getBody();
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).hasSize(3);
+    Assertions.assertThat(responseData).isNotNull()
+        .hasSize(3);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2395,8 +2398,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
 
     List<ProyectoConceptoGasto> responseData = response.getBody();
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).hasSize(2);
+    Assertions.assertThat(responseData).isNotNull().hasSize(2);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2451,8 +2453,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
 
     List<ProyectoConceptoGasto> responseData = response.getBody();
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).hasSize(2);
+    Assertions.assertThat(responseData).isNotNull().hasSize(2);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();

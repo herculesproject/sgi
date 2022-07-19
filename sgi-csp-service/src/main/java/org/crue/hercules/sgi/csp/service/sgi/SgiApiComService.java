@@ -154,6 +154,7 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String SOLICITUD_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/solicitudhitos/%s/deferrable-recipients";
   private static final String PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/proyectohitos/%s/deferrable-recipients";
   private static final String CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/convocatoriafases/%s/deferrable-recipients";
+  private static final String PROYECTO_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT = "/proyectofases/%s/deferrable-recipients";
 
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO = "CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO";
   private static final String TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_PARAM = TEMPLATE_CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO
@@ -777,6 +778,24 @@ public class SgiApiComService extends SgiApiBaseService {
         String.format(CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, convocatoriaFaseId), HttpMethod.GET))
         .getId();
     log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - end", convocatoriaFaseId, subject, content, recipients);
+    return id;
+  }
+
+  public Long createProyectoFaseEmail(Long proyectoFaseId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - start", proyectoFaseId, subject, content, recipients);
+
+    Assert.notNull(proyectoFaseId, "ProyectoFase ID is required");
+    Assert.notNull(subject, "Subject is required");
+    Assert.notNull(content, "Content is required");
+    Assert.notEmpty(recipients, "At least one Recipient is required");
+    Assert.noNullElements(recipients, "The Recipients list must not contain null elements");
+
+    Long id = this.createGenericEmailText(subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(PROYECTO_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, proyectoFaseId), HttpMethod.GET))
+        .getId();
+    log.debug("createProyectoFaseEmail({}, {}, {}, {}) - end", proyectoFaseId, subject, content, recipients);
     return id;
   }
 
