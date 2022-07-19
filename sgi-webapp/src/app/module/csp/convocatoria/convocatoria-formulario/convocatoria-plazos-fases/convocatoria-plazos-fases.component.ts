@@ -31,7 +31,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
   formPart: ConvocatoriaPlazosFasesFragment;
   private subscriptions: Subscription[] = [];
 
-  displayedColumns = ['fechaInicio', 'fechaFin', 'tipoFase', 'observaciones', 'acciones'];
+  displayedColumns = ['fechaInicio', 'fechaFin', 'tipoFase', 'observaciones', 'aviso', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
   msgParamEntity = {};

@@ -13,7 +13,6 @@ import { PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-equipo.
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
-import { PROYECTO_PLAZO_CONVERTER } from '@core/converters/csp/proyecto-plazo.converter';
 import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
@@ -33,7 +32,6 @@ import { IProyectoEquipoBackend } from '@core/models/csp/backend/proyecto-equipo
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
-import { IProyectoPlazoBackend } from '@core/models/csp/backend/proyecto-plazo-backend';
 import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
@@ -61,7 +59,7 @@ import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-traba
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
-import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
+import { IProyectoFase } from '@core/models/csp/proyecto-fase';
 import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
@@ -103,6 +101,8 @@ import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-ec
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response';
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
+import { PROYECTO_FASE_RESPONSE_CONVERTER } from './proyecto-fase/proyecto-fase-response.converter';
+import { IProyectoFaseResponse } from './proyecto-fase/proyecto-fase-response';
 
 @Injectable({
   providedIn: 'root'
@@ -157,11 +157,11 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param idProyecto Identificador del proyecto.
    * @returns Listado de plazos.
    */
-  findPlazosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPlazos>> {
-    return this.find<IProyectoPlazoBackend, IProyectoPlazos>(
+  findPlazosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoFase>> {
+    return this.find<IProyectoFaseResponse, IProyectoFase>(
       `${this.endpointUrl}/${idProyecto}/proyectofases`,
       options,
-      PROYECTO_PLAZO_CONVERTER
+      PROYECTO_FASE_RESPONSE_CONVERTER
     );
   }
 

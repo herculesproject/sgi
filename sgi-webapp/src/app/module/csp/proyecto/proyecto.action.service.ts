@@ -32,7 +32,7 @@ import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.serv
 import { ProyectoPeriodoAmortizacionService } from '@core/services/csp/proyecto-periodo-amortizacion/proyecto-periodo-amortizacion.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
-import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
+import { ProyectoFaseService } from '@core/services/csp/proyecto-fase.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoResponsableEconomicoService } from '@core/services/csp/proyecto-responsable-economico/proyecto-responsable-economico.service';
@@ -249,7 +249,7 @@ export class ProyectoActionService extends ActionService {
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
     proyectoHitoService: ProyectoHitoService,
     proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
-    proyectoPlazoService: ProyectoPlazoService,
+    proyectoPlazoService: ProyectoFaseService,
     contextoProyectoService: ContextoProyectoService,
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     documentoService: DocumentoService,

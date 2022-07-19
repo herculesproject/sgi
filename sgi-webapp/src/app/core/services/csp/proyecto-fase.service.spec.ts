@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ProyectoPlazoService } from './proyecto-plazo.service';
+import { ProyectoFaseService } from './proyecto-fase.service';
 
-describe('ProyectoPlazoService', () => {
-  let service: ProyectoPlazoService;
+describe('ProyectoFaseService', () => {
+  let service: ProyectoFaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('ProyectoPlazoService', () => {
         LoggerTestingModule
       ]
     });
-    service = TestBed.inject(ProyectoPlazoService);
+    service = TestBed.inject(ProyectoFaseService);
   });
 
   it('should be created', () => {
