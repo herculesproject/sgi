@@ -15,7 +15,7 @@ public interface ProyectoFaseService {
   /**
    * Guarda la entidad {@link ProyectoFase}.
    * 
-   * @param ProyectoFaseInput la entidad {@link ProyectoFase} a guardar.
+   * @param proyectoFaseInput la entidad {@link ProyectoFase} a guardar.
    * @return ProyectoFase la entidad {@link ProyectoFase} persistida.
    */
   ProyectoFase create(ProyectoFaseInput proyectoFaseInput);
@@ -23,7 +23,8 @@ public interface ProyectoFaseService {
   /**
    * Actualiza la entidad {@link ProyectoFase}.
    * 
-   * @param ProyectoFaseActualizar la entidad {@link ProyectoFase} a guardar.
+   * @param id                     Id del {@link ProyectoFase}.
+   * @param proyectoFaseActualizar la entidad {@link ProyectoFase} a guardar.
    * @return ProyectoFase la entidad {@link ProyectoFase} persistida.
    */
   ProyectoFase update(Long id, ProyectoFaseInput proyectoFaseActualizar);

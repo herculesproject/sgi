@@ -118,7 +118,7 @@ public class ProyectoFaseAvisoService {
    * Comprueba si el aviso entrante es nulo y si existe en la base de datos, si
    * existe, lo intenta borrar
    * 
-   * @param aviso             aviso entrante
+   * @param avisoInput        aviso entrante
    * @param proyectoFaseAviso aviso persistido
    * @return boolean true if was deleted, false if not
    */

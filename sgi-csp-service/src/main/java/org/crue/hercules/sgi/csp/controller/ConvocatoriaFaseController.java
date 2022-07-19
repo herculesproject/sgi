@@ -44,7 +44,8 @@ public class ConvocatoriaFaseController {
   /**
    * Instancia un nuevo ConvocatoriaFaseController.
    * 
-   * @param service {@link ConvocatoriaFaseService}
+   * @param service                   {@link ConvocatoriaFaseService}
+   * @param convocatoriaFaseConverter {@link ConvocatoriaFaseConverter}
    */
   public ConvocatoriaFaseController(ConvocatoriaFaseService service,
       ConvocatoriaFaseConverter convocatoriaFaseConverter) {
