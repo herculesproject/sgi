@@ -216,6 +216,7 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
     boolean isCambioEstadoValido;
     switch (estadoActual) {
       case BORRADOR:
+      case RECHAZADA:
         isCambioEstadoValido = nuevoEstado.equals(Estado.SOLICITADA) || nuevoEstado.equals(Estado.DESISTIDA);
         break;
       case SUBSANACION:
