@@ -77,5 +77,19 @@
       <column name="value" value="[&quot;convocatoria.fases.ugi@sgi.es&quot;]" />
     </insert>
 
+    <!-- Nombre sistema gestion externo -->
+    <insert tableName="config">
+      <column name="name" value="nombre-sistema-gestion-externo" />
+      <column name="description" value="Nombre de la opción del menú que hará ir a la url del sistema gestion externo." />
+      <column name="value" value="Acceso Goliat Hércules" />
+    </insert>
+
+    <!-- URL sistema gestion externo -->
+    <insert tableName="config">
+      <column name="name" value="url-sistema-gestion-externo" />
+      <column name="description" value="URL sistema gestion externo" />
+      <column name="value" value="https://goliathtest.um.es" />
+    </insert>
+
   </changeSet>
 </databaseChangeLog>
