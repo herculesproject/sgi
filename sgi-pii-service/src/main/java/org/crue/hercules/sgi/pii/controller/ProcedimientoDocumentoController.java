@@ -40,7 +40,7 @@ public class ProcedimientoDocumentoController {
    * @return {@link ProcedimientoDocumento} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthority('PII-INV-E', 'PII-INV-V')")
+  @PreAuthorize("hasAnyAuthority('PII-INV-E', 'PII-INV-V')")
   public ResponseEntity<ProcedimientoDocumentoOutput> findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProcedimientoDocumento returnValue = procedimientoDocumentoService.findById(id);

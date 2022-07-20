@@ -1,6 +1,9 @@
 -- vacia la bd
 DELETE FROM test.invencion_gasto;
 DELETE FROM test.invencion_ingreso;
+DELETE FROM test.pais_validado;
+DELETE FROM test.procedimiento_documento;
+DELETE FROM test.procedimiento;
 DELETE FROM test.solicitud_proteccion;
 DELETE FROM test.periodotitularidad_titular;
 DELETE FROM test.periodo_titularidad;
