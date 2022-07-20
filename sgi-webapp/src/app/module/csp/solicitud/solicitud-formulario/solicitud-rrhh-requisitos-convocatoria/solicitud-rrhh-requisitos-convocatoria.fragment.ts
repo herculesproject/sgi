@@ -71,6 +71,8 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
   solicitante$ = new BehaviorSubject<IPersona>(null);
   tutor$ = new BehaviorSubject<IPersona>(null);
 
+  needDocumentoAcreditativo = false;
+
   readonly solicitudId: number;
 
   constructor(
@@ -318,7 +320,7 @@ export class SolicitudRrhhRequisitosConvocatoriaFragment extends Fragment {
     const hasCategoriaAcreditada = this.requisitosNivelesAcademicosExigidosSolicitante$.value.length === 0
       || this.requisitosNivelesAcademicosExigidosSolicitante$.value.some(requisito => !!requisito.value.nivelAcreditado.documento);
 
-    this.setErrors(!(hasNivelAcreditado && hasCategoriaAcreditada));
+    this.needDocumentoAcreditativo = !(hasNivelAcreditado && hasCategoriaAcreditada);
   }
 
   private getRequisitosEquipoCategoriasProfesionales(convocatoriaId: number): Observable<IRequisitoEquipoCategoriaProfesional[]> {

@@ -1,7 +1,7 @@
 <sgi-fragment
   title="{{'menu.csp.solicitud.solicitud-rrhh' | translate}} - {{'menu.csp.solicitud.solicitud-rrhh.requisitos-convocatoria' | translate}}">
 
-  <div *ngIf="formPart.hasErrors()" class="info-message">
+  <div *ngIf="formPart.needDocumentoAcreditativo" class="info-message">
     {{'msg.csp.solicitud.solicitud-rrhh.requisitos.sin-nivel-acreditado' | translate}}
   </div>
 

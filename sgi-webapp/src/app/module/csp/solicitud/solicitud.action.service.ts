@@ -539,7 +539,6 @@ export class SolicitudActionService extends ActionService {
         this.solicitanteRrhh.initialize();
         this.tutorRrhh.initialize();
         this.memoriaRrhh.initialize();
-        this.requisitosConvocatoriaRrhh.initialize();
 
         this.subscriptions.push(
           this.solicitanteRrhh.solicitante$.subscribe(value => {

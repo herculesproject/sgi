@@ -2122,7 +2122,7 @@
   "msg.csp.solicitud.solicitante-miembro-equipo": "El solicitante de la solicitud debe ser miembro del equipo",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.categorias-exigidas": "Categorías profesionales exigidas",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.niveles-exigidos": "Niveles académicos exigidos",
-  "msg.csp.solicitud.solicitud-rrhh.requisitos.sin-nivel-acreditado": "Es nececesario añadir al menos un documento acreditativo en los Niveles académicos y Categorías profesionales exigidos",
+  "msg.csp.solicitud.solicitud-rrhh.requisitos.sin-nivel-acreditado": "Recuerde añadir los documentos acreditativos para el Nivel académico y la Categoría profesional en caso de que no haber sido expedidos en su momento por esta Universidad o no haber sido entregados con anterioridad",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.solicitante": "Solicitante",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.tutor": "Tutor/a",
   "msg.csp.solicitud.solicitud-rrhh.solicitante": "En caso de que la persona solicitante no se encuentre disponible en el buscador proporcionado, sus datos personales y de contacto deberán introducirse manualmente en los campos disponibles a continuación. De igual forma, podrá anular los datos introducidos manualmente cuando la persona solicitante ya haya sido registrada en el sistema de personas oficial de la Universidad, para ello deberá realizar la búsqueda de la persona a través del buscador. También puede utilizar el buscador en cualquier momento para solicitar el alta de la persona solicitante en el sistema de personas oficial de la Universidad si así lo desea.",
