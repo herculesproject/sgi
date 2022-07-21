@@ -98,7 +98,6 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     super.ngOnInit();
     this.setupI18N();
 
-    this.createValidatorDate(this.data?.plazo?.tipoFase);
     this.subscriptions.push(this.formGroup.controls.tipoFase.valueChanges.subscribe((value) => this.createValidatorDate(value)));
     this.subscriptions.push(this.formGroup.controls.fechaFin.valueChanges.subscribe((value) => this.validatorGeneraAviso(value)));
 

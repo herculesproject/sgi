@@ -1,6 +1,6 @@
 <!-- Menu secundario -->
 <div class="navbar-icon">
-  <div class="nav-item" [matTooltip]="(authService.authStatus$ | async).preferredUsername">
+  <div class="nav-item" [matTooltip]="(authService.authStatus$ | async)?.preferredUsername">
     <a class="nav-link" [matMenuTriggerFor]="account">
       <mat-icon color="primary">person</mat-icon>
     </a>

@@ -61,6 +61,12 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     this.setupI18N();
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (wrapper, property) => {
+      if (property === 'aviso') {
+        return !!wrapper.value.aviso1 || !!wrapper.value.aviso2 ? 's' : 'n';
+      }
+      return wrapper.value[property];
+    }
     this.dataSource.sort = this.sort;
 
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {

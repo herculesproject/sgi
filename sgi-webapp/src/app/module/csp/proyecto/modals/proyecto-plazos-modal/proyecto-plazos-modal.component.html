@@ -79,7 +79,7 @@
       <mat-tab label="{{'csp.proyecto.plazo.aviso.primero' | translate}}">
         <!-- Aviso 1 card -->
         <mat-card formGroupName="aviso1" *ngIf="formGroup.controls?.generaAviso1?.value" fxFlex fxLayout="column">
-          <!-- Fecha Envío -->>
+          <!-- Fecha Envío -->
           <div fxFlex>
             <mat-form-field color="primary" fxFlex="45">
               <mat-label>{{'label.aviso.primero.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
@@ -136,7 +136,7 @@
       </mat-tab>
       <mat-tab label="{{'csp.proyecto.plazo.aviso.segundo' | translate}}"
         *ngIf="formGroup.controls?.generaAviso2?.value">
-        <!-- Comunicado 2 card -->
+        <!-- Aviso 2 -->
         <mat-card formGroupName="aviso2" fxFlex fxLayout="column">
           <!-- Fecha Envío -->
           <div fxFlex>
