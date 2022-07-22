@@ -40,7 +40,8 @@
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-tipo_documento">
+  <!-- TODO: Tratarlos como datos de prueba si se llega a realizar el CRUD en la web -->
+  <changeSet context="!test" author="master" id="0000000000000-tipo_documento">
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
       <column name="nombre" value="Documentos de procedimiento" />
@@ -53,8 +54,8 @@
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" valueSequenceNext="tipo_documento_seq" />
-      <column name="nombre" value="Estutos sociales" />
-      <column name="descripcion" value="Estutos sociales" />
+      <column name="nombre" value="Estatutos sociales" />
+      <column name="descripcion" value="Estatutos sociales" />
     </insert>
 
     <insert tableName="tipo_documento">
