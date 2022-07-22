@@ -227,6 +227,10 @@ public class ProduccionCientificaApiService {
       return null;
     }
 
+    if (valor.matches("^(\\d{4})-(\\d{2})-(\\d{2})$")) {
+      valor = valor + "T00:00:00Z";
+    }
+
     return Instant.parse(valor);
   }
 
