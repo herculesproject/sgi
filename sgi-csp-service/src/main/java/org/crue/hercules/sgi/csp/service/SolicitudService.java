@@ -639,6 +639,9 @@ public class SolicitudService {
             solicitud);
         break;
       case RECHAZADA:
+        this.solicitudRrhhComService.enviarComunicadoCambioEstadoRechazadaSolTipoRrhh(
+            estadoSolicitud.getFechaEstado(),
+            solicitud);
         break;
       default:
         log.info("No se manda ningún comunicado porque el estado {} no está contemplado.", estadoSolicitud.getEstado());

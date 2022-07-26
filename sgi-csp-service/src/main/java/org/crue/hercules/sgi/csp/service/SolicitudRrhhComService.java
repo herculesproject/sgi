@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoRechazadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoValidadaSolTipoRrhhData;
@@ -46,7 +47,8 @@ public class SolicitudRrhhComService {
   private final SolicitanteExternoRepository solicitanteExternoRepository;
   private final SolicitudRrhhRepository solicitudRrhhRepository;
 
-  public void enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud) {
+  public void enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud)
+      throws JsonProcessingException {
 
     CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
         .builder()
@@ -57,22 +59,18 @@ public class SolicitudRrhhComService {
 
     this.fillConvocatoriaData(dataBuilder, solicitud.getConvocatoriaId());
 
-    try {
-      log.debug(
-          "Construyendo comunicado aviso cambio de estado SOLICITADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
-          solicitud.getId());
+    log.debug(
+        "Construyendo comunicado aviso cambio de estado SOLICITADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
+        solicitud.getId());
 
-      EmailOutput comunicado = this.emailService
-          .createComunicadoCambioEstadoSolicitadaSolTipoRrhh(dataBuilder.build(),
-              this.getTutorRecipients(solicitud.getId()));
-      this.emailService.sendEmail(comunicado.getId());
-
-    } catch (JsonProcessingException e) {
-      log.error(e.getMessage(), e);
-    }
+    EmailOutput comunicado = this.emailService
+        .createComunicadoCambioEstadoSolicitadaSolTipoRrhh(dataBuilder.build(),
+            this.getTutorRecipients(solicitud.getId()));
+    this.emailService.sendEmail(comunicado.getId());
   }
 
-  public void enviarComunicadoCambioEstadoValidadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud) {
+  public void enviarComunicadoCambioEstadoValidadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud)
+      throws JsonProcessingException {
 
     CspComCambioEstadoValidadaSolTipoRrhhData data = CspComCambioEstadoValidadaSolTipoRrhhData
         .builder()
@@ -82,19 +80,36 @@ public class SolicitudRrhhComService {
         .tituloConvocatoria(this.getTituloConvocatoria(solicitud.getConvocatoriaId()))
         .build();
 
-    try {
-      log.debug(
-          "Construyendo comunicado aviso cambio de estado VALIDADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
-          solicitud.getId());
+    log.debug(
+        "Construyendo comunicado aviso cambio de estado RECHAZADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
+        solicitud.getId());
 
-      EmailOutput comunicado = this.emailService
-          .createComunicadoCambioEstadoValidadaSolTipoRrhh(data,
-              this.getSolicitanteRecipients(solicitud.getId(), solicitud.getSolicitanteRef()));
-      this.emailService.sendEmail(comunicado.getId());
+    EmailOutput comunicado = this.emailService
+        .createComunicadoCambioEstadoValidadaSolTipoRrhh(data,
+            this.getSolicitanteRecipients(solicitud.getId(), solicitud.getSolicitanteRef()));
+    this.emailService.sendEmail(comunicado.getId());
+  }
 
-    } catch (JsonProcessingException e) {
-      log.error(e.getMessage(), e);
-    }
+  public void enviarComunicadoCambioEstadoRechazadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud)
+      throws JsonProcessingException {
+
+    CspComCambioEstadoRechazadaSolTipoRrhhData data = CspComCambioEstadoRechazadaSolTipoRrhhData
+        .builder()
+        .fechaEstado(fechaEstado)
+        .nombreApellidosSolicitante(getSolicitanteNombreApellidos(solicitud))
+        .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
+        .tituloConvocatoria(this.getTituloConvocatoria(solicitud.getConvocatoriaId()))
+        .build();
+
+    log.debug(
+        "Construyendo comunicado aviso cambio de estado VALIDADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
+        solicitud.getId());
+
+    EmailOutput comunicado = this.emailService
+        .createComunicadoCambioEstadoRechazadaSolTipoRrhh(data,
+            this.getSolicitanteRecipients(solicitud.getId(), solicitud.getSolicitanteRef()));
+    this.emailService.sendEmail(comunicado.getId());
+
   }
 
   private void fillConvocatoriaData(

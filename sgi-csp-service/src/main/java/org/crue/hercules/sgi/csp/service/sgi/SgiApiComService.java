@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComAddModCertAutorizacionPartProyect
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionNotificarData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionValidarIPData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoParticipacionAutorizacionProyectoExternoData;
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoRechazadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoValidadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
@@ -179,6 +180,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH = "CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH";
   private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH_PARAM = TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH = "CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH";
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH_PARAM = TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH
       + DATA;
 
   private final ObjectMapper mapper;
@@ -775,6 +780,15 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH_PARAM);
+  }
+
+  public EmailOutput createComunicadoCambioEstadoRechazadaSolTipoRrhh(
+      CspComCambioEstadoRechazadaSolTipoRrhhData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH_PARAM);
   }
 
   public Long createConvocatoriaFaseEmail(Long convocatoriaFaseId, String subject, String content,
