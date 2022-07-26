@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionNotificarDat
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionValidarIPData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoParticipacionAutorizacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoValidadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionGastoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
@@ -174,6 +175,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH = "CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH";
   private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_PARAM = TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH
+      + DATA;
+
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH = "CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH";
+  private static final String TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH_PARAM = TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH
       + DATA;
 
   private final ObjectMapper mapper;
@@ -761,6 +766,15 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH,
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_SOLICITADA_SOL_TIPO_RRHH_PARAM);
+  }
+
+  public EmailOutput createComunicadoCambioEstadoValidadaSolTipoRrhh(
+      CspComCambioEstadoValidadaSolTipoRrhhData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+
+    return this.createComunicado(data, recipients,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH,
+        TEMPLATE_CSP_COM_CAMBIO_ESTADO_VALIDADA_SOL_TIPO_RRHH_PARAM);
   }
 
   public Long createConvocatoriaFaseEmail(Long convocatoriaFaseId, String subject, String content,

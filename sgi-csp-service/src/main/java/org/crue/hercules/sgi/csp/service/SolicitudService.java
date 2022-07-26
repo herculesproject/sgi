@@ -612,15 +612,11 @@ public class SolicitudService {
           }
         }
       }
-
-      if (EstadoSolicitud.Estado.SOLICITADA == estadoSolicitud.getEstado()
-          && solicitud.getFormularioSolicitud() == FormularioSolicitud.RRHH) {
+      if (solicitud.getFormularioSolicitud() == FormularioSolicitud.RRHH) {
         try {
-          this.solicitudRrhhComService.enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(
-              estadoSolicitud.getFechaEstado(),
-              solicitud);
-        } catch (Exception ex) {
-          log.error(ex.getMessage(), ex);
+          sendComunicadoSolicitudRrhh(estadoSolicitud, solicitud);
+        } catch (Exception e) {
+          log.error(e.getMessage(), e);
         }
       }
     }
@@ -628,6 +624,26 @@ public class SolicitudService {
     enviarComunicadosCambioEstado(solicitud, estadoSolicitud);
     log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - end");
     return returnValue;
+  }
+
+  private void sendComunicadoSolicitudRrhh(EstadoSolicitud estadoSolicitud, Solicitud solicitud) throws Exception {
+    switch (estadoSolicitud.getEstado()) {
+      case SOLICITADA:
+        this.solicitudRrhhComService.enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(
+            estadoSolicitud.getFechaEstado(),
+            solicitud);
+        break;
+      case VALIDADA:
+        this.solicitudRrhhComService.enviarComunicadoCambioEstadoValidadaSolTipoRrhh(
+            estadoSolicitud.getFechaEstado(),
+            solicitud);
+        break;
+      case RECHAZADA:
+        break;
+      default:
+        log.info("No se manda ningún comunicado porque el estado {} no está contemplado.", estadoSolicitud.getEstado());
+        break;
+    }
   }
 
   /**

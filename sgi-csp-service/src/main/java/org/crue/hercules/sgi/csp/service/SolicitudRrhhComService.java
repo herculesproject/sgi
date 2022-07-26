@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder;
+import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoValidadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
@@ -70,6 +72,31 @@ public class SolicitudRrhhComService {
     }
   }
 
+  public void enviarComunicadoCambioEstadoValidadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud) {
+
+    CspComCambioEstadoValidadaSolTipoRrhhData data = CspComCambioEstadoValidadaSolTipoRrhhData
+        .builder()
+        .fechaEstado(fechaEstado)
+        .nombreApellidosSolicitante(getSolicitanteNombreApellidos(solicitud))
+        .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
+        .tituloConvocatoria(this.getTituloConvocatoria(solicitud.getConvocatoriaId()))
+        .build();
+
+    try {
+      log.debug(
+          "Construyendo comunicado aviso cambio de estado VALIDADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
+          solicitud.getId());
+
+      EmailOutput comunicado = this.emailService
+          .createComunicadoCambioEstadoValidadaSolTipoRrhh(data,
+              this.getSolicitanteRecipients(solicitud.getId(), solicitud.getSolicitanteRef()));
+      this.emailService.sendEmail(comunicado.getId());
+
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+    }
+  }
+
   private void fillConvocatoriaData(
       CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder,
       Long convocatoriaId) {
@@ -80,6 +107,16 @@ public class SolicitudRrhhComService {
         dataBuilder.fechaProvisionalConvocatoria(convocatoria.get().getFechaProvisional());
       }
     }
+  }
+
+  private String getTituloConvocatoria(Long convocatoriaId) {
+    if (convocatoriaId != null) {
+      Optional<Convocatoria> convocatoria = this.convocatoriaRepository.findById(convocatoriaId);
+      if (convocatoria.isPresent()) {
+        return convocatoria.get().getTitulo();
+      }
+    }
+    return null;
   }
 
   private String getEnlaceAplicacionMenuValidacionTutor() {
@@ -98,17 +135,29 @@ public class SolicitudRrhhComService {
         .collect(Collectors.toList());
   }
 
+  private List<Recipient> getSolicitanteRecipients(Long solicitudId, String solicitanteRef) {
+
+    String emailSolicitante = StringUtils
+        .isNotEmpty(solicitanteRef)
+            ? getEmailFromPersonaWithSolicitanteRef(solicitanteRef)
+            : getEmailFromSolicitanteExterno(solicitudId);
+
+    return Collections.singletonList(Recipient
+        .builder().name(emailSolicitante).address(emailSolicitante)
+        .build());
+  }
+
   private String getSolicitanteNombreApellidos(Solicitud solicitud) {
     return StringUtils
         .isNotEmpty(solicitud.getSolicitanteRef())
-            ? getNombreApellidosFromPersonaWithSolicitanteRef(solicitud)
-            : getNombreApellidosFromSolicitanteExterno(solicitud);
+            ? getNombreApellidosFromPersonaWithSolicitanteRef(solicitud.getSolicitanteRef())
+            : getNombreApellidosFromSolicitanteExterno(solicitud.getId());
   }
 
-  private String getNombreApellidosFromSolicitanteExterno(Solicitud solicitud) {
+  private String getNombreApellidosFromSolicitanteExterno(Long solicitudId) {
 
     Optional<SolicitanteExterno> solicitanteExterno = this.solicitanteExternoRepository
-        .findBySolicitudId(solicitud.getId());
+        .findBySolicitudId(solicitudId);
     if (!solicitanteExterno.isPresent()) {
       return null;
     }
@@ -117,10 +166,34 @@ public class SolicitudRrhhComService {
         solicitanteExterno.get().getApellidos());
   }
 
-  private String getNombreApellidosFromPersonaWithSolicitanteRef(Solicitud solicitud) {
-    PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitud.getSolicitanteRef());
+  private String getNombreApellidosFromPersonaWithSolicitanteRef(String solicitanteRef) {
+    PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitanteRef);
+    if (datosPersona == null) {
+      return null;
+    }
 
     return String.format("%s %s", datosPersona.getNombre(), datosPersona.getApellidos());
+  }
+
+  private String getEmailFromSolicitanteExterno(Long solicitudId) {
+
+    Optional<SolicitanteExterno> solicitanteExterno = this.solicitanteExternoRepository
+        .findBySolicitudId(solicitudId);
+    if (!solicitanteExterno.isPresent()) {
+      return null;
+    }
+
+    return solicitanteExterno.get().getEmail();
+  }
+
+  private String getEmailFromPersonaWithSolicitanteRef(String solicitanteRef) {
+    PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitanteRef);
+    if (datosPersona == null) {
+      return null;
+    }
+
+    return datosPersona.getEmails().stream().filter(Email::getPrincipal).findFirst().map(Email::getEmail)
+        .orElse(null);
   }
 
 }
