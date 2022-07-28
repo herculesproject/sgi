@@ -96,7 +96,7 @@ public class ProyectoPeriodoJustificacionController {
    * @return {@link ProyectoPeriodoJustificacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   public ProyectoPeriodoJustificacionOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPeriodoJustificacionOutput returnValue = convert(service.findById(id));

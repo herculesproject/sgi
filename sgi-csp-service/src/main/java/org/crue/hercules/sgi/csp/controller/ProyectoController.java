@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
+import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
@@ -23,6 +24,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
+import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
@@ -52,6 +54,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
@@ -84,6 +87,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -128,6 +132,8 @@ public class ProyectoController {
   public static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
   public static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
+  public static final String PATH_REQUERIMIENTOS_JUSTIFICACION = PATH_ID + PATH_SEPARATOR
+      + "requerimientos-justificacion";
 
   private final ModelMapper modelMapper;
 
@@ -219,6 +225,12 @@ public class ProyectoController {
   private final ConvocatoriaService convocatoriaService;
 
   private final ProyectoFaseConverter proyectoFaseConverter;
+
+  /** RequerimientoJustificacion service */
+  private final RequerimientoJustificacionService requerimientoJustificacionService;
+
+  /** RequerimientoJustificacion converter */
+  private final RequerimientoJustificacionConverter requerimientoJustificacionConverter;
 
   /**
    * Crea nuevo {@link Proyecto}
@@ -1646,4 +1658,31 @@ public class ProyectoController {
     return proyectoEquipoDto;
   }
 
+  /**
+   * Devuelve una lista paginada y/o filtrada {@link RequerimientoJustificacion}
+   * que pertenezcan a un {@link Proyecto}.
+   * 
+   * @param id     identificador de {@link Proyecto}
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link RequerimientoJustificacion} activas
+   *         paginadas y/o filtradas.
+   */
+  @GetMapping(PATH_REQUERIMIENTOS_JUSTIFICACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SJUS-V', 'CSP-SJUS-E')")
+  public ResponseEntity<Page<RequerimientoJustificacionOutput>> findRequerimientosJustificacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findRequerimientosJustificacion(Long id, String query, Pageable paging) - start");
+
+    Page<RequerimientoJustificacionOutput> page = requerimientoJustificacionConverter
+        .convert(requerimientoJustificacionService.findAllByProyectoId(id, query, paging));
+
+    if (page.isEmpty()) {
+      log.debug("findRequerimientosJustificacion(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findRequerimientosJustificacion(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }
