@@ -10,6 +10,7 @@ public class AssertHelper {
   private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
   private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
   private static final String MESSAGE_KEY_ID = "id";
+  public static final String MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO = "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario";
 
   private AssertHelper() {
   }

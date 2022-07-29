@@ -138,6 +138,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudRrhhComService solicitudRrhhComService;
 
+  @Mock
+  private SolicitudComService solicitudComService;
+
   private SolicitudService service;
 
   @BeforeEach
@@ -145,11 +148,23 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitudAuthorityHelper = new SolicitudAuthorityHelper(repository);
     service = new SolicitudService(sgiConfigProperties,
         sgiApiEtiService, repository,
-        estadoSolicitudRepository, configuracionSolicitudRepository, proyectoRepository, solicitudProyectoRepository,
-        documentoRequeridoSolicitudRepository, solicitudDocumentoRepository, solicitudProyectoEquipoRepository,
-        solicitudProyectoSocioRepository, solicitudProyectoPresupuestoRepository, convocatoriaRepository,
-        convocatoriaEntidadFinanciadoraRepository, convocatoriaEnlaceRepository, comunicadosService, personasService,
-        programaRepository, solicitudAuthorityHelper, grupoAuthorityHelper, solicitudRrhhComService);
+        estadoSolicitudRepository,
+        configuracionSolicitudRepository,
+        proyectoRepository,
+        solicitudProyectoRepository,
+        documentoRequeridoSolicitudRepository,
+        solicitudDocumentoRepository,
+        solicitudProyectoEquipoRepository,
+        solicitudProyectoSocioRepository,
+        solicitudProyectoPresupuestoRepository,
+        convocatoriaRepository,
+        convocatoriaEntidadFinanciadoraRepository,
+        convocatoriaEnlaceRepository,
+        programaRepository,
+        solicitudAuthorityHelper,
+        grupoAuthorityHelper,
+        solicitudRrhhComService,
+        solicitudComService);
   }
 
   @Test

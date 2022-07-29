@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
+import static org.crue.hercules.sgi.csp.util.AssertHelper.MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +16,6 @@ import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
-import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -59,7 +60,6 @@ import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
-import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
@@ -102,12 +102,11 @@ public class SolicitudService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
   private final ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
-  private final ComunicadosService comunicadosService;
-  private final SgiApiSgpService personasService;
   private final ProgramaRepository programaRepository;
   private final SolicitudAuthorityHelper solicitudAuthorityHelper;
   private final GrupoAuthorityHelper grupoAuthorityHelper;
   private final SolicitudRrhhComService solicitudRrhhComService;
+  private final SolicitudComService solicitudComService;
 
   public SolicitudService(SgiConfigProperties sgiConfigProperties,
       SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
@@ -122,12 +121,11 @@ public class SolicitudService {
       ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
       ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
-      ComunicadosService comunicadosService,
-      SgiApiSgpService personasService,
       ProgramaRepository programaRepository,
       SolicitudAuthorityHelper solicitudAuthorityHelper,
       GrupoAuthorityHelper grupoAuthorityHelper,
-      SolicitudRrhhComService solicitudRrhhComService) {
+      SolicitudRrhhComService solicitudRrhhComService,
+      SolicitudComService solicitudComService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiEtiService = sgiApiEtiService;
     this.repository = repository;
@@ -143,12 +141,11 @@ public class SolicitudService {
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
     this.convocatoriaEnlaceRepository = convocatoriaEnlaceRepository;
-    this.comunicadosService = comunicadosService;
-    this.personasService = personasService;
     this.programaRepository = programaRepository;
     this.solicitudAuthorityHelper = solicitudAuthorityHelper;
     this.grupoAuthorityHelper = grupoAuthorityHelper;
     this.solicitudRrhhComService = solicitudRrhhComService;
+    this.solicitudComService = solicitudComService;
   }
 
   /**
@@ -179,7 +176,7 @@ public class SolicitudService {
       Assert.isTrue(
           SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") || (SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef())),
-          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
     } else {
@@ -238,7 +235,7 @@ public class SolicitudService {
       Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
 
       Assert.isTrue(solicitudAuthorityHelper.hasPermisosEdicion(solicitud),
-          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
       data.setCodigoExterno(solicitud.getCodigoExterno());
@@ -274,7 +271,7 @@ public class SolicitudService {
     return repository.findById(id).map(solicitud -> {
 
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
-          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
 
       if (Boolean.TRUE.equals(solicitud.getActivo())) {
         // Si esta activo no se hace nada
@@ -314,7 +311,7 @@ public class SolicitudService {
         Assert.isTrue(
             SgiSecurityContextHolder.hasAuthority(authority)
                 || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
-            "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+            MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
       }
 
       if (Boolean.FALSE.equals(solicitud.getActivo())) {
@@ -550,8 +547,8 @@ public class SolicitudService {
 
                 try {
                   // Enviamos el comunicado de alta de solicitud de petición evaluación de ética
-                  this.comunicadosService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
-                      peticionEvaluacion.getCodigo(), solicitud.getCodigoRegistroInterno(),
+                  this.solicitudComService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
+                      solicitud.getId(), peticionEvaluacion.getCodigo(), solicitud.getCodigoRegistroInterno(),
                       solicitud.getSolicitanteRef());
                 } catch (Exception e) {
                   log.debug(
@@ -1086,14 +1083,15 @@ public class SolicitudService {
         case SOLICITADA:
           /*
            * Enviamos el comunicado de Cambio al estado SOLICITADA en solicitudes de
-           * CONVOCATORIAS PROPIAS registradas por el propio por solicitante
+           * CONVOCATORIAS PROPIAS registradas por el propio solicitante
            */
           if (checkConvocatoriaPropia(solicitud.getSolicitanteRef())
               && checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
             Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoSolicitada(
-                getNombreApellidosByPersonaRef(solicitud.getSolicitanteRef()),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoSolicitada(
+                solicitud.getId(),
+                solicitud.getSolicitanteRef(),
                 solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), convocatoria.getFechaPublicacion(),
                 solicitud.getEstado().getFechaEstado());
           }
@@ -1112,8 +1110,8 @@ public class SolicitudService {
               && checkConvocatoriaTramitable(solicitud.getConvocatoriaId())) {
             Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoAlegaciones(
-                getNombreApellidosByPersonaRef(solicitud.getSolicitanteRef()),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoAlegaciones(
+                solicitud.getId(), solicitud.getSolicitanteRef(),
                 solicitud.getUnidadGestionRef(), convocatoria.getTitulo(), solicitud.getCodigoRegistroInterno(),
                 solicitud.getEstado().getFechaEstado(), convocatoria.getFechaProvisional());
           }
@@ -1130,7 +1128,9 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoExclProv(solicitud.getSolicitanteRef(),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoExclProv(
+                solicitud.getId(),
+                solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaProvisional(),
                 enlaces);
@@ -1148,7 +1148,9 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoExclDef(solicitud.getSolicitanteRef(),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoExclDef(
+                solicitud.getId(),
+                solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaConcesion(),
                 enlaces);
@@ -1168,7 +1170,8 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoConcProv(
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoConcProv(
+                solicitud.getId(),
                 solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaProvisional(),
@@ -1188,7 +1191,8 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoDenProv(
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoDenProv(
+                solicitud.getId(),
                 solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaProvisional(),
@@ -1207,7 +1211,9 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoConc(solicitud.getSolicitanteRef(),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoConc(
+                solicitud.getId(),
+                solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaConcesion(),
                 enlaces);
@@ -1225,7 +1231,8 @@ public class SolicitudService {
             List<ConvocatoriaEnlace> enlaces = convocatoriaEnlaceRepository
                 .findByConvocatoriaId(solicitud.getConvocatoriaId())
                 .orElseThrow(() -> new ConvocatoriaEnlaceNotFoundException(solicitud.getConvocatoriaId()));
-            this.comunicadosService.enviarComunicadoSolicitudCambioEstadoDen(solicitud.getSolicitanteRef(),
+            this.solicitudComService.enviarComunicadoSolicitudCambioEstadoDen(solicitud.getId(),
+                solicitud.getSolicitanteRef(),
                 convocatoria.getTitulo(),
                 convocatoria.getFechaConcesion(),
                 enlaces);
@@ -1255,10 +1262,5 @@ public class SolicitudService {
   private boolean checkConvocatoriaPropia(String solicitanteRef) {
     String personaRef = SecurityContextHolder.getContext().getAuthentication().getName();
     return personaRef.equals(solicitanteRef);
-  }
-
-  private String getNombreApellidosByPersonaRef(String personaRef) {
-    PersonaOutput persona = personasService.findById(personaRef);
-    return persona.getNombre() + " " + persona.getApellidos();
   }
 }
