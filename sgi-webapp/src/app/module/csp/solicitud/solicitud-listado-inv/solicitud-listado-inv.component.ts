@@ -122,7 +122,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
         response.items.forEach(solicitud => {
           requestsModificable.push(
             forkJoin({
-              modificable: this.solicitudService.modificable(solicitud.id),
+              modificable: this.solicitudService.modificableByInvestigador(solicitud.id),
               estadoAndDocumentosReadonly: this.solicitudService.modificableEstadoAndDocumentosByInvestigador(solicitud.id)
             }).pipe(
               map(({ modificable, estadoAndDocumentosReadonly }) => {

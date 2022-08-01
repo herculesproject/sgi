@@ -18,7 +18,7 @@ export class GrupoEnlaceFragment extends Fragment {
     key: number,
     private readonly grupoService: GrupoService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
-    private readonly: boolean,
+    public readonly readonly: boolean,
   ) {
     super(key);
     this.setComplete(true);

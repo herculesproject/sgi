@@ -15,7 +15,6 @@ import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacio
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,7 +23,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
@@ -49,11 +48,11 @@ export interface IAutorizacionListado {
 }
 
 @Component({
-  selector: 'sgi-autorizacion-listado',
-  templateUrl: './autorizacion-listado.component.html',
-  styleUrls: ['./autorizacion-listado.component.scss']
+  selector: 'sgi-autorizacion-listado-inv',
+  templateUrl: './autorizacion-listado-inv.component.html',
+  styleUrls: ['./autorizacion-listado-inv.component.scss']
 })
-export class AutorizacionListadoComponent extends AbstractTablePaginationComponent<IAutorizacionListado> implements OnInit {
+export class AutorizacionListadoInvComponent extends AbstractTablePaginationComponent<IAutorizacionListado> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
 
@@ -65,7 +64,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   textoDelete: string;
   textoSuccessDelete: string;
   textoErrorDelete: string;
-  mapCanBeDeleted: Map<number, boolean> = new Map();
 
   msgParamNotificacionEntity = {};
   msgParamProyectoEntity = {};
@@ -80,7 +78,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
     private autorizacionService: AutorizacionService,
     private estadoAutorizacionService: EstadoAutorizacionService,
     private empresaService: EmpresaService,
-    private personaService: PersonaService,
     private dialogService: DialogService,
     private documentoService: DocumentoService,
     public authService: SgiAuthService,
@@ -175,7 +172,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IAutorizacionListado>> {
-    return this.autorizacionService.findAll(this.getFindOptions(reset)).pipe(
+    return this.autorizacionService.findAllInvestigador(this.getFindOptions(reset)).pipe(
       map(result => {
         const autorizaciones = result.items.map((autorizacion) => {
           return {
@@ -194,13 +191,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
       }),
       switchMap(response =>
         from(response.items).pipe(
-          mergeMap(autorizacionListado => {
-            return this.autorizacionService.hasAutorizacionNotificacionProyectoExterno(autorizacionListado.autorizacion.id).pipe(
-              tap((hasAutorizacionNotificacionProyectoExterno) =>
-                this.mapCanBeDeleted.set(autorizacionListado.autorizacion.id, hasAutorizacionNotificacionProyectoExterno)),
-              map(() => autorizacionListado)
-            );
-          }),
           mergeMap(autorizacionListado => {
             if (autorizacionListado.autorizacion.estado.id) {
               return this.estadoAutorizacionService.findById(autorizacionListado.autorizacion.estado.id).pipe(
@@ -256,22 +246,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
               return of(autorizacionListado);
             }
           }),
-          mergeMap(autorizacionListado => {
-            if (autorizacionListado?.autorizacion?.solicitante?.id) {
-              return this.personaService.findById(autorizacionListado?.autorizacion?.solicitante?.id).pipe(
-                map((persona) => {
-                  autorizacionListado.autorizacion.solicitante = persona;
-                  return autorizacionListado;
-                }),
-                catchError((error) => {
-                  this.logger.error(error);
-                  return EMPTY;
-                }));
-            } else {
-              autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
-              return of(autorizacionListado);
-            }
-          }),
           toArray(),
           map(() => {
             return response;
@@ -283,7 +257,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
 
   protected initColumns(): void {
     this.columnas = [
-      'fechaFirstEstado', 'solicitante', 'tituloProyecto', 'entidadParticipacion', 'estado',
+      'fechaFirstEstado', 'tituloProyecto', 'entidadParticipacion', 'estado',
       'fechaEstado', 'acciones'
     ];
   }

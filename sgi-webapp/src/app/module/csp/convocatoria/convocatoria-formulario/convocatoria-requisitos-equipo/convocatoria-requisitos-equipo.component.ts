@@ -250,7 +250,12 @@ export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent
       }
     );
   }
-  private checkCategoriasProfesionales() {
+
+  private checkCategoriasProfesionales(): void {
+    if (!this.formPart.hasEditPerm) {
+      return;
+    }
+
     // En caso de que se marque Sí en vinculación universidad se habilitará el botón de añadir categoría profesional
     this.disableAddCategoriaProfesional$.next(!this.formGroup.controls.vinculacionUniversidad.value);
 
@@ -266,9 +271,6 @@ export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent
       this.formGroup.controls.vinculacionUniversidad.enable({ emitEvent: false });
       this.disableVinculacionProfesional$.next(false);
     }
-
-    if (!this.authService.hasAnyAuthorityForAnyUO(['CSP-CON-E', 'CSP-CON-C'])) {
-      this.formGroup.controls.vinculacionUniversidad.disable({ emitEvent: false });
-    }
   }
+
 }
