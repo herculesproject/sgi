@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import static org.crue.hercules.sgi.csp.util.AssertHelper.MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -86,6 +84,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Validated
 public class SolicitudService {
+
+  public static final String MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO = "La Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final SgiApiEtiService sgiApiEtiService;
@@ -176,7 +176,7 @@ public class SolicitudService {
       Assert.isTrue(
           SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") || (SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef())),
-          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
+          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
     } else {
@@ -830,11 +830,48 @@ public class SolicitudService {
       return false;
     }
 
-    if (solicitudAuthorityHelper.isUserInvestigador()) {
-      return modificableByInvestigador(solicitud);
-    } else {
-      return modificableByUnidadGestion(solicitud);
+    return (solicitudAuthorityHelper.isUserInvestigador() && modificableByInvestigador(solicitud))
+        || modificableByUnidadGestion(solicitud);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada por un usuario investigador.
+   * No es modificable cuando el estado de la {@link Solicitud} es distinto de
+   * {@link EstadoSolicitud.Estado#BORRADOR} o
+   * {@link EstadoSolicitud.Estado#RECHAZADA} si es una {@link Solicitud} con
+   * {@link FormularioSolicitud#RRHH}
+   *
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableByInvestigador(Long id) {
+    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    if (!solicitudAuthorityHelper.hasAuthorityEditInvestigador(solicitud)) {
+      return false;
     }
+
+    return modificableByInvestigador(solicitud);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada por un usuario de la unidad de gestion.
+   * No es modificable cuando no esta activa ni cuando tiene
+   * {@link Proyecto} asociados.
+   *
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableByUnidadGestion(Long id) {
+    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    if (!solicitudAuthorityHelper.hasAuthorityEditUnidadGestion(solicitud.getUnidadGestionRef())) {
+      return false;
+    }
+
+    return modificableByUnidadGestion(solicitud);
   }
 
   /**

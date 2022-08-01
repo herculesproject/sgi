@@ -776,7 +776,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void hasAnyProyectoSocio_Returns200() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
 
@@ -806,7 +806,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void hasAnyProyectoSocio_ReturnsEmptyProyectoSocio() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
 
@@ -836,7 +836,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void hasAnyProyectoSocioWithRolCoordinador_Returns200() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
 
@@ -867,7 +867,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void hasAnyProyectoSocioWithRolCoordinador_ReturnsEmptyProyectoSocioWithRolCoordinador() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
 
@@ -899,7 +899,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void existsProyectoSocioPeriodoPagoByProyectoSocioId_Returns200() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
 
@@ -931,7 +931,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void existsProyectoSocioPeriodoPagoByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoPago() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
 
@@ -963,7 +963,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_Returns200() throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 1L;
 
@@ -996,7 +996,7 @@ class ProyectoIT extends BaseIT {
   @Test
   void existsProyectoSocioPeriodoJustificacionByProyectoSocioId_ReturnsEmptyProyectoSocioPeriodoJustificacion()
       throws Exception {
-    String[] roles = { "CSP-SOL-E", "CSP-SOL-V" };
+    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
 
     Long proyectoId = 2L;
 

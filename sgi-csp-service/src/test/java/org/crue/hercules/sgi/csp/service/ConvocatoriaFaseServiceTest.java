@@ -37,6 +37,7 @@ import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaFaseServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -86,10 +87,12 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Mock
   private SgiApiSgpService personaService;
 
+  private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaFaseService service;
 
   @BeforeEach
   void setUp() throws Exception {
+    this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
         modeloTipoFaseRepository, convocatoriaService,
         convocatoriaFaseAvisoRepository,
@@ -97,7 +100,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         proyectoEquipoRepository,
         emailService,
         sgiApiTaskService,
-        personaService);
+        personaService,
+        authorityHelper);
   }
 
   @Test

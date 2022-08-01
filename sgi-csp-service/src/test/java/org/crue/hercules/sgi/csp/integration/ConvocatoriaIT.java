@@ -1327,7 +1327,7 @@ class ConvocatoriaIT extends BaseIT {
   void findAllConvocatoriaGastosCodigoEcPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoCodigoEcSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-SOL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,asc";
@@ -1340,7 +1340,7 @@ class ConvocatoriaIT extends BaseIT {
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
 
     final ResponseEntity<List<ConvocatoriaConceptoGastoCodigoEc>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildGenericRequest(headers, null, "CSP-SOL-V"),
+        buildGenericRequest(headers, null, "CSP-CON-V", "CSP-SOL-V"),
         new ParameterizedTypeReference<List<ConvocatoriaConceptoGastoCodigoEc>>() {
         });
 
@@ -1379,7 +1379,7 @@ class ConvocatoriaIT extends BaseIT {
   void findAllConvocatoriaGastosCodigoEcNoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoCodigoEcSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-SOL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,asc";
@@ -1393,7 +1393,7 @@ class ConvocatoriaIT extends BaseIT {
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
 
     final ResponseEntity<List<ConvocatoriaConceptoGastoCodigoEc>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildGenericRequest(headers, null, "CSP-SOL-V"),
+        buildGenericRequest(headers, null, "CSP-CON-V", "CSP-SOL-V"),
         new ParameterizedTypeReference<List<ConvocatoriaConceptoGastoCodigoEc>>() {
         });
 
@@ -1519,7 +1519,7 @@ class ConvocatoriaIT extends BaseIT {
         .buildAndExpand(convocatoriaId).toUri();
 
     final ResponseEntity<List<RequisitoIPNivelAcademicoOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildGenericRequest(null, null, "CSP-SOL-INV-C"),
+        buildGenericRequest(null, null, "CSP-CON-V", "CSP-SOL-INV-C"),
         new ParameterizedTypeReference<List<RequisitoIPNivelAcademicoOutput>>() {
         });
 
@@ -1551,7 +1551,7 @@ class ConvocatoriaIT extends BaseIT {
 
     final ResponseEntity<List<RequisitoEquipoNivelAcademicoOutput>> response = restTemplate.exchange(uri,
         HttpMethod.GET,
-        buildGenericRequest(null, null, "CSP-SOL-INV-C"),
+        buildGenericRequest(null, null, "CSP-CON-V", "CSP-SOL-INV-C"),
         new ParameterizedTypeReference<List<RequisitoEquipoNivelAcademicoOutput>>() {
         });
 
@@ -1583,7 +1583,7 @@ class ConvocatoriaIT extends BaseIT {
 
     final ResponseEntity<List<RequisitoIPCategoriaProfesionalOutput>> response = restTemplate.exchange(uri,
         HttpMethod.GET,
-        buildGenericRequest(null, null, "CSP-SOL-INV-C"),
+        buildGenericRequest(null, null, "CSP-CON-V", "CSP-SOL-INV-C"),
         new ParameterizedTypeReference<List<RequisitoIPCategoriaProfesionalOutput>>() {
         });
 
@@ -1615,7 +1615,7 @@ class ConvocatoriaIT extends BaseIT {
 
     final ResponseEntity<List<RequisitoEquipoCategoriaProfesionalOutput>> response = restTemplate.exchange(uri,
         HttpMethod.GET,
-        buildGenericRequest(null, null, "CSP-CON-INV-V"),
+        buildGenericRequest(null, null, "CSP-CON-V", "CSP-CON-INV-V"),
         new ParameterizedTypeReference<List<RequisitoEquipoCategoriaProfesionalOutput>>() {
         });
 

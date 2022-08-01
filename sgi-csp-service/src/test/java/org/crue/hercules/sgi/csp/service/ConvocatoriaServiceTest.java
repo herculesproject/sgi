@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToCreateConvocatoriaException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
@@ -37,6 +38,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaServiceImpl;
+import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +85,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoHelper proyectoHelper;
 
+  private ConvocatoriaAuthorityHelper authorityHelper;
+
   private ConvocatoriaService service;
 
   @Autowired
@@ -90,11 +94,12 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    authorityHelper = new ConvocatoriaAuthorityHelper(repository, configuracionSolicitudRepository);
     service = new ConvocatoriaServiceImpl(repository, convocatoriaPeriodoJustificacionRepository,
         modeloUnidadRepository, modeloTipoFinalidadRepository, tipoRegimenConcurrenciaRepository,
         tipoAmbitoGeograficoRepository, convocatoriaPeriodoSeguimientoCientificoRepository,
         configuracionSolicitudRepository, this.solicitudReposiotry, this.proyectoReposiotry, convocatoriaClonerService,
-        autorizacionRepository, proyectoHelper, sgiConfigProperties);
+        autorizacionRepository, proyectoHelper, sgiConfigProperties, authorityHelper);
   }
 
   @Test
@@ -241,12 +246,10 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
 
     convocatoria.setUnidadGestionRef("2");
 
-    Assertions.assertThatThrownBy(
-        // when: create Convocatoria
-        () -> service.create(convocatoria))
-        // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
+    // when: create Convocatoria
+    Throwable thrown = Assertions.catchThrowable(() -> this.service.create(convocatoria));
+    // then: throw exception as id can't be provided
+    Assertions.assertThat(thrown).isInstanceOf(UserNotAuthorizedToCreateConvocatoriaException.class);
   }
 
   @Test

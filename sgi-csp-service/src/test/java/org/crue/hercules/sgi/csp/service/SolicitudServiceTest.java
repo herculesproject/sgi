@@ -541,7 +541,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
 
     Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+        .hasMessage("La Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario");
 
   }
 

@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaDocumentoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -53,14 +54,16 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
   @Mock
   private ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
   @Mock
-  ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+  private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
+  private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaDocumentoService service;
 
   @BeforeEach
   void setUp() throws Exception {
+    this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaDocumentoServiceImpl(repository, convocatoriaRepository, modeloTipoFaseRepository,
-        modeloTipoDocumentoRepository, configuracionSolicitudRepository);
+        modeloTipoDocumentoRepository, authorityHelper);
   }
 
   @Test

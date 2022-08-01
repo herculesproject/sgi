@@ -26,7 +26,7 @@ public class SolicitanteDataService {
 
     String emailSolicitante = StringUtils
         .isNotEmpty(solicitanteRef)
-            ? getEmailFromPersonaWithSolicitanteRef(solicitanteRef)
+            ? getEmailFromSolicitanteRef(solicitanteRef)
             : getEmailFromSolicitanteExterno(solicitudId);
 
     return Collections.singletonList(Recipient
@@ -37,11 +37,11 @@ public class SolicitanteDataService {
   public String getSolicitanteNombreApellidos(Long solicitudId, String solicitanteRef) {
     return StringUtils
         .isNotEmpty(solicitanteRef)
-            ? getNombreApellidosFromPersonaWithSolicitanteRef(solicitanteRef)
+            ? getNombreApellidosFromSolicitanteRef(solicitanteRef)
             : getNombreApellidosFromSolicitanteExterno(solicitudId);
   }
 
-  public String getNombreApellidosFromSolicitanteExterno(Long solicitudId) {
+  private String getNombreApellidosFromSolicitanteExterno(Long solicitudId) {
 
     Optional<SolicitanteExterno> solicitanteExterno = this.solicitanteExternoRepository
         .findBySolicitudId(solicitudId);
@@ -53,7 +53,7 @@ public class SolicitanteDataService {
         solicitanteExterno.get().getApellidos());
   }
 
-  public String getNombreApellidosFromPersonaWithSolicitanteRef(String solicitanteRef) {
+  private String getNombreApellidosFromSolicitanteRef(String solicitanteRef) {
     PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitanteRef);
     if (datosPersona == null) {
       return null;
@@ -62,7 +62,7 @@ public class SolicitanteDataService {
     return String.format("%s %s", datosPersona.getNombre(), datosPersona.getApellidos());
   }
 
-  public String getEmailFromSolicitanteExterno(Long solicitudId) {
+  private String getEmailFromSolicitanteExterno(Long solicitudId) {
 
     Optional<SolicitanteExterno> solicitanteExterno = this.solicitanteExternoRepository
         .findBySolicitudId(solicitudId);
@@ -73,7 +73,7 @@ public class SolicitanteDataService {
     return solicitanteExterno.get().getEmail();
   }
 
-  public String getEmailFromPersonaWithSolicitanteRef(String solicitanteRef) {
+  private String getEmailFromSolicitanteRef(String solicitanteRef) {
     PersonaOutput datosPersona = this.sgiApiSgpService.findById(solicitanteRef);
     if (datosPersona == null) {
       return null;

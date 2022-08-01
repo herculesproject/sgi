@@ -26,9 +26,10 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
-import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -78,13 +79,15 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   @Mock
   SgiApiSgpService personaService;
 
+  private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaHitoService service;
 
   @BeforeEach
   void setUp() throws Exception {
+    this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaHitoService(repository, convocatoriaRepository, modeloTipoHitoRepository,
-        configuracionSolicitudRepository, convocatoriaHitoAvisoRepository, solicitudRepository,
-        proyectoEquipoRepository, emailService, sgiApiTaskService, personaService);
+        convocatoriaHitoAvisoRepository, solicitudRepository,
+        proyectoEquipoRepository, emailService, sgiApiTaskService, personaService, authorityHelper);
   }
 
   @Test

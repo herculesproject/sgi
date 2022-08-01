@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEntidadFinanciadoraServiceImpl;
+import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -50,15 +51,17 @@ class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest {
   @Mock
   private ConvocatoriaService convocatoriaService;
   @Mock
-  ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+  private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
+  private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaEntidadFinanciadoraService service;
 
   @BeforeEach
   void setUp() throws Exception {
+    this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaEntidadFinanciadoraServiceImpl(repository, convocatoriaRepository,
         fuenteFinanciacionRepository, tipoFinanciacionRepository, convocatoriaService,
-        configuracionSolicitudRepository);
+        authorityHelper);
   }
 
   @Test
