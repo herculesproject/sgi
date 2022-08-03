@@ -198,7 +198,7 @@ class SectorLicenciadoControllerIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
         .buildAndExpand(sectorLicenciadoId).toUri();
 
-    ResponseEntity<SectorLicenciadoOutput> response = this.restTemplate.exchange(uri, HttpMethod.GET,
+    ResponseEntity<SectorLicenciadoOutput> response = this.restTemplate.exchange(uri, HttpMethod.PUT,
         this.buildRequest(null, input, roles), SectorLicenciadoOutput.class);
 
     Assertions.assertThat(response).isNotNull();
@@ -207,11 +207,14 @@ class SectorLicenciadoControllerIT extends BaseIT {
 
     SectorLicenciadoOutput output = response.getBody();
     Assertions.assertThat(output.getId()).isEqualTo(sectorLicenciadoId);
-    Assertions.assertThat(output.getExclusividad()).isFalse();
+    Assertions.assertThat(output.getExclusividad()).isEqualTo(input.getExclusividad());
     Assertions.assertThat(output.getInvencionId()).isEqualTo(input.getInvencionId());
     Assertions.assertThat(output.getSectorAplicacion()).isNotNull();
     Assertions.assertThat(output.getSectorAplicacion().getId()).isEqualTo(input.getSectorAplicacionId());
     Assertions.assertThat(output.getPaisRef()).isEqualTo(input.getPaisRef());
+    Assertions.assertThat(output.getContratoRef()).isEqualTo(input.getContratoRef());
+    Assertions.assertThat(output.getFechaFinLicencia()).isEqualTo(input.getFechaFinLicencia());
+    Assertions.assertThat(output.getFechaInicioLicencia()).isEqualTo(input.getFechaInicioLicencia());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
