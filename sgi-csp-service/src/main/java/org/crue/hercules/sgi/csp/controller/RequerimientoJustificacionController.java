@@ -2,14 +2,17 @@ package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.converter.GastoRequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.converter.IncidenciaDocumentacionRequerimientoConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
+import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
-import org.crue.hercules.sgi.csp.dto.RelacionEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.service.GastoRequerimientoJustificacionService;
 import org.crue.hercules.sgi.csp.service.IncidenciaDocumentacionRequerimientoService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -45,11 +48,15 @@ public class RequerimientoJustificacionController {
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_INCIDENCIAS_DOCUMENTACION = PATH_DELIMITER + "{id}" + PATH_DELIMITER
       + "incidencias-documentacion";
+  public static final String PATH_GASTOS = PATH_ID + PATH_DELIMITER
+      + "gastos";
 
   private final RequerimientoJustificacionService service;
   private final RequerimientoJustificacionConverter converter;
   private final IncidenciaDocumentacionRequerimientoService incidenciaDocumentacionRequerimientoService;
   private final IncidenciaDocumentacionRequerimientoConverter incidenciaDocumentacionRequerimientoConverter;
+  private final GastoRequerimientoJustificacionService gastoRequerimientoJustificacionService;
+  private final GastoRequerimientoJustificacionConverter gastoRequerimientoJustificacionConverter;
 
   /**
    * Devuelve el {@link RequerimientoJustificacion} con el id indicado.
@@ -130,21 +137,48 @@ public class RequerimientoJustificacionController {
    *               {@link RequerimientoJustificacion}.
    * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
-   * @return el listado de entidades {@link RelacionEjecucionEconomica} paginadas
-   *         y filtradas.
+   * @return el listado de entidades {@link IncidenciaDocumentacionRequerimiento}
+   *         paginadas y/o filtradas.
    */
   @GetMapping(PATH_INCIDENCIAS_DOCUMENTACION)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-SJUS-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SJUS-V', 'CSP-SJUS-E')")
   public ResponseEntity<Page<IncidenciaDocumentacionRequerimientoOutput>> findIncidenciasDocumentacion(
       @PathVariable Long id,
       @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findRelacionesProyectos(Long id, String query, Pageable paging) - start");
+    log.debug("findIncidenciasDocumentacion(Long id, String query, Pageable paging) - start");
 
     Page<IncidenciaDocumentacionRequerimientoOutput> page = incidenciaDocumentacionRequerimientoConverter
         .convert(incidenciaDocumentacionRequerimientoService.findAllByRequerimientoJustificacionId(id, query, paging));
 
-    log.debug("findRelacionesProyectos(Long id, String query, Pageable paging) - end");
+    log.debug("findIncidenciasDocumentacion(Long id, String query, Pageable paging) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y/o filtrada
+   * {@link GastoRequerimientoJustificacion} de un
+   * {@link RequerimientoJustificacion}
+   * 
+   * @param id     identificador de la entidad
+   *               {@link RequerimientoJustificacion}.
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link GastoRequerimientoJustificacion}
+   *         paginadas y filtradas.
+   */
+  @GetMapping(PATH_GASTOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SJUS-V', 'CSP-SJUS-E')")
+  public ResponseEntity<Page<GastoRequerimientoJustificacionOutput>> findGastos(
+      @PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findGastos(Long id, String query, Pageable paging) - start");
+
+    Page<GastoRequerimientoJustificacionOutput> page = gastoRequerimientoJustificacionConverter
+        .convert(gastoRequerimientoJustificacionService.findAllByRequerimientoJustificacionId(id, query, paging));
+
+    log.debug("findGastos(Long id, String query, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 }

@@ -44,4 +44,19 @@ public class AssertHelper {
             .build());
   }
 
+  /**
+   * Comprueba que el campo no sea null
+   * 
+   * @param fieldValue      el valor del campo.
+   * @param clazz           clase para la que se comprueba el campo.
+   * @param messageKeyField clave del campo del messages properties.
+   */
+  public static void fieldNotNull(Object fieldValue, Class<?> clazz, String messageKeyField) {
+    Assert.notNull(fieldValue,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .build());
+  }
 }
