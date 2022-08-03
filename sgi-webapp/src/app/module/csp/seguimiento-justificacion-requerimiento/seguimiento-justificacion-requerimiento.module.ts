@@ -12,6 +12,7 @@ import { SeguimientoJustificacionRequerimientoRouting } from './seguimiento-just
 import { SeguimientoJustificacionRequerimientoDatosGeneralesComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-datos-generales/seguimiento-justificacion-requerimiento-datos-generales.component';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { IncidenciaDocumentoRequerimientoModalComponent } from './modals/incidencia-documento-requerimiento-modal/incidencia-documento-requerimiento-modal.component';
+import { SeguimientoJustificacionRequerimientoGastosComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-gastos/seguimiento-justificacion-requerimiento-gastos.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { IncidenciaDocumentoRequerimientoModalComponent } from './modals/inciden
     SeguimientoJustificacionRequerimientoCrearComponent,
     SeguimientoJustificacionRequerimientoDatosGeneralesComponent,
     IncidenciaDocumentoRequerimientoModalComponent,
+    SeguimientoJustificacionRequerimientoGastosComponent,
   ],
   imports: [
     CommonModule,

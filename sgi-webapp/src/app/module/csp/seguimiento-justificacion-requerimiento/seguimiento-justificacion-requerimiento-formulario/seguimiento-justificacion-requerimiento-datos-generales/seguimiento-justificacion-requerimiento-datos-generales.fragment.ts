@@ -1,10 +1,10 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
+import { ITipoRequerimiento } from '@core/models/csp/tipo-requerimiento';
 import { FormFragment } from '@core/services/action-service';
 import { IncidenciaDocumentacionRequerimientoService } from '@core/services/csp/incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
-import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
@@ -23,7 +23,6 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
     readonly proyectoSgeRef: string,
     private readonly requerimientoJustificacionService: RequerimientoJustificacionService,
     private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
-    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
     private readonly incidenciaDocumentacionRequerimientoService: IncidenciaDocumentacionRequerimientoService
   ) {
     super(requerimientoJustificacion?.id, true);
@@ -63,6 +62,10 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
     }
 
     return form;
+  }
+
+  tipoRequerimientoControlValueChanges(): Observable<ITipoRequerimiento> {
+    return this.getFormGroup().controls.tipoRequerimiento.valueChanges
   }
 
   protected buildPatch(value: IRequerimientoJustificacion): { [key: string]: any; } {
@@ -138,19 +141,6 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
 
   private findRequerimientoJustificacion(): Observable<IRequerimientoJustificacion> {
     return of(this.requerimientoJustificacion).pipe(
-      switchMap((requerimientoJustificacion) => {
-        if (requerimientoJustificacion?.proyectoProyectoSge?.id) {
-          return this.proyectoProyectoSgeService.findById(requerimientoJustificacion.proyectoProyectoSge.id)
-            .pipe(
-              map((proyectoProyectoSge) => {
-                requerimientoJustificacion.proyectoProyectoSge = proyectoProyectoSge;
-                return requerimientoJustificacion;
-              })
-            );
-        } else {
-          return of(requerimientoJustificacion);
-        }
-      }),
       switchMap((requerimientoJustificacion) => {
         if (requerimientoJustificacion?.proyectoPeriodoJustificacion?.id) {
           return this.proyectoPeriodoJustificacionService.findById(requerimientoJustificacion.proyectoPeriodoJustificacion.id)

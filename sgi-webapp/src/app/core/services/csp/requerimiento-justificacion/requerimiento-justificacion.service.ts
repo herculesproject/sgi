@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { environment } from '@env';
@@ -10,6 +11,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { IGastoRequerimientoJustificacionResponse } from '../gasto-requerimiento-justificado/gasto-requerimiento-justificado-response';
+import { GASTO_REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../gasto-requerimiento-justificado/gasto-requerimiento-justificado-response.converter';
 import { IIncidenciaDocumentacionRequerimientoResponse } from '../incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento-response';
 import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_RESPONSE_CONVERTER } from '../incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento-response.converter';
 import { IRequerimientoJustificacionRequest } from './requerimiento-justificacion-request';
@@ -69,5 +72,13 @@ export class RequerimientoJustificacionService extends _RequerimientoJustificaci
       `${this.endpointUrl}/${id}/incidencias-documentacion`,
       options,
       INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_RESPONSE_CONVERTER);
+  }
+
+  findGastos(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IGastoRequerimientoJustificacion>> {
+    return this.find<IGastoRequerimientoJustificacionResponse, IGastoRequerimientoJustificacion>(
+      `${this.endpointUrl}/${id}/gastos`,
+      options,
+      GASTO_REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER);
   }
 }
