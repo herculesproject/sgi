@@ -2,6 +2,21 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
   <property name="schemaPrefix" value="" />
 
+  <!-- Actualiza las plantillas modificadas en la tarea HERCULES-6379 para que se apliquen los cambios porque se modificaron despues de pasar a la siguiente version -->
+  <changeSet context="!test" author="master" id="0000000000004-fix">
+    <!-- ETI Aviso de Evaluación retrospectiva pendiente-->
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_CONTENT_html.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT'</where>
+    </update>
+
+    <!-- ETI Informe de Seguimiento Anual Pendiente -->
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/0000000000002/eti-com-informe/ETI_COM_INF_SEG_ANU_CONTENT_html.ftl" />
+      <where>name='ETI_COM_INF_SEG_ANU_CONTENT'</where>
+    </update>
+  </changeSet>
+
   <changeSet context="!test" author="master" id="0000000000004-param">
 
     <!-- CSP Cambio al estado Validada para solicitudes de tipo RRHH -->
