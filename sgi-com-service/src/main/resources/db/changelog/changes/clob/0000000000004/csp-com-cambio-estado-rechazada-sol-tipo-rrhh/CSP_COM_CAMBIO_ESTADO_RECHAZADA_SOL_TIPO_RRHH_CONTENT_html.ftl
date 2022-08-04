@@ -7,7 +7,7 @@
   <body>
     <p>Estimado/a investigador/a,</p>
 
-    <p>Le informamos que con fecha ${data.fechaEstado?datetime.iso?string('dd/MM/yyyy')}, ${data.nombreApellidosSolicitante} su solicitud ${data.codigoInternoSolicitud} <#if data.tituloConvocatoria?has_content>dentro de la convocatoria ${data.tituloConvocatoria} </#if>ha sido rechazada por el/la tutor/a.</p>
+    <p>Le informamos que con fecha ${data.fechaEstado?datetime.iso?string('dd/MM/yyyy')}, su solicitud ${data.codigoInternoSolicitud} <#if data.tituloConvocatoria?has_content>dentro de la convocatoria ${data.tituloConvocatoria} </#if>ha sido rechazada por el/la tutor/a.</p>
 
     <p>Reciba un cordial saludo.</p>
 
