@@ -187,8 +187,8 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
     this.parseFormlyToJSON();
 
     const obs$: Observable<IPersona> = this.personaData.action === ACTION_MODAL_MODE.EDIT
-      ? this.update(this.personaData.personaId, this.formlyData.model)
-      : this.create(this.formlyData.model);
+      ? this.update(this.personaData.personaId, this.formlyData)
+      : this.create(this.formlyData);
 
     return obs$.pipe(
       catchError(error => {
