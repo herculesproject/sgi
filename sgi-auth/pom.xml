@@ -64,6 +64,17 @@
     <module>broker-saml-mappers</module>
   </modules>
 
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>${dist.repo.rel.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>${dist.repo.snap.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <profiles>
     <profile>
       <!-- dev profile. This is the default profile -->
