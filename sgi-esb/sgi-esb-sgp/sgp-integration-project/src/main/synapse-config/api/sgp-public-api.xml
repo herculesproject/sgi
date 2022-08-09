@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sgp/public" name="sgp-api" xmlns="http://ws.apache.org/ns/synapse">
+
+  <!-- categorias-profesionales -->
+  <resource methods="GET" uri-template="/categorias-profesionales/{id}">
+    <inSequence>
+      <sequence key="sgp-add-x-api-key-sequence" />
+      <send>
+        <endpoint key="sgp-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
+  <!-- niveles-academicos -->
+  <resource methods="GET" uri-template="/niveles-academicos/{id}">
+    <inSequence>
+      <sequence key="sgp-add-x-api-key-sequence" />
+      <send>
+        <endpoint key="sgp-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
+  <!-- sexos -->
+  <resource methods="GET" url-mapping="/sexos">
+    <inSequence>
+      <sequence key="sgp-add-x-api-key-sequence" />
+      <send>
+        <endpoint key="sgp-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
+</api>
