@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/sgp/public" name="sgp-api" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/sgp/public" name="sgp-public-api" xmlns="http://ws.apache.org/ns/synapse">
 
   <!-- categorias-profesionales -->
   <resource methods="GET" uri-template="/categorias-profesionales/{id}">
