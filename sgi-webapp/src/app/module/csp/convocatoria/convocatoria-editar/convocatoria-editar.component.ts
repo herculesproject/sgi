@@ -33,7 +33,7 @@ const MSG_ERROR_REGISTRAR = marker('error.csp.convocatoria.registrar');
 export class ConvocatoriaEditarComponent extends ActionComponent implements OnInit {
   CONVOCATORIA_ROUTE_NAMES = CONVOCATORIA_ROUTE_NAMES;
 
-  textoCrear: string;
+  textoEditar: string;
   textoRegistrar = MSG_BUTTON_REGISTRAR;
   textoEditarSuccess: string;
   textoEditarError: string;
@@ -92,7 +92,7 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
           { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
-    ).subscribe((value) => this.textoCrear = value);
+    ).subscribe((value) => this.textoEditar = value);
 
     this.translate.get(
       CONVOCATORIA_KEY,

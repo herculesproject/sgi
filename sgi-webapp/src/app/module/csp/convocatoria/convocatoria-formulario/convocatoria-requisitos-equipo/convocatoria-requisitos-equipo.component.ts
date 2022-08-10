@@ -15,7 +15,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { SexoService } from '@core/services/sgp/sexo.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { CategoriaProfesionalModalComponent, CategoriaProfesionalModalData } from '../../modals/categoria-profesional-modal/categoria-profesional-modal.component';
@@ -69,8 +68,7 @@ export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent
     private dialogService: DialogService,
     private matDialog: MatDialog,
     public translate: TranslateService,
-    private readonly sexoService: SexoService,
-    private authService: SgiAuthService
+    private readonly sexoService: SexoService
   ) {
     super(actionService.FRAGMENT.REQUISITOS_EQUIPO, actionService);
     this.formPart = this.fragment as ConvocatoriaRequisitosEquipoFragment;
