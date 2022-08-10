@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoInput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -689,7 +690,11 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   }
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).build();
+    return Convocatoria.builder()
+        .id(convocatoriaId)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .activo(true)
+        .build();
   }
 
 }

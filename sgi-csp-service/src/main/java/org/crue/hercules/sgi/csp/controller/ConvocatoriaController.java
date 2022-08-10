@@ -91,6 +91,7 @@ public class ConvocatoriaController {
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "convocatorias";
 
+  public static final String PATH_INVESTIGADOR = PATH_DELIMITER + "investigador";
   public static final String PATH_RESTRINGIDOS = PATH_DELIMITER + "restringidos";
   public static final String PATH_TODOS_RESTRINGIDOS = PATH_DELIMITER + "todos/restringidos";
 
@@ -125,6 +126,7 @@ public class ConvocatoriaController {
       + "convocatoriaperiodojustificaciones";
   public static final String PATH_PERIODOS_SEGUIMIENTO_CIENTIFICO = PATH_ID + PATH_DELIMITER
       + "convocatoriaperiodoseguimientocientificos";
+  public static final String PATH_TRAMITABLE = PATH_ID + PATH_DELIMITER + "tramitable";
 
   private ModelMapper modelMapper;
 
@@ -410,30 +412,7 @@ public class ConvocatoriaController {
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
    *         filtradas.
    */
-  @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
-  public ResponseEntity<Page<Convocatoria>> findAll(@RequestParam(name = "q", required = false) String query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query,Pageable paging) - start");
-    Page<Convocatoria> page = service.findAll(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAll(String query,Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
-   *
-   * @param query  filtro de búsqueda.
-   * @param paging {@link Pageable}.
-   * @return el listado de entidades {@link Convocatoria} activas paginadas y
-   *         filtradas.
-   */
-  @GetMapping("/investigador")
+  @GetMapping(PATH_INVESTIGADOR)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-INV-V')")
   public ResponseEntity<Page<Convocatoria>> findAllInvestigador(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
@@ -1057,7 +1036,7 @@ public class ConvocatoriaController {
    * @param id Id del {@link Convocatoria}.
    * @return HTTP-200 si puede ser tramitada / HTTP-204 si no puede ser tramitada
    */
-  @RequestMapping(path = "/{id}/tramitable", method = RequestMethod.HEAD)
+  @RequestMapping(path = PATH_TRAMITABLE, method = RequestMethod.HEAD)
   @PreAuthorize("hasAuthority('CSP-SOL-INV-C')")
   public ResponseEntity<Void> tramitable(@PathVariable Long id) {
     log.debug("registrable(Long id) - start");

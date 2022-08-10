@@ -381,22 +381,24 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
-   * Obtiene todas las entidades {@link Convocatoria} activas paginadas y
-   * filtradas.
+   * Obtiene todas las entidades {@link Convocatoria} que puede visualizar un
+   * investigador paginadas y filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
-   * @return el listado de entidades {@link Convocatoria} activas paginadas y
-   *         filtradas.
+   * @return el listado de entidades {@link Convocatoria} que puede visualizar un
+   *         investigador paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAll(String query, Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+  public Page<Convocatoria> findAllInvestigador(String query, Pageable paging) {
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
     Specification<Convocatoria> specs = ConvocatoriaSpecifications.distinct().and(ConvocatoriaSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query)));
+        .and(ConvocatoriaSpecifications.registradas())
+        .and(ConvocatoriaSpecifications.configuracionSolicitudTramitacionSGI())
+        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance(sgiConfigProperties))));
 
     Page<Convocatoria> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -410,15 +412,14 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    *         investigador paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAllInvestigador(String query, Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
-    Specification<Convocatoria> specs = ConvocatoriaSpecifications.distinct().and(ConvocatoriaSpecifications.activos()
-        .and(ConvocatoriaSpecifications.registradas())
-        .and(ConvocatoriaSpecifications.configuracionSolicitudTramitacionSGI())
-        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance(sgiConfigProperties))));
+  public Page<Convocatoria> findAllPublicas(String query, Pageable paging) {
+    log.debug("findAllPublicas(String query, Pageable paging) - start");
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.distinct()
+        .and(ConvocatoriaSpecifications.publicas())
+        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance(sgiConfigProperties)));
 
     Page<Convocatoria> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findAllPublicas(String query, Pageable paging) - end");
     return returnValue;
   }
 

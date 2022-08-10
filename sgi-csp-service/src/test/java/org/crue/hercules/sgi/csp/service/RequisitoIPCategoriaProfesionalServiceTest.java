@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessConvocatoriaException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -87,6 +88,7 @@ class RequisitoIPCategoriaProfesionalServiceTest extends BaseServiceTest {
         .builder()
         .id(id)
         .activo(Boolean.TRUE)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
         .estado(Estado.BORRADOR)
         .build();
   }

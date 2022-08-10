@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.util;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -62,7 +63,9 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
    */
   public void checkUserHasAuthorityViewConvocatoria(Convocatoria convocatoria)
       throws UserNotAuthorizedToAccessConvocatoriaException {
-    if (!(hasAuthorityViewUnidadGestion(convocatoria) || hasAuthorityViewInvestigador(convocatoria))) {
+    if (!(hasPublicAccess(convocatoria)
+        || hasAuthorityViewUnidadGestion(convocatoria)
+        || hasAuthorityViewInvestigador(convocatoria))) {
       throw new UserNotAuthorizedToAccessConvocatoriaException();
     }
   }
@@ -159,6 +162,27 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
   public List<String> getUserUOsConvocatoria() {
     return SgiSecurityContextHolder.getUOsForAnyAuthority(
         new String[] { CSP_CON_C, CSP_CON_V, CSP_CON_E, CSP_CON_B, CSP_CON_R });
+  }
+
+  /**
+   * Comprueba si es una {@link Convocatoria} acesible publicamente.
+   * 
+   * @param convocatoria la {@link Convocatoria}
+   * @return <code>true</code> si es acesible publicamente, <code>false</code> si
+   *         no lo es
+   */
+  private boolean hasPublicAccess(Convocatoria convocatoria) {
+    if (!convocatoria.getActivo().booleanValue()
+        || !convocatoria.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
+      return false;
+    }
+
+    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(convocatoria.getId())
+        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoria.getId()));
+
+    return convocatoria.getEstado().equals(Estado.REGISTRADA)
+        && Boolean.TRUE.equals(configuracionSolicitud.getTramitacionSGI());
   }
 
 }

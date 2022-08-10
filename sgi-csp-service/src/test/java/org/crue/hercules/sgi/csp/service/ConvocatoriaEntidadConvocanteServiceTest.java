@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
@@ -525,7 +526,11 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   }
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).build();
+    return Convocatoria.builder()
+        .id(convocatoriaId)
+        .activo(true)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .build();
   }
 
   /**

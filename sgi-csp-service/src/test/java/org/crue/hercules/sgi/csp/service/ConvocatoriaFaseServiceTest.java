@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -770,7 +771,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).build();
+    return Convocatoria.builder()
+        .id(convocatoriaId)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .activo(true)
+        .build();
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -1130,6 +1131,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         .duracion(12)
         .ambitoGeografico(tipoAmbitoGeografico)
         .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
         .activo(activo)
         .build();
     // @formatter:on
