@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.rel.integration;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rel.dto.RelacionInput;
@@ -104,6 +105,22 @@ class RelacionControllerIT extends BaseIT {
     Assertions.assertThat(output.getObservaciones()).isEqualTo(relacion.getObservaciones());
     Assertions.assertThat(output.getTipoEntidadDestino()).isEqualTo(relacion.getTipoEntidadDestino());
     Assertions.assertThat(output.getTipoEntidadOrigen()).isEqualTo(relacion.getTipoEntidadOrigen());
+  }
+
+  @Test
+  void findById_ShouldReturnRelacionNotFoundException() throws Exception {
+    String[] roles = { "REL-V" };
+    Long relacionId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID).buildAndExpand(relacionId)
+        .toUri();
+
+    ResponseEntity<Map<String, Object>> response = this.restTemplate.exchange(uri, HttpMethod.GET,
+        this.buildRequest(null, null, roles), new ParameterizedTypeReference<Map<String, Object>>() {
+        });
+
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
