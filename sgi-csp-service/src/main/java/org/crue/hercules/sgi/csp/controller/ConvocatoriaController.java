@@ -380,12 +380,12 @@ public class ConvocatoriaController {
   @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-INV-V', 'CSP-CON-E')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
-    log.debug("Convocatoria exists(Long id) - start");
+    log.debug("exists(Long id) - start");
     if (service.existsById(id)) {
-      log.debug("Convocatoria exists(Long id) - end");
+      log.debug("exists(Long id) - end");
       return new ResponseEntity<>(HttpStatus.OK);
     }
-    log.debug("Convocatoria exists(Long id) - end");
+    log.debug("exists(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -398,9 +398,9 @@ public class ConvocatoriaController {
   @GetMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public Convocatoria findById(@PathVariable Long id) {
-    log.debug("Convocatoria findById(Long id) - start");
+    log.debug("findById(Long id) - start");
     Convocatoria returnValue = service.findById(id);
-    log.debug("Convocatoria findById(Long id) - end");
+    log.debug("findById(Long id) - end");
     return returnValue;
   }
 
