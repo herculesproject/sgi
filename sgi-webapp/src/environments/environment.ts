@@ -43,23 +43,23 @@ export const environment = {
       isInvestigador: false
     },
     protectedResources: [
-      /\/api\/eti.*/i,
-      /\/api\/csp.*/i,
-      /\/api\/usr.*/i,
+      /\/api\/eti(?!\/config\/time-zone$).*/i,
+      /\/api\/csp(?!\/public\/|\/config\/time-zone$).*/i,
+      /\/api\/usr(?!\/config\/time-zone$).*/i,
       /\/api\/sgp.*/i,
-      /\/api\/sgemp.*/i,
+      /\/api\/sgemp(?!\/public\/).*/i,
       /\/api\/sgepii.*/i,
       /\/api\/sgo.*/i,
-      /\/api\/sge.*/i,
-      /\/api\/pii.*/i,
+      /\/api\/sge\/.*/i,
+      /\/api\/pii(?!\/config\/time-zone$).*/i,
       /\/api\/sgdoc.*/i,
-      /\/api\/rel.*/i,
-      /\/api\/rep.*/i,
-      /\/api\/prc.*/i,
+      /\/api\/rel(?!\/config\/time-zone$).*/i,
+      /\/api\/rep(?!\/config\/time-zone$).*/i,
+      /\/api\/prc(?!\/config\/time-zone$).*/i,
       /\/api\/cnf.*/i,
       /\/api\/com.*/i,
       /\/api\/tp.*/i,
-      /\/api\/eer.*/i
+      /\/api\/eer(?!\/config\/time-zone$).*/i
     ]
   } as SgiAuthConfig,
   version,
