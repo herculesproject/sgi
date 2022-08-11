@@ -49,4 +49,20 @@
     </faultSequence>
   </resource>
 
+  <!-- tipos-documento -->
+  <resource methods="GET" url-mapping="/tipos-documento">
+    <inSequence>
+      <sequence key="sgp-add-x-api-key-sequence" />
+      <send>
+        <endpoint key="sgp-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
 </api>
