@@ -179,9 +179,10 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
 
     ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
         .findByConvocatoriaId(convocatoria.getId())
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoria.getId()));
+        .orElse(null);
 
-    return convocatoria.getEstado().equals(Estado.REGISTRADA)
+    return configuracionSolicitud != null
+        && convocatoria.getEstado().equals(Estado.REGISTRADA)
         && Boolean.TRUE.equals(configuracionSolicitud.getTramitacionSGI());
   }
 
