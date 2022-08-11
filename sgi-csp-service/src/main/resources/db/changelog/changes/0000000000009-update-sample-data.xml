@@ -68,4 +68,13 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000009-gasto_requerimiento_justificacion_identificador_justificacion">
+    <update tableName="gasto_requerimiento_justificacion">
+      <column name="identificador_justificacion" value="653/2021" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="identificador_justificacion" value="653-2021" />
+      </whereParams>
+    </update>
+  </changeSet>
 </databaseChangeLog>
