@@ -13,6 +13,7 @@ import { SeguimientoJustificacionRequerimientoDatosGeneralesComponent } from './
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { IncidenciaDocumentoRequerimientoModalComponent } from './modals/incidencia-documento-requerimiento-modal/incidencia-documento-requerimiento-modal.component';
 import { SeguimientoJustificacionRequerimientoGastosComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-gastos/seguimiento-justificacion-requerimiento-gastos.component';
+import { GastosJustificadosModalComponent } from './modals/gastos-justificados-modal/gastos-justificados-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { SeguimientoJustificacionRequerimientoGastosComponent } from './seguimie
     SeguimientoJustificacionRequerimientoDatosGeneralesComponent,
     IncidenciaDocumentoRequerimientoModalComponent,
     SeguimientoJustificacionRequerimientoGastosComponent,
+    GastosJustificadosModalComponent,
   ],
   imports: [
     CommonModule,

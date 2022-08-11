@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
+import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -25,7 +26,8 @@ export class SeguimientoJustificacionRequerimientoDataResolver extends SgiResolv
     snackBar: SnackBarService,
     private service: RequerimientoJustificacionService,
     private authService: SgiAuthService,
-    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService) {
+    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
 
@@ -46,6 +48,19 @@ export class SeguimientoJustificacionRequerimientoDataResolver extends SgiResolv
           return of(requerimientoJustificacion);
         }
       }),
+      switchMap((requerimientoJustificacion) => {
+        if (requerimientoJustificacion?.proyectoPeriodoJustificacion?.id) {
+          return this.proyectoPeriodoJustificacionService.findById(requerimientoJustificacion.proyectoPeriodoJustificacion.id)
+            .pipe(
+              map((proyectoPeriodoJustificacion) => {
+                requerimientoJustificacion.proyectoPeriodoJustificacion = proyectoPeriodoJustificacion;
+                return requerimientoJustificacion;
+              })
+            );
+        } else {
+          return of(requerimientoJustificacion);
+        }
+      }),
       map(requerimientoJustificacion => {
         if (!requerimientoJustificacion) {
           throwError('NOT_FOUND');
@@ -54,6 +69,7 @@ export class SeguimientoJustificacionRequerimientoDataResolver extends SgiResolv
           canEdit: this.authService.hasAuthority('CSP-SJUS-E'),
           requerimientoJustificacion
         };
-      }));
+      })
+    );
   }
 }

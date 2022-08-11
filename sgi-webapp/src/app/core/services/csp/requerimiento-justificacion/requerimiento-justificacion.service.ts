@@ -11,8 +11,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IGastoRequerimientoJustificacionResponse } from '../gasto-requerimiento-justificado/gasto-requerimiento-justificado-response';
-import { GASTO_REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../gasto-requerimiento-justificado/gasto-requerimiento-justificado-response.converter';
+import { IGastoRequerimientoJustificacionResponse } from '../gasto-requerimiento-justificacion/gasto-requerimiento-justificacion-response';
+import { GASTO_REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../gasto-requerimiento-justificacion/gasto-requerimiento-justificacion-response.converter';
 import { IIncidenciaDocumentacionRequerimientoResponse } from '../incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento-response';
 import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_RESPONSE_CONVERTER } from '../incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento-response.converter';
 import { IRequerimientoJustificacionRequest } from './requerimiento-justificacion-request';

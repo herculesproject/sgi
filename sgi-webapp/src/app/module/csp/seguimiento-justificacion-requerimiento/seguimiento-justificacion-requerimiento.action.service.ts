@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { ActionService } from '@core/services/action-service';
+import { GastoRequerimientoJustificacionService } from '@core/services/csp/gasto-requerimiento-justificacion/gasto-requerimiento-justificacion.service';
 import { IncidenciaDocumentacionRequerimientoService } from '@core/services/csp/incidencia-documentacion-requerimiento/incidencia-documentacion-requerimiento.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { SeguimientoJustificacionService } from '@core/services/sge/seguimiento-justificacion/seguimiento-justificacion.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { EJECUCION_ECONOMICA_DATA_KEY } from '../ejecucion-economica/ejecucion-economica-data.resolver';
 import { IEjecucionEconomicaData } from '../ejecucion-economica/ejecucion-economica.action.service';
 import { REQUERIMIENTO_JUSTIFICACION_DATA_KEY } from './seguimiento-justificacion-requerimiento-data.resolver';
@@ -28,7 +28,6 @@ export class SeguimientoJustificacionRequerimientoActionService extends ActionSe
     GASTOS: 'gastos'
   };
 
-  private nombreTipoRequerimiento$ = new BehaviorSubject<string>('');
   private readonly data: IRequerimientoJustificacionData;
   private readonly dataEjecucionEconomica: IEjecucionEconomicaData;
   public readonly: boolean;
@@ -42,7 +41,8 @@ export class SeguimientoJustificacionRequerimientoActionService extends ActionSe
     requerimientoJustificacionService: RequerimientoJustificacionService,
     proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
     incidenciaDocumentacionRequerimientoService: IncidenciaDocumentacionRequerimientoService,
-    seguimientoJustificacionService: SeguimientoJustificacionService
+    seguimientoJustificacionService: SeguimientoJustificacionService,
+    gastoRequerimientoJustificacionService: GastoRequerimientoJustificacionService,
   ) {
     super();
     this.data = {} as IRequerimientoJustificacionData;
@@ -59,7 +59,6 @@ export class SeguimientoJustificacionRequerimientoActionService extends ActionSe
       this.data.canEdit,
       this.dataEjecucionEconomica.proyectoSge.id,
       requerimientoJustificacionService,
-      proyectoPeriodoJustificacionService,
       incidenciaDocumentacionRequerimientoService
     );
 
@@ -67,26 +66,22 @@ export class SeguimientoJustificacionRequerimientoActionService extends ActionSe
 
     if (this.isEdit()) {
       this.gastos = new SeguimientoJustificacionRequerimientoGastosFragment(
-        this.data.requerimientoJustificacion,
+        this.data.requerimientoJustificacion.id,
+        this.dataEjecucionEconomica.proyectoSge.id,
         requerimientoJustificacionService,
         seguimientoJustificacionService,
-        proyectoPeriodoJustificacionService
+        proyectoPeriodoJustificacionService,
+        gastoRequerimientoJustificacionService
       );
 
       this.datosGenerales.initialize();
       this.subscriptions.push(
-        this.datosGenerales.tipoRequerimientoControlValueChanges()
-          .subscribe(tipoRequerimiento => this.changeNombreTipoRequerimiento(tipoRequerimiento?.nombre ?? ''))
+        this.datosGenerales.getCurrentRequerimientoJustificacion$()
+          .subscribe((currentRequerimientoJustificacion =>
+            this.gastos.currentRequerimientoJustificacion = currentRequerimientoJustificacion)
+          )
       );
       this.addFragment(this.FRAGMENT.GASTOS, this.gastos);
     }
-  }
-
-  getNombreTipoRequerimiento$(): Observable<string> {
-    return this.nombreTipoRequerimiento$.asObservable();
-  }
-
-  changeNombreTipoRequerimiento(newNombreTipoRequerimiento: string): void {
-    this.nombreTipoRequerimiento$.next(newNombreTipoRequerimiento);
   }
 }

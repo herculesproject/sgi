@@ -2,7 +2,7 @@ import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requeri
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { IGastoJustificado } from '@core/models/sge/gasto-justificado';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { IGastoRequerimientoJustificacionResponse } from './gasto-requerimiento-justificado-response';
+import { IGastoRequerimientoJustificacionResponse } from './gasto-requerimiento-justificacion-response';
 
 class GastoRequerimientoJustificacionResponseConverter
   extends SgiBaseConverter<IGastoRequerimientoJustificacionResponse, IGastoRequerimientoJustificacion>{
