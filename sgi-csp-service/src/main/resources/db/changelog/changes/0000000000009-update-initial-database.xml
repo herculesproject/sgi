@@ -30,4 +30,8 @@
     <addForeignKeyConstraint baseColumnNames="requerimiento_justificacion_id" baseTableName="gasto_requerimiento_justificacion" constraintName="FK_GASTOREQUERIMIENTOJUSTIFICACION_REQUERIMIENTOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requerimiento_justificacion" validate="true" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000009-4">
+    <modifyDataType tableName="linea_investigacion" columnName="nombre" newDataType="VARCHAR(1000)" />
+  </changeSet>
+
 </databaseChangeLog>
