@@ -117,4 +117,35 @@ public class GastoRequerimientoJustificacionService {
         }).orElseThrow(
             () -> new GastoRequerimientoJustificacionNotFoundException(gastoRequerimientoJustificacion.getId()));
   }
+
+  /**
+   * Elimina el {@link GastoRequerimientoJustificacion}.
+   *
+   * @param id Id del {@link GastoRequerimientoJustificacion}.
+   */
+  @Transactional
+  public void deleteById(Long id) {
+    log.debug("deleteById(Long id) - start");
+
+    AssertHelper.idNotNull(id, GastoRequerimientoJustificacion.class);
+
+    repository.deleteById(id);
+    log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Elimina las entidades {@link GastoRequerimientoJustificacion} con el
+   * requerimientoJustificacionId indicado.
+   *
+   * @param requerimientoJustificacionId identificador de la entidad
+   *                                     {@link RequerimientoJustificacion}.
+   */
+  @Transactional
+  public void deleteByRequerimientoJustificacionId(Long requerimientoJustificacionId) {
+    log.debug("deleteByRequerimientoJustificacionId(Long requerimientoJustificacionId) - start");
+    AssertHelper.idNotNull(requerimientoJustificacionId, RequerimientoJustificacion.class);
+
+    repository.deleteInBulkByRequerimientoJustificacionId(requerimientoJustificacionId);
+    log.debug("deleteByRequerimientoJustificacionId(Long requerimientoJustificacionId) - end");
+  }
 }

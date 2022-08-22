@@ -134,6 +134,21 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
         .andExpect(MockMvcResultMatchers.jsonPath("alegacion").value(alegacion));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
+  void deleteById_WithExistingId_ReturnsNoContent() throws Exception {
+    // given: existing id
+    Long id = 1L;
+
+    // when: delete by existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_ID, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: response is NO_CONTENT
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(
       GastoRequerimientoJustificacionInput input) {
     return generarMockGastoRequerimientoJustificacion(null, input.getRequerimientoJustificacionId(),

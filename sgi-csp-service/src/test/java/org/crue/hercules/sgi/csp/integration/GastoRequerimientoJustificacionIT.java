@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de GastoRequerimientoJustificacion.
@@ -114,6 +116,37 @@ public class GastoRequerimientoJustificacionIT extends BaseIT {
         .isEqualTo(input.getAlegacion());
     Assertions.assertThat(output.getRequerimientoJustificacionId()).as("getRequerimientoJustificacionId()")
         .isEqualTo(input.getRequerimientoJustificacionId());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/proyecto_proyecto_sge.sql",
+    "classpath:scripts/proyecto_periodo_justificacion.sql",
+    "classpath:scripts/tipo_requerimiento.sql",
+    "classpath:scripts/requerimiento_justificacion.sql",
+    "classpath:scripts/gasto_requerimiento_justificacion.sql",
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void deleteById_Returns204() throws Exception {
+    Long requerimientoJustificacionId = 2L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_ID)
+        .queryParam("s").buildAndExpand(requerimientoJustificacionId).toUri();
+    final ResponseEntity<Void> response = restTemplate.exchange(uri,
+        HttpMethod.DELETE,
+        buildRequest(null, null, DEFAULT_ROLES),
+        Void.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   private GastoRequerimientoJustificacionInput generarMockGastoRequerimientoJustificacionInput(

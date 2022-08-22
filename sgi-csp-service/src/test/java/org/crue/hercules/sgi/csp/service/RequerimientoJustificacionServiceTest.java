@@ -48,6 +48,9 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
   private IncidenciaDocumentacionRequerimientoService incidenciaDocumentacionRequerimientoService;
 
   @MockBean
+  private GastoRequerimientoJustificacionService gastoRequerimientoJustificacionService;
+
+  @MockBean
   private EntityManager entityManager;
 
   @MockBean

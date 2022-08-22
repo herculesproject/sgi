@@ -47,6 +47,7 @@ public class RequerimientoJustificacionService {
   private final Validator validator;
   private final RequerimientoJustificacionRepository repository;
   private final IncidenciaDocumentacionRequerimientoService incidenciaDocumentacionRequerimientoService;
+  private final GastoRequerimientoJustificacionService gastoRequerimientoJustificacionService;
 
   /**
    * Obtener todas las entidades {@link RequerimientoJustificacion} pertenecientes
@@ -103,6 +104,7 @@ public class RequerimientoJustificacionService {
 
     // Delete related entities
     incidenciaDocumentacionRequerimientoService.deleteByRequerimientoJustificacionId(id);
+    gastoRequerimientoJustificacionService.deleteByRequerimientoJustificacionId(id);
 
     // Delete main entity
     repository.delete(requerimientoJustificacionToDelete);

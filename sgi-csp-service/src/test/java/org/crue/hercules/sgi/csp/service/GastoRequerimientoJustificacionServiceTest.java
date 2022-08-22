@@ -172,6 +172,28 @@ public class GastoRequerimientoJustificacionServiceTest extends BaseServiceTest 
         .isInstanceOf(GastoRequerimientoJustificacionNotFoundException.class);
   }
 
+  @Test
+  void deleteById_WithIdNull_ThrowsIllegalArgumentException() {
+    // given: id null
+    Long id = null;
+    // when: Eliminamos por id null
+    // then: Lanza IllegalArgumentException porque el id no puede ser null
+    Assertions.assertThatThrownBy(() -> gastoRequerimientoJustificacionService.deleteById(id))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void deleteByRequerimientoJustificacionId_WithIdNull_ThrowsIllegalArgumentException() {
+    // given: id null
+    Long requerimientoJustificacionId = null;
+    // when: Eliminamos por requerimientoJustificacionId null
+    // then: Lanza IllegalArgumentException porque el id no puede ser null
+    Assertions
+        .assertThatThrownBy(() -> gastoRequerimientoJustificacionService
+            .deleteByRequerimientoJustificacionId(requerimientoJustificacionId))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(Long id,
       Long requerimientoJustificacionId) {
     String suffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
