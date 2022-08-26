@@ -40,4 +40,38 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000009-6">
+    <createSequence incrementBy="1" sequenceName="alegacion_requerimiento_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000009-7">
+    <createTable tableName="alegacion_requerimiento">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="alegacion_requerimientoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="fecha_alegacion" type="TIMESTAMP" />
+      <column name="fecha_reintegro" type="TIMESTAMP" />
+      <column name="importe_alegado" type="DECIMAL(19, 2)" />
+      <column name="importe_alegado_cd" type="DECIMAL(19, 2)" />
+      <column name="importe_alegado_ci" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrado" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrado_cd" type="DECIMAL(19, 2)" />
+      <column name="importe_reintegrado_ci" type="DECIMAL(19, 2)" />
+      <column name="intereses_reintegrados" type="DECIMAL(19, 2)" />
+      <column name="justificante_reintegro" type="VARCHAR(250)" />
+      <column name="observaciones" type="VARCHAR(2000)" />
+      <column name="requerimiento_justificacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000009-8">
+    <addUniqueConstraint columnNames="requerimiento_justificacion_id" constraintName="UC_ALEGACION_REQUERIMIENTOREQUERIMIENTO_JUSTIFICACION_ID_COL" tableName="alegacion_requerimiento" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000009-9">
+    <addForeignKeyConstraint baseColumnNames="requerimiento_justificacion_id" baseTableName="alegacion_requerimiento" constraintName="FK_ALEGACIONREQUERIMIENTO_REQUERIMIENTOJUSTIFICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="requerimiento_justificacion" validate="true" />
+  </changeSet>
 </databaseChangeLog>

@@ -48,6 +48,7 @@ public class RequerimientoJustificacionService {
   private final RequerimientoJustificacionRepository repository;
   private final IncidenciaDocumentacionRequerimientoService incidenciaDocumentacionRequerimientoService;
   private final GastoRequerimientoJustificacionService gastoRequerimientoJustificacionService;
+  private final AlegacionRequerimientoService alegacionRequerimientoService;
 
   /**
    * Obtener todas las entidades {@link RequerimientoJustificacion} pertenecientes
@@ -105,6 +106,7 @@ public class RequerimientoJustificacionService {
     // Delete related entities
     incidenciaDocumentacionRequerimientoService.deleteByRequerimientoJustificacionId(id);
     gastoRequerimientoJustificacionService.deleteByRequerimientoJustificacionId(id);
+    alegacionRequerimientoService.deleteByRequerimientoJustificacionId(id);
 
     // Delete main entity
     repository.delete(requerimientoJustificacionToDelete);

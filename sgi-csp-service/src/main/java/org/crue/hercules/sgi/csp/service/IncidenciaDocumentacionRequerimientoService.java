@@ -140,4 +140,38 @@ public class IncidenciaDocumentacionRequerimientoService {
         }).orElseThrow(() -> new IncidenciaDocumentacionRequerimientoNotFoundException(
             incidenciaDocumentacionRequerimiento.getId()));
   }
+
+  /**
+   * Actualizar el campo alegacion de la entidad
+   * {@link IncidenciaDocumentacionRequerimiento}.
+   *
+   * @param incidenciaDocumentacionRequerimiento la entidad
+   *                                             {@link IncidenciaDocumentacionRequerimiento}
+   *                                             a actualizar.
+   * @return la entidad {@link IncidenciaDocumentacionRequerimiento} persistida.
+   */
+  @Transactional
+  public IncidenciaDocumentacionRequerimiento updateAlegacion(
+      IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento) {
+    log.debug("updateAlegacion(IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento) - start");
+
+    AssertHelper.idNotNull(incidenciaDocumentacionRequerimiento.getId(), IncidenciaDocumentacionRequerimiento.class);
+
+    return repository.findById(incidenciaDocumentacionRequerimiento.getId())
+        .map(incidenciaDocumentacionRequerimientoExistente -> {
+
+          // Establecemos los campos actualizables con los recibidos
+          incidenciaDocumentacionRequerimientoExistente
+              .setAlegacion(incidenciaDocumentacionRequerimiento.getAlegacion());
+
+          // Actualizamos la entidad
+          IncidenciaDocumentacionRequerimiento returnValue = repository
+              .save(incidenciaDocumentacionRequerimientoExistente);
+
+          log.debug(
+              "updateAlegacion(IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento) - end");
+          return returnValue;
+        }).orElseThrow(() -> new IncidenciaDocumentacionRequerimientoNotFoundException(
+            incidenciaDocumentacionRequerimiento.getId()));
+  }
 }

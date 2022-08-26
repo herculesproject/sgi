@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.converter;
 
+import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoAlegacionInput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoInput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
@@ -27,6 +28,13 @@ public class IncidenciaDocumentacionRequerimientoConverter {
   }
 
   public IncidenciaDocumentacionRequerimiento convert(IncidenciaDocumentacionRequerimientoInput inputDto,
+      Long id) {
+    IncidenciaDocumentacionRequerimiento entity = modelMapper.map(inputDto, IncidenciaDocumentacionRequerimiento.class);
+    entity.setId(id);
+    return entity;
+  }
+
+  public IncidenciaDocumentacionRequerimiento convert(IncidenciaDocumentacionRequerimientoAlegacionInput inputDto,
       Long id) {
     IncidenciaDocumentacionRequerimiento entity = modelMapper.map(inputDto, IncidenciaDocumentacionRequerimiento.class);
     entity.setId(id);

@@ -7,16 +7,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.converter.AlegacionRequerimientoConverter;
 import org.crue.hercules.sgi.csp.converter.GastoRequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.converter.IncidenciaDocumentacionRequerimientoConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
+import org.crue.hercules.sgi.csp.dto.AlegacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.service.AlegacionRequerimientoService;
 import org.crue.hercules.sgi.csp.service.GastoRequerimientoJustificacionService;
 import org.crue.hercules.sgi.csp.service.IncidenciaDocumentacionRequerimientoService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
@@ -59,11 +63,16 @@ public class RequerimientoJustificacionControllerTest extends BaseControllerTest
   private GastoRequerimientoJustificacionService gastoRequerimientoJustificacionService;
   @MockBean
   private GastoRequerimientoJustificacionConverter gastoRequerimientoJustificacionConverter;
+  @MockBean
+  private AlegacionRequerimientoService alegacionRequerimientoService;
+  @MockBean
+  private AlegacionRequerimientoConverter alegacionRequerimientoConverter;
 
   private static final String CONTROLLER_BASE_PATH = RequerimientoJustificacionController.REQUEST_MAPPING;
   private static final String PATH_ID = RequerimientoJustificacionController.PATH_ID;
   private static final String PATH_INCIDENCIAS_DOCUMENTACION = RequerimientoJustificacionController.PATH_INCIDENCIAS_DOCUMENTACION;
   private static final String PATH_GASTOS = RequerimientoJustificacionController.PATH_GASTOS;
+  private static final String PATH_ALEGACION = RequerimientoJustificacionController.PATH_ALEGACION;
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V", "CSP-SJUS-E" })
@@ -452,6 +461,52 @@ public class RequerimientoJustificacionControllerTest extends BaseControllerTest
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
+  void findAlegacion_ReturnsAlegacionRequerimiento() throws Exception {
+    // given: Un requerimientoJustificacionId con AlegacionRequerimiento asociada
+    Long requerimientoJustificacionId = 1L;
+    AlegacionRequerimiento alegacionRequerimiento = generarMockAlegacionRequerimiento(1L, requerimientoJustificacionId);
+    BDDMockito.given(alegacionRequerimientoService.findByRequerimientoJustificacionId(requerimientoJustificacionId))
+        .willReturn(alegacionRequerimiento);
+    BDDMockito.given(alegacionRequerimientoConverter.convert(ArgumentMatchers.<AlegacionRequerimiento>any()))
+        .willAnswer(new Answer<AlegacionRequerimientoOutput>() {
+          @Override
+          public AlegacionRequerimientoOutput answer(InvocationOnMock invocation) throws Throwable {
+            AlegacionRequerimiento input = invocation.getArgument(0, AlegacionRequerimiento.class);
+            AlegacionRequerimientoOutput output = generarMockAlegacionRequerimientoOutput(input);
+            return output;
+          }
+        });
+    // when: Buscamos la AlegacionRequerimiento asociada
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_ALEGACION, requerimientoJustificacionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: response is OK
+        // and the requested AlegacionRequerimiento is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("requerimientoJustificacionId").value(requerimientoJustificacionId));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
+  void findAlegacion_Returns204() throws Exception {
+    // given: Un requerimientoJustificacionId sin AlegacionRequerimiento asociada
+    Long requerimientoJustificacionId = 1L;
+    BDDMockito.given(alegacionRequerimientoService.findByRequerimientoJustificacionId(requerimientoJustificacionId))
+        .willReturn(null);
+    // when: Buscamos la AlegacionRequerimiento asociada
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_ALEGACION, requerimientoJustificacionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id) {
     String observacionSuffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
     return generarMockRequerimientoJustificacion(id, "RequerimientoJustificacion-" + observacionSuffix,
@@ -600,6 +655,38 @@ public class RequerimientoJustificacionControllerTest extends BaseControllerTest
         .importeAlegado(importeAlegado)
         .importeRechazado(importeRechazado)
         .incidencia(incidencia)
+        .requerimientoJustificacionId(requerimientoJustificacionId)
+        .build();
+  }
+
+  private AlegacionRequerimiento generarMockAlegacionRequerimiento(Long id,
+      Long requerimientoJustificacionId) {
+    String suffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
+    return generarMockAlegacionRequerimiento(id, "Justificante-" + suffix, "Observacion-" + suffix,
+        requerimientoJustificacionId);
+  }
+
+  private AlegacionRequerimiento generarMockAlegacionRequerimiento(Long id,
+      String justificanteReintegro, String observaciones, Long requerimientoJustificacionId) {
+    return AlegacionRequerimiento.builder()
+        .id(id)
+        .justificanteReintegro(justificanteReintegro)
+        .observaciones(observaciones)
+        .requerimientoJustificacionId(requerimientoJustificacionId)
+        .build();
+  }
+
+  private AlegacionRequerimientoOutput generarMockAlegacionRequerimientoOutput(AlegacionRequerimiento input) {
+    return generarMockAlegacionRequerimientoOutput(input.getId(), input.getJustificanteReintegro(),
+        input.getObservaciones(), input.getRequerimientoJustificacionId());
+  }
+
+  private AlegacionRequerimientoOutput generarMockAlegacionRequerimientoOutput(Long id,
+      String justificanteReintegro, String observaciones, Long requerimientoJustificacionId) {
+    return AlegacionRequerimientoOutput.builder()
+        .id(id)
+        .justificanteReintegro(justificanteReintegro)
+        .observaciones(observaciones)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }

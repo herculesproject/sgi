@@ -194,6 +194,53 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
         .isEqualTo(incidenciaToUpdate);
   }
 
+  @Test
+  void updateAlegacion_idIsNull_ThrowsIllegalArgumentException() {
+    // given: Un IncidenciaDocumentacionRequerimiento con un id null
+    IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoToUpdate = generarMockIncidenciaDocumentacionRequerimiento(
+        null, 1L);
+
+    // when: Actualizamos un IncidenciaDocumentacionRequerimiento con id null
+    // then: Lanza IllegalArgumentException porque el id no debe ser null
+    Assertions
+        .assertThatThrownBy(
+            () -> incidenciaDocumentacionRequerimientoService
+                .updateAlegacion(incidenciaDocumentacionRequerimientoToUpdate))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void updateAlegacion_ReturnsRequerimientoJustificacion() {
+    // given: Un IncidenciaDocumentacionRequerimiento con datos correctos
+    Long id = 123L;
+    Long requerimientoJustificacionId = 1234L;
+    String alegacionToUpdate = "Alegacion-123";
+    IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoToUpdate = generarMockIncidenciaDocumentacionRequerimiento(
+        id, requerimientoJustificacionId);
+    IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoOnDB = generarMockIncidenciaDocumentacionRequerimiento(
+        id, requerimientoJustificacionId);
+    incidenciaDocumentacionRequerimientoToUpdate.setAlegacion(alegacionToUpdate);
+
+    BDDMockito.given(incidenciaDocumentacionRequerimientoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(incidenciaDocumentacionRequerimientoOnDB));
+    BDDMockito
+        .given(incidenciaDocumentacionRequerimientoRepository
+            .save(ArgumentMatchers.<IncidenciaDocumentacionRequerimiento>any()))
+        .willReturn(incidenciaDocumentacionRequerimientoToUpdate);
+
+    // when: Actualizamos un IncidenciaDocumentacionRequerimiento con datos
+    // correctos
+    // then: Se actualiza correctamente
+    IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento = incidenciaDocumentacionRequerimientoService
+        .update(incidenciaDocumentacionRequerimientoToUpdate);
+    Assertions.assertThat(incidenciaDocumentacionRequerimiento).isNotNull();
+    Assertions.assertThat(incidenciaDocumentacionRequerimiento.getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(incidenciaDocumentacionRequerimiento.getRequerimientoJustificacionId())
+        .as("getRequerimientoJustificacionId()").isEqualTo(requerimientoJustificacionId);
+    Assertions.assertThat(incidenciaDocumentacionRequerimiento.getAlegacion()).as("getAlegacion()")
+        .isEqualTo(alegacionToUpdate);
+  }
+
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(Long id,
       Long requerimientoJustificacionId) {
     String suffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);

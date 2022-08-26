@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.converter.IncidenciaDocumentacionRequerimientoConverter;
+import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoAlegacionInput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoInput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
@@ -32,6 +33,7 @@ public class IncidenciaDocumentacionRequerimientoControllerTest extends BaseCont
 
   private static final String CONTROLLER_BASE_PATH = IncidenciaDocumentacionRequerimientoController.REQUEST_MAPPING;
   private static final String PATH_ID = IncidenciaDocumentacionRequerimientoController.PATH_ID;
+  private static final String PATH_ALEGAR = IncidenciaDocumentacionRequerimientoController.PATH_ALEGAR;
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
@@ -151,6 +153,59 @@ public class IncidenciaDocumentacionRequerimientoControllerTest extends BaseCont
             MockMvcResultMatchers.jsonPath("nombreDocumento").value("IncidenciaDocumentacionRequerimiento-" + suffix));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
+  void updateAlegacion_ReturnsIncidenciaDocumentacionRequerimiento() throws Exception {
+    // given: IncidenciaDocumentacionRequerimientoInputInput data and a
+    // incidenciaDocumentacionRequerimientoId
+    Long incidenciaDocumentacionRequerimientoId = 1L;
+    String alegacion = "Alegacion-1";
+    IncidenciaDocumentacionRequerimientoAlegacionInput input = generarMockIncidenciaDocumentacionRequerimientoAlegacionInput(
+        alegacion);
+    BDDMockito
+        .given(converter.convert(ArgumentMatchers.<IncidenciaDocumentacionRequerimientoAlegacionInput>any(),
+            ArgumentMatchers.anyLong()))
+        .willAnswer(new Answer<IncidenciaDocumentacionRequerimiento>() {
+          @Override
+          public IncidenciaDocumentacionRequerimiento answer(InvocationOnMock invocation) throws Throwable {
+            IncidenciaDocumentacionRequerimientoAlegacionInput input = invocation.getArgument(0,
+                IncidenciaDocumentacionRequerimientoAlegacionInput.class);
+            Long id = invocation.getArgument(1,
+                Long.class);
+            return generarMockIncidenciaDocumentacionRequerimiento(input, id);
+          }
+        });
+    BDDMockito.given(service.updateAlegacion(ArgumentMatchers.<IncidenciaDocumentacionRequerimiento>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento = invocation.getArgument(0);
+          return incidenciaDocumentacionRequerimiento;
+        });
+    BDDMockito.given(converter.convert(ArgumentMatchers.<IncidenciaDocumentacionRequerimiento>any()))
+        .willAnswer(new Answer<IncidenciaDocumentacionRequerimientoOutput>() {
+          @Override
+          public IncidenciaDocumentacionRequerimientoOutput answer(InvocationOnMock invocation) throws Throwable {
+            IncidenciaDocumentacionRequerimiento requerimientoJustificacion = invocation.getArgument(0,
+                IncidenciaDocumentacionRequerimiento.class);
+            return generarMockIncidenciaDocumentacionRequerimientoOutput(requerimientoJustificacion);
+          }
+        });
+
+    // when: update IncidenciaDocumentacionRequerimiento
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_ALEGAR, incidenciaDocumentacionRequerimientoId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: response is OK and the updated IncidenciaDocumentacionRequerimiento is
+        // resturned as JSON object
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(incidenciaDocumentacionRequerimientoId))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("alegacion").value(alegacion));
+  }
+
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(
       IncidenciaDocumentacionRequerimientoInput input) {
     return generarMockIncidenciaDocumentacionRequerimiento(null, null, input.getIncidencia(),
@@ -161,6 +216,11 @@ public class IncidenciaDocumentacionRequerimientoControllerTest extends BaseCont
       IncidenciaDocumentacionRequerimientoInput input, Long id) {
     return generarMockIncidenciaDocumentacionRequerimiento(id, null, input.getIncidencia(),
         input.getNombreDocumento(), input.getRequerimientoJustificacionId());
+  }
+
+  private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(
+      IncidenciaDocumentacionRequerimientoAlegacionInput input, Long id) {
+    return generarMockIncidenciaDocumentacionRequerimiento(id, input.getAlegacion(), null, null, null);
   }
 
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(Long id,
@@ -208,6 +268,13 @@ public class IncidenciaDocumentacionRequerimientoControllerTest extends BaseCont
         .incidencia(incidencia)
         .nombreDocumento(nombreDocumento)
         .requerimientoJustificacionId(requerimientoJustificacionId)
+        .build();
+  }
+
+  private IncidenciaDocumentacionRequerimientoAlegacionInput generarMockIncidenciaDocumentacionRequerimientoAlegacionInput(
+      String alegacion) {
+    return IncidenciaDocumentacionRequerimientoAlegacionInput.builder()
+        .alegacion(alegacion)
         .build();
   }
 }

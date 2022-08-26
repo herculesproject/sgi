@@ -59,6 +59,7 @@ UPDATE test.proyecto SET estado_proyecto_id = NULL;
 DELETE FROM test.estado_proyecto;
 DELETE FROM test.incidencia_documentacion_requerimiento;
 DELETE FROM test.gasto_requerimiento_justificacion;
+DELETE FROM test.alegacion_requerimiento;
 DELETE FROM test.requerimiento_justificacion;
 DELETE FROM test.proyecto_proyecto_sge;
 DELETE FROM test.proyecto_partida;
