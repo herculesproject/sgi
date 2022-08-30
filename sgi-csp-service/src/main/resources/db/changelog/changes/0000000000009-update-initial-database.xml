@@ -34,4 +34,10 @@
     <modifyDataType tableName="linea_investigacion" columnName="nombre" newDataType="VARCHAR(1000)" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000009-5">
+    <addColumn tableName="proyecto_periodo_seguimiento">
+      <column name="fecha_presentacion_documentacion" type="timestamp" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
