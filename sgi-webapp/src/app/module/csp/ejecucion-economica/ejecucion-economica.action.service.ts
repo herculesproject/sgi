@@ -10,6 +10,7 @@ import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
+import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -97,7 +98,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     empresaService: EmpresaService,
     proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
     requerimientoJustificacionService: RequerimientoJustificacionService,
-    proyectoProyectoSgeService: ProyectoProyectoSgeService
+    proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService
   ) {
     super();
 
@@ -158,7 +160,7 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(
       id, this.data.proyectoSge, this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
       this.data.configuracion, proyectoService, proyectoSeguimientoEjecucionEconomicaService, empresaService,
-      proyectoPeriodoJustificacionService
+      proyectoPeriodoJustificacionService, proyectoPeriodoSeguimientoService
     );
 
     this.seguimientoJustificacionRequerimientos = new SeguimientoJustificacionRequerimientosFragment(

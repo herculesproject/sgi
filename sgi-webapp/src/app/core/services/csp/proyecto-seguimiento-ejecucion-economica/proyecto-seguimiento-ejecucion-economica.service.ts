@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoSeguimientoEjecucionEconomica } from '@core/models/csp/proyecto-seguimiento-ejecucion-economica';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { environment } from '@env';
@@ -8,6 +9,8 @@ import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/
 import { Observable } from 'rxjs';
 import { IProyectoPeriodoJustificacionResponse } from '../proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from '../proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
+import { IProyectoPeriodoSeguimientoResponse } from '../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
+import { PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER } from '../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response.converter';
 import { IRequerimientoJustificacionResponse } from '../requerimiento-justificacion/requerimiento-justificacion-response';
 import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../requerimiento-justificacion/requerimiento-justificacion-response.converter';
 import { IProyectoSeguimientoEjecucionEconomicaResponse } from './proyecto-seguimiento-ejecucion-economica-response';
@@ -43,6 +46,16 @@ export class ProyectoSeguimientoEjecucionEconomicaService extends SgiRestBaseSer
       `${this.endpointUrl}/${proyectoSgeRef}/periodos-justificacion`,
       options,
       PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER
+    );
+  }
+
+  findProyectoPeriodosSeguimiento(
+    proyectoSgeRef: string,
+    options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPeriodoSeguimiento>> {
+    return this.find<IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento>(
+      `${this.endpointUrl}/${proyectoSgeRef}/periodos-seguimiento`,
+      options,
+      PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER
     );
   }
 

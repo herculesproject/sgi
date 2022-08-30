@@ -1,7 +1,6 @@
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
-import { DateTime } from 'luxon';
 
-export interface IProyectoPeriodoSeguimientoBackend {
+export interface IProyectoPeriodoSeguimientoResponse {
   id: number;
   proyectoId: number;
   numPeriodo: number;
@@ -12,5 +11,5 @@ export interface IProyectoPeriodoSeguimientoBackend {
   tipoSeguimiento: TipoSeguimiento;
   observaciones: string;
   convocatoriaPeriodoSeguimientoId: number;
-  fechaPresentacionDocumentacion: DateTime;
+  fechaPresentacionDocumentacion: string;
 }
