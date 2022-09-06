@@ -63,7 +63,7 @@ export class SeguimientoJustificacionRequerimientoEditarComponent extends Action
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoActualizarSuccess = value);
@@ -75,7 +75,7 @@ export class SeguimientoJustificacionRequerimientoEditarComponent extends Action
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoActualizarError = value);

@@ -44,7 +44,8 @@
           {{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.gastos.aceptado' | translate}}
         </mat-header-cell>
         <mat-cell mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.aceptado ? ('label.si' | translate) : ('label.no'| translate)}}</mat-cell>
+          {{wrapper.value.aceptado | booleanToText | translate}}
+        </mat-cell>
       </ng-container>
 
       <!-- Importe aceptado Column -->
@@ -82,8 +83,23 @@
         <mat-header-cell mat-header-cell *matHeaderCellDef>
           {{ 'label.actions' | translate }}
         </mat-header-cell>
-        <mat-cell mat-cell *matCellDef="let gasto">
+        <mat-cell mat-cell *matCellDef="let wrapper; let i = index">
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-SJUS-E'">
+            <button mat-icon-button matTooltip="{{'btn.edit' | translate}}" color="primary"
+              (click)="openDetalleModal(wrapper, false, i)">
+              <mat-icon>border_color</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-SJUS-V'">
+            <button mat-icon-button matTooltip="{{'btn.view' | translate}}" color="primary"
+              (click)="openDetalleModal(wrapper, true, i)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-SJUS-E'">
+            <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteGasto(wrapper)">
+              <mat-icon color="warn">highlight_off</mat-icon>
+            </button>
           </ng-container>
         </mat-cell>
       </ng-container>

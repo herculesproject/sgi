@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
+import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
@@ -8,7 +10,7 @@ import { RequerimientoJustificacionService } from '@core/services/csp/requerimie
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_PARAMS } from './seguimiento-justificacion-requerimiento-route-params';
 import { IRequerimientoJustificacionData } from './seguimiento-justificacion-requerimiento.action.service';
@@ -32,9 +34,27 @@ export class SeguimientoJustificacionRequerimientoDataResolver extends SgiResolv
   }
 
   protected resolveEntity(route: ActivatedRouteSnapshot): Observable<IRequerimientoJustificacionData> {
-    const repartoId = Number(route.paramMap.get(SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_PARAMS.ID));
+    const requerimientoJustificacionId = Number(route.paramMap.get(SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_PARAMS.ID));
 
-    return this.service.findById(repartoId).pipe(
+    return forkJoin({
+      requerimientoJustificacion: this.findRequerimientoJustificacion(requerimientoJustificacionId),
+      incidenciasDocumentacion: this.findIncidenciasDocumentacion(requerimientoJustificacionId)
+    }).pipe(
+      map(({ requerimientoJustificacion, incidenciasDocumentacion }) => {
+        if (!requerimientoJustificacion) {
+          throwError('NOT_FOUND');
+        }
+        return {
+          canEdit: this.authService.hasAuthority('CSP-SJUS-E'),
+          requerimientoJustificacion,
+          incidenciasDocumentacion
+        };
+      })
+    );
+  }
+
+  private findRequerimientoJustificacion(requerimientoJustificacionId: number): Observable<IRequerimientoJustificacion> {
+    return this.service.findById(requerimientoJustificacionId).pipe(
       switchMap((requerimientoJustificacion) => {
         if (requerimientoJustificacion?.proyectoProyectoSge?.id) {
           return this.proyectoProyectoSgeService.findById(requerimientoJustificacion.proyectoProyectoSge.id)
@@ -60,16 +80,14 @@ export class SeguimientoJustificacionRequerimientoDataResolver extends SgiResolv
         } else {
           return of(requerimientoJustificacion);
         }
-      }),
-      map(requerimientoJustificacion => {
-        if (!requerimientoJustificacion) {
-          throwError('NOT_FOUND');
-        }
-        return {
-          canEdit: this.authService.hasAuthority('CSP-SJUS-E'),
-          requerimientoJustificacion
-        };
       })
     );
+  }
+
+  private findIncidenciasDocumentacion(requerimientoJustificacionId: number): Observable<IIncidenciaDocumentacionRequerimiento[]> {
+    return this.service.findIncidenciasDocumentacion(requerimientoJustificacionId)
+      .pipe(
+        map(({ items }) => items)
+      );
   }
 }

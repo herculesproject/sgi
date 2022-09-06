@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
 import { environment } from '@env';
 import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { IIncidenciaDocumentacionRequerimientoRequest } from './incidencia-documentacion-requerimiento-incidencia-request';
-import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_INCIDENCIA_REQUEST_CONVERTER } from './incidencia-documentacion-requerimiento-incidencia-request.converter';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_ALEGACION_REQUEST_CONVERTER } from './incidencia-documentacion-requerimiento-alegacion-request.converter';
+import { IIncidenciaDocumentacionRequerimientoRequest } from './incidencia-documentacion-requerimiento-request';
+import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_INCIDENCIA_REQUEST_CONVERTER } from './incidencia-documentacion-requerimiento-request.converter';
 import { IIncidenciaDocumentacionRequerimientoResponse } from './incidencia-documentacion-requerimiento-response';
 import { INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_RESPONSE_CONVERTER } from './incidencia-documentacion-requerimiento-response.converter';
 
@@ -46,11 +47,21 @@ export class IncidenciaDocumentacionRequerimientoService extends _IncidenciaDocu
    *
    * @param id Id de la Incidencia Documentacion Requerimiento
    */
-  deleteById(id: number) {
+  deleteById(id: number): Observable<void> {
     return this.http.delete<void>(`${this.endpointUrl}/${id}`).pipe(
       catchError((error: HttpErrorResponse) => {
         return throwError(error);
       })
     );
+  }
+
+  updateAlegacion(id: number, incidenciaDocumentacion: IIncidenciaDocumentacionRequerimiento):
+    Observable<IIncidenciaDocumentacionRequerimiento> {
+    return this.http.patch<IIncidenciaDocumentacionRequerimientoResponse>(
+      `${this.endpointUrl}/${id}/alegar`,
+      INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_ALEGACION_REQUEST_CONVERTER.fromTarget(incidenciaDocumentacion))
+      .pipe(
+        map(response => INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_RESPONSE_CONVERTER.toTarget(response))
+      );
   }
 }

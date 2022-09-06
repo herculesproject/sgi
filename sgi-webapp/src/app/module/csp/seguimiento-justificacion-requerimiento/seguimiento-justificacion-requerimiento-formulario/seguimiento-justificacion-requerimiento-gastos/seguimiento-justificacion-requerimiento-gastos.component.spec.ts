@@ -24,6 +24,7 @@ describe('SeguimientoJustificacionRequerimientoGastosComponent', () => {
   let fixture: ComponentFixture<SeguimientoJustificacionRequerimientoGastosComponent>;
   const routeData: Data = {
     [REQUERIMIENTO_JUSTIFICACION_DATA_KEY]: {
+      incidenciasDocumentacion: [],
       requerimientoJustificacion: {},
       canEdit: true
     } as IRequerimientoJustificacionData

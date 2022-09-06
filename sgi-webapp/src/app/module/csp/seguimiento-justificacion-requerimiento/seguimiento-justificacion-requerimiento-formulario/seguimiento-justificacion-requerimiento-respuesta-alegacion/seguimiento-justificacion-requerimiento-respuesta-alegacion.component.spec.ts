@@ -17,11 +17,11 @@ import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { REQUERIMIENTO_JUSTIFICACION_DATA_KEY } from '../../seguimiento-justificacion-requerimiento-data.resolver';
 import { IRequerimientoJustificacionData, SeguimientoJustificacionRequerimientoActionService } from '../../seguimiento-justificacion-requerimiento.action.service';
 
-import { SeguimientoJustificacionRequerimientoDatosGeneralesComponent } from './seguimiento-justificacion-requerimiento-datos-generales.component';
+import { SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent } from './seguimiento-justificacion-requerimiento-respuesta-alegacion.component';
 
-describe('SeguimientoJustificacionRequerimientoDatosGeneralesComponent', () => {
-  let component: SeguimientoJustificacionRequerimientoDatosGeneralesComponent;
-  let fixture: ComponentFixture<SeguimientoJustificacionRequerimientoDatosGeneralesComponent>;
+describe('SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent', () => {
+  let component: SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent;
+  let fixture: ComponentFixture<SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent>;
   const routeData: Data = {
     [REQUERIMIENTO_JUSTIFICACION_DATA_KEY]: {
       incidenciasDocumentacion: [],
@@ -38,7 +38,7 @@ describe('SeguimientoJustificacionRequerimientoDatosGeneralesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SeguimientoJustificacionRequerimientoDatosGeneralesComponent],
+      declarations: [SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -63,7 +63,7 @@ describe('SeguimientoJustificacionRequerimientoDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SeguimientoJustificacionRequerimientoDatosGeneralesComponent);
+    fixture = TestBed.createComponent(SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

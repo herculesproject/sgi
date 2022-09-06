@@ -12,6 +12,7 @@ import { SeguimientoJustificacionRequerimientoDataResolver, REQUERIMIENTO_JUSTIF
 import { SeguimientoJustificacionRequerimientoEditarComponent } from './seguimiento-justificacion-requerimiento-editar/seguimiento-justificacion-requerimiento-editar.component';
 import { SeguimientoJustificacionRequerimientoDatosGeneralesComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-datos-generales/seguimiento-justificacion-requerimiento-datos-generales.component';
 import { SeguimientoJustificacionRequerimientoGastosComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-gastos/seguimiento-justificacion-requerimiento-gastos.component';
+import { SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent } from './seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-respuesta-alegacion/seguimiento-justificacion-requerimiento-respuesta-alegacion.component';
 import { SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_NAMES } from './seguimiento-justificacion-requerimiento-route-names';
 import { SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_PARAMS } from './seguimiento-justificacion-requerimiento-route-params';
 
@@ -70,6 +71,11 @@ const routes: SgiRoutes = [
       {
         path: SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_NAMES.GASTOS,
         component: SeguimientoJustificacionRequerimientoGastosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTO_ROUTE_NAMES.RESPUESTA_ALEGACION,
+        component: SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
 import { environment } from '@env';
 import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { IGastoRequerimientoJustificacionRequest } from './gasto-requerimiento-justificacion-request';
 import { GASTO_REQUERIMIENTO_JUSTIFICACION_REQUEST_CONVERTER } from './gasto-requerimiento-justificacion-request.converter';
 import { IGastoRequerimientoJustificacionResponse } from './gasto-requerimiento-justificacion-response';
@@ -36,6 +38,19 @@ export class GastoRequerimientoJustificacionService extends _GastoRequerimientoJ
     super(
       `${environment.serviceServers.csp}${GastoRequerimientoJustificacionService.MAPPING}`,
       http
+    );
+  }
+
+  /**
+   * Elimina un Gasto Requerimiento Justificacion por id.
+   *
+   * @param id Id del Gasto Requerimiento Justificacion
+   */
+  deleteById(id: number) {
+    return this.http.delete<void>(`${this.endpointUrl}/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        return throwError(error);
+      })
     );
   }
 }

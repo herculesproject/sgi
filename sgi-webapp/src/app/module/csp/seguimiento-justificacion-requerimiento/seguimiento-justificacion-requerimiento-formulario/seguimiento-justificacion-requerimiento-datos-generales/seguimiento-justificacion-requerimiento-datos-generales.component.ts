@@ -79,7 +79,7 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesComponent
   }
 
   private getIncidenciaDocumentacionTableData(): void {
-    this.subscriptions.push(this.formPart.getIncidenciasDocumentacion$()
+    this.subscriptions.push(this.actionService.getIncidenciasDocumentacion$()
       .subscribe(elements => this.dataSource.data = elements));
   }
 

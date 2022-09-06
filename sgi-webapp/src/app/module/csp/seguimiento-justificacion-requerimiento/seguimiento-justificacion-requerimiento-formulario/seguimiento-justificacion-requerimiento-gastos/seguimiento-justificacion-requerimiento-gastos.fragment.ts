@@ -23,6 +23,8 @@ export interface IGastoJustificadoWithProyectoPeriodoJustificacion extends IGast
 
 export class SeguimientoJustificacionRequerimientoGastosFragment extends Fragment {
   gastosRequerimientoTableData$ = new BehaviorSubject<StatusWrapper<IGastoRequerimientoJustificacionTableData>[]>([]);
+  private gastosRequerimientoTableDataToDelete: StatusWrapper<IGastoRequerimientoJustificacionTableData>[] = [];
+
   displayColumns: string[] = [];
   columns: IColumnDefinition[] = [];
   private proyectosPeriodosJustificacionLookUp: Map<string, IProyectoPeriodoJustificacion>;
@@ -223,13 +225,41 @@ export class SeguimientoJustificacionRequerimientoGastosFragment extends Fragmen
     );
   }
 
-  private hasFragmentChangesPending(): boolean {
-    return this.gastosRequerimientoTableData$.value.some((value) => value.created || value.edited);
+  updateGastoRequerimientoTableData(index: number): void {
+    if (index >= 0) {
+      const current = this.gastosRequerimientoTableData$.value;
+      const wrapper = current[index];
+      if (!wrapper.created) {
+        wrapper.setEdited();
+      }
+      this.gastosRequerimientoTableData$.next(current);
+      this.setChanges(true);
+    }
+  }
+
+  deleteGastoRequerimientoTableData(wrapper: StatusWrapper<IGastoRequerimientoJustificacionTableData>): void {
+    const current = this.gastosRequerimientoTableData$.value;
+    const index = current.findIndex(value => value === wrapper);
+    if (index >= 0) {
+      if (!wrapper.created) {
+        this.gastosRequerimientoTableDataToDelete.push(current[index]);
+      }
+      this.removeDeletedFromArray(index, current);
+    }
+  }
+
+  private removeDeletedFromArray(
+    index: number, currentProyectoRelacionesTableData: StatusWrapper<IGastoRequerimientoJustificacionTableData>[]): void {
+    currentProyectoRelacionesTableData.splice(index, 1);
+    this.gastosRequerimientoTableData$.next(currentProyectoRelacionesTableData);
+    this.setChanges(this.hasFragmentChangesPending());
   }
 
   saveOrUpdate(action?: any): Observable<string | number | void> {
     return merge(
-      this.createGastos()
+      this.deleteGastos(),
+      this.createGastos(),
+      this.updateGastos()
     ).pipe(
       takeLast(1),
       tap(() => {
@@ -238,11 +268,53 @@ export class SeguimientoJustificacionRequerimientoGastosFragment extends Fragmen
     );
   }
 
+  private hasFragmentChangesPending(): boolean {
+    return this.gastosRequerimientoTableDataToDelete.length > 0 ||
+      this.gastosRequerimientoTableData$.value.some((value) => value.created || value.edited);
+  }
+
+  private deleteGastos(): Observable<void> {
+    if (this.gastosRequerimientoTableDataToDelete.length === 0) {
+      return of(void 0);
+    }
+
+    return from(this.gastosRequerimientoTableDataToDelete).pipe(
+      mergeMap(wrapped =>
+        this.deleteGasto(wrapped)
+      )
+    );
+  }
+
+  private deleteGasto(wrapped: StatusWrapper<IGastoRequerimientoJustificacionTableData>): Observable<void> {
+    return this.gastoRequerimientoJustificacionService.deleteById(wrapped.value.id).pipe(
+      tap(() =>
+        this.gastosRequerimientoTableDataToDelete = this.gastosRequerimientoTableDataToDelete.filter(entidadEliminada =>
+          entidadEliminada.value.id !== wrapped.value.id
+        )
+      )
+    );
+  }
+
   private createGastos(): Observable<void> {
     const current = this.gastosRequerimientoTableData$.value;
     return from(current.filter(wrapper => wrapper.created)).pipe(
       mergeMap((wrapper => {
         return this.gastoRequerimientoJustificacionService.create(
+          this.createGastoRequerimientoJustificadoFromGastoRequerimientoJustificacionTableData(wrapper.value))
+          .pipe(
+            map((gastoRequerimientoJustificacionResponse) =>
+              this.refreshGastosRequerimientoJustificacionTableData(gastoRequerimientoJustificacionResponse, wrapper, current)),
+          );
+      }))
+    );
+  }
+
+  private updateGastos(): Observable<void> {
+    const current = this.gastosRequerimientoTableData$.value;
+    return from(current.filter(wrapper => wrapper.edited)).pipe(
+      mergeMap((wrapper => {
+        return this.gastoRequerimientoJustificacionService.update(
+          wrapper.value.id,
           this.createGastoRequerimientoJustificadoFromGastoRequerimientoJustificacionTableData(wrapper.value))
           .pipe(
             map((gastoRequerimientoJustificacionResponse) =>

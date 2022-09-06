@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IColumnDefinition } from '../../../ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
 import { IGastoRequerimientoJustificacionTableData } from '../../seguimiento-justificacion-requerimiento-formulario/seguimiento-justificacion-requerimiento-gastos/seguimiento-justificacion-requerimiento-gastos.fragment';
+import { GastoJustificadoDetalleModalComponent } from '../gasto-justificado-detalle-modal/gasto-justificado-detalle-modal.component';
 
 export interface IGastosJustificadosModalData {
   selectedGastosRequerimiento: StatusWrapper<IGastoRequerimientoJustificacionTableData>[];
@@ -61,7 +62,8 @@ export class GastosJustificadosModalComponent extends DialogCommonComponent impl
     public readonly dialogRef: MatDialogRef<GastosJustificadosModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IGastosJustificadosModalData,
     private readonly seguimientoJustificacionService: SeguimientoJustificacionService,
-    private readonly proyectoService: ProyectoService) {
+    private readonly proyectoService: ProyectoService,
+    private matDialog: MatDialog) {
     super(dialogRef);
     this.initialFilterData = {
       identificadoresJustificacion: this.getInitialProyectosPeriodoJustificacionSelected(this.data)
@@ -226,5 +228,15 @@ export class GastosJustificadosModalComponent extends DialogCommonComponent impl
     return Array.isArray(identificadoresJustificacion) && identificadoresJustificacion.length > 0 ?
       identificadoresJustificacion :
       this.periodosJustificacionByProyectoSgi.map(periodoJustificacion => periodoJustificacion.identificadorJustificacion);
+  }
+
+  openModalDetalle(value: IGastoJustificado): void {
+    const data: IGastoJustificado = value;
+
+    const config: MatDialogConfig<IGastoJustificado> = {
+      data
+    };
+
+    this.matDialog.open(GastoJustificadoDetalleModalComponent, config);
   }
 }

@@ -1,6 +1,6 @@
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { IIncidenciaDocumentacionRequerimientoRequest } from './incidencia-documentacion-requerimiento-incidencia-request';
+import { IIncidenciaDocumentacionRequerimientoRequest } from './incidencia-documentacion-requerimiento-request';
 
 class IncidenciaDocumentacionRequerimientoIncidenciaRequestConverter
   extends SgiBaseConverter<IIncidenciaDocumentacionRequerimientoRequest, IIncidenciaDocumentacionRequerimiento> {

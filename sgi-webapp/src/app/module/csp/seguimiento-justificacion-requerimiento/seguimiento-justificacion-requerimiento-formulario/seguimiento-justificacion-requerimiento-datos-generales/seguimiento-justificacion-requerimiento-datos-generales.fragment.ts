@@ -6,17 +6,17 @@ import { IncidenciaDocumentacionRequerimientoService } from '@core/services/csp/
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
 export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends FormFragment<IRequerimientoJustificacion> {
   private requerimientoJustificacionServerData: IRequerimientoJustificacion;
-  private incidenciasDocumentacion$ = new BehaviorSubject<StatusWrapper<IIncidenciaDocumentacionRequerimiento>[]>([]);
   private incidenciasDocumentacionToDelete: StatusWrapper<IIncidenciaDocumentacionRequerimiento>[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly requerimientoJustificacion: IRequerimientoJustificacion,
+    private readonly incidenciasDocumentacion$: BehaviorSubject<StatusWrapper<IIncidenciaDocumentacionRequerimiento>[]>,
     private readonly canEdit: boolean,
     readonly proyectoSgeRef: string,
     private readonly requerimientoJustificacionService: RequerimientoJustificacionService,
@@ -126,20 +126,13 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
   }
 
   protected initializer(key: string | number): Observable<IRequerimientoJustificacion> {
-    return forkJoin({
-      requerimientoJustificacion: of(this.requerimientoJustificacion),
-      incidenciasDocumentacion: this.requerimientoJustificacionService.findIncidenciasDocumentacion(key as number)
-    }).pipe(
-      tap((data) => {
-        this.incidenciasDocumentacion$.next(data.incidenciasDocumentacion.items.map(item => new StatusWrapper(item)));
-        this.requerimientoJustificacionServerData = data.requerimientoJustificacion;
-      }),
-      map(({ requerimientoJustificacion }) => requerimientoJustificacion)
-    );
-  }
-
-  getIncidenciasDocumentacion$(): Observable<StatusWrapper<IIncidenciaDocumentacionRequerimiento>[]> {
-    return this.incidenciasDocumentacion$.asObservable();
+    return of(this.requerimientoJustificacion)
+      .pipe(
+        tap((requerimientoJustificacion) => {
+          this.requerimientoJustificacionServerData = requerimientoJustificacion;
+        }),
+        map((requerimientoJustificacion) => requerimientoJustificacion)
+      );
   }
 
   addIncidenciaDocumentacion(incidenciaDocumentacionRequerimiento: IIncidenciaDocumentacionRequerimiento): void {
@@ -200,7 +193,7 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
     let cascade = of(void 0);
     if (this.formGroupStatus$.value.changes) {
       cascade = cascade.pipe(
-        switchMap(() => this.createRequerimientoJustificacion(requerimientoJustificacion))
+        mergeMap(() => this.createRequerimientoJustificacion(requerimientoJustificacion))
       );
     }
 
@@ -219,11 +212,11 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
     let cascade = of(void 0);
     if (this.formGroupStatus$.value.changes) {
       cascade = cascade.pipe(
-        switchMap(() => this.updateRequerimientoJustificacion(requerimientoJustificacion))
+        mergeMap(() => this.updateRequerimientoJustificacion(requerimientoJustificacion))
       );
     } else {
       cascade = cascade.pipe(
-        switchMap(() => of(requerimientoJustificacion))
+        mergeMap(() => of(requerimientoJustificacion))
       );
     }
 
@@ -325,8 +318,21 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
     wrapper: StatusWrapper<IIncidenciaDocumentacionRequerimiento>,
     current: StatusWrapper<IIncidenciaDocumentacionRequerimiento>[]
   ): void {
-    current[current.findIndex(c => c === wrapper)] =
-      new StatusWrapper<IIncidenciaDocumentacionRequerimiento>(incidenciaDocumentacionResponse);
+    let wrapperToUpdate = current[current.findIndex(c => c === wrapper)];
+    if (!this.incidienciaDocumentacionHasChangesPending(incidenciaDocumentacionResponse, wrapper.value)) {
+      wrapperToUpdate = new StatusWrapper<IIncidenciaDocumentacionRequerimiento>(incidenciaDocumentacionResponse);
+    } else {
+      if (wrapperToUpdate.created) {
+        wrapperToUpdate.value.id = incidenciaDocumentacionResponse.id;
+      }
+      wrapperToUpdate.setEdited();
+    }
     this.incidenciasDocumentacion$.next(current);
+  }
+
+  incidienciaDocumentacionHasChangesPending(
+    serverData: IIncidenciaDocumentacionRequerimiento,
+    appData: IIncidenciaDocumentacionRequerimiento): boolean {
+    return serverData.alegacion !== appData.alegacion;
   }
 }

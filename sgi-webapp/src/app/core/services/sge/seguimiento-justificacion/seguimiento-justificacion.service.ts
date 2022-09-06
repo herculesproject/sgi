@@ -4,7 +4,7 @@ import { IColumna } from '@core/models/sge/columna';
 import { IGastoJustificado } from '@core/models/sge/gasto-justificado';
 import { IGastoJustificadoDetalle } from '@core/models/sge/gasto-justificado-detalle';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGastoJustificadoDetalleResponse } from './gasto-justificado-detalle-response';
@@ -14,13 +14,9 @@ import { GASTO_JUSTIFICADO_RESPONSE_CONVERTER } from './gasto-justificado-respon
 
 // tslint:disable-next-line: variable-name
 const _SeguimientoJustificacionServiceMixinBase:
-  FindByIdCtor<string, IGastoJustificadoDetalle, IGastoJustificadoDetalleResponse> &
   FindAllCtor<IGastoJustificado, IGastoJustificadoResponse> &
   typeof SgiRestBaseService = mixinFindAll(
-    mixinFindById(
-      SgiRestBaseService,
-      GASTO_JUSTIFICADO_DETALLE_RESPONSE_CONVERTER
-    ),
+    SgiRestBaseService,
     GASTO_JUSTIFICADO_RESPONSE_CONVERTER
   );
 
@@ -48,5 +44,13 @@ export class SeguimientoJustificacionService extends _SeguimientoJustificacionSe
       `${this.endpointUrl}/columnas`).pipe(
         map(response => response.items)
       );
+  }
+
+  findById(gastoRef: string, params: { justificacionId: string, proyectoId: string }): Observable<IGastoJustificadoDetalle> {
+    return this.http.get<IGastoJustificadoDetalleResponse>(
+      `${this.endpointUrl}/${gastoRef}`, { params }
+    ).pipe(
+      map(response => GASTO_JUSTIFICADO_DETALLE_RESPONSE_CONVERTER.fromTarget(response))
+    );
   }
 }
