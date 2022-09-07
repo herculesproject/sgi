@@ -325,12 +325,10 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
         .byRangoMesesSolapados(convocatoriaConceptoGasto.getMesInicial(), convocatoriaConceptoGasto.getMesFinal());
     Specification<ConvocatoriaConceptoGasto> specByIdNotEqual = ConvocatoriaConceptoGastoSpecifications
         .byIdNotEqual(convocatoriaConceptoGasto.getId());
-    Specification<ConvocatoriaConceptoGasto> specByPermitido = ConvocatoriaConceptoGastoSpecifications
-        .byPermitido(convocatoriaConceptoGasto.getPermitido());
 
     Specification<ConvocatoriaConceptoGasto> specs = Specification.where(specByConvocatoria)
         .and(specByConceptoGastoConvocatoriaActiva).and(specByConceptoGasto).and(specByRangoMesesSolapados)
-        .and(specByIdNotEqual).and(specByPermitido);
+        .and(specByIdNotEqual);
 
     Page<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = repository.findAll(specs, Pageable.unpaged());
 
