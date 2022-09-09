@@ -13,6 +13,7 @@ import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
+import { ProyectoSeguimientoJustificacionService } from '@core/services/csp/proyecto-seguimiento-justificacion/proyecto-seguimiento-justificacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
@@ -99,7 +100,8 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
     requerimientoJustificacionService: RequerimientoJustificacionService,
     proyectoProyectoSgeService: ProyectoProyectoSgeService,
-    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService
+    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
+    proyectoSeguimientoJustificacionService: ProyectoSeguimientoJustificacionService
   ) {
     super();
 
@@ -160,7 +162,7 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(
       id, this.data.proyectoSge, this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
       this.data.configuracion, proyectoService, proyectoSeguimientoEjecucionEconomicaService, empresaService,
-      proyectoPeriodoJustificacionService, proyectoPeriodoSeguimientoService
+      proyectoPeriodoJustificacionService, proyectoPeriodoSeguimientoService, proyectoSeguimientoJustificacionService
     );
 
     this.seguimientoJustificacionRequerimientos = new SeguimientoJustificacionRequerimientosFragment(

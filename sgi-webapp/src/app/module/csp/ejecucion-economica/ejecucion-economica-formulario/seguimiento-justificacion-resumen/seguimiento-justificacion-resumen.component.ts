@@ -12,9 +12,11 @@ import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IdentificadorJustificacionModalComponent, IdentificadorJustificacionModalData } from '../../modals/identificador-justificacion-modal/identificador-justificacion-modal.component';
 import { PresentacionDocumentacionModalComponent } from '../../modals/presentacion-documentacion-modal/presentacion-documentacion-modal.component';
+import { ISeguimientoJustificacionModalData, SeguimientoJustificacionModalComponent } from '../../modals/seguimiento-justificacion-modal/seguimiento-justificacion-modal.component';
 import {
   IProyectoPeriodoJustificacionWithTituloProyecto, IProyectoPeriodoSeguimientoWithTituloProyecto,
-  IProyectoSeguimientoEjecucionEconomicaData, SeguimientoJustificacionResumenFragment
+  IProyectoSeguimientoEjecucionEconomicaData, IProyectoSeguimientoJustificacionWithFechaJustificacion,
+  SeguimientoJustificacionResumenFragment
 } from './seguimiento-justificacion-resumen.fragment';
 
 @Component({
@@ -39,6 +41,22 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     'entidadesFinanciadoras',
     'importeConcedido',
     'importeConcedidoCostesIndirectos',
+    'acciones',
+  ];
+
+  seguimientosJustificacionElementosPagina = [5, 10, 25, 100];
+  seguimientosJustificacionDisplayedColumns = [
+    'proyectoId',
+    'fechaUltimaJustificacion',
+    'importeJustificado',
+    'importeAceptado',
+    'importeRechazado',
+    'importeAlegado',
+    'importeNoEjecutado',
+    'importeReintegrar',
+    'importeReintegrado',
+    'interesesReintegrar',
+    'interesesReintegrados',
     'acciones',
   ];
 
@@ -72,10 +90,15 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
   ];
 
   proyectosSGIDataSource = new MatTableDataSource<IProyectoSeguimientoEjecucionEconomicaData>();
+  seguimientosJustificacionDataSource = new
+    MatTableDataSource<StatusWrapper<IProyectoSeguimientoJustificacionWithFechaJustificacion>>();
   calendarioJustificacionDataSource = new MatTableDataSource<StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>>();
   calendarioSeguimientoDataSource = new MatTableDataSource<StatusWrapper<IProyectoPeriodoSeguimientoWithTituloProyecto>>();
   @ViewChild('proyectosSGIPaginator', { static: true }) proyectosSGIPaginator: MatPaginator;
   @ViewChild('proyectosSGISort', { static: true }) proyectosSGISort: MatSort;
+  @ViewChild('seguimientosJustificacionPaginator', { static: true })
+  seguimientosJustificacionPaginator: MatPaginator;
+  @ViewChild('seguimientosJustificacionSort', { static: true }) seguimientosJustificacionSort: MatSort;
   @ViewChild('calendarioJustificacionPaginator', { static: true }) calendarioJustificacionPaginator: MatPaginator;
   @ViewChild('calendarioJustificacionSort', { static: true }) calendarioJustificacionSort: MatSort;
   @ViewChild('calendarioSeguimientoPaginator', { static: true }) calendarioSeguimientoPaginator: MatPaginator;
@@ -103,6 +126,7 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
   ngOnInit(): void {
     super.ngOnInit();
     this.initProyectosSGITable();
+    this.initSeguimientoJustificacionTable();
     this.initCalendarioJustificacionTable();
     this.initCalendarioSeguimientoTable();
   }
@@ -115,8 +139,36 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     }));
   }
 
+  private initSeguimientoJustificacionTable(): void {
+    this.seguimientosJustificacionDataSource.paginator = this.seguimientosJustificacionPaginator;
+    this.seguimientosJustificacionDataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IProyectoSeguimientoJustificacionWithFechaJustificacion>, property: string) => {
+        switch (property) {
+          case 'proyectoId':
+            return wrapper.value?.proyectoProyectoSge?.proyecto?.id;
+          default:
+            return wrapper.value[property];
+        }
+      };
+    this.seguimientosJustificacionDataSource.sort = this.seguimientosJustificacionSort;
+    this.subscriptions.push(this.formPart.getSeguimientosJustificacion$().subscribe(elements => {
+      this.seguimientosJustificacionDataSource.data = elements;
+    }));
+  }
+
   private initCalendarioJustificacionTable(): void {
     this.calendarioJustificacionDataSource.paginator = this.calendarioJustificacionPaginator;
+    this.calendarioJustificacionDataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>, property: string) => {
+        switch (property) {
+          case 'proyecto.id':
+            return wrapper.value?.proyecto?.id;
+          case 'tipoJustificacion':
+            return TIPO_JUSTIFICACION_MAP.get(wrapper.value.tipoJustificacion);
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.calendarioJustificacionDataSource.sort = this.calendarioJustificacionSort;
     this.subscriptions.push(this.formPart.getPeriodosJustificacion$().subscribe(elements => {
       this.calendarioJustificacionDataSource.data = elements;
@@ -125,6 +177,15 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
 
   private initCalendarioSeguimientoTable(): void {
     this.calendarioSeguimientoDataSource.paginator = this.calendarioSeguimientoPaginator;
+    this.calendarioSeguimientoDataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IProyectoPeriodoSeguimientoWithTituloProyecto>, property: string) => {
+        switch (property) {
+          case 'tipoSeguimiento':
+            return TIPO_SEGUIMIENTO_MAP.get(wrapper.value?.tipoSeguimiento);
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.calendarioSeguimientoDataSource.sort = this.calendarioSeguimientoSort;
     this.subscriptions.push(this.formPart.getPeriodosSeguimiento$().subscribe(elements => {
       this.calendarioSeguimientoDataSource.data = elements;
@@ -133,6 +194,33 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  openModalSeguimientoJustificacion(
+    seguimientoJustificacion: StatusWrapper<IProyectoSeguimientoJustificacionWithFechaJustificacion>): void {
+    const data: ISeguimientoJustificacionModalData = {
+      proyecto: this.proyectosSGIDataSource.data.find(
+        proyectoSGI => proyectoSGI.id === seguimientoJustificacion.value.proyectoProyectoSge.id
+      ),
+      seguimientoJustificacion
+    };
+
+    const config: MatDialogConfig<ISeguimientoJustificacionModalData> = {
+      data
+    };
+
+    const dialogRef = this.matDialog.open(SeguimientoJustificacionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (modalData: StatusWrapper<IProyectoSeguimientoJustificacionWithFechaJustificacion>) => {
+        if (modalData) {
+          if (modalData.value.id) {
+            this.formPart.updateSeguimientoJustificacion(modalData);
+          } else {
+            this.formPart.createSeguimientoJustificacion(modalData);
+          }
+        }
+      }
+    );
   }
 
   openModalPeriodoJustificacion(periodoJustificacion: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>): void {

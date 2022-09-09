@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoSeguimientoEjecucionEconomica } from '@core/models/csp/proyecto-seguimiento-ejecucion-economica';
+import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seguimiento-justificacion';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { environment } from '@env';
 import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
@@ -11,6 +12,8 @@ import { IProyectoPeriodoJustificacionResponse } from '../proyecto-periodo-justi
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from '../proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoPeriodoSeguimientoResponse } from '../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 import { PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER } from '../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response.converter';
+import { IProyectoSeguimientoJustificacionResponse } from '../proyecto-seguimiento-justificacion/proyecto-seguimiento-justificacion-response';
+import { PROYECTO_SEGUIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../proyecto-seguimiento-justificacion/proyecto-seguimiento-justificacion-response.converter';
 import { IRequerimientoJustificacionResponse } from '../requerimiento-justificacion/requerimiento-justificacion-response';
 import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from '../requerimiento-justificacion/requerimiento-justificacion-response.converter';
 import { IProyectoSeguimientoEjecucionEconomicaResponse } from './proyecto-seguimiento-ejecucion-economica-response';
@@ -66,6 +69,16 @@ export class ProyectoSeguimientoEjecucionEconomicaService extends SgiRestBaseSer
       `${this.endpointUrl}/${proyectoSgeRef}/requerimientos-justificacion`,
       options,
       REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER
+    );
+  }
+
+  findSeguimientosJustificacion(
+    proyectoSgeRef: string,
+    options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoSeguimientoJustificacion>> {
+    return this.find<IProyectoSeguimientoJustificacionResponse, IProyectoSeguimientoJustificacion>(
+      `${this.endpointUrl}/${proyectoSgeRef}/seguimientos-justificacion`,
+      options,
+      PROYECTO_SEGUIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER
     );
   }
 }
