@@ -230,7 +230,7 @@ public class EvaluacionController {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-gestor")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-INV-ER', 'ETI-EVC-EVALR')")
   public ResponseEntity<Page<Comentario>> getComentariosGestor(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getComentariosGestor(Long id, Pageable pageable) - start");
@@ -475,7 +475,7 @@ public class EvaluacionController {
    * @return Número de comentarios
    */
   @GetMapping("/{idEvaluacion}/{idTipoComentario}/numero-comentarios")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR', 'ETI-EVC-EVALR')")
   public ResponseEntity<Integer> countByEvaluacionIdAndTipoComentarioId(@PathVariable Long idEvaluacion,
       @PathVariable Long idTipoComentario) {
     log.debug("countByEvaluacionIdAndTipoComentarioId(@PathVariable Long idEvaluacion, idTipoComentario) - start");
@@ -536,7 +536,7 @@ public class EvaluacionController {
    * @return el documento del evaluador
    */
   @GetMapping("/{idEvaluacion}/documento-evaluacion")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-EVC-INV-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-EVC-INV-EVALR','ETI-EVC-EVALR')")
   public ResponseEntity<DocumentoOutput> documentoEvaluacion(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - start");
     DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion);
