@@ -59,4 +59,20 @@ public class AssertHelper {
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
             .build());
   }
+
+  /**
+   * Comprueba que la entidad perteneciente a una clase no sea null
+   * 
+   * @param entityValue el valor de la entidad.
+   * @param clazz       clase para la que se comprueba la entidad.
+   * @param entityClazz clase de la entidad a comprobar entidad.
+   */
+  public static void entityNotNull(Object entityValue, Class<?> clazz, Class<?> entityClazz) {
+    Assert.notNull(entityValue,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .build());
+  }
 }

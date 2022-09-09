@@ -8,16 +8,22 @@ import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.ProyectoPeriodoSeguimientoConverter;
+import org.crue.hercules.sgi.csp.converter.ProyectoSeguimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
+import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoJustificacionOutput.ProyectoProyectoSgeOutput;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.crue.hercules.sgi.csp.model.ProyectoSeguimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSeguimientoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -59,12 +65,17 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
   private RequerimientoJustificacionService requerimientoJustificacionService;
   @MockBean
   private RequerimientoJustificacionConverter requerimientoJustificacionConverter;
+  @MockBean
+  private ProyectoSeguimientoJustificacionService proyectoSeguimientoJustificacionService;
+  @MockBean
+  private ProyectoSeguimientoJustificacionConverter proyectoSeguimientoJustificacionConverter;
 
   private static final String CONTROLLER_BASE_PATH = SeguimientoEjecucionEconomicaController.REQUEST_MAPPING;
   private static final String PATH_PROYECTOS = SeguimientoEjecucionEconomicaController.PATH_PROYECTOS;
   private static final String PATH_PERIODO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_PERIODO_JUSTIFICACION;
   private static final String PATH_PERIODO_SEGUIMIENTO = SeguimientoEjecucionEconomicaController.PATH_PERIODO_SEGUIMIENTO;
   private static final String PATH_REQUERIMIENTO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_REQUERIMIENTO_JUSTIFICACION;
+  private static final String PATH_SEGUIMIENTO_JUSTIFICACION = SeguimientoEjecucionEconomicaController.PATH_SEGUIMIENTO_JUSTIFICACION;
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
@@ -473,6 +484,115 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-V" })
+  public void findSeguimientosJustificacion_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoSeguimientoJustificacion
+    String proyectoSgeRef = "1";
+    List<ProyectoSeguimientoJustificacion> proyectoSeguimientosJustificacion = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoSeguimientosJustificacion.add(generarMockProyectoSeguimientoJustificacion(i, i));
+    }
+    Integer page = 3;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(proyectoSeguimientoJustificacionService.findAllByProyectoSgeRef(ArgumentMatchers.<String>any(),
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectoSeguimientosJustificacion.size() ? proyectoSeguimientosJustificacion.size()
+              : toIndex;
+          List<ProyectoSeguimientoJustificacion> content = proyectoSeguimientosJustificacion.subList(fromIndex,
+              toIndex);
+          Page<ProyectoSeguimientoJustificacion> pageResponse = new PageImpl<>(content, pageable,
+              proyectoSeguimientosJustificacion.size());
+          return pageResponse;
+        });
+
+    BDDMockito
+        .given(proyectoSeguimientoJustificacionConverter
+            .convert(ArgumentMatchers.<Page<ProyectoSeguimientoJustificacion>>any()))
+        .willAnswer(new Answer<Page<ProyectoSeguimientoJustificacionOutput>>() {
+          @Override
+          public Page<ProyectoSeguimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ProyectoSeguimientoJustificacion> pageInput = invocation.getArgument(0);
+            List<ProyectoSeguimientoJustificacionOutput> content = pageInput.getContent().stream().map(input -> {
+              return generarMockProyectoSeguimientoJustificacionOutput(input);
+            }).collect(Collectors.toList());
+            Page<ProyectoSeguimientoJustificacionOutput> pageOutput = new PageImpl<>(content, pageInput.getPageable(),
+                pageInput.getTotalElements());
+            return pageOutput;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_SEGUIMIENTO_JUSTIFICACION, proyectoSgeRef)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Devuelve la pagina 3 con los ProyectoSeguimientoJustificacion del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+    List<ProyectoSeguimientoJustificacion> response = mapper.readValue(
+        requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ProyectoSeguimientoJustificacion>>() {
+        });
+    for (int i = 31; i <= 37; i++) {
+      ProyectoSeguimientoJustificacion proyectoSeguimientoJustificacion = response
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoSeguimientoJustificacion.getJustificanteReintegro())
+          .isEqualTo("ProyectoSeguimientoJustificacion-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SJUS-E" })
+  public void findSeguimientosJustificacion_EmptyList_Returns204() throws Exception {
+    // given: no data ProyectoSeguimientoJustificacion
+    String proyectoSgeRef = "1";
+    BDDMockito
+        .given(proyectoSeguimientoJustificacionService.findAllByProyectoSgeRef(ArgumentMatchers.anyString(),
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoSeguimientoJustificacion>>() {
+          @Override
+          public Page<ProyectoSeguimientoJustificacion> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ProyectoSeguimientoJustificacion> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+    BDDMockito
+        .given(
+            proyectoSeguimientoJustificacionConverter
+                .convert(ArgumentMatchers.<Page<ProyectoSeguimientoJustificacion>>any()))
+        .willAnswer(new Answer<Page<ProyectoSeguimientoJustificacionOutput>>() {
+          @Override
+          public Page<ProyectoSeguimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ProyectoSeguimientoJustificacionOutput> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(
+            CONTROLLER_BASE_PATH + PATH_SEGUIMIENTO_JUSTIFICACION, proyectoSgeRef)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id) {
     String observacionSuffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
     return generarMockRequerimientoJustificacion(id, "RequerimientoJustificacion-" + observacionSuffix,
@@ -501,5 +621,50 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
         .observaciones(observaciones)
         .requerimientoPrevioId(requerimientoPrevioId)
         .build();
+  }
+
+  private ProyectoSeguimientoJustificacion generarMockProyectoSeguimientoJustificacion(Long id,
+      Long proyectoProyectoSgeId) {
+    String justificanteReintegroSuffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
+    return generarMockProyectoSeguimientoJustificacion(id, generarMockProyectoProyectoSge(proyectoProyectoSgeId),
+        "ProyectoSeguimientoJustificacion-" + justificanteReintegroSuffix);
+  }
+
+  private ProyectoSeguimientoJustificacion generarMockProyectoSeguimientoJustificacion(Long id,
+      ProyectoProyectoSge proyectoProyectoSge, String justificanteReintegro) {
+    return ProyectoSeguimientoJustificacion.builder()
+        .id(id)
+        .proyectoProyectoSge(proyectoProyectoSge)
+        .justificanteReintegro(justificanteReintegro)
+        .build();
+  }
+
+  private ProyectoProyectoSge generarMockProyectoProyectoSge(Long id) {
+    String proyectoSgeRef = id != null ? String.format("%03d", id) : String.format("%03d", 1);
+    return ProyectoProyectoSge.builder().id(id).proyectoSgeRef(proyectoSgeRef).build();
+  }
+
+  private ProyectoSeguimientoJustificacionOutput generarMockProyectoSeguimientoJustificacionOutput(
+      ProyectoSeguimientoJustificacion input) {
+    return generarMockProyectoSeguimientoJustificacionOutput(input.getId(),
+        generarMockProyectoProyectoSgeOutput(input.getProyectoProyectoSge()),
+        input.getJustificanteReintegro());
+  }
+
+  private ProyectoSeguimientoJustificacionOutput generarMockProyectoSeguimientoJustificacionOutput(Long id,
+      ProyectoProyectoSgeOutput proyectoProyectoSge, String justificanteReintegro) {
+    return ProyectoSeguimientoJustificacionOutput.builder()
+        .id(id)
+        .proyectoProyectoSge(proyectoProyectoSge)
+        .justificanteReintegro(justificanteReintegro)
+        .build();
+  }
+
+  private ProyectoProyectoSgeOutput generarMockProyectoProyectoSgeOutput(ProyectoProyectoSge input) {
+    return generarMockProyectoProyectoSgeOutput(input.getId(), input.getProyectoSgeRef());
+  }
+
+  private ProyectoProyectoSgeOutput generarMockProyectoProyectoSgeOutput(Long id, String proyectoSgeRef) {
+    return ProyectoProyectoSgeOutput.builder().id(id).proyectoSgeRef(proyectoSgeRef).build();
   }
 }
