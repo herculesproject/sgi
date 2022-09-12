@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
+import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -41,6 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EvaluacionController {
 
+  private static final String FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END = "findAll(String query,Pageable paging) - end";
+  private static final String FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START = "findAll(String query,Pageable paging) - start";
+
   /** Evaluacion service */
   private final EvaluacionService service;
 
@@ -70,14 +74,14 @@ public class EvaluacionController {
   @GetMapping()
   public ResponseEntity<Page<Evaluacion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query,Pageable paging) - start");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
     Page<Evaluacion> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
+      log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(String query,Pageable paging) - end");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -144,14 +148,14 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
   public ResponseEntity<Page<Evaluacion>> findAllByMemoriaAndRetrospectivaEnEvaluacion(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query,Pageable paging) - start");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
     Page<Evaluacion> page = service.findAllByMemoriaAndRetrospectivaEnEvaluacion(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
+      log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(String query,Pageable paging) - end");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -347,7 +351,7 @@ public class EvaluacionController {
   @PutMapping("/{id}/comentario-gestor/{idComentario}")
   @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
   public Comentario replaceComentarioGestor(@PathVariable Long id, @PathVariable Long idComentario,
-      @Validated({ Comentario.Update.class }) @RequestBody Comentario comentario) {
+      @Validated({ BaseEntity.Update.class }) @RequestBody Comentario comentario) {
     log.debug("replaceComentarioGestor(Long id,  Long idComentario, Comentario comentario) - start");
 
     comentario.setId(idComentario);
@@ -369,7 +373,7 @@ public class EvaluacionController {
   @PutMapping("/{id}/comentario-evaluador/{idComentario}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   public Comentario replaceComentarioEvaluador(@PathVariable Long id, @PathVariable Long idComentario,
-      @Validated({ Comentario.Update.class }) @RequestBody Comentario comentario, Authentication authorization) {
+      @Validated({ BaseEntity.Update.class }) @RequestBody Comentario comentario, Authentication authorization) {
     log.debug("replaceComentarioEvaluador( Long id,  Long idComentario, Comentario comentario) - start");
     String personaRef = authorization.getName();
     comentario.setId(idComentario);
@@ -438,13 +442,13 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
   public ResponseEntity<Page<Evaluacion>> findByEvaluacionesEnSeguimientoFinal(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findAll(String query,Pageable paging) - start");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
     Page<Evaluacion> page = service.findByEvaluacionesEnSeguimientoFinal(query, pageable);
     if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
+      log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(String query,Pageable paging) - end");
+    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -549,10 +553,10 @@ public class EvaluacionController {
    */
   @RequestMapping(path = "/{id}/evaluacion", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<?> isEvaluacionEvaluable(@PathVariable Long id, Authentication authorization) {
+  public ResponseEntity<Void> isEvaluacionEvaluable(@PathVariable Long id, Authentication authorization) {
     log.debug("isEvaluacionEvaluable(Long id, Authentication authorization) - start");
     String personaRef = authorization.getName();
-    if (service.isEvaluacionEvaluableByEvaluador(id, personaRef)) {
+    if (service.isEvaluacionEvaluableByEvaluador(id, personaRef).booleanValue()) {
       log.debug("isEvaluacionEvaluable(Long id, Authentication authorization) - end");
       return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -569,10 +573,10 @@ public class EvaluacionController {
    */
   @RequestMapping(path = "/{id}/evaluacion-seguimiento", method = RequestMethod.HEAD)
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<?> isSeguimientoEvaluable(@PathVariable Long id, Authentication authorization) {
+  public ResponseEntity<Void> isSeguimientoEvaluable(@PathVariable Long id, Authentication authorization) {
     log.debug("isSeguimientoEvaluable(Long id, Authentication authorization) - start");
     String personaRef = authorization.getName();
-    if (service.isEvaluacionSeguimientoEvaluableByEvaluador(id, personaRef)) {
+    if (service.isEvaluacionSeguimientoEvaluableByEvaluador(id, personaRef).booleanValue()) {
       log.debug("isSeguimientoEvaluable(Long id, Authentication authorization) - end");
       return new ResponseEntity<>(HttpStatus.OK);
     }
