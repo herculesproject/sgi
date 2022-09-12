@@ -1620,6 +1620,7 @@
   "error.prc.baremo.peso-total": "La suma del peso de los baremos debe ser igual a 100",
   "error.prc.informe.generar": "No se ha podido generar el informe",
   "error.prc.moduladores-rango.tipo.duplicated": "Ya existe un tipo de rango igual al seleccionado",
+  "error.prc.moduladores-rango.tipo.notHasRangoInicial": "El rango de costes indirectos tiene un salto",
   "error.proyecto-concepto-gasto.create": "Error al asignar el concepto de gasto al proyecto",
   "error.reactivate.entity": "Error al reactivar {gender,select,male{el} female{la} other{el/la}} {entity}",
   "error.reject.entity": "Error al rechazar {gender,select,male{el} female{la} other{el/la}} {entity}",
