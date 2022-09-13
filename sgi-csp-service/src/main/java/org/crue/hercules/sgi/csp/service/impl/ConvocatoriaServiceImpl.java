@@ -837,7 +837,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   public boolean hasAnySolicitudReferenced(Long convocatoriaId) {
-    return this.solicitudRepository.existsByConvocatoriaId(convocatoriaId);
+    return this.solicitudRepository.existsByConvocatoriaIdAndActivoTrue(convocatoriaId);
   }
 
   /**
@@ -848,7 +848,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   public boolean hasAnyProyectoReferenced(Long convocatoriaId) {
-    return this.proyectoRepository.existsByConvocatoriaId(convocatoriaId);
+    return this.proyectoRepository.existsByConvocatoriaIdAndActivoTrue(convocatoriaId);
   }
 
   /**
