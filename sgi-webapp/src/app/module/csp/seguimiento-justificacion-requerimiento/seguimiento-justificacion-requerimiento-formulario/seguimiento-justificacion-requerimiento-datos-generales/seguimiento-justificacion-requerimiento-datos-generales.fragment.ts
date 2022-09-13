@@ -7,7 +7,7 @@ import { RequerimientoJustificacionService } from '@core/services/csp/requerimie
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, startWith, takeLast, tap } from 'rxjs/operators';
 
 export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends FormFragment<IRequerimientoJustificacion> {
   private requerimientoJustificacionServerData: IRequerimientoJustificacion;
@@ -63,6 +63,7 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesFragment extends
 
   getCurrentRequerimientoJustificacion$(): Observable<IRequerimientoJustificacion> {
     return this.getFormGroup().valueChanges.pipe(
+      startWith(this.requerimientoJustificacion),
       map(() => this.getValue())
     );
   }

@@ -38,7 +38,7 @@ export class GastoJustificadoDetalleModalComponent extends DialogCommonComponent
                 map(proyectoPeriodoJustificacion =>
                 ({
                   ...gastoJustificadoDetalle,
-                  proyectoSgiId: proyectoPeriodoJustificacion.proyecto.id
+                  proyectoSgiId: proyectoPeriodoJustificacion?.proyecto?.id
                 } as IGastoJustificadoDetalleWithProyectoSgiId)
                 )
               )

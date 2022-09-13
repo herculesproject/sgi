@@ -76,7 +76,7 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionFragment ext
 
   onCurrentRequerimientoJustificacionChanges(currentRequerimiento: IRequerimientoJustificacion): void {
     this.currentRequerimientoJustificacion = currentRequerimiento;
-    this.requerimientoJustificacionFormGroup.setValue({
+    this.requerimientoJustificacionFormGroup.patchValue({
       numRequerimiento: currentRequerimiento?.numRequerimiento,
       tipoRequerimiento: currentRequerimiento?.tipoRequerimiento?.nombre
     });
