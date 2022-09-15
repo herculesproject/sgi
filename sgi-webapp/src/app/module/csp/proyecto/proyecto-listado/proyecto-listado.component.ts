@@ -363,7 +363,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     }
     filter
       .and('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
-      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
+      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
       .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
       .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
       .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
