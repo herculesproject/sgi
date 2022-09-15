@@ -45,6 +45,7 @@ export class ActaComentariosFragment extends Fragment {
         map((response) => response.items),
         switchMap((evaluaciones) => {
           const evaluacionesComentario: IEvaluacion[] = [];
+          const current = [];
           return from(evaluaciones).pipe(
             mergeMap(evaluacion => {
               if (evaluacion.dictamen?.activo) {
@@ -53,7 +54,6 @@ export class ActaComentariosFragment extends Fragment {
                 return this.service.getComentariosActa(evaluacion.id).pipe(
                   map((comentarios) => {
                     if (comentarios.items.length > 0) {
-                      const current = [];
                       this.comentarios$.value.map(comentario => {
                         if (!evaluacionesComentario.some(ev => ev.id === comentario.value.evaluacion.id)) {
                           evaluacionesComentario.push(comentario.value.evaluacion);
