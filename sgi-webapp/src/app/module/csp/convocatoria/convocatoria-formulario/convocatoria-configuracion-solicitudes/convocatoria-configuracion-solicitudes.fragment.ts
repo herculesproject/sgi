@@ -32,7 +32,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
-      tramitacionSGI: new FormControl(null, Validators.required),
+      tramitacionSGI: new FormControl(null),
       fasePresentacionSolicitudes: new FormControl(null),
       fechaInicioFase: new FormControl({ value: null, disabled: true }),
       fechaFinFase: new FormControl({ value: null, disabled: true }),
