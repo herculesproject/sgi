@@ -123,6 +123,7 @@
   "csp.convocatoria-concepto-gasto.importe-maximo": "Importe máximo",
   "csp.convocatoria-concepto-gasto.mes-final": "Mes de fin",
   "csp.convocatoria-concepto-gasto.mes-inicial": "Mes de inicio",
+  "csp.convocatoria-concepto-gasto.msg": "No se pueden añadir conceptos de gasto hasta que no se haya creado la convocatoria",
   "csp.convocatoria-concepto-gasto.nombre": "Concepto de gasto",
   "csp.convocatoria-concepto-gasto.observaciones": "Observaciones",
   "csp.convocatoria-configuracion-solicitud": "Configuración Solicitudes",
