@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.util;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -10,6 +11,7 @@ import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudEx
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -28,6 +30,7 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   public static final String CSP_SOL_V = "CSP-SOL-V";
 
   private final SolicitudRepository repository;
+  private final SolicitudExternaRepository solicitudExternaRepository;
 
   public boolean isUserInvestigador() {
     return hasAuthorityCreateInvestigador() || hasAuthorityDeleteInvestigador() || hasAuthorityEditInvestigador();
@@ -94,6 +97,27 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   public void checkUserHasAuthorityModifySolicitud(Solicitud solicitud)
       throws UserNotAuthorizedToModifySolicitudException {
     if (!hasPermisosEdicion(solicitud) || solicitud.getActivo().equals(Boolean.FALSE)) {
+      throw new UserNotAuthorizedToModifySolicitudException();
+    }
+  }
+
+  /**
+   * Comprueba si el usuario externo tiene permiso para modificar la
+   * {@link Solicitud}
+   * 
+   * @param solicitud la {@link Solicitud}
+   * 
+   * @throws UserNotAuthorizedToModifySolicitudException si el usuario no esta
+   *                                                     autorizado para modificar
+   *                                                     la {@link Solicitud}
+   */
+  public void checkExternalUserHasAuthorityModifySolicitud(Solicitud solicitud)
+      throws UserNotAuthorizedToModifySolicitudException {
+
+    boolean estadoModificable = solicitud.getEstado().getEstado().equals(Estado.BORRADOR)
+        || solicitud.getEstado().getEstado().equals(Estado.RECHAZADA);
+
+    if (!estadoModificable || solicitud.getCreadorRef() != null || solicitud.getActivo().equals(Boolean.FALSE)) {
       throw new UserNotAuthorizedToModifySolicitudException();
     }
   }
@@ -190,6 +214,37 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
     return hasAuthorityViewInvestigador()
         && solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)
         && isUserTutor(solicitud.getId());
+  }
+
+  /**
+   * Obtiene una entidad {@link Solicitud} por publicId.
+   * 
+   * @param publicId Identificador de la entidad {@link Solicitud}.
+   * @return la entidad {@link Solicitud}.
+   */
+  public Solicitud getSolicitudByPublicId(String publicId) {
+    return repository.findById(getSolicitudIdByPublicId(publicId))
+        .orElseThrow(UserNotAuthorizedToAccessSolicitudException::new);
+  }
+
+  /**
+   * Obtiene el id de la entidad {@link Solicitud} por publicId.
+   * 
+   * @param publicId Identificador de la entidad {@link Solicitud}.
+   * @return el id de la entidad {@link Solicitud}.
+   */
+  public Long getSolicitudIdByPublicId(String publicId) {
+    return solicitudExternaRepository.findSolicitudId(UUID.fromString(publicId))
+        .orElseThrow(UserNotAuthorizedToAccessSolicitudException::new);
+  }
+
+  /**
+   * Comprueba si existe una {@link Solicitud} por publicId.
+   * 
+   * @param publicId Identificador de la entidad {@link Solicitud}.
+   */
+  public void checkValidSolicitudPublicId(String publicId) {
+    getSolicitudByPublicId(publicId);
   }
 
   /**
