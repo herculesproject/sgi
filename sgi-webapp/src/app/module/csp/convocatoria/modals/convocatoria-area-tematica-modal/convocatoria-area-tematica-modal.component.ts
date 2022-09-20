@@ -89,6 +89,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends DialogFormComponent<
   title: string;
 
   selectedAreasTematicas = [] as IAreaTematica[];
+  hasChangesSelectedAreas = false;
   checkedNodes: NodeAreaTematica[];
   hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
@@ -99,7 +100,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends DialogFormComponent<
     private areaTematicaService: AreaTematicaService,
     private readonly translate: TranslateService
   ) {
-    super(matDialogRef, !data.padre);
+    super(matDialogRef, !!data.padre);
   }
 
   ngOnInit(): void {
@@ -297,5 +298,18 @@ export class ConvocatoriaAreaTematicaModalComponent extends DialogFormComponent<
       this.enableChilds(node);
       this.selectedAreasTematicas = this.selectedAreasTematicas.filter(checkedNode => checkedNode.id !== node.areaTematica.value.id);
     }
+    this.checkChangesSelectedAreas();
+  }
+
+
+  checkChangesSelectedAreas(): void {
+    this.hasChangesSelectedAreas = this.selectedAreasTematicas.length !== this.data.areasTematicas.length
+      || !this.selectedAreasTematicas.every(area => this.data.areasTematicas.map(a => a.id).includes(area.id));
+  }
+
+  get actionDisabled(): boolean {
+    return (this.status$.value.errors)
+      || (this.isEdit() && !this.status$.value.changes && !this.hasChangesSelectedAreas)
+      || (!this.isEdit() && !this.status$.value.complete);
   }
 }

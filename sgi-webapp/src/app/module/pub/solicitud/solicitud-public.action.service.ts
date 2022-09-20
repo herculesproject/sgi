@@ -179,7 +179,7 @@ export class SolicitudPublicActionService extends ActionService {
     );
 
     if (idConvocatoria) {
-      this.loadConvocatoria(idConvocatoria); // TODO
+      this.loadConvocatoria(idConvocatoria);
     }
 
     this.documentos = new SolicitudDocumentosPublicFragment(
