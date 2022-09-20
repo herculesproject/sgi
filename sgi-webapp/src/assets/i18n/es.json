@@ -304,6 +304,8 @@
   "csp.ejecucion-economica.causa-exencion": "Causa exención",
   "csp.ejecucion-economica.codigo-externo": "Referencia en entidad convocante",
   "csp.ejecucion-economica.convocatoria": "Convocatoria",
+  "csp.ejecucion-economica.entidad-convocante": "Entidad convocante",
+  "csp.ejecucion-economica.entidad-financiadora": "Entidad financiadora",
   "csp.ejecucion-economica.facturas-justificantes.fecha-congreso": "Fecha congreso",
   "csp.ejecucion-economica.facturas-justificantes.importe-inscripcion": "Inscripción",
   "csp.ejecucion-economica.facturas-justificantes.observaciones": "Observaciones",

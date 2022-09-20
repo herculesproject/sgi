@@ -61,6 +61,7 @@ import { RequerimientoJustificacionNombrePipe } from './pipes/requerimiento-just
 import { PresentacionDocumentacionModalComponent } from './modals/presentacion-documentacion-modal/presentacion-documentacion-modal.component';
 import { SeguimientoJustificacionModalComponent } from './modals/seguimiento-justificacion-modal/seguimiento-justificacion-modal.component';
 import { SeguimientoJustificacionAnualidadModalComponent } from './modals/seguimiento-justificacion-anualidad-modal/seguimiento-justificacion-anualidad-modal.component';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { SeguimientoJustificacionAnualidadModalComponent } from './modals/seguim
     SgoSharedModule,
     FormlyFormsModule,
     SgpSharedModule,
+    SgempSharedModule
   ],
   providers: [
     EjecucionEconomicaDataResolver,

@@ -150,7 +150,11 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     if (this.busquedaAvanzada) {
       if (this.tipoEntidadSelected === TipoEntidad.PROYECTO) {
         restFilter
-          .and('proyecto.convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
+          .and('proyecto.convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString());
+        restFilter
+          .and('entidadConvocante', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id?.toString());
+        restFilter
+          .and('entidadFinanciadora', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id?.toString());
       }
 
       restFilter
@@ -183,6 +187,8 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
       fechaFinDesde: new FormControl(null),
       fechaFinHasta: new FormControl(null),
       convocatoria: new FormControl(null),
+      entidadConvocante: new FormControl(null),
+      entidadFinanciadora: new FormControl(null),
       responsable: new FormControl({ value: null, disabled: true })
     });
 
