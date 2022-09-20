@@ -6,8 +6,7 @@ import { IVinculacionCategoriaProfesionalBackend } from '@core/models/sgp/backen
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { IVinculacionCategoriaProfesional } from '@core/models/sgp/vinculacion-categoria-profesional';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { get } from 'http';
+import { SgiRestFindOptions, SgiRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VINCULACION_CONVERTER } from './vinculacion-converter';
