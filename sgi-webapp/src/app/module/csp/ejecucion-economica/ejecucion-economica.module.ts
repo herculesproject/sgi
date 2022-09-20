@@ -60,6 +60,7 @@ import { SeguimientoJustificacionRequerimientosComponent } from './ejecucion-eco
 import { RequerimientoJustificacionNombrePipe } from './pipes/requerimiento-justificacion-nombre.pipe';
 import { PresentacionDocumentacionModalComponent } from './modals/presentacion-documentacion-modal/presentacion-documentacion-modal.component';
 import { SeguimientoJustificacionModalComponent } from './modals/seguimiento-justificacion-modal/seguimiento-justificacion-modal.component';
+import { SeguimientoJustificacionAnualidadModalComponent } from './modals/seguimiento-justificacion-anualidad-modal/seguimiento-justificacion-anualidad-modal.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { SeguimientoJustificacionModalComponent } from './modals/seguimiento-jus
     SeguimientoJustificacionRequerimientosComponent,
     RequerimientoJustificacionNombrePipe,
     PresentacionDocumentacionModalComponent,
-    SeguimientoJustificacionModalComponent
+    SeguimientoJustificacionModalComponent,
+    SeguimientoJustificacionAnualidadModalComponent
   ],
   imports: [
     CommonModule,
