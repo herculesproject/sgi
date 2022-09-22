@@ -57,6 +57,13 @@ export class SolicitudPublicDataResolver extends SgiResolverResolver<ISolicitudP
         return this.service.modificable(solicitudPublicId).pipe(
           map(value => {
             data.readonly = !value;
+            return data;
+          })
+        );
+      }),
+      switchMap(data => {
+        return this.service.modificableEstadoAndDocumentosByInvestigador(solicitudPublicId).pipe(
+          map(value => {
             data.estadoAndDocumentosReadonly = !value;
             return data;
           })
@@ -64,8 +71,5 @@ export class SolicitudPublicDataResolver extends SgiResolverResolver<ISolicitudP
       })
     );
   }
-
-
-
 
 }

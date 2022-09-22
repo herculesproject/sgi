@@ -12,7 +12,6 @@ import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
 import { IPersona } from '@core/models/sgp/persona';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaPublicService } from '@core/services/csp/convocatoria-public.service';
 import { SolicitanteExternoPublicService } from '@core/services/csp/solicitante-externo/solicitante-externo-public.service';
@@ -234,25 +233,11 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
   saveOrUpdate(): Observable<string> {
     return this.saveOrUpdateSolicitud(this.getValue()).pipe(
       switchMap(() => this.saveOrUpdateSolicitanteExterno(this.getDatosFormSolicitanteExterno())),
-      switchMap(() => this.getSolicitudPublicId()),
       switchMap(() => this.saveOrUpdateSolicitudModalidades(this.getValue())),
       switchMap(() => this.saveOrUpdateSolicitudRrhh(this.getValue().solicitudRrhh)),
-
       map(() => {
         return this.solicitud.publicKey;
       })
-    );
-  }
-
-  private getSolicitudPublicId(): Observable<string> {
-    return this.service.getPublicId(this.solicitud.codigoRegistroInterno, this.solicitud.solicitanteExterno.numeroDocumento).pipe(
-      tap(publicId => {
-        this.solicitud = {
-          ...this.solicitud,
-          publicKey: publicId
-        };
-      }
-      )
     );
   }
 
@@ -276,8 +261,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       tap((value) => {
         this.solicitud = {
           ...this.solicitud,
-          ...value,
-          publicKey: `${value.codigoRegistroInterno}@${this.solicitud.solicitanteExterno.numeroDocumento}`
+          ...value
         };
       }),
       map(() => {
@@ -307,6 +291,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
   private createSolicitanteExterno(solicitante: ISolicitanteExterno): Observable<void> {
     return this.solicitanteExternoService.create(solicitante).pipe(
       map(solicitanteExterno => {
+        this.solicitud.publicKey = solicitanteExterno.solicitudUUID;
         this.solicitud.solicitanteExterno = solicitante;
         this.solicitud.solicitanteExterno.id = solicitanteExterno.id;
       })

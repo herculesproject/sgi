@@ -1,16 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
 import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
-import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
-import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -109,16 +106,23 @@ export class SolicitudPublicService extends _SolicitudMixinBase {
     );
   }
 
-  getPublicId(codigoRegistroInterno: string, numeroDocumento: string): Observable<string> {
+  getPublicId(solicitudPublicId: string, numeroDocumento: string): Observable<string> {
     const url = `${this.endpointUrl}/publicId`;
     let params = new HttpParams();
-    params = params.append('codigoRegistroInterno', codigoRegistroInterno);
+    params = params.append('uuid', solicitudPublicId);
     params = params.append('numeroDocumento', numeroDocumento);
     return this.http.get<string>(url, { params });
   }
 
   modificable(solicitudPublicId: string): Observable<boolean> {
     const url = `${this.endpointUrl}/${solicitudPublicId}/modificable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  modificableEstadoAndDocumentosByInvestigador(solicitudPublicId: string): Observable<boolean> {
+    const url = `${this.endpointUrl}/${solicitudPublicId}/modificableestadoanddocumentos`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

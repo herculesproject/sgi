@@ -63,13 +63,13 @@ export class SolicitudConsultarComponent implements OnInit, OnDestroy {
     const numeroDocumento = this.formGroup.controls.numeroDocumento.value;
     const uuid = this.formGroup.controls.uuid.value;
 
-    this.solicitudService.getPublicId(uuid, numeroDocumento).pipe(
-      tap(() => { },
-        () => this.clearProblems(),
-        () => this.clearProblems()
-      ),
-    )
-      .subscribe(value => {
+    this.solicitudService.getPublicId(uuid, numeroDocumento)
+      .pipe(
+        tap(() => { },
+          () => this.clearProblems(),
+          () => this.clearProblems()
+        ),
+      ).subscribe(value => {
         this.router.navigate([value], { relativeTo: this.activatedRoute });
       },
         this.processError);
