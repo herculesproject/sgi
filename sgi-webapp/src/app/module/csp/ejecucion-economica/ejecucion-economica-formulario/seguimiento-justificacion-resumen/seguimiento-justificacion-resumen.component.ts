@@ -8,11 +8,13 @@ import { TIPO_JUSTIFICACION_MAP } from '@core/enums/tipo-justificacion';
 import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { ISeguimientoJustificacionAnualidad } from '@core/models/csp/seguimiento-justificacion-anualidad';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiRestFindOptions } from '@sgi/framework/http';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IdentificadorJustificacionModalComponent, IdentificadorJustificacionModalData } from '../../modals/identificador-justificacion-modal/identificador-justificacion-modal.component';
 import { PresentacionDocumentacionModalComponent } from '../../modals/presentacion-documentacion-modal/presentacion-documentacion-modal.component';
+import { ISeguimientoGastosJustificadosResumenExportModalData, SeguimientoGastosJustificadosResumenExportModalComponent } from '../../modals/seguimiento-gastos-justificados-resumen-export-modal/seguimiento-gastos-justificados-resumen-export-modal.component';
 import { ISeguimientoJustificacionAnualidadModalData, SeguimientoJustificacionAnualidadModalComponent } from '../../modals/seguimiento-justificacion-anualidad-modal/seguimiento-justificacion-anualidad-modal.component';
 import { ISeguimientoJustificacionModalData, SeguimientoJustificacionModalComponent } from '../../modals/seguimiento-justificacion-modal/seguimiento-justificacion-modal.component';
 import {
@@ -335,5 +337,17 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
         }
       }
     );
+  }
+
+  public openExportModal(): void {
+    const data: ISeguimientoGastosJustificadosResumenExportModalData = {
+      findOptions: {},
+      proyectoSgeRef: this.formPart.proyectoSgeRef
+    };
+
+    const config = {
+      data
+    };
+    this.matDialog.open(SeguimientoGastosJustificadosResumenExportModalComponent, config);
   }
 }

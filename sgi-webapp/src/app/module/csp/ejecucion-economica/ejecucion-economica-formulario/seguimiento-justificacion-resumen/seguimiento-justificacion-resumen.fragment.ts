@@ -55,6 +55,10 @@ export class SeguimientoJustificacionResumenFragment extends Fragment {
     return this._configuracion;
   }
 
+  get proyectoSgeRef(): string {
+    return this.proyectoSge.id;
+  }
+
   constructor(
     key: number,
     private readonly proyectoSge: IProyectoSge,

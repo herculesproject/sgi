@@ -685,4 +685,11 @@
       </mat-paginator>
     </div>
   </section>
+  <div class="export-button">
+    <button color="primary" matTooltip="{{'btn.export.gastos.justificados' | translate}}" class="rounded"
+      mat-raised-button (click)="openExportModal()">
+      <mat-icon>insert_chart_outlined</mat-icon>
+      {{'btn.export.gastos.justificados'| translate}}
+    </button>
+  </div>
 </sgi-fragment>

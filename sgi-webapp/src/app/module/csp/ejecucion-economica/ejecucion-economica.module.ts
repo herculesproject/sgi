@@ -62,6 +62,9 @@ import { PresentacionDocumentacionModalComponent } from './modals/presentacion-d
 import { SeguimientoJustificacionModalComponent } from './modals/seguimiento-justificacion-modal/seguimiento-justificacion-modal.component';
 import { SeguimientoJustificacionAnualidadModalComponent } from './modals/seguimiento-justificacion-anualidad-modal/seguimiento-justificacion-anualidad-modal.component';
 import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
+import { SeguimientoGastosJustificadosResumenExportModalComponent } from './modals/seguimiento-gastos-justificados-resumen-export-modal/seguimiento-gastos-justificados-resumen-export-modal.component';
+import { SeguimientoGastosJustificadosResumenListadoExportService } from './seguimiento-gastos-justificados-listado-export.service';
+import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from './seguimiento-gastos-justificados-listado-general-export.service';
 
 @NgModule({
   declarations: [
@@ -104,7 +107,8 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
     RequerimientoJustificacionNombrePipe,
     PresentacionDocumentacionModalComponent,
     SeguimientoJustificacionModalComponent,
-    SeguimientoJustificacionAnualidadModalComponent
+    SeguimientoJustificacionAnualidadModalComponent,
+    SeguimientoGastosJustificadosResumenExportModalComponent
   ],
   imports: [
     CommonModule,
@@ -132,7 +136,9 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
     FacturasGastosExportService,
     PersonalContratadoExportService,
     ViajesDietasExportService,
-    LuxonDatePipe
+    LuxonDatePipe,
+    SeguimientoGastosJustificadosResumenListadoExportService,
+    SeguimientoGastosJustificadosResumenListadoGeneralExportService
   ]
 })
 export class EjecucionEconomicaModule { }
