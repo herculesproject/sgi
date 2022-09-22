@@ -24,14 +24,14 @@ public interface CustomSolicitudExternaRepository {
 
   /**
    * Devuelve el id de la {@link SolicitudExterna} de la
-   * {@link Solicitud} con codigoRegistroInterno y numeroDocumentoSolicitante
+   * {@link Solicitud} con uuid y numeroDocumentoSolicitante
    * indicados.
    *
-   * @param codigoRegistroInterno      codigo interno de la {@link Solicitud}.
+   * @param uuid                       codigo interno de la {@link Solicitud}.
    * @param numeroDocumentoSolicitante Numero de documento del solicitante
    *                                   externo.
    * @return id de la {@link SolicitudExterna}
    */
-  Optional<UUID> findPublicId(String codigoRegistroInterno, String numeroDocumentoSolicitante);
+  Optional<UUID> findPublicId(UUID uuid, String numeroDocumentoSolicitante);
 
 }

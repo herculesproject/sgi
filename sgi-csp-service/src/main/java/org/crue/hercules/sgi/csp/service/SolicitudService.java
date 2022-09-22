@@ -560,7 +560,7 @@ public class SolicitudService {
     Solicitud solicitud = solicitudAuthorityHelper.getSolicitudByPublicId(solicitudPublicId);
 
     // Permisos
-    solicitudAuthorityHelper.checkExternalUserHasAuthorityModifySolicitud(solicitud);
+    solicitudAuthorityHelper.checkExternalUserHasAuthorityModifyEstadoSolicitud(solicitud, estadoSolicitud);
 
     Solicitud returnValue = cambiarEstado(solicitud, estadoSolicitud);
     log.debug("cambiarEstado(Long solicitudPublicId, EstadoSolicitud estadoSolicitud) - end");
@@ -1035,6 +1035,26 @@ public class SolicitudService {
   public boolean modificableEstadoAndDocumentosByInvestigador(Long id) {
     return modificableEstadoAndDocumentosByInvestigador(
         repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id)));
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada para cambiar el estado y añadir
+   * nuevos documentos.
+   *
+   * @param solicitudPublicId Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  public boolean modificableEstadoAndDocumentosByUsuarioExterno(String solicitudPublicId) {
+    Solicitud solicitud = solicitudAuthorityHelper.getSolicitudByPublicId(solicitudPublicId);
+
+    return Arrays.asList(
+        Estado.BORRADOR,
+        Estado.SUBSANACION,
+        Estado.EXCLUIDA_PROVISIONAL,
+        Estado.EXCLUIDA_DEFINITIVA,
+        Estado.DENEGADA_PROVISIONAL,
+        Estado.DENEGADA).contains(solicitud.getEstado().getEstado());
   }
 
   /**

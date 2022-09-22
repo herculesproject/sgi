@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -65,7 +67,7 @@ public class SolicitanteExternoService {
 
     solicitudExternaRepository.save(solicitudExterna);
 
-    enviarComunicadoSolicitudExterna(solicitanteExterno.getSolicitudId());
+    enviarComunicadoSolicitudExterna(solicitanteExterno.getSolicitudId(), solicitudExterna.getId());
 
     log.debug("create(SolicitanteExterno solicitanteExterno) - end");
     return returnValue;
@@ -147,11 +149,12 @@ public class SolicitanteExternoService {
    * Guarda la entidad {@link SolicitanteExterno}.
    * 
    * @param solicitanteExterno la entidad {@link SolicitanteExterno} a guardar.
-   * @return la entidad {@link SolicitanteExterno} persistida.
+   * @return la entidad {@link SolicitanteExterno} persistida y el uuid de la
+   *         solicitud.
    */
   @Transactional
   @Validated({ BaseEntity.Create.class })
-  public SolicitanteExterno createByExternalUser(@Valid SolicitanteExterno solicitanteExterno) {
+  public Pair<SolicitanteExterno, UUID> createByExternalUser(@Valid SolicitanteExterno solicitanteExterno) {
     log.debug("createByExternalUser(SolicitanteExterno solicitanteExterno) - start");
 
     AssertHelper.idIsNull(solicitanteExterno.getId(), SolicitanteExterno.class);
@@ -169,10 +172,10 @@ public class SolicitanteExternoService {
 
     solicitudExternaRepository.save(solicitudExterna);
 
-    enviarComunicadoSolicitudExterna(solicitanteExterno.getSolicitudId());
+    enviarComunicadoSolicitudExterna(solicitanteExterno.getSolicitudId(), solicitudExterna.getId());
 
     log.debug("createByExternalUser(SolicitanteExterno solicitanteExterno) - end");
-    return returnValue;
+    return Pair.of(returnValue, solicitudExterna.getId());
   }
 
   /**
@@ -233,7 +236,7 @@ public class SolicitanteExternoService {
     return (returnValue.isPresent()) ? returnValue.get() : null;
   }
 
-  private void enviarComunicadoSolicitudExterna(Long solicitudId) {
+  private void enviarComunicadoSolicitudExterna(Long solicitudId, UUID uuid) {
     log.debug("enviarComunicadoSolicitudExterna(Solicitud solicitud) - start");
     try {
 
@@ -241,11 +244,8 @@ public class SolicitanteExternoService {
           .findOne(ConvocatoriaSpecifications.bySolicitudId(solicitudId))
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitudId));
 
-      Solicitud solicitud = solicitudRepository.findById(solicitudId)
-          .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
-
       this.solicitudComService.enviarComunicadoSolicitudUsuarioExterno(solicitudId, convocatoria.getTitulo(),
-          solicitud.getCodigoRegistroInterno());
+          uuid.toString());
 
       log.debug("enviarComunicadoSolicitudExterna(Solicitud solicitud) - end");
     } catch (Exception e) {

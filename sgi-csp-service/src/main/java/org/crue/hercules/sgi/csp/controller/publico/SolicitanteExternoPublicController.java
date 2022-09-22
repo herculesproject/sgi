@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.controller.publico;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.SolicitanteExternoConverter;
@@ -8,6 +10,7 @@ import org.crue.hercules.sgi.csp.dto.SolicitanteExternoOutput;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.SolicitanteExternoService;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -50,8 +53,9 @@ public class SolicitanteExternoPublicController {
   public ResponseEntity<SolicitanteExternoOutput> create(@Valid @RequestBody SolicitanteExternoInput solicitanteExterno,
       @PathVariable String solicitudId) {
     log.debug("create(SolicitanteExternoInput solicitanteExterno, String solicitudId) - start");
-    SolicitanteExternoOutput returnValue = converter
-        .convert(service.createByExternalUser(converter.convert(solicitanteExterno)));
+    Pair<SolicitanteExterno, UUID> created = service.createByExternalUser(converter.convert(solicitanteExterno));
+    SolicitanteExternoOutput returnValue = converter.convert(created.getFirst());
+    returnValue.setSolicitudUUID(created.getSecond().toString());
     log.debug("create(SolicitanteExternoInput solicitanteExterno, String solicitudId) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }

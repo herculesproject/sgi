@@ -176,6 +176,27 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
     }
   }
 
+  /**
+   * Comprueba si el usuario externo tiene permiso para modificar la
+   * {@link Solicitud}
+   * 
+   * @param solicitud       la {@link Solicitud}
+   * @param estadoSolicitud El {@link EstadoSolicitud}
+   * @throws UserNotAuthorizedToModifySolicitudException si el usuario no esta
+   *                                                     autorizado para modificar
+   *                                                     la {@link Solicitud}
+   */
+  public void checkExternalUserHasAuthorityModifyEstadoSolicitud(Solicitud solicitud, EstadoSolicitud estadoSolicitud)
+      throws UserNotAuthorizedToModifySolicitudException {
+
+    boolean estadoModificable = validateCambioEstadoInvestigador(solicitud.getEstado().getEstado(),
+        estadoSolicitud.getEstado());
+
+    if (!estadoModificable || solicitud.getCreadorRef() != null || solicitud.getActivo().equals(Boolean.FALSE)) {
+      throw new UserNotAuthorizedToModifySolicitudException();
+    }
+  }
+
   public boolean hasAuthorityCreateInvestigador() {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO(CSP_SOL_INV_C);
   }
@@ -197,7 +218,8 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   }
 
   public boolean hasAuthorityEditInvestigador(Solicitud solicitud) {
-    return hasAuthorityEditInvestigador() && solicitud.getCreadorRef().equals(getAuthenticationPersonaRef());
+    return hasAuthorityEditInvestigador() && solicitud.getCreadorRef() != null
+        && solicitud.getCreadorRef().equals(getAuthenticationPersonaRef());
   }
 
   public boolean hasAuthorityViewInvestigador(Solicitud solicitud) {

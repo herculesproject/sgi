@@ -30,20 +30,19 @@ public class SolicitudExternaService {
   /**
    * Obtiene el uuid de la {@link SolicitudExterna}.
    * 
-   * @param codigoRegistroInterno codigo de la {@link Solicitud}.
-   * @param numeroDocumento       numero documento del {@link SolicitanteExterno}.
+   * @param uuid            codigo de la {@link Solicitud}.
+   * @param numeroDocumento numero documento del {@link SolicitanteExterno}.
    * @return el uuid.
    */
-  public UUID findIdByCodigoRegistroInternoAndNumeroDocumento(String codigoRegistroInterno, String numeroDocumento) {
+  public UUID findIdByUuidAndNumeroDocumento(String uuid, String numeroDocumento) {
     log.debug(
-        "findIdByCodigoRegistroInternoAndNumeroDocumento(String codigoRegistroInterno, String numeroDocumento) - start");
+        "findIdByUuidAndNumeroDocumento(String uuid, String numeroDocumento) - start");
 
-    final UUID returnValue = repository.findPublicId(codigoRegistroInterno,
-        numeroDocumento)
+    final UUID returnValue = repository.findPublicId(UUID.fromString(uuid), numeroDocumento)
         .orElseThrow(() -> new SolicitudExternaIncorrectAccessException());
 
     log.debug(
-        "findIdByCodigoRegistroInternoAndNumeroDocumento(String codigoRegistroInterno, String numeroDocumento) - end");
+        "findIdByUuidAndNumeroDocumento(String uuid, String numeroDocumento) - end");
     return returnValue;
   }
 

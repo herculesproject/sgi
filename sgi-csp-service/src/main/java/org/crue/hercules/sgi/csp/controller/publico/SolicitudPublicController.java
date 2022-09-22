@@ -27,7 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +58,8 @@ public class SolicitudPublicController {
   public static final String PATH_HISTORICO_ESTADOS = PATH_ID + PATH_DELIMITER + "estadosolicitudes";
   public static final String PATH_MODALIDADES = PATH_ID + PATH_DELIMITER + "solicitudmodalidades";
   public static final String PATH_MODIFICABLE = PATH_ID + PATH_DELIMITER + "modificable";
+  public static final String PATH_MODIFICABLE_ESTADO_DOCUMENTOS = PATH_ID + PATH_DELIMITER
+      + "modificableestadoanddocumentos";
   public static final String PATH_PUBLIC_ID = PATH_DELIMITER + "publicId";
 
   /** Solicitud service */
@@ -256,16 +257,16 @@ public class SolicitudPublicController {
   /**
    * Devuelve el uuid de la {@link Solicitud}.
    *
-   * @param codigoRegistroInterno codigo interno de la {@link Solicitud}.
-   * @param numeroDocumento       numero de documento del solicitante
+   * @param uuid            codigo interno de la {@link Solicitud}.
+   * @param numeroDocumento numero de documento del solicitante
    * @return el uuid de la {@link Solicitud}.
    */
   @GetMapping(PATH_PUBLIC_ID)
-  public String getPublicId(@RequestParam String codigoRegistroInterno, @RequestParam String numeroDocumento) {
-    log.debug("getPublicId(String codigoRegistroInterno, @RequestParam String numeroDocumento) - start");
-    UUID returnValue = solicitudExternaService.findIdByCodigoRegistroInternoAndNumeroDocumento(codigoRegistroInterno,
+  public String getPublicId(@RequestParam String uuid, @RequestParam String numeroDocumento) {
+    log.debug("getPublicId(String uuid, @RequestParam String numeroDocumento) - start");
+    UUID returnValue = solicitudExternaService.findIdByUuidAndNumeroDocumento(uuid,
         numeroDocumento);
-    log.debug("getPublicId(String codigoRegistroInterno, @RequestParam String numeroDocumento) - end");
+    log.debug("getPublicId(String uuid, @RequestParam String numeroDocumento) - end");
     return JSONObject.quote(returnValue.toString());
   }
 
@@ -284,6 +285,23 @@ public class SolicitudPublicController {
     log.debug("modificable(String publicId) - end");
     return returnValue.booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si el estado y los
+   * {@link SolicitudDocumento} de la {@link Solicitud}
+   * pueden ser modificados por un investigador.
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = PATH_MODIFICABLE_ESTADO_DOCUMENTOS, method = RequestMethod.HEAD)
+  public ResponseEntity<Void> modificableEstadoAndDocumentos(@PathVariable String publicId) {
+    log.debug("modificableEstadoAndDocumentos(String publicId) - start");
+    boolean returnValue = service.modificableEstadoAndDocumentosByUsuarioExterno(publicId);
+    log.debug("modificableEstadoAndDocumentos(String publicId) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }
