@@ -292,7 +292,7 @@ public class SolicitudPublicController {
    * {@link SolicitudDocumento} de la {@link Solicitud}
    * pueden ser modificados por un investigador.
    * 
-   * @param id Id del {@link Solicitud}.
+   * @param publicId Id del {@link Solicitud}.
    * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
    *         modificación
    */
