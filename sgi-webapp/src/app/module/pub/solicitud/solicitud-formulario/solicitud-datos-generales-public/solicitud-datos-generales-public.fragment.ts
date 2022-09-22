@@ -259,10 +259,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       this.service.create(datosGenerales);
     return obs.pipe(
       tap((value) => {
-        this.solicitud = {
-          ...this.solicitud,
-          ...value
-        };
+        this.solicitud.id = value.id;
       }),
       map(() => {
         return this.solicitud.id;
