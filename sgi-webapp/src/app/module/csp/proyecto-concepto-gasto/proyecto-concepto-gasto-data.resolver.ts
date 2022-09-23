@@ -87,7 +87,7 @@ export class ProyectoConceptoGastoDataResolver extends SgiResolverResolver<IProy
         return this.proyectoService.findAllProyectoConceptosGastoPermitidos(proyectoId).pipe(
           map(conceptosGastoPermitido => {
             conceptosGastoPermitido.items
-              .filter(concepto => concepto.id !== convocatoriaConceptoGastoId).forEach(
+              .filter(concepto => concepto.id !== proyectoConceptoGastoId).forEach(
                 conceptoGastoPermitido => data.selectedProyectoConceptosGasto.push(conceptoGastoPermitido)
               );
             return data;
@@ -98,7 +98,7 @@ export class ProyectoConceptoGastoDataResolver extends SgiResolverResolver<IProy
         return this.proyectoService.findAllProyectoConceptosGastoNoPermitidos(proyectoId).pipe(
           map(conceptosGastoNoPermitido => {
             conceptosGastoNoPermitido.items
-              .filter(concepto => concepto.id !== convocatoriaConceptoGastoId).forEach(
+              .filter(concepto => concepto.id !== proyectoConceptoGastoId).forEach(
                 conceptoGastoNoPermitido => data.selectedProyectoConceptosGasto.push(conceptoGastoNoPermitido));
             return data;
           })
