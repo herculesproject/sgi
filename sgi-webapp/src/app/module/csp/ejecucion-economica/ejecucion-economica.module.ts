@@ -65,7 +65,9 @@ import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module'
 import { SeguimientoGastosJustificadosResumenExportModalComponent } from './modals/seguimiento-gastos-justificados-resumen-export-modal/seguimiento-gastos-justificados-resumen-export-modal.component';
 import { SeguimientoGastosJustificadosResumenListadoExportService } from './seguimiento-gastos-justificados-listado-export.service';
 import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from './seguimiento-gastos-justificados-listado-general-export.service';
-
+import { RequerimientoJustificacionListadoExportModalComponent } from './modals/requerimiento-justificacion-listado-export-modal/requerimiento-justificacion-listado-export-modal.component';
+import { RequerimientoJustificacionListadoExportService } from './requerimiento-justificacion-listado-export.service';
+import { RequerimientoJustificacionGeneralListadoExportService } from './requerimiento-justificacion-general-listado-export.service';
 @NgModule({
   declarations: [
     EjecucionEconomicaListadoComponent,
@@ -107,6 +109,7 @@ import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from 
     RequerimientoJustificacionNombrePipe,
     PresentacionDocumentacionModalComponent,
     SeguimientoJustificacionModalComponent,
+    RequerimientoJustificacionListadoExportModalComponent,
     SeguimientoJustificacionAnualidadModalComponent,
     SeguimientoGastosJustificadosResumenExportModalComponent
   ],
@@ -138,7 +141,9 @@ import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from 
     ViajesDietasExportService,
     LuxonDatePipe,
     SeguimientoGastosJustificadosResumenListadoExportService,
-    SeguimientoGastosJustificadosResumenListadoGeneralExportService
+    SeguimientoGastosJustificadosResumenListadoGeneralExportService,
+    RequerimientoJustificacionListadoExportService,
+    RequerimientoJustificacionGeneralListadoExportService
   ]
 })
 export class EjecucionEconomicaModule { }
