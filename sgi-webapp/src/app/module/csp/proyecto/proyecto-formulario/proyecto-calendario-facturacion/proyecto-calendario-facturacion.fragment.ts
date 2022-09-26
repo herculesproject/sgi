@@ -27,7 +27,8 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
     public proyecto: IProyecto,
     private proyectoService: ProyectoService,
     private proyectoFacturacionService: ProyectoFacturacionService,
-    private facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService
+    private facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    private readonly isInvestigador: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -163,7 +164,11 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
 
     return from(toUpdateProyetosFacturacionItems).pipe(
       mergeMap((toUpdate: StatusWrapper<IProyectoFacturacionData>) => {
-        return this.proyectoFacturacionService.update(toUpdate.value.id, toUpdate.value)
+        const obs$ = this.isInvestigador
+          ? this.proyectoFacturacionService.updateValidacionIP(toUpdate.value.id, toUpdate.value)
+          : this.proyectoFacturacionService.update(toUpdate.value.id, toUpdate.value);
+
+        return obs$
           .pipe(
             map((updatedItem: IProyectoFacturacionData) => {
               const index = this.proyectosFacturacion$.value.findIndex(currentItem => currentItem.value.id === updatedItem.id);

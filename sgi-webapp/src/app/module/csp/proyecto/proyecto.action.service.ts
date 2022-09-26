@@ -323,7 +323,7 @@ export class ProyectoActionService extends ActionService {
 
     if (this.data?.isInvestigador) {
       this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
-        proyectoService, proyectoFacturacionService, facturaPrevistaEmitidaService);
+        proyectoService, proyectoFacturacionService, facturaPrevistaEmitidaService, this.isInvestigador);
       this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
         proyectoSgeService, this.readonly, this.data?.isVisor);
 
@@ -404,7 +404,7 @@ export class ProyectoActionService extends ActionService {
         this.relaciones = new ProyectoRelacionFragment(
           id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, sgiAuthService);
         this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
-          proyectoService, proyectoFacturacionService, facturaPrevistaEmitidaService);
+          proyectoService, proyectoFacturacionService, facturaPrevistaEmitidaService, this.isInvestigador);
 
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
         this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
