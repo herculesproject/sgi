@@ -46,7 +46,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
 
   abiertoRequired: boolean;
-  comentarioEstadoCancelado: boolean;
   mostrarSolicitud = false;
   mostrarCausaExencion = false;
   solicitudProyecto: ISolicitudProyecto;
@@ -657,12 +656,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       formgroup.get('permitePaquetesTrabajo').setValidators([
         Validators.required]);
       this.abiertoRequired = true;
-      this.comentarioEstadoCancelado = false;
     } else if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
       this.abiertoRequired = false;
-      this.comentarioEstadoCancelado = false;
     }
     formgroup.updateValueAndValidity();
   }
