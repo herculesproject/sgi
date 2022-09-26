@@ -1640,7 +1640,7 @@
   "error.csp.proyecto-equipo.solicitante.required": "El equipo de proyecto debe contener al solicitante",
   "error.csp.proyecto-ficha-general.fecha-fin.range": "La fecha de fin del proyecto debe ser posterior o igual a la fecha de fin del periodo de seguimiento",
   "error.csp.proyecto-ficha-general.fecha-inicio.range": "La fecha de inicio del proyecto debe ser anterior o igual a la fecha de inicio del periodo de seguimiento",
-  "error.csp.proyecto-ficha-general.iva.proyectos-sge": "El porcentaje de IVA no puede ser igual a 0 con proyectos SGE vinculados",
+  "error.csp.proyecto-ficha-general.iva.proyectos-sge": "El proyecto se encuentra vinculado a un proyecto SGE. Porcentaje IVA no puede cambiar a valor 0 con posterioridad a la creación del proyecto SGE.",
   "error.csp.proyecto-hito.duplicate": "Ya existe ese hito para la fecha indicada",
   "error.csp.proyecto-paquete-trabajo.nombre.duplicate": "Ya existe un paquete de trabajo con este nombre",
   "error.csp.proyecto-partida-presupuestaria.codigo.duplicated": "Ya existe otra partida con el mismo código y tipo",
