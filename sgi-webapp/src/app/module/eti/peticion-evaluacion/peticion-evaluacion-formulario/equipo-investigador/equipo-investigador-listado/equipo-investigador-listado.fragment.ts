@@ -93,7 +93,16 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
                       catchError(() => of(element))
                     );
                   }),
-                  catchError(() => of(element))
+                  switchMap(() => {
+                    return this.peticionEvaluacionService.findById(this.selectedIdPeticionEvaluacion).pipe(
+                      map((peticionEvaluacion) => {
+                        if (peticionEvaluacion.solicitante.id === element.value.persona.id) {
+                          element.value.eliminable = false;
+                        }
+                      }),
+                      catchError(() => of(element))
+                    );
+                  })
                 );
               }),
               mergeAll(),
